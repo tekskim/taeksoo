@@ -12,21 +12,24 @@ const GRADIENTS = [
   {
     name: 'HUMAIN Brand',
     css: 'linear-gradient(180deg in oklab, #00D4AA 0%, #6366F1 55%, #EC4899 100%)',
-    cssVariable: 'linear-gradient(180deg in oklab, var(--color-tertiary) 0%, var(--color-primary) 55%, var(--color-secondary) 100%)',
+    cssVariable:
+      'linear-gradient(180deg in oklab, var(--color-tertiary) 0%, var(--color-primary) 55%, var(--color-secondary) 100%)',
     colors: ['#00D4AA', '#6366F1', '#EC4899'],
     description: 'Official HUMAIN brand gradient (oklab color space)',
   },
   {
     name: 'HUMAIN Secondary',
     css: 'linear-gradient(180deg in oklab, #00D4AA 0%, #6366F1 100%)',
-    cssVariable: 'linear-gradient(180deg in oklab, var(--color-tertiary) 0%, var(--color-primary) 100%)',
+    cssVariable:
+      'linear-gradient(180deg in oklab, var(--color-tertiary) 0%, var(--color-primary) 100%)',
     colors: ['#00D4AA', '#6366F1'],
     description: 'HUMAIN secondary gradient - Teal to Indigo (oklab)',
   },
   {
     name: 'HUMAIN Tertiary',
     css: 'linear-gradient(180deg in oklab, #00D4AA 0%, #FFFFFF 100%)',
-    cssVariable: 'linear-gradient(180deg in oklab, var(--color-tertiary) 0%, var(--color-white) 100%)',
+    cssVariable:
+      'linear-gradient(180deg in oklab, var(--color-tertiary) 0%, var(--color-white) 100%)',
     colors: ['#00D4AA', '#FFFFFF'],
     description: 'HUMAIN tertiary gradient - Teal to White (oklab)',
   },
@@ -106,20 +109,24 @@ const GRADIENTS = [
 
 function CopyButton({ text }: { text: string }) {
   const [copied, setCopied] = useState(false);
-  
+
   const handleCopy = () => {
     navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
-  
+
   return (
     <button
       onClick={handleCopy}
       className="p-1.5 rounded-md bg-white/20 hover:bg-white/30 transition-colors"
       title="Copy to clipboard"
     >
-      {copied ? <IconCheck size={14} className="text-green-400" /> : <IconCopy size={14} className="text-white/80" />}
+      {copied ? (
+        <IconCheck size={14} className="text-green-400" />
+      ) : (
+        <IconCopy size={14} className="text-white/80" />
+      )}
     </button>
   );
 }
@@ -136,25 +143,22 @@ function GradientCard({ gradient }: { gradient: GradientItem }) {
   return (
     <div className="rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300">
       {/* Gradient Preview */}
-      <div 
-        className="h-40 flex items-end p-4"
-        style={{ background: gradient.css }}
-      >
+      <div className="h-40 flex items-end p-4" style={{ background: gradient.css }}>
         <div className="flex gap-2">
           <CopyButton text={gradient.cssVariable || gradient.css} />
         </div>
       </div>
-      
+
       {/* Info */}
       <div className="bg-white p-4 space-y-2">
         <h3 className="font-semibold text-slate-900">{gradient.name}</h3>
         <p className="text-sm text-slate-500">{gradient.description}</p>
-        
+
         {/* Color Swatches */}
         <div className="flex flex-wrap gap-2 pt-2">
           {gradient.colors.map((color, idx) => (
             <div key={idx} className="flex items-center gap-1.5">
-              <div 
+              <div
                 className="w-6 h-6 rounded-full border border-slate-200 shadow-sm"
                 style={{ backgroundColor: color }}
               />
@@ -162,7 +166,7 @@ function GradientCard({ gradient }: { gradient: GradientItem }) {
             </div>
           ))}
         </div>
-        
+
         {/* CSS Variable Code (if exists) */}
         {gradient.cssVariable && (
           <div className="mt-3 p-2 bg-purple-50 rounded-lg border border-purple-200">
@@ -173,7 +177,7 @@ function GradientCard({ gradient }: { gradient: GradientItem }) {
             <code className="text-xs text-purple-800 break-all">{gradient.cssVariable}</code>
           </div>
         )}
-        
+
         {/* CSS Code */}
         <div className="mt-3 p-2 bg-slate-100 rounded-lg">
           <div className="flex items-center justify-between mb-1">
@@ -193,12 +197,11 @@ export function GradientShowcasePage() {
   return (
     <div className="flex h-screen bg-[var(--color-surface-default)]">
       <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-      
+
       <div className="flex flex-col items-stretch justify-start gap-4 flex-1 overflow-hidden ml-[200px]">
-        
         <div className="flex-1 overflow-auto p-6 space-y-8">
           {/* Hero Section with Selected Gradient */}
-          <div 
+          <div
             className="relative rounded-3xl overflow-hidden h-64 flex items-center justify-center transition-all duration-500"
             style={{ background: selectedGradient.css }}
           >
@@ -207,12 +210,12 @@ export function GradientShowcasePage() {
               <p className="text-lg opacity-90 drop-shadow">Inspired by humain.com</p>
               <p className="text-sm mt-4 opacity-75">{selectedGradient.name}</p>
             </div>
-            
+
             {/* Floating Decorations */}
             <div className="absolute top-8 left-8 w-20 h-20 rounded-full bg-white/10 blur-xl" />
             <div className="absolute bottom-8 right-8 w-32 h-32 rounded-full bg-white/10 blur-xl" />
           </div>
-          
+
           {/* Gradient Selector */}
           <div className="flex gap-2 flex-wrap">
             {GRADIENTS.map((gradient, idx) => (
@@ -220,8 +223,8 @@ export function GradientShowcasePage() {
                 key={idx}
                 onClick={() => setSelectedGradient(gradient)}
                 className={`w-12 h-12 rounded-xl transition-all duration-200 ${
-                  selectedGradient.name === gradient.name 
-                    ? 'ring-2 ring-offset-2 ring-purple-500 scale-110' 
+                  selectedGradient.name === gradient.name
+                    ? 'ring-2 ring-offset-2 ring-purple-500 scale-110'
                     : 'hover:scale-105'
                 }`}
                 style={{ background: gradient.css }}
@@ -229,25 +232,25 @@ export function GradientShowcasePage() {
               />
             ))}
           </div>
-          
+
           {/* Grid of Gradient Cards */}
           <VStack gap={6}>
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-bold text-slate-900">Gradient Collection</h2>
               <span className="text-sm text-slate-500">{GRADIENTS.length} gradients</span>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {GRADIENTS.map((gradient, idx) => (
                 <GradientCard key={idx} gradient={gradient} />
               ))}
             </div>
           </VStack>
-          
+
           {/* Usage Examples */}
           <VStack gap={6}>
             <h2 className="text-2xl font-bold text-slate-900">Usage examples</h2>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {/* Button Examples */}
               <div className="space-y-4">
@@ -264,7 +267,7 @@ export function GradientShowcasePage() {
                   ))}
                 </div>
               </div>
-              
+
               {/* Badge Examples */}
               <div className="space-y-4">
                 <h3 className="font-semibold text-slate-700">Badges</h3>
@@ -280,7 +283,7 @@ export function GradientShowcasePage() {
                   ))}
                 </div>
               </div>
-              
+
               {/* Text Examples */}
               <div className="space-y-4">
                 <h3 className="font-semibold text-slate-700">Text</h3>
@@ -298,13 +301,13 @@ export function GradientShowcasePage() {
               </div>
             </div>
           </VStack>
-          
+
           {/* CSS Code Block */}
           <VStack gap={4}>
             <h2 className="text-2xl font-bold text-slate-900">CSS Variables</h2>
             <div className="bg-slate-900 rounded-xl p-6 overflow-x-auto">
               <pre className="text-sm text-slate-300">
-{`:root {
+                {`:root {
 ${GRADIENTS.map((g, idx) => `  --gradient-${idx + 1}: ${g.css};`).join('\n')}
 }
 
@@ -326,13 +329,3 @@ ${GRADIENTS.map((g, idx) => `  --gradient-${idx + 1}: ${g.css};`).join('\n')}
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-

@@ -32,8 +32,6 @@ import { DataViewDrawer } from '@/components/DataViewDrawer';
 import {
   IconBell,
   IconRefresh,
-  IconChevronLeft,
-  IconChevronRight,
   IconDotsCircleHorizontal,
   IconArrowsMaximize,
   IconArrowsMinimize,
@@ -66,7 +64,16 @@ const timeOptions: { label: string; value: TimePeriod }[] = [
 ];
 
 const CalendarIcon = () => (
-  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg
+    width="12"
+    height="12"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
     <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
     <line x1="16" y1="2" x2="16" y2="6" />
     <line x1="8" y1="2" x2="8" y2="6" />
@@ -75,7 +82,16 @@ const CalendarIcon = () => (
 );
 
 const CloseIcon = () => (
-  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg
+    width="12"
+    height="12"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
     <line x1="18" y1="6" x2="6" y2="18" />
     <line x1="6" y1="6" x2="18" y2="18" />
   </svg>
@@ -86,7 +102,10 @@ interface OSDMonitoringTimeControlsProps {
   onRefresh?: () => void;
 }
 
-function OSDMonitoringTimeControls({ onTimeRangeChange, onRefresh }: OSDMonitoringTimeControlsProps) {
+function OSDMonitoringTimeControls({
+  onTimeRangeChange,
+  onRefresh,
+}: OSDMonitoringTimeControlsProps) {
   const [timeRange, setTimeRange] = useState<TimePeriod>('30m');
   const [customPeriod, setCustomPeriod] = useState<{ start: Date; end: Date } | null>(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -164,12 +183,20 @@ function OSDMonitoringTimeControls({ onTimeRangeChange, onRefresh }: OSDMonitori
     const prevMonth = new Date(year, month, 0);
     const prevMonthDays = prevMonth.getDate();
     for (let i = startingDay - 1; i >= 0; i--) {
-      days.push({ date: new Date(year, month - 1, prevMonthDays - i), isCurrentMonth: false, isToday: false });
+      days.push({
+        date: new Date(year, month - 1, prevMonthDays - i),
+        isCurrentMonth: false,
+        isToday: false,
+      });
     }
     const today = new Date();
     for (let i = 1; i <= daysInMonth; i++) {
       const d = new Date(year, month, i);
-      days.push({ date: d, isCurrentMonth: true, isToday: d.toDateString() === today.toDateString() });
+      days.push({
+        date: d,
+        isCurrentMonth: true,
+        isToday: d.toDateString() === today.toDateString(),
+      });
     }
     const remainingDays = 42 - days.length;
     for (let i = 1; i <= remainingDays; i++) {
@@ -194,18 +221,21 @@ function OSDMonitoringTimeControls({ onTimeRangeChange, onRefresh }: OSDMonitori
     }
   };
 
-  const isDateInRange = (date: Date) => tempStartDate && tempEndDate && date >= tempStartDate && date <= tempEndDate;
+  const isDateInRange = (date: Date) =>
+    tempStartDate && tempEndDate && date >= tempStartDate && date <= tempEndDate;
   const isStartDate = (date: Date) => tempStartDate?.toDateString() === date.toDateString();
   const isEndDate = (date: Date) => tempEndDate?.toDateString() === date.toDateString();
-  const prevMonthNav = () => setViewMonth(new Date(viewMonth.getFullYear(), viewMonth.getMonth() - 1, 1));
-  const nextMonthNav = () => setViewMonth(new Date(viewMonth.getFullYear(), viewMonth.getMonth() + 1, 1));
+  const prevMonthNav = () =>
+    setViewMonth(new Date(viewMonth.getFullYear(), viewMonth.getMonth() - 1, 1));
+  const nextMonthNav = () =>
+    setViewMonth(new Date(viewMonth.getFullYear(), viewMonth.getMonth() + 1, 1));
   const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
   return (
     <div className="fullScreenTimeControls">
       <div className="timeSegments">
-        {timeOptions.map(option => (
-          <button 
+        {timeOptions.map((option) => (
+          <button
             key={option.value}
             className={`timeSegment ${timeRange === option.value && !customPeriod ? 'timeSegmentActive' : ''}`}
             onClick={() => handleTimeRangeClick(option.value)}
@@ -216,10 +246,23 @@ function OSDMonitoringTimeControls({ onTimeRangeChange, onRefresh }: OSDMonitori
       </div>
       <div className="periodSelector" ref={datePickerRef}>
         {customPeriod ? (
-          <div className="periodBadge" onClick={() => { setTempStartDate(customPeriod.start); setTempEndDate(customPeriod.end); setViewMonth(customPeriod.start); setSelectingStart(true); setShowDatePicker(true); }}>
+          <div
+            className="periodBadge"
+            onClick={() => {
+              setTempStartDate(customPeriod.start);
+              setTempEndDate(customPeriod.end);
+              setViewMonth(customPeriod.start);
+              setSelectingStart(true);
+              setShowDatePicker(true);
+            }}
+          >
             <CalendarIcon />
-            <span>{formatDateForDisplay(customPeriod.start)} - {formatDateForDisplay(customPeriod.end)}</span>
-            <button className="periodClear" onClick={handleClearCustomPeriod}><CloseIcon /></button>
+            <span>
+              {formatDateForDisplay(customPeriod.start)} - {formatDateForDisplay(customPeriod.end)}
+            </span>
+            <button className="periodClear" onClick={handleClearCustomPeriod}>
+              <CloseIcon />
+            </button>
           </div>
         ) : (
           <button className="periodButton" onClick={handleCustomPeriodClick}>
@@ -231,7 +274,7 @@ function OSDMonitoringTimeControls({ onTimeRangeChange, onRefresh }: OSDMonitori
           <div className="calendarDropdown">
             {/* Date Range Header */}
             <div className="calendarHeader">
-              <div 
+              <div
                 className={`calendarDateBox ${selectingStart ? 'calendarDateBoxActive' : ''}`}
                 onClick={() => setSelectingStart(true)}
               >
@@ -239,7 +282,7 @@ function OSDMonitoringTimeControls({ onTimeRangeChange, onRefresh }: OSDMonitori
                 <span className="calendarDateValue">{formatDateForDisplay(tempStartDate)}</span>
               </div>
               <div className="calendarDateSeparator">~</div>
-              <div 
+              <div
                 className={`calendarDateBox ${!selectingStart ? 'calendarDateBoxActive' : ''}`}
                 onClick={() => setSelectingStart(false)}
               >
@@ -261,13 +304,19 @@ function OSDMonitoringTimeControls({ onTimeRangeChange, onRefresh }: OSDMonitori
             />
 
             <div className="calendarActions">
-              <button className="calendarCancel" onClick={() => setShowDatePicker(false)}>Cancel</button>
-              <button className="calendarApply" onClick={handleApplyCustomPeriod}>Apply</button>
+              <button className="calendarCancel" onClick={() => setShowDatePicker(false)}>
+                Cancel
+              </button>
+              <button className="calendarApply" onClick={handleApplyCustomPeriod}>
+                Apply
+              </button>
             </div>
           </div>
         )}
       </div>
-      <button className="refreshButton" onClick={onRefresh}><IconRefresh size={14} stroke={1.5} /></button>
+      <button className="refreshButton" onClick={onRefresh}>
+        <IconRefresh size={14} stroke={1.5} />
+      </button>
     </div>
   );
 }
@@ -304,7 +353,7 @@ function OSDPerformanceChart({
   timeControls,
 }: OSDPerformanceChartProps) {
   const [visibleSeries, setVisibleSeries] = useState<Record<string, boolean>>(
-    Object.fromEntries(series.map(s => [s.name, true]))
+    Object.fromEntries(series.map((s) => [s.name, true]))
   );
   const [menuOpen, setMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -314,7 +363,11 @@ function OSDPerformanceChart({
 
   const handleChartReady = (chartInstance: ECharts) => {
     setTimeout(() => {
-      try { chartInstance.resize(); } catch { /* Instance might be disposed */ }
+      try {
+        chartInstance.resize();
+      } catch {
+        /* Instance might be disposed */
+      }
     }, 100);
   };
 
@@ -326,9 +379,13 @@ function OSDPerformanceChart({
     return () => observer.disconnect();
   }, []);
 
-  const allVisible = Object.values(visibleSeries).every(v => v);
-  const toggleAll = () => setVisibleSeries(Object.fromEntries(series.map(s => [s.name, !allVisible])));
-  const handleFullScreen = () => { setMenuOpen(false); if (onFullScreen) onFullScreen(); };
+  const allVisible = Object.values(visibleSeries).every((v) => v);
+  const toggleAll = () =>
+    setVisibleSeries(Object.fromEntries(series.map((s) => [s.name, !allVisible])));
+  const handleFullScreen = () => {
+    setMenuOpen(false);
+    if (onFullScreen) onFullScreen();
+  };
 
   const splitLineColor = isDarkMode ? 'rgba(255, 255, 255, 0.08)' : chartColors.slate100;
   const splitLineOpacity = isDarkMode ? 1 : 0.5;
@@ -336,7 +393,7 @@ function OSDPerformanceChart({
   const tooltipBorder = isDarkMode ? '#3a3a3a' : '#e2e8f0';
   const tooltipTextColor = isDarkMode ? '#e5e5e5' : chartColors.slate800;
 
-  const allData = series.filter(s => visibleSeries[s.name]).flatMap(s => s.data);
+  const allData = series.filter((s) => visibleSeries[s.name]).flatMap((s) => s.data);
   const dataMax = Math.max(...allData, 0);
   const rawInterval = dataMax / 4;
   const magnitude = Math.pow(10, Math.floor(Math.log10(rawInterval || 1)));
@@ -359,7 +416,7 @@ function OSDPerformanceChart({
       axisLine: { show: false },
       axisTick: { show: false },
       axisLabel: { color: chartColors.slate400, fontSize: 10, padding: [0, 0, 0, 15] },
-      boundaryGap: false
+      boundaryGap: false,
     },
     yAxis: {
       type: 'value' as const,
@@ -369,34 +426,49 @@ function OSDPerformanceChart({
       axisLine: { show: false },
       axisTick: { show: false },
       splitLine: { lineStyle: { color: splitLineColor, opacity: splitLineOpacity } },
-      axisLabel: { color: chartColors.slate400, fontSize: 10, formatter: (v: number) => `${v}${yAxisUnit}` }
+      axisLabel: {
+        color: chartColors.slate400,
+        fontSize: 10,
+        formatter: (v: number) => `${v}${yAxisUnit}`,
+      },
     },
     tooltip: {
       trigger: 'axis' as const,
       backgroundColor: tooltipBg,
       borderColor: tooltipBorder,
-      textStyle: { color: tooltipTextColor, fontSize: 11, fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif' },
-      formatter: (params: Array<{ marker: string; seriesName: string; value: number; axisValueLabel: string }>) => {
+      textStyle: {
+        color: tooltipTextColor,
+        fontSize: 11,
+        fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif',
+      },
+      formatter: (
+        params: Array<{ marker: string; seriesName: string; value: number; axisValueLabel: string }>
+      ) => {
         if (!Array.isArray(params) || params.length === 0) return '';
         const time = params[0].axisValueLabel;
-        const items = params.map(p => 
-          `<div style="display: flex; align-items: center; gap: 8px;"><span style="display: inline-block; width: 8px; height: 8px; border-radius: 9999px; background-color: ${p.color};"></span><span>${p.seriesName}</span><span style="font-weight: 500; margin-left: auto;">${p.value}</span></div>`
-        ).join('');
+        const items = params
+          .map(
+            (p) =>
+              `<div style="display: flex; align-items: center; gap: 8px;"><span style="display: inline-block; width: 8px; height: 8px; border-radius: 9999px; background-color: ${p.color};"></span><span>${p.seriesName}</span><span style="font-weight: 500; margin-left: auto;">${p.value}</span></div>`
+          )
+          .join('');
         return `<div style="font-size: 11px; font-family: Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif;">${time}<div style="margin-top: 4px;">${items}</div></div>`;
-      }
+      },
     },
-    series: series.filter(s => visibleSeries[s.name]).map(s => ({
-      name: s.name,
-      type: 'line' as const,
-      data: s.data,
-      smooth: true,
-      symbol: 'circle',
-      symbolSize: 6,
-      showSymbol: false,
-      lineStyle: { color: s.color, width: 1 },
-      itemStyle: { color: s.color },
-      areaStyle: { color: s.color, opacity: 0.1 }
-    }))
+    series: series
+      .filter((s) => visibleSeries[s.name])
+      .map((s) => ({
+        name: s.name,
+        type: 'line' as const,
+        data: s.data,
+        smooth: true,
+        symbol: 'circle',
+        symbolSize: 6,
+        showSymbol: false,
+        lineStyle: { color: s.color, width: 1 },
+        itemStyle: { color: s.color },
+        areaStyle: { color: s.color, opacity: 0.1 },
+      })),
   };
 
   return (
@@ -416,36 +488,69 @@ function OSDPerformanceChart({
               </>
             )}
             <div className="menuContainer">
-              <button className="menuTrigger" onClick={(e) => { e.stopPropagation(); setMenuOpen(!menuOpen); }}>
+              <button
+                className="menuTrigger"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setMenuOpen(!menuOpen);
+                }}
+              >
                 <IconDotsCircleHorizontal size={16} stroke={1.5} />
               </button>
               {menuOpen && (
                 <div className="contextMenu">
-                  <button className="contextMenuItem" onClick={() => setMenuOpen(false)}>Download Image</button>
-                  <button className="contextMenuItem" onClick={() => setMenuOpen(false)}>Download CSV</button>
-                  <button className="contextMenuItemLast" onClick={() => { setMenuOpen(false); setShowDataView(true); }}>Data View</button>
+                  <button className="contextMenuItem" onClick={() => setMenuOpen(false)}>
+                    Download Image
+                  </button>
+                  <button className="contextMenuItem" onClick={() => setMenuOpen(false)}>
+                    Download CSV
+                  </button>
+                  <button
+                    className="contextMenuItemLast"
+                    onClick={() => {
+                      setMenuOpen(false);
+                      setShowDataView(true);
+                    }}
+                  >
+                    Data View
+                  </button>
                 </div>
               )}
             </div>
-            <button className="expandTrigger" title={isFullScreen ? "Minimize" : "Expand"} onClick={isFullScreen ? onExitFullScreen : handleFullScreen}>
-              {isFullScreen ? <IconArrowsMinimize size={16} stroke={1.5} /> : <IconArrowsMaximize size={16} stroke={1.5} />}
+            <button
+              className="expandTrigger"
+              title={isFullScreen ? 'Minimize' : 'Expand'}
+              onClick={isFullScreen ? onExitFullScreen : handleFullScreen}
+            >
+              {isFullScreen ? (
+                <IconArrowsMinimize size={16} stroke={1.5} />
+              ) : (
+                <IconArrowsMaximize size={16} stroke={1.5} />
+              )}
             </button>
           </div>
         </div>
         <div className="chartBody">
           <div className="chartWrapper" ref={wrapperRef}>
-            <ReactECharts 
+            <ReactECharts
               key={isFullScreen ? 'fullscreen' : 'normal'}
               ref={chartRef}
               option={option}
-              style={{ height: isFullScreen ? 'calc(100vh - 200px)' : '100%', width: isFullScreen ? 'calc(100vw - 300px)' : '100%' }}
+              style={{
+                height: isFullScreen ? 'calc(100vh - 200px)' : '100%',
+                width: isFullScreen ? 'calc(100vw - 300px)' : '100%',
+              }}
               notMerge={true}
               onChartReady={handleChartReady}
             />
           </div>
           <div className="chartLegend">
             {series.map((s, i) => (
-              <div key={i} className={`legendItem ${!visibleSeries[s.name] ? 'legendItemHidden' : ''}`} onClick={() => setVisibleSeries(prev => ({ ...prev, [s.name]: !prev[s.name] }))}>
+              <div
+                key={i}
+                className={`legendItem ${!visibleSeries[s.name] ? 'legendItemHidden' : ''}`}
+                onClick={() => setVisibleSeries((prev) => ({ ...prev, [s.name]: !prev[s.name] }))}
+              >
                 <div className="legendDot" style={{ backgroundColor: s.color }} />
                 <span>{s.name}</span>
               </div>
@@ -453,7 +558,13 @@ function OSDPerformanceChart({
           </div>
         </div>
       </div>
-      <DataViewDrawer isOpen={showDataView} onClose={() => setShowDataView(false)} title={`${title} (RAW)`} series={series} timeLabels={timeLabels} />
+      <DataViewDrawer
+        isOpen={showDataView}
+        onClose={() => setShowDataView(false)}
+        title={`${title} (RAW)`}
+        series={series}
+        timeLabels={timeLabels}
+      />
     </>
   );
 }
@@ -469,14 +580,27 @@ interface FullScreenChartData {
   yAxisUnit?: string;
 }
 
-function OSDChartWithFullScreen({ title, series, timeLabels, yAxisUnit = '' }: { title: string; series: ChartSeries[]; timeLabels: string[]; yAxisUnit?: string; }) {
+function OSDChartWithFullScreen({
+  title,
+  series,
+  timeLabels,
+  yAxisUnit = '',
+}: {
+  title: string;
+  series: ChartSeries[];
+  timeLabels: string[];
+  yAxisUnit?: string;
+}) {
   const [fullScreenChart, setFullScreenChart] = useState<FullScreenChartData | null>(null);
   const fullScreenContainerRef = useRef<HTMLDivElement>(null);
   const [containerReady, setContainerReady] = useState(false);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && fullScreenChart) { setFullScreenChart(null); setContainerReady(false); }
+      if (event.key === 'Escape' && fullScreenChart) {
+        setFullScreenChart(null);
+        setContainerReady(false);
+      }
     };
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
@@ -484,16 +608,34 @@ function OSDChartWithFullScreen({ title, series, timeLabels, yAxisUnit = '' }: {
 
   useEffect(() => {
     if (fullScreenChart && fullScreenContainerRef.current) {
-      requestAnimationFrame(() => { requestAnimationFrame(() => { setContainerReady(true); }); });
-    } else { setContainerReady(false); }
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setContainerReady(true);
+        });
+      });
+    } else {
+      setContainerReady(false);
+    }
   }, [fullScreenChart]);
 
   return (
     <>
-      <OSDPerformanceChart title={title} series={series} timeLabels={timeLabels} yAxisUnit={yAxisUnit} onFullScreen={() => setFullScreenChart({ title, series, timeLabels, yAxisUnit })} />
+      <OSDPerformanceChart
+        title={title}
+        series={series}
+        timeLabels={timeLabels}
+        yAxisUnit={yAxisUnit}
+        onFullScreen={() => setFullScreenChart({ title, series, timeLabels, yAxisUnit })}
+      />
       {fullScreenChart && (
         <>
-          <div className="fullScreenOverlay" onClick={() => { setFullScreenChart(null); setContainerReady(false); }} />
+          <div
+            className="fullScreenOverlay"
+            onClick={() => {
+              setFullScreenChart(null);
+              setContainerReady(false);
+            }}
+          />
           <div className="fullScreenFloating" ref={fullScreenContainerRef}>
             {containerReady && (
               <OSDPerformanceChart
@@ -502,7 +644,10 @@ function OSDChartWithFullScreen({ title, series, timeLabels, yAxisUnit = '' }: {
                 timeLabels={fullScreenChart.timeLabels}
                 yAxisUnit={fullScreenChart.yAxisUnit}
                 isFullScreen={true}
-                onExitFullScreen={() => { setFullScreenChart(null); setContainerReady(false); }}
+                onExitFullScreen={() => {
+                  setFullScreenChart(null);
+                  setContainerReady(false);
+                }}
                 timeControls={<OSDMonitoringTimeControls />}
               />
             )}
@@ -737,13 +882,14 @@ export function OSDDetailPage() {
   const [deviceSearchQuery, setDeviceSearchQuery] = useState('');
   const [deviceCurrentPage, setDeviceCurrentPage] = useState(1);
   const deviceRowsPerPage = 10;
-  
+
   // Device health tab state
   const [selectedHealthDevice, setSelectedHealthDevice] = useState(mockDeviceHealthList[0]);
   const [healthSubTab, setHealthSubTab] = useState<'device-info' | 'smart'>('device-info');
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } =
+    useTabs();
 
   // Update tab label to match the OSD name (most recent breadcrumb)
   useEffect(() => {
@@ -760,12 +906,15 @@ export function OSDDetailPage() {
   }));
 
   // Filter devices based on search
-  const filteredDevices = useMemo(() =>
-    mockDevices.filter((device) =>
-      device.deviceId.toLowerCase().includes(deviceSearchQuery.toLowerCase()) ||
-      device.deviceName.toLowerCase().includes(deviceSearchQuery.toLowerCase()) ||
-      device.daemons.some(d => d.toLowerCase().includes(deviceSearchQuery.toLowerCase()))
-    ), [deviceSearchQuery]
+  const filteredDevices = useMemo(
+    () =>
+      mockDevices.filter(
+        (device) =>
+          device.deviceId.toLowerCase().includes(deviceSearchQuery.toLowerCase()) ||
+          device.deviceName.toLowerCase().includes(deviceSearchQuery.toLowerCase()) ||
+          device.daemons.some((d) => d.toLowerCase().includes(deviceSearchQuery.toLowerCase()))
+      ),
+    [deviceSearchQuery]
   );
 
   const deviceTotalPages = Math.ceil(filteredDevices.length / deviceRowsPerPage);
@@ -802,7 +951,7 @@ export function OSDDetailPage() {
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       {/* Sidebar */}
-      <StorageSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
+      <StorageSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
 
       {/* Main Content */}
       <main
@@ -839,10 +988,7 @@ export function OSDDetailPage() {
               />
             }
             actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-              />
+              <TopBarAction icon={<IconBell size={16} stroke={1.5} />} aria-label="Notifications" />
             }
           />
         </div>
@@ -856,24 +1002,18 @@ export function OSDDetailPage() {
               <DetailHeader>
                 <DetailHeaderTitle>{osd.host}</DetailHeaderTitle>
                 <div className="flex gap-2 w-full">
-                  <DetailHeaderInfoCard 
-                    label="Status" 
+                  <DetailHeaderInfoCard
+                    label="Status"
                     value={
                       <div className="flex gap-0.5">
                         {osd.status.map((s, index) => (
-                          <Chip
-                            key={index}
-                            value={s}
-                          />
+                          <Chip key={index} value={s} />
                         ))}
                       </div>
                     }
                     status={osd.status.includes('up') ? 'active' : 'error'}
                   />
-                  <DetailHeaderInfoCard 
-                    label="ID" 
-                    value={String(osd.id)}
-                  />
+                  <DetailHeaderInfoCard label="ID" value={String(osd.id)} />
                 </div>
               </DetailHeader>
 
@@ -892,9 +1032,7 @@ export function OSDDetailPage() {
                     <VStack gap={4} className="pt-4">
                       {/* Basic information */}
                       <SectionCard>
-                        <SectionCardHeader
-                          title="Basic information"
-                        />
+                        <SectionCardHeader title="Basic information" />
                         <SectionCardContent>
                           <SectionCardDataRow label="Device class" showDivider={false}>
                             <Chip value={osd.deviceClass} />
@@ -969,9 +1107,10 @@ export function OSDDetailPage() {
                               className={`
                                 text-left px-2.5 py-[7px] rounded text-[12px] font-medium truncate
                                 transition-colors duration-[var(--duration-fast)]
-                                ${selectedHealthDevice.id === device.id
-                                  ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)]'
-                                  : 'text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)]'
+                                ${
+                                  selectedHealthDevice.id === device.id
+                                    ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)]'
+                                    : 'text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)]'
                                 }
                               `}
                             >
@@ -995,9 +1134,10 @@ export function OSDDetailPage() {
                             className={`
                               flex-1 py-2.5 px-4 rounded-md text-[14px] font-medium text-center border
                               transition-colors duration-[var(--duration-fast)]
-                              ${healthSubTab === 'device-info'
-                                ? 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] text-[var(--color-action-primary)]'
-                                : 'border-transparent text-[var(--color-text-default)] hover:bg-[var(--color-surface-default)]'
+                              ${
+                                healthSubTab === 'device-info'
+                                  ? 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] text-[var(--color-action-primary)]'
+                                  : 'border-transparent text-[var(--color-text-default)] hover:bg-[var(--color-surface-default)]'
                               }
                             `}
                           >
@@ -1008,9 +1148,10 @@ export function OSDDetailPage() {
                             className={`
                               flex-1 py-2.5 px-4 rounded-md text-[14px] font-medium text-center border
                               transition-colors duration-[var(--duration-fast)]
-                              ${healthSubTab === 'smart'
-                                ? 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] text-[var(--color-action-primary)]'
-                                : 'border-transparent text-[var(--color-text-default)] hover:bg-[var(--color-surface-default)]'
+                              ${
+                                healthSubTab === 'smart'
+                                  ? 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] text-[var(--color-action-primary)]'
+                                  : 'border-transparent text-[var(--color-text-default)] hover:bg-[var(--color-surface-default)]'
                               }
                             `}
                           >
@@ -1022,11 +1163,24 @@ export function OSDDetailPage() {
                         <SectionCard>
                           <SectionCardHeader title="Device Information" />
                           <SectionCardContent>
-                            <SectionCardDataRow label="Model number" value={selectedHealthDevice.modelNumber} showDivider={false} />
-                            <SectionCardDataRow label="Serial number" value={selectedHealthDevice.serialNumber} />
-                            <SectionCardDataRow label="Firmware version" value={selectedHealthDevice.firmwareVersion} />
-                            <SectionCardDataRow label="Total capacity" value={selectedHealthDevice.totalCapacity} />
-                            
+                            <SectionCardDataRow
+                              label="Model number"
+                              value={selectedHealthDevice.modelNumber}
+                              showDivider={false}
+                            />
+                            <SectionCardDataRow
+                              label="Serial number"
+                              value={selectedHealthDevice.serialNumber}
+                            />
+                            <SectionCardDataRow
+                              label="Firmware version"
+                              value={selectedHealthDevice.firmwareVersion}
+                            />
+                            <SectionCardDataRow
+                              label="Total capacity"
+                              value={selectedHealthDevice.totalCapacity}
+                            />
+
                             {/* Smartctl Output */}
                             <div className="pt-3 mt-3 border-t border-[var(--color-border-default)]">
                               <p className="text-[11px] font-medium text-[var(--color-text-subtle)] mb-1.5">
@@ -1049,12 +1203,12 @@ export function OSDDetailPage() {
                     <VStack gap={4} className="pt-4">
                       {/* Monitoring Time Controls */}
                       <div className="flex justify-start w-full">
-                        <OSDMonitoringTimeControls 
+                        <OSDMonitoringTimeControls
                           onTimeRangeChange={(value) => console.log('Time range changed:', value)}
                           onRefresh={() => console.log('Refresh clicked')}
                         />
                       </div>
-                      
+
                       {/* OSD Performance Section */}
                       <SectionCard>
                         <SectionCardHeader title="OSD PERFORMANCE" />
@@ -1065,8 +1219,16 @@ export function OSDDetailPage() {
                               <OSDChartWithFullScreen
                                 title={`osd.${osdId} Latency`}
                                 series={[
-                                  { name: 'Reads', data: [65, 68, 70, 72, 75, 85], color: chartColors.cyan400 },
-                                  { name: 'Writes', data: [20, 22, 25, 28, 30, 35], color: chartColors.emerald400 },
+                                  {
+                                    name: 'Reads',
+                                    data: [65, 68, 70, 72, 75, 85],
+                                    color: chartColors.cyan400,
+                                  },
+                                  {
+                                    name: 'Writes',
+                                    data: [20, 22, 25, 28, 30, 35],
+                                    color: chartColors.emerald400,
+                                  },
                                 ]}
                                 timeLabels={['15:50', '15:05', '15:20', '15:35', '16:50']}
                                 yAxisUnit=" µs"
@@ -1074,8 +1236,16 @@ export function OSDDetailPage() {
                               <OSDChartWithFullScreen
                                 title={`osd.${osdId} R/W IOPS`}
                                 series={[
-                                  { name: 'Reads', data: [0.6, 0.7, 0.8, 1.0, 1.2, 1.5], color: chartColors.cyan400 },
-                                  { name: 'Writes', data: [0.4, 0.45, 0.5, 0.55, 0.6, 0.7], color: chartColors.emerald400 },
+                                  {
+                                    name: 'Reads',
+                                    data: [0.6, 0.7, 0.8, 1.0, 1.2, 1.5],
+                                    color: chartColors.cyan400,
+                                  },
+                                  {
+                                    name: 'Writes',
+                                    data: [0.4, 0.45, 0.5, 0.55, 0.6, 0.7],
+                                    color: chartColors.emerald400,
+                                  },
                                 ]}
                                 timeLabels={['15:50', '15:05', '15:20', '15:35', '16:50']}
                                 yAxisUnit=""
@@ -1086,8 +1256,16 @@ export function OSDDetailPage() {
                               <OSDChartWithFullScreen
                                 title={`osd.${osdId} R/W Bytes`}
                                 series={[
-                                  { name: 'Reads', data: [15, 18, 22, 28, 32, 40], color: chartColors.cyan400 },
-                                  { name: 'Writes', data: [8, 10, 12, 15, 18, 22], color: chartColors.emerald400 },
+                                  {
+                                    name: 'Reads',
+                                    data: [15, 18, 22, 28, 32, 40],
+                                    color: chartColors.cyan400,
+                                  },
+                                  {
+                                    name: 'Writes',
+                                    data: [8, 10, 12, 15, 18, 22],
+                                    color: chartColors.emerald400,
+                                  },
                                 ]}
                                 timeLabels={['15:50', '15:05', '15:20', '15:35', '16:50']}
                                 yAxisUnit=" B"
@@ -1096,7 +1274,7 @@ export function OSDDetailPage() {
                           </div>
                         </SectionCardContent>
                       </SectionCard>
-                      
+
                       {/* Physical Device Data Section */}
                       <SectionCard>
                         <SectionCardHeader title={`PHYSICAL DEVICE DATA FOR OSD.${osdId}`} />
@@ -1107,8 +1285,16 @@ export function OSDDetailPage() {
                               <OSDChartWithFullScreen
                                 title={`Physical Device Latency for osd.${osdId}`}
                                 series={[
-                                  { name: 'dm-0 Reads', data: [180, 350, 420, 550, 680, 750], color: chartColors.cyan400 },
-                                  { name: 'dm-0 Writes', data: [50, 80, 100, 120, 150, 180], color: chartColors.emerald400 },
+                                  {
+                                    name: 'dm-0 Reads',
+                                    data: [180, 350, 420, 550, 680, 750],
+                                    color: chartColors.cyan400,
+                                  },
+                                  {
+                                    name: 'dm-0 Writes',
+                                    data: [50, 80, 100, 120, 150, 180],
+                                    color: chartColors.emerald400,
+                                  },
                                 ]}
                                 timeLabels={['15:50', '15:05', '15:20', '15:35', '16:50']}
                                 yAxisUnit=" µs"
@@ -1116,8 +1302,16 @@ export function OSDDetailPage() {
                               <OSDChartWithFullScreen
                                 title={`Physical Device R/W IOPS for osd.${osdId}`}
                                 series={[
-                                  { name: 'dm-0 Reads', data: [50, 80, 100, 140, 170, 200], color: chartColors.cyan400 },
-                                  { name: 'dm-0 Writes', data: [30, 50, 70, 90, 110, 130], color: chartColors.emerald400 },
+                                  {
+                                    name: 'dm-0 Reads',
+                                    data: [50, 80, 100, 140, 170, 200],
+                                    color: chartColors.cyan400,
+                                  },
+                                  {
+                                    name: 'dm-0 Writes',
+                                    data: [30, 50, 70, 90, 110, 130],
+                                    color: chartColors.emerald400,
+                                  },
                                 ]}
                                 timeLabels={['15:50', '15:05', '15:20', '15:35', '16:50']}
                                 yAxisUnit=""
@@ -1128,8 +1322,16 @@ export function OSDDetailPage() {
                               <OSDChartWithFullScreen
                                 title={`Physical Device R/W Bytes for osd.${osdId}`}
                                 series={[
-                                  { name: 'dm-0 Reads', data: [350, 450, 550, 700, 900, 1100], color: chartColors.cyan400 },
-                                  { name: 'dm-0 Writes', data: [200, 280, 350, 450, 550, 650], color: chartColors.emerald400 },
+                                  {
+                                    name: 'dm-0 Reads',
+                                    data: [350, 450, 550, 700, 900, 1100],
+                                    color: chartColors.cyan400,
+                                  },
+                                  {
+                                    name: 'dm-0 Writes',
+                                    data: [200, 280, 350, 450, 550, 650],
+                                    color: chartColors.emerald400,
+                                  },
                                 ]}
                                 timeLabels={['15:50', '15:05', '15:20', '15:35', '16:50']}
                                 yAxisUnit=" kiB/s"
@@ -1137,7 +1339,11 @@ export function OSDDetailPage() {
                               <OSDChartWithFullScreen
                                 title={`Physical Device Util% for osd.${osdId}`}
                                 series={[
-                                  { name: 'dm-0 Util%', data: [2.5, 4.0, 5.5, 6.5, 8.0, 9.5], color: chartColors.cyan400 },
+                                  {
+                                    name: 'dm-0 Util%',
+                                    data: [2.5, 4.0, 5.5, 6.5, 8.0, 9.5],
+                                    color: chartColors.cyan400,
+                                  },
                                 ]}
                                 timeLabels={['15:50', '15:05', '15:20', '15:35', '16:50']}
                                 yAxisUnit="%"
@@ -1159,4 +1365,3 @@ export function OSDDetailPage() {
 }
 
 export default OSDDetailPage;
-

@@ -2,7 +2,6 @@ import { useState, useMemo } from 'react';
 import {
   Button,
   FilterSearchInput,
-  SearchInput,
   Table,
   Pagination,
   VStack,
@@ -25,7 +24,6 @@ import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPrefe
 import { CreateVolumeFromBackupDrawer } from '@/components/CreateVolumeFromBackupDrawer';
 import { EditVolumeBackupDrawer } from '@/components/EditVolumeBackupDrawer';
 import {
-  IconPlus,
   IconDotsCircleHorizontal,
   IconTrash,
   IconDownload,
@@ -57,16 +55,106 @@ interface VolumeBackup {
    ---------------------------------------- */
 
 const mockVolumeBackups: VolumeBackup[] = [
-  { id: 'vbak-001', name: 'db-data-backup', size: '1500GiB', sourceVolume: 'vol-1', sourceVolumeId: 'vol-001', backupMode: 'Full Backup', createdAt: '2025-09-12', status: 'active' },
-  { id: 'vbak-002', name: 'app-storage-backup', size: '500GiB', sourceVolume: 'vol-2', sourceVolumeId: 'vol-002', backupMode: 'Incremental', createdAt: '2025-09-10', status: 'active' },
-  { id: 'vbak-003', name: 'backup-vol-backup', size: '2000GiB', sourceVolume: 'vol-3', sourceVolumeId: 'vol-003', backupMode: 'Full Backup', createdAt: '2025-09-08', status: 'active' },
-  { id: 'vbak-004', name: 'log-storage-backup', size: '100GiB', sourceVolume: 'vol-4', sourceVolumeId: 'vol-004', backupMode: 'Incremental', createdAt: '2025-09-05', status: 'creating' },
-  { id: 'vbak-005', name: 'cache-vol-backup', size: '256GiB', sourceVolume: 'vol-5', sourceVolumeId: 'vol-005', backupMode: 'Full Backup', createdAt: '2025-08-30', status: 'active' },
-  { id: 'vbak-006', name: 'media-storage-backup', size: '5000GiB', sourceVolume: 'vol-6', sourceVolumeId: 'vol-006', backupMode: 'Full Backup', createdAt: '2025-08-25', status: 'restoring' },
-  { id: 'vbak-007', name: 'temp-vol-backup', size: '50GiB', sourceVolume: 'vol-7', sourceVolumeId: 'vol-007', backupMode: 'Incremental', createdAt: '2025-08-20', status: 'error' },
-  { id: 'vbak-008', name: 'ml-data-backup', size: '1000GiB', sourceVolume: 'vol-8', sourceVolumeId: 'vol-008', backupMode: 'Full Backup', createdAt: '2025-08-15', status: 'active' },
-  { id: 'vbak-009', name: 'archive-vol-backup', size: '10000GiB', sourceVolume: 'vol-9', sourceVolumeId: 'vol-009', backupMode: 'Full Backup', createdAt: '2025-08-10', status: 'active' },
-  { id: 'vbak-010', name: 'boot-vol-backup', size: '100GiB', sourceVolume: 'vol-10', sourceVolumeId: 'vol-010', backupMode: 'Incremental', createdAt: '2025-08-05', status: 'deleting' },
+  {
+    id: 'vbak-001',
+    name: 'db-data-backup',
+    size: '1500GiB',
+    sourceVolume: 'vol-1',
+    sourceVolumeId: 'vol-001',
+    backupMode: 'Full Backup',
+    createdAt: '2025-09-12',
+    status: 'active',
+  },
+  {
+    id: 'vbak-002',
+    name: 'app-storage-backup',
+    size: '500GiB',
+    sourceVolume: 'vol-2',
+    sourceVolumeId: 'vol-002',
+    backupMode: 'Incremental',
+    createdAt: '2025-09-10',
+    status: 'active',
+  },
+  {
+    id: 'vbak-003',
+    name: 'backup-vol-backup',
+    size: '2000GiB',
+    sourceVolume: 'vol-3',
+    sourceVolumeId: 'vol-003',
+    backupMode: 'Full Backup',
+    createdAt: '2025-09-08',
+    status: 'active',
+  },
+  {
+    id: 'vbak-004',
+    name: 'log-storage-backup',
+    size: '100GiB',
+    sourceVolume: 'vol-4',
+    sourceVolumeId: 'vol-004',
+    backupMode: 'Incremental',
+    createdAt: '2025-09-05',
+    status: 'creating',
+  },
+  {
+    id: 'vbak-005',
+    name: 'cache-vol-backup',
+    size: '256GiB',
+    sourceVolume: 'vol-5',
+    sourceVolumeId: 'vol-005',
+    backupMode: 'Full Backup',
+    createdAt: '2025-08-30',
+    status: 'active',
+  },
+  {
+    id: 'vbak-006',
+    name: 'media-storage-backup',
+    size: '5000GiB',
+    sourceVolume: 'vol-6',
+    sourceVolumeId: 'vol-006',
+    backupMode: 'Full Backup',
+    createdAt: '2025-08-25',
+    status: 'restoring',
+  },
+  {
+    id: 'vbak-007',
+    name: 'temp-vol-backup',
+    size: '50GiB',
+    sourceVolume: 'vol-7',
+    sourceVolumeId: 'vol-007',
+    backupMode: 'Incremental',
+    createdAt: '2025-08-20',
+    status: 'error',
+  },
+  {
+    id: 'vbak-008',
+    name: 'ml-data-backup',
+    size: '1000GiB',
+    sourceVolume: 'vol-8',
+    sourceVolumeId: 'vol-008',
+    backupMode: 'Full Backup',
+    createdAt: '2025-08-15',
+    status: 'active',
+  },
+  {
+    id: 'vbak-009',
+    name: 'archive-vol-backup',
+    size: '10000GiB',
+    sourceVolume: 'vol-9',
+    sourceVolumeId: 'vol-009',
+    backupMode: 'Full Backup',
+    createdAt: '2025-08-10',
+    status: 'active',
+  },
+  {
+    id: 'vbak-010',
+    name: 'boot-vol-backup',
+    size: '100GiB',
+    sourceVolume: 'vol-10',
+    sourceVolumeId: 'vol-010',
+    backupMode: 'Incremental',
+    createdAt: '2025-08-05',
+    status: 'deleting',
+  },
 ];
 
 /* ----------------------------------------
@@ -74,11 +162,11 @@ const mockVolumeBackups: VolumeBackup[] = [
    ---------------------------------------- */
 
 const volumeBackupStatusMap: Record<BackupStatus, 'active' | 'building' | 'error' | 'pending'> = {
-  'active': 'active',
-  'creating': 'building',
-  'restoring': 'building',
-  'error': 'error',
-  'deleting': 'pending',
+  active: 'active',
+  creating: 'building',
+  restoring: 'building',
+  error: 'error',
+  deleting: 'pending',
 };
 
 /* ----------------------------------------
@@ -89,17 +177,27 @@ const volumeBackupStatusMap: Record<BackupStatus, 'active' | 'building' | 'error
 const filterFields: FilterField[] = [
   { id: 'name', label: 'Name', type: 'text' },
   { id: 'sourceVolume', label: 'Source Volume', type: 'text' },
-  { id: 'backupMode', label: 'Backup Mode', type: 'select', options: [
-    { value: 'Full Backup', label: 'Full Backup' },
-    { value: 'Incremental', label: 'Incremental' },
-  ]},
-  { id: 'status', label: 'Status', type: 'select', options: [
-    { value: 'active', label: 'Active' },
-    { value: 'creating', label: 'Creating' },
-    { value: 'error', label: 'Error' },
-    { value: 'restoring', label: 'Restoring' },
-    { value: 'deleting', label: 'Deleting' },
-  ]},
+  {
+    id: 'backupMode',
+    label: 'Backup Mode',
+    type: 'select',
+    options: [
+      { value: 'Full Backup', label: 'Full Backup' },
+      { value: 'Incremental', label: 'Incremental' },
+    ],
+  },
+  {
+    id: 'status',
+    label: 'Status',
+    type: 'select',
+    options: [
+      { value: 'active', label: 'Active' },
+      { value: 'creating', label: 'Creating' },
+      { value: 'error', label: 'Error' },
+      { value: 'restoring', label: 'Restoring' },
+      { value: 'deleting', label: 'Deleting' },
+    ],
+  },
 ];
 
 export function VolumeBackupsPage() {
@@ -109,7 +207,7 @@ export function VolumeBackupsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [backups, setBackups] = useState(mockVolumeBackups);
   const [searchQuery, setSearchQuery] = useState('');
-  
+
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [backupToDelete, setBackupToDelete] = useState<VolumeBackup | null>(null);
@@ -184,7 +282,7 @@ export function VolumeBackupsPage() {
   // Filter backups by search
   const filteredBackups = useMemo(() => {
     if (appliedFilters.length === 0) return backups;
-    
+
     return backups.filter((backup) => {
       return appliedFilters.every((filter) => {
         const value = backup[filter.fieldId as keyof VolumeBackup];
@@ -245,7 +343,7 @@ export function VolumeBackupsPage() {
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link
-          to={`/compute/volumes/${row.sourceVolumeId}`}
+            to={`/compute/volumes/${row.sourceVolumeId}`}
             className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
@@ -304,7 +402,11 @@ export function VolumeBackupsPage() {
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={menuItems} trigger="click">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+                <IconDotsCircleHorizontal
+                  size={16}
+                  stroke={1.5}
+                  className="text-[var(--action-icon-color)]"
+                />
               </button>
             </ContextMenu>
           </div>
@@ -315,9 +417,7 @@ export function VolumeBackupsPage() {
 
   // Filter and order columns based on preferences
   const visibleColumns = useMemo(() => {
-    const visibleColumnIds = columnConfig
-      .filter((col) => col.visible)
-      .map((col) => col.id);
+    const visibleColumnIds = columnConfig.filter((col) => col.visible).map((col) => col.id);
 
     const columnMap = new Map(columns.map((col) => [col.key, col]));
 
@@ -328,7 +428,7 @@ export function VolumeBackupsPage() {
 
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
+      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
 
       <main
         className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
@@ -337,109 +437,110 @@ export function VolumeBackupsPage() {
       >
         {/* Fixed Header Area */}
         <div className="shrink-0 bg-[var(--color-surface-default)]">
-        {/* Tab Bar */}
-        <TabBar
-          tabs={tabBarTabs}
-          activeTab={activeTabId}
-          onTabChange={selectTab}
-          onTabClose={closeTab}
-          onTabAdd={addNewTab}
+          {/* Tab Bar */}
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabAdd={addNewTab}
             onTabReorder={moveTab}
-          showAddButton={true}
-          showWindowControls={true}
-        />
+            showAddButton={true}
+            showWindowControls={true}
+          />
 
-        {/* Top Bar */}
-        <TopBar
-          showSidebarToggle={!sidebarOpen}
-          onSidebarToggle={() => setSidebarOpen(true)}
-          showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'Proj-1', href: '/project' },
-                { label: 'Volume backups' },
-              ]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
-        />
+          {/* Top Bar */}
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(true)}
+            showNavigation={true}
+            onBack={() => window.history.back()}
+            onForward={() => window.history.forward()}
+            breadcrumb={
+              <Breadcrumb
+                items={[{ label: 'Proj-1', href: '/project' }, { label: 'Volume backups' }]}
+              />
+            }
+            actions={
+              <TopBarAction
+                icon={<IconBell size={16} stroke={1} />}
+                aria-label="Notifications"
+                badge={true}
+              />
+            }
+          />
         </div>
 
         {/* Scrollable Content Area */}
         <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
-        <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
-          <VStack gap={3}>
-            {/* Page Header */}
-            <div className="flex items-center justify-between h-8">
-              <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
-                Volume backups
-              </h1>
-              <Button>
-                Create Backup
-              </Button>
-            </div>
+          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
+            <VStack gap={3}>
+              {/* Page Header */}
+              <div className="flex items-center justify-between h-8">
+                <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
+                  Volume backups
+                </h1>
+                <Button>Create Backup</Button>
+              </div>
 
-            {/* List Toolbar */}
-            <ListToolbar
-              primaryActions={
-                <ListToolbar.Actions>
-                  <FilterSearchInput
-                    filters={filterFields}
-                    appliedFilters={appliedFilters}
-                    onFiltersChange={setAppliedFilters}
-                    placeholder="Search backup by attributes"
-                    size="sm"
-                    className="w-[var(--search-input-width)]"
-                    hideAppliedFilters
-                  />
-                  <Button variant="secondary" size="sm" iconOnly icon={<IconDownload size={12} />} aria-label="Download" />
-                </ListToolbar.Actions>
-              }
-              bulkActions={
-                <ListToolbar.Actions>
-                  <Button
-                    variant="muted"
-                    size="sm"
-                    leftIcon={<IconTrash size={12} />}
-                    disabled={selectedBackups.length === 0}
-                  >
-                    Delete
-                  </Button>
-                </ListToolbar.Actions>
-              }
-            />
+              {/* List Toolbar */}
+              <ListToolbar
+                primaryActions={
+                  <ListToolbar.Actions>
+                    <FilterSearchInput
+                      filters={filterFields}
+                      appliedFilters={appliedFilters}
+                      onFiltersChange={setAppliedFilters}
+                      placeholder="Search backup by attributes"
+                      size="sm"
+                      className="w-[var(--search-input-width)]"
+                      hideAppliedFilters
+                    />
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      iconOnly
+                      icon={<IconDownload size={12} />}
+                      aria-label="Download"
+                    />
+                  </ListToolbar.Actions>
+                }
+                bulkActions={
+                  <ListToolbar.Actions>
+                    <Button
+                      variant="muted"
+                      size="sm"
+                      leftIcon={<IconTrash size={12} />}
+                      disabled={selectedBackups.length === 0}
+                    >
+                      Delete
+                    </Button>
+                  </ListToolbar.Actions>
+                }
+              />
 
-            {/* Pagination */}
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              totalItems={filteredBackups.length}
-              selectedCount={selectedBackups.length}
-              onPageChange={setCurrentPage}
-              showSettings
-              onSettingsClick={() => setIsPreferencesOpen(true)}
-            />
+              {/* Pagination */}
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                totalItems={filteredBackups.length}
+                selectedCount={selectedBackups.length}
+                onPageChange={setCurrentPage}
+                showSettings
+                onSettingsClick={() => setIsPreferencesOpen(true)}
+              />
 
-            {/* Table */}
-            <Table
-              columns={visibleColumns}
-              data={paginatedBackups}
-              rowKey="id"
-              selectable
-              selectedKeys={selectedBackups}
-              onSelectionChange={setSelectedBackups}
-            />
-          </VStack>
-        </div>
+              {/* Table */}
+              <Table
+                columns={visibleColumns}
+                data={paginatedBackups}
+                rowKey="id"
+                selectable
+                selectedKeys={selectedBackups}
+                onSelectionChange={setSelectedBackups}
+              />
+            </VStack>
+          </div>
         </div>
       </main>
 
@@ -470,24 +571,31 @@ export function VolumeBackupsPage() {
       <CreateVolumeFromBackupDrawer
         isOpen={createVolumeOpen}
         onClose={() => setCreateVolumeOpen(false)}
-        volumeBackup={selectedBackupForDrawer ? {
-          id: selectedBackupForDrawer.id,
-          name: selectedBackupForDrawer.name,
-          size: parseSizeToNumber(selectedBackupForDrawer.size),
-        } : null}
+        volumeBackup={
+          selectedBackupForDrawer
+            ? {
+                id: selectedBackupForDrawer.id,
+                name: selectedBackupForDrawer.name,
+                size: parseSizeToNumber(selectedBackupForDrawer.size),
+              }
+            : null
+        }
       />
 
       <EditVolumeBackupDrawer
         isOpen={editBackupOpen}
         onClose={() => setEditBackupOpen(false)}
-        volumeBackup={selectedBackupForDrawer ? {
-          id: selectedBackupForDrawer.id,
-          name: selectedBackupForDrawer.name,
-        } : null}
+        volumeBackup={
+          selectedBackupForDrawer
+            ? {
+                id: selectedBackupForDrawer.id,
+                name: selectedBackupForDrawer.name,
+              }
+            : null
+        }
       />
     </div>
   );
 }
 
 export default VolumeBackupsPage;
-

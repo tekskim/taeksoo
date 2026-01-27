@@ -20,4 +20,3 @@ export const agentRoutes = (
     <Route path="/mcp-tools" element={<MCPToolsPage />} />
   </>
 );
-

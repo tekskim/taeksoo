@@ -7,7 +7,6 @@ import {
   HStack,
   TabBar,
   TopBar,
-  TopBarAction,
   Breadcrumb,
   Tabs,
   TabList,
@@ -23,13 +22,7 @@ import {
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconEdit,
-  IconTrash,
-  IconChevronDown,
-  IconBell,
-  IconRefresh,
-} from '@tabler/icons-react';
+import { IconEdit, IconTrash, IconChevronDown, IconRefresh } from '@tabler/icons-react';
 import { IconAction } from '@/design-system';
 
 /* ----------------------------------------
@@ -169,13 +162,36 @@ const defaultAdminDetail: SystemAdminDetail = {
 };
 
 const mockMFAMethods: MFAMethod[] = [
-  { id: 'mfa-001', method: 'OTP', lastUsed: '2025-09-12 12:33:15', createdAt: '2025-09-12 12:33:15' },
+  {
+    id: 'mfa-001',
+    method: 'OTP',
+    lastUsed: '2025-09-12 12:33:15',
+    createdAt: '2025-09-12 12:33:15',
+  },
 ];
 
 const mockSessions: Session[] = [
-  { id: 'sess-001', started: '2025-09-12 10:00:00', lastAccess: '2025-09-12 14:30:00', ipAddress: '192.168.1.100', device: 'Chrome / Windows' },
-  { id: 'sess-002', started: '2025-09-11 09:15:00', lastAccess: '2025-09-11 18:45:00', ipAddress: '192.168.1.101', device: 'Firefox / macOS' },
-  { id: 'sess-003', started: '2025-09-10 08:30:00', lastAccess: '2025-09-10 17:00:00', ipAddress: '192.168.1.102', device: 'Safari / iOS' },
+  {
+    id: 'sess-001',
+    started: '2025-09-12 10:00:00',
+    lastAccess: '2025-09-12 14:30:00',
+    ipAddress: '192.168.1.100',
+    device: 'Chrome / Windows',
+  },
+  {
+    id: 'sess-002',
+    started: '2025-09-11 09:15:00',
+    lastAccess: '2025-09-11 18:45:00',
+    ipAddress: '192.168.1.101',
+    device: 'Firefox / macOS',
+  },
+  {
+    id: 'sess-003',
+    started: '2025-09-10 08:30:00',
+    lastAccess: '2025-09-10 17:00:00',
+    ipAddress: '192.168.1.102',
+    device: 'Safari / iOS',
+  },
 ];
 
 /* ----------------------------------------
@@ -195,9 +211,7 @@ function InfoCard({ label, value, statusIndicator }: InfoCardProps) {
         <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)]">
           {label}
         </span>
-        <span className="text-[12px] leading-4 text-[var(--color-text-default)]">
-          {value}
-        </span>
+        <span className="text-[12px] leading-4 text-[var(--color-text-default)]">{value}</span>
       </div>
       {statusIndicator}
     </div>
@@ -217,10 +231,11 @@ export default function IAMSystemAdminDetailPage() {
   const [sessionsCurrentPage, setSessionsCurrentPage] = useState(1);
 
   // Get admin data based on URL username
-  const admin = username ? (mockAdminsMap[username] || defaultAdminDetail) : defaultAdminDetail;
+  const admin = username ? mockAdminsMap[username] || defaultAdminDetail : defaultAdminDetail;
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } =
+    useTabs();
 
   // Update tab label to username
   useEffect(() => {
@@ -247,9 +262,10 @@ export default function IAMSystemAdminDetailPage() {
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
   // Filter sessions by search query
-  const filteredSessions = mockSessions.filter(session =>
-    session.ipAddress.toLowerCase().includes(sessionsSearchQuery.toLowerCase()) ||
-    session.device.toLowerCase().includes(sessionsSearchQuery.toLowerCase())
+  const filteredSessions = mockSessions.filter(
+    (session) =>
+      session.ipAddress.toLowerCase().includes(sessionsSearchQuery.toLowerCase()) ||
+      session.device.toLowerCase().includes(sessionsSearchQuery.toLowerCase())
   );
 
   // Sessions pagination
@@ -347,7 +363,10 @@ export default function IAMSystemAdminDetailPage() {
       width: 72,
       align: 'center',
       render: (_value, row) => (
-        <ContextMenu items={sessionContextMenuItems} onSelect={(itemId) => console.log(itemId, row.id)}>
+        <ContextMenu
+          items={sessionContextMenuItems}
+          onSelect={(itemId) => console.log(itemId, row.id)}
+        >
           <button
             type="button"
             className="p-1.5 rounded-md hover:bg-[var(--color-surface-subtle)] transition-colors"
@@ -412,8 +431,15 @@ export default function IAMSystemAdminDetailPage() {
                     <Button variant="secondary" size="sm">
                       Lock setting
                     </Button>
-                    <ContextMenu items={moreActionsItems} onSelect={(itemId) => console.log(itemId)}>
-                      <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
+                    <ContextMenu
+                      items={moreActionsItems}
+                      onSelect={(itemId) => console.log(itemId)}
+                    >
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        rightIcon={<IconChevronDown size={12} />}
+                      >
                         More Actions
                       </Button>
                     </ContextMenu>
@@ -424,7 +450,11 @@ export default function IAMSystemAdminDetailPage() {
                     <InfoCard
                       label="Status"
                       value={admin.status === 'online' ? 'Online' : 'Offline'}
-                      statusIndicator={<StatusIndicator status={admin.status === 'online' ? 'active' : 'shutoff'} />}
+                      statusIndicator={
+                        <StatusIndicator
+                          status={admin.status === 'online' ? 'active' : 'shutoff'}
+                        />
+                      }
                     />
                     <InfoCard label="Display name" value={admin.displayName} />
                     <InfoCard label="Email address" value={admin.email} />
@@ -472,11 +502,7 @@ export default function IAMSystemAdminDetailPage() {
                     <SectionCard>
                       <SectionCard.Header title={`MFA (${mockMFAMethods.length})`} />
                       <SectionCard.Content>
-                        <Table
-                          columns={mfaColumns}
-                          data={mockMFAMethods}
-                          rowKey="id"
-                        />
+                        <Table columns={mfaColumns} data={mockMFAMethods} rowKey="id" />
                       </SectionCard.Content>
                     </SectionCard>
                   </VStack>
@@ -508,10 +534,7 @@ export default function IAMSystemAdminDetailPage() {
                         />
                       </HStack>
                       <div className="w-px h-4 bg-[var(--color-border-default)]" />
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                      >
+                      <Button variant="secondary" size="sm">
                         Terminate all sessions
                       </Button>
                     </HStack>
@@ -521,16 +544,11 @@ export default function IAMSystemAdminDetailPage() {
                       currentPage={sessionsCurrentPage}
                       totalPages={sessionsTotalPages || 1}
                       onPageChange={setSessionsCurrentPage}
-                      showSettings
                       totalItems={filteredSessions.length}
                     />
 
                     {/* Sessions Table */}
-                    <Table
-                      columns={sessionColumns}
-                      data={paginatedSessions}
-                      rowKey="id"
-                    />
+                    <Table columns={sessionColumns} data={paginatedSessions} rowKey="id" />
                   </VStack>
                 </TabPanel>
               </Tabs>
@@ -541,4 +559,3 @@ export default function IAMSystemAdminDetailPage() {
     </div>
   );
 }
-

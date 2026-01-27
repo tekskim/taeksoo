@@ -76,7 +76,8 @@ const sampleNotifications: NotificationItem[] = [
     isRead: false,
     detail: {
       code: 'ECONNREFUSED',
-      message: 'Connection refused at 10.0.1.50:5432. Please check if the database server is running.',
+      message:
+        'Connection refused at 10.0.1.50:5432. Please check if the database server is running.',
     },
   },
   {
@@ -120,17 +121,15 @@ export const Default: Story = {
 export const Interactive: Story = {
   render: function InteractiveStory() {
     const [notifications, setNotifications] = useState<NotificationItem[]>(sampleNotifications);
-    
+
     const handleMarkAsRead = (id: string) => {
-      setNotifications(prev => 
-        prev.map(n => n.id === id ? { ...n, isRead: true } : n)
-      );
+      setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, isRead: true } : n)));
     };
-    
+
     const handleMarkAllAsRead = () => {
-      setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
+      setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
     };
-    
+
     return (
       <NotificationCenter
         notifications={notifications}
@@ -157,7 +156,7 @@ export const EmptyState: Story = {
 export const AllRead: Story = {
   render: () => (
     <NotificationCenter
-      notifications={sampleNotifications.map(n => ({ ...n, isRead: true }))}
+      notifications={sampleNotifications.map((n) => ({ ...n, isRead: true }))}
       onMarkAsRead={(id) => console.log('Mark as read:', id)}
       onMarkAllAsRead={() => console.log('Mark all as read')}
     />
@@ -222,7 +221,8 @@ export const WithDetails: Story = {
           isRead: false,
           detail: {
             code: 'DEPLOY_FAILED',
-            message: 'Container failed health check after 3 attempts. Last error: Connection timeout to upstream service.',
+            message:
+              'Container failed health check after 3 attempts. Last error: Connection timeout to upstream service.',
           },
         },
         {
@@ -234,7 +234,8 @@ export const WithDetails: Story = {
           isRead: false,
           detail: {
             code: 'MEM_HIGH',
-            message: 'Memory usage at 92%. Consider scaling up or optimizing memory-intensive processes.',
+            message:
+              'Memory usage at 92%. Consider scaling up or optimizing memory-intensive processes.',
           },
         },
       ]}

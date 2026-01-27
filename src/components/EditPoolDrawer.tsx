@@ -50,9 +50,12 @@ const algorithmOptions = [
 ];
 
 const algorithmDescriptions: Record<AlgorithmType, string> = {
-  ROUND_ROBIN: 'Round Robin : Each new connection request is assigned to the next server in order, ensuring even distribution. Best for short-lived HTTP connections.',
-  LEAST_CONNECTIONS: 'Least Connections : Routes requests to the server with the fewest active connections. Ideal for long-lived connections.',
-  SOURCE_IP: 'Source IP : Routes requests from the same client IP to the same backend server. Good for stateful applications.',
+  ROUND_ROBIN:
+    'Round Robin : Each new connection request is assigned to the next server in order, ensuring even distribution. Best for short-lived HTTP connections.',
+  LEAST_CONNECTIONS:
+    'Least Connections : Routes requests to the server with the fewest active connections. Ideal for long-lived connections.',
+  SOURCE_IP:
+    'Source IP : Routes requests from the same client IP to the same backend server. Good for stateful applications.',
 };
 
 const sessionPersistenceOptions = [
@@ -66,12 +69,7 @@ const sessionPersistenceOptions = [
    EditPoolDrawer Component
    ---------------------------------------- */
 
-export function EditPoolDrawer({
-  isOpen,
-  onClose,
-  pool,
-  onSubmit,
-}: EditPoolDrawerProps) {
+export function EditPoolDrawer({ isOpen, onClose, pool, onSubmit }: EditPoolDrawerProps) {
   const [name, setName] = useState(pool.name);
   const [description, setDescription] = useState(pool.description || '');
   const [algorithm, setAlgorithm] = useState<AlgorithmType>(pool.algorithm);
@@ -102,7 +100,7 @@ export function EditPoolDrawer({
 
   const handleSubmit = async () => {
     if (!name.trim()) return;
-    
+
     setIsSubmitting(true);
     try {
       await onSubmit?.({
@@ -110,7 +108,8 @@ export function EditPoolDrawer({
         description,
         algorithm,
         sessionPersistenceType,
-        sessionPersistenceCookieName: sessionPersistenceType === 'APP_COOKIE' ? cookieName : undefined,
+        sessionPersistenceCookieName:
+          sessionPersistenceType === 'APP_COOKIE' ? cookieName : undefined,
         tlsEnabled,
         tlsCiphers: tlsEnabled ? tlsCiphers : undefined,
         adminStateUp,
@@ -125,7 +124,6 @@ export function EditPoolDrawer({
     onClose();
   };
 
-
   return (
     <Drawer
       isOpen={isOpen}
@@ -135,15 +133,11 @@ export function EditPoolDrawer({
       width={376}
       footer={
         <HStack gap={2} className="w-full">
-          <Button 
-            variant="secondary" 
-            onClick={handleClose}
-            className="flex-1 h-8"
-          >
+          <Button variant="secondary" onClick={handleClose} className="flex-1 h-8">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={handleSubmit}
             disabled={isSubmitting}
             className="flex-1 h-8"
@@ -241,7 +235,7 @@ export function EditPoolDrawer({
                 options={sessionPersistenceOptions}
                 fullWidth
               />
-              
+
               {sessionPersistenceType === 'APP_COOKIE' && (
                 <>
                   <Input
@@ -265,15 +259,12 @@ export function EditPoolDrawer({
             Backend TLS
           </label>
           <HStack gap={2} className="items-center">
-            <Toggle 
-              checked={tlsEnabled} 
-              onChange={(e) => setTlsEnabled(e.target.checked)} 
-            />
+            <Toggle checked={tlsEnabled} onChange={(e) => setTlsEnabled(e.target.checked)} />
             <span className="text-[12px] text-[var(--color-text-default)] leading-4">
               {tlsEnabled ? 'On' : 'Off'}
             </span>
           </HStack>
-          
+
           {tlsEnabled && (
             <>
               <Textarea
@@ -284,7 +275,8 @@ export function EditPoolDrawer({
                 fullWidth
               />
               <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
-                Use a colon-separated list of cipher names (e.g., CIPHER1:CIPHER2). Spaces and special characters are not allowed.
+                Use a colon-separated list of cipher names (e.g., CIPHER1:CIPHER2). Spaces and
+                special characters are not allowed.
               </p>
             </>
           )}
@@ -296,10 +288,7 @@ export function EditPoolDrawer({
             Admin State
           </label>
           <HStack gap={2} className="items-center">
-            <Toggle 
-              checked={adminStateUp} 
-              onChange={(e) => setAdminStateUp(e.target.checked)} 
-            />
+            <Toggle checked={adminStateUp} onChange={(e) => setAdminStateUp(e.target.checked)} />
             <span className="text-[12px] text-[var(--color-text-default)] leading-4">
               {adminStateUp ? 'Up' : 'Down'}
             </span>
@@ -311,4 +300,3 @@ export function EditPoolDrawer({
 }
 
 export default EditPoolDrawer;
-

@@ -55,36 +55,24 @@ describe('Loading', () => {
     });
 
     it('renders with status text', () => {
-      render(
-        <Loading
-          variant="progress"
-          text="Uploading"
-          statusText="50% complete"
-        />
-      );
+      render(<Loading variant="progress" text="Uploading" statusText="50% complete" />);
       expect(screen.getByText('50% complete')).toBeInTheDocument();
     });
 
     it('clamps progress value to 0-100', () => {
-      const { container } = render(
-        <Loading variant="progress" progress={150} />
-      );
+      const { container } = render(<Loading variant="progress" progress={150} />);
       const progressBar = container.querySelector('[style*="width"]');
       expect(progressBar).toHaveStyle({ width: '100%' });
     });
 
     it('clamps negative progress value', () => {
-      const { container } = render(
-        <Loading variant="progress" progress={-50} />
-      );
+      const { container } = render(<Loading variant="progress" progress={-50} />);
       const progressBar = container.querySelector('[style*="width"]');
       expect(progressBar).toHaveStyle({ width: '0%' });
     });
 
     it('renders progress value correctly', () => {
-      const { container } = render(
-        <Loading variant="progress" progress={75} />
-      );
+      const { container } = render(<Loading variant="progress" progress={75} />);
       const progressBar = container.querySelector('[style*="width"]');
       expect(progressBar).toHaveStyle({ width: '75%' });
     });

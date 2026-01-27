@@ -1,11 +1,6 @@
 import { useState, useCallback } from 'react';
 import { Drawer, Button, Select } from '@/design-system';
-import {
-  IconGripVertical,
-  IconEye,
-  IconEyeOff,
-  IconRefresh,
-} from '@tabler/icons-react';
+import { IconGripVertical, IconEye, IconEyeOff, IconRefresh } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -109,22 +104,25 @@ export function ViewPreferencesDrawer({
     setDraggedIndex(index);
   }, []);
 
-  const handleDragOver = useCallback((e: React.DragEvent, index: number) => {
-    e.preventDefault();
-    if (draggedIndex === null || draggedIndex === index) return;
+  const handleDragOver = useCallback(
+    (e: React.DragEvent, index: number) => {
+      e.preventDefault();
+      if (draggedIndex === null || draggedIndex === index) return;
 
-    const draggedColumn = localColumns[draggedIndex];
-    const targetColumn = localColumns[index];
+      const draggedColumn = localColumns[draggedIndex];
+      const targetColumn = localColumns[index];
 
-    // Don't allow reordering locked columns
-    if (draggedColumn.locked || targetColumn.locked) return;
+      // Don't allow reordering locked columns
+      if (draggedColumn.locked || targetColumn.locked) return;
 
-    const newColumns = [...localColumns];
-    newColumns.splice(draggedIndex, 1);
-    newColumns.splice(index, 0, draggedColumn);
-    setLocalColumns(newColumns);
-    setDraggedIndex(index);
-  }, [draggedIndex, localColumns]);
+      const newColumns = [...localColumns];
+      newColumns.splice(draggedIndex, 1);
+      newColumns.splice(index, 0, draggedColumn);
+      setLocalColumns(newColumns);
+      setDraggedIndex(index);
+    },
+    [draggedIndex, localColumns]
+  );
 
   const handleDragEnd = useCallback(() => {
     setDraggedIndex(null);
@@ -208,9 +206,10 @@ export function ViewPreferencesDrawer({
                   bg-[var(--color-surface-default)]
                   border border-solid rounded-[6px]
                   transition-colors
-                  ${column.locked 
-                    ? 'border-[var(--color-border-default)]' 
-                    : 'border-[var(--color-border-strong)] cursor-grab active:cursor-grabbing'
+                  ${
+                    column.locked
+                      ? 'border-[var(--color-border-default)]'
+                      : 'border-[var(--color-border-strong)] cursor-grab active:cursor-grabbing'
                   }
                   ${draggedIndex === index ? 'opacity-50' : ''}
                 `}
@@ -253,4 +252,3 @@ export function ViewPreferencesDrawer({
 
 export { defaultColumns };
 export default ViewPreferencesDrawer;
-

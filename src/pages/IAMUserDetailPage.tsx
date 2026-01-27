@@ -23,13 +23,7 @@ import {
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconEdit,
-  IconTrash,
-  IconChevronDown,
-  IconBell,
-  IconRefresh,
-} from '@tabler/icons-react';
+import { IconEdit, IconTrash, IconChevronDown, IconBell, IconRefresh } from '@tabler/icons-react';
 import { IconAction } from '@/design-system';
 import { Link } from 'react-router-dom';
 
@@ -168,51 +162,284 @@ const defaultUserDetail: UserDetail = {
 };
 
 const mockUserGroups: UserGroup[] = [
-  { id: 'ug-001', name: 'dev-admin-group', users: 100, attachedRoles: 'admin (+3)', description: 'the development team' },
-  { id: 'ug-002', name: 'ops-team', users: 25, attachedRoles: 'network-admin (+1)', description: 'Operations team' },
-  { id: 'ug-003', name: 'qa-team', users: 15, attachedRoles: 'qa-lead (+2)', description: 'Quality assurance team' },
+  {
+    id: 'ug-001',
+    name: 'dev-admin-group',
+    users: 100,
+    attachedRoles: 'admin (+3)',
+    description: 'the development team',
+  },
+  {
+    id: 'ug-002',
+    name: 'ops-team',
+    users: 25,
+    attachedRoles: 'network-admin (+1)',
+    description: 'Operations team',
+  },
+  {
+    id: 'ug-003',
+    name: 'qa-team',
+    users: 15,
+    attachedRoles: 'qa-lead (+2)',
+    description: 'Quality assurance team',
+  },
 ];
 
 const mockAccessKeys: AccessKey[] = [
-  { id: 'ak-001', keyId: 'AKIA112AK3IALQI2', description: '-', lastUsed: '2025-09-12 12:33:15', createdAt: '2025-09-12 12:33:15', status: 'active' },
+  {
+    id: 'ak-001',
+    keyId: 'AKIA112AK3IALQI2',
+    description: '-',
+    lastUsed: '2025-09-12 12:33:15',
+    createdAt: '2025-09-12 12:33:15',
+    status: 'active',
+  },
 ];
 
 const mockSessions: Session[] = [
-  { id: 's-001', started: '2025-11-04 14:31:34', lastAccess: '2025-11-04 15:23:22', ipAddress: '10.2.40.25', device: 'Chrome/Mac OS' },
-  { id: 's-002', started: '2025-11-03 09:15:00', lastAccess: '2025-11-03 17:45:30', ipAddress: '192.168.1.100', device: 'Firefox/Windows' },
-  { id: 's-003', started: '2025-11-02 10:00:00', lastAccess: '2025-11-02 18:30:00', ipAddress: '10.2.40.30', device: 'Safari/iOS' },
-  { id: 's-004', started: '2025-11-01 08:45:00', lastAccess: '2025-11-01 16:20:00', ipAddress: '172.16.0.50', device: 'Edge/Windows' },
-  { id: 's-005', started: '2025-10-31 11:30:00', lastAccess: '2025-10-31 19:00:00', ipAddress: '10.2.40.45', device: 'Chrome/Linux' },
-  { id: 's-006', started: '2025-10-30 07:00:00', lastAccess: '2025-10-30 15:45:00', ipAddress: '192.168.2.75', device: 'Firefox/Mac OS' },
-  { id: 's-007', started: '2025-10-29 13:20:00', lastAccess: '2025-10-29 21:10:00', ipAddress: '10.2.40.60', device: 'Safari/Mac OS' },
-  { id: 's-008', started: '2025-10-28 09:00:00', lastAccess: '2025-10-28 17:30:00', ipAddress: '172.16.0.80', device: 'Chrome/Android' },
-  { id: 's-009', started: '2025-10-27 06:30:00', lastAccess: '2025-10-27 14:45:00', ipAddress: '10.2.40.70', device: 'Firefox/Linux' },
-  { id: 's-010', started: '2025-10-26 12:15:00', lastAccess: '2025-10-26 20:00:00', ipAddress: '192.168.3.90', device: 'Edge/Mac OS' },
-  { id: 's-011', started: '2025-10-25 08:00:00', lastAccess: '2025-10-25 16:30:00', ipAddress: '10.2.40.85', device: 'Chrome/Windows' },
-  { id: 's-012', started: '2025-10-24 10:45:00', lastAccess: '2025-10-24 18:15:00', ipAddress: '172.16.0.100', device: 'Safari/iOS' },
-  { id: 's-013', started: '2025-10-23 07:30:00', lastAccess: '2025-10-23 15:00:00', ipAddress: '10.2.40.95', device: 'Firefox/Windows' },
-  { id: 's-014', started: '2025-10-22 11:00:00', lastAccess: '2025-10-22 19:30:00', ipAddress: '192.168.4.110', device: 'Chrome/Linux' },
-  { id: 's-015', started: '2025-10-21 09:15:00', lastAccess: '2025-10-21 17:45:00', ipAddress: '10.2.40.105', device: 'Edge/Windows' },
-  { id: 's-016', started: '2025-10-20 06:00:00', lastAccess: '2025-10-20 14:30:00', ipAddress: '172.16.0.120', device: 'Safari/Mac OS' },
+  {
+    id: 's-001',
+    started: '2025-11-04 14:31:34',
+    lastAccess: '2025-11-04 15:23:22',
+    ipAddress: '10.2.40.25',
+    device: 'Chrome/Mac OS',
+  },
+  {
+    id: 's-002',
+    started: '2025-11-03 09:15:00',
+    lastAccess: '2025-11-03 17:45:30',
+    ipAddress: '192.168.1.100',
+    device: 'Firefox/Windows',
+  },
+  {
+    id: 's-003',
+    started: '2025-11-02 10:00:00',
+    lastAccess: '2025-11-02 18:30:00',
+    ipAddress: '10.2.40.30',
+    device: 'Safari/iOS',
+  },
+  {
+    id: 's-004',
+    started: '2025-11-01 08:45:00',
+    lastAccess: '2025-11-01 16:20:00',
+    ipAddress: '172.16.0.50',
+    device: 'Edge/Windows',
+  },
+  {
+    id: 's-005',
+    started: '2025-10-31 11:30:00',
+    lastAccess: '2025-10-31 19:00:00',
+    ipAddress: '10.2.40.45',
+    device: 'Chrome/Linux',
+  },
+  {
+    id: 's-006',
+    started: '2025-10-30 07:00:00',
+    lastAccess: '2025-10-30 15:45:00',
+    ipAddress: '192.168.2.75',
+    device: 'Firefox/Mac OS',
+  },
+  {
+    id: 's-007',
+    started: '2025-10-29 13:20:00',
+    lastAccess: '2025-10-29 21:10:00',
+    ipAddress: '10.2.40.60',
+    device: 'Safari/Mac OS',
+  },
+  {
+    id: 's-008',
+    started: '2025-10-28 09:00:00',
+    lastAccess: '2025-10-28 17:30:00',
+    ipAddress: '172.16.0.80',
+    device: 'Chrome/Android',
+  },
+  {
+    id: 's-009',
+    started: '2025-10-27 06:30:00',
+    lastAccess: '2025-10-27 14:45:00',
+    ipAddress: '10.2.40.70',
+    device: 'Firefox/Linux',
+  },
+  {
+    id: 's-010',
+    started: '2025-10-26 12:15:00',
+    lastAccess: '2025-10-26 20:00:00',
+    ipAddress: '192.168.3.90',
+    device: 'Edge/Mac OS',
+  },
+  {
+    id: 's-011',
+    started: '2025-10-25 08:00:00',
+    lastAccess: '2025-10-25 16:30:00',
+    ipAddress: '10.2.40.85',
+    device: 'Chrome/Windows',
+  },
+  {
+    id: 's-012',
+    started: '2025-10-24 10:45:00',
+    lastAccess: '2025-10-24 18:15:00',
+    ipAddress: '172.16.0.100',
+    device: 'Safari/iOS',
+  },
+  {
+    id: 's-013',
+    started: '2025-10-23 07:30:00',
+    lastAccess: '2025-10-23 15:00:00',
+    ipAddress: '10.2.40.95',
+    device: 'Firefox/Windows',
+  },
+  {
+    id: 's-014',
+    started: '2025-10-22 11:00:00',
+    lastAccess: '2025-10-22 19:30:00',
+    ipAddress: '192.168.4.110',
+    device: 'Chrome/Linux',
+  },
+  {
+    id: 's-015',
+    started: '2025-10-21 09:15:00',
+    lastAccess: '2025-10-21 17:45:00',
+    ipAddress: '10.2.40.105',
+    device: 'Edge/Windows',
+  },
+  {
+    id: 's-016',
+    started: '2025-10-20 06:00:00',
+    lastAccess: '2025-10-20 14:30:00',
+    ipAddress: '172.16.0.120',
+    device: 'Safari/Mac OS',
+  },
 ];
 
 const mockRoles: Role[] = [
-  { id: 'r-001', name: 'viewer', source: 'Direct', type: 'Built-in', policies: 'ReadCompute (+2)', createdAt: '2025-09-12' },
-  { id: 'r-002', name: 'compute-admin', source: 'Group', type: 'Built-in', policies: 'ComputeFullAccess (+5)', createdAt: '2025-08-20' },
-  { id: 'r-003', name: 'storage-viewer', source: 'Direct', type: 'Custom', policies: 'StorageReadOnly', createdAt: '2025-07-15' },
-  { id: 'r-004', name: 'network-admin', source: 'Group', type: 'Built-in', policies: 'NetworkFullAccess (+3)', createdAt: '2025-06-10' },
-  { id: 'r-005', name: 'iam-reader', source: 'Direct', type: 'Built-in', policies: 'IAMReadOnly (+1)', createdAt: '2025-05-05' },
-  { id: 'r-006', name: 'security-auditor', source: 'Direct', type: 'Custom', policies: 'SecurityAudit (+2)', createdAt: '2025-04-01' },
-  { id: 'r-007', name: 'billing-viewer', source: 'Group', type: 'Built-in', policies: 'BillingReadOnly', createdAt: '2025-03-15' },
-  { id: 'r-008', name: 'developer', source: 'Direct', type: 'Custom', policies: 'DevAccess (+4)', createdAt: '2025-02-20' },
-  { id: 'r-009', name: 'operator', source: 'Group', type: 'Built-in', policies: 'OperatorAccess (+2)', createdAt: '2025-01-10' },
-  { id: 'r-010', name: 'support', source: 'Direct', type: 'Custom', policies: 'SupportAccess (+1)', createdAt: '2024-12-05' },
-  { id: 'r-011', name: 'data-analyst', source: 'Direct', type: 'Built-in', policies: 'DataReadOnly (+3)', createdAt: '2024-11-20' },
-  { id: 'r-012', name: 'db-admin', source: 'Group', type: 'Custom', policies: 'DatabaseAdmin (+4)', createdAt: '2024-10-15' },
-  { id: 'r-013', name: 'container-admin', source: 'Direct', type: 'Built-in', policies: 'ContainerFullAccess', createdAt: '2024-09-10' },
-  { id: 'r-014', name: 'monitoring-viewer', source: 'Group', type: 'Built-in', policies: 'MonitoringRead (+2)', createdAt: '2024-08-05' },
-  { id: 'r-015', name: 'log-analyst', source: 'Direct', type: 'Custom', policies: 'LogReadOnly (+1)', createdAt: '2024-07-01' },
-  { id: 'r-016', name: 'backup-operator', source: 'Group', type: 'Built-in', policies: 'BackupAccess (+2)', createdAt: '2024-06-15' },
+  {
+    id: 'r-001',
+    name: 'viewer',
+    source: 'Direct',
+    type: 'Built-in',
+    policies: 'ReadCompute (+2)',
+    createdAt: '2025-09-12',
+  },
+  {
+    id: 'r-002',
+    name: 'compute-admin',
+    source: 'Group',
+    type: 'Built-in',
+    policies: 'ComputeFullAccess (+5)',
+    createdAt: '2025-08-20',
+  },
+  {
+    id: 'r-003',
+    name: 'storage-viewer',
+    source: 'Direct',
+    type: 'Custom',
+    policies: 'StorageReadOnly',
+    createdAt: '2025-07-15',
+  },
+  {
+    id: 'r-004',
+    name: 'network-admin',
+    source: 'Group',
+    type: 'Built-in',
+    policies: 'NetworkFullAccess (+3)',
+    createdAt: '2025-06-10',
+  },
+  {
+    id: 'r-005',
+    name: 'iam-reader',
+    source: 'Direct',
+    type: 'Built-in',
+    policies: 'IAMReadOnly (+1)',
+    createdAt: '2025-05-05',
+  },
+  {
+    id: 'r-006',
+    name: 'security-auditor',
+    source: 'Direct',
+    type: 'Custom',
+    policies: 'SecurityAudit (+2)',
+    createdAt: '2025-04-01',
+  },
+  {
+    id: 'r-007',
+    name: 'billing-viewer',
+    source: 'Group',
+    type: 'Built-in',
+    policies: 'BillingReadOnly',
+    createdAt: '2025-03-15',
+  },
+  {
+    id: 'r-008',
+    name: 'developer',
+    source: 'Direct',
+    type: 'Custom',
+    policies: 'DevAccess (+4)',
+    createdAt: '2025-02-20',
+  },
+  {
+    id: 'r-009',
+    name: 'operator',
+    source: 'Group',
+    type: 'Built-in',
+    policies: 'OperatorAccess (+2)',
+    createdAt: '2025-01-10',
+  },
+  {
+    id: 'r-010',
+    name: 'support',
+    source: 'Direct',
+    type: 'Custom',
+    policies: 'SupportAccess (+1)',
+    createdAt: '2024-12-05',
+  },
+  {
+    id: 'r-011',
+    name: 'data-analyst',
+    source: 'Direct',
+    type: 'Built-in',
+    policies: 'DataReadOnly (+3)',
+    createdAt: '2024-11-20',
+  },
+  {
+    id: 'r-012',
+    name: 'db-admin',
+    source: 'Group',
+    type: 'Custom',
+    policies: 'DatabaseAdmin (+4)',
+    createdAt: '2024-10-15',
+  },
+  {
+    id: 'r-013',
+    name: 'container-admin',
+    source: 'Direct',
+    type: 'Built-in',
+    policies: 'ContainerFullAccess',
+    createdAt: '2024-09-10',
+  },
+  {
+    id: 'r-014',
+    name: 'monitoring-viewer',
+    source: 'Group',
+    type: 'Built-in',
+    policies: 'MonitoringRead (+2)',
+    createdAt: '2024-08-05',
+  },
+  {
+    id: 'r-015',
+    name: 'log-analyst',
+    source: 'Direct',
+    type: 'Custom',
+    policies: 'LogReadOnly (+1)',
+    createdAt: '2024-07-01',
+  },
+  {
+    id: 'r-016',
+    name: 'backup-operator',
+    source: 'Group',
+    type: 'Built-in',
+    policies: 'BackupAccess (+2)',
+    createdAt: '2024-06-15',
+  },
 ];
 
 /* ----------------------------------------
@@ -232,9 +459,7 @@ function InfoCard({ label, value, statusIndicator }: InfoCardProps) {
         <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)]">
           {label}
         </span>
-        <span className="text-[12px] leading-4 text-[var(--color-text-default)]">
-          {value}
-        </span>
+        <span className="text-[12px] leading-4 text-[var(--color-text-default)]">{value}</span>
       </div>
       {statusIndicator}
     </div>
@@ -258,10 +483,11 @@ export function IAMUserDetailPage() {
   const [sessionsCurrentPage, setSessionsCurrentPage] = useState(1);
 
   // Get user data based on URL username
-  const user = username ? (mockUsersMap[username] || defaultUserDetail) : defaultUserDetail;
+  const user = username ? mockUsersMap[username] || defaultUserDetail : defaultUserDetail;
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } =
+    useTabs();
 
   // Update tab label to username
   useEffect(() => {
@@ -288,9 +514,10 @@ export function IAMUserDetailPage() {
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
   // Filter user groups by search query
-  const filteredGroups = mockUserGroups.filter(group =>
-    group.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    group.description.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredGroups = mockUserGroups.filter(
+    (group) =>
+      group.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      group.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   // User groups pagination
@@ -302,10 +529,11 @@ export function IAMUserDetailPage() {
   );
 
   // Filter roles by search query
-  const filteredRoles = mockRoles.filter(role =>
-    role.name.toLowerCase().includes(rolesSearchQuery.toLowerCase()) ||
-    role.source.toLowerCase().includes(rolesSearchQuery.toLowerCase()) ||
-    role.policies.toLowerCase().includes(rolesSearchQuery.toLowerCase())
+  const filteredRoles = mockRoles.filter(
+    (role) =>
+      role.name.toLowerCase().includes(rolesSearchQuery.toLowerCase()) ||
+      role.source.toLowerCase().includes(rolesSearchQuery.toLowerCase()) ||
+      role.policies.toLowerCase().includes(rolesSearchQuery.toLowerCase())
   );
 
   // Roles pagination
@@ -316,9 +544,10 @@ export function IAMUserDetailPage() {
   );
 
   // Filter sessions by search query
-  const filteredSessions = mockSessions.filter(session =>
-    session.ipAddress.toLowerCase().includes(sessionsSearchQuery.toLowerCase()) ||
-    session.device.toLowerCase().includes(sessionsSearchQuery.toLowerCase())
+  const filteredSessions = mockSessions.filter(
+    (session) =>
+      session.ipAddress.toLowerCase().includes(sessionsSearchQuery.toLowerCase()) ||
+      session.device.toLowerCase().includes(sessionsSearchQuery.toLowerCase())
   );
 
   // Sessions pagination
@@ -333,32 +562,43 @@ export function IAMUserDetailPage() {
 
   // Context menu items factory functions (to include row-specific onClick handlers)
   const getGroupContextMenuItems = (rowId: string): ContextMenuItem[] => [
-    { 
-      id: 'detach', 
-      label: 'Detach', 
-      status: isUserLocked ? undefined : 'danger', 
+    {
+      id: 'detach',
+      label: 'Detach',
+      status: isUserLocked ? undefined : 'danger',
       disabled: isUserLocked,
-      onClick: () => console.log('Detach group', rowId) 
+      onClick: () => console.log('Detach group', rowId),
     },
   ];
 
   const getRoleContextMenuItems = (rowId: string): ContextMenuItem[] => [
-    { 
-      id: 'detach', 
-      label: 'Detach', 
-      status: isUserLocked ? undefined : 'danger', 
+    {
+      id: 'detach',
+      label: 'Detach',
+      status: isUserLocked ? undefined : 'danger',
       disabled: isUserLocked,
-      onClick: () => console.log('Detach role', rowId) 
+      onClick: () => console.log('Detach role', rowId),
     },
   ];
 
   const getAccessKeyContextMenuItems = (rowId: string): ContextMenuItem[] => [
     { id: 'deactivate', label: 'Deactivate', onClick: () => console.log('Deactivate', rowId) },
-    { id: 'delete', label: 'Delete', status: 'danger', divider: true, onClick: () => console.log('Delete', rowId) },
+    {
+      id: 'delete',
+      label: 'Delete',
+      status: 'danger',
+      divider: true,
+      onClick: () => console.log('Delete', rowId),
+    },
   ];
 
   const getSessionContextMenuItems = (rowId: string): ContextMenuItem[] => [
-    { id: 'terminate', label: 'Terminate', status: 'danger', onClick: () => console.log('Terminate', rowId) },
+    {
+      id: 'terminate',
+      label: 'Terminate',
+      status: 'danger',
+      onClick: () => console.log('Terminate', rowId),
+    },
   ];
 
   // Table columns for sessions
@@ -411,9 +651,7 @@ export function IAMUserDetailPage() {
       label: 'Status',
       width: 64,
       align: 'center',
-      render: (value) => (
-        <StatusIndicator status={value === 'active' ? 'active' : 'shutoff'} />
-      ),
+      render: (value) => <StatusIndicator status={value === 'active' ? 'active' : 'shutoff'} />,
     },
     {
       key: 'keyId',
@@ -465,7 +703,7 @@ export function IAMUserDetailPage() {
       flex: 1,
       sortable: true,
       render: (value) => (
-        <Link 
+        <Link
           to={`/iam/roles/${value}`}
           className="text-[var(--color-action-primary)] font-medium hover:underline"
         >
@@ -520,7 +758,7 @@ export function IAMUserDetailPage() {
       flex: 1,
       sortable: true,
       render: (value) => (
-        <Link 
+        <Link
           to={`/iam/user-groups/${value}`}
           className="text-[var(--color-action-primary)] font-medium hover:underline"
         >
@@ -665,7 +903,12 @@ export function IAMUserDetailPage() {
 
               {/* Tabs Section */}
               <div className="w-full">
-                <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline" size="sm">
+                <Tabs
+                  value={activeDetailTab}
+                  onChange={setActiveDetailTab}
+                  variant="underline"
+                  size="sm"
+                >
                   <TabList>
                     <Tab value="user-groups">User groups</Tab>
                     <Tab value="roles">Roles</Tab>
@@ -703,11 +946,7 @@ export function IAMUserDetailPage() {
                       />
 
                       {/* Table */}
-                      <Table<UserGroup>
-                        columns={groupColumns}
-                        data={paginatedGroups}
-                        rowKey="id"
-                      />
+                      <Table<UserGroup> columns={groupColumns} data={paginatedGroups} rowKey="id" />
                     </VStack>
                   </TabPanel>
 
@@ -741,11 +980,7 @@ export function IAMUserDetailPage() {
                       />
 
                       {/* Table */}
-                      <Table<Role>
-                        columns={roleColumns}
-                        data={paginatedRoles}
-                        rowKey="id"
-                      />
+                      <Table<Role> columns={roleColumns} data={paginatedRoles} rowKey="id" />
                     </VStack>
                   </TabPanel>
 
@@ -781,14 +1016,8 @@ export function IAMUserDetailPage() {
                           }
                         />
                         <SectionCard.Content>
-                          <SectionCard.DataRow
-                            label="Last used"
-                            value="2025.11.11 14:22:43"
-                          />
-                          <SectionCard.DataRow
-                            label="Created at"
-                            value="2025.11.11 14:22:43"
-                          />
+                          <SectionCard.DataRow label="Last used" value="2025.11.11 14:22:43" />
+                          <SectionCard.DataRow label="Created at" value="2025.11.11 14:22:43" />
                         </SectionCard.Content>
                       </SectionCard>
 
@@ -868,4 +1097,3 @@ export function IAMUserDetailPage() {
 }
 
 export default IAMUserDetailPage;
-

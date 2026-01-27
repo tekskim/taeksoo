@@ -27,7 +27,6 @@ import {
   IconTrash,
   IconBell,
   IconChevronDown,
-  IconCirclePlus,
   IconDotsCircleHorizontal,
   IconUsers,
 } from '@tabler/icons-react';
@@ -191,14 +190,15 @@ const memberStatusMap: Record<MemberStatus, 'active' | 'down' | 'error'> = {
 
 export default function PoolDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
-  
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } =
+    useTabs();
+
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeDetailTab, setActiveDetailTab] = useState('details');
   const [copiedId, setCopiedId] = useState(false);
 
   // Get pool based on URL id
-  const pool = id ? (mockPoolsMap[id] || defaultPoolDetail) : defaultPoolDetail;
+  const pool = id ? mockPoolsMap[id] || defaultPoolDetail : defaultPoolDetail;
 
   // Update tab label when pool name changes
   useEffect(() => {
@@ -211,7 +211,7 @@ export default function PoolDetailPage() {
   const [memberSearchTerm, setMemberSearchTerm] = useState('');
   const [memberCurrentPage, setMemberCurrentPage] = useState(1);
   const membersPerPage = 10;
-  
+
   // Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
   const healthMonitor = mockHealthMonitor;
@@ -225,7 +225,7 @@ export default function PoolDetailPage() {
   ];
 
   // Convert tabs to TabBar format
-  const tabBarTabs = tabs.map(tab => ({
+  const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
     closable: tab.closable,
@@ -241,10 +241,11 @@ export default function PoolDetailPage() {
   const filteredMembers = useMemo(() => {
     if (!memberSearchTerm) return mockMembers;
     const query = memberSearchTerm.toLowerCase();
-    return mockMembers.filter(member =>
-      member.id.toLowerCase().includes(query) ||
-      member.source.name.toLowerCase().includes(query) ||
-      member.ipAddress.toLowerCase().includes(query)
+    return mockMembers.filter(
+      (member) =>
+        member.id.toLowerCase().includes(query) ||
+        member.source.name.toLowerCase().includes(query) ||
+        member.ipAddress.toLowerCase().includes(query)
     );
   }, [memberSearchTerm]);
 
@@ -254,7 +255,6 @@ export default function PoolDetailPage() {
     const start = (memberCurrentPage - 1) * membersPerPage;
     return filteredMembers.slice(start, start + membersPerPage);
   }, [filteredMembers, memberCurrentPage, membersPerPage]);
-
 
   // Member columns
   const memberColumns: TableColumn<Member>[] = [
@@ -328,7 +328,7 @@ export default function PoolDetailPage() {
       key: 'backup',
       label: 'Backup',
       flex: 1,
-      render: (_, row) => row.backup ? 'Yes' : 'No',
+      render: (_, row) => (row.backup ? 'Yes' : 'No'),
     },
     {
       key: 'adminState',
@@ -343,13 +343,22 @@ export default function PoolDetailPage() {
       render: (_: unknown, row: Member) => {
         const memberMenuItems: ContextMenuItem[] = [
           { id: 'edit', label: 'Edit', onClick: () => console.log('Edit member', row.id) },
-          { id: 'delete', label: 'Delete', status: 'danger', onClick: () => console.log('Delete member', row.id) },
+          {
+            id: 'delete',
+            label: 'Delete',
+            status: 'danger',
+            onClick: () => console.log('Delete member', row.id),
+          },
         ];
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={memberMenuItems} trigger="click">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+                <IconDotsCircleHorizontal
+                  size={16}
+                  stroke={1.5}
+                  className="text-[var(--action-icon-color)]"
+                />
               </button>
             </ContextMenu>
           </div>
@@ -411,42 +420,39 @@ export default function PoolDetailPage() {
                 <DetailHeader.Title>{pool.name}</DetailHeader.Title>
 
                 <DetailHeader.Actions>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    leftIcon={<IconEdit size={12} />}
-                  >
+                  <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
                     Edit
                   </Button>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    leftIcon={<IconUsers size={12} />}
-                  >
+                  <Button variant="secondary" size="sm" leftIcon={<IconUsers size={12} />}>
                     Manage Members
                   </Button>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    leftIcon={<IconTrash size={12} />}
-                  >
+                  <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
                     Delete
                   </Button>
                   <ContextMenu
                     items={[
-                      { id: 'create-health-monitor', label: 'Create health monitor', onClick: () => console.log('Create health monitor') },
-                      { id: 'edit-health-monitor', label: 'Edit health monitor', onClick: () => console.log('Edit health monitor') },
-                      { id: 'delete-health-monitor', label: 'Delete health monitor', status: 'danger', onClick: () => console.log('Delete health monitor') },
+                      {
+                        id: 'create-health-monitor',
+                        label: 'Create health monitor',
+                        onClick: () => console.log('Create health monitor'),
+                      },
+                      {
+                        id: 'edit-health-monitor',
+                        label: 'Edit health monitor',
+                        onClick: () => console.log('Edit health monitor'),
+                      },
+                      {
+                        id: 'delete-health-monitor',
+                        label: 'Delete health monitor',
+                        status: 'danger',
+                        onClick: () => console.log('Delete health monitor'),
+                      },
                     ]}
                     trigger="click"
                   >
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    rightIcon={<IconChevronDown size={12} />}
-                  >
-                    More Actions
-                  </Button>
+                    <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
+                      More Actions
+                    </Button>
                   </ContextMenu>
                 </DetailHeader.Actions>
 
@@ -463,14 +469,8 @@ export default function PoolDetailPage() {
                     onCopy={handleCopyId}
                     className="flex-1"
                   />
-                  <DetailHeader.InfoCard
-                    label="Admin state"
-                    value={pool.adminState}
-                  />
-                  <DetailHeader.InfoCard
-                    label="Created at"
-                    value={pool.createdAt}
-                  />
+                  <DetailHeader.InfoCard label="Admin state" value={pool.adminState} />
+                  <DetailHeader.InfoCard label="Created at" value={pool.createdAt} />
                 </DetailHeader.InfoGrid>
               </DetailHeader>
 
@@ -501,7 +501,10 @@ export default function PoolDetailPage() {
                           <SectionCard.DataRow label="Description" value={pool.description} />
                           <SectionCard.DataRow label="Algorithm" value={pool.algorithm} />
                           <SectionCard.DataRow label="Protocol" value={pool.protocol} />
-                          <SectionCard.DataRow label="Session persistence" value={pool.sessionPersistence} />
+                          <SectionCard.DataRow
+                            label="Session persistence"
+                            value={pool.sessionPersistence}
+                          />
                           <SectionCard.DataRow label="Admin state" value={pool.adminState} />
                         </SectionCard.Content>
                       </SectionCard>
@@ -524,7 +527,9 @@ export default function PoolDetailPage() {
                                   {pool.listener.name}
                                 </Link>
                               ) : (
-                                <span className="text-[12px] leading-4 text-[var(--color-text-default)]">-</span>
+                                <span className="text-[12px] leading-4 text-[var(--color-text-default)]">
+                                  -
+                                </span>
                               )}
                             </div>
                           </div>
@@ -561,21 +566,15 @@ export default function PoolDetailPage() {
                       </div>
 
                       {/* Pagination */}
-                        <Pagination
-                          currentPage={memberCurrentPage}
-                          totalPages={totalMemberPages}
-                          onPageChange={setMemberCurrentPage}
+                      <Pagination
+                        currentPage={memberCurrentPage}
+                        totalPages={totalMemberPages}
+                        onPageChange={setMemberCurrentPage}
                         totalItems={filteredMembers.length}
-                        showSettings
-                        onSettingsClick={() => setIsPreferencesOpen(true)}
-                        />
+                      />
 
                       {/* Table */}
-                      <Table
-                        columns={memberColumns}
-                        data={paginatedMembers}
-                        rowKey="id"
-                      />
+                      <Table columns={memberColumns} data={paginatedMembers} rowKey="id" />
                     </VStack>
                   </TabPanel>
 
@@ -587,10 +586,18 @@ export default function PoolDetailPage() {
                           title="Health Monitor"
                           actions={
                             <div className="flex items-center gap-2">
-                              <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+                              <Button
+                                variant="secondary"
+                                size="sm"
+                                leftIcon={<IconEdit size={12} />}
+                              >
                                 Edit
                               </Button>
-                              <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+                              <Button
+                                variant="secondary"
+                                size="sm"
+                                leftIcon={<IconTrash size={12} />}
+                              >
                                 Delete
                               </Button>
                             </div>
@@ -600,10 +607,22 @@ export default function PoolDetailPage() {
                           <SectionCard.DataRow label="Name" value={healthMonitor.name} />
                           <SectionCard.DataRow label="State" value={healthMonitor.state} />
                           <SectionCard.DataRow label="Type" value={healthMonitor.type} />
-                          <SectionCard.DataRow label="Interval" value={`${healthMonitor.interval} sec`} />
-                          <SectionCard.DataRow label="Timeout" value={`${healthMonitor.timeout} sec`} />
-                          <SectionCard.DataRow label="Max retries" value={String(healthMonitor.maxRetries)} />
-                          <SectionCard.DataRow label="Admin state" value={healthMonitor.adminState} />
+                          <SectionCard.DataRow
+                            label="Interval"
+                            value={`${healthMonitor.interval} sec`}
+                          />
+                          <SectionCard.DataRow
+                            label="Timeout"
+                            value={`${healthMonitor.timeout} sec`}
+                          />
+                          <SectionCard.DataRow
+                            label="Max retries"
+                            value={String(healthMonitor.maxRetries)}
+                          />
+                          <SectionCard.DataRow
+                            label="Admin state"
+                            value={healthMonitor.adminState}
+                          />
                         </SectionCard.Content>
                       </SectionCard>
                     </VStack>
@@ -617,4 +636,3 @@ export default function PoolDetailPage() {
     </div>
   );
 }
-

@@ -16,9 +16,7 @@ const data = [
 
 describe('Table Accessibility', () => {
   it('should have no accessibility violations', async () => {
-    const { container } = render(
-      <Table columns={columns} data={data} />
-    );
+    const { container } = render(<Table columns={columns} data={data} />);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
@@ -38,21 +36,15 @@ describe('Table Accessibility', () => {
   });
 
   it('should have no accessibility violations with sortable columns', async () => {
-    const sortableColumns = columns.map(col => ({ ...col, sortable: true }));
-    const { container } = render(
-      <Table columns={sortableColumns} data={data} />
-    );
+    const sortableColumns = columns.map((col) => ({ ...col, sortable: true }));
+    const { container } = render(<Table columns={sortableColumns} data={data} />);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
 
   it('should have no accessibility violations with empty state', async () => {
     const { container } = render(
-      <Table
-        columns={columns}
-        data={[]}
-        emptyMessage="No data available"
-      />
+      <Table columns={columns} data={[]} emptyMessage="No data available" />
     );
     const results = await axe(container);
     expect(results).toHaveNoViolations();

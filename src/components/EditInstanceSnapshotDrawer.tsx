@@ -43,7 +43,7 @@ export function EditInstanceSnapshotDrawer({
 
   const handleSubmit = async () => {
     if (!snapshotName.trim()) return;
-    
+
     setIsSubmitting(true);
     try {
       await onSubmit?.(snapshotName, description);
@@ -66,15 +66,11 @@ export function EditInstanceSnapshotDrawer({
       width={376}
       footer={
         <HStack gap={2} className="w-full">
-          <Button 
-            variant="secondary" 
-            onClick={handleClose}
-            className="flex-1 h-8"
-          >
+          <Button variant="secondary" onClick={handleClose} className="flex-1 h-8">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={handleSubmit}
             disabled={isSubmitting}
             className="flex-1 h-8"
@@ -102,7 +98,8 @@ export function EditInstanceSnapshotDrawer({
             fullWidth
           />
           <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
-            The name should start with upper letter, lower letter or chinese, and be a string of 1 to 128, characters can only contain "0-9, a-z, A-Z, "-'_.".
+            The name should start with upper letter, lower letter or chinese, and be a string of 1
+            to 128, characters can only contain "0-9, a-z, A-Z, "-'_.".
           </p>
         </VStack>
 
@@ -112,9 +109,7 @@ export function EditInstanceSnapshotDrawer({
             <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
               Description
             </label>
-            <span className="text-[12px] text-[var(--color-text-subtle)]">
-              (optional)
-            </span>
+            <span className="text-[12px] text-[var(--color-text-subtle)]">(optional)</span>
           </HStack>
           <Input
             value={description}
@@ -129,5 +124,3 @@ export function EditInstanceSnapshotDrawer({
 }
 
 export default EditInstanceSnapshotDrawer;
-
-

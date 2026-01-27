@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { computeRoutes } from './compute.routes';
+import { computeAdminRoutes } from './compute-admin.routes';
 import { storageRoutes } from './storage.routes';
 import { agentRoutes } from './agent.routes';
 import { designRoutes } from './design.routes';
@@ -33,10 +34,10 @@ export const AppRoutes = () => {
         {/* Domain-specific routes */}
         {agentRoutes}
         {computeRoutes}
+        {computeAdminRoutes}
         {storageRoutes}
         {designRoutes}
       </Routes>
     </Suspense>
   );
 };
-

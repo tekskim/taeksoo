@@ -2,16 +2,16 @@ import { useEffect, useRef, type RefObject } from 'react';
 
 /**
  * Hook to detect clicks outside of specified elements
- * 
+ *
  * @example
  * ```tsx
  * function Dropdown() {
  *   const [isOpen, setIsOpen] = useState(false);
  *   const triggerRef = useRef<HTMLButtonElement>(null);
  *   const contentRef = useRef<HTMLDivElement>(null);
- *   
+ *
  *   useClickOutside([triggerRef, contentRef], () => setIsOpen(false), isOpen);
- *   
+ *
  *   return (
  *     <>
  *       <button ref={triggerRef}>Toggle</button>
@@ -39,7 +39,7 @@ export function useClickOutside<T extends HTMLElement = HTMLElement>(
 
     const listener = (event: MouseEvent | TouchEvent) => {
       const target = event.target as Node;
-      
+
       // Check if click is inside any of the refs
       const isInside = refsArray.some((ref) => {
         return ref.current?.contains(target);

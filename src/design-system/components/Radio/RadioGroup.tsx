@@ -1,4 +1,11 @@
-import { createContext, useContext, useId, useState, type ReactNode, type ChangeEvent } from 'react';
+import {
+  createContext,
+  useContext,
+  useId,
+  useState,
+  type ReactNode,
+  type ChangeEvent,
+} from 'react';
 import { twMerge } from 'tailwind-merge';
 
 /* ----------------------------------------
@@ -149,8 +156,3 @@ export function RadioGroup({
     </RadioGroupContext.Provider>
   );
 }
-
-
-
-
-

@@ -38,15 +38,11 @@ type SectionState = 'pre' | 'active' | 'done' | 'writing';
 const SECTION_LABELS: Record<SectionStep, string> = {
   'basic-info': 'Basic Information',
   'storage-config': 'Parameters',
-  'customize': 'Customize',
+  customize: 'Customize',
 };
 
 // Section order for navigation
-const SECTION_ORDER: SectionStep[] = [
-  'basic-info',
-  'storage-config',
-  'customize',
-];
+const SECTION_ORDER: SectionStep[] = ['basic-info', 'storage-config', 'customize'];
 
 // Reclaim Policy options
 type ReclaimPolicy = 'delete' | 'retain';
@@ -140,7 +136,12 @@ interface SummarySidebarProps {
   isCreateDisabled: boolean;
 }
 
-function SummarySidebar({ sectionStatus, onCancel, onCreate, isCreateDisabled }: SummarySidebarProps) {
+function SummarySidebar({
+  sectionStatus,
+  onCancel,
+  onCreate,
+  isCreateDisabled,
+}: SummarySidebarProps) {
   // Map SectionState to WizardSectionState
   const mapState = (state: SectionState): WizardSectionState => {
     if (state === 'pre') return 'pending';
@@ -159,14 +160,14 @@ function SummarySidebar({ sectionStatus, onCancel, onCreate, isCreateDisabled }:
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
       <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
         <WizardSummary items={summaryItems} />
-        
+
         {/* Action Buttons */}
         <HStack gap={2}>
           <Button variant="secondary" onClick={onCancel} className="w-[80px]">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={onCreate}
             disabled={isCreateDisabled}
             className="flex-1"
@@ -505,10 +506,7 @@ function CustomizeSection({
                   value="delete"
                   label="Delete volumes and underlying device when volume claim is deleted"
                 />
-                <Radio
-                  value="retain"
-                  label="Retain the volume for manual cleanup"
-                />
+                <Radio value="retain" label="Retain the volume for manual cleanup" />
               </VStack>
             </RadioGroup>
           </VStack>
@@ -523,14 +521,8 @@ function CustomizeSection({
               onChange={(value) => onVolumeExpansionChange(value as VolumeExpansion)}
             >
               <VStack gap={1}>
-                <Radio
-                  value="enabled"
-                  label="Enabled"
-                />
-                <Radio
-                  value="disabled"
-                  label="Disabled"
-                />
+                <Radio value="enabled" label="Enabled" />
+                <Radio value="disabled" label="Disabled" />
               </VStack>
             </RadioGroup>
           </VStack>
@@ -627,7 +619,7 @@ export function CreateStorageClassPage() {
   const [sectionStatus, setSectionStatus] = useState<Record<SectionStep, SectionState>>({
     'basic-info': 'active',
     'storage-config': 'pre',
-    'customize': 'pre',
+    customize: 'pre',
   });
 
   // Editing state
@@ -637,7 +629,8 @@ export function CreateStorageClassPage() {
   const [storageClassNameError, setStorageClassNameError] = useState<string | null>(null);
 
   // Tab management
-  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } =
+    useTabs();
 
   // Update tab label
   useEffect(() => {
@@ -815,7 +808,12 @@ export function CreateStorageClassPage() {
 
   const getMountOptionsDisplay = () => {
     if (mountOptions.length === 0) return 'None';
-    return mountOptions.map((o) => o.value).filter(v => v).join(', ') || 'None';
+    return (
+      mountOptions
+        .map((o) => o.value)
+        .filter((v) => v)
+        .join(', ') || 'None'
+    );
   };
 
   return (
@@ -916,7 +914,11 @@ export function CreateStorageClassPage() {
                       title={SECTION_LABELS['basic-info']}
                       onEdit={() => handleEdit('basic-info')}
                     >
-                      <SectionCard.DataRow label="Name" value={storageClassName} showDivider={false} />
+                      <SectionCard.DataRow
+                        label="Name"
+                        value={storageClassName}
+                        showDivider={false}
+                      />
                       <SectionCard.DataRow label="Description" value={description || '-'} />
                     </DoneSection>
                   )}
@@ -943,13 +945,17 @@ export function CreateStorageClassPage() {
                       title={SECTION_LABELS['storage-config']}
                       onEdit={() => handleEdit('storage-config')}
                     >
-                      <SectionCard.DataRow 
-                        label="Parameters" 
-                        value={parameters.length > 0 
-                          ? parameters.map(p => `${p.key}=${p.value}`).filter(p => p !== '=').join(', ') || 'None' 
-                          : 'None'
-                        } 
-                        showDivider={false} 
+                      <SectionCard.DataRow
+                        label="Parameters"
+                        value={
+                          parameters.length > 0
+                            ? parameters
+                                .map((p) => `${p.key}=${p.value}`)
+                                .filter((p) => p !== '=')
+                                .join(', ') || 'None'
+                            : 'None'
+                        }
+                        showDivider={false}
                       />
                     </DoneSection>
                   )}
@@ -982,9 +988,19 @@ export function CreateStorageClassPage() {
                       title={SECTION_LABELS['customize']}
                       onEdit={() => handleEdit('customize')}
                     >
-                      <SectionCard.DataRow label="Reclaim Policy" value={getReclaimPolicyDisplay()} showDivider={false} />
-                      <SectionCard.DataRow label="Volume Expansion" value={getVolumeExpansionDisplay()} />
-                      <SectionCard.DataRow label="Volume Binding Mode" value={getVolumeBindingModeDisplay()} />
+                      <SectionCard.DataRow
+                        label="Reclaim Policy"
+                        value={getReclaimPolicyDisplay()}
+                        showDivider={false}
+                      />
+                      <SectionCard.DataRow
+                        label="Volume Expansion"
+                        value={getVolumeExpansionDisplay()}
+                      />
+                      <SectionCard.DataRow
+                        label="Volume Binding Mode"
+                        value={getVolumeBindingModeDisplay()}
+                      />
                       <SectionCard.DataRow label="Mount Options" value={getMountOptionsDisplay()} />
                     </DoneSection>
                   )}

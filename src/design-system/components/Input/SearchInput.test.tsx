@@ -43,19 +43,19 @@ describe('SearchInput', () => {
       const user = userEvent.setup();
 
       render(<SearchInput onChange={handleChange} />);
-      
+
       await user.type(screen.getByRole('searchbox'), 'hello');
-      
+
       expect(handleChange).toHaveBeenCalled();
     });
 
     it('updates uncontrolled value on input', async () => {
       const user = userEvent.setup();
       render(<SearchInput />);
-      
+
       const input = screen.getByRole('searchbox');
       await user.type(input, 'search term');
-      
+
       expect(input).toHaveValue('search term');
     });
   });
@@ -64,10 +64,10 @@ describe('SearchInput', () => {
     it('shows clear button when has value and clearable', async () => {
       const user = userEvent.setup();
       render(<SearchInput clearable />);
-      
+
       const input = screen.getByRole('searchbox');
       await user.type(input, 'test');
-      
+
       expect(screen.getByRole('button', { name: 'Clear search' })).toBeInTheDocument();
     });
 
@@ -79,7 +79,7 @@ describe('SearchInput', () => {
     it('hides clear button when clearable is false', async () => {
       const user = userEvent.setup();
       render(<SearchInput clearable={false} defaultValue="test" />);
-      
+
       expect(screen.queryByRole('button', { name: 'Clear search' })).not.toBeInTheDocument();
     });
 
@@ -91,14 +91,14 @@ describe('SearchInput', () => {
     it('clears uncontrolled value when clear button is clicked', async () => {
       const user = userEvent.setup();
       render(<SearchInput clearable />);
-      
+
       const input = screen.getByRole('searchbox');
       await user.type(input, 'test value');
-      
+
       expect(input).toHaveValue('test value');
-      
+
       await user.click(screen.getByRole('button', { name: 'Clear search' }));
-      
+
       expect(input).toHaveValue('');
     });
 
@@ -107,9 +107,9 @@ describe('SearchInput', () => {
       const user = userEvent.setup();
 
       render(<SearchInput clearable onClear={handleClear} defaultValue="test" />);
-      
+
       await user.click(screen.getByRole('button', { name: 'Clear search' }));
-      
+
       expect(handleClear).toHaveBeenCalled();
     });
 
@@ -118,9 +118,9 @@ describe('SearchInput', () => {
       const user = userEvent.setup();
 
       render(<SearchInput clearable onClear={handleClear} value="test" onChange={() => {}} />);
-      
+
       await user.click(screen.getByRole('button', { name: 'Clear search' }));
-      
+
       expect(handleClear).toHaveBeenCalled();
     });
   });
@@ -181,7 +181,10 @@ describe('SearchInput', () => {
 
     it('clear button has aria-label', () => {
       render(<SearchInput defaultValue="test" clearable />);
-      expect(screen.getByRole('button', { name: 'Clear search' })).toHaveAttribute('aria-label', 'Clear search');
+      expect(screen.getByRole('button', { name: 'Clear search' })).toHaveAttribute(
+        'aria-label',
+        'Clear search'
+      );
     });
 
     it('generates unique id when not provided', () => {

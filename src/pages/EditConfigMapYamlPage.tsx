@@ -1,22 +1,9 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import {
-  Button,
-  Breadcrumb,
-  HStack,
-  VStack,
-  TabBar,
-  TopBar,
-} from '@/design-system';
+import { Button, Breadcrumb, HStack, VStack, TabBar, TopBar } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconBell,
-  IconTerminal2,
-  IconFile,
-  IconCopy,
-  IconSearch,
-} from '@tabler/icons-react';
+import { IconBell, IconTerminal2, IconFile, IconCopy, IconSearch } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Mock YAML Content (would be fetched from API)
@@ -116,7 +103,8 @@ export function EditConfigMapYamlPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Tab management
-  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } =
+    useTabs();
 
   // Load YAML content based on configMap ID
   useEffect(() => {
@@ -213,7 +201,10 @@ export function EditConfigMapYamlPage() {
               items={[
                 { label: 'clusterName', href: '/container' },
                 { label: 'ConfigMaps', href: '/container/configMaps' },
-                { label: configMapName || 'ConfigMap', href: `/container/configMaps/${configMapName}` },
+                {
+                  label: configMapName || 'ConfigMap',
+                  href: `/container/configMaps/${configMapName}`,
+                },
                 { label: 'Edit YAML' },
               ]}
             />
@@ -240,9 +231,7 @@ export function EditConfigMapYamlPage() {
         />
 
         {/* Page Content */}
-        <div
-          className="flex-1 overflow-hidden min-w-[var(--layout-content-min-width)] flex flex-col"
-        >
+        <div className="flex-1 overflow-hidden min-w-[var(--layout-content-min-width)] flex flex-col">
           <div className="flex-1 flex flex-col pt-4 px-8 pb-6 bg-[var(--color-surface-default)] min-h-0">
             <VStack gap={6} className="flex-1 min-h-0">
               {/* Header */}
@@ -253,38 +242,34 @@ export function EditConfigMapYamlPage() {
               </VStack>
 
               {/* YAML Editor */}
-              <YamlEditor
-                value={yamlContent}
-                onChange={setYamlContent}
-                onCopy={handleCopy}
-              />
+              <YamlEditor value={yamlContent} onChange={setYamlContent} onCopy={handleCopy} />
 
               {/* Footer */}
               <div className="flex-shrink-0 h-[61px] flex items-center justify-between border-t border-[var(--color-border-strong)]">
-              {/* Left side - Read from File */}
-              <div>
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept=".yaml,.yml,.txt"
-                  onChange={handleFileChange}
-                  className="hidden"
-                />
-                <Button variant="secondary" size="md" onClick={handleReadFromFile}>
-                  Read from File
-                </Button>
-              </div>
+                {/* Left side - Read from File */}
+                <div>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept=".yaml,.yml,.txt"
+                    onChange={handleFileChange}
+                    className="hidden"
+                  />
+                  <Button variant="secondary" size="md" onClick={handleReadFromFile}>
+                    Read from File
+                  </Button>
+                </div>
 
-              {/* Right side - Cancel & Save */}
-              <HStack gap={3}>
-                <Button variant="secondary" size="md" onClick={handleCancel}>
-                  Cancel
-                </Button>
-                <Button variant="primary" size="md" onClick={handleSave}>
-                  Save
-                </Button>
-              </HStack>
-            </div>
+                {/* Right side - Cancel & Save */}
+                <HStack gap={3}>
+                  <Button variant="secondary" size="md" onClick={handleCancel}>
+                    Cancel
+                  </Button>
+                  <Button variant="primary" size="md" onClick={handleSave}>
+                    Save
+                  </Button>
+                </HStack>
+              </div>
             </VStack>
           </div>
         </div>

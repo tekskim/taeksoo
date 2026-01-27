@@ -36,7 +36,6 @@ import {
   IconSettings2,
   IconCode,
   IconGitBranch,
-  IconBrandDocker,
   IconChartBar,
   IconSettings,
   IconHelp,
@@ -44,7 +43,6 @@ import {
   IconActivity,
   IconBoxModel,
   IconShield,
-  IconChevronDown,
   IconApps,
   IconBell,
   IconPalette,
@@ -62,10 +60,20 @@ import { CircleGauge, BrainCircuit, RefreshCw } from 'lucide-react';
 function AIPlatformLogo() {
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M12 2L14.5 7.5L20 10L14.5 12.5L12 18L9.5 12.5L4 10L9.5 7.5L12 2Z" fill="url(#ai-gradient)" />
+      <path
+        d="M12 2L14.5 7.5L20 10L14.5 12.5L12 18L9.5 12.5L4 10L9.5 7.5L12 2Z"
+        fill="url(#ai-gradient)"
+      />
       <path d="M12 6L13.5 9.5L17 11L13.5 12.5L12 16L10.5 12.5L7 11L10.5 9.5L12 6Z" fill="#F472B6" />
       <defs>
-        <linearGradient id="ai-gradient" x1="4" y1="2" x2="20" y2="18" gradientUnits="userSpaceOnUse">
+        <linearGradient
+          id="ai-gradient"
+          x1="4"
+          y1="2"
+          x2="20"
+          y2="18"
+          gradientUnits="userSpaceOnUse"
+        >
           <stop stopColor="#A78BFA" />
           <stop offset="1" stopColor="#818CF8" />
         </linearGradient>
@@ -95,7 +103,9 @@ export function AIPlatformSidebar() {
       <div className="h-12 px-4 flex items-center justify-between border-b border-[var(--color-border-subtle)]">
         <Link to="/ai-platform" className="flex items-center gap-2">
           <AIPlatformLogo />
-          <span className="font-semibold text-[14px] text-[var(--color-text-default)]">AI Platform</span>
+          <span className="font-semibold text-[14px] text-[var(--color-text-default)]">
+            AI Platform
+          </span>
         </Link>
         <button className="p-1.5 rounded-md border border-[var(--color-border-default)] hover:bg-[var(--color-surface-subtle)] transition-colors">
           <IconApps size={14} stroke={1.5} className="text-[var(--color-text-muted)]" />
@@ -379,9 +389,7 @@ export function AIPlatformPageLayout({
                   <p className="text-[12px] text-[var(--color-text-subtle)] mt-0.5">{subtitle}</p>
                 )}
               </div>
-              {headerActions && (
-                <div className="flex items-center gap-2">{headerActions}</div>
-              )}
+              {headerActions && <div className="flex items-center gap-2">{headerActions}</div>}
             </div>
 
             {/* Page Content */}
@@ -416,70 +424,122 @@ const routeConfigs: Record<string, RouteConfig> = {
   // Hub
   '/ai-platform/packages': {
     title: 'Packages',
-    breadcrumbs: [{ label: 'AI Platform', href: '/ai-platform' }, { label: 'Hub' }, { label: 'Packages' }],
+    breadcrumbs: [
+      { label: 'AI Platform', href: '/ai-platform' },
+      { label: 'Hub' },
+      { label: 'Packages' },
+    ],
     section: 'Hub',
   },
   '/ai-platform/models': {
     title: 'Models',
-    breadcrumbs: [{ label: 'AI Platform', href: '/ai-platform' }, { label: 'Hub' }, { label: 'Models' }],
+    breadcrumbs: [
+      { label: 'AI Platform', href: '/ai-platform' },
+      { label: 'Hub' },
+      { label: 'Models' },
+    ],
     section: 'Hub',
   },
   '/ai-platform/datasets': {
     title: 'Datasets',
-    breadcrumbs: [{ label: 'AI Platform', href: '/ai-platform' }, { label: 'Hub' }, { label: 'Datasets' }],
+    breadcrumbs: [
+      { label: 'AI Platform', href: '/ai-platform' },
+      { label: 'Hub' },
+      { label: 'Datasets' },
+    ],
     section: 'Hub',
   },
   // Infrastructure
   '/ai-platform/workloads': {
     title: 'Workloads',
     subtitle: 'Pod and Helm Chart management',
-    breadcrumbs: [{ label: 'AI Platform', href: '/ai-platform' }, { label: 'Infrastructure' }, { label: 'Workloads' }],
+    breadcrumbs: [
+      { label: 'AI Platform', href: '/ai-platform' },
+      { label: 'Infrastructure' },
+      { label: 'Workloads' },
+    ],
     section: 'Infrastructure',
   },
   '/ai-platform/my-templates': {
     title: 'My Templates',
-    breadcrumbs: [{ label: 'AI Platform', href: '/ai-platform' }, { label: 'Infrastructure' }, { label: 'My Templates' }],
+    breadcrumbs: [
+      { label: 'AI Platform', href: '/ai-platform' },
+      { label: 'Infrastructure' },
+      { label: 'My Templates' },
+    ],
     section: 'Infrastructure',
   },
   '/ai-platform/storage': {
     title: 'Storage',
-    breadcrumbs: [{ label: 'AI Platform', href: '/ai-platform' }, { label: 'Infrastructure' }, { label: 'Storage' }],
+    breadcrumbs: [
+      { label: 'AI Platform', href: '/ai-platform' },
+      { label: 'Infrastructure' },
+      { label: 'Storage' },
+    ],
     section: 'Infrastructure',
   },
   '/ai-platform/serverless': {
     title: 'Serverless',
-    breadcrumbs: [{ label: 'AI Platform', href: '/ai-platform' }, { label: 'Infrastructure' }, { label: 'Serverless' }],
+    breadcrumbs: [
+      { label: 'AI Platform', href: '/ai-platform' },
+      { label: 'Infrastructure' },
+      { label: 'Serverless' },
+    ],
     section: 'Infrastructure',
   },
   // MLOps
   '/ai-platform/fine-tune': {
     title: 'Fine-Tune',
-    breadcrumbs: [{ label: 'AI Platform', href: '/ai-platform' }, { label: 'MLOps' }, { label: 'Fine-Tune' }],
+    breadcrumbs: [
+      { label: 'AI Platform', href: '/ai-platform' },
+      { label: 'MLOps' },
+      { label: 'Fine-Tune' },
+    ],
     section: 'MLOps',
   },
   '/ai-platform/devspace': {
     title: 'DevSpace',
-    breadcrumbs: [{ label: 'AI Platform', href: '/ai-platform' }, { label: 'MLOps' }, { label: 'DevSpace' }],
+    breadcrumbs: [
+      { label: 'AI Platform', href: '/ai-platform' },
+      { label: 'MLOps' },
+      { label: 'DevSpace' },
+    ],
     section: 'MLOps',
   },
   '/ai-platform/pipeline': {
     title: 'Pipeline',
-    breadcrumbs: [{ label: 'AI Platform', href: '/ai-platform' }, { label: 'MLOps' }, { label: 'Pipeline' }],
+    breadcrumbs: [
+      { label: 'AI Platform', href: '/ai-platform' },
+      { label: 'MLOps' },
+      { label: 'Pipeline' },
+    ],
     section: 'MLOps',
   },
   '/ai-platform/kubeflow': {
     title: 'Kubeflow',
-    breadcrumbs: [{ label: 'AI Platform', href: '/ai-platform' }, { label: 'MLOps' }, { label: 'Kubeflow' }],
+    breadcrumbs: [
+      { label: 'AI Platform', href: '/ai-platform' },
+      { label: 'MLOps' },
+      { label: 'Kubeflow' },
+    ],
     section: 'MLOps',
   },
   '/ai-platform/mlflow': {
     title: 'MLflow',
-    breadcrumbs: [{ label: 'AI Platform', href: '/ai-platform' }, { label: 'MLOps' }, { label: 'MLflow' }],
+    breadcrumbs: [
+      { label: 'AI Platform', href: '/ai-platform' },
+      { label: 'MLOps' },
+      { label: 'MLflow' },
+    ],
     section: 'MLOps',
   },
   '/ai-platform/benchmarks': {
     title: 'Benchmarks',
-    breadcrumbs: [{ label: 'AI Platform', href: '/ai-platform' }, { label: 'MLOps' }, { label: 'Benchmarks' }],
+    breadcrumbs: [
+      { label: 'AI Platform', href: '/ai-platform' },
+      { label: 'MLOps' },
+      { label: 'Benchmarks' },
+    ],
     section: 'MLOps',
   },
   // Settings
@@ -490,28 +550,48 @@ const routeConfigs: Record<string, RouteConfig> = {
   },
   '/ai-platform/faq': {
     title: 'FAQ',
-    breadcrumbs: [{ label: 'AI Platform', href: '/ai-platform' }, { label: 'Settings' }, { label: 'FAQ' }],
+    breadcrumbs: [
+      { label: 'AI Platform', href: '/ai-platform' },
+      { label: 'Settings' },
+      { label: 'FAQ' },
+    ],
     section: 'Settings',
   },
   // Operations
   '/ai-platform/kueue': {
     title: 'Kueue',
-    breadcrumbs: [{ label: 'AI Platform', href: '/ai-platform' }, { label: 'Operations' }, { label: 'Kueue' }],
+    breadcrumbs: [
+      { label: 'AI Platform', href: '/ai-platform' },
+      { label: 'Operations' },
+      { label: 'Kueue' },
+    ],
     section: 'Operations',
   },
   '/ai-platform/monitoring': {
     title: 'Monitoring',
-    breadcrumbs: [{ label: 'AI Platform', href: '/ai-platform' }, { label: 'Operations' }, { label: 'Monitoring' }],
+    breadcrumbs: [
+      { label: 'AI Platform', href: '/ai-platform' },
+      { label: 'Operations' },
+      { label: 'Monitoring' },
+    ],
     section: 'Operations',
   },
   '/ai-platform/dependencies': {
     title: 'Dependencies',
-    breadcrumbs: [{ label: 'AI Platform', href: '/ai-platform' }, { label: 'Operations' }, { label: 'Dependencies' }],
+    breadcrumbs: [
+      { label: 'AI Platform', href: '/ai-platform' },
+      { label: 'Operations' },
+      { label: 'Dependencies' },
+    ],
     section: 'Operations',
   },
   '/ai-platform/admin': {
     title: 'System Administration',
-    breadcrumbs: [{ label: 'AI Platform', href: '/ai-platform' }, { label: 'Operations' }, { label: 'System Administration' }],
+    breadcrumbs: [
+      { label: 'AI Platform', href: '/ai-platform' },
+      { label: 'Operations' },
+      { label: 'System Administration' },
+    ],
     section: 'Operations',
   },
 };
@@ -522,12 +602,12 @@ const routeConfigs: Record<string, RouteConfig> = {
 function useRouteConfig(): RouteConfig {
   const location = useLocation();
   const pathname = location.pathname;
-  
+
   // Exact match
   if (routeConfigs[pathname]) {
     return routeConfigs[pathname];
   }
-  
+
   // Default fallback
   return {
     title: 'Dashboard',
@@ -568,10 +648,17 @@ interface StatCardProps {
   iconBgColor?: string;
 }
 
-function StatCard({ icon, value, label, iconBgColor = 'bg-[var(--color-surface-subtle)]' }: StatCardProps) {
+function StatCard({
+  icon,
+  value,
+  label,
+  iconBgColor = 'bg-[var(--color-surface-subtle)]',
+}: StatCardProps) {
   return (
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex items-center gap-4">
-      <div className={`w-10 h-10 rounded-lg ${iconBgColor} flex items-center justify-center shrink-0`}>
+      <div
+        className={`w-10 h-10 rounded-lg ${iconBgColor} flex items-center justify-center shrink-0`}
+      >
         {icon}
       </div>
       <div>
@@ -652,7 +739,9 @@ function DashboardContent() {
       {/* My Resource Usage & Queue Status */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <ResourceCard
-          icon={<IconStack2 size={24} stroke={1.5} className="text-[var(--color-action-primary)]" />}
+          icon={
+            <IconStack2 size={24} stroke={1.5} className="text-[var(--color-action-primary)]" />
+          }
           title="My Resource Usage"
         >
           <div className="space-y-1">
@@ -669,8 +758,12 @@ function DashboardContent() {
           <div className="space-y-1">
             <DataRow label="My pending Jobs:" value={0} />
             <DataRow label="My running Jobs:" value={0} />
-            <p className="text-[12px] font-medium text-[var(--color-text-default)] mt-2">No active jobs</p>
-            <p className="text-[11px] text-[var(--color-text-subtle)]">You can start a new job now</p>
+            <p className="text-[12px] font-medium text-[var(--color-text-default)] mt-2">
+              No active jobs
+            </p>
+            <p className="text-[11px] text-[var(--color-text-subtle)]">
+              You can start a new job now
+            </p>
           </div>
         </ResourceCard>
       </div>
@@ -678,7 +771,9 @@ function DashboardContent() {
       {/* Resource Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
-          icon={<IconServer size={20} stroke={1.5} className="text-[var(--color-action-primary)]" />}
+          icon={
+            <IconServer size={20} stroke={1.5} className="text-[var(--color-action-primary)]" />
+          }
           value="15 / 15"
           label="Active nodes"
           iconBgColor="bg-blue-50"
@@ -705,10 +800,14 @@ function DashboardContent() {
 
       {/* Quick Actions */}
       <div>
-        <h3 className="text-[14px] font-semibold text-[var(--color-text-default)] mb-3">Quick Actions</h3>
+        <h3 className="text-[14px] font-semibold text-[var(--color-text-default)] mb-3">
+          Quick Actions
+        </h3>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <QuickActionCard
-            icon={<IconStack2 size={28} stroke={1.5} className="text-[var(--color-action-primary)]" />}
+            icon={
+              <IconStack2 size={28} stroke={1.5} className="text-[var(--color-action-primary)]" />
+            }
             title="Deploy New Workload"
             description="Deploy Pod or template"
             onClick={() => navigate('/ai-platform/workloads')}
@@ -736,16 +835,26 @@ function DashboardContent() {
 
       {/* Service Overview */}
       <div>
-        <h3 className="text-[14px] font-semibold text-[var(--color-text-default)] mb-3">Service Overview</h3>
+        <h3 className="text-[14px] font-semibold text-[var(--color-text-default)] mb-3">
+          Service Overview
+        </h3>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <ServiceOverviewCard
-            icon={<CircleGauge size={28} strokeWidth={1.5} className="text-[var(--color-action-primary)]" />}
+            icon={
+              <CircleGauge
+                size={28}
+                strokeWidth={1.5}
+                className="text-[var(--color-action-primary)]"
+              />
+            }
             count={4}
             label="Workloads"
             onClick={() => navigate('/ai-platform/workloads')}
           />
           <ServiceOverviewCard
-            icon={<IconTemplate size={28} stroke={1.5} className="text-[var(--color-action-primary)]" />}
+            icon={
+              <IconTemplate size={28} stroke={1.5} className="text-[var(--color-action-primary)]" />
+            }
             count={20}
             label="My Templates"
             onClick={() => navigate('/ai-platform/my-templates')}
@@ -775,7 +884,9 @@ function DashboardContent() {
             onClick={() => navigate('/ai-platform/benchmarks')}
           />
           <ServiceOverviewCard
-            icon={<IconDatabase size={28} stroke={1.5} className="text-[var(--color-action-primary)]" />}
+            icon={
+              <IconDatabase size={28} stroke={1.5} className="text-[var(--color-action-primary)]" />
+            }
             count={0}
             label="Datasets"
             onClick={() => navigate('/ai-platform/datasets')}
@@ -793,7 +904,9 @@ function DashboardContent() {
       <div>
         <div className="flex items-center gap-2 mb-3">
           <IconActivity size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
-          <h3 className="text-[14px] font-semibold text-[var(--color-text-default)]">Recent Services</h3>
+          <h3 className="text-[14px] font-semibold text-[var(--color-text-default)]">
+            Recent Services
+          </h3>
           <span className="text-[11px] text-[var(--color-text-subtle)]">(Last 24 hours)</span>
         </div>
         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-8 flex items-center justify-center">
@@ -902,7 +1015,7 @@ function UsageCell({ percent }: UsageCellProps) {
       <div className="h-1 w-full bg-[var(--color-border-subtle)] rounded-full overflow-hidden">
         <div
           className="h-full rounded-full transition-all duration-300"
-          style={{ 
+          style={{
             width: `${Math.min(percent, 100)}%`,
             backgroundColor: getStatusColor(percent),
           }}
@@ -922,7 +1035,7 @@ interface StatusCardProps {
 function StatusCard({ label, count, status }: StatusCardProps) {
   let bgColor = 'bg-[var(--color-surface-subtle,#f8fafc)]';
   let iconBg = 'bg-[var(--color-text-muted,#475569)]';
-  
+
   if (status === 'running') {
     bgColor = 'bg-[var(--color-state-success-bg,#f0fdf4)]';
     iconBg = 'bg-[var(--color-success,#4ade80)]';
@@ -947,7 +1060,9 @@ function StatusCard({ label, count, status }: StatusCardProps) {
   };
 
   return (
-    <div className={`${bgColor} flex flex-[1_0_0] items-center justify-between min-h-px min-w-px px-4 py-3 relative rounded-lg shrink-0`}>
+    <div
+      className={`${bgColor} flex flex-[1_0_0] items-center justify-between min-h-px min-w-px px-4 py-3 relative rounded-lg shrink-0`}
+    >
       <div className="flex flex-col gap-1.5 items-start leading-4 not-italic relative shrink-0">
         <p className="font-medium text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
           {label}
@@ -956,7 +1071,9 @@ function StatusCard({ label, count, status }: StatusCardProps) {
           {count}
         </p>
       </div>
-      <div className={`${iconBg} flex gap-0 items-center justify-center p-1 relative rounded-2xl shrink-0 size-6`}>
+      <div
+        className={`${iconBg} flex gap-0 items-center justify-center p-1 relative rounded-2xl shrink-0 size-6`}
+      >
         {getStatusIcon()}
       </div>
     </div>
@@ -1037,28 +1154,45 @@ function WorkloadsContent() {
   const totalPages = Math.ceil(filteredWorkloads.length / rowsPerPage);
 
   // Stats
-  const stats = useMemo(() => ({
-    running: mockWorkloads.filter(w => w.status === 'running').length,
-    pending: mockWorkloads.filter(w => w.status === 'pending').length,
-    failed: mockWorkloads.filter(w => w.status === 'failed').length,
-    stopped: mockWorkloads.filter(w => w.status === 'stopped').length,
-  }), []);
+  const stats = useMemo(
+    () => ({
+      running: mockWorkloads.filter((w) => w.status === 'running').length,
+      pending: mockWorkloads.filter((w) => w.status === 'pending').length,
+      failed: mockWorkloads.filter((w) => w.status === 'failed').length,
+      stopped: mockWorkloads.filter((w) => w.status === 'stopped').length,
+    }),
+    []
+  );
 
   // Status mapping for StatusIndicator
   const statusMap: Record<Workload['status'], 'active' | 'error' | 'building' | 'muted'> = {
-    'running': 'active',
-    'pending': 'building',
-    'failed': 'error',
-    'stopped': 'muted',
+    running: 'active',
+    pending: 'building',
+    failed: 'error',
+    stopped: 'muted',
   };
 
   // Context menu items for workloads
   const getWorkloadContextMenuItems = (workload: Workload): ContextMenuItem[] => [
     { id: 'view-logs', label: 'View logs', onClick: () => console.log('View logs:', workload.id) },
-    { id: 'view-metrics', label: 'View metrics', onClick: () => console.log('View metrics:', workload.id) },
+    {
+      id: 'view-metrics',
+      label: 'View metrics',
+      onClick: () => console.log('View metrics:', workload.id),
+    },
     { id: 'restart', label: 'Restart', onClick: () => console.log('Restart:', workload.id) },
-    { id: 'stop', label: 'Stop', status: 'danger', onClick: () => console.log('Stop:', workload.id) },
-    { id: 'delete', label: 'Delete', status: 'danger', onClick: () => console.log('Delete:', workload.id) },
+    {
+      id: 'stop',
+      label: 'Stop',
+      status: 'danger',
+      onClick: () => console.log('Stop:', workload.id),
+    },
+    {
+      id: 'delete',
+      label: 'Delete',
+      status: 'danger',
+      onClick: () => console.log('Delete:', workload.id),
+    },
   ];
 
   // Table columns
@@ -1068,9 +1202,7 @@ function WorkloadsContent() {
       label: 'Status',
       width: '64px',
       align: 'center' as const,
-      render: (_, row) => (
-        <StatusIndicator status={statusMap[row.status]} layout="icon-only" />
-      ),
+      render: (_, row) => <StatusIndicator status={statusMap[row.status]} layout="icon-only" />,
     },
     {
       key: 'name',
@@ -1093,44 +1225,47 @@ function WorkloadsContent() {
       key: 'utilization',
       label: 'Utilization',
       flex: 1,
-      render: (_, row) => (
+      render: (_, row) =>
         row.utilization !== null ? (
           <UsageCell percent={row.utilization} />
         ) : (
           <span className="text-[var(--color-text-subtle)]">-</span>
-        )
-      ),
+        ),
     },
     {
       key: 'memory',
       label: 'Memory',
       flex: 1,
-      render: (_, row) => (
+      render: (_, row) =>
         row.memoryPercent !== null ? (
           <UsageCell percent={row.memoryPercent} />
         ) : (
           <span className="text-[var(--color-text-default)]">{row.memory}</span>
-        )
-      ),
+        ),
     },
     {
       key: 'disk',
       label: 'Disk',
       flex: 1,
-      render: (_, row) => (
+      render: (_, row) =>
         row.diskPercent !== null ? (
           <UsageCell percent={row.diskPercent} />
         ) : (
           <span className="text-[var(--color-text-subtle)]">{row.disk}</span>
-        )
-      ),
+        ),
     },
     {
       key: 'computeType',
       label: 'Compute type',
       flex: 1,
       render: (_, row) => (
-        <span className={row.computeType !== '-' ? 'text-[var(--color-text-default)]' : 'text-[var(--color-text-subtle)]'}>
+        <span
+          className={
+            row.computeType !== '-'
+              ? 'text-[var(--color-text-default)]'
+              : 'text-[var(--color-text-subtle)]'
+          }
+        >
           {row.computeType}
         </span>
       ),
@@ -1139,9 +1274,7 @@ function WorkloadsContent() {
       key: 'cost',
       label: 'Cost',
       flex: 1,
-      render: (_, row) => (
-        <span className="text-[var(--color-text-default)]">{row.cost}</span>
-      ),
+      render: (_, row) => <span className="text-[var(--color-text-default)]">{row.cost}</span>,
     },
     {
       key: 'actions',
@@ -1152,7 +1285,11 @@ function WorkloadsContent() {
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getWorkloadContextMenuItems(row)} trigger="click">
             <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-              <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+              <IconDotsCircleHorizontal
+                size={16}
+                stroke={1.5}
+                className="text-[var(--action-icon-color)]"
+              />
             </button>
           </ContextMenu>
         </div>
@@ -1285,4 +1422,3 @@ export function AIPlatformPage() {
 }
 
 export default AIPlatformPage;
-

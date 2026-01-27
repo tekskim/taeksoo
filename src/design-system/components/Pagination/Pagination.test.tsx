@@ -33,13 +33,7 @@ describe('Pagination', () => {
   it('calls onPageChange when clicking previous', async () => {
     const user = userEvent.setup();
     const onPageChange = vi.fn();
-    render(
-      <Pagination
-        {...defaultProps}
-        currentPage={5}
-        onPageChange={onPageChange}
-      />
-    );
+    render(<Pagination {...defaultProps} currentPage={5} onPageChange={onPageChange} />);
 
     const prevButton = screen.getByLabelText('Previous page');
     await user.click(prevButton);
@@ -82,9 +76,7 @@ describe('Pagination', () => {
   });
 
   it('renders selected count when provided', () => {
-    render(
-      <Pagination {...defaultProps} totalItems={100} selectedCount={5} />
-    );
+    render(<Pagination {...defaultProps} totalItems={100} selectedCount={5} />);
     expect(screen.getByText(/5 selected/)).toBeInTheDocument();
   });
 
@@ -96,13 +88,7 @@ describe('Pagination', () => {
   it('calls onSettingsClick when settings button is clicked', async () => {
     const user = userEvent.setup();
     const onSettingsClick = vi.fn();
-    render(
-      <Pagination
-        {...defaultProps}
-        showSettings
-        onSettingsClick={onSettingsClick}
-      />
-    );
+    render(<Pagination {...defaultProps} showSettings onSettingsClick={onSettingsClick} />);
 
     await user.click(screen.getByLabelText('Pagination settings'));
     expect(onSettingsClick).toHaveBeenCalled();
@@ -127,9 +113,7 @@ describe('Pagination', () => {
   });
 
   it('applies custom className', () => {
-    const { container } = render(
-      <Pagination {...defaultProps} className="custom-pagination" />
-    );
+    const { container } = render(<Pagination {...defaultProps} className="custom-pagination" />);
     expect(container.firstChild).toHaveClass('custom-pagination');
   });
 });

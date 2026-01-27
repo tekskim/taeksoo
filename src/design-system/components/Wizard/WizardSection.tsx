@@ -27,25 +27,33 @@ export function WizardSectionStatusIcon({ status }: WizardSectionStatusIconProps
       </div>
     );
   }
-  
+
   // active → spinning progress (currently working)
   if (status === 'active') {
     return (
       <div className="w-4 h-4 shrink-0">
-        <IconProgress size={16} stroke={1.5} className="text-[var(--color-text-subtle)] animate-spin" />
+        <IconProgress
+          size={16}
+          stroke={1.5}
+          className="text-[var(--color-text-subtle)] animate-spin"
+        />
       </div>
     );
   }
-  
+
   // writing → spinning progress
   if (status === 'writing') {
     return (
       <div className="w-4 h-4 shrink-0">
-        <IconProgress size={16} stroke={1.5} className="text-[var(--color-text-subtle)] animate-spin" />
+        <IconProgress
+          size={16}
+          stroke={1.5}
+          className="text-[var(--color-text-subtle)] animate-spin"
+        />
       </div>
     );
   }
-  
+
   // skipped → minus icon
   if (status === 'skipped') {
     return (
@@ -54,7 +62,7 @@ export function WizardSectionStatusIcon({ status }: WizardSectionStatusIconProps
       </div>
     );
   }
-  
+
   // pre → empty circle (waiting)
   return (
     <div className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)]" />
@@ -129,7 +137,9 @@ export function SkippedSection({ title, onEdit }: SkippedSectionProps) {
           {title}
         </h5>
         <div className="flex items-center gap-3">
-          <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-muted)]">Not configured</span>
+          <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-muted)]">
+            Not configured
+          </span>
           <Button variant="outline" size="sm" leftIcon={<IconEdit size={12} />} onClick={onEdit}>
             Edit
           </Button>
@@ -153,12 +163,8 @@ export function DoneSectionRow({ label, value }: DoneSectionRowProps) {
     <VStack gap={0} className="pt-3">
       <div className="w-full h-px bg-[var(--color-border-subtle)]" />
       <VStack gap={2} className="pt-3">
-        <span className="text-[11px] font-medium text-[var(--color-text-subtle)]">
-          {label}
-        </span>
-        <span className="text-[12px] text-[var(--color-text-default)]">
-          {value || '-'}
-        </span>
+        <span className="text-[11px] font-medium text-[var(--color-text-subtle)]">{label}</span>
+        <span className="text-[12px] text-[var(--color-text-default)]">{value || '-'}</span>
       </VStack>
     </VStack>
   );
@@ -208,7 +214,7 @@ interface WizardSectionProps {
 
 /**
  * WizardSection - 마법사(Wizard) 패턴의 섹션 컴포넌트
- * 
+ *
  * 상태에 따라 다른 UI를 렌더링합니다:
  * - pre: 대기 중 (빈 원 아이콘)
  * - active: 활성화됨 (회전 아이콘, children 렌더링)
@@ -216,30 +222,30 @@ interface WizardSectionProps {
  * - skipped: 건너뜀 (마이너스 아이콘, Not configured 표시)
  * - writing: 작성 중 (회전 아이콘, Writing... 표시)
  */
-export function WizardSection({ 
-  title, 
-  status, 
-  onEdit, 
+export function WizardSection({
+  title,
+  status,
+  onEdit,
   summaryContent,
-  children 
+  children,
 }: WizardSectionProps) {
   switch (status) {
     case 'pre':
       return <PreSection title={title} />;
-    
+
     case 'writing':
       return <WritingSection title={title} />;
-    
+
     case 'skipped':
       return <SkippedSection title={title} onEdit={onEdit || (() => {})} />;
-    
+
     case 'done':
       return (
         <DoneSection title={title} onEdit={onEdit || (() => {})}>
           {summaryContent}
         </DoneSection>
       );
-    
+
     case 'active':
     default:
       // Active state는 SectionCard를 사용하거나 children을 직접 렌더링
@@ -248,11 +254,11 @@ export function WizardSection({
 }
 
 // Export all components and types
-export type { 
-  PreSectionProps, 
-  WritingSectionProps, 
-  SkippedSectionProps, 
-  DoneSectionProps, 
+export type {
+  PreSectionProps,
+  WritingSectionProps,
+  SkippedSectionProps,
+  DoneSectionProps,
   DoneSectionRowProps,
-  WizardSectionProps 
+  WizardSectionProps,
 };

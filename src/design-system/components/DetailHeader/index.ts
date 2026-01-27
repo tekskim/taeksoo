@@ -10,14 +10,3 @@ export {
   type DetailHeaderInfoGridProps,
   type DetailHeaderInfoCardProps,
 } from './DetailHeader';
-
-
-
-
-
-
-
-
-
-
-

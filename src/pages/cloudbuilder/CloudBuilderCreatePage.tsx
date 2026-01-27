@@ -1,8 +1,21 @@
 import { useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import AppLayout from '@/layouts/AppLayout';
-import { Button, ConfirmModal, DetailHeader, Input, SectionCard, Select, Textarea, VStack } from '@/design-system';
-import { CLOUD_BUILDER_SLUGS, getCloudBuilderListConfig, type CloudBuilderSlug } from './consoleListConfig';
+import {
+  Button,
+  ConfirmModal,
+  DetailHeader,
+  Input,
+  SectionCard,
+  Select,
+  Textarea,
+  VStack,
+} from '@/design-system';
+import {
+  CLOUD_BUILDER_SLUGS,
+  getCloudBuilderListConfig,
+  type CloudBuilderSlug,
+} from './consoleListConfig';
 
 function isCloudBuilderSlug(v: string | undefined): v is CloudBuilderSlug {
   return !!v && (CLOUD_BUILDER_SLUGS as readonly string[]).includes(v);
@@ -64,9 +77,12 @@ export function CloudBuilderCreatePage() {
             <>
               <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg">
                 <div className="px-6 py-5">
-                  <div className="text-[14px] font-semibold text-[var(--color-text-default)]">Endpoint</div>
+                  <div className="text-[14px] font-semibold text-[var(--color-text-default)]">
+                    Endpoint
+                  </div>
                   <div className="mt-1 text-[12px] text-[var(--color-text-subtle)]">
-                    엔드포인트를 입력하고 불러오기를 누르면 Serial/MAC/IP/Location을 채웁니다. (데모)
+                    엔드포인트를 입력하고 불러오기를 누르면 Serial/MAC/IP/Location을 채웁니다.
+                    (데모)
                   </div>
 
                   <div className="mt-4 grid grid-cols-12 gap-4 items-center">
@@ -98,14 +114,18 @@ export function CloudBuilderCreatePage() {
                 <div className="h-px bg-[var(--color-border-subtle)]" />
 
                 <div className="px-6 py-5">
-                  <div className="text-[14px] font-semibold text-[var(--color-text-default)]">Basic</div>
+                  <div className="text-[14px] font-semibold text-[var(--color-text-default)]">
+                    Basic
+                  </div>
 
                   <div className="mt-4 grid grid-cols-12 gap-y-5 gap-x-6">
                     <div className="col-span-4">
                       <div className="text-[12px] font-medium text-[var(--color-text-default)]">
                         Serial <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                       </div>
-                      <div className="mt-1 text-[11px] text-[var(--color-text-subtle)]">현장 휴면 식별용 시리얼</div>
+                      <div className="mt-1 text-[11px] text-[var(--color-text-subtle)]">
+                        현장 휴면 식별용 시리얼
+                      </div>
                     </div>
                     <div className="col-span-8">
                       <Input
@@ -117,9 +137,12 @@ export function CloudBuilderCreatePage() {
 
                     <div className="col-span-4">
                       <div className="text-[12px] font-medium text-[var(--color-text-default)]">
-                        MAC (Primary) <span className="ml-1 text-[var(--color-state-danger)]">*</span>
+                        MAC (Primary){' '}
+                        <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                       </div>
-                      <div className="mt-1 text-[11px] text-[var(--color-text-subtle)]">대표 MAC(자산 식별 키)</div>
+                      <div className="mt-1 text-[11px] text-[var(--color-text-subtle)]">
+                        대표 MAC(자산 식별 키)
+                      </div>
                     </div>
                     <div className="col-span-8">
                       <Input
@@ -133,7 +156,9 @@ export function CloudBuilderCreatePage() {
                       <div className="text-[12px] font-medium text-[var(--color-text-default)]">
                         Location <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                       </div>
-                      <div className="mt-1 text-[11px] text-[var(--color-text-subtle)]">랙/유닛 등 물리 위치</div>
+                      <div className="mt-1 text-[11px] text-[var(--color-text-subtle)]">
+                        랙/유닛 등 물리 위치
+                      </div>
                     </div>
                     <div className="col-span-8">
                       <Input
@@ -144,8 +169,12 @@ export function CloudBuilderCreatePage() {
                     </div>
 
                     <div className="col-span-4">
-                      <div className="text-[12px] font-medium text-[var(--color-text-default)]">Mgmt IP (Optional)</div>
-                      <div className="mt-1 text-[11px] text-[var(--color-text-subtle)]">관리 IP(있으면 입력)</div>
+                      <div className="text-[12px] font-medium text-[var(--color-text-default)]">
+                        Mgmt IP (Optional)
+                      </div>
+                      <div className="mt-1 text-[11px] text-[var(--color-text-subtle)]">
+                        관리 IP(있으면 입력)
+                      </div>
                     </div>
                     <div className="col-span-8">
                       <Input
@@ -157,8 +186,12 @@ export function CloudBuilderCreatePage() {
                     </div>
 
                     <div className="col-span-4">
-                      <div className="text-[12px] font-medium text-[var(--color-text-default)]">Notes</div>
-                      <div className="mt-1 text-[11px] text-[var(--color-text-subtle)]">메모(선택)</div>
+                      <div className="text-[12px] font-medium text-[var(--color-text-default)]">
+                        Notes
+                      </div>
+                      <div className="mt-1 text-[11px] text-[var(--color-text-subtle)]">
+                        메모(선택)
+                      </div>
                     </div>
                     <div className="col-span-8">
                       <Textarea
@@ -178,7 +211,6 @@ export function CloudBuilderCreatePage() {
                   </div>
                 </div>
               </div>
-
             </>
           ) : isServerLike ? (
             <>
@@ -293,9 +325,7 @@ export function CloudBuilderCreatePage() {
                 <Button variant="secondary" onClick={() => navigate(`/cloudbuilder/${slug}`)}>
                   Cancel
                 </Button>
-                <Button onClick={() => setConfirmOpen(true)}>
-                  Create
-                </Button>
+                <Button onClick={() => setConfirmOpen(true)}>Create</Button>
               </div>
             </>
           ) : (
@@ -322,5 +352,3 @@ export function CloudBuilderCreatePage() {
     </AppLayout>
   );
 }
-
-

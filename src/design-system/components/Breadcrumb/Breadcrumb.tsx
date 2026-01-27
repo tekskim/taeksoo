@@ -33,20 +33,12 @@ export interface BreadcrumbProps {
    Breadcrumb Component
    ---------------------------------------- */
 
-export function Breadcrumb({
-  items,
-  separator,
-  className = '',
-  maxItems = 0,
-}: BreadcrumbProps) {
+export function Breadcrumb({ items, separator, className = '', maxItems = 0 }: BreadcrumbProps) {
   // Collapse middle items if maxItems is set
-  const displayItems = maxItems > 0 && items.length > maxItems
-    ? [
-        ...items.slice(0, 1),
-        { label: '...', href: undefined },
-        ...items.slice(-(maxItems - 1)),
-      ]
-    : items;
+  const displayItems =
+    maxItems > 0 && items.length > maxItems
+      ? [...items.slice(0, 1), { label: '...', href: undefined }, ...items.slice(-(maxItems - 1))]
+      : items;
 
   const defaultSeparator = (
     <IconChevronRight
@@ -67,13 +59,12 @@ export function Breadcrumb({
           const isEllipsis = item.label === '...';
 
           return (
-            <li key={`${item.label}-${index}`} className="flex items-center gap-[var(--breadcrumb-gap)]">
+            <li
+              key={`${item.label}-${index}`}
+              className="flex items-center gap-[var(--breadcrumb-gap)]"
+            >
               {/* Separator (not before first item) */}
-              {index > 0 && (
-                <span aria-hidden="true">
-                  {separator ?? defaultSeparator}
-                </span>
-              )}
+              {index > 0 && <span aria-hidden="true">{separator ?? defaultSeparator}</span>}
 
               {/* Breadcrumb Item */}
               {isEllipsis ? (
@@ -114,8 +105,3 @@ export function Breadcrumb({
     </nav>
   );
 }
-
-
-
-
-

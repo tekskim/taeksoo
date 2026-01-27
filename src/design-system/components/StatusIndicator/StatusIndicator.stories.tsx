@@ -3,27 +3,27 @@ import { StatusIndicator, type StatusType } from './StatusIndicator';
 
 /**
  * # StatusIndicator
- * 
+ *
  * 리소스나 작업의 상태를 시각적으로 표시하는 컴포넌트입니다.
- * 
+ *
  * ## 언제 사용하나요?
  * - 서버/인스턴스 상태 표시 (Active, Error, Building 등)
  * - 작업 진행 상태 표시 (Pending, Deleting 등)
  * - 리소스 사용 상태 표시 (In-use, Mounted 등)
  * - 테이블이나 카드에서 상태 정보 표시
- * 
+ *
  * ## 상태 카테고리
  * - **Success (녹색)**: active
  * - **Danger (빨강)**: error
  * - **Info (파랑)**: building, deleting
  * - **Warning (주황)**: verify-resized, degraded, no-monitor
  * - **Muted (회색)**: suspended, shelved, shutoff, paused, pending, draft 등
- * 
+ *
  * ## 레이아웃
  * - **icon-only**: 아이콘만 표시 (원형 배경)
  * - **default**: 아이콘 + 라벨 (pill 형태)
  * - **badge**: 아이콘 + 라벨 (사각형 배지)
- * 
+ *
  * ## 접근성
  * - `role="status"`로 상태 정보 전달
  * - `aria-label`로 스크린 리더에 상태 설명
@@ -44,10 +44,25 @@ const meta = {
     status: {
       control: 'select',
       options: [
-        'active', 'error', 'building', 'deleting', 'suspended',
-        'shelved', 'shelved-offloaded', 'mounted', 'shutoff', 'paused',
-        'pending', 'draft', 'verify-resized', 'deactivated', 'in-use',
-        'maintenance', 'degraded', 'no-monitor', 'down',
+        'active',
+        'error',
+        'building',
+        'deleting',
+        'suspended',
+        'shelved',
+        'shelved-offloaded',
+        'mounted',
+        'shutoff',
+        'paused',
+        'pending',
+        'draft',
+        'verify-resized',
+        'deactivated',
+        'in-use',
+        'maintenance',
+        'degraded',
+        'no-monitor',
+        'down',
       ] as StatusType[],
       description: '상태 유형',
     },
@@ -226,12 +241,27 @@ export const AllStatuses: Story = {
   name: 'All Statuses',
   render: () => {
     const statuses: StatusType[] = [
-      'active', 'error', 'building', 'deleting', 'suspended',
-      'shelved', 'shelved-offloaded', 'mounted', 'shutoff', 'paused',
-      'pending', 'draft', 'verify-resized', 'deactivated', 'in-use',
-      'maintenance', 'degraded', 'no-monitor', 'down',
+      'active',
+      'error',
+      'building',
+      'deleting',
+      'suspended',
+      'shelved',
+      'shelved-offloaded',
+      'mounted',
+      'shutoff',
+      'paused',
+      'pending',
+      'draft',
+      'verify-resized',
+      'deactivated',
+      'in-use',
+      'maintenance',
+      'degraded',
+      'no-monitor',
+      'down',
     ];
-    
+
     return (
       <div className="flex flex-col gap-4">
         <div className="grid grid-cols-3 gap-4">

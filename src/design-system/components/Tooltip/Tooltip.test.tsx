@@ -42,9 +42,9 @@ describe('Tooltip', () => {
       );
 
       await user.hover(screen.getByText('Hover me'));
-      
+
       vi.advanceTimersByTime(200);
-      
+
       await waitFor(() => {
         expect(screen.getByRole('tooltip')).toBeInTheDocument();
         expect(screen.getByText('Tooltip text')).toBeInTheDocument();
@@ -61,13 +61,13 @@ describe('Tooltip', () => {
 
       await user.hover(screen.getByText('Hover me'));
       vi.advanceTimersByTime(0);
-      
+
       await waitFor(() => {
         expect(screen.getByRole('tooltip')).toBeInTheDocument();
       });
 
       await user.unhover(screen.getByText('Hover me'));
-      
+
       await waitFor(() => {
         expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
       });
@@ -115,13 +115,13 @@ describe('Tooltip', () => {
 
       await user.tab();
       vi.advanceTimersByTime(0);
-      
+
       await waitFor(() => {
         expect(screen.getByRole('tooltip')).toBeInTheDocument();
       });
 
       await user.tab();
-      
+
       await waitFor(() => {
         expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
       });
@@ -138,11 +138,11 @@ describe('Tooltip', () => {
       );
 
       await user.hover(screen.getByText('Hover me'));
-      
+
       // Should not show after 200ms
       vi.advanceTimersByTime(200);
       expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
-      
+
       // Should show after 500ms total
       vi.advanceTimersByTime(300);
       await waitFor(() => {

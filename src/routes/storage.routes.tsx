@@ -28,4 +28,3 @@ export const storageRoutes = (
     <Route path="/storage/buckets/:id" element={<BucketDetailPage />} />
   </>
 );
-

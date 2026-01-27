@@ -37,16 +37,12 @@ type SectionState = 'pre' | 'active' | 'done' | 'writing';
 // Section labels for display
 const SECTION_LABELS: Record<SectionStep, string> = {
   'basic-info': 'Basic Information',
-  'taints': 'Taints',
+  taints: 'Taints',
   'labels-annotations': 'Labels & Annotations',
 };
 
 // Section order for navigation
-const SECTION_ORDER: SectionStep[] = [
-  'basic-info',
-  'taints',
-  'labels-annotations',
-];
+const SECTION_ORDER: SectionStep[] = ['basic-info', 'taints', 'labels-annotations'];
 
 // Effect options for taints
 const TAINT_EFFECT_OPTIONS = [
@@ -168,17 +164,13 @@ function SummarySidebar({ sectionStatus, onCancel, onSave }: SummarySidebarProps
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
       <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
         <WizardSummary items={summaryItems} />
-        
+
         {/* Action Buttons */}
         <HStack gap={2}>
           <Button variant="secondary" onClick={onCancel} className="w-[80px]">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
-            onClick={onSave}
-            className="flex-1"
-          >
+          <Button variant="primary" onClick={onSave} className="flex-1">
             Save
           </Button>
         </HStack>
@@ -477,7 +469,7 @@ function LabelsAnnotationsSection({
                 <div className="w-6" />
               </div>
             )}
-            
+
             {labels.map((label, index) => (
               <div key={index} className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center">
                 <Input
@@ -534,7 +526,7 @@ function LabelsAnnotationsSection({
                 <div className="w-6" />
               </div>
             )}
-            
+
             {annotations.map((annotation, index) => (
               <div key={index} className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center">
                 <Input
@@ -598,22 +590,16 @@ export function EditNodeConfigPage() {
   const [description, setDescription] = useState('');
 
   // Taints state
-  const [taints, setTaints] = useState<Taint[]>([
-    { key: '', value: '', effect: 'NoSchedule' },
-  ]);
+  const [taints, setTaints] = useState<Taint[]>([{ key: '', value: '', effect: 'NoSchedule' }]);
 
   // Labels & Annotations state
-  const [labels, setLabels] = useState<Label[]>([
-    { key: '', value: '' },
-  ]);
-  const [annotations, setAnnotations] = useState<Annotation[]>([
-    { key: '', value: '' },
-  ]);
+  const [labels, setLabels] = useState<Label[]>([{ key: '', value: '' }]);
+  const [annotations, setAnnotations] = useState<Annotation[]>([{ key: '', value: '' }]);
 
   // Section states - start with all sections active for edit flow
   const [sectionStatus, setSectionStatus] = useState<Record<SectionStep, SectionState>>({
     'basic-info': 'active',
-    'taints': 'pre',
+    taints: 'pre',
     'labels-annotations': 'pre',
   });
 
@@ -751,9 +737,9 @@ export function EditNodeConfigPage() {
     console.log('Saving node config:', {
       nodeName,
       description,
-      taints: taints.filter(t => t.key.trim() !== ''),
-      labels: labels.filter(l => l.key.trim() !== ''),
-      annotations: annotations.filter(a => a.key.trim() !== ''),
+      taints: taints.filter((t) => t.key.trim() !== ''),
+      labels: labels.filter((l) => l.key.trim() !== ''),
+      annotations: annotations.filter((a) => a.key.trim() !== ''),
     });
     navigate('/container/nodes');
   }, [nodeName, description, taints, labels, annotations, navigate]);
@@ -763,61 +749,79 @@ export function EditNodeConfigPage() {
     setTaints([...taints, { key: '', value: '', effect: 'NoSchedule' }]);
   }, [taints]);
 
-  const removeTaint = useCallback((index: number) => {
-    setTaints(taints.filter((_, i) => i !== index));
-  }, [taints]);
+  const removeTaint = useCallback(
+    (index: number) => {
+      setTaints(taints.filter((_, i) => i !== index));
+    },
+    [taints]
+  );
 
-  const updateTaint = useCallback((index: number, field: 'key' | 'value' | 'effect', value: string) => {
-    const newTaints = [...taints];
-    newTaints[index][field] = value;
-    setTaints(newTaints);
-  }, [taints]);
+  const updateTaint = useCallback(
+    (index: number, field: 'key' | 'value' | 'effect', value: string) => {
+      const newTaints = [...taints];
+      newTaints[index][field] = value;
+      setTaints(newTaints);
+    },
+    [taints]
+  );
 
   // Label management
   const addLabel = useCallback(() => {
     setLabels([...labels, { key: '', value: '' }]);
   }, [labels]);
 
-  const removeLabel = useCallback((index: number) => {
-    setLabels(labels.filter((_, i) => i !== index));
-  }, [labels]);
+  const removeLabel = useCallback(
+    (index: number) => {
+      setLabels(labels.filter((_, i) => i !== index));
+    },
+    [labels]
+  );
 
-  const updateLabel = useCallback((index: number, field: 'key' | 'value', value: string) => {
-    const newLabels = [...labels];
-    newLabels[index][field] = value;
-    setLabels(newLabels);
-  }, [labels]);
+  const updateLabel = useCallback(
+    (index: number, field: 'key' | 'value', value: string) => {
+      const newLabels = [...labels];
+      newLabels[index][field] = value;
+      setLabels(newLabels);
+    },
+    [labels]
+  );
 
   // Annotation management
   const addAnnotation = useCallback(() => {
     setAnnotations([...annotations, { key: '', value: '' }]);
   }, [annotations]);
 
-  const removeAnnotation = useCallback((index: number) => {
-    setAnnotations(annotations.filter((_, i) => i !== index));
-  }, [annotations]);
+  const removeAnnotation = useCallback(
+    (index: number) => {
+      setAnnotations(annotations.filter((_, i) => i !== index));
+    },
+    [annotations]
+  );
 
-  const updateAnnotation = useCallback((index: number, field: 'key' | 'value', value: string) => {
-    const newAnnotations = [...annotations];
-    newAnnotations[index][field] = value;
-    setAnnotations(newAnnotations);
-  }, [annotations]);
+  const updateAnnotation = useCallback(
+    (index: number, field: 'key' | 'value', value: string) => {
+      const newAnnotations = [...annotations];
+      newAnnotations[index][field] = value;
+      setAnnotations(newAnnotations);
+    },
+    [annotations]
+  );
 
   // Get display values for done sections
   const getTaintsDisplay = () => {
-    const validTaints = taints.filter(t => t.key.trim() !== '');
+    const validTaints = taints.filter((t) => t.key.trim() !== '');
     if (validTaints.length === 0) return 'None';
     return validTaints.map((t) => `${t.key}=${t.value}:${t.effect}`).join(', ');
   };
 
   const getLabelsDisplay = () => {
-    const validLabels = labels.filter(l => l.key.trim() !== '');
+    const validLabels = labels.filter((l) => l.key.trim() !== '');
     if (validLabels.length === 0) return 'None';
     return validLabels.map((l) => `${l.key}: ${l.value}`).join(', ');
   };
 
   const getAnnotationsDisplay = () => {
-    const validAnnotations = annotations.filter(a => a.key.trim() !== '');
+    const validAnnotations = annotations.filter((a) => a.key.trim() !== '');
     if (validAnnotations.length === 0) return 'None';
     return validAnnotations.map((a) => `${a.key}: ${a.value}`).join(', ');
   };
@@ -945,7 +949,11 @@ export function EditNodeConfigPage() {
                       title={SECTION_LABELS['taints']}
                       onEdit={() => handleEdit('taints')}
                     >
-                      <SectionCard.DataRow label="Taints" value={getTaintsDisplay()} showDivider={false} />
+                      <SectionCard.DataRow
+                        label="Taints"
+                        value={getTaintsDisplay()}
+                        showDivider={false}
+                      />
                     </DoneSection>
                   )}
 
@@ -977,7 +985,11 @@ export function EditNodeConfigPage() {
                       title={SECTION_LABELS['labels-annotations']}
                       onEdit={() => handleEdit('labels-annotations')}
                     >
-                      <SectionCard.DataRow label="Labels" value={getLabelsDisplay()} showDivider={false} />
+                      <SectionCard.DataRow
+                        label="Labels"
+                        value={getLabelsDisplay()}
+                        showDivider={false}
+                      />
                       <SectionCard.DataRow label="Annotations" value={getAnnotationsDisplay()} />
                     </DoneSection>
                   )}

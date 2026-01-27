@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { 
-  Drawer, 
-  Button, 
+import {
+  Drawer,
+  Button,
   Input,
   SearchInput,
   Pagination,
@@ -78,26 +78,22 @@ function QuotaProgressBar({ label, used, total }: QuotaProgressBarProps) {
           {label}
         </span>
         <HStack gap={0} align="center">
-          <span className="text-[12px] text-[var(--color-text-default)] leading-4">
-            {used}/
-          </span>
+          <span className="text-[12px] text-[var(--color-text-default)] leading-4">{used}/</span>
           {isUnlimited ? (
             <IconInfinity size={16} className="text-[var(--color-text-default)]" />
           ) : (
-            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
-              {total}
-            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">{total}</span>
           )}
         </HStack>
       </HStack>
       <div className="w-full h-1 bg-[var(--color-border-subtle)] rounded-lg relative overflow-hidden">
         {/* Current usage (darker green) */}
-        <div 
+        <div
           className="absolute left-0 top-0 h-full bg-[#4ade80] rounded-lg z-[2]"
           style={{ width: isUnlimited ? '5%' : `${Math.min(percentage, 100)}%` }}
         />
         {/* Next usage preview (lighter green) */}
-        <div 
+        <div
           className="absolute left-0 top-0 h-full bg-[#bbf7d0] rounded-lg z-[1]"
           style={{ width: isUnlimited ? '10%' : `${Math.min(nextPercentage, 100)}%` }}
         />
@@ -131,10 +127,11 @@ export function CreateVolumeBackupWithSelectionDrawer({
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
   // Filter volumes
-  const filteredVolumes = volumes.filter((vol) =>
-    vol.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    vol.attachedTo?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    vol.diskTag?.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredVolumes = volumes.filter(
+    (vol) =>
+      vol.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      vol.attachedTo?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      vol.diskTag?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const totalPages = Math.ceil(filteredVolumes.length / ITEMS_PER_PAGE);
@@ -158,7 +155,7 @@ export function CreateVolumeBackupWithSelectionDrawer({
   const handleSubmit = async () => {
     setHasAttemptedSubmit(true);
     if (!selectedVolumeId || !backupName.trim()) return;
-    
+
     setIsSubmitting(true);
     try {
       await onSubmit?.(selectedVolumeId, backupName, description, backupMode);
@@ -206,15 +203,11 @@ export function CreateVolumeBackupWithSelectionDrawer({
 
           {/* Buttons */}
           <HStack gap={2} justify="center" className="w-full">
-            <Button 
-              variant="secondary" 
-              onClick={handleClose}
-              className="w-[152px] h-8"
-            >
+            <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
               Cancel
             </Button>
-            <Button 
-              variant="primary" 
+            <Button
+              variant="primary"
               onClick={handleSubmit}
               disabled={isSubmitting}
               className="w-[152px] h-8"
@@ -256,7 +249,10 @@ export function CreateVolumeBackupWithSelectionDrawer({
           />
 
           {/* Volumes Table */}
-          <div className="flex flex-col gap-[var(--table-row-gap)]" style={{ width: '648px', maxWidth: '648px' }}>
+          <div
+            className="flex flex-col gap-[var(--table-row-gap)]"
+            style={{ width: '648px', maxWidth: '648px' }}
+          >
             {/* Header */}
             <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
               <div className="w-[var(--table-checkbox-width)] flex items-center justify-center" />
@@ -281,17 +277,20 @@ export function CreateVolumeBackupWithSelectionDrawer({
 
             {/* Rows */}
             {paginatedVolumes.map((vol) => (
-              <div 
+              <div
                 key={vol.id}
                 className={`flex items-stretch min-h-[var(--table-row-height)] border rounded-[var(--table-row-radius)] cursor-pointer transition-all ${
-                  selectedVolumeId === vol.id 
-                    ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]' 
+                  selectedVolumeId === vol.id
+                    ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]'
                     : 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] hover:bg-[var(--table-row-hover-bg)]'
                 }`}
                 onClick={() => setSelectedVolumeId(vol.id)}
               >
                 {/* Radio */}
-                <div className="w-[var(--table-checkbox-width)] flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
+                <div
+                  className="w-[var(--table-checkbox-width)] flex items-center justify-center"
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <Radio
                     name="volume-select"
                     value={vol.id}
@@ -305,27 +304,43 @@ export function CreateVolumeBackupWithSelectionDrawer({
                 </div>
                 {/* Name */}
                 <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] truncate">{vol.name}</span>
-                  <IconExternalLink size={12} className="shrink-0 text-[var(--color-action-primary)]" />
+                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] truncate">
+                    {vol.name}
+                  </span>
+                  <IconExternalLink
+                    size={12}
+                    className="shrink-0 text-[var(--color-action-primary)]"
+                  />
                 </div>
                 {/* Size */}
                 <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">{vol.size} GiB</span>
+                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">
+                    {vol.size} GiB
+                  </span>
                 </div>
                 {/* Attach To */}
                 <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
                   {vol.attachedTo ? (
                     <>
-                      <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] truncate">{vol.attachedTo}</span>
-                      <IconExternalLink size={12} className="shrink-0 text-[var(--color-action-primary)]" />
+                      <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] truncate">
+                        {vol.attachedTo}
+                      </span>
+                      <IconExternalLink
+                        size={12}
+                        className="shrink-0 text-[var(--color-action-primary)]"
+                      />
                     </>
                   ) : (
-                    <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-subtle)]">-</span>
+                    <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-subtle)]">
+                      -
+                    </span>
                   )}
                 </div>
                 {/* Disk Tag */}
                 <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">{vol.diskTag || '-'}</span>
+                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">
+                    {vol.diskTag || '-'}
+                  </span>
                 </div>
               </div>
             ))}
@@ -333,7 +348,9 @@ export function CreateVolumeBackupWithSelectionDrawer({
 
           {/* Selection Indicator */}
           <SelectionIndicator
-            selectedItems={selectedVolume ? [{ id: selectedVolume.id, label: selectedVolume.name }] : []}
+            selectedItems={
+              selectedVolume ? [{ id: selectedVolume.id, label: selectedVolume.name }] : []
+            }
             onRemove={() => setSelectedVolumeId(null)}
             emptyText="No item Selected"
             error={!selectedVolumeId && hasAttemptedSubmit}
@@ -348,7 +365,9 @@ export function CreateVolumeBackupWithSelectionDrawer({
 
         {/* Backup Mode */}
         <VStack gap={3}>
-          <span className="text-[14px] font-medium text-[var(--color-text-default)]">Backup mode</span>
+          <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+            Backup mode
+          </span>
           <VStack gap={3}>
             <Radio
               name="backup-mode"
@@ -369,7 +388,9 @@ export function CreateVolumeBackupWithSelectionDrawer({
 
         {/* Volume Backup Name */}
         <VStack gap={2}>
-          <span className="text-[14px] font-medium text-[var(--color-text-default)]">Volume Backup name</span>
+          <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+            Volume Backup name
+          </span>
           <Input
             value={backupName}
             onChange={(e) => setBackupName(e.target.value)}
@@ -383,7 +404,9 @@ export function CreateVolumeBackupWithSelectionDrawer({
 
         {/* Description */}
         <VStack gap={2} className="pb-5">
-          <span className="text-[14px] font-medium text-[var(--color-text-default)]">Description (optional)</span>
+          <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+            Description (optional)
+          </span>
           <Input
             value={description}
             onChange={(e) => setDescription(e.target.value)}

@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import {
   Button,
   Breadcrumb,
-  HStack,
   VStack,
   TabBar,
   TopBar,
@@ -21,7 +20,6 @@ import {
   Slider,
   NumberInput,
   StatusIndicator,
-  Chip,
   IconUbuntu,
   IconGrid,
   IconRocky,
@@ -53,11 +51,7 @@ const SECTION_LABELS: Record<SectionStep, string> = {
 };
 
 // Section order for navigation
-const SECTION_ORDER: SectionStep[] = [
-  'basic-info',
-  'source',
-  'configuration',
-];
+const SECTION_ORDER: SectionStep[] = ['basic-info', 'source', 'configuration'];
 
 type SourceType = 'blank' | 'image' | 'snapshot';
 
@@ -94,21 +88,126 @@ interface VolumeTypeRow {
    ---------------------------------------- */
 
 const mockImages: ImageRow[] = [
-  { id: 'img-001', name: 'Ubuntu-24.04-64-base', version: '24.04', size: '799.00 MiB', minDisk: '0.00 MiB', minRAM: '0 MiB', visibility: 'Public', os: 'ubuntu', status: 'active' },
-  { id: 'img-002', name: 'Ubuntu-24.04-64-base', version: '24.04', size: '199.00 MiB', minDisk: '199.00 MiB', minRAM: '0 MiB', visibility: 'Public', os: 'ubuntu', status: 'active' },
-  { id: 'img-003', name: 'Ubuntu-24.04-64-base', version: '24.04', size: '199.00 MiB', minDisk: '0.00 MiB', minRAM: '1 MiB', visibility: 'Public', os: 'ubuntu', status: 'active' },
-  { id: 'img-004', name: 'Ubuntu-24.04-64-base', version: '24.04', size: '159.00 MiB', minDisk: '10.00 MiB', minRAM: '0 MiB', visibility: 'Public', os: 'ubuntu', status: 'active' },
-  { id: 'img-005', name: 'Ubuntu-24.04-64-base', version: '24.04', size: '799.00 MiB', minDisk: '0.00 MiB', minRAM: '0 MiB', visibility: 'Public', os: 'ubuntu', status: 'active' },
-  { id: 'img-006', name: 'Windows-Server-2019', version: '2019', size: '4.5 GiB', minDisk: '40 GiB', minRAM: '2 GiB', visibility: 'Public', os: 'windows', status: 'active' },
-  { id: 'img-007', name: 'Rocky-Linux-9', version: '9.0', size: '1.2 GiB', minDisk: '10 GiB', minRAM: '1 GiB', visibility: 'Public', os: 'rocky', status: 'active' },
+  {
+    id: 'img-001',
+    name: 'Ubuntu-24.04-64-base',
+    version: '24.04',
+    size: '799.00 MiB',
+    minDisk: '0.00 MiB',
+    minRAM: '0 MiB',
+    visibility: 'Public',
+    os: 'ubuntu',
+    status: 'active',
+  },
+  {
+    id: 'img-002',
+    name: 'Ubuntu-24.04-64-base',
+    version: '24.04',
+    size: '199.00 MiB',
+    minDisk: '199.00 MiB',
+    minRAM: '0 MiB',
+    visibility: 'Public',
+    os: 'ubuntu',
+    status: 'active',
+  },
+  {
+    id: 'img-003',
+    name: 'Ubuntu-24.04-64-base',
+    version: '24.04',
+    size: '199.00 MiB',
+    minDisk: '0.00 MiB',
+    minRAM: '1 MiB',
+    visibility: 'Public',
+    os: 'ubuntu',
+    status: 'active',
+  },
+  {
+    id: 'img-004',
+    name: 'Ubuntu-24.04-64-base',
+    version: '24.04',
+    size: '159.00 MiB',
+    minDisk: '10.00 MiB',
+    minRAM: '0 MiB',
+    visibility: 'Public',
+    os: 'ubuntu',
+    status: 'active',
+  },
+  {
+    id: 'img-005',
+    name: 'Ubuntu-24.04-64-base',
+    version: '24.04',
+    size: '799.00 MiB',
+    minDisk: '0.00 MiB',
+    minRAM: '0 MiB',
+    visibility: 'Public',
+    os: 'ubuntu',
+    status: 'active',
+  },
+  {
+    id: 'img-006',
+    name: 'Windows-Server-2019',
+    version: '2019',
+    size: '4.5 GiB',
+    minDisk: '40 GiB',
+    minRAM: '2 GiB',
+    visibility: 'Public',
+    os: 'windows',
+    status: 'active',
+  },
+  {
+    id: 'img-007',
+    name: 'Rocky-Linux-9',
+    version: '9.0',
+    size: '1.2 GiB',
+    minDisk: '10 GiB',
+    minRAM: '1 GiB',
+    visibility: 'Public',
+    os: 'rocky',
+    status: 'active',
+  },
 ];
 
 const mockSnapshots: SnapshotRow[] = [
-  { id: 'snap-001', name: 'snapshot-01', volumeType: '_DEFAULT_', size: '50 GiB', createdAt: '2025-11-01', status: 'active' },
-  { id: 'snap-002', name: 'snapshot-02', volumeType: '_DEFAULT_', size: '0.0 GiB', createdAt: '2025-11-20', status: 'active' },
-  { id: 'snap-003', name: 'snapshot-03', volumeType: '_DEFAULT_', size: '10 GiB', createdAt: '2025-11-20', status: 'active' },
-  { id: 'snap-004', name: 'snapshot-04', volumeType: '_DEFAULT_', size: '68 GiB', createdAt: '2025-11-20', status: 'active' },
-  { id: 'snap-005', name: 'snapshot-05', volumeType: '_DEFAULT_', size: '68 GiB', createdAt: '2025-11-30', status: 'active' },
+  {
+    id: 'snap-001',
+    name: 'snapshot-01',
+    volumeType: '_DEFAULT_',
+    size: '50 GiB',
+    createdAt: '2025-11-01',
+    status: 'active',
+  },
+  {
+    id: 'snap-002',
+    name: 'snapshot-02',
+    volumeType: '_DEFAULT_',
+    size: '0.0 GiB',
+    createdAt: '2025-11-20',
+    status: 'active',
+  },
+  {
+    id: 'snap-003',
+    name: 'snapshot-03',
+    volumeType: '_DEFAULT_',
+    size: '10 GiB',
+    createdAt: '2025-11-20',
+    status: 'active',
+  },
+  {
+    id: 'snap-004',
+    name: 'snapshot-04',
+    volumeType: '_DEFAULT_',
+    size: '68 GiB',
+    createdAt: '2025-11-20',
+    status: 'active',
+  },
+  {
+    id: 'snap-005',
+    name: 'snapshot-05',
+    volumeType: '_DEFAULT_',
+    size: '68 GiB',
+    createdAt: '2025-11-30',
+    status: 'active',
+  },
 ];
 
 const mockVolumeTypes: VolumeTypeRow[] = [
@@ -136,7 +235,12 @@ interface SummarySidebarProps {
   isCreateDisabled: boolean;
 }
 
-function SummarySidebar({ sectionStatus, onCancel, onCreate, isCreateDisabled }: SummarySidebarProps) {
+function SummarySidebar({
+  sectionStatus,
+  onCancel,
+  onCreate,
+  isCreateDisabled,
+}: SummarySidebarProps) {
   const summaryItems: WizardSummaryItem[] = SECTION_ORDER.map((key) => ({
     key,
     label: SECTION_LABELS[key],
@@ -147,15 +251,15 @@ function SummarySidebar({ sectionStatus, onCancel, onCreate, isCreateDisabled }:
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
       <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
         <WizardSummary items={summaryItems} />
-        
+
         {/* Action Buttons */}
         <div className="flex flex-col w-full">
           <div className="flex gap-2 items-center justify-end w-full">
             <Button variant="secondary" onClick={onCancel}>
               Cancel
             </Button>
-            <Button 
-              variant="primary" 
+            <Button
+              variant="primary"
               onClick={onCreate}
               disabled={isCreateDisabled}
               className="flex-1"
@@ -181,7 +285,7 @@ export function CreateVolumePage() {
   const [volumeName, setVolumeName] = useState('');
   const [availabilityZone, setAvailabilityZone] = useState('');
   const [description, setDescription] = useState('');
-  
+
   // Source section state
   const [sourceType, setSourceType] = useState<SourceType>('blank');
   const [selectedImage, setSelectedImage] = useState<string[]>([]);
@@ -228,8 +332,8 @@ export function CreateVolumePage() {
   const filteredImages = useMemo(() => {
     return mockImages.filter((img) => {
       const matchesOs = imageOsFilter === 'all' || img.os === imageOsFilter;
-      const matchesSearch = !imageSearchQuery || 
-        img.name.toLowerCase().includes(imageSearchQuery.toLowerCase());
+      const matchesSearch =
+        !imageSearchQuery || img.name.toLowerCase().includes(imageSearchQuery.toLowerCase());
       return matchesOs && matchesSearch;
     });
   }, [imageOsFilter, imageSearchQuery]);
@@ -237,16 +341,19 @@ export function CreateVolumePage() {
   // Filter snapshots by search
   const filteredSnapshots = useMemo(() => {
     return mockSnapshots.filter((snap) => {
-      return !snapshotSearchQuery || 
-        snap.name.toLowerCase().includes(snapshotSearchQuery.toLowerCase());
+      return (
+        !snapshotSearchQuery || snap.name.toLowerCase().includes(snapshotSearchQuery.toLowerCase())
+      );
     });
   }, [snapshotSearchQuery]);
 
   // Filter volume types by search
   const filteredVolumeTypes = useMemo(() => {
     return mockVolumeTypes.filter((vt) => {
-      return !volumeTypeSearchQuery || 
-        vt.name.toLowerCase().includes(volumeTypeSearchQuery.toLowerCase());
+      return (
+        !volumeTypeSearchQuery ||
+        vt.name.toLowerCase().includes(volumeTypeSearchQuery.toLowerCase())
+      );
     });
   }, [volumeTypeSearchQuery]);
 
@@ -267,21 +374,21 @@ export function CreateVolumePage() {
   // Validation handler for basic-info section
   const handleBasicInfoNext = () => {
     let hasError = false;
-    
+
     if (!volumeName.trim()) {
       setVolumeNameError('Please enter a volume name.');
       hasError = true;
     } else {
       setVolumeNameError(null);
     }
-    
+
     if (!availabilityZone) {
       setAzError('Please select an availability zone.');
       hasError = true;
     } else {
       setAzError(null);
     }
-    
+
     if (!hasError) {
       goToNextSection('basic-info');
     }
@@ -290,7 +397,7 @@ export function CreateVolumePage() {
   // Validation handler for source section
   const handleSourceNext = () => {
     let hasError = false;
-    
+
     if (sourceType === 'image' && selectedImage.length === 0) {
       setSourceError('Please select an image.');
       hasError = true;
@@ -300,7 +407,7 @@ export function CreateVolumePage() {
     } else {
       setSourceError(null);
     }
-    
+
     if (!hasError) {
       goToNextSection('source');
     }
@@ -345,27 +452,31 @@ export function CreateVolumePage() {
 
   // Image table columns
   const imageColumns: TableColumn<ImageRow>[] = [
-    { 
-      key: 'status', 
-      label: 'Status', 
+    {
+      key: 'status',
+      label: 'Status',
       width: '64px',
       align: 'center',
-      render: (value: ImageRow['status']) => <StatusIndicator status={value} />
+      render: (value: ImageRow['status']) => <StatusIndicator status={value} />,
     },
-    { 
-      key: 'name', 
-      label: 'Name', 
-      flex: 1, 
+    {
+      key: 'name',
+      label: 'Name',
+      flex: 1,
       sortable: true,
       render: (value: string, row: ImageRow) => (
         <div className="flex flex-col gap-0.5">
           <div className="flex items-center gap-1.5">
-            <span className="text-[12px] text-[var(--color-action-primary)] leading-[16px]">{value}</span>
+            <span className="text-[12px] text-[var(--color-action-primary)] leading-[16px]">
+              {value}
+            </span>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </div>
-          <span className="text-[11px] text-[var(--color-text-subtle)] leading-[16px]">ID: {row.id}</span>
+          <span className="text-[11px] text-[var(--color-text-subtle)] leading-[16px]">
+            ID: {row.id}
+          </span>
         </div>
-      )
+      ),
     },
     { key: 'version', label: 'Version', width: '100px', sortable: true },
     { key: 'size', label: 'Size', width: '120px', sortable: true },
@@ -376,30 +487,34 @@ export function CreateVolumePage() {
 
   // Snapshot table columns
   const snapshotColumns: TableColumn<SnapshotRow>[] = [
-    { 
-      key: 'status', 
-      label: 'Status', 
+    {
+      key: 'status',
+      label: 'Status',
       width: '64px',
       align: 'center',
-      render: (value: SnapshotRow['status']) => <StatusIndicator status={value} />
+      render: (value: SnapshotRow['status']) => <StatusIndicator status={value} />,
     },
-    { 
-      key: 'name', 
-      label: 'Name', 
-      flex: 2, 
+    {
+      key: 'name',
+      label: 'Name',
+      flex: 2,
       sortable: true,
       render: (value: string, row: SnapshotRow) => (
         <div className="flex flex-col gap-0.5">
           <div className="flex items-center gap-1.5">
-            <span className="text-[12px] text-[var(--color-action-primary)] leading-[16px]">{value}</span>
+            <span className="text-[12px] text-[var(--color-action-primary)] leading-[16px]">
+              {value}
+            </span>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
             {row.status === 'error' && (
               <IconAlertCircle size={16} className="text-[var(--color-state-danger)]" />
             )}
           </div>
-          <span className="text-[11px] text-[var(--color-text-subtle)] leading-[16px]">ID: {row.id}</span>
+          <span className="text-[11px] text-[var(--color-text-subtle)] leading-[16px]">
+            ID: {row.id}
+          </span>
         </div>
-      )
+      ),
     },
     { key: 'volumeType', label: 'Volume type', flex: 1, sortable: true },
     { key: 'size', label: 'Size', flex: 1, sortable: true },
@@ -443,10 +558,7 @@ export function CreateVolumePage() {
             onForward={() => window.history.forward()}
             breadcrumb={
               <Breadcrumb
-                items={[
-                  { label: 'Volumes', href: '/compute/volumes' },
-                  { label: 'Create volume' },
-                ]}
+                items={[{ label: 'Volumes', href: '/compute/volumes' }, { label: 'Create volume' }]}
               />
             }
             actions={
@@ -468,15 +580,14 @@ export function CreateVolumePage() {
                 Create volume
               </h1>
             </div>
-            
+
             <div className="flex gap-6 max-w-[1320px] mx-auto items-start">
               {/* Left Column - Main Content */}
               <div className="flex-1 min-w-0">
                 <VStack gap={4} align="stretch">
-                  
                   {/* Basic information Section */}
                   <SectionCard isActive={sectionStatus['basic-info'] === 'active'}>
-                    <SectionCard.Header 
+                    <SectionCard.Header
                       title={SECTION_LABELS['basic-info']}
                       showDivider={sectionStatus['basic-info'] === 'active'}
                       actions={
@@ -498,9 +609,12 @@ export function CreateVolumePage() {
                           <FormField.Label>Volume name</FormField.Label>
                           <FormField.Control>
                             <VStack gap={1}>
-                              <Input 
-                                value={volumeName} 
-                                onChange={(e) => { setVolumeName(e.target.value); setVolumeNameError(null); }}
+                              <Input
+                                value={volumeName}
+                                onChange={(e) => {
+                                  setVolumeName(e.target.value);
+                                  setVolumeNameError(null);
+                                }}
                                 placeholder="Enter volume name"
                                 fullWidth
                                 error={!!volumeNameError}
@@ -513,7 +627,8 @@ export function CreateVolumePage() {
                             </VStack>
                           </FormField.Control>
                           <FormField.HelperText>
-                            You can use letters, numbers, and special characters (+=,.@-_), and the length must be between 2-64 characters.
+                            You can use letters, numbers, and special characters (+=,.@-_), and the
+                            length must be between 2-64 characters.
                           </FormField.HelperText>
                         </FormField>
 
@@ -528,7 +643,10 @@ export function CreateVolumePage() {
                             <VStack gap={1}>
                               <Select
                                 value={availabilityZone}
-                                onChange={(value) => { setAvailabilityZone(value); setAzError(null); }}
+                                onChange={(value) => {
+                                  setAvailabilityZone(value);
+                                  setAzError(null);
+                                }}
                                 placeholder="Select AZ"
                                 options={azOptions}
                                 fullWidth
@@ -547,23 +665,21 @@ export function CreateVolumePage() {
                         <FormField>
                           <FormField.Label>Description</FormField.Label>
                           <FormField.Control>
-                            <Input 
-                              value={description} 
+                            <Input
+                              value={description}
                               onChange={(e) => setDescription(e.target.value)}
                               placeholder="Enter description"
-                              fullWidth 
+                              fullWidth
                             />
                           </FormField.Control>
                           <FormField.HelperText>
-                            You can use letters, numbers, and special characters (+=,.@-_()), and maximum 255 characters.
+                            You can use letters, numbers, and special characters (+=,.@-_()), and
+                            maximum 255 characters.
                           </FormField.HelperText>
                         </FormField>
 
                         <div className="flex items-center justify-end w-full">
-                          <Button 
-                            variant="primary" 
-                            onClick={handleBasicInfoNext}
-                          >
+                          <Button variant="primary" onClick={handleBasicInfoNext}>
                             Next
                           </Button>
                         </div>
@@ -573,14 +689,18 @@ export function CreateVolumePage() {
                       <SectionCard.Content>
                         <SectionCard.DataRow label="Volume name" value={volumeName} showDivider />
                         <SectionCard.DataRow label="AZ" value={availabilityZone} showDivider />
-                        <SectionCard.DataRow label="Description" value={description || '-'} showDivider />
+                        <SectionCard.DataRow
+                          label="Description"
+                          value={description || '-'}
+                          showDivider
+                        />
                       </SectionCard.Content>
                     )}
                   </SectionCard>
 
                   {/* Source Section */}
                   <SectionCard isActive={sectionStatus['source'] === 'active'}>
-                    <SectionCard.Header 
+                    <SectionCard.Header
                       title={SECTION_LABELS['source']}
                       showDivider={sectionStatus['source'] === 'active'}
                       actions={
@@ -601,7 +721,8 @@ export function CreateVolumePage() {
                         <FormField required>
                           <FormField.Label>Volume source type</FormField.Label>
                           <FormField.HelperText>
-                            Select the source for the new volume. You can create a blank volume or generate a volume from an image or an existing volume.
+                            Select the source for the new volume. You can create a blank volume or
+                            generate a volume from an image or an existing volume.
                           </FormField.HelperText>
                           <RadioGroup
                             value={sourceType}
@@ -636,9 +757,10 @@ export function CreateVolumePage() {
                                     onClick={() => setImageOsFilter(tab.id)}
                                     className={`
                                       inline-flex items-center gap-1.5 px-3 py-2 rounded-[4px] cursor-pointer text-[12px] font-medium transition-colors
-                                      ${isSelected 
-                                        ? 'bg-[var(--color-surface-default)] text-[var(--color-text-default)] shadow-sm' 
-                                        : 'bg-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text-default)]'
+                                      ${
+                                        isSelected
+                                          ? 'bg-[var(--color-surface-default)] text-[var(--color-text-default)] shadow-sm'
+                                          : 'bg-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text-default)]'
                                       }
                                     `}
                                   >
@@ -669,23 +791,31 @@ export function CreateVolumePage() {
 
                             <Table<ImageRow>
                               columns={imageColumns}
-                              data={filteredImages.slice((imageCurrentPage - 1) * 5, imageCurrentPage * 5)}
+                              data={filteredImages.slice(
+                                (imageCurrentPage - 1) * 5,
+                                imageCurrentPage * 5
+                              )}
                               rowKey="id"
                               emptyMessage="No images found"
                               selectable
                               hideSelectAll
                               selectedKeys={selectedImage}
-                              onSelectionChange={(keys) => { setSelectedImage(keys); setSourceError(null); }}
+                              onSelectionChange={(keys) => {
+                                setSelectedImage(keys);
+                                setSourceError(null);
+                              }}
                             />
 
                             {/* Selection Indicator for Images */}
                             <SelectionIndicator
                               className="mt-2"
-                              selectedItems={selectedImage.map(id => {
-                                const image = mockImages.find(img => img.id === id);
+                              selectedItems={selectedImage.map((id) => {
+                                const image = mockImages.find((img) => img.id === id);
                                 return { id, label: image?.name || id };
                               })}
-                              onRemove={(id) => setSelectedImage(selectedImage.filter(i => i !== id))}
+                              onRemove={(id) =>
+                                setSelectedImage(selectedImage.filter((i) => i !== id))
+                              }
                             />
                           </VStack>
                         )}
@@ -713,23 +843,31 @@ export function CreateVolumePage() {
 
                             <Table<SnapshotRow>
                               columns={snapshotColumns}
-                              data={filteredSnapshots.slice((snapshotCurrentPage - 1) * 5, snapshotCurrentPage * 5)}
+                              data={filteredSnapshots.slice(
+                                (snapshotCurrentPage - 1) * 5,
+                                snapshotCurrentPage * 5
+                              )}
                               rowKey="id"
                               emptyMessage="No snapshots found"
                               selectable
                               hideSelectAll
                               selectedKeys={selectedSnapshot}
-                              onSelectionChange={(keys) => { setSelectedSnapshot(keys); setSourceError(null); }}
+                              onSelectionChange={(keys) => {
+                                setSelectedSnapshot(keys);
+                                setSourceError(null);
+                              }}
                             />
 
                             {/* Selection Indicator for Snapshots */}
                             <SelectionIndicator
                               className="mt-2"
-                              selectedItems={selectedSnapshot.map(id => {
-                                const snapshot = mockSnapshots.find(s => s.id === id);
+                              selectedItems={selectedSnapshot.map((id) => {
+                                const snapshot = mockSnapshots.find((s) => s.id === id);
                                 return { id, label: snapshot?.name || id };
                               })}
-                              onRemove={(id) => setSelectedSnapshot(selectedSnapshot.filter(i => i !== id))}
+                              onRemove={(id) =>
+                                setSelectedSnapshot(selectedSnapshot.filter((i) => i !== id))
+                              }
                             />
                           </VStack>
                         )}
@@ -737,17 +875,12 @@ export function CreateVolumePage() {
                         {/* Source Error Message */}
                         {sourceError && (
                           <div className="mt-2">
-                            <InlineMessage variant="error">
-                              {sourceError}
-                            </InlineMessage>
+                            <InlineMessage variant="error">{sourceError}</InlineMessage>
                           </div>
                         )}
 
                         <div className="flex items-center justify-end w-full">
-                          <Button 
-                            variant="primary" 
-                            onClick={handleSourceNext}
-                          >
+                          <Button variant="primary" onClick={handleSourceNext}>
                             Next
                           </Button>
                         </div>
@@ -755,23 +888,31 @@ export function CreateVolumePage() {
                     )}
                     {sectionStatus['source'] === 'done' && (
                       <SectionCard.Content>
-                        <SectionCard.DataRow 
-                          label="Source type" 
-                          value={sourceType === 'blank' ? 'Blank volume' : sourceType === 'image' ? 'Image' : 'Volume snapshot'} 
-                          showDivider 
+                        <SectionCard.DataRow
+                          label="Source type"
+                          value={
+                            sourceType === 'blank'
+                              ? 'Blank volume'
+                              : sourceType === 'image'
+                                ? 'Image'
+                                : 'Volume snapshot'
+                          }
+                          showDivider
                         />
                         {sourceType === 'image' && selectedImage.length > 0 && (
-                          <SectionCard.DataRow 
-                            label="Image" 
-                            value={mockImages.find(i => i.id === selectedImage[0])?.name || '-'} 
-                            showDivider 
+                          <SectionCard.DataRow
+                            label="Image"
+                            value={mockImages.find((i) => i.id === selectedImage[0])?.name || '-'}
+                            showDivider
                           />
                         )}
                         {sourceType === 'snapshot' && selectedSnapshot.length > 0 && (
-                          <SectionCard.DataRow 
-                            label="Snapshot" 
-                            value={mockSnapshots.find(s => s.id === selectedSnapshot[0])?.name || '-'} 
-                            showDivider 
+                          <SectionCard.DataRow
+                            label="Snapshot"
+                            value={
+                              mockSnapshots.find((s) => s.id === selectedSnapshot[0])?.name || '-'
+                            }
+                            showDivider
                           />
                         )}
                       </SectionCard.Content>
@@ -780,7 +921,7 @@ export function CreateVolumePage() {
 
                   {/* Configuration Section */}
                   <SectionCard isActive={sectionStatus['configuration'] === 'active'}>
-                    <SectionCard.Header 
+                    <SectionCard.Header
                       title={SECTION_LABELS['configuration']}
                       showDivider={sectionStatus['configuration'] === 'active'}
                       actions={
@@ -805,18 +946,20 @@ export function CreateVolumePage() {
                             <VStack gap={4} align="stretch">
                               <VStack gap={3} align="start">
                                 <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
-                                  Volume type <span className="text-[var(--color-state-danger)]">*</span>
+                                  Volume type{' '}
+                                  <span className="text-[var(--color-state-danger)]">*</span>
                                 </span>
                                 <span className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
-                                  Automatically set to the volume type of the source volume used to create the snapshot.
+                                  Automatically set to the volume type of the source volume used to
+                                  create the snapshot.
                                 </span>
                               </VStack>
                               <div className="bg-[var(--color-surface-subtle)] px-4 py-3 rounded-lg w-full">
                                 <span className="text-[12px] text-[var(--color-text-default)]">
-                                  {selectedSnapshot.length > 0 
-                                    ? mockSnapshots.find(s => s.id === selectedSnapshot[0])?.volumeType || '_DEFAULT_'
-                                    : '_DEFAULT_'
-                                  }
+                                  {selectedSnapshot.length > 0
+                                    ? mockSnapshots.find((s) => s.id === selectedSnapshot[0])
+                                        ?.volumeType || '_DEFAULT_'
+                                    : '_DEFAULT_'}
                                 </span>
                               </div>
                             </VStack>
@@ -825,7 +968,8 @@ export function CreateVolumePage() {
                             <FormField required>
                               <FormField.Label>Volume type capacity</FormField.Label>
                               <FormField.HelperText>
-                                Defines the size of the volume. Depending on the selected source, a minimum required size may apply.
+                                Defines the size of the volume. Depending on the selected source, a
+                                minimum required size may apply.
                               </FormField.HelperText>
                               <div className="flex items-center gap-6 w-full border border-[var(--color-border-default)] rounded-md px-4 py-2">
                                 <div className="flex-1">
@@ -845,17 +989,17 @@ export function CreateVolumePage() {
                                       max={1460}
                                     />
                                   </div>
-                                  <span className="text-[12px] text-[var(--color-text-default)]">GiB</span>
+                                  <span className="text-[12px] text-[var(--color-text-default)]">
+                                    GiB
+                                  </span>
                                 </div>
                               </div>
-                              <FormField.HelperText>
-                                1-1460 GiB
-                              </FormField.HelperText>
+                              <FormField.HelperText>1-1460 GiB</FormField.HelperText>
                             </FormField>
 
                             <div className="flex items-center justify-end w-full">
-                              <Button 
-                                variant="primary" 
+                              <Button
+                                variant="primary"
                                 onClick={() => {
                                   setSectionStatus((prev) => ({
                                     ...prev,
@@ -873,7 +1017,8 @@ export function CreateVolumePage() {
                             <FormField required>
                               <FormField.Label>Volume type</FormField.Label>
                               <FormField.HelperText>
-                                Select the volume type that determines performance characteristics for the volume.
+                                Select the volume type that determines performance characteristics
+                                for the volume.
                               </FormField.HelperText>
                             </FormField>
 
@@ -898,7 +1043,10 @@ export function CreateVolumePage() {
 
                               <Table<VolumeTypeRow>
                                 columns={volumeTypeColumns}
-                                data={filteredVolumeTypes.slice((volumeTypeCurrentPage - 1) * 5, volumeTypeCurrentPage * 5)}
+                                data={filteredVolumeTypes.slice(
+                                  (volumeTypeCurrentPage - 1) * 5,
+                                  volumeTypeCurrentPage * 5
+                                )}
                                 rowKey="id"
                                 emptyMessage="No volume types found"
                                 selectable
@@ -909,18 +1057,21 @@ export function CreateVolumePage() {
                               {/* Selection Indicator for Volume Types */}
                               <SelectionIndicator
                                 className="mt-2"
-                                selectedItems={selectedVolumeType.map(id => {
-                                  const volumeType = mockVolumeTypes.find(v => v.id === id);
+                                selectedItems={selectedVolumeType.map((id) => {
+                                  const volumeType = mockVolumeTypes.find((v) => v.id === id);
                                   return { id, label: volumeType?.name || id };
                                 })}
-                                onRemove={(id) => setSelectedVolumeType(selectedVolumeType.filter(i => i !== id))}
+                                onRemove={(id) =>
+                                  setSelectedVolumeType(selectedVolumeType.filter((i) => i !== id))
+                                }
                               />
                             </VStack>
 
                             <FormField required>
                               <FormField.Label>Volume type capacity</FormField.Label>
                               <FormField.HelperText>
-                                Defines the size of the volume. Depending on the selected source, and minimum required size may apply.
+                                Defines the size of the volume. Depending on the selected source,
+                                and minimum required size may apply.
                               </FormField.HelperText>
                               <div className="flex items-center gap-4 w-full">
                                 <div className="flex-1">
@@ -940,17 +1091,17 @@ export function CreateVolumePage() {
                                       max={1000}
                                     />
                                   </div>
-                                  <span className="text-[14px] text-[var(--color-text-default)]">GiB</span>
+                                  <span className="text-[14px] text-[var(--color-text-default)]">
+                                    GiB
+                                  </span>
                                 </div>
                               </div>
-                              <FormField.HelperText>
-                                1 ~ 1000 GiB
-                              </FormField.HelperText>
+                              <FormField.HelperText>1 ~ 1000 GiB</FormField.HelperText>
                             </FormField>
 
                             <div className="flex items-center justify-end w-full">
-                              <Button 
-                                variant="primary" 
+                              <Button
+                                variant="primary"
                                 onClick={() => {
                                   setSectionStatus((prev) => ({
                                     ...prev,
@@ -968,20 +1119,21 @@ export function CreateVolumePage() {
                     )}
                     {sectionStatus['configuration'] === 'done' && (
                       <SectionCard.Content>
-                        <SectionCard.DataRow 
-                          label="Volume type" 
-                          value={mockVolumeTypes.find(v => v.id === selectedVolumeType[0])?.name || '-'} 
-                          showDivider 
+                        <SectionCard.DataRow
+                          label="Volume type"
+                          value={
+                            mockVolumeTypes.find((v) => v.id === selectedVolumeType[0])?.name || '-'
+                          }
+                          showDivider
                         />
-                        <SectionCard.DataRow 
-                          label="Capacity" 
-                          value={`${volumeCapacity} GiB`} 
-                          showDivider 
+                        <SectionCard.DataRow
+                          label="Capacity"
+                          value={`${volumeCapacity} GiB`}
+                          showDivider
                         />
                       </SectionCard.Content>
                     )}
                   </SectionCard>
-
                 </VStack>
               </div>
 
@@ -1001,4 +1153,3 @@ export function CreateVolumePage() {
 }
 
 export default CreateVolumePage;
-

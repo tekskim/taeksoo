@@ -169,7 +169,15 @@ interface ConnectionCardProps {
   highlighted?: boolean;
 }
 
-function ConnectionCard({ icon, title, description, status, badge, children, highlighted }: ConnectionCardProps) {
+function ConnectionCard({
+  icon,
+  title,
+  description,
+  status,
+  badge,
+  children,
+  highlighted,
+}: ConnectionCardProps) {
   const getStatusBadge = () => {
     switch (status) {
       case 'available':
@@ -210,15 +218,17 @@ function ConnectionCard({ icon, title, description, status, badge, children, hig
   };
 
   return (
-    <div className={`border rounded-lg p-4 ${highlighted ? 'border-[var(--color-action-primary)] border-2' : 'border-[var(--color-border-default)]'}`}>
+    <div
+      className={`border rounded-lg p-4 ${highlighted ? 'border-[var(--color-action-primary)] border-2' : 'border-[var(--color-border-default)]'}`}
+    >
       <div className="flex items-start justify-between mb-2">
         <div className="flex items-start gap-3">
-          <div className="text-[var(--color-text-muted)] mt-0.5">
-            {icon}
-          </div>
+          <div className="text-[var(--color-text-muted)] mt-0.5">{icon}</div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-medium text-[14px] text-[var(--color-text-default)]">{title}</span>
+              <span className="font-medium text-[14px] text-[var(--color-text-default)]">
+                {title}
+              </span>
               {badge}
             </div>
             <p className="text-[12px] text-[var(--color-text-subtle)] mt-0.5">{description}</p>
@@ -276,7 +286,7 @@ export function WorkloadDetailPage() {
   const [activeDetailTab, setActiveDetailTab] = useState('connect');
 
   // Get workload data based on the ID from URL
-  const workload = id ? (mockWorkloadsMap[id] || defaultWorkloadDetail) : defaultWorkloadDetail;
+  const workload = id ? mockWorkloadsMap[id] || defaultWorkloadDetail : defaultWorkloadDetail;
 
   // Global tab management
   const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab } = useTabs();
@@ -308,10 +318,14 @@ export function WorkloadDetailPage() {
   // Status mapping
   const getStatusType = () => {
     switch (workload.status) {
-      case 'running': return 'active' as const;
-      case 'pending': return 'building' as const;
-      case 'failed': return 'error' as const;
-      default: return 'muted' as const;
+      case 'running':
+        return 'active' as const;
+      case 'pending':
+        return 'building' as const;
+      case 'failed':
+        return 'error' as const;
+      default:
+        return 'muted' as const;
     }
   };
 
@@ -366,7 +380,7 @@ export function WorkloadDetailPage() {
               {/* Workload Header Card */}
               <DetailHeader>
                 <DetailHeader.Title>{workload.name}</DetailHeader.Title>
-                
+
                 <DetailHeader.Actions>
                   <Button variant="secondary" size="sm" leftIcon={<IconPlayerPause size={12} />}>
                     Stop
@@ -377,8 +391,16 @@ export function WorkloadDetailPage() {
                   <ContextMenu
                     items={[
                       { id: 'restart', label: 'Restart', onClick: () => console.log('Restart') },
-                      { id: 'view-logs', label: 'View logs', onClick: () => console.log('View logs') },
-                      { id: 'view-metrics', label: 'View metrics', onClick: () => console.log('View metrics') },
+                      {
+                        id: 'view-logs',
+                        label: 'View logs',
+                        onClick: () => console.log('View logs'),
+                      },
+                      {
+                        id: 'view-metrics',
+                        label: 'View metrics',
+                        onClick: () => console.log('View metrics'),
+                      },
                     ]}
                     trigger="click"
                   >
@@ -389,7 +411,11 @@ export function WorkloadDetailPage() {
                 </DetailHeader.Actions>
 
                 <DetailHeader.InfoGrid>
-                  <DetailHeader.InfoCard label="Status" value={workload.status.charAt(0).toUpperCase() + workload.status.slice(1)} status={getStatusType()} />
+                  <DetailHeader.InfoCard
+                    label="Status"
+                    value={workload.status.charAt(0).toUpperCase() + workload.status.slice(1)}
+                    status={getStatusType()}
+                  />
                   <DetailHeader.InfoCard label="ID" value={workload.id} copyable />
                   <DetailHeader.InfoCard label="Namespace" value={workload.namespace} />
                   <DetailHeader.InfoCard label="Created at" value={workload.createdAt} />
@@ -398,7 +424,12 @@ export function WorkloadDetailPage() {
 
               {/* Workload Tabs */}
               <div className="w-full">
-                <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline" size="sm">
+                <Tabs
+                  value={activeDetailTab}
+                  onChange={setActiveDetailTab}
+                  variant="underline"
+                  size="sm"
+                >
                   <TabList>
                     <Tab value="connect">Connect</Tab>
                     <Tab value="details">Details</Tab>
@@ -413,10 +444,14 @@ export function WorkloadDetailPage() {
                       {/* Quick Access Section */}
                       <div>
                         <div className="flex items-center gap-2 mb-4">
-                          <h3 className="text-[14px] font-semibold text-[var(--color-text-default)]">Quick Access</h3>
-                          <Badge variant="default" size="sm">Recommended</Badge>
+                          <h3 className="text-[14px] font-semibold text-[var(--color-text-default)]">
+                            Quick Access
+                          </h3>
+                          <Badge variant="default" size="sm">
+                            Recommended
+                          </Badge>
                         </div>
-                        
+
                         <ConnectionCard
                           icon={<IconWorld size={24} stroke={1.5} />}
                           title="HTTP Services"
@@ -430,25 +465,28 @@ export function WorkloadDetailPage() {
                               <span className="text-[13px]">{workload.httpServices.message}</span>
                             </div>
                           )}
-                          {workload.httpServices.status === 'available' && workload.httpServices.url && (
-                            <div className="mt-3">
-                              <a
-                                href={workload.httpServices.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-[var(--color-action-primary)] hover:underline text-[13px]"
-                              >
-                                {workload.httpServices.url}
-                              </a>
-                            </div>
-                          )}
+                          {workload.httpServices.status === 'available' &&
+                            workload.httpServices.url && (
+                              <div className="mt-3">
+                                <a
+                                  href={workload.httpServices.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-[var(--color-action-primary)] hover:underline text-[13px]"
+                                >
+                                  {workload.httpServices.url}
+                                </a>
+                              </div>
+                            )}
                         </ConnectionCard>
                       </div>
 
                       {/* Advanced Connection Options */}
                       <Disclosure defaultOpen={true}>
                         <Disclosure.Trigger>
-                          <span className="text-[14px] text-[var(--color-text-default)]">Advanced Connection Options</span>
+                          <span className="text-[14px] text-[var(--color-text-default)]">
+                            Advanced Connection Options
+                          </span>
                         </Disclosure.Trigger>
                         <Disclosure.Panel>
                           <VStack gap={4} className="pt-4">
@@ -458,21 +496,34 @@ export function WorkloadDetailPage() {
                               title="SSH Access"
                               description="Secure shell access for advanced users"
                               status={workload.sshAccess.status}
-                              badge={<Badge variant="default" size="sm">Advanced</Badge>}
+                              badge={
+                                <Badge variant="default" size="sm">
+                                  Advanced
+                                </Badge>
+                              }
                             >
                               {workload.sshAccess.status === 'setup-required' && (
                                 <>
                                   <InlineMessage variant="info" className="mt-3">
-                                    SSH access requires setting up a secure connection through our bastion host. This process takes 5-10 seconds.
+                                    SSH access requires setting up a secure connection through our
+                                    bastion host. This process takes 5-10 seconds.
                                   </InlineMessage>
-                                  <Button variant="primary" size="md" className="w-full mt-3" leftIcon={<IconTerminal2 size={16} />}>
+                                  <Button
+                                    variant="primary"
+                                    size="md"
+                                    className="w-full mt-3"
+                                    leftIcon={<IconTerminal2 size={16} />}
+                                  >
                                     Set Up SSH Connection
                                   </Button>
                                 </>
                               )}
-                              {workload.sshAccess.status === 'available' && workload.sshAccess.host && (
-                                <CopyableCommand command={`ssh root@${workload.sshAccess.host} -p ${workload.sshAccess.port} -i ${workload.sshAccess.keyPath}`} />
-                              )}
+                              {workload.sshAccess.status === 'available' &&
+                                workload.sshAccess.host && (
+                                  <CopyableCommand
+                                    command={`ssh root@${workload.sshAccess.host} -p ${workload.sshAccess.port} -i ${workload.sshAccess.keyPath}`}
+                                  />
+                                )}
                             </ConnectionCard>
 
                             {/* SSH over TCP */}
@@ -481,11 +532,16 @@ export function WorkloadDetailPage() {
                               title="SSH over TCP"
                               description="Direct TCP connection with SCP & SFTP support"
                               status={workload.sshOverTcp.status}
-                              badge={<Badge variant="default" size="sm">Advanced</Badge>}
+                              badge={
+                                <Badge variant="default" size="sm">
+                                  Advanced
+                                </Badge>
+                              }
                             >
-                              {workload.sshOverTcp.status === 'ready' && workload.sshOverTcp.command && (
-                                <CopyableCommand command={workload.sshOverTcp.command} />
-                              )}
+                              {workload.sshOverTcp.status === 'ready' &&
+                                workload.sshOverTcp.command && (
+                                  <CopyableCommand command={workload.sshOverTcp.command} />
+                                )}
                             </ConnectionCard>
 
                             {/* Direct TCP Ports */}
@@ -494,11 +550,18 @@ export function WorkloadDetailPage() {
                               title="Direct TCP Ports"
                               description="Direct TCP connections to exposed ports"
                               status={workload.directTcpPorts.status}
-                              badge={<Badge variant="default" size="sm">Advanced</Badge>}
+                              badge={
+                                <Badge variant="default" size="sm">
+                                  Advanced
+                                </Badge>
+                              }
                             >
-                              {workload.directTcpPorts.status === 'ready' && workload.directTcpPorts.address && (
-                                <CopyableCommand command={`${workload.directTcpPorts.address} → ${workload.directTcpPorts.targetPort}`} />
-                              )}
+                              {workload.directTcpPorts.status === 'ready' &&
+                                workload.directTcpPorts.address && (
+                                  <CopyableCommand
+                                    command={`${workload.directTcpPorts.address} → ${workload.directTcpPorts.targetPort}`}
+                                  />
+                                )}
                             </ConnectionCard>
                           </VStack>
                         </Disclosure.Panel>
@@ -516,7 +579,12 @@ export function WorkloadDetailPage() {
                           <SectionCard.DataRow label="Name" value={workload.name} />
                           <SectionCard.DataRow label="ID" value={workload.id} />
                           <SectionCard.DataRow label="Namespace" value={workload.namespace} />
-                          <SectionCard.DataRow label="Status" value={workload.status.charAt(0).toUpperCase() + workload.status.slice(1)} />
+                          <SectionCard.DataRow
+                            label="Status"
+                            value={
+                              workload.status.charAt(0).toUpperCase() + workload.status.slice(1)
+                            }
+                          />
                           <SectionCard.DataRow label="Created at" value={workload.createdAt} />
                         </SectionCard.Content>
                       </SectionCard>
@@ -547,7 +615,7 @@ export function WorkloadDetailPage() {
                     <div className="pt-6">
                       <div className="bg-[var(--color-surface-subtle)] rounded-lg p-4 font-mono text-[12px] text-[var(--color-text-default)] h-[400px] overflow-auto">
                         <pre className="whitespace-pre-wrap">
-{`[2025-01-08 14:30:00] Starting container...
+                          {`[2025-01-08 14:30:00] Starting container...
 [2025-01-08 14:30:02] Pulling image presidio-pii-deid:latest
 [2025-01-08 14:30:15] Image pulled successfully
 [2025-01-08 14:30:16] Creating container...

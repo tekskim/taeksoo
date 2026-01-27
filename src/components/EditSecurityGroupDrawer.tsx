@@ -46,7 +46,7 @@ export function EditSecurityGroupDrawer({
   const handleSubmit = async () => {
     setHasAttemptedSubmit(true);
     if (!name.trim()) return;
-    
+
     setIsSubmitting(true);
     try {
       await onSubmit?.(name, description);
@@ -70,15 +70,11 @@ export function EditSecurityGroupDrawer({
       width={376}
       footer={
         <HStack gap={2} className="w-full">
-          <Button 
-            variant="secondary" 
-            onClick={handleClose}
-            className="flex-1 h-8"
-          >
+          <Button variant="secondary" onClick={handleClose} className="flex-1 h-8">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={handleSubmit}
             disabled={isSubmitting}
             className="flex-1 h-8"
@@ -142,5 +138,3 @@ export function EditSecurityGroupDrawer({
 }
 
 export default EditSecurityGroupDrawer;
-
-

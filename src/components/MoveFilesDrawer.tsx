@@ -78,9 +78,19 @@ function FolderTreeItem({
 
         {/* Folder Icon */}
         {isExpanded && hasChildren ? (
-          <IconFolderOpen size={16} className={isSelected ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-subtle)]'} />
+          <IconFolderOpen
+            size={16}
+            className={
+              isSelected ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-subtle)]'
+            }
+          />
         ) : (
-          <IconFolder size={16} className={isSelected ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-subtle)]'} />
+          <IconFolder
+            size={16}
+            className={
+              isSelected ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-subtle)]'
+            }
+          />
         )}
 
         {/* Folder Name */}
@@ -186,7 +196,9 @@ export function MoveFilesDrawer({
   onSubmit,
 }: MoveFilesDrawerProps) {
   const [selectedPath, setSelectedPath] = useState<string | null>(null);
-  const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set(['folder-a', 'folder-c', 'folder-d', 'folder-e', 'folder-f', 'folder-g']));
+  const [expandedFolders, setExpandedFolders] = useState<Set<string>>(
+    new Set(['folder-a', 'folder-c', 'folder-d', 'folder-e', 'folder-f', 'folder-g'])
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Reset form when drawer opens/closes

@@ -246,7 +246,7 @@ export const RealWorldExample: Story = {
           </div>
           <span className="text-[var(--color-state-success)]">23%</span>
         </div>
-        
+
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="font-medium">Memory</span>
@@ -256,7 +256,7 @@ export const RealWorldExample: Story = {
           </div>
           <span className="text-[var(--color-state-warning)]">67%</span>
         </div>
-        
+
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="font-medium">Disk I/O</span>

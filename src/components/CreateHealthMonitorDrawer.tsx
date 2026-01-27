@@ -77,7 +77,7 @@ export function CreateHealthMonitorDrawer({
     setHasAttemptedSubmit(true);
     // Validation: timeout must be less than interval
     if (timeout >= interval) return;
-    
+
     setIsSubmitting(true);
     try {
       await onSubmit?.({
@@ -113,15 +113,11 @@ export function CreateHealthMonitorDrawer({
       width={376}
       footer={
         <HStack gap={2} className="w-full">
-          <Button 
-            variant="secondary" 
-            onClick={handleClose}
-            className="flex-1 h-8"
-          >
+          <Button variant="secondary" onClick={handleClose} className="flex-1 h-8">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={handleSubmit}
             disabled={isSubmitting}
             className="flex-1 h-8"
@@ -144,12 +140,7 @@ export function CreateHealthMonitorDrawer({
           <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
             Pool name
           </label>
-          <Input
-            value={pool.name}
-            readOnly
-            disabled
-            fullWidth
-          />
+          <Input value={pool.name} readOnly disabled fullWidth />
         </VStack>
 
         {/* Health Monitor Name */}
@@ -262,9 +253,7 @@ export function CreateHealthMonitorDrawer({
               Max Retries must be between 1-10
             </p>
           ) : (
-            <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
-              1 ~ 10
-            </p>
+            <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">1 ~ 10</p>
           )}
         </VStack>
 
@@ -274,10 +263,7 @@ export function CreateHealthMonitorDrawer({
             Admin State
           </label>
           <HStack gap={2} className="items-center">
-            <Toggle 
-              checked={adminStateUp} 
-              onChange={(e) => setAdminStateUp(e.target.checked)} 
-            />
+            <Toggle checked={adminStateUp} onChange={(e) => setAdminStateUp(e.target.checked)} />
             <span className="text-[12px] text-[var(--color-text-default)] leading-4">
               {adminStateUp ? 'Up' : 'Down'}
             </span>
@@ -289,4 +275,3 @@ export function CreateHealthMonitorDrawer({
 }
 
 export default CreateHealthMonitorDrawer;
-

@@ -8,8 +8,7 @@ import { twMerge } from 'tailwind-merge';
 export type InputSize = 'sm' | 'md';
 export type InputVariant = 'default' | 'search' | 'code';
 
-export interface InputProps
-  extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
+export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
   /** Input field size */
   size?: InputSize;
   /** Input variant */
@@ -87,10 +86,12 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 
     // Focus styles (not applied for readOnly)
     // Use box-shadow instead of border-width change to prevent text jumping
-    const focusStyles = !readOnly ? [
-      'focus:border-[var(--input-border-focus)]',
-      'focus:shadow-[0_0_0_1px_var(--input-border-focus)]',
-    ] : [];
+    const focusStyles = !readOnly
+      ? [
+          'focus:border-[var(--input-border-focus)]',
+          'focus:shadow-[0_0_0_1px_var(--input-border-focus)]',
+        ]
+      : [];
 
     // Variant styles
     const variantStyles: Record<InputVariant, string> = {
@@ -112,9 +113,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       : '';
 
     // ReadOnly styles
-    const readOnlyStyles = readOnly && !disabled
-      ? 'cursor-default'
-      : '';
+    const readOnlyStyles = readOnly && !disabled ? 'cursor-default' : '';
 
     const inputClasses = twMerge(
       baseInputStyles.join(' '),
@@ -129,10 +128,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       className
     );
 
-    const wrapperClasses = [
-      'flex flex-col gap-2',
-      fullWidth ? 'w-full' : 'w-fit',
-    ].join(' ');
+    const wrapperClasses = ['flex flex-col gap-2', fullWidth ? 'w-full' : 'w-fit'].join(' ');
 
     return (
       <div className={wrapperClasses}>
@@ -142,9 +138,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             className={`font-medium text-[var(--color-text-default)] text-[14px] leading-5`}
           >
             {label}
-            {required && (
-              <span className="text-[var(--color-state-danger)] ml-0.5">*</span>
-            )}
+            {required && <span className="text-[var(--color-state-danger)] ml-0.5">*</span>}
           </label>
         )}
 
@@ -177,13 +171,19 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 
         {/* Helper Text - below input */}
         {helperText && !error && (
-          <p id={`${inputId}-helper`} className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+          <p
+            id={`${inputId}-helper`}
+            className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]"
+          >
             {helperText}
           </p>
         )}
 
         {error && (
-          <p id={`${inputId}-error`} className="text-[length:var(--font-size-11)] text-[var(--color-state-danger)]">
+          <p
+            id={`${inputId}-error`}
+            className="text-[length:var(--font-size-11)] text-[var(--color-state-danger)]"
+          >
             {error}
           </p>
         )}

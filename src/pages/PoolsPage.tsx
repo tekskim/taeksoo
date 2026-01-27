@@ -13,10 +13,7 @@ import {
 } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconRefresh,
-  IconBell,
-} from '@tabler/icons-react';
+import { IconRefresh, IconBell } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
@@ -143,7 +140,7 @@ function UsageCell({ percent }: UsageCellProps) {
       <div className="h-1 w-full bg-[var(--color-border-subtle)] rounded-full overflow-hidden">
         <div
           className="h-full rounded-full transition-all duration-300"
-          style={{ 
+          style={{
             width: `${Math.min(percent, 100)}%`,
             backgroundColor: getStatusColor(percent),
           }}
@@ -175,12 +172,15 @@ export function PoolsPage() {
   }));
 
   // Filter pools based on search
-  const filteredPools = useMemo(() =>
-    mockPools.filter((pool) =>
-      pool.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      pool.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      pool.applications.toLowerCase().includes(searchQuery.toLowerCase())
-    ), [searchQuery]
+  const filteredPools = useMemo(
+    () =>
+      mockPools.filter(
+        (pool) =>
+          pool.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          pool.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          pool.applications.toLowerCase().includes(searchQuery.toLowerCase())
+      ),
+    [searchQuery]
   );
 
   const totalPages = Math.ceil(filteredPools.length / rowsPerPage);
@@ -228,7 +228,7 @@ export function PoolsPage() {
       render: (_, row) => {
         const fullText = row.pgStatus.join(' ');
         return (
-          <div 
+          <div
             className="line-clamp-2 text-[length:var(--table-font-size)] leading-[var(--table-line-height)]"
             title={fullText}
           >
@@ -248,9 +248,7 @@ export function PoolsPage() {
       label: 'Usage',
       flex: 1.2,
       sortable: true,
-      render: (_, row) => (
-        <UsageCell percent={row.usagePercent} />
-      ),
+      render: (_, row) => <UsageCell percent={row.usagePercent} />,
     },
     {
       key: 'readOps',
@@ -269,7 +267,7 @@ export function PoolsPage() {
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       {/* Sidebar */}
-      <StorageSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
+      <StorageSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
 
       {/* Main Content */}
       <main
@@ -297,18 +295,10 @@ export function PoolsPage() {
             onBack={() => window.history.back()}
             onForward={() => window.history.forward()}
             breadcrumb={
-              <Breadcrumb
-                items={[
-                  { label: 'Home', href: '/storage' },
-                  { label: 'Pools' },
-                ]}
-              />
+              <Breadcrumb items={[{ label: 'Home', href: '/storage' }, { label: 'Pools' }]} />
             }
             actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-              />
+              <TopBarAction icon={<IconBell size={16} stroke={1.5} />} aria-label="Notifications" />
             }
           />
         </div>
@@ -380,4 +370,3 @@ export function PoolsPage() {
 }
 
 export default PoolsPage;
-

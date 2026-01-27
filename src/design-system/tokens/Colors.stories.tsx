@@ -35,17 +35,17 @@ CSS 변수로 정의되어 있어 다크 모드 자동 지원됩니다.
 export default meta;
 type Story = StoryObj;
 
-const ColorSwatch = ({ 
-  name, 
-  variable, 
-  description 
-}: { 
-  name: string; 
-  variable: string; 
+const ColorSwatch = ({
+  name,
+  variable,
+  description,
+}: {
+  name: string;
+  variable: string;
   description?: string;
 }) => (
   <div className="flex items-center gap-4 py-2">
-    <div 
+    <div
       className="w-12 h-12 rounded-lg border border-[var(--color-border-default)] shrink-0"
       style={{ background: `var(${variable})` }}
     />
@@ -59,11 +59,11 @@ const ColorSwatch = ({
   </div>
 );
 
-const ColorSection = ({ 
-  title, 
-  colors 
-}: { 
-  title: string; 
+const ColorSection = ({
+  title,
+  colors,
+}: {
+  title: string;
   colors: Array<{ name: string; variable: string; description?: string }>;
 }) => (
   <div className="mb-8">

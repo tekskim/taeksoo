@@ -95,7 +95,7 @@ function randIp(i: number) {
 function randMac(i: number) {
   const hex = (n: number) => n.toString(16).padStart(2, '0');
   return `00:${hex((i * 13) % 256)}:${hex((i * 29) % 256)}:${hex((i * 7) % 256)}:${hex(
-    (i * 19) % 256,
+    (i * 19) % 256
   )}:${hex((i * 23) % 256)}`;
 }
 
@@ -106,7 +106,7 @@ function uuidLike(i: number) {
   const c = (i * 362437) >>> 0;
   return `${hex(a, 8)}-${hex(b, 4).slice(0, 4)}-${hex(c, 4).slice(0, 4)}-${hex(a ^ b, 4).slice(
     0,
-    4,
+    4
   )}-${hex((b ^ c) + a, 12).slice(0, 12)}`;
 }
 
@@ -152,8 +152,18 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
       createHref: '/cloudbuilder/discovery/create',
       actionMenu: {
         items: [
-          { id: 'register-server', label: 'Register server', kind: 'action', actionId: 'register-server' },
-          { id: 'register-switch', label: 'Register switch', kind: 'action', actionId: 'register-switch' },
+          {
+            id: 'register-server',
+            label: 'Register server',
+            kind: 'action',
+            actionId: 'register-server',
+          },
+          {
+            id: 'register-switch',
+            label: 'Register switch',
+            kind: 'action',
+            actionId: 'register-switch',
+          },
           { id: 'edit', label: 'Edit', kind: 'action', actionId: 'edit' },
           { id: 'remove', label: 'Remove', kind: 'action', status: 'danger', actionId: 'remove' },
         ],
@@ -163,7 +173,13 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
         { key: 'location', label: 'Location', sortable: true },
         { key: 'mgmtIp', label: 'Mgmt IP', sortable: true, kind: 'mono' },
         { key: 'source', label: 'Source', sortable: true },
-        { key: 'frontierNet', label: 'Frontier NET', sortable: true, kind: 'badge', badgeTones: frontierTones },
+        {
+          key: 'frontierNet',
+          label: 'Frontier NET',
+          sortable: true,
+          kind: 'badge',
+          badgeTones: frontierTones,
+        },
         { key: 'updatedAt', label: 'Updated At', sortable: true },
       ],
       rows: makeRows(COUNT, (i) => {
@@ -212,10 +228,28 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
         { key: 'location', label: 'Location', sortable: true },
         { key: 'updatedAt', label: 'Updated At', sortable: true },
         { key: 'nicPrimaryName', label: 'NIC (Primary Name)', sortable: true },
-        { key: 'frontierNet', label: 'Frontier NET', sortable: true, kind: 'badge', badgeTones: frontierTones },
+        {
+          key: 'frontierNet',
+          label: 'Frontier NET',
+          sortable: true,
+          kind: 'badge',
+          badgeTones: frontierTones,
+        },
         { key: 'mgmtIp', label: 'Mgmt IP', sortable: true, kind: 'mono' },
-        { key: 'observedHealth', label: 'Observed Health', sortable: true, kind: 'badge', badgeTones: observedHealthTones },
-        { key: 'provisionStatus', label: 'Provision Status', sortable: true, kind: 'badge', badgeTones: provisionStatusTones },
+        {
+          key: 'observedHealth',
+          label: 'Observed Health',
+          sortable: true,
+          kind: 'badge',
+          badgeTones: observedHealthTones,
+        },
+        {
+          key: 'provisionStatus',
+          label: 'Provision Status',
+          sortable: true,
+          kind: 'badge',
+          badgeTones: provisionStatusTones,
+        },
         { key: 'role', label: 'Role', sortable: true, kind: 'badge', badgeTones: roleTones },
         { key: 'purpose', label: 'Purpose', sortable: true },
       ],
@@ -263,7 +297,13 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
         { key: 'name', label: 'Switch', sortable: true },
         { key: 'mgmtIp', label: 'Mgmt IP', sortable: true, kind: 'mono' },
         { key: 'model', label: 'Model', sortable: true },
-        { key: 'status', label: 'Status', sortable: true, kind: 'badge', badgeTones: { Up: 'success', Down: 'neutral' } },
+        {
+          key: 'status',
+          label: 'Status',
+          sortable: true,
+          kind: 'badge',
+          badgeTones: { Up: 'success', Down: 'neutral' },
+        },
         { key: 'updatedAt', label: 'Updated At', sortable: true },
       ],
       rows: makeRows(COUNT, (i) => ({
@@ -308,7 +348,13 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
         { key: 'location', label: 'Location', sortable: true },
         { key: 'updatedAt', label: 'Updated At', sortable: true },
         { key: 'nicPrimaryName', label: 'NIC (Primary Name)', sortable: true },
-        { key: 'frontierNet', label: 'Frontier NET', sortable: true, kind: 'badge', badgeTones: frontierTones },
+        {
+          key: 'frontierNet',
+          label: 'Frontier NET',
+          sortable: true,
+          kind: 'badge',
+          badgeTones: frontierTones,
+        },
         { key: 'mgmtIp', label: 'Mgmt IP', sortable: true, kind: 'mono' },
         {
           key: 'observedHealth',
@@ -377,10 +423,23 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
         { key: 'endpoints', label: 'Endpoints', sortable: true },
       ],
       rows: makeRows(COUNT, (i) => ({
-        name: i % 5 === 0 ? 'neutron' : i % 5 === 1 ? 'nova' : i % 5 === 2 ? 'keystone' : i % 5 === 3 ? 'cinder3' : `service-${i}`,
-        service: i % 4 === 0 ? 'network' : i % 4 === 1 ? 'compute' : i % 4 === 2 ? 'identity' : 'volumev3',
+        name:
+          i % 5 === 0
+            ? 'neutron'
+            : i % 5 === 1
+              ? 'nova'
+              : i % 5 === 2
+                ? 'keystone'
+                : i % 5 === 3
+                  ? 'cinder3'
+                  : `service-${i}`,
+        service:
+          i % 4 === 0 ? 'network' : i % 4 === 1 ? 'compute' : i % 4 === 2 ? 'identity' : 'volumev3',
         region: i % 3 === 0 ? 'RegionOne' : i % 3 === 1 ? 'RegionTwo' : 'RegionZero',
-        endpoints: i % 2 === 0 ? 'public: http://... / internal: http://...' : 'public: https://... / internal: http://...',
+        endpoints:
+          i % 2 === 0
+            ? 'public: http://... / internal: http://...'
+            : 'public: https://... / internal: http://...',
       })),
     };
   }
@@ -405,7 +464,13 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
         { key: 'host', label: 'Host', sortable: true },
         { key: 'vcpus', label: 'vCPUs', sortable: true, kind: 'mono' },
         { key: 'ram', label: 'RAM', sortable: true, kind: 'mono' },
-        { key: 'status', label: 'Status', sortable: true, kind: 'badge', badgeTones: { Enabled: 'success', Disabled: 'neutral' } },
+        {
+          key: 'status',
+          label: 'Status',
+          sortable: true,
+          kind: 'badge',
+          badgeTones: { Enabled: 'success', Disabled: 'neutral' },
+        },
         { key: 'updatedAt', label: 'Updated At', sortable: true },
       ],
       rows: makeRows(COUNT, (i) => ({
@@ -430,7 +495,12 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
         { key: 'name', label: 'Name', sortable: true },
         { key: 'type', label: 'Type', sortable: true },
         { key: 'vcpuCore', label: 'VCPU (Core)', sortable: true, kind: 'mono' },
-        { key: 'configuredMemoryGiB', label: 'Configured Memory (GiB)', sortable: true, kind: 'mono' },
+        {
+          key: 'configuredMemoryGiB',
+          label: 'Configured Memory (GiB)',
+          sortable: true,
+          kind: 'mono',
+        },
         { key: 'instances', label: 'Instances', sortable: true, kind: 'mono' },
         { key: 'gpuUsage', label: 'GPU usage', sortable: true, kind: 'mono' },
         { key: 'pcpuUsage', label: 'PCPU usage', sortable: true, kind: 'mono' },
@@ -459,11 +529,21 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
         { key: 'vcpusUsed', label: 'VCPUs used', sortable: true, kind: 'mono' },
         { key: 'vcpusReserved', label: 'VCPUs reserved', sortable: true, kind: 'mono' },
         { key: 'vcpusTotal', label: 'VCPUs total', sortable: true, kind: 'mono' },
-        { key: 'vcpusAllocationRatio', label: 'VCPUs allocation ratio', sortable: true, kind: 'mono' },
+        {
+          key: 'vcpusAllocationRatio',
+          label: 'VCPUs allocation ratio',
+          sortable: true,
+          kind: 'mono',
+        },
         { key: 'pcpusUsed', label: 'PCPUs used', sortable: true, kind: 'mono' },
         { key: 'pcpusReserved', label: 'PCPUs reserved', sortable: true, kind: 'mono' },
         { key: 'pcpusTotal', label: 'PCPUs total', sortable: true, kind: 'mono' },
-        { key: 'pcpusAllocationRatio', label: 'PCPUs allocation ratio', sortable: true, kind: 'mono' },
+        {
+          key: 'pcpusAllocationRatio',
+          label: 'PCPUs allocation ratio',
+          sortable: true,
+          kind: 'mono',
+        },
         { key: 'ramUsed', label: 'RAM used', sortable: true, kind: 'mono' },
         { key: 'ramReserved', label: 'RAM reserved', sortable: true, kind: 'mono' },
         { key: 'ramTotal', label: 'RAM total', sortable: true, kind: 'mono' },
@@ -471,7 +551,12 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
         { key: 'storageUsed', label: 'Storage used', sortable: true, kind: 'mono' },
         { key: 'storageReserved', label: 'Storage reserved', sortable: true, kind: 'mono' },
         { key: 'storageTotal', label: 'Storage total', sortable: true, kind: 'mono' },
-        { key: 'storageAllocationRatio', label: 'Storage allocation ratio', sortable: true, kind: 'mono' },
+        {
+          key: 'storageAllocationRatio',
+          label: 'Storage allocation ratio',
+          sortable: true,
+          kind: 'mono',
+        },
       ],
       rows: makeRows(COUNT, (i) => {
         // 첫 몇 개는 스크린샷/실제 서비스 느낌에 가깝게 고정값
@@ -641,15 +726,44 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
         { key: 'type', label: 'Type', sortable: true, width: '200px' },
         { key: 'host', label: 'Host', sortable: true },
         { key: 'availabilityZone', label: 'Availability Zone', sortable: true },
-        { key: 'serviceStatus', label: 'Service Status', sortable: true, kind: 'badge', badgeTones: { Enabled: 'success', Disabled: 'neutral' } },
-        { key: 'serviceState', label: 'Service State', sortable: true, kind: 'badge', badgeTones: { Up: 'success', Down: 'neutral' } },
+        {
+          key: 'serviceStatus',
+          label: 'Service Status',
+          sortable: true,
+          kind: 'badge',
+          badgeTones: { Enabled: 'success', Disabled: 'neutral' },
+        },
+        {
+          key: 'serviceState',
+          label: 'Service State',
+          sortable: true,
+          kind: 'badge',
+          badgeTones: { Up: 'success', Down: 'neutral' },
+        },
         { key: 'lastUpdated', label: 'Last Updated', sortable: true },
       ],
       rows: makeRows(COUNT, (i) => ({
         id: `25d21d${String(60 + (i % 30)).padStart(2, '0')}`,
-        name: i % 4 === 0 ? 'neutron-dhcp-agent' : i % 4 === 1 ? 'neutron-metadata-agent' : i % 4 === 2 ? 'ovn-controller-agent' : 'ovn-gateway-agent',
-        type: i % 4 === 0 ? 'DHCP agent' : i % 4 === 1 ? 'OVN Metadata agent' : i % 4 === 2 ? 'OVN Controller agent' : 'OVN Controller Gateway agent',
-        host: i % 3 === 0 ? 'bdv2kr1-ctrl01' : `bdv2kr1-gcompute${String((i % 24) + 1).padStart(2, '0')}`,
+        name:
+          i % 4 === 0
+            ? 'neutron-dhcp-agent'
+            : i % 4 === 1
+              ? 'neutron-metadata-agent'
+              : i % 4 === 2
+                ? 'ovn-controller-agent'
+                : 'ovn-gateway-agent',
+        type:
+          i % 4 === 0
+            ? 'DHCP agent'
+            : i % 4 === 1
+              ? 'OVN Metadata agent'
+              : i % 4 === 2
+                ? 'OVN Controller agent'
+                : 'OVN Controller Gateway agent',
+        host:
+          i % 3 === 0
+            ? 'bdv2kr1-ctrl01'
+            : `bdv2kr1-gcompute${String((i % 24) + 1).padStart(2, '0')}`,
         availabilityZone: i % 5 === 0 ? '-' : 'nova',
         serviceStatus: i % 9 === 0 ? 'Disabled' : 'Enabled',
         serviceState: i % 11 === 0 ? 'Down' : 'Up',
@@ -683,7 +797,14 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
         { key: 'lastUpdated', label: 'Last Updated', sortable: true },
       ],
       rows: makeRows(COUNT, (i) => ({
-        name: i % 7 === 0 ? 'cinder-scheduler' : i % 7 === 1 ? 'cinder-volume' : i % 7 === 2 ? 'cinder-backup' : 'cinder-volume',
+        name:
+          i % 7 === 0
+            ? 'cinder-scheduler'
+            : i % 7 === 1
+              ? 'cinder-volume'
+              : i % 7 === 2
+                ? 'cinder-backup'
+                : 'cinder-volume',
         host:
           i % 5 === 0
             ? 'bdv2kr1-ctrl01'
@@ -697,7 +818,8 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
         availabilityZone: 'nova',
         serviceStatus: i % 11 === 0 ? 'Disabled' : 'Enabled',
         serviceState: i % 13 === 0 ? 'Down' : 'Up',
-        lastUpdated: i % 7 === 0 ? 'a few seconds ago' : i % 7 === 1 ? '3 months ago' : 'a few seconds ago',
+        lastUpdated:
+          i % 7 === 0 ? 'a few seconds ago' : i % 7 === 1 ? '3 months ago' : 'a few seconds ago',
       })),
     };
 
@@ -712,7 +834,13 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
         { key: 'name', label: 'Name', sortable: true },
         { key: 'protocol', label: 'Protocol', sortable: true },
         { key: 'backendName', label: 'Backend Name', sortable: true },
-        { key: 'storageCapacityGiB', label: 'Storage Capacity(GiB)', sortable: true, align: 'center', width: '520px' },
+        {
+          key: 'storageCapacityGiB',
+          label: 'Storage Capacity(GiB)',
+          sortable: true,
+          align: 'center',
+          width: '520px',
+        },
       ],
       rows: [
         {

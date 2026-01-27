@@ -129,12 +129,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
 
   const { usedStatus, newStatus } = error
     ? { usedStatus: 'danger' as ProgressBarStatus, newStatus: 'danger' as ProgressBarStatus }
-    : getStatus(
-        (value / total) * 100,
-        ((value + newValue) / total) * 100,
-        isUnlimited
-      );
-
+    : getStatus((value / total) * 100, ((value + newValue) / total) * 100, isUnlimited);
 
   // Quota variant
   if (variant === 'quota') {
@@ -150,11 +145,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
           {showValue && (
             <div className="flex items-center text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-default)]">
               <span>{value + newValue}/</span>
-              {isUnlimited ? (
-                <IconInfinity size={16} stroke={1} />
-              ) : (
-                <span>{max}</span>
-              )}
+              {isUnlimited ? <IconInfinity size={16} stroke={1} /> : <span>{max}</span>}
             </div>
           )}
         </div>
@@ -176,8 +167,8 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
           {/* Used segment */}
           <div
             className={`absolute inset-y-0 left-0 z-[3] ${
-              newValue > 0 
-                ? 'rounded-l-[var(--progress-bar-radius)]' 
+              newValue > 0
+                ? 'rounded-l-[var(--progress-bar-radius)]'
                 : 'rounded-[var(--progress-bar-radius)]'
             }`}
             style={{
@@ -280,9 +271,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
           className="absolute inset-y-0 left-0 rounded-[var(--progress-bar-radius)] z-[2]"
           style={{
             width: `${Math.min(totalPercent, 100)}%`,
-            backgroundColor: error
-              ? getStatusColor('danger')
-              : getStatusColor(status || 'info'),
+            backgroundColor: error ? getStatusColor('danger') : getStatusColor(status || 'info'),
             minWidth: totalPercent > 0 ? 4 : 0,
           }}
         />
@@ -292,4 +281,3 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
 };
 
 export default ProgressBar;
-

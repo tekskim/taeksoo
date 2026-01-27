@@ -11,7 +11,7 @@ export interface UseControllableOptions<T> {
 
 /**
  * Hook for managing controlled/uncontrolled component state
- * 
+ *
  * @example
  * ```tsx
  * function Input({ value, defaultValue, onChange }: InputProps) {
@@ -20,7 +20,7 @@ export interface UseControllableOptions<T> {
  *     defaultValue: defaultValue ?? '',
  *     onChange,
  *   });
- *   
+ *
  *   return <input value={internalValue} onChange={(e) => setValue(e.target.value)} />;
  * }
  * ```

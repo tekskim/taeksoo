@@ -56,9 +56,7 @@ export function SelectionIndicator({
         'px-3 py-2',
         'rounded-[var(--table-row-radius)]',
         'min-h-[42px]',
-        showError 
-          ? 'bg-[var(--inline-message-error-bg)]' 
-          : 'bg-[var(--color-surface-subtle)]',
+        showError ? 'bg-[var(--inline-message-error-bg)]' : 'bg-[var(--color-surface-subtle)]',
         className
       )}
       role={showError ? 'status' : undefined}
@@ -77,29 +75,22 @@ export function SelectionIndicator({
           ))
         ) : showError ? (
           <>
-            <IconCircleX 
-              size={16} 
-              className="text-[var(--inline-message-error-icon)] shrink-0" 
-              strokeWidth={1.5} 
+            <IconCircleX
+              size={16}
+              className="text-[var(--inline-message-error-icon)] shrink-0"
+              strokeWidth={1.5}
             />
             <span className="text-[length:var(--inline-message-font-size)] leading-[var(--inline-message-line-height)] text-[var(--inline-message-text)]">
               {errorMessage || emptyText}
             </span>
           </>
         ) : (
-          <span className="text-[12px] text-[var(--color-text-muted)]">
-            {emptyText}
-          </span>
+          <span className="text-[12px] text-[var(--color-text-muted)]">{emptyText}</span>
         )}
       </div>
 
       {/* Right side content */}
-      {rightContent && (
-        <div className="flex items-center shrink-0">
-          {rightContent}
-        </div>
-      )}
+      {rightContent && <div className="flex items-center shrink-0">{rightContent}</div>}
     </div>
   );
 }
-

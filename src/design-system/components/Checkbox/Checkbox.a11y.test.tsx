@@ -37,9 +37,7 @@ describe('Checkbox Accessibility', () => {
   });
 
   it('should have no accessibility violations with error', async () => {
-    const { container } = render(
-      <Checkbox label="Terms" error errorMessage="Required" />
-    );
+    const { container } = render(<Checkbox label="Terms" error errorMessage="Required" />);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });

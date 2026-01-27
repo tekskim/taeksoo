@@ -14,9 +14,7 @@ import {
   Tabs,
   TabList,
   Tab,
-  Tooltip,
   FloatingCard,
-  Disclosure,
   Chip,
   SearchInput,
   Pagination,
@@ -28,11 +26,7 @@ import {
   SelectionIndicator,
   type TableColumn,
 } from '@/design-system';
-import {
-  IconBell,
-  IconPalette,
-  IconX,
-} from '@tabler/icons-react';
+import { IconBell, IconPalette } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 
 /* ----------------------------------------
@@ -42,7 +36,7 @@ import { useNavigate } from 'react-router-dom';
 export function CreateAgentPage() {
   const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState<'configuration' | 'data-mcp'>('configuration');
-  
+
   // Validation error
   const [agentNameError, setAgentNameError] = useState<string | null>(null);
 
@@ -93,7 +87,7 @@ export function CreateAgentPage() {
   // Mock data
   const dataSources: DataSourceRow[] = Array.from({ length: 5 }, (_, i) => ({
     id: `data-${i + 1}`,
-    status: i === 0 ? 'completed' : (i === 1 ? 'error' : 'completed'),
+    status: i === 0 ? 'completed' : i === 1 ? 'error' : 'completed',
     name: i === 0 ? 'LableLableLableLableLableLableLa' : 'lable',
     type: 'File',
     size: '60 MB',
@@ -103,15 +97,15 @@ export function CreateAgentPage() {
   const mcpTools: MCPToolRow[] = [
     {
       id: 'mcp-1',
-    status: 'active',
+      status: 'active',
       title: 'LableLableLableLableLa...',
       mcpServer: {
         thumbnail: 'https://a.slack-edge.com/80588/marketing/img/icons/icon_slack_hash_colored.png',
         label: 'LableLableLableLa...',
       },
-    category: 'Communication',
+      category: 'Communication',
       tags: ['Tag', 'Tag', 'Tag', '+2'],
-    createdAt: 'Nov 11, 2025, 2:51 PM',
+      createdAt: 'Nov 11, 2025, 2:51 PM',
     },
     {
       id: 'mcp-2',
@@ -175,7 +169,10 @@ export function CreateAgentPage() {
 
   const dataSourceTotalPages = Math.ceil(filteredDataSources.length / rowsPerPage);
   const paginatedDataSources = useMemo(() => {
-    return filteredDataSources.slice((dataSourcePage - 1) * rowsPerPage, dataSourcePage * rowsPerPage);
+    return filteredDataSources.slice(
+      (dataSourcePage - 1) * rowsPerPage,
+      dataSourcePage * rowsPerPage
+    );
   }, [filteredDataSources, dataSourcePage, rowsPerPage]);
 
   // Filter MCP tools
@@ -196,13 +193,13 @@ export function CreateAgentPage() {
 
   // Status mapping for StatusIndicator
   const dataSourceStatusMap: Record<DataSourceRow['status'], 'active' | 'shutoff'> = {
-    'completed': 'active',
-    'error': 'shutoff',
+    completed: 'active',
+    error: 'shutoff',
   };
 
   const mcpToolStatusMap: Record<MCPToolRow['status'], 'active' | 'shutoff'> = {
-    'active': 'active',
-    'error': 'shutoff',
+    active: 'active',
+    error: 'shutoff',
   };
 
   // Data source table columns
@@ -269,8 +266,8 @@ export function CreateAgentPage() {
       render: (_, row) => (
         <div className="flex items-center gap-1.5">
           {row.mcpServer.thumbnail && (
-            <img 
-              src={row.mcpServer.thumbnail} 
+            <img
+              src={row.mcpServer.thumbnail}
               alt={row.mcpServer.label}
               className="size-4 shrink-0 rounded"
             />
@@ -342,553 +339,562 @@ export function CreateAgentPage() {
 
   return (
     <>
-          <TopBar
-            showSidebarToggle={false}
-            showNavigation={true}
-            canGoBack={false}
-            canGoForward={false}
-            onBack={() => {}}
-            onForward={() => {}}
-            breadcrumb={
-              <Breadcrumb
-                items={[
-                  { label: 'Agent', href: '/agent/list' },
-                  { label: 'Create agent' },
-                ]}
-              />
-            }
-            actions={
-              <>
-                <TopBarAction
-                  icon={<IconPalette size={16} stroke={1} />}
-                  onClick={() => navigate('/design-system')}
-                  aria-label="Design system"
-                />
-                <TopBarAction
-                  icon={<IconBell size={16} stroke={1} />}
-                  aria-label="Notifications"
-                  badge={true}
-                />
-              </>
-            }
+      <TopBar
+        showSidebarToggle={false}
+        showNavigation={true}
+        canGoBack={false}
+        canGoForward={false}
+        onBack={() => {}}
+        onForward={() => {}}
+        breadcrumb={
+          <Breadcrumb
+            items={[{ label: 'Agent', href: '/agent/list' }, { label: 'Create agent' }]}
           />
+        }
+        actions={
+          <>
+            <TopBarAction
+              icon={<IconPalette size={16} stroke={1} />}
+              onClick={() => navigate('/design-system')}
+              aria-label="Design system"
+            />
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1} />}
+              aria-label="Notifications"
+              badge={true}
+            />
+          </>
+        }
+      />
 
-        {/* Scrollable Content Area */}
+      {/* Scrollable Content Area */}
       <div className="flex-1 overflow-auto min-h-0 overscroll-contain sidebar-scroll">
-          <div className="bg-[var(--color-surface-default)] flex flex-col gap-3 items-center pb-6 pt-4 px-8 w-full min-h-full">
-            <div className="flex flex-col gap-3 items-start min-w-[1176px] relative shrink-0 w-full">
-              <div className="flex items-center justify-between h-8 w-full">
-                <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
-                  Create agent
-                </h1>
-              </div>
-              <div className="flex flex-row flex-1 items-start min-h-0 relative w-full gap-6">
-                {/* Left Content */}
-                <div className="flex flex-1 flex-col min-h-0">
-                  <div className="flex flex-col gap-6 w-full">
+        <div className="bg-[var(--color-surface-default)] flex flex-col gap-3 items-center pb-6 pt-4 px-8 w-full min-h-full">
+          <div className="flex flex-col gap-3 items-start min-w-[1176px] relative shrink-0 w-full">
+            <div className="flex items-center justify-between h-8 w-full">
+              <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
+                Create agent
+              </h1>
+            </div>
+            <div className="flex flex-row flex-1 items-start min-h-0 relative w-full gap-6">
+              {/* Left Content */}
+              <div className="flex flex-1 flex-col min-h-0">
+                <div className="flex flex-col gap-6 w-full">
+                  {/* Tabs */}
+                  <Tabs
+                    value={activeStep}
+                    onChange={(value) => setActiveStep(value as 'configuration' | 'data-mcp')}
+                    variant="underline"
+                    size="sm"
+                  >
+                    <TabList className="w-full">
+                      <Tab value="configuration">Configuration</Tab>
+                      <Tab value="data-mcp">Data & MCP Connection</Tab>
+                    </TabList>
+                  </Tabs>
 
-                {/* Tabs */}
-                <Tabs value={activeStep} onChange={(value) => setActiveStep(value as 'configuration' | 'data-mcp')} variant="underline" size="sm">
-                  <TabList className="w-full">
-                    <Tab value="configuration">Configuration</Tab>
-                    <Tab value="data-mcp">Data & MCP Connection</Tab>
-                  </TabList>
-                </Tabs>
-
-                {/* Configuration Tab */}
-                {activeStep === 'configuration' && (
-                  <VStack gap={8}>
-                    {/* Basic information */}
-                    <SectionCard id="basic-information">
-                      <SectionCard.Header title="Basic information" />
-                      <SectionCard.Content>
-                        {/* Agent name */}
-                        <VStack gap={1} className="w-full">
-                          <Input
-                            label="Agent name"
-                            placeholder="Enter a name for this agent."
-                            value={agentName}
-                            onChange={(e) => { setAgentName(e.target.value); setAgentNameError(null); }}
-                            fullWidth
-                            required
-                            error={!!agentNameError}
-                          />
-                          {agentNameError && (
-                            <span className="text-[11px] leading-[var(--line-height-16)] text-[var(--color-state-danger)]">
-                              {agentNameError}
-                            </span>
-                          )}
-                        </VStack>
-
-                        {/* Description */}
-                        <VStack gap={2} className="w-full">
-                          <Textarea
-                            label="Description"
-                            placeholder="Add an description."
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
-                            fullWidth
-                          />
-                        </VStack>
-
-                        {/* Status */}
-                        <VStack gap={2} className="w-full">
-                          <label className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
-                            Status
-                            <span className="text-[var(--color-state-danger)] ml-0.5">*</span>
-                          </label>
-                          <p className="text-[11px] text-[var(--color-text-subtle)]">
-                            Choose whether the agent will be active immediately or remain inactive.
-                          </p>
-                          <RadioGroup
-                            value={status}
-                            onChange={(value) => setStatus(value as 'inactive' | 'active')}
-                          >
-                            <Radio value="inactive">Inactive</Radio>
-                            <Radio value="active">Active</Radio>
-                          </RadioGroup>
-                        </VStack>
-
-                        {/* Tag */}
-                        <VStack gap={2} className="w-full">
-                          <label className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
-                            Tag
-                          </label>
-                          <p className="text-[11px] text-[var(--color-text-subtle)]">
-                            Tags help categorize and identify your resources.
-                          </p>
-                          <Input
-                            placeholder="Enter tags"
-                            value={tagInput}
-                            onChange={(e) => setTagInput(e.target.value)}
-                            onKeyPress={(e) => {
-                              if (e.key === 'Enter') {
-                                e.preventDefault();
-                                handleAddTag();
-                              }
-                            }}
-                            helperText="Up to 10 tags allowed."
-                            fullWidth
-                          />
-                          {tags.length > 0 && (
-                            <div className="flex flex-wrap gap-2">
-                              {tags.map((tag, index) => (
-                                <Chip
-                                  key={index}
-                                  value={tag}
-                                  onRemove={() => handleRemoveTag(index)}
-                                />
-                              ))}
-                            </div>
-                          )}
-                        </VStack>
-                      </SectionCard.Content>
-                    </SectionCard>
-
-                    {/* Model settings */}
-                    <SectionCard id="model-settings">
-                      <SectionCard.Header title="Model settings" />
-                      <SectionCard.Content>
-                        {/* Model provider */}
-                        <VStack gap={2} className="w-full">
-                          <div className="w-[289px]">
-                            <Select
-                              label="Model provider"
-                              value={modelProvider}
-                              onChange={setModelProvider}
-                              options={[
-                                { value: 'anthropic', label: 'Anthropic (Claude)' },
-                                { value: 'openai', label: 'OpenAI' },
-                                { value: 'google', label: 'Google' },
-                              ]}
+                  {/* Configuration Tab */}
+                  {activeStep === 'configuration' && (
+                    <VStack gap={8}>
+                      {/* Basic information */}
+                      <SectionCard id="basic-information">
+                        <SectionCard.Header title="Basic information" />
+                        <SectionCard.Content>
+                          {/* Agent name */}
+                          <VStack gap={1} className="w-full">
+                            <Input
+                              label="Agent name"
+                              placeholder="Enter a name for this agent."
+                              value={agentName}
+                              onChange={(e) => {
+                                setAgentName(e.target.value);
+                                setAgentNameError(null);
+                              }}
                               fullWidth
                               required
-                              helperText="Select the LLM provider for this agent."
+                              error={!!agentNameError}
                             />
-                          </div>
-                        </VStack>
+                            {agentNameError && (
+                              <span className="text-[11px] leading-[var(--line-height-16)] text-[var(--color-state-danger)]">
+                                {agentNameError}
+                              </span>
+                            )}
+                          </VStack>
 
-                        {/* Model */}
-                        <VStack gap={2} className="w-full">
-                          <div className="w-[289px]">
-                            <Select
-                              label="Model"
-                              value={model}
-                              onChange={setModel}
-                              options={[
-                                { value: 'claude-sonnet-4.5', label: 'Claude Sonnet 4.5 (Latest) - Recommended' },
-                                { value: 'claude-opus', label: 'Claude Opus' },
-                                { value: 'claude-haiku', label: 'Claude Haiku' },
-                              ]}
+                          {/* Description */}
+                          <VStack gap={2} className="w-full">
+                            <Textarea
+                              label="Description"
+                              placeholder="Add an description."
+                              value={description}
+                              onChange={(e) => setDescription(e.target.value)}
                               fullWidth
-                              required
-                              helperText="Choose the model version offered by the selected provider."
                             />
-                          </div>
-                        </VStack>
+                          </VStack>
 
-                        {/* Temperature */}
-                        <VStack gap={2} className="w-full">
-                          <label className="text-[14px] font-medium text-[var(--color-text-default)]">
-                            Temperature
-                            <span className="text-[var(--color-state-danger)] ml-0.5">*</span>
-                          </label>
-                          <p className="text-[11px] text-[var(--color-text-subtle)]">
-                            Adjust how creative or deterministic the model's responses should be.
-                          </p>
-                          <div className="flex items-center gap-3 w-[289px]">
-                            <div className="flex-1">
-                              <Slider
-                                value={temperature}
-                                onChange={setTemperature}
-                                min={0}
-                                max={1}
-                                step={0.1}
-                              />
-                            </div>
-                            <span className="text-[12px] text-[var(--color-text-default)] shrink-0">{temperature}</span>
-                          </div>
-                          <p className="text-[11px] text-[var(--color-text-subtle)]">
-                            Lower values make answers more consistent, while higher values increase variability.
-                          </p>
-                        </VStack>
+                          {/* Status */}
+                          <VStack gap={2} className="w-full">
+                            <label className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
+                              Status
+                              <span className="text-[var(--color-state-danger)] ml-0.5">*</span>
+                            </label>
+                            <p className="text-[11px] text-[var(--color-text-subtle)]">
+                              Choose whether the agent will be active immediately or remain
+                              inactive.
+                            </p>
+                            <RadioGroup
+                              value={status}
+                              onChange={(value) => setStatus(value as 'inactive' | 'active')}
+                            >
+                              <Radio value="inactive">Inactive</Radio>
+                              <Radio value="active">Active</Radio>
+                            </RadioGroup>
+                          </VStack>
 
-                        {/* Max tokens */}
-                        <VStack gap={2} className="w-full">
-                          <label className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
-                            Max tokens
-                            <span className="text-[var(--color-state-danger)] ml-0.5">*</span>
-                          </label>
-                          <p className="text-[11px] text-[var(--color-text-subtle)]">
-                            Adjust how creative or deterministic the model's responses should be.
-                          </p>
-                          <div className="flex items-center gap-3 w-fit">
+                          {/* Tag */}
+                          <VStack gap={2} className="w-full">
+                            <label className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
+                              Tag
+                            </label>
+                            <p className="text-[11px] text-[var(--color-text-subtle)]">
+                              Tags help categorize and identify your resources.
+                            </p>
+                            <Input
+                              placeholder="Enter tags"
+                              value={tagInput}
+                              onChange={(e) => setTagInput(e.target.value)}
+                              onKeyPress={(e) => {
+                                if (e.key === 'Enter') {
+                                  e.preventDefault();
+                                  handleAddTag();
+                                }
+                              }}
+                              helperText="Up to 10 tags allowed."
+                              fullWidth
+                            />
+                            {tags.length > 0 && (
+                              <div className="flex flex-wrap gap-2">
+                                {tags.map((tag, index) => (
+                                  <Chip
+                                    key={index}
+                                    value={tag}
+                                    onRemove={() => handleRemoveTag(index)}
+                                  />
+                                ))}
+                              </div>
+                            )}
+                          </VStack>
+                        </SectionCard.Content>
+                      </SectionCard>
+
+                      {/* Model settings */}
+                      <SectionCard id="model-settings">
+                        <SectionCard.Header title="Model settings" />
+                        <SectionCard.Content>
+                          {/* Model provider */}
+                          <VStack gap={2} className="w-full">
                             <div className="w-[289px]">
-                              <Slider
-                                value={maxTokens}
-                                onChange={setMaxTokens}
-                                min={0}
-                                max={64000}
-                                step={1000}
-                                className="w-full"
+                              <Select
+                                label="Model provider"
+                                value={modelProvider}
+                                onChange={setModelProvider}
+                                options={[
+                                  { value: 'anthropic', label: 'Anthropic (Claude)' },
+                                  { value: 'openai', label: 'OpenAI' },
+                                  { value: 'google', label: 'Google' },
+                                ]}
+                                fullWidth
+                                required
+                                helperText="Select the LLM provider for this agent."
                               />
                             </div>
-                            <span className="text-[12px] text-[var(--color-text-default)] shrink-0">{maxTokens.toLocaleString()}</span>
-                          </div>
-                          <p className="text-[11px] text-[var(--color-text-subtle)]">
-                            Max: 64,000
-                          </p>
-                        </VStack>
-                      </SectionCard.Content>
-                    </SectionCard>
+                          </VStack>
 
-                    {/* Prompt settings */}
-                    <SectionCard id="prompt-settings">
-                      <SectionCard.Header title="Prompt settings" />
-                      <SectionCard.Content>
-                        {/* System prompt */}
-                        <VStack gap={2} className="w-full">
-                          <Textarea
-                            label="System prompt"
-                            placeholder="Enter a prompt or task for your agent."
-                            value={systemPrompt}
-                            onChange={(e) => setSystemPrompt(e.target.value)}
-                            helperText="Defines the agent's core behavior and response rules."
-                            fullWidth
-                          />
-                        </VStack>
+                          {/* Model */}
+                          <VStack gap={2} className="w-full">
+                            <div className="w-[289px]">
+                              <Select
+                                label="Model"
+                                value={model}
+                                onChange={setModel}
+                                options={[
+                                  {
+                                    value: 'claude-sonnet-4.5',
+                                    label: 'Claude Sonnet 4.5 (Latest) - Recommended',
+                                  },
+                                  { value: 'claude-opus', label: 'Claude Opus' },
+                                  { value: 'claude-haiku', label: 'Claude Haiku' },
+                                ]}
+                                fullWidth
+                                required
+                                helperText="Choose the model version offered by the selected provider."
+                              />
+                            </div>
+                          </VStack>
 
-                        {/* Tone */}
-                        <VStack gap={2} className="w-full">
-                          <label className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
-                            Tone
-                            <span className="text-[var(--color-state-danger)] ml-0.5">*</span>
-                          </label>
-                          <p className="text-[11px] text-[var(--color-text-subtle)]">
-                            Select the response style the agent should use.
-                          </p>
-                          <RadioGroup
-                            value={tone}
-                            onChange={setTone}
-                          >
-                            <Radio value="default">Default</Radio>
-                            <Radio value="professional">Professional</Radio>
-                            <Radio value="casual">Casual</Radio>
-                            <Radio value="technical">Technical</Radio>
-                            <Radio value="creative">Creative</Radio>
-                          </RadioGroup>
-                        </VStack>
+                          {/* Temperature */}
+                          <VStack gap={2} className="w-full">
+                            <label className="text-[14px] font-medium text-[var(--color-text-default)]">
+                              Temperature
+                              <span className="text-[var(--color-state-danger)] ml-0.5">*</span>
+                            </label>
+                            <p className="text-[11px] text-[var(--color-text-subtle)]">
+                              Adjust how creative or deterministic the model's responses should be.
+                            </p>
+                            <div className="flex items-center gap-3 w-[289px]">
+                              <div className="flex-1">
+                                <Slider
+                                  value={temperature}
+                                  onChange={setTemperature}
+                                  min={0}
+                                  max={1}
+                                  step={0.1}
+                                />
+                              </div>
+                              <span className="text-[12px] text-[var(--color-text-default)] shrink-0">
+                                {temperature}
+                              </span>
+                            </div>
+                            <p className="text-[11px] text-[var(--color-text-subtle)]">
+                              Lower values make answers more consistent, while higher values
+                              increase variability.
+                            </p>
+                          </VStack>
 
-                        {/* Max iteration */}
-                        <VStack gap={2} className="w-full">
-                          <label className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
-                            Max iteration
-                            <span className="text-[var(--color-state-danger)] ml-0.5">*</span>
-                          </label>
-                          <p className="text-[11px] text-[var(--color-text-subtle)]">
-                            Limits how many reasoning cycles the agent can run.
-                          </p>
-                          <div className="w-[80px]">
-                            <NumberInput
-                              value={maxIteration}
-                              onChange={setMaxIteration}
-                              min={1}
-                              max={10}
+                          {/* Max tokens */}
+                          <VStack gap={2} className="w-full">
+                            <label className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
+                              Max tokens
+                              <span className="text-[var(--color-state-danger)] ml-0.5">*</span>
+                            </label>
+                            <p className="text-[11px] text-[var(--color-text-subtle)]">
+                              Adjust how creative or deterministic the model's responses should be.
+                            </p>
+                            <div className="flex items-center gap-3 w-fit">
+                              <div className="w-[289px]">
+                                <Slider
+                                  value={maxTokens}
+                                  onChange={setMaxTokens}
+                                  min={0}
+                                  max={64000}
+                                  step={1000}
+                                  className="w-full"
+                                />
+                              </div>
+                              <span className="text-[12px] text-[var(--color-text-default)] shrink-0">
+                                {maxTokens.toLocaleString()}
+                              </span>
+                            </div>
+                            <p className="text-[11px] text-[var(--color-text-subtle)]">
+                              Max: 64,000
+                            </p>
+                          </VStack>
+                        </SectionCard.Content>
+                      </SectionCard>
+
+                      {/* Prompt settings */}
+                      <SectionCard id="prompt-settings">
+                        <SectionCard.Header title="Prompt settings" />
+                        <SectionCard.Content>
+                          {/* System prompt */}
+                          <VStack gap={2} className="w-full">
+                            <Textarea
+                              label="System prompt"
+                              placeholder="Enter a prompt or task for your agent."
+                              value={systemPrompt}
+                              onChange={(e) => setSystemPrompt(e.target.value)}
+                              helperText="Defines the agent's core behavior and response rules."
                               fullWidth
                             />
-                          </div>
+                          </VStack>
+
+                          {/* Tone */}
+                          <VStack gap={2} className="w-full">
+                            <label className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
+                              Tone
+                              <span className="text-[var(--color-state-danger)] ml-0.5">*</span>
+                            </label>
+                            <p className="text-[11px] text-[var(--color-text-subtle)]">
+                              Select the response style the agent should use.
+                            </p>
+                            <RadioGroup value={tone} onChange={setTone}>
+                              <Radio value="default">Default</Radio>
+                              <Radio value="professional">Professional</Radio>
+                              <Radio value="casual">Casual</Radio>
+                              <Radio value="technical">Technical</Radio>
+                              <Radio value="creative">Creative</Radio>
+                            </RadioGroup>
+                          </VStack>
+
+                          {/* Max iteration */}
+                          <VStack gap={2} className="w-full">
+                            <label className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
+                              Max iteration
+                              <span className="text-[var(--color-state-danger)] ml-0.5">*</span>
+                            </label>
+                            <p className="text-[11px] text-[var(--color-text-subtle)]">
+                              Limits how many reasoning cycles the agent can run.
+                            </p>
+                            <div className="w-[80px]">
+                              <NumberInput
+                                value={maxIteration}
+                                onChange={setMaxIteration}
+                                min={1}
+                                max={10}
+                                fullWidth
+                              />
+                            </div>
+                            <p className="text-[11px] text-[var(--color-text-subtle)]">Max: 10</p>
+                          </VStack>
+                        </SectionCard.Content>
+                      </SectionCard>
+
+                      {/* Next Button */}
+                      <HStack justify="end" className="w-full">
+                        <Button variant="primary" size="sm" onClick={handleNext}>
+                          Next
+                        </Button>
+                      </HStack>
+                    </VStack>
+                  )}
+
+                  {/* Data & MCP Connection Tab */}
+                  {activeStep === 'data-mcp' && (
+                    <VStack gap={8}>
+                      {/* Connect data sources */}
+                      <SectionCard id="connect-data-sources">
+                        <SectionCard.Header title="Connect data sources" />
+                        <SectionCard.Content>
                           <p className="text-[11px] text-[var(--color-text-subtle)]">
-                            Max: 10
+                            Select the data sources the agent can reference when generating answers.
+                            (Multiple selection available).
                           </p>
-                        </VStack>
-                      </SectionCard.Content>
-                    </SectionCard>
 
-                    {/* Next Button */}
-                    <HStack justify="end" className="w-full">
-                      <Button
-                        variant="primary"
-                        size="sm"
-                        onClick={handleNext}
-                      >
-                        Next
-                      </Button>
-                    </HStack>
-                  </VStack>
-                )}
+                          <SearchInput
+                            placeholder="Search data by attributes"
+                            size="sm"
+                            className="w-[var(--search-input-width)]"
+                            value={dataSourceSearch}
+                            onChange={(e) => {
+                              setDataSourceSearch(e.target.value);
+                              setDataSourcePage(1);
+                            }}
+                          />
 
-                {/* Data & MCP Connection Tab */}
-                {activeStep === 'data-mcp' && (
-                  <VStack gap={8}>
-                    {/* Connect data sources */}
-                    <SectionCard id="connect-data-sources">
-                      <SectionCard.Header title="Connect data sources" />
-                      <SectionCard.Content>
-                        <p className="text-[11px] text-[var(--color-text-subtle)]">
-                          Select the data sources the agent can reference when generating answers. (Multiple selection available).
-                        </p>
-                      
-                      <SearchInput
-                        placeholder="Search data by attributes"
-                        size="sm"
-                        className="w-[var(--search-input-width)]"
-                          value={dataSourceSearch}
-                          onChange={(e) => {
-                            setDataSourceSearch(e.target.value);
-                            setDataSourcePage(1);
-                          }}
-                      />
-                      
-                      {/* Pagination */}
-                        <Pagination
-                          currentPage={dataSourcePage}
-                          totalPages={dataSourceTotalPages}
-                          totalItems={filteredDataSources.length}
-                          selectedCount={selectedDataSources.length}
-                          onPageChange={setDataSourcePage}
-                        />
-                      
-                      {/* Data sources Table */}
-                        <Table
-                          columns={dataSourceColumns}
-                          data={paginatedDataSources}
-                          rowKey="id"
-                          selectable
-                          selectedKeys={selectedDataSources}
-                          onSelectionChange={setSelectedDataSources}
-                        />
-                      
-                      {/* Selection Indicator for Data Sources */}
-                      <SelectionIndicator
-                        className="mt-2"
-                        selectedItems={selectedDataSources.map(id => {
-                          const data = filteredDataSources.find(d => d.id === id);
-                          return { id, label: data?.name || id };
-                        })}
-                        onRemove={(id) => setSelectedDataSources(selectedDataSources.filter(selectedId => selectedId !== id))}
-                      />
-                      </SectionCard.Content>
-                    </SectionCard>
+                          {/* Pagination */}
+                          <Pagination
+                            currentPage={dataSourcePage}
+                            totalPages={dataSourceTotalPages}
+                            totalItems={filteredDataSources.length}
+                            selectedCount={selectedDataSources.length}
+                            onPageChange={setDataSourcePage}
+                          />
 
-                    {/* Connect MCP tools */}
-                    <SectionCard id="connect-mcp-tools">
-                      <SectionCard.Header title="Connect MCP tools" />
-                      <SectionCard.Content>
-                        <p className="text-[11px] text-[var(--color-text-subtle)]">
-                          Choose the MCP tools the agent can use to perform actions or retrieve external information. (Multiple selection available).
-                        </p>
-                      
-                      <SearchInput
-                        placeholder="Search MCP tools by attributes"
-                        size="sm"
-                        className="w-[var(--search-input-width)]"
-                          value={mcpToolSearch}
-                          onChange={(e) => {
-                            setMcpToolSearch(e.target.value);
-                            setMcpToolPage(1);
-                          }}
-                      />
-                      
-                      {/* Pagination */}
-                        <Pagination
-                          currentPage={mcpToolPage}
-                          totalPages={mcpToolTotalPages}
-                          totalItems={filteredMCPTools.length}
-                          selectedCount={selectedMCPTools.length}
-                          onPageChange={setMcpToolPage}
-                        />
-                      
-                      {/* MCP Tools Table */}
-                        <Table
-                          columns={mcpToolColumns}
-                          data={paginatedMCPTools}
-                          rowKey="id"
-                          selectable
-                          selectedKeys={selectedMCPTools}
-                          onSelectionChange={setSelectedMCPTools}
-                        />
-                      
-                      {/* Selection Indicator for MCP Tools */}
-                      <SelectionIndicator
-                        className="mt-2"
-                        selectedItems={selectedMCPTools.map(id => {
-                          const tool = filteredMCPTools.find(t => t.id === id);
-                          return { id, label: tool?.mcpServer.label || id };
-                        })}
-                        onRemove={(id) => setSelectedMCPTools(selectedMCPTools.filter(selectedId => selectedId !== id))}
-                      />
-                      </SectionCard.Content>
-                    </SectionCard>
+                          {/* Data sources Table */}
+                          <Table
+                            columns={dataSourceColumns}
+                            data={paginatedDataSources}
+                            rowKey="id"
+                            selectable
+                            selectedKeys={selectedDataSources}
+                            onSelectionChange={setSelectedDataSources}
+                          />
 
-                    {/* Previous Button */}
-                    <HStack justify="start" className="w-full">
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        onClick={handlePrevious}
-                      >
-                        Previous
-                      </Button>
-                    </HStack>
-                  </VStack>
-                )}
-                  </div>
+                          {/* Selection Indicator for Data Sources */}
+                          <SelectionIndicator
+                            className="mt-2"
+                            selectedItems={selectedDataSources.map((id) => {
+                              const data = filteredDataSources.find((d) => d.id === id);
+                              return { id, label: data?.name || id };
+                            })}
+                            onRemove={(id) =>
+                              setSelectedDataSources(
+                                selectedDataSources.filter((selectedId) => selectedId !== id)
+                              )
+                            }
+                          />
+                        </SectionCard.Content>
+                      </SectionCard>
+
+                      {/* Connect MCP tools */}
+                      <SectionCard id="connect-mcp-tools">
+                        <SectionCard.Header title="Connect MCP tools" />
+                        <SectionCard.Content>
+                          <p className="text-[11px] text-[var(--color-text-subtle)]">
+                            Choose the MCP tools the agent can use to perform actions or retrieve
+                            external information. (Multiple selection available).
+                          </p>
+
+                          <SearchInput
+                            placeholder="Search MCP tools by attributes"
+                            size="sm"
+                            className="w-[var(--search-input-width)]"
+                            value={mcpToolSearch}
+                            onChange={(e) => {
+                              setMcpToolSearch(e.target.value);
+                              setMcpToolPage(1);
+                            }}
+                          />
+
+                          {/* Pagination */}
+                          <Pagination
+                            currentPage={mcpToolPage}
+                            totalPages={mcpToolTotalPages}
+                            totalItems={filteredMCPTools.length}
+                            selectedCount={selectedMCPTools.length}
+                            onPageChange={setMcpToolPage}
+                          />
+
+                          {/* MCP Tools Table */}
+                          <Table
+                            columns={mcpToolColumns}
+                            data={paginatedMCPTools}
+                            rowKey="id"
+                            selectable
+                            selectedKeys={selectedMCPTools}
+                            onSelectionChange={setSelectedMCPTools}
+                          />
+
+                          {/* Selection Indicator for MCP Tools */}
+                          <SelectionIndicator
+                            className="mt-2"
+                            selectedItems={selectedMCPTools.map((id) => {
+                              const tool = filteredMCPTools.find((t) => t.id === id);
+                              return { id, label: tool?.mcpServer.label || id };
+                            })}
+                            onRemove={(id) =>
+                              setSelectedMCPTools(
+                                selectedMCPTools.filter((selectedId) => selectedId !== id)
+                              )
+                            }
+                          />
+                        </SectionCard.Content>
+                      </SectionCard>
+
+                      {/* Previous Button */}
+                      <HStack justify="start" className="w-full">
+                        <Button variant="secondary" size="sm" onClick={handlePrevious}>
+                          Previous
+                        </Button>
+                      </HStack>
+                    </VStack>
+                  )}
                 </div>
+              </div>
 
-                {/* Right Summary Sidebar */}
-                <div className="w-[320px] flex flex-col h-full relative">
-                  <FloatingCard
-                    title="Summary"
-                    sections={[
-                      {
-                        tabTitle: 'Configuration',
-                        items: [
-                          { 
-                            id: 'basic-info', 
-                            title: 'Basic information', 
-                            status: 'default',
-                            onClick: () => {
-                              setActiveStep('configuration');
-                              setTimeout(() => {
-                                const element = document.getElementById('basic-information');
-                                if (element) {
-                                  element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                                }
-                              }, 0);
-                            },
+              {/* Right Summary Sidebar */}
+              <div className="w-[320px] flex flex-col h-full relative">
+                <FloatingCard
+                  title="Summary"
+                  sections={[
+                    {
+                      tabTitle: 'Configuration',
+                      items: [
+                        {
+                          id: 'basic-info',
+                          title: 'Basic information',
+                          status: 'default',
+                          onClick: () => {
+                            setActiveStep('configuration');
+                            setTimeout(() => {
+                              const element = document.getElementById('basic-information');
+                              if (element) {
+                                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                              }
+                            }, 0);
                           },
-                          { 
-                            id: 'model-settings', 
-                            title: 'Model settings', 
-                            status: 'default',
-                            onClick: () => {
-                              setActiveStep('configuration');
-                              setTimeout(() => {
-                                const element = document.getElementById('model-settings');
-                                if (element) {
-                                  element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                                }
-                              }, 0);
-                            },
+                        },
+                        {
+                          id: 'model-settings',
+                          title: 'Model settings',
+                          status: 'default',
+                          onClick: () => {
+                            setActiveStep('configuration');
+                            setTimeout(() => {
+                              const element = document.getElementById('model-settings');
+                              if (element) {
+                                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                              }
+                            }, 0);
                           },
-                          { 
-                            id: 'prompt-settings', 
-                            title: 'Prompt settings', 
-                            status: 'default',
-                            onClick: () => {
-                              setActiveStep('configuration');
-                              setTimeout(() => {
-                                const element = document.getElementById('prompt-settings');
-                                if (element) {
-                                  element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                                }
-                              }, 0);
-                            },
+                        },
+                        {
+                          id: 'prompt-settings',
+                          title: 'Prompt settings',
+                          status: 'default',
+                          onClick: () => {
+                            setActiveStep('configuration');
+                            setTimeout(() => {
+                              const element = document.getElementById('prompt-settings');
+                              if (element) {
+                                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                              }
+                            }, 0);
                           },
-                        ],
-                        collapsible: true,
-                        defaultExpanded: activeStep === 'configuration',
-                        showSuccessIcon: activeStep === 'data-mcp',
-                      },
-                      {
-                        tabTitle: 'Data & MCP Connection',
-                        items: [
-                          { 
-                            id: 'data-sources', 
-                            title: 'Connect data sources', 
-                            status: 'default',
-                            onClick: () => {
-                              setActiveStep('data-mcp');
-                              setTimeout(() => {
-                                const element = document.getElementById('connect-data-sources');
-                                if (element) {
-                                  element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                                }
-                              }, 0);
-                            },
+                        },
+                      ],
+                      collapsible: true,
+                      defaultExpanded: activeStep === 'configuration',
+                      showSuccessIcon: activeStep === 'data-mcp',
+                    },
+                    {
+                      tabTitle: 'Data & MCP Connection',
+                      items: [
+                        {
+                          id: 'data-sources',
+                          title: 'Connect data sources',
+                          status: 'default',
+                          onClick: () => {
+                            setActiveStep('data-mcp');
+                            setTimeout(() => {
+                              const element = document.getElementById('connect-data-sources');
+                              if (element) {
+                                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                              }
+                            }, 0);
                           },
-                          { 
-                            id: 'mcp-tools', 
-                            title: 'Connect MCP tools', 
-                            status: 'default',
-                            onClick: () => {
-                              setActiveStep('data-mcp');
-                              setTimeout(() => {
-                                const element = document.getElementById('connect-mcp-tools');
-                                if (element) {
-                                  element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                                }
-                              }, 0);
-                            },
+                        },
+                        {
+                          id: 'mcp-tools',
+                          title: 'Connect MCP tools',
+                          status: 'default',
+                          onClick: () => {
+                            setActiveStep('data-mcp');
+                            setTimeout(() => {
+                              const element = document.getElementById('connect-mcp-tools');
+                              if (element) {
+                                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                              }
+                            }, 0);
                           },
-                        ],
-                        collapsible: true,
-                        defaultExpanded: activeStep === 'data-mcp',
-                      },
-                    ]}
-                    onCancel={() => navigate('/agent/list')}
-                    onAction={() => {
-                      // Handle create
-                      navigate('/agent/list');
-                    }}
-                    actionLabel="Create"
-                    cancelLabel="Cancel"
-                    actionEnabled={true}
-                    portal={false}
-                    position="top-left"
-                    width="100%"
-                    style={{ 
-                      height: '100%',
-                    }}
-                  />
-                </div>
+                        },
+                      ],
+                      collapsible: true,
+                      defaultExpanded: activeStep === 'data-mcp',
+                    },
+                  ]}
+                  onCancel={() => navigate('/agent/list')}
+                  onAction={() => {
+                    // Handle create
+                    navigate('/agent/list');
+                  }}
+                  actionLabel="Create"
+                  cancelLabel="Cancel"
+                  actionEnabled={true}
+                  portal={false}
+                  position="top-left"
+                  width="100%"
+                  style={{
+                    height: '100%',
+                  }}
+                />
               </div>
             </div>
           </div>
         </div>
+      </div>
     </>
   );
 }
 
 export default CreateAgentPage;
-

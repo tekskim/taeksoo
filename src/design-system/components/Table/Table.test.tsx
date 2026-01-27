@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen, within } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Table, type TableColumn } from './Table';
 
@@ -26,7 +26,7 @@ describe('Table', () => {
   describe('Rendering', () => {
     it('renders column headers', () => {
       render(<Table columns={testColumns} data={testData} rowKey="id" />);
-      
+
       expect(screen.getByText('Name')).toBeInTheDocument();
       expect(screen.getByText('Email')).toBeInTheDocument();
       expect(screen.getByText('Status')).toBeInTheDocument();
@@ -34,7 +34,7 @@ describe('Table', () => {
 
     it('renders data rows', () => {
       render(<Table columns={testColumns} data={testData} rowKey="id" />);
-      
+
       expect(screen.getByText('John Doe')).toBeInTheDocument();
       expect(screen.getByText('jane@example.com')).toBeInTheDocument();
       expect(screen.getByText('Bob Wilson')).toBeInTheDocument();
@@ -42,13 +42,13 @@ describe('Table', () => {
 
     it('renders empty message when no data', () => {
       render(<Table columns={testColumns} data={[]} rowKey="id" emptyMessage="No items found" />);
-      
+
       expect(screen.getByText('No items found')).toBeInTheDocument();
     });
 
     it('renders default empty message', () => {
       render(<Table columns={testColumns} data={[]} rowKey="id" />);
-      
+
       expect(screen.getByText('No data')).toBeInTheDocument();
     });
   });
@@ -65,7 +65,7 @@ describe('Table', () => {
       ];
 
       render(<Table columns={columnsWithRender} data={testData} rowKey="id" />);
-      
+
       expect(screen.getByTestId('action-1')).toBeInTheDocument();
       expect(screen.getByTestId('action-2')).toBeInTheDocument();
     });
@@ -80,7 +80,7 @@ describe('Table', () => {
       ];
 
       render(<Table columns={columnsWithHeader} data={testData} rowKey="id" />);
-      
+
       expect(screen.getByTestId('custom-header')).toBeInTheDocument();
     });
   });
@@ -88,19 +88,13 @@ describe('Table', () => {
   describe('Row Key', () => {
     it('supports string rowKey', () => {
       render(<Table columns={testColumns} data={testData} rowKey="id" />);
-      
+
       expect(screen.getByText('John Doe')).toBeInTheDocument();
     });
 
     it('supports function rowKey', () => {
-      render(
-        <Table
-          columns={testColumns}
-          data={testData}
-          rowKey={(row) => `custom-${row.id}`}
-        />
-      );
-      
+      render(<Table columns={testColumns} data={testData} rowKey={(row) => `custom-${row.id}`} />);
+
       expect(screen.getByText('John Doe')).toBeInTheDocument();
     });
   });
@@ -117,7 +111,7 @@ describe('Table', () => {
           onSelectionChange={() => {}}
         />
       );
-      
+
       const checkboxes = screen.getAllByRole('checkbox');
       // 1 header checkbox + 3 row checkboxes
       expect(checkboxes.length).toBe(4);
@@ -126,7 +120,7 @@ describe('Table', () => {
     it('calls onSelectionChange when row checkbox is clicked', async () => {
       const user = userEvent.setup();
       const handleSelectionChange = vi.fn();
-      
+
       render(
         <Table
           columns={testColumns}
@@ -137,17 +131,17 @@ describe('Table', () => {
           onSelectionChange={handleSelectionChange}
         />
       );
-      
+
       const checkboxes = screen.getAllByRole('checkbox');
       await user.click(checkboxes[1]); // First row checkbox
-      
+
       expect(handleSelectionChange).toHaveBeenCalledWith(['1']);
     });
 
     it('selects all rows when header checkbox is clicked', async () => {
       const user = userEvent.setup();
       const handleSelectionChange = vi.fn();
-      
+
       render(
         <Table
           columns={testColumns}
@@ -158,17 +152,17 @@ describe('Table', () => {
           onSelectionChange={handleSelectionChange}
         />
       );
-      
+
       const checkboxes = screen.getAllByRole('checkbox');
       await user.click(checkboxes[0]); // Header checkbox
-      
+
       expect(handleSelectionChange).toHaveBeenCalledWith(['1', '2', '3']);
     });
 
     it('deselects all when all are selected and header is clicked', async () => {
       const user = userEvent.setup();
       const handleSelectionChange = vi.fn();
-      
+
       render(
         <Table
           columns={testColumns}
@@ -179,10 +173,10 @@ describe('Table', () => {
           onSelectionChange={handleSelectionChange}
         />
       );
-      
+
       const checkboxes = screen.getAllByRole('checkbox');
       await user.click(checkboxes[0]); // Header checkbox
-      
+
       expect(handleSelectionChange).toHaveBeenCalledWith([]);
     });
 
@@ -198,7 +192,7 @@ describe('Table', () => {
           onSelectionChange={() => {}}
         />
       );
-      
+
       const checkboxes = screen.getAllByRole('checkbox');
       expect(checkboxes.length).toBe(3); // Only row checkboxes
     });
@@ -211,10 +205,8 @@ describe('Table', () => {
         { key: 'email', label: 'Email' },
       ];
 
-      render(
-        <Table columns={sortableColumns} data={testData} rowKey="id" />
-      );
-      
+      render(<Table columns={sortableColumns} data={testData} rowKey="id" />);
+
       // Check that sortable column header element exists
       const nameHeader = screen.getByText('Name');
       expect(nameHeader).toBeInTheDocument();
@@ -228,10 +220,10 @@ describe('Table', () => {
       ];
 
       render(<Table columns={sortableColumns} data={testData} rowKey="id" />);
-      
+
       // Click to sort ascending
       await user.click(screen.getByText('Name'));
-      
+
       // Check order - Bob should be first alphabetically
       const rows = screen.getAllByText(/Doe|Smith|Wilson/);
       expect(rows[0]).toHaveTextContent('Bob Wilson');
@@ -242,31 +234,19 @@ describe('Table', () => {
     it('calls onRowClick when row is clicked', async () => {
       const user = userEvent.setup();
       const handleRowClick = vi.fn();
-      
+
       render(
-        <Table
-          columns={testColumns}
-          data={testData}
-          rowKey="id"
-          onRowClick={handleRowClick}
-        />
+        <Table columns={testColumns} data={testData} rowKey="id" onRowClick={handleRowClick} />
       );
-      
+
       await user.click(screen.getByText('John Doe'));
-      
+
       expect(handleRowClick).toHaveBeenCalledWith(testData[0], 0);
     });
 
     it('has cursor-pointer class when onRowClick is provided', () => {
-      render(
-        <Table
-          columns={testColumns}
-          data={testData}
-          rowKey="id"
-          onRowClick={() => {}}
-        />
-      );
-      
+      render(<Table columns={testColumns} data={testData} rowKey="id" onRowClick={() => {}} />);
+
       const row = screen.getByText('John Doe').closest('.cursor-pointer');
       expect(row).toBeInTheDocument();
     });
@@ -281,7 +261,7 @@ describe('Table', () => {
       ];
 
       render(<Table columns={alignedColumns} data={testData} rowKey="id" />);
-      
+
       // Check headers exist with correct text
       expect(screen.getByText('Name')).toBeInTheDocument();
       expect(screen.getByText('Email')).toBeInTheDocument();
@@ -297,7 +277,7 @@ describe('Table', () => {
       ];
 
       render(<Table columns={widthColumns} data={testData} rowKey="id" />);
-      
+
       // Check that column header is rendered
       expect(screen.getByText('Name')).toBeInTheDocument();
       expect(screen.getByText('Email')).toBeInTheDocument();

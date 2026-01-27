@@ -135,11 +135,7 @@ export const Default: Story = {
     return (
       <>
         <Button onClick={() => setIsOpen(true)}>Open Drawer</Button>
-        <Drawer
-          isOpen={isOpen}
-          onClose={() => setIsOpen(false)}
-          title="Drawer Title"
-        >
+        <Drawer isOpen={isOpen} onClose={() => setIsOpen(false)} title="Drawer Title">
           <p className="text-sm text-[var(--color-text-muted)]">
             This is the drawer content. You can put any content here.
           </p>
@@ -165,9 +161,15 @@ export const LeftSide: Story = {
           width={280}
         >
           <nav className="flex flex-col gap-2">
-            <a href="#" className="px-3 py-2 rounded hover:bg-[var(--color-surface-subtle)]">Dashboard</a>
-            <a href="#" className="px-3 py-2 rounded hover:bg-[var(--color-surface-subtle)]">Projects</a>
-            <a href="#" className="px-3 py-2 rounded hover:bg-[var(--color-surface-subtle)]">Settings</a>
+            <a href="#" className="px-3 py-2 rounded hover:bg-[var(--color-surface-subtle)]">
+              Dashboard
+            </a>
+            <a href="#" className="px-3 py-2 rounded hover:bg-[var(--color-surface-subtle)]">
+              Projects
+            </a>
+            <a href="#" className="px-3 py-2 rounded hover:bg-[var(--color-surface-subtle)]">
+              Settings
+            </a>
           </nav>
         </Drawer>
       </>
@@ -192,9 +194,7 @@ export const WithFooter: Story = {
               <Button variant="secondary" onClick={() => setIsOpen(false)}>
                 Cancel
               </Button>
-              <Button onClick={() => setIsOpen(false)}>
-                Save Changes
-              </Button>
+              <Button onClick={() => setIsOpen(false)}>Save Changes</Button>
             </div>
           }
         >
@@ -226,9 +226,7 @@ export const EditForm: Story = {
               <Button variant="secondary" onClick={() => setIsOpen(false)}>
                 Cancel
               </Button>
-              <Button onClick={() => setIsOpen(false)}>
-                Save
-              </Button>
+              <Button onClick={() => setIsOpen(false)}>Save</Button>
             </div>
           }
         >
@@ -278,12 +276,7 @@ export const WideDrawer: Story = {
     return (
       <>
         <Button onClick={() => setIsOpen(true)}>Open Wide Drawer</Button>
-        <Drawer
-          isOpen={isOpen}
-          onClose={() => setIsOpen(false)}
-          title="Detailed View"
-          width={600}
-        >
+        <Drawer isOpen={isOpen} onClose={() => setIsOpen(false)} title="Detailed View" width={600}>
           <div className="flex flex-col gap-4">
             <p className="text-sm text-[var(--color-text-muted)]">
               This drawer is wider than the default to accommodate more content.
@@ -320,15 +313,13 @@ export const NoBackdropClose: Story = {
               <Button variant="secondary" onClick={() => setIsOpen(false)}>
                 Discard
               </Button>
-              <Button onClick={() => setIsOpen(false)}>
-                Save
-              </Button>
+              <Button onClick={() => setIsOpen(false)}>Save</Button>
             </div>
           }
         >
           <p className="text-sm text-[var(--color-text-muted)]">
-            This drawer can only be closed by clicking the buttons.
-            Clicking the backdrop or pressing ESC won't close it.
+            This drawer can only be closed by clicking the buttons. Clicking the backdrop or
+            pressing ESC won't close it.
           </p>
         </Drawer>
       </>
@@ -344,10 +335,7 @@ export const NoTitle: Story = {
     return (
       <>
         <Button onClick={() => setIsOpen(true)}>Open Drawer</Button>
-        <Drawer
-          isOpen={isOpen}
-          onClose={() => setIsOpen(false)}
-        >
+        <Drawer isOpen={isOpen} onClose={() => setIsOpen(false)}>
           <div className="text-center py-8">
             <h2 className="text-lg font-semibold mb-2">Custom Header</h2>
             <p className="text-sm text-[var(--color-text-muted)]">
@@ -373,7 +361,9 @@ export const ScrollableContent: Story = {
           onClose={() => setIsOpen(false)}
           title="Long Content"
           footer={
-            <Button onClick={() => setIsOpen(false)} fullWidth>Close</Button>
+            <Button onClick={() => setIsOpen(false)} fullWidth>
+              Close
+            </Button>
           }
         >
           <div className="flex flex-col gap-4">
@@ -381,7 +371,8 @@ export const ScrollableContent: Story = {
               <div key={i} className="p-4 border border-[var(--color-border-default)] rounded">
                 <h3 className="font-medium">Item {i + 1}</h3>
                 <p className="text-sm text-[var(--color-text-muted)]">
-                  This is the description for item {i + 1}. It contains some text to demonstrate scrollable content.
+                  This is the description for item {i + 1}. It contains some text to demonstrate
+                  scrollable content.
                 </p>
               </div>
             ))}

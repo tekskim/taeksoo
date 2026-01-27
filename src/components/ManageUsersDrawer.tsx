@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { 
-  Drawer, 
-  Button, 
+import {
+  Drawer,
+  Button,
   SearchInput,
   Pagination,
   Checkbox,
@@ -39,16 +39,87 @@ export interface ManageUsersDrawerProps {
    ---------------------------------------- */
 
 const defaultUsers: UserItem[] = [
-  { id: 'user-1', username: 'thaki-kim', status: 'active', userGroups: 'dev-admin-group (+2)', roles: 'compute-admin (+3)', createdAt: '2025-09-12' },
-  { id: 'user-2', username: 'thaki-kim', status: 'active', userGroups: 'dev-admin-group (+2)', roles: 'compute-admin (+3)', createdAt: '2025-09-12' },
-  { id: 'user-3', username: 'thaki-kim', status: 'active', userGroups: 'dev-admin-group (+2)', roles: 'compute-admin (+3)', createdAt: '2025-09-12' },
-  { id: 'user-4', username: 'thaki-kim', status: 'active', userGroups: 'dev-admin-group (+2)', roles: 'compute-admin (+3)', createdAt: '2025-09-12' },
-  { id: 'user-5', username: 'thaki-kim', status: 'active', userGroups: 'dev-admin-group (+2)', roles: 'compute-admin (+3)', createdAt: '2025-09-12' },
-  { id: 'user-6', username: 'thaki-kim', status: 'active', userGroups: 'dev-admin-group (+2)', roles: 'compute-admin (+3)', createdAt: '2025-09-12' },
-  { id: 'user-7', username: 'thaki-kim', status: 'active', userGroups: 'dev-admin-group (+2)', roles: 'compute-admin (+3)', createdAt: '2025-09-12' },
-  { id: 'user-8', username: 'thaki-kim', status: 'active', userGroups: 'dev-admin-group (+2)', roles: 'compute-admin (+3)', createdAt: '2025-09-12' },
-  { id: 'user-9', username: 'thaki-kim', status: 'active', userGroups: 'dev-admin-group (+2)', roles: 'compute-admin (+3)', createdAt: '2025-09-12', hasWarning: true },
-  { id: 'user-10', username: 'thaki-kim', status: 'active', userGroups: 'dev-admin-group (+2)', roles: 'compute-admin (+3)', createdAt: '2025-09-12' },
+  {
+    id: 'user-1',
+    username: 'thaki-kim',
+    status: 'active',
+    userGroups: 'dev-admin-group (+2)',
+    roles: 'compute-admin (+3)',
+    createdAt: '2025-09-12',
+  },
+  {
+    id: 'user-2',
+    username: 'thaki-kim',
+    status: 'active',
+    userGroups: 'dev-admin-group (+2)',
+    roles: 'compute-admin (+3)',
+    createdAt: '2025-09-12',
+  },
+  {
+    id: 'user-3',
+    username: 'thaki-kim',
+    status: 'active',
+    userGroups: 'dev-admin-group (+2)',
+    roles: 'compute-admin (+3)',
+    createdAt: '2025-09-12',
+  },
+  {
+    id: 'user-4',
+    username: 'thaki-kim',
+    status: 'active',
+    userGroups: 'dev-admin-group (+2)',
+    roles: 'compute-admin (+3)',
+    createdAt: '2025-09-12',
+  },
+  {
+    id: 'user-5',
+    username: 'thaki-kim',
+    status: 'active',
+    userGroups: 'dev-admin-group (+2)',
+    roles: 'compute-admin (+3)',
+    createdAt: '2025-09-12',
+  },
+  {
+    id: 'user-6',
+    username: 'thaki-kim',
+    status: 'active',
+    userGroups: 'dev-admin-group (+2)',
+    roles: 'compute-admin (+3)',
+    createdAt: '2025-09-12',
+  },
+  {
+    id: 'user-7',
+    username: 'thaki-kim',
+    status: 'active',
+    userGroups: 'dev-admin-group (+2)',
+    roles: 'compute-admin (+3)',
+    createdAt: '2025-09-12',
+  },
+  {
+    id: 'user-8',
+    username: 'thaki-kim',
+    status: 'active',
+    userGroups: 'dev-admin-group (+2)',
+    roles: 'compute-admin (+3)',
+    createdAt: '2025-09-12',
+  },
+  {
+    id: 'user-9',
+    username: 'thaki-kim',
+    status: 'active',
+    userGroups: 'dev-admin-group (+2)',
+    roles: 'compute-admin (+3)',
+    createdAt: '2025-09-12',
+    hasWarning: true,
+  },
+  {
+    id: 'user-10',
+    username: 'thaki-kim',
+    status: 'active',
+    userGroups: 'dev-admin-group (+2)',
+    roles: 'compute-admin (+3)',
+    createdAt: '2025-09-12',
+  },
   ...Array.from({ length: 15 }, (_, i) => ({
     id: `user-${i + 11}`,
     username: 'thaki-kim',
@@ -81,11 +152,12 @@ export function ManageUsersDrawer({
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
   // Filter users
-  const filteredUsers = users.filter((user) =>
-    user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    user.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    user.userGroups.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    user.roles.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredUsers = users.filter(
+    (user) =>
+      user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      user.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      user.userGroups.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      user.roles.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const totalPages = Math.ceil(filteredUsers.length / ITEMS_PER_PAGE);
@@ -102,7 +174,6 @@ export function ManageUsersDrawer({
       setCurrentPage(1);
       setHasAttemptedSubmit(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
   const handleToggleUser = (userId: string) => {
@@ -119,12 +190,12 @@ export function ManageUsersDrawer({
 
   const handleSubmit = async () => {
     setHasAttemptedSubmit(true);
-    
+
     // Validate required fields
     if (selectedUserIds.size === 0) {
       return; // Don't submit if no users selected
     }
-    
+
     setIsSubmitting(true);
     try {
       await onSubmit?.({
@@ -158,10 +229,10 @@ export function ManageUsersDrawer({
     .map((user) => ({ id: user.id, label: user.username }));
 
   // Select all logic
-  const allCurrentPageSelected = paginatedUsers.length > 0 && 
-    paginatedUsers.every((user) => selectedUserIds.has(user.id));
+  const allCurrentPageSelected =
+    paginatedUsers.length > 0 && paginatedUsers.every((user) => selectedUserIds.has(user.id));
   const someCurrentPageSelected = paginatedUsers.some((user) => selectedUserIds.has(user.id));
-  
+
   const handleSelectAll = () => {
     if (allCurrentPageSelected) {
       // Deselect all on current page
@@ -189,15 +260,11 @@ export function ManageUsersDrawer({
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
-          <Button 
-            variant="secondary" 
-            onClick={handleClose}
-            className="w-[152px] h-8"
-          >
+          <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={handleSubmit}
             disabled={isSubmitting}
             className="w-[152px] h-8"
@@ -215,7 +282,8 @@ export function ManageUsersDrawer({
               Manage users
             </h2>
             <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-              Add or remove members of this user group. Users included in the group automatically receive the permissions assigned to the group.
+              Add or remove members of this user group. Users included in the group automatically
+              receive the permissions assigned to the group.
             </p>
           </VStack>
 
@@ -245,7 +313,8 @@ export function ManageUsersDrawer({
               </span>
             </div>
             <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-              Select users to include in this group. All selected users will receive the group's assigned roles and policies.
+              Select users to include in this group. All selected users will receive the group's
+              assigned roles and policies.
             </p>
           </VStack>
 
@@ -302,17 +371,20 @@ export function ManageUsersDrawer({
 
             {/* Rows */}
             {paginatedUsers.map((user) => (
-              <div 
+              <div
                 key={user.id}
                 className={`flex items-stretch min-h-[var(--table-row-height)] border rounded-[var(--table-row-radius)] cursor-pointer transition-all ${
-                  selectedUserIds.has(user.id) 
-                    ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]' 
+                  selectedUserIds.has(user.id)
+                    ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]'
                     : 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] hover:bg-[var(--table-row-hover-bg)]'
                 }`}
                 onClick={() => handleToggleUser(user.id)}
               >
                 {/* Checkbox */}
-                <div className="w-[var(--table-checkbox-width)] flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
+                <div
+                  className="w-[var(--table-checkbox-width)] flex items-center justify-center"
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <Checkbox
                     checked={selectedUserIds.has(user.id)}
                     onChange={() => handleToggleUser(user.id)}
@@ -324,23 +396,39 @@ export function ManageUsersDrawer({
                 </div>
                 {/* Username with link */}
                 <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] truncate">{user.username}</span>
-                  <IconExternalLink size={12} stroke={1.5} className="shrink-0 text-[var(--color-action-primary)]" />
+                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] truncate">
+                    {user.username}
+                  </span>
+                  <IconExternalLink
+                    size={12}
+                    stroke={1.5}
+                    className="shrink-0 text-[var(--color-action-primary)]"
+                  />
                   {user.hasWarning && (
-                    <IconAlertCircle size={16} stroke={1.5} className="shrink-0 text-[var(--color-state-danger)]" />
+                    <IconAlertCircle
+                      size={16}
+                      stroke={1.5}
+                      className="shrink-0 text-[var(--color-state-danger)]"
+                    />
                   )}
                 </div>
                 {/* User groups */}
                 <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">{user.userGroups}</span>
+                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">
+                    {user.userGroups}
+                  </span>
                 </div>
                 {/* Roles */}
                 <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">{user.roles}</span>
+                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">
+                    {user.roles}
+                  </span>
                 </div>
                 {/* Created at */}
                 <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">{user.createdAt}</span>
+                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                    {user.createdAt}
+                  </span>
                 </div>
               </div>
             ))}

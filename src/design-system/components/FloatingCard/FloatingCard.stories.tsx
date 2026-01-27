@@ -196,9 +196,7 @@ export const ActionEnabled: Story = {
           {
             tabTitle: 'Configuration',
             showSuccessIcon: true,
-            items: [
-              { id: '1', title: 'All settings configured', status: 'success' },
-            ],
+            items: [{ id: '1', title: 'All settings configured', status: 'success' }],
           },
         ]}
         actionEnabled
@@ -262,9 +260,7 @@ export const MultipleSections: Story = {
             ],
           },
         ]}
-        quota={[
-          { label: 'Pods', current: 15, total: 100 },
-        ]}
+        quota={[{ label: 'Pods', current: 15, total: 100 }]}
         onCancel={() => {}}
         onAction={() => {}}
       />

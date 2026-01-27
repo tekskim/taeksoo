@@ -79,9 +79,19 @@ function FolderTreeItem({
 
         {/* Folder Icon */}
         {isExpanded && hasChildren ? (
-          <IconFolderOpen size={16} className={isSelected ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-subtle)]'} />
+          <IconFolderOpen
+            size={16}
+            className={
+              isSelected ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-subtle)]'
+            }
+          />
         ) : (
-          <IconFolder size={16} className={isSelected ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-subtle)]'} />
+          <IconFolder
+            size={16}
+            className={
+              isSelected ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-subtle)]'
+            }
+          />
         )}
 
         {/* Folder Name */}
@@ -206,7 +216,7 @@ export function CreateFolderDrawer({
   const validateFolderName = (name: string): string | null => {
     if (!name) return null;
     if (name.length > 128) return 'Folder name must be 128 characters or less';
-    const validPattern = /^[a-zA-Z0-9\-_.\(\)\[\]]+$/;
+    const validPattern = /^[a-zA-Z0-9\-_.()[\]]+$/;
     if (!validPattern.test(name)) {
       return 'Invalid characters. Allowed: letters, numbers, "-", "_", ".", "()", "[]"';
     }
@@ -303,7 +313,9 @@ export function CreateFolderDrawer({
             fullWidth
             error={!!error}
           />
-          <p className={`text-[11px] leading-4 ${error ? 'text-[var(--color-state-danger)]' : 'text-[var(--color-text-subtle)]'}`}>
+          <p
+            className={`text-[11px] leading-4 ${error ? 'text-[var(--color-state-danger)]' : 'text-[var(--color-text-subtle)]'}`}
+          >
             {error || 'Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"'}
           </p>
         </VStack>

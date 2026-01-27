@@ -1,9 +1,5 @@
 import { useState } from 'react';
-import { 
-  Drawer, 
-  Button, 
-  Input,
-} from '@/design-system';
+import { Drawer, Button, Input } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 import { IconCirclePlus, IconX } from '@tabler/icons-react';
 
@@ -43,15 +39,19 @@ export function ManageTagsDrawer({
   onSave,
   maxTags = 50,
 }: ManageTagsDrawerProps) {
-  const [tags, setTags] = useState<TagItem[]>(initialTags.length > 0 ? initialTags : [
-    { id: '1', key: '', value: '' },
-    { id: '2', key: 'e.g. team', value: 'e.g. team' },
-  ]);
+  const [tags, setTags] = useState<TagItem[]>(
+    initialTags.length > 0
+      ? initialTags
+      : [
+          { id: '1', key: '', value: '' },
+          { id: '2', key: 'e.g. team', value: 'e.g. team' },
+        ]
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleAddTag = () => {
     if (tags.length >= maxTags) return;
-    
+
     const newTag: TagItem = {
       id: Date.now().toString(),
       key: '',
@@ -65,9 +65,7 @@ export function ManageTagsDrawer({
   };
 
   const handleTagChange = (tagId: string, field: 'key' | 'value', newValue: string) => {
-    setTags(tags.map((tag) =>
-      tag.id === tagId ? { ...tag, [field]: newValue } : tag
-    ));
+    setTags(tags.map((tag) => (tag.id === tagId ? { ...tag, [field]: newValue } : tag)));
   };
 
   const handleSave = async () => {
@@ -96,15 +94,11 @@ export function ManageTagsDrawer({
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
-          <Button 
-            variant="secondary" 
-            onClick={handleClose}
-            className="w-[152px] h-8"
-          >
+          <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={handleSave}
             disabled={isSubmitting}
             className="w-[152px] h-8"
@@ -142,8 +136,14 @@ export function ManageTagsDrawer({
               <span className="text-[12px] text-[var(--color-text-subtle)]">(Optional)</span>
             </HStack>
             <div className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-              <p className="mb-0">A tag consists of a Key that defines the resource category and a Value that describes it.</p>
-              <p>Keys must be unique and 1-256 characters long. A maximum of {maxTags} tags can be added. ({tags.length}/{maxTags})</p>
+              <p className="mb-0">
+                A tag consists of a Key that defines the resource category and a Value that
+                describes it.
+              </p>
+              <p>
+                Keys must be unique and 1-256 characters long. A maximum of {maxTags} tags can be
+                added. ({tags.length}/{maxTags})
+              </p>
             </div>
           </VStack>
 
@@ -169,7 +169,9 @@ export function ManageTagsDrawer({
               >
                 {/* Key Field */}
                 <HStack gap={3} align="center" className="flex-1 min-w-0">
-                  <span className="text-[14px] font-medium text-[var(--color-text-default)] shrink-0">Key</span>
+                  <span className="text-[14px] font-medium text-[var(--color-text-default)] shrink-0">
+                    Key
+                  </span>
                   <Input
                     value={tag.key}
                     onChange={(e) => handleTagChange(tag.id, 'key', e.target.value)}
@@ -180,7 +182,9 @@ export function ManageTagsDrawer({
 
                 {/* Value Field */}
                 <HStack gap={3} align="center" className="flex-1 min-w-0">
-                  <span className="text-[14px] font-medium text-[var(--color-text-default)] shrink-0">Value</span>
+                  <span className="text-[14px] font-medium text-[var(--color-text-default)] shrink-0">
+                    Value
+                  </span>
                   <Input
                     value={tag.value}
                     onChange={(e) => handleTagChange(tag.id, 'value', e.target.value)}

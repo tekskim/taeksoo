@@ -13,7 +13,7 @@ describe('Badge Accessibility', () => {
 
   it('should have no accessibility violations with different themes', async () => {
     const themes = ['blue', 'red', 'green', 'yellow', 'gray'] as const;
-    
+
     for (const theme of themes) {
       const { container } = render(<Badge theme={theme}>{theme}</Badge>);
       const results = await axe(container);
@@ -23,7 +23,7 @@ describe('Badge Accessibility', () => {
 
   it('should have no accessibility violations with different types', async () => {
     const types = ['solid', 'subtle'] as const;
-    
+
     for (const type of types) {
       const { container } = render(<Badge type={type}>{type}</Badge>);
       const results = await axe(container);
@@ -32,9 +32,7 @@ describe('Badge Accessibility', () => {
   });
 
   it('should have no accessibility violations with icon', async () => {
-    const { container } = render(
-      <Badge leftIcon={<IconCheck size={12} />}>Verified</Badge>
-    );
+    const { container } = render(<Badge leftIcon={<IconCheck size={12} />}>Verified</Badge>);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
