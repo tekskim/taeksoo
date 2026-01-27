@@ -33,8 +33,6 @@ import { DataViewDrawer } from '@/components/DataViewDrawer';
 import {
   IconBell,
   IconRefresh,
-  IconChevronLeft,
-  IconChevronRight,
   IconDotsCircleHorizontal,
   IconArrowsMaximize,
   IconArrowsMinimize,
@@ -87,7 +85,16 @@ const timeOptions: { label: string; value: TimePeriod }[] = [
 ];
 
 const CalendarIcon = () => (
-  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg
+    width="12"
+    height="12"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
     <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
     <line x1="16" y1="2" x2="16" y2="6" />
     <line x1="8" y1="2" x2="8" y2="6" />
@@ -96,7 +103,16 @@ const CalendarIcon = () => (
 );
 
 const CloseIcon = () => (
-  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg
+    width="12"
+    height="12"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
     <line x1="18" y1="6" x2="6" y2="18" />
     <line x1="6" y1="6" x2="18" y2="18" />
   </svg>
@@ -115,7 +131,10 @@ interface HostMonitoringTimeControlsProps {
   onRefresh?: () => void;
 }
 
-function HostMonitoringTimeControls({ onTimeRangeChange, onRefresh }: HostMonitoringTimeControlsProps) {
+function HostMonitoringTimeControls({
+  onTimeRangeChange,
+  onRefresh,
+}: HostMonitoringTimeControlsProps) {
   const [timeRange, setTimeRange] = useState<TimePeriod>('30m');
   const [customPeriod, setCustomPeriod] = useState<{ start: Date; end: Date } | null>(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -203,9 +222,9 @@ function HostMonitoringTimeControls({ onTimeRangeChange, onRefresh }: HostMonito
     const lastDay = new Date(year, month + 1, 0);
     const daysInMonth = lastDay.getDate();
     const startingDay = firstDay.getDay();
-    
+
     const days: { date: Date; isCurrentMonth: boolean; isToday: boolean }[] = [];
-    
+
     // Previous month days
     const prevMonth = new Date(year, month, 0);
     const prevMonthDays = prevMonth.getDate();
@@ -213,10 +232,10 @@ function HostMonitoringTimeControls({ onTimeRangeChange, onRefresh }: HostMonito
       days.push({
         date: new Date(year, month - 1, prevMonthDays - i),
         isCurrentMonth: false,
-        isToday: false
+        isToday: false,
       });
     }
-    
+
     // Current month days
     const today = new Date();
     for (let i = 1; i <= daysInMonth; i++) {
@@ -224,20 +243,20 @@ function HostMonitoringTimeControls({ onTimeRangeChange, onRefresh }: HostMonito
       days.push({
         date: d,
         isCurrentMonth: true,
-        isToday: d.toDateString() === today.toDateString()
+        isToday: d.toDateString() === today.toDateString(),
       });
     }
-    
+
     // Next month days
     const remainingDays = 42 - days.length;
     for (let i = 1; i <= remainingDays; i++) {
       days.push({
         date: new Date(year, month + 1, i),
         isCurrentMonth: false,
-        isToday: false
+        isToday: false,
       });
     }
-    
+
     return days;
   };
 
@@ -286,8 +305,8 @@ function HostMonitoringTimeControls({ onTimeRangeChange, onRefresh }: HostMonito
     <div className="fullScreenTimeControls">
       {/* Time Range Buttons */}
       <div className="timeSegments">
-        {timeOptions.map(option => (
-          <button 
+        {timeOptions.map((option) => (
+          <button
             key={option.value}
             className={`timeSegment ${timeRange === option.value && !customPeriod ? 'timeSegmentActive' : ''}`}
             onClick={() => handleTimeRangeClick(option.value)}
@@ -311,7 +330,7 @@ function HostMonitoringTimeControls({ onTimeRangeChange, onRefresh }: HostMonito
             </button>
           </div>
         ) : (
-          <button 
+          <button
             className={`customPeriodBtn ${showDatePicker ? 'customPeriodBtnActive' : ''}`}
             onClick={handleCustomPeriodClick}
           >
@@ -325,7 +344,7 @@ function HostMonitoringTimeControls({ onTimeRangeChange, onRefresh }: HostMonito
           <div className="calendarDropdown">
             {/* Date Range Header */}
             <div className="calendarHeader">
-              <div 
+              <div
                 className={`calendarDateBox ${selectingStart ? 'calendarDateBoxActive' : ''}`}
                 onClick={() => setSelectingStart(true)}
               >
@@ -333,7 +352,7 @@ function HostMonitoringTimeControls({ onTimeRangeChange, onRefresh }: HostMonito
                 <span className="calendarDateValue">{formatCalendarDate(tempStartDate)}</span>
               </div>
               <div className="calendarDateSeparator">~</div>
-              <div 
+              <div
                 className={`calendarDateBox ${!selectingStart ? 'calendarDateBoxActive' : ''}`}
                 onClick={() => setSelectingStart(false)}
               >
@@ -356,8 +375,12 @@ function HostMonitoringTimeControls({ onTimeRangeChange, onRefresh }: HostMonito
 
             {/* Actions */}
             <div className="calendarActions">
-              <button className="calendarCancel" onClick={() => setShowDatePicker(false)}>Cancel</button>
-              <button className="calendarApply" onClick={handleApplyCustomPeriod}>Apply</button>
+              <button className="calendarCancel" onClick={() => setShowDatePicker(false)}>
+                Cancel
+              </button>
+              <button className="calendarApply" onClick={handleApplyCustomPeriod}>
+                Apply
+              </button>
             </div>
           </div>
         )}
@@ -403,7 +426,7 @@ function HostPerformanceChart({
   timeControls,
 }: HostPerformanceChartProps) {
   const [visibleSeries, setVisibleSeries] = useState<Record<string, boolean>>(
-    Object.fromEntries(series.map(s => [s.name, true]))
+    Object.fromEntries(series.map((s) => [s.name, true]))
   );
   const [menuOpen, setMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -431,10 +454,10 @@ function HostPerformanceChart({
     return () => observer.disconnect();
   }, []);
 
-  const allVisible = Object.values(visibleSeries).every(v => v);
+  const allVisible = Object.values(visibleSeries).every((v) => v);
   const toggleAll = () => {
     const newState = !allVisible;
-    setVisibleSeries(Object.fromEntries(series.map(s => [s.name, newState])));
+    setVisibleSeries(Object.fromEntries(series.map((s) => [s.name, newState])));
   };
 
   const handleFullScreen = () => {
@@ -448,19 +471,19 @@ function HostPerformanceChart({
   const tooltipBorder = isDarkMode ? '#3a3a3a' : '#e2e8f0';
   const tooltipTextColor = isDarkMode ? '#e5e5e5' : chartColors.slate800;
 
-  const allData = series.filter(s => visibleSeries[s.name]).flatMap(s => s.data);
+  const allData = series.filter((s) => visibleSeries[s.name]).flatMap((s) => s.data);
   const dataMax = Math.max(...allData, 0);
   const rawInterval = dataMax / 4;
   const magnitude = Math.pow(10, Math.floor(Math.log10(rawInterval || 1)));
   const normalizedInterval = rawInterval / magnitude;
-  
+
   let niceNormalizedInterval;
   if (normalizedInterval <= 1) niceNormalizedInterval = 1;
   else if (normalizedInterval <= 2) niceNormalizedInterval = 2;
   else if (normalizedInterval <= 2.5) niceNormalizedInterval = 2.5;
   else if (normalizedInterval <= 5) niceNormalizedInterval = 5;
   else niceNormalizedInterval = 10;
-  
+
   const niceInterval = niceNormalizedInterval * magnitude;
   const niceMax = niceInterval * 4;
 
@@ -471,7 +494,7 @@ function HostPerformanceChart({
       right: '16px',
       top: '20px',
       bottom: '16px',
-      containLabel: false
+      containLabel: false,
     },
     xAxis: {
       type: 'category' as const,
@@ -479,7 +502,7 @@ function HostPerformanceChart({
       axisLine: { show: false },
       axisTick: { show: false },
       axisLabel: { color: chartColors.slate400, fontSize: 10, padding: [0, 0, 0, 15] },
-      boundaryGap: false
+      boundaryGap: false,
     },
     yAxis: {
       type: 'value' as const,
@@ -492,30 +515,35 @@ function HostPerformanceChart({
       axisLabel: {
         color: chartColors.slate400,
         fontSize: 10,
-        formatter: (value: number) => `${value}${yAxisUnit}`
-      }
+        formatter: (value: number) => `${value}${yAxisUnit}`,
+      },
     },
     tooltip: {
       trigger: 'axis' as const,
       backgroundColor: tooltipBg,
       borderColor: tooltipBorder,
-      textStyle: { 
-        color: tooltipTextColor, 
-        fontSize: 11, 
-        fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif' 
+      textStyle: {
+        color: tooltipTextColor,
+        fontSize: 11,
+        fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif',
       },
-      formatter: (params: Array<{ marker: string; seriesName: string; value: number; axisValueLabel: string }>) => {
+      formatter: (
+        params: Array<{ marker: string; seriesName: string; value: number; axisValueLabel: string }>
+      ) => {
         if (!Array.isArray(params) || params.length === 0) return '';
         const time = params[0].axisValueLabel;
-        const items = params.map(p => 
-          `<div style="display: flex; align-items: center; gap: 8px;"><span style="display: inline-block; width: 8px; height: 8px; border-radius: 9999px; background-color: ${p.color};"></span><span>${p.seriesName}</span><span style="font-weight: 500; margin-left: auto;">${p.value}</span></div>`
-        ).join('');
+        const items = params
+          .map(
+            (p) =>
+              `<div style="display: flex; align-items: center; gap: 8px;"><span style="display: inline-block; width: 8px; height: 8px; border-radius: 9999px; background-color: ${p.color};"></span><span>${p.seriesName}</span><span style="font-weight: 500; margin-left: auto;">${p.value}</span></div>`
+          )
+          .join('');
         return `<div style="font-size: 11px; font-family: Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif;">${time}<div style="margin-top: 4px;">${items}</div></div>`;
-      }
+      },
     },
     series: series
-      .filter(s => visibleSeries[s.name])
-      .map(s => ({
+      .filter((s) => visibleSeries[s.name])
+      .map((s) => ({
         name: s.name,
         type: 'line' as const,
         data: s.data,
@@ -525,8 +553,8 @@ function HostPerformanceChart({
         showSymbol: false,
         lineStyle: { color: s.color, width: 1 },
         itemStyle: { color: s.color },
-        areaStyle: { color: s.color, opacity: 0.1 }
-      }))
+        areaStyle: { color: s.color, opacity: 0.1 },
+      })),
   };
 
   return (
@@ -535,9 +563,7 @@ function HostPerformanceChart({
         {/* Header */}
         <div className="chartHeader">
           <span className="chartTitle">{title}</span>
-          {isFullScreen && timeControls && (
-            <div className="chartHeaderCenter">{timeControls}</div>
-          )}
+          {isFullScreen && timeControls && <div className="chartHeaderCenter">{timeControls}</div>}
           <div className="chartControls">
             {/* Toggle Button - only show for multiple series */}
             {series.length > 1 && (
@@ -549,12 +575,15 @@ function HostPerformanceChart({
                 <span className="toggleDivider">|</span>
               </>
             )}
-            
+
             {/* Menu Button */}
             <div className="menuContainer">
-              <button 
+              <button
                 className="menuTrigger"
-                onClick={(e) => { e.stopPropagation(); setMenuOpen(!menuOpen); }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setMenuOpen(!menuOpen);
+                }}
               >
                 <IconDotsCircleHorizontal size={16} stroke={1.5} />
               </button>
@@ -566,17 +595,23 @@ function HostPerformanceChart({
                   <button className="contextMenuItem" onClick={() => setMenuOpen(false)}>
                     Download CSV
                   </button>
-                  <button className="contextMenuItemLast" onClick={() => { setMenuOpen(false); setShowDataView(true); }}>
+                  <button
+                    className="contextMenuItemLast"
+                    onClick={() => {
+                      setMenuOpen(false);
+                      setShowDataView(true);
+                    }}
+                  >
                     Data View
                   </button>
                 </div>
               )}
             </div>
-            
+
             {/* Expand/Minimize Button */}
-            <button 
-              className="expandTrigger" 
-              title={isFullScreen ? "Minimize" : "Expand"}
+            <button
+              className="expandTrigger"
+              title={isFullScreen ? 'Minimize' : 'Expand'}
               onClick={isFullScreen ? onExitFullScreen : handleFullScreen}
             >
               {isFullScreen ? (
@@ -587,17 +622,17 @@ function HostPerformanceChart({
             </button>
           </div>
         </div>
-        
+
         {/* Chart Body */}
         <div className="chartBody">
           <div className="chartWrapper" ref={wrapperRef}>
-            <ReactECharts 
+            <ReactECharts
               key={isFullScreen ? 'fullscreen' : 'normal'}
               ref={chartRef}
               option={option}
-              style={{ 
-                height: isFullScreen ? 'calc(100vh - 200px)' : '100%', 
-                width: isFullScreen ? 'calc(100vw - 300px)' : '100%'
+              style={{
+                height: isFullScreen ? 'calc(100vh - 200px)' : '100%',
+                width: isFullScreen ? 'calc(100vw - 300px)' : '100%',
               }}
               notMerge={true}
               onChartReady={handleChartReady}
@@ -605,10 +640,10 @@ function HostPerformanceChart({
           </div>
           <div className="chartLegend">
             {series.map((s, i) => (
-              <div 
+              <div
                 key={i}
                 className={`legendItem ${!visibleSeries[s.name] ? 'legendItemHidden' : ''}`}
-                onClick={() => setVisibleSeries(prev => ({ ...prev, [s.name]: !prev[s.name] }))}
+                onClick={() => setVisibleSeries((prev) => ({ ...prev, [s.name]: !prev[s.name] }))}
               >
                 <div className="legendDot" style={{ backgroundColor: s.color }} />
                 <span>{s.name}</span>
@@ -617,7 +652,7 @@ function HostPerformanceChart({
           </div>
         </div>
       </div>
-      
+
       {/* Data View Drawer */}
       <DataViewDrawer
         isOpen={showDataView}
@@ -645,7 +680,7 @@ function HostChartWithFullScreen({
   title,
   series,
   timeLabels,
-  yAxisUnit = ''
+  yAxisUnit = '',
 }: {
   title: string;
   series: ChartSeries[];
@@ -688,10 +723,16 @@ function HostChartWithFullScreen({
         yAxisUnit={yAxisUnit}
         onFullScreen={() => setFullScreenChart({ title, series, timeLabels, yAxisUnit })}
       />
-      
+
       {fullScreenChart && (
         <>
-          <div className="fullScreenOverlay" onClick={() => { setFullScreenChart(null); setContainerReady(false); }} />
+          <div
+            className="fullScreenOverlay"
+            onClick={() => {
+              setFullScreenChart(null);
+              setContainerReady(false);
+            }}
+          />
           <div className="fullScreenFloating" ref={fullScreenContainerRef}>
             {containerReady && (
               <HostPerformanceChart
@@ -700,7 +741,10 @@ function HostChartWithFullScreen({
                 timeLabels={fullScreenChart.timeLabels}
                 yAxisUnit={fullScreenChart.yAxisUnit}
                 isFullScreen={true}
-                onExitFullScreen={() => { setFullScreenChart(null); setContainerReady(false); }}
+                onExitFullScreen={() => {
+                  setFullScreenChart(null);
+                  setContainerReady(false);
+                }}
                 timeControls={<HostMonitoringTimeControls />}
               />
             )}
@@ -798,25 +842,125 @@ const mockHostData: Record<string, HostDetail> = {
     flash: 1,
     nics: 4,
     devices: [
-      { id: 'dev-1', deviceId: '9350-16i_LOGICAL_VOLUME_L9HF55E012A', deviceName: 'sda', daemons: ['osd.5', 'osd.4', 'osd.6'] },
-      { id: 'dev-2', deviceId: '9350-16i_LOGICAL_VOLUME_L9HF55E012A', deviceName: 'sdc', daemons: ['osd.5', 'osd.4', 'osd.6'] },
-      { id: 'dev-3', deviceId: 'LENOVO_MG09SCA14TE_2540A00MF2AJ', deviceName: 'sda', daemons: ['osd.5', 'osd.4', 'osd.6'] },
-      { id: 'dev-4', deviceId: 'LENOVO_MG09SCA14TE_2540A00MF2AJ', deviceName: 'sdc', daemons: ['osd.5', 'osd.6'] },
-      { id: 'dev-5', deviceId: 'LENOVO_MG09SCA14TE_2540A00MF2AJ', deviceName: 'sdd', daemons: ['osd.5'] },
+      {
+        id: 'dev-1',
+        deviceId: '9350-16i_LOGICAL_VOLUME_L9HF55E012A',
+        deviceName: 'sda',
+        daemons: ['osd.5', 'osd.4', 'osd.6'],
+      },
+      {
+        id: 'dev-2',
+        deviceId: '9350-16i_LOGICAL_VOLUME_L9HF55E012A',
+        deviceName: 'sdc',
+        daemons: ['osd.5', 'osd.4', 'osd.6'],
+      },
+      {
+        id: 'dev-3',
+        deviceId: 'LENOVO_MG09SCA14TE_2540A00MF2AJ',
+        deviceName: 'sda',
+        daemons: ['osd.5', 'osd.4', 'osd.6'],
+      },
+      {
+        id: 'dev-4',
+        deviceId: 'LENOVO_MG09SCA14TE_2540A00MF2AJ',
+        deviceName: 'sdc',
+        daemons: ['osd.5', 'osd.6'],
+      },
+      {
+        id: 'dev-5',
+        deviceId: 'LENOVO_MG09SCA14TE_2540A00MF2AJ',
+        deviceName: 'sdd',
+        daemons: ['osd.5'],
+      },
     ],
     physicalDisks: [
-      { id: 'disk-1', devicePath: '/dev/sda', type: 'SSD', available: false, vendor: '', model: 'KIOXIA KCD8DPUG3T20', size: '2.9 TiB', osd: 'osd.2', identifyTimer: null },
-      { id: 'disk-2', devicePath: '/dev/sdb', type: 'SSD', available: false, vendor: '', model: 'KIOXIA KCD8DPUG3T20', size: '2.9 TiB', osd: 'osd.3', identifyTimer: null },
-      { id: 'disk-3', devicePath: '/dev/sdc', type: 'SSD', available: false, vendor: '', model: 'KIOXIA KCD8DPUG3T20', size: '2.9 TiB', osd: 'osd.4', identifyTimer: null },
-      { id: 'disk-4', devicePath: '/dev/sdd', type: 'SSD', available: false, vendor: '', model: 'KIOXIA KCD8DPUG3T20', size: '2.9 TiB', osd: 'osd.5', identifyTimer: null },
+      {
+        id: 'disk-1',
+        devicePath: '/dev/sda',
+        type: 'SSD',
+        available: false,
+        vendor: '',
+        model: 'KIOXIA KCD8DPUG3T20',
+        size: '2.9 TiB',
+        osd: 'osd.2',
+        identifyTimer: null,
+      },
+      {
+        id: 'disk-2',
+        devicePath: '/dev/sdb',
+        type: 'SSD',
+        available: false,
+        vendor: '',
+        model: 'KIOXIA KCD8DPUG3T20',
+        size: '2.9 TiB',
+        osd: 'osd.3',
+        identifyTimer: null,
+      },
+      {
+        id: 'disk-3',
+        devicePath: '/dev/sdc',
+        type: 'SSD',
+        available: false,
+        vendor: '',
+        model: 'KIOXIA KCD8DPUG3T20',
+        size: '2.9 TiB',
+        osd: 'osd.4',
+        identifyTimer: null,
+      },
+      {
+        id: 'disk-4',
+        devicePath: '/dev/sdd',
+        type: 'SSD',
+        available: false,
+        vendor: '',
+        model: 'KIOXIA KCD8DPUG3T20',
+        size: '2.9 TiB',
+        osd: 'osd.5',
+        identifyTimer: null,
+      },
     ],
     daemons: [
-      { id: 'daemon-1', status: 'running', daemonName: 'mon.bdv2kr1-cephobj02', version: '19.2.3', lastRefreshed: '5 minutes ago', cpuUsage: 88.17, cpuStatus: 'chunking', memoryUsage: '18.4 GiB', daemonEvents: 'A month ago - daemon:mds.cephfs-test.bdv2kr1-cephobj02.lrphgq' },
-      { id: 'daemon-2', status: 'running', daemonName: 'mon.bdv2kr1-cephobj02', version: '19.2.3', lastRefreshed: '5 minutes ago', cpuUsage: 0, cpuStatus: 'chunking', memoryUsage: '3.5 GiB', daemonEvents: 'No data available' },
-      { id: 'daemon-3', status: 'running', daemonName: 'mon.bdv2kr1-cephobj02', version: '19.2.3', lastRefreshed: '5 minutes ago', cpuUsage: 0, cpuStatus: 'chunking', memoryUsage: '3.5 GiB', daemonEvents: 'No data available' },
+      {
+        id: 'daemon-1',
+        status: 'running',
+        daemonName: 'mon.bdv2kr1-cephobj02',
+        version: '19.2.3',
+        lastRefreshed: '5 minutes ago',
+        cpuUsage: 88.17,
+        cpuStatus: 'chunking',
+        memoryUsage: '18.4 GiB',
+        daemonEvents: 'A month ago - daemon:mds.cephfs-test.bdv2kr1-cephobj02.lrphgq',
+      },
+      {
+        id: 'daemon-2',
+        status: 'running',
+        daemonName: 'mon.bdv2kr1-cephobj02',
+        version: '19.2.3',
+        lastRefreshed: '5 minutes ago',
+        cpuUsage: 0,
+        cpuStatus: 'chunking',
+        memoryUsage: '3.5 GiB',
+        daemonEvents: 'No data available',
+      },
+      {
+        id: 'daemon-3',
+        status: 'running',
+        daemonName: 'mon.bdv2kr1-cephobj02',
+        version: '19.2.3',
+        lastRefreshed: '5 minutes ago',
+        cpuUsage: 0,
+        cpuStatus: 'chunking',
+        memoryUsage: '3.5 GiB',
+        daemonEvents: 'No data available',
+      },
     ],
     deviceHealth: [
-      { id: 'dh-1', device: '/dev/sdf', serialId: 'L9HF55E012A', smartStatus: 'passed', smartctlOutput: `"smartctl_output": [
+      {
+        id: 'dh-1',
+        device: '/dev/sdf',
+        serialId: 'L9HF55E012A',
+        smartStatus: 'passed',
+        smartctlOutput: `"smartctl_output": [
             "smartctl 7.2 2020-12-30 r5155 [x86_64-linux-6.8.0-79-generic] (local build)",
             "Copyright (C) 2002-20, Bruce Allen, Christian Franke, www.smartmontools.org",
             "",
@@ -838,8 +982,14 @@ const mockHostData: Record<string, HostDetail> = {
             "Local Time is:                      Tue Dec 16 01:00:01 2025 UTC",
             "Firmware Updates (0x16):            3 Slots, no Reset required",
             "Optional Admin Commands (0x06df):   Security Format F"
-        ]` },
-      { id: 'dh-2', device: '/dev/sda', serialId: '2540A00MF2AJ', smartStatus: 'unavailable', smartctlOutput: `"smartctl_output": [
+        ]`,
+      },
+      {
+        id: 'dh-2',
+        device: '/dev/sda',
+        serialId: '2540A00MF2AJ',
+        smartStatus: 'unavailable',
+        smartctlOutput: `"smartctl_output": [
             "smartctl 7.2 2020-12-30 r5155 [x86_64-linux-6.8.0-79-generic] (local build)",
             "Copyright (C) 2002-20, Bruce Allen, Christian Franke, www.smartmontools.org",
             "",
@@ -847,10 +997,29 @@ const mockHostData: Record<string, HostDetail> = {
             "Model number:                       Samsung PM983",
             "Serial number:                      2540A00MF2AJ",
             "Firmware version:                   EDA5102Q"
-        ]` },
-      { id: 'dh-3', device: '/dev/sdb', serialId: '2540A00MF3AK', smartStatus: 'passed', smartctlOutput: `"smartctl_output": []` },
-      { id: 'dh-4', device: '/dev/sdc', serialId: '2540A00MF4AL', smartStatus: 'loading', smartctlOutput: `"smartctl_output": []` },
-      { id: 'dh-5', device: '/dev/sdd', serialId: '2540A00MF5AM', smartStatus: 'unavailable', smartctlOutput: `"smartctl_output": []` },
+        ]`,
+      },
+      {
+        id: 'dh-3',
+        device: '/dev/sdb',
+        serialId: '2540A00MF3AK',
+        smartStatus: 'passed',
+        smartctlOutput: `"smartctl_output": []`,
+      },
+      {
+        id: 'dh-4',
+        device: '/dev/sdc',
+        serialId: '2540A00MF4AL',
+        smartStatus: 'loading',
+        smartctlOutput: `"smartctl_output": []`,
+      },
+      {
+        id: 'dh-5',
+        device: '/dev/sdd',
+        serialId: '2540A00MF5AM',
+        smartStatus: 'unavailable',
+        smartctlOutput: `"smartctl_output": []`,
+      },
     ],
   },
   'host-002': {
@@ -908,7 +1077,7 @@ export default function HostDetailPage() {
   const [isIdentifyDrawerOpen, setIsIdentifyDrawerOpen] = useState(false);
   const [selectedDiskId, setSelectedDiskId] = useState<string | null>(null);
   const [identifyDuration, setIdentifyDuration] = useState('1');
-  
+
   // Timer state for each disk (in seconds)
   const [diskTimers, setDiskTimers] = useState<Record<string, number>>({});
 
@@ -922,7 +1091,8 @@ export default function HostDetailPage() {
   ];
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } =
+    useTabs();
 
   // Get host data
   const host = id ? mockHostData[id] : null;
@@ -988,9 +1158,9 @@ export default function HostDetailPage() {
   const deviceColumns: TableColumn<Device>[] = [
     { key: 'deviceId', label: 'Device ID', width: columnWidths.deviceId, sortable: true },
     { key: 'deviceName', label: 'Device name', width: columnWidths.deviceName, sortable: true },
-    { 
-      key: 'daemons', 
-      label: 'Daemons', 
+    {
+      key: 'daemons',
+      label: 'Daemons',
       width: columnWidths.daemons,
       render: (_, row) => (
         <div className="flex flex-wrap gap-0.5">
@@ -1005,22 +1175,22 @@ export default function HostDetailPage() {
   const physicalDiskColumns: TableColumn<PhysicalDisk>[] = [
     { key: 'devicePath', label: 'Device path', width: columnWidths.devicePath, sortable: true },
     { key: 'type', label: 'Type', width: columnWidths.type, sortable: true },
-    { 
-      key: 'available', 
-      label: 'Available', 
-      width: columnWidths.available, 
+    {
+      key: 'available',
+      label: 'Available',
+      width: columnWidths.available,
       sortable: true,
-      render: (_, row) => row.available ? 'Yes' : '',
+      render: (_, row) => (row.available ? 'Yes' : ''),
     },
     { key: 'vendor', label: 'Vendor', width: columnWidths.vendor, sortable: true },
     { key: 'model', label: 'Model', width: columnWidths.model, sortable: true },
     { key: 'size', label: 'Size', width: columnWidths.size, sortable: true },
-    { 
-      key: 'osd', 
-      label: 'OSDs', 
-      width: columnWidths.osd, 
+    {
+      key: 'osd',
+      label: 'OSDs',
+      width: columnWidths.osd,
       sortable: true,
-      render: (_, row) => row.osd ? <Chip value={row.osd} /> : null,
+      render: (_, row) => (row.osd ? <Chip value={row.osd} /> : null),
     },
     {
       key: 'identify',
@@ -1034,12 +1204,14 @@ export default function HostDetailPage() {
           const secs = seconds % 60;
           return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         };
-        
+
         const timer = diskTimers[row.id] ?? row.identifyTimer;
-        
+
         if (timer && timer > 0) {
           return (
-            <span className="text-[11px] font-medium text-[var(--color-state-warning)]">{formatTime(timer)}</span>
+            <span className="text-[11px] font-medium text-[var(--color-state-warning)]">
+              {formatTime(timer)}
+            </span>
           );
         }
         return (
@@ -1087,7 +1259,12 @@ export default function HostDetailPage() {
               className="h-full rounded-full transition-all duration-300"
               style={{
                 width: `${Math.min(row.cpuUsage, 100)}%`,
-                backgroundColor: row.cpuUsage >= 95 ? 'var(--color-state-danger)' : row.cpuUsage >= 85 ? 'var(--color-state-warning)' : 'var(--color-blue-400)',
+                backgroundColor:
+                  row.cpuUsage >= 95
+                    ? 'var(--color-state-danger)'
+                    : row.cpuUsage >= 85
+                      ? 'var(--color-state-warning)'
+                      : 'var(--color-blue-400)',
               }}
             />
           </div>
@@ -1113,14 +1290,15 @@ export default function HostDetailPage() {
   // State for Device Health tab
   const [selectedDeviceHealth, setSelectedDeviceHealth] = useState<string | null>(null);
   const [deviceHealthTab, setDeviceHealthTab] = useState<'device-info' | 'smart'>('device-info');
-  
+
   // Get selected device health data
-  const selectedDeviceData = host?.deviceHealth.find(d => d.id === selectedDeviceHealth) || host?.deviceHealth[0];
+  const selectedDeviceData =
+    host?.deviceHealth.find((d) => d.id === selectedDeviceHealth) || host?.deviceHealth[0];
 
   if (!host) {
     return (
       <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-        <StorageSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
+        <StorageSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
         <main
           className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
           style={{ left: sidebarOpen ? 'var(--layout-sidebar-width)' : '0' }}
@@ -1149,7 +1327,7 @@ export default function HostDetailPage() {
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       {/* Sidebar */}
-      <StorageSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
+      <StorageSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
 
       {/* Main Content */}
       <main
@@ -1158,12 +1336,12 @@ export default function HostDetailPage() {
       >
         {/* Tab Bar */}
         <TabBar
-          tabs={tabs.map(tab => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
           onTabAdd={addNewTab}
-            onTabReorder={moveTab}
+          onTabReorder={moveTab}
           showAddButton={true}
           showWindowControls={true}
         />
@@ -1202,21 +1380,26 @@ export default function HostDetailPage() {
               <DetailHeader>
                 <DetailHeader.Title>{host.hostname}</DetailHeader.Title>
                 <DetailHeader.InfoGrid>
-                  <DetailHeader.InfoCard 
-                    label="Status" 
-                    value={getStatusLabel(host.status)} 
-                    status={host.status} 
+                  <DetailHeader.InfoCard
+                    label="Status"
+                    value={getStatusLabel(host.status)}
+                    status={host.status}
                   />
-                  <DetailHeader.InfoCard 
-                    label="Labels" 
-                    value={host.labels.length > 0 ? host.labels.join(', ') : '-'} 
+                  <DetailHeader.InfoCard
+                    label="Labels"
+                    value={host.labels.length > 0 ? host.labels.join(', ') : '-'}
                   />
                 </DetailHeader.InfoGrid>
               </DetailHeader>
 
               {/* Tabs */}
               <div className="w-full">
-                <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline" size="sm">
+                <Tabs
+                  value={activeDetailTab}
+                  onChange={setActiveDetailTab}
+                  variant="underline"
+                  size="sm"
+                >
                   <TabList>
                     <Tab value="details">Details</Tab>
                     <Tab value="devices">Devices</Tab>
@@ -1242,27 +1425,17 @@ export default function HostDetailPage() {
                               ))}
                             </div>
                           </SectionCard.DataRow>
-                          <SectionCard.DataRow label="CPUs">
-                            {host.cpus}
-                          </SectionCard.DataRow>
-                          <SectionCard.DataRow label="Cores">
-                            {host.cores}
-                          </SectionCard.DataRow>
+                          <SectionCard.DataRow label="CPUs">{host.cpus}</SectionCard.DataRow>
+                          <SectionCard.DataRow label="Cores">{host.cores}</SectionCard.DataRow>
                           <SectionCard.DataRow label="Total memory">
                             {host.totalMemory}
                           </SectionCard.DataRow>
                           <SectionCard.DataRow label="Raw capacity">
                             {host.rawCapacity}
                           </SectionCard.DataRow>
-                          <SectionCard.DataRow label="HDDs">
-                            {host.hdds}
-                          </SectionCard.DataRow>
-                          <SectionCard.DataRow label="Flash">
-                            {host.flash}
-                          </SectionCard.DataRow>
-                          <SectionCard.DataRow label="NICs">
-                            {host.nics}
-                          </SectionCard.DataRow>
+                          <SectionCard.DataRow label="HDDs">{host.hdds}</SectionCard.DataRow>
+                          <SectionCard.DataRow label="Flash">{host.flash}</SectionCard.DataRow>
+                          <SectionCard.DataRow label="NICs">{host.nics}</SectionCard.DataRow>
                         </SectionCard.Content>
                       </SectionCard>
                     </VStack>
@@ -1277,18 +1450,18 @@ export default function HostDetailPage() {
                           Devices
                         </h3>
                       </div>
-                      
+
                       {/* Search */}
                       <div className="flex items-center gap-4">
                         <div className="w-[var(--search-input-width)]">
-                          <SearchInput 
+                          <SearchInput
                             placeholder="Search instance by attributes"
                             size="sm"
                             fullWidth
                           />
                         </div>
                       </div>
-                      
+
                       {/* Pagination */}
                       <Pagination
                         currentPage={1}
@@ -1298,7 +1471,7 @@ export default function HostDetailPage() {
                         itemsPerPage={10}
                         showItemCount
                       />
-                      
+
                       {/* Table */}
                       <Table
                         columns={deviceColumns}
@@ -1318,16 +1491,16 @@ export default function HostDetailPage() {
                           Physical disks
                         </h3>
                       </div>
-                      
+
                       {/* Search */}
                       <div className="w-[var(--search-input-width)]">
-                        <SearchInput 
+                        <SearchInput
                           placeholder="Search instance by attributes"
                           size="sm"
                           fullWidth
                         />
                       </div>
-                      
+
                       {/* Pagination */}
                       <Pagination
                         currentPage={1}
@@ -1337,7 +1510,7 @@ export default function HostDetailPage() {
                         itemsPerPage={10}
                         showItemCount
                       />
-                      
+
                       {/* Table */}
                       <Table
                         columns={physicalDiskColumns}
@@ -1357,16 +1530,16 @@ export default function HostDetailPage() {
                           Daemon
                         </h3>
                       </div>
-                      
+
                       {/* Search */}
                       <div className="w-[var(--search-input-width)]">
-                        <SearchInput 
+                        <SearchInput
                           placeholder="Search instance by attributes"
                           size="sm"
                           fullWidth
                         />
                       </div>
-                      
+
                       {/* Pagination */}
                       <Pagination
                         currentPage={1}
@@ -1376,7 +1549,7 @@ export default function HostDetailPage() {
                         itemsPerPage={10}
                         showItemCount
                       />
-                      
+
                       {/* Table */}
                       <Table
                         columns={daemonColumns}
@@ -1398,7 +1571,8 @@ export default function HostDetailPage() {
                         <div className="w-full h-px bg-[var(--color-border-subtle)]" />
                         <div className="flex flex-col">
                           {host.deviceHealth.map((device) => {
-                            const isSelected = (selectedDeviceHealth || host.deviceHealth[0]?.id) === device.id;
+                            const isSelected =
+                              (selectedDeviceHealth || host.deviceHealth[0]?.id) === device.id;
                             return (
                               <button
                                 key={device.id}
@@ -1415,7 +1589,7 @@ export default function HostDetailPage() {
                           })}
                         </div>
                       </div>
-                      
+
                       {/* Right Panel - Device Details */}
                       <div className="flex-1 flex flex-col gap-3">
                         {selectedDeviceData && (
@@ -1424,7 +1598,7 @@ export default function HostDetailPage() {
                             <h3 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
                               {selectedDeviceData.device} ({selectedDeviceData.serialId})
                             </h3>
-                            
+
                             {/* Tab Switcher */}
                             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md p-1">
                               <div className="flex gap-2">
@@ -1450,14 +1624,14 @@ export default function HostDetailPage() {
                                 </button>
                               </div>
                             </div>
-                            
+
                             {/* Content */}
                             {deviceHealthTab === 'device-info' && (
                               <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md p-4 flex flex-col gap-3">
                                 <h4 className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
                                   Device Information
                                 </h4>
-                                
+
                                 <div className="flex flex-col gap-1.5">
                                   <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)]">
                                     Smartctl Output
@@ -1476,21 +1650,62 @@ export default function HostDetailPage() {
                                 {/* Info/Status Message based on SMART status */}
                                 {selectedDeviceData?.smartStatus === 'passed' && (
                                   <div className="bg-[var(--color-state-success-bg)] rounded-md p-3 flex items-start gap-2">
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0 mt-0.5">
-                                      <path d="M8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8C2 11.3137 4.68629 14 8 14Z" stroke="var(--color-state-success)" strokeLinecap="round" strokeLinejoin="round"/>
-                                      <path d="M5.5 8L7.16667 9.66667L10.5 6.33333" stroke="var(--color-state-success)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                    <svg
+                                      width="16"
+                                      height="16"
+                                      viewBox="0 0 16 16"
+                                      fill="none"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      className="shrink-0 mt-0.5"
+                                    >
+                                      <path
+                                        d="M8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8C2 11.3137 4.68629 14 8 14Z"
+                                        stroke="var(--color-state-success)"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                      />
+                                      <path
+                                        d="M5.5 8L7.16667 9.66667L10.5 6.33333"
+                                        stroke="var(--color-state-success)"
+                                        strokeWidth="1.5"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                      />
                                     </svg>
                                     <span className="text-[12px] leading-4 text-[var(--color-text-default)]">
-                                      SMART overall-health self-assessment test result: <strong>passed</strong>
+                                      SMART overall-health self-assessment test result:{' '}
+                                      <strong>passed</strong>
                                     </span>
                                   </div>
                                 )}
                                 {selectedDeviceData?.smartStatus === 'unavailable' && (
                                   <div className="bg-[var(--color-state-info-bg)] rounded-md p-3 flex items-start gap-2">
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0 mt-0.5">
-                                      <path d="M8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8C2 11.3137 4.68629 14 8 14Z" stroke="var(--color-state-info)" strokeLinecap="round" strokeLinejoin="round"/>
-                                      <path d="M8 10.6667V8" stroke="var(--color-state-info)" strokeLinecap="round" strokeLinejoin="round"/>
-                                      <path d="M8 5.33333H8.00667" stroke="var(--color-state-info)" strokeLinecap="round" strokeLinejoin="round"/>
+                                    <svg
+                                      width="16"
+                                      height="16"
+                                      viewBox="0 0 16 16"
+                                      fill="none"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      className="shrink-0 mt-0.5"
+                                    >
+                                      <path
+                                        d="M8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8C2 11.3137 4.68629 14 8 14Z"
+                                        stroke="var(--color-state-info)"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                      />
+                                      <path
+                                        d="M8 10.6667V8"
+                                        stroke="var(--color-state-info)"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                      />
+                                      <path
+                                        d="M8 5.33333H8.00667"
+                                        stroke="var(--color-state-info)"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                      />
                                     </svg>
                                     <span className="text-[12px] leading-4 text-[var(--color-text-default)]">
                                       No SMART data available for this device.
@@ -1499,10 +1714,32 @@ export default function HostDetailPage() {
                                 )}
                                 {selectedDeviceData?.smartStatus === 'loading' && (
                                   <div className="bg-[var(--color-state-info-bg)] rounded-md p-3 flex items-start gap-2">
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0 mt-0.5">
-                                      <path d="M8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8C2 11.3137 4.68629 14 8 14Z" stroke="var(--color-state-info)" strokeLinecap="round" strokeLinejoin="round"/>
-                                      <path d="M8 10.6667V8" stroke="var(--color-state-info)" strokeLinecap="round" strokeLinejoin="round"/>
-                                      <path d="M8 5.33333H8.00667" stroke="var(--color-state-info)" strokeLinecap="round" strokeLinejoin="round"/>
+                                    <svg
+                                      width="16"
+                                      height="16"
+                                      viewBox="0 0 16 16"
+                                      fill="none"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      className="shrink-0 mt-0.5"
+                                    >
+                                      <path
+                                        d="M8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8C2 11.3137 4.68629 14 8 14Z"
+                                        stroke="var(--color-state-info)"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                      />
+                                      <path
+                                        d="M8 10.6667V8"
+                                        stroke="var(--color-state-info)"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                      />
+                                      <path
+                                        d="M8 5.33333H8.00667"
+                                        stroke="var(--color-state-info)"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                      />
                                     </svg>
                                     <span className="text-[12px] leading-4 text-[var(--color-text-default)]">
                                       SMART data is loading.
@@ -1511,13 +1748,36 @@ export default function HostDetailPage() {
                                 )}
                                 {selectedDeviceData?.smartStatus === 'failed' && (
                                   <div className="bg-[var(--color-state-danger-bg)] rounded-md p-3 flex items-start gap-2">
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0 mt-0.5">
-                                      <path d="M8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8C2 11.3137 4.68629 14 8 14Z" stroke="var(--color-state-danger)" strokeLinecap="round" strokeLinejoin="round"/>
-                                      <path d="M10 6L6 10" stroke="var(--color-state-danger)" strokeLinecap="round" strokeLinejoin="round"/>
-                                      <path d="M6 6L10 10" stroke="var(--color-state-danger)" strokeLinecap="round" strokeLinejoin="round"/>
+                                    <svg
+                                      width="16"
+                                      height="16"
+                                      viewBox="0 0 16 16"
+                                      fill="none"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      className="shrink-0 mt-0.5"
+                                    >
+                                      <path
+                                        d="M8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8C2 11.3137 4.68629 14 8 14Z"
+                                        stroke="var(--color-state-danger)"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                      />
+                                      <path
+                                        d="M10 6L6 10"
+                                        stroke="var(--color-state-danger)"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                      />
+                                      <path
+                                        d="M6 6L10 10"
+                                        stroke="var(--color-state-danger)"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                      />
                                     </svg>
                                     <span className="text-[12px] leading-4 text-[var(--color-text-default)]">
-                                      SMART overall-health self-assessment test result: <strong>failed</strong>
+                                      SMART overall-health self-assessment test result:{' '}
+                                      <strong>failed</strong>
                                     </span>
                                   </div>
                                 )}
@@ -1527,15 +1787,19 @@ export default function HostDetailPage() {
                                   <h4 className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
                                     SMART
                                   </h4>
-                                  
+
                                   <div className="flex flex-col gap-1.5">
                                     <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)]">
                                       Health Status
                                     </span>
                                     <span className="text-[12px] leading-4 text-[var(--color-text-default)]">
-                                      {selectedDeviceData?.smartStatus === 'passed' ? 'Passed' : 
-                                       selectedDeviceData?.smartStatus === 'failed' ? 'Failed' : 
-                                       selectedDeviceData?.smartStatus === 'unavailable' ? 'Unavailable' : '-'}
+                                      {selectedDeviceData?.smartStatus === 'passed'
+                                        ? 'Passed'
+                                        : selectedDeviceData?.smartStatus === 'failed'
+                                          ? 'Failed'
+                                          : selectedDeviceData?.smartStatus === 'unavailable'
+                                            ? 'Unavailable'
+                                            : '-'}
                                     </span>
                                   </div>
                                 </div>
@@ -1543,7 +1807,7 @@ export default function HostDetailPage() {
                             )}
                           </>
                         )}
-                        
+
                         {!selectedDeviceData && host.deviceHealth.length === 0 && (
                           <div className="flex items-center justify-center h-[200px] text-[var(--color-text-subtle)]">
                             No device health data available
@@ -1569,7 +1833,7 @@ export default function HostDetailPage() {
                         <h3 className="text-[14px] font-semibold text-[var(--color-text-default)] mb-4 tracking-wider">
                           SYSTEM OVERVIEW
                         </h3>
-                        
+
                         {/* Stat Cards Row */}
                         <div className="grid grid-cols-2 gap-4 mb-6">
                           {/* OSDs Card */}
@@ -1579,16 +1843,18 @@ export default function HostDetailPage() {
                               {host.osds || 24}
                             </div>
                           </div>
-                          
+
                           {/* Raw capacity Card */}
                           <div className="bg-[var(--color-surface-subtle)] rounded-lg p-4">
-                            <span className="text-[12px] text-[var(--color-text-muted)]">Raw capacity</span>
+                            <span className="text-[12px] text-[var(--color-text-muted)]">
+                              Raw capacity
+                            </span>
                             <div className="text-[24px] leading-[28px] font-semibold text-[var(--color-text-default)] mt-1">
                               {host.rawCapacity || '11.6 TiB'}
                             </div>
                           </div>
                         </div>
-                        
+
                         {/* Charts Container with 24px vertical gap */}
                         <div className="flex flex-col gap-6">
                           {/* Charts Row */}
@@ -1597,21 +1863,53 @@ export default function HostDetailPage() {
                             <HostChartWithFullScreen
                               title="Network drop rate"
                               series={[
-                                { name: 'Send', data: [2, 4, 8, 10, 9, 12, 14], color: chartColors.cyan400 },
-                                { name: 'Receive', data: [1, 3, 6, 8, 7, 10, 12], color: chartColors.emerald400 },
+                                {
+                                  name: 'Send',
+                                  data: [2, 4, 8, 10, 9, 12, 14],
+                                  color: chartColors.cyan400,
+                                },
+                                {
+                                  name: 'Receive',
+                                  data: [1, 3, 6, 8, 7, 10, 12],
+                                  color: chartColors.emerald400,
+                                },
                               ]}
-                              timeLabels={['14:30', '14:45', '15:00', '15:15', '15:30', '15:45', '16:00']}
+                              timeLabels={[
+                                '14:30',
+                                '14:45',
+                                '15:00',
+                                '15:15',
+                                '15:30',
+                                '15:45',
+                                '16:00',
+                              ]}
                               yAxisUnit=" p/s"
                             />
-                            
+
                             {/* Network error rate */}
                             <HostChartWithFullScreen
                               title="Network error rate"
                               series={[
-                                { name: 'Send', data: [1, 2, 4, 5, 4, 6, 8], color: chartColors.cyan400 },
-                                { name: 'Receive', data: [0.5, 1.5, 3, 4, 3, 5, 7], color: chartColors.emerald400 },
+                                {
+                                  name: 'Send',
+                                  data: [1, 2, 4, 5, 4, 6, 8],
+                                  color: chartColors.cyan400,
+                                },
+                                {
+                                  name: 'Receive',
+                                  data: [0.5, 1.5, 3, 4, 3, 5, 7],
+                                  color: chartColors.emerald400,
+                                },
                               ]}
-                              timeLabels={['14:30', '14:45', '15:00', '15:15', '15:30', '15:45', '16:00']}
+                              timeLabels={[
+                                '14:30',
+                                '14:45',
+                                '15:00',
+                                '15:15',
+                                '15:30',
+                                '15:45',
+                                '16:00',
+                              ]}
                               yAxisUnit=" p/s"
                             />
                           </div>
@@ -1622,22 +1920,50 @@ export default function HostDetailPage() {
                             <HostChartWithFullScreen
                               title="RAM Usage"
                               series={[
-                                { name: 'Used', data: [28, 32, 35, 38, 36, 40], color: chartColors.cyan400 },
-                                { name: 'Cached', data: [18, 22, 25, 28, 26, 30], color: chartColors.emerald400 },
-                                { name: 'Buffers', data: [8, 10, 12, 14, 12, 15], color: chartColors.amber400 },
+                                {
+                                  name: 'Used',
+                                  data: [28, 32, 35, 38, 36, 40],
+                                  color: chartColors.cyan400,
+                                },
+                                {
+                                  name: 'Cached',
+                                  data: [18, 22, 25, 28, 26, 30],
+                                  color: chartColors.emerald400,
+                                },
+                                {
+                                  name: 'Buffers',
+                                  data: [8, 10, 12, 14, 12, 15],
+                                  color: chartColors.amber400,
+                                },
                               ]}
                               timeLabels={['14:30', '14:45', '15:00', '15:15', '15:30']}
                               yAxisUnit=" GB"
                             />
-                            
+
                             {/* CPU Utilization */}
                             <HostChartWithFullScreen
                               title="CPU Utilization"
                               series={[
-                                { name: 'osd.0', data: [1.2, 1.4, 1.6, 1.5, 1.8], color: chartColors.cyan400 },
-                                { name: 'osd.1', data: [0.8, 1.0, 1.2, 1.1, 1.4], color: chartColors.emerald400 },
-                                { name: 'osd.2', data: [0.5, 0.7, 0.9, 0.85, 1.0], color: chartColors.amber400 },
-                                { name: 'osd.3', data: [0.6, 0.8, 1.0, 0.95, 1.2], color: chartColors.violet400 },
+                                {
+                                  name: 'osd.0',
+                                  data: [1.2, 1.4, 1.6, 1.5, 1.8],
+                                  color: chartColors.cyan400,
+                                },
+                                {
+                                  name: 'osd.1',
+                                  data: [0.8, 1.0, 1.2, 1.1, 1.4],
+                                  color: chartColors.emerald400,
+                                },
+                                {
+                                  name: 'osd.2',
+                                  data: [0.5, 0.7, 0.9, 0.85, 1.0],
+                                  color: chartColors.amber400,
+                                },
+                                {
+                                  name: 'osd.3',
+                                  data: [0.6, 0.8, 1.0, 0.95, 1.2],
+                                  color: chartColors.violet400,
+                                },
                               ]}
                               timeLabels={['14:30', '14:45', '15:00', '15:15', '15:30']}
                               yAxisUnit="%"
@@ -1649,10 +1975,26 @@ export default function HostDetailPage() {
                             <HostChartWithFullScreen
                               title="Network load"
                               series={[
-                                { name: 'eth0 Rx', data: [2.2, 2.5, 2.8, 3.0, 3.2, 3.5], color: chartColors.cyan400 },
-                                { name: 'eth0 Tx', data: [1.5, 1.8, 2.0, 2.2, 2.5, 2.8], color: chartColors.emerald400 },
-                                { name: 'eth1 Rx', data: [1.0, 1.2, 1.5, 1.8, 2.0, 2.2], color: chartColors.amber400 },
-                                { name: 'eth1 Tx', data: [0.8, 1.0, 1.2, 1.4, 1.6, 1.8], color: chartColors.violet400 },
+                                {
+                                  name: 'eth0 Rx',
+                                  data: [2.2, 2.5, 2.8, 3.0, 3.2, 3.5],
+                                  color: chartColors.cyan400,
+                                },
+                                {
+                                  name: 'eth0 Tx',
+                                  data: [1.5, 1.8, 2.0, 2.2, 2.5, 2.8],
+                                  color: chartColors.emerald400,
+                                },
+                                {
+                                  name: 'eth1 Rx',
+                                  data: [1.0, 1.2, 1.5, 1.8, 2.0, 2.2],
+                                  color: chartColors.amber400,
+                                },
+                                {
+                                  name: 'eth1 Tx',
+                                  data: [0.8, 1.0, 1.2, 1.4, 1.6, 1.8],
+                                  color: chartColors.violet400,
+                                },
                               ]}
                               timeLabels={['14:30', '14:45', '15:00', '15:15', '15:30']}
                               yAxisUnit=" Gb/s"
@@ -1666,7 +2008,7 @@ export default function HostDetailPage() {
                         <h3 className="text-[14px] font-semibold text-[var(--color-text-default)] mb-4 tracking-wider">
                           DISK PERFORMANCE
                         </h3>
-                        
+
                         {/* Disk Charts Container with 24px vertical gap */}
                         <div className="flex flex-col gap-6">
                           {/* Row 1: Disk IOPS + Throughput by Disk */}
@@ -1675,23 +2017,55 @@ export default function HostDetailPage() {
                             <HostChartWithFullScreen
                               title="Disk IOPS"
                               series={[
-                                { name: 'sda Read', data: [100, 120, 140, 160, 180, 150], color: chartColors.cyan400 },
-                                { name: 'sda Write', data: [80, 95, 110, 130, 145, 120], color: chartColors.emerald400 },
-                                { name: 'sdb Read', data: [60, 70, 85, 100, 110, 90], color: chartColors.amber400 },
-                                { name: 'sdb Write', data: [40, 55, 70, 85, 95, 75], color: chartColors.violet400 },
+                                {
+                                  name: 'sda Read',
+                                  data: [100, 120, 140, 160, 180, 150],
+                                  color: chartColors.cyan400,
+                                },
+                                {
+                                  name: 'sda Write',
+                                  data: [80, 95, 110, 130, 145, 120],
+                                  color: chartColors.emerald400,
+                                },
+                                {
+                                  name: 'sdb Read',
+                                  data: [60, 70, 85, 100, 110, 90],
+                                  color: chartColors.amber400,
+                                },
+                                {
+                                  name: 'sdb Write',
+                                  data: [40, 55, 70, 85, 95, 75],
+                                  color: chartColors.violet400,
+                                },
                               ]}
                               timeLabels={['14:30', '14:45', '15:00', '15:15', '15:30']}
                               yAxisUnit=""
                             />
-                            
+
                             {/* Throughput by Disk */}
                             <HostChartWithFullScreen
                               title="Throughput by Disk"
                               series={[
-                                { name: 'sda Read', data: [4, 5, 6, 7, 8, 9], color: chartColors.cyan400 },
-                                { name: 'sda Write', data: [3, 4, 5, 5.5, 6, 7], color: chartColors.emerald400 },
-                                { name: 'sdb Read', data: [2, 2.5, 3, 4, 5, 6], color: chartColors.amber400 },
-                                { name: 'sdb Write', data: [1, 1.5, 2, 2.5, 3, 4], color: chartColors.violet400 },
+                                {
+                                  name: 'sda Read',
+                                  data: [4, 5, 6, 7, 8, 9],
+                                  color: chartColors.cyan400,
+                                },
+                                {
+                                  name: 'sda Write',
+                                  data: [3, 4, 5, 5.5, 6, 7],
+                                  color: chartColors.emerald400,
+                                },
+                                {
+                                  name: 'sdb Read',
+                                  data: [2, 2.5, 3, 4, 5, 6],
+                                  color: chartColors.amber400,
+                                },
+                                {
+                                  name: 'sdb Write',
+                                  data: [1, 1.5, 2, 2.5, 3, 4],
+                                  color: chartColors.violet400,
+                                },
                               ]}
                               timeLabels={['14:30', '14:45', '15:00', '15:15', '15:30']}
                               yAxisUnit=" MB/s"
@@ -1704,23 +2078,55 @@ export default function HostDetailPage() {
                             <HostChartWithFullScreen
                               title="Disk Latency"
                               series={[
-                                { name: 'sda Read', data: [5, 8, 12, 15, 18, 20], color: chartColors.cyan400 },
-                                { name: 'sda Write', data: [4, 6, 9, 12, 14, 16], color: chartColors.emerald400 },
-                                { name: 'sdb Read', data: [3, 5, 7, 10, 12, 14], color: chartColors.amber400 },
-                                { name: 'sdb Write', data: [2, 4, 6, 8, 10, 12], color: chartColors.violet400 },
+                                {
+                                  name: 'sda Read',
+                                  data: [5, 8, 12, 15, 18, 20],
+                                  color: chartColors.cyan400,
+                                },
+                                {
+                                  name: 'sda Write',
+                                  data: [4, 6, 9, 12, 14, 16],
+                                  color: chartColors.emerald400,
+                                },
+                                {
+                                  name: 'sdb Read',
+                                  data: [3, 5, 7, 10, 12, 14],
+                                  color: chartColors.amber400,
+                                },
+                                {
+                                  name: 'sdb Write',
+                                  data: [2, 4, 6, 8, 10, 12],
+                                  color: chartColors.violet400,
+                                },
                               ]}
                               timeLabels={['14:30', '14:45', '15:00', '15:15', '15:30']}
                               yAxisUnit=" ms"
                             />
-                            
+
                             {/* Disk Utilization */}
                             <HostChartWithFullScreen
                               title="Disk Utilization"
                               series={[
-                                { name: 'sda', data: [20, 25, 30, 35, 45, 50], color: chartColors.cyan400 },
-                                { name: 'sdb', data: [15, 20, 25, 30, 40, 45], color: chartColors.emerald400 },
-                                { name: 'sdc', data: [10, 15, 20, 28, 35, 42], color: chartColors.amber400 },
-                                { name: 'sdd', data: [8, 12, 18, 22, 30, 38], color: chartColors.violet400 },
+                                {
+                                  name: 'sda',
+                                  data: [20, 25, 30, 35, 45, 50],
+                                  color: chartColors.cyan400,
+                                },
+                                {
+                                  name: 'sdb',
+                                  data: [15, 20, 25, 30, 40, 45],
+                                  color: chartColors.emerald400,
+                                },
+                                {
+                                  name: 'sdc',
+                                  data: [10, 15, 20, 28, 35, 42],
+                                  color: chartColors.amber400,
+                                },
+                                {
+                                  name: 'sdd',
+                                  data: [8, 12, 18, 22, 30, 38],
+                                  color: chartColors.violet400,
+                                },
                               ]}
                               timeLabels={['14:30', '14:45', '15:00', '15:15', '15:30']}
                               yAxisUnit="%"
@@ -1745,18 +2151,10 @@ export default function HostDetailPage() {
         width={360}
         footer={
           <div className="flex gap-2 w-full">
-            <Button
-              variant="secondary"
-              onClick={handleCloseIdentifyDrawer}
-              className="flex-1"
-            >
+            <Button variant="secondary" onClick={handleCloseIdentifyDrawer} className="flex-1">
               Cancel
             </Button>
-            <Button
-              variant="primary"
-              onClick={handleExecuteIdentify}
-              className="flex-1"
-            >
+            <Button variant="primary" onClick={handleExecuteIdentify} className="flex-1">
               Execute
             </Button>
           </div>
@@ -1782,4 +2180,3 @@ export default function HostDetailPage() {
     </div>
   );
 }
-
