@@ -16,6 +16,7 @@ const ComputeAdminImagesPage = lazy(() => import('@/pages/ComputeAdminImagesPage
 const ComputeAdminImageDetailPage = lazy(() => import('@/pages/ComputeAdminImageDetailPage'));
 const ComputeAdminFlavorsPage = lazy(() => import('@/pages/ComputeAdminFlavorsPage'));
 const ComputeAdminFlavorDetailPage = lazy(() => import('@/pages/ComputeAdminFlavorDetailPage'));
+const ComputeAdminCreateFlavorPage = lazy(() => import('@/pages/ComputeAdminCreateFlavorPage'));
 const KeyPairsPage = lazy(() => import('@/pages/KeyPairsPage'));
 const KeyPairDetailPage = lazy(() => import('@/pages/KeyPairDetailPage'));
 const ServerGroupsPage = lazy(() => import('@/pages/ServerGroupsPage'));
@@ -63,6 +64,7 @@ export const computeAdminRoutes = (
     <Route path="/compute-admin/images" element={<ComputeAdminImagesPage />} />
     <Route path="/compute-admin/images/:id" element={<ComputeAdminImageDetailPage />} />
     <Route path="/compute-admin/flavors" element={<ComputeAdminFlavorsPage />} />
+    <Route path="/compute-admin/flavors/create" element={<ComputeAdminCreateFlavorPage />} />
     <Route path="/compute-admin/flavors/:id" element={<ComputeAdminFlavorDetailPage />} />
     <Route path="/compute-admin/key-pairs" element={<KeyPairsPage />} />
     <Route path="/compute-admin/key-pairs/:id" element={<KeyPairDetailPage />} />
