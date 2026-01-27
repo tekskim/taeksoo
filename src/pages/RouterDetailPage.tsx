@@ -725,7 +725,7 @@ export default function RouterDetailPage() {
                               )
                             }
                           />
-                          <SectionCard.DataRow label="Gateway IPP" value={router.gatewayIp} />
+                          <SectionCard.DataRow label="Gateway IP" value={router.gatewayIp} />
                         </SectionCard.Content>
                       </SectionCard>
                     </VStack>

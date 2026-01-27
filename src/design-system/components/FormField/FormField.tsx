@@ -138,10 +138,7 @@ FormFieldControl.displayName = 'FormField.Control';
 
 const FormFieldHelperText = forwardRef<HTMLParagraphElement, FormFieldHelperTextProps>(
   ({ children, className, ...props }, ref) => {
-    const { id, error } = useFormField();
-
-    // Don't render helper text when there's an error
-    if (error) return null;
+    const { id } = useFormField();
 
     return (
       <p
