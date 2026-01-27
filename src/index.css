@@ -915,8 +915,8 @@ html.theme-transition *::after {
   --tooltip-line-height: var(--line-height-16);
   --tooltip-min-width: 60px;
   --tooltip-max-width: 230px;
-  --tooltip-bg: var(--color-surface-inverse);
-  --tooltip-text: var(--color-text-inverse);
+  --tooltip-bg: var(--color-slate-900);
+  --tooltip-text: var(--color-white);
   --tooltip-arrow-size: 4px;
   --tooltip-value-font-weight: 500;
 
@@ -1017,6 +1017,10 @@ html.theme-transition *::after {
   --color-text-success: var(--color-green-400);
   --color-text-warning: var(--color-orange-400);
   --color-text-danger: var(--color-red-400);
+
+  /* Tooltip (Dark Mode) */
+  --tooltip-bg: #fafafa;
+  --tooltip-text: #0f172a;
 
   /* Extended Surface Colors - Dark Mode */
   --color-surface-sunken: #141414;

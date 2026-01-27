@@ -1415,7 +1415,7 @@ function Popover({ data, position, onClose }: PopoverProps) {
           <>
             {data.gatewayIp && (
               <div className="flex justify-between">
-                <span className="text-slate-500">Gateway IPP:</span>
+                <span className="text-slate-500">Gateway IP:</span>
                 <CopyableText value={data.gatewayIp} />
               </div>
             )}
