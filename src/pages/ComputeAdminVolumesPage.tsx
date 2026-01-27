@@ -327,7 +327,7 @@ export function ComputeAdminVolumesPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '59px',
+      width: '64px',
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={volumeStatusMap[row.status]} layout="icon-only" />
