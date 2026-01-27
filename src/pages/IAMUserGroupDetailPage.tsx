@@ -466,7 +466,7 @@ export default function IAMUserGroupDetailPage() {
     {
       key: 'createdAt',
       label: 'Created at',
-      flex: 1,
+      width: columnWidths.createdAt,
       sortable: true,
     },
     {
@@ -531,7 +531,7 @@ export default function IAMUserGroupDetailPage() {
     {
       key: 'createdAt',
       label: 'Created at',
-      flex: 1,
+      width: columnWidths.createdAt,
       sortable: true,
     },
     {

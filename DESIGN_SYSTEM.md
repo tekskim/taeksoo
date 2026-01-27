@@ -9,6 +9,7 @@ THAKI Design System (TDS)은 THAKI Cloud 플랫폼을 위한 디자인 시스템
 - [컴포넌트](#컴포넌트)
   - [Form Controls](#form-controls)
   - [Data Display](#data-display)
+    - [Table Column Width Presets](#table-column-width-presets)
   - [Layout](#layout)
   - [Navigation](#navigation)
   - [Feedback](#feedback)
@@ -231,6 +232,80 @@ const columns = [
   onRowClick={(row) => navigate(`/items/${row.id}`)}
 />
 ```
+
+##### Table Column Width Presets
+
+테이블 컬럼 너비를 일관되게 관리하기 위한 프리셋입니다.
+
+**Import:**
+```tsx
+import { columnWidths } from '@/design-system';
+```
+
+**기본 사용법:**
+```tsx
+const columns = [
+  { key: 'select', width: columnWidths.select },      // 고정 40px
+  { key: 'status', width: columnWidths.status },      // 고정 64px
+  { key: 'name', flex: 1 },                           // 가변 (남은 공간 채움)
+  { key: 'createdAt', width: columnWidths.createdAt }, // 고정 140px
+  { key: 'actions', width: columnWidths.actions },    // 고정 64px
+];
+```
+
+**주요 프리셋 카테고리:**
+
+| 카테고리 | 프리셋 | 너비 |
+|---------|--------|------|
+| **선택** | `select`, `checkbox` | 40px |
+| **액션** | `actions` | 64px |
+| **상태** | `status` | 64px |
+| **이름** | `name` | 180px |
+| **시간** | `createdAt`, `updatedAt` | 140px |
+| **타입** | `type` | 100px |
+| **IP** | `ip`, `fixedIp`, `floatingIp` | 130px |
+| **설명** | `description` | 200px |
+
+**너비 설정 패턴:**
+
+1. **고정 너비** - 숫자, 날짜, 상태 컬럼에 적합
+```tsx
+{ key: 'status', width: columnWidths.status }
+{ key: 'createdAt', width: columnWidths.createdAt }
+```
+
+2. **가변 너비 (flex)** - 이름, 설명 등 콘텐츠 컬럼에 적합
+```tsx
+{ key: 'name', flex: 1 }
+{ key: 'description', flex: 1 }
+```
+
+3. **반응형 (flex + minWidth)** - 컬럼이 많은 테이블에서 사용
+```tsx
+{ key: 'name', flex: 1, minWidth: columnWidths.name }
+```
+
+**권장 사항:**
+- 하나의 테이블에 최소 1개의 `flex: 1` 컬럼 필요
+- 컬럼 8개 이상 테이블은 `flex + minWidth` 권장
+- 총 고정 너비 800px 초과 시 오버플로우 위험
+- 액션 컬럼에 `minWidth` 추가하여 축소 방지:
+```tsx
+{ key: 'actions', width: columnWidths.actions, minWidth: columnWidths.actions }
+```
+
+**truncate 적용 시:**
+```tsx
+{
+  key: 'name',
+  flex: 1,
+  render: (_, row) => (
+    <span className="truncate block">{row.name}</span>
+  )
+}
+```
+
+> **Note**: `truncate`는 `block` 또는 `inline-block`과 함께 사용해야 동작합니다.
 
 #### Badge
 
@@ -777,8 +852,10 @@ className="text-[var(--color-action-primary)]"  // 링크/액션
 
 ## 버전
 
-- **Current Version**: 1.1.0
-- **Last Updated**: 2026-01-12
-- **Changes**: Wizard Pattern 추가 (Create Flow)
+- **Current Version**: 1.2.0
+- **Last Updated**: 2026-01-26
+- **Changes**: 
+  - Table Column Width Presets 가이드 추가
+  - columnWidths 프리셋 값 조정 (gpu, type, protocol, adminState)
 
 
