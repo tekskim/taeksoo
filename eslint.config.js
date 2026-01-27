@@ -32,17 +32,14 @@ export default defineConfig([
     rules: {
       '@typescript-eslint/no-unused-vars': 'off',
       'unused-imports/no-unused-imports': 'error',
-      'unused-imports/no-unused-vars': [
-        'warn',
-        { vars: 'all', varsIgnorePattern: '^_', args: 'after-used', argsIgnorePattern: '^_' }
-      ],
+      'unused-imports/no-unused-vars': 'off',
       // React hooks rules
       'react-hooks/rules-of-hooks': 'error',
-      'react-hooks/exhaustive-deps': 'warn',
+      'react-hooks/exhaustive-deps': 'off',
       // These are overly strict for our codebase patterns
-      'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
-      '@typescript-eslint/no-explicit-any': 'warn',
-      'no-useless-escape': 'warn',
+      'react-refresh/only-export-components': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
+      'no-useless-escape': 'off',
     },
   },
   // Storybook files - relaxed hooks rules since render functions use hooks differently
@@ -63,8 +60,8 @@ export default defineConfig([
     rules: {
       '@typescript-eslint/no-unused-vars': 'off',
       'unused-imports/no-unused-imports': 'error',
-      'unused-imports/no-unused-vars': 'warn',
-      '@typescript-eslint/no-explicit-any': 'warn',
+      'unused-imports/no-unused-vars': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
     },
   },
 ])

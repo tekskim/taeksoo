@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { 
-  Drawer, 
-  Button, 
+import {
+  Drawer,
+  Button,
   SearchInput,
   Pagination,
   Checkbox,
@@ -60,19 +60,22 @@ export function ManagePoliciesDrawer({
   onSubmit,
 }: ManagePoliciesDrawerProps) {
   // Policy selection state
-  const [selectedPolicyIds, setSelectedPolicyIds] = useState<Set<string>>(new Set(initialSelectedIds));
+  const [selectedPolicyIds, setSelectedPolicyIds] = useState<Set<string>>(
+    new Set(initialSelectedIds)
+  );
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
   // Filter policies
-  const filteredPolicies = policies.filter((policy) =>
-    policy.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    policy.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    policy.type.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    policy.apps.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    policy.description.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredPolicies = policies.filter(
+    (policy) =>
+      policy.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      policy.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      policy.type.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      policy.apps.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      policy.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const totalPages = Math.ceil(filteredPolicies.length / ITEMS_PER_PAGE);
@@ -89,7 +92,6 @@ export function ManagePoliciesDrawer({
       setCurrentPage(1);
       setHasAttemptedSubmit(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
   const handleTogglePolicy = (policyId: string) => {
@@ -106,12 +108,12 @@ export function ManagePoliciesDrawer({
 
   const handleSubmit = async () => {
     setHasAttemptedSubmit(true);
-    
+
     // Validate required fields
     if (selectedPolicyIds.size === 0) {
       return; // Don't submit if no policies selected
     }
-    
+
     setIsSubmitting(true);
     try {
       await onSubmit?.({
@@ -145,10 +147,13 @@ export function ManagePoliciesDrawer({
     .map((policy) => ({ id: policy.id, label: policy.name }));
 
   // Select all logic
-  const allCurrentPageSelected = paginatedPolicies.length > 0 && 
+  const allCurrentPageSelected =
+    paginatedPolicies.length > 0 &&
     paginatedPolicies.every((policy) => selectedPolicyIds.has(policy.id));
-  const someCurrentPageSelected = paginatedPolicies.some((policy) => selectedPolicyIds.has(policy.id));
-  
+  const someCurrentPageSelected = paginatedPolicies.some((policy) =>
+    selectedPolicyIds.has(policy.id)
+  );
+
   const handleSelectAll = () => {
     if (allCurrentPageSelected) {
       // Deselect all on current page
@@ -176,15 +181,11 @@ export function ManagePoliciesDrawer({
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
-          <Button 
-            variant="secondary" 
-            onClick={handleClose}
-            className="w-[152px] h-8"
-          >
+          <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={handleSubmit}
             disabled={isSubmitting}
             className="w-[152px] h-8"
@@ -232,7 +233,8 @@ export function ManagePoliciesDrawer({
               </span>
             </div>
             <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-              Select policies to apply to this role. If policies include conditions, all conditions must be satisfied for the permission to be granted.
+              Select policies to apply to this role. If policies include conditions, all conditions
+              must be satisfied for the permission to be granted.
             </p>
           </VStack>
 
@@ -290,17 +292,20 @@ export function ManagePoliciesDrawer({
 
             {/* Rows */}
             {paginatedPolicies.map((policy) => (
-              <div 
+              <div
                 key={policy.id}
                 className={`flex items-stretch min-h-[var(--table-row-height)] border rounded-[var(--table-row-radius)] cursor-pointer transition-all ${
-                  selectedPolicyIds.has(policy.id) 
-                    ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]' 
+                  selectedPolicyIds.has(policy.id)
+                    ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]'
                     : 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] hover:bg-[var(--table-row-hover-bg)]'
                 }`}
                 onClick={() => handleTogglePolicy(policy.id)}
               >
                 {/* Checkbox */}
-                <div className="w-[var(--table-checkbox-width)] flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
+                <div
+                  className="w-[var(--table-checkbox-width)] flex items-center justify-center"
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <Checkbox
                     checked={selectedPolicyIds.has(policy.id)}
                     onChange={() => handleTogglePolicy(policy.id)}
@@ -308,25 +313,42 @@ export function ManagePoliciesDrawer({
                 </div>
                 {/* Name with chevron and link */}
                 <div className="flex-1 flex items-center gap-2 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <IconChevronRight size={12} className="shrink-0 text-[var(--color-text-default)]" />
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] truncate">{policy.name}</span>
-                  <IconExternalLink size={12} stroke={1.5} className="shrink-0 text-[var(--color-action-primary)]" />
+                  <IconChevronRight
+                    size={12}
+                    className="shrink-0 text-[var(--color-text-default)]"
+                  />
+                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] truncate">
+                    {policy.name}
+                  </span>
+                  <IconExternalLink
+                    size={12}
+                    stroke={1.5}
+                    className="shrink-0 text-[var(--color-action-primary)]"
+                  />
                 </div>
                 {/* Type (centered) */}
                 <div className="w-[100px] flex items-center justify-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">{policy.type}</span>
+                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                    {policy.type}
+                  </span>
                 </div>
                 {/* Apps */}
                 <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">{policy.apps}</span>
+                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">
+                    {policy.apps}
+                  </span>
                 </div>
                 {/* Description */}
                 <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">{policy.description}</span>
+                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">
+                    {policy.description}
+                  </span>
                 </div>
                 {/* Edited at */}
                 <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">{policy.editedAt}</span>
+                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                    {policy.editedAt}
+                  </span>
                 </div>
               </div>
             ))}
