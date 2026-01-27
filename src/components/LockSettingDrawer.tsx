@@ -15,12 +15,7 @@ export interface LockSettingDrawerProps {
   onSubmit?: (isLocked: boolean) => void;
 }
 
-export function LockSettingDrawer({
-  isOpen,
-  onClose,
-  instance,
-  onSubmit,
-}: LockSettingDrawerProps) {
+export function LockSettingDrawer({ isOpen, onClose, instance, onSubmit }: LockSettingDrawerProps) {
   const [isLocked, setIsLocked] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -53,11 +48,7 @@ export function LockSettingDrawer({
       width={376}
       footer={
         <HStack gap={2} className="w-full">
-          <Button
-            variant="secondary"
-            onClick={handleClose}
-            className="flex-1 h-8"
-          >
+          <Button variant="secondary" onClick={handleClose} className="flex-1 h-8">
             Cancel
           </Button>
           <Button
@@ -100,10 +91,7 @@ export function LockSettingDrawer({
             When locked, the instance cannot be modified or deleted.
           </p>
           <HStack gap={2} align="center">
-            <Toggle
-              checked={isLocked}
-              onChange={setIsLocked}
-            />
+            <Toggle checked={isLocked} onChange={setIsLocked} />
             <span className="text-[12px] text-[var(--color-text-default)] leading-4">
               {isLocked ? 'Locked' : 'Unlocked'}
             </span>

@@ -1,22 +1,9 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  Button,
-  Breadcrumb,
-  HStack,
-  VStack,
-  TabBar,
-  TopBar,
-} from '@/design-system';
+import { Button, Breadcrumb, HStack, VStack, TabBar, TopBar } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconBell,
-  IconTerminal2,
-  IconFile,
-  IconCopy,
-  IconSearch,
-} from '@tabler/icons-react';
+import { IconBell, IconTerminal2, IconFile, IconCopy, IconSearch } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Default YAML Template
@@ -154,7 +141,8 @@ export function CreateIngressYamlPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Tab management
-  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } =
+    useTabs();
 
   // Update tab label
   useEffect(() => {
@@ -269,9 +257,7 @@ export function CreateIngressYamlPage() {
         />
 
         {/* Page Content */}
-        <div
-          className="flex-1 overflow-hidden min-w-[var(--layout-content-min-width)] flex flex-col"
-        >
+        <div className="flex-1 overflow-hidden min-w-[var(--layout-content-min-width)] flex flex-col">
           <div className="flex-1 flex flex-col pt-4 px-8 pb-6 bg-[var(--color-surface-default)] min-h-0">
             <VStack gap={6} className="flex-1 min-h-0">
               {/* Header */}
@@ -280,16 +266,14 @@ export function CreateIngressYamlPage() {
                   Create Ingress
                 </h1>
                 <p className="text-[11px] leading-[16px] text-[var(--color-text-subtle)]">
-                  Ingresses route incoming traffic from the internet to Services within the cluster based on the hostname and path specified in the request. You can expose multiple Services on the same external IP address and port.
+                  Ingresses route incoming traffic from the internet to Services within the cluster
+                  based on the hostname and path specified in the request. You can expose multiple
+                  Services on the same external IP address and port.
                 </p>
               </VStack>
 
               {/* YAML Editor */}
-              <YamlEditor
-                value={yamlContent}
-                onChange={setYamlContent}
-                onCopy={handleCopy}
-              />
+              <YamlEditor value={yamlContent} onChange={setYamlContent} onCopy={handleCopy} />
 
               {/* Footer */}
               <div className="flex-shrink-0 h-[61px] flex items-center justify-between border-t border-[var(--color-border-strong)]">

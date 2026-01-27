@@ -37,20 +37,56 @@ import {
   IconTerminal2,
 } from '@tabler/icons-react';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
-import { CreateInstanceSnapshotDrawer, type InstanceInfo } from '@/components/CreateInstanceSnapshotDrawer';
-import { LockSettingDrawer, type InstanceInfo as LockInstanceInfo } from '@/components/LockSettingDrawer';
-import { EditInstanceDrawer, type InstanceInfo as EditInstanceInfo } from '@/components/EditInstanceDrawer';
+import {
+  CreateInstanceSnapshotDrawer,
+  type InstanceInfo,
+} from '@/components/CreateInstanceSnapshotDrawer';
+import {
+  LockSettingDrawer,
+  type InstanceInfo as LockInstanceInfo,
+} from '@/components/LockSettingDrawer';
+import {
+  EditInstanceDrawer,
+  type InstanceInfo as EditInstanceInfo,
+} from '@/components/EditInstanceDrawer';
 import { AttachVolumeDrawer } from '@/components/AttachVolumeDrawer';
-import { DetachVolumeDrawer, type InstanceInfo as DetachVolumeInstanceInfo } from '@/components/DetachVolumeDrawer';
-import { AttachInterfaceDrawer, type InstanceInfo as AttachInterfaceInstanceInfo } from '@/components/AttachInterfaceDrawer';
-import { DetachInterfaceDrawer, type InstanceInfo as DetachInterfaceInstanceInfo } from '@/components/DetachInterfaceDrawer';
+import {
+  DetachVolumeDrawer,
+  type InstanceInfo as DetachVolumeInstanceInfo,
+} from '@/components/DetachVolumeDrawer';
+import {
+  AttachInterfaceDrawer,
+  type InstanceInfo as AttachInterfaceInstanceInfo,
+} from '@/components/AttachInterfaceDrawer';
+import {
+  DetachInterfaceDrawer,
+  type InstanceInfo as DetachInterfaceInstanceInfo,
+} from '@/components/DetachInterfaceDrawer';
 import { AssociateFloatingIPDrawer } from '@/components/AssociateFloatingIPDrawer';
-import { DisassociateFloatingIPDrawer, type InstanceInfo as DisassociateFloatingIPInstanceInfo } from '@/components/DisassociateFloatingIPDrawer';
-import { ManageSecurityGroupsDrawer, type InstanceInfo as ManageSecurityGroupsInstanceInfo } from '@/components/ManageSecurityGroupsDrawer';
-import { RebuildInstanceDrawer, type InstanceInfo as RebuildInstanceInfo } from '@/components/RebuildInstanceDrawer';
-import { ResizeInstanceDrawer, type InstanceInfo as ResizeInstanceInfo } from '@/components/ResizeInstanceDrawer';
-import { ManageTagsDrawer, type InstanceInfo as ManageTagsInstanceInfo } from '@/components/ManageTagsDrawer';
-import { RescueInstanceDrawer, type InstanceInfo as RescueInstanceInfo } from '@/components/RescueInstanceDrawer';
+import {
+  DisassociateFloatingIPDrawer,
+  type InstanceInfo as DisassociateFloatingIPInstanceInfo,
+} from '@/components/DisassociateFloatingIPDrawer';
+import {
+  ManageSecurityGroupsDrawer,
+  type InstanceInfo as ManageSecurityGroupsInstanceInfo,
+} from '@/components/ManageSecurityGroupsDrawer';
+import {
+  RebuildInstanceDrawer,
+  type InstanceInfo as RebuildInstanceInfo,
+} from '@/components/RebuildInstanceDrawer';
+import {
+  ResizeInstanceDrawer,
+  type InstanceInfo as ResizeInstanceInfo,
+} from '@/components/ResizeInstanceDrawer';
+import {
+  ManageTagsDrawer,
+  type InstanceInfo as ManageTagsInstanceInfo,
+} from '@/components/ManageTagsDrawer';
+import {
+  RescueInstanceDrawer,
+  type InstanceInfo as RescueInstanceInfo,
+} from '@/components/RescueInstanceDrawer';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -96,29 +132,289 @@ interface BareMetalInstance {
    ---------------------------------------- */
 
 const mockInstances: Instance[] = [
-  { id: 'vm-001', name: 'worker-node-01', status: 'running', locked: true, fixedIp: '10.20.30.40', floatingIp: '20.30.40.50', image: 'CentOS 7', flavor: 'Medium', vcpu: 4, ram: '8GB', disk: '100GB', gpu: '1', az: 'keystone' },
-  { id: 'vm-002', name: 'worker-node-02', status: 'running', locked: false, fixedIp: '10.20.30.41', floatingIp: '20.30.40.51', image: 'CentOS 7', flavor: 'Medium', vcpu: 4, ram: '8GB', disk: '100GB', gpu: '1', az: 'keystone' },
-  { id: 'vm-003', name: 'master-node-01', status: 'running', locked: true, fixedIp: '10.20.30.10', floatingIp: '20.30.40.10', image: 'Ubuntu 22.04', flavor: 'Large', vcpu: 8, ram: '16GB', disk: '200GB', gpu: '-', az: 'nova' },
-  { id: 'vm-004', name: 'db-server-01', status: 'stopped', locked: true, fixedIp: '10.20.30.20', floatingIp: '-', image: 'CentOS 8', flavor: 'XLarge', vcpu: 16, ram: '64GB', disk: '500GB', gpu: '-', az: 'keystone' },
-  { id: 'vm-005', name: 'gpu-node-01', status: 'running', locked: false, fixedIp: '10.20.30.50', floatingIp: '20.30.40.60', image: 'Ubuntu 22.04', flavor: 'GPU Large', vcpu: 32, ram: '128GB', disk: '1TB', gpu: '4', az: 'nova' },
-  { id: 'vm-006', name: 'gpu-node-02', status: 'running', locked: false, fixedIp: '10.20.30.51', floatingIp: '20.30.40.61', image: 'Ubuntu 22.04', flavor: 'GPU Large', vcpu: 32, ram: '128GB', disk: '1TB', gpu: '4', az: 'nova' },
-  { id: 'vm-007', name: 'web-server-01', status: 'pending', locked: false, fixedIp: '-', floatingIp: '-', image: 'Rocky Linux 9', flavor: 'Small', vcpu: 2, ram: '4GB', disk: '50GB', gpu: '-', az: 'keystone' },
-  { id: 'vm-008', name: 'web-server-02', status: 'building', locked: false, fixedIp: '-', floatingIp: '-', image: 'Rocky Linux 9', flavor: 'Small', vcpu: 2, ram: '4GB', disk: '50GB', gpu: '-', az: 'keystone' },
-  { id: 'vm-009', name: 'analytics-01', status: 'error', locked: true, fixedIp: '10.20.30.80', floatingIp: '-', image: 'Debian 12', flavor: 'XLarge', vcpu: 16, ram: '32GB', disk: '500GB', gpu: '2', az: 'nova' },
-  { id: 'vm-010', name: 'cache-server-01', status: 'running', locked: false, fixedIp: '10.20.30.90', floatingIp: '20.30.40.90', image: 'Debian 12', flavor: 'Medium', vcpu: 4, ram: '16GB', disk: '100GB', gpu: '-', az: 'keystone' },
+  {
+    id: 'vm-001',
+    name: 'worker-node-01',
+    status: 'running',
+    locked: true,
+    fixedIp: '10.20.30.40',
+    floatingIp: '20.30.40.50',
+    image: 'CentOS 7',
+    flavor: 'Medium',
+    vcpu: 4,
+    ram: '8GB',
+    disk: '100GB',
+    gpu: '1',
+    az: 'keystone',
+  },
+  {
+    id: 'vm-002',
+    name: 'worker-node-02',
+    status: 'running',
+    locked: false,
+    fixedIp: '10.20.30.41',
+    floatingIp: '20.30.40.51',
+    image: 'CentOS 7',
+    flavor: 'Medium',
+    vcpu: 4,
+    ram: '8GB',
+    disk: '100GB',
+    gpu: '1',
+    az: 'keystone',
+  },
+  {
+    id: 'vm-003',
+    name: 'master-node-01',
+    status: 'running',
+    locked: true,
+    fixedIp: '10.20.30.10',
+    floatingIp: '20.30.40.10',
+    image: 'Ubuntu 22.04',
+    flavor: 'Large',
+    vcpu: 8,
+    ram: '16GB',
+    disk: '200GB',
+    gpu: '-',
+    az: 'nova',
+  },
+  {
+    id: 'vm-004',
+    name: 'db-server-01',
+    status: 'stopped',
+    locked: true,
+    fixedIp: '10.20.30.20',
+    floatingIp: '-',
+    image: 'CentOS 8',
+    flavor: 'XLarge',
+    vcpu: 16,
+    ram: '64GB',
+    disk: '500GB',
+    gpu: '-',
+    az: 'keystone',
+  },
+  {
+    id: 'vm-005',
+    name: 'gpu-node-01',
+    status: 'running',
+    locked: false,
+    fixedIp: '10.20.30.50',
+    floatingIp: '20.30.40.60',
+    image: 'Ubuntu 22.04',
+    flavor: 'GPU Large',
+    vcpu: 32,
+    ram: '128GB',
+    disk: '1TB',
+    gpu: '4',
+    az: 'nova',
+  },
+  {
+    id: 'vm-006',
+    name: 'gpu-node-02',
+    status: 'running',
+    locked: false,
+    fixedIp: '10.20.30.51',
+    floatingIp: '20.30.40.61',
+    image: 'Ubuntu 22.04',
+    flavor: 'GPU Large',
+    vcpu: 32,
+    ram: '128GB',
+    disk: '1TB',
+    gpu: '4',
+    az: 'nova',
+  },
+  {
+    id: 'vm-007',
+    name: 'web-server-01',
+    status: 'pending',
+    locked: false,
+    fixedIp: '-',
+    floatingIp: '-',
+    image: 'Rocky Linux 9',
+    flavor: 'Small',
+    vcpu: 2,
+    ram: '4GB',
+    disk: '50GB',
+    gpu: '-',
+    az: 'keystone',
+  },
+  {
+    id: 'vm-008',
+    name: 'web-server-02',
+    status: 'building',
+    locked: false,
+    fixedIp: '-',
+    floatingIp: '-',
+    image: 'Rocky Linux 9',
+    flavor: 'Small',
+    vcpu: 2,
+    ram: '4GB',
+    disk: '50GB',
+    gpu: '-',
+    az: 'keystone',
+  },
+  {
+    id: 'vm-009',
+    name: 'analytics-01',
+    status: 'error',
+    locked: true,
+    fixedIp: '10.20.30.80',
+    floatingIp: '-',
+    image: 'Debian 12',
+    flavor: 'XLarge',
+    vcpu: 16,
+    ram: '32GB',
+    disk: '500GB',
+    gpu: '2',
+    az: 'nova',
+  },
+  {
+    id: 'vm-010',
+    name: 'cache-server-01',
+    status: 'running',
+    locked: false,
+    fixedIp: '10.20.30.90',
+    floatingIp: '20.30.40.90',
+    image: 'Debian 12',
+    flavor: 'Medium',
+    vcpu: 4,
+    ram: '16GB',
+    disk: '100GB',
+    gpu: '-',
+    az: 'keystone',
+  },
 ];
 
 const mockBareMetalInstances: BareMetalInstance[] = [
-  { id: 'bm-001', name: 'web-server-1', status: 'running', ip: '10.62.0.30', image: 'BM image', flavor: 'BM flavor', cpu: 8, ram: '16GiB', disk: '10GiB', gpu: '-', az: 'zone-a' },
-  { id: 'bm-002', name: 'web-server-2', status: 'running', ip: '10.62.0.31', image: 'BM image', flavor: 'BM flavor', cpu: 8, ram: '16GiB', disk: '10GiB', gpu: '-', az: 'zone-a' },
-  { id: 'bm-003', name: 'db-server-1', status: 'running', ip: '10.62.0.40', image: 'BM image', flavor: 'BM large', cpu: 16, ram: '64GiB', disk: '500GiB', gpu: '-', az: 'zone-b' },
-  { id: 'bm-004', name: 'db-server-2', status: 'stopped', ip: '10.62.0.41', image: 'BM image', flavor: 'BM large', cpu: 16, ram: '64GiB', disk: '500GiB', gpu: '-', az: 'zone-b' },
-  { id: 'bm-005', name: 'gpu-node-1', status: 'running', ip: '10.62.0.50', image: 'BM GPU', flavor: 'BM GPU', cpu: 32, ram: '128GiB', disk: '1TiB', gpu: 'A100 x4', az: 'zone-c' },
-  { id: 'bm-006', name: 'gpu-node-2', status: 'running', ip: '10.62.0.51', image: 'BM GPU', flavor: 'BM GPU', cpu: 32, ram: '128GiB', disk: '1TiB', gpu: 'A100 x4', az: 'zone-c' },
-  { id: 'bm-007', name: 'compute-1', status: 'pending', ip: '—', image: 'BM image', flavor: 'BM xlarge', cpu: 64, ram: '256GiB', disk: '2TiB', gpu: '-', az: 'zone-a' },
-  { id: 'bm-008', name: 'compute-2', status: 'building', ip: '—', image: 'BM image', flavor: 'BM xlarge', cpu: 64, ram: '256GiB', disk: '2TiB', gpu: '-', az: 'zone-a' },
-  { id: 'bm-009', name: 'storage-node-1', status: 'running', ip: '10.62.0.60', image: 'BM storage', flavor: 'BM storage', cpu: 8, ram: '32GiB', disk: '10TiB', gpu: '-', az: 'zone-b' },
-  { id: 'bm-010', name: 'storage-node-2', status: 'error', ip: '10.62.0.61', image: 'BM storage', flavor: 'BM storage', cpu: 8, ram: '32GiB', disk: '10TiB', gpu: '-', az: 'zone-b' },
+  {
+    id: 'bm-001',
+    name: 'web-server-1',
+    status: 'running',
+    ip: '10.62.0.30',
+    image: 'BM image',
+    flavor: 'BM flavor',
+    cpu: 8,
+    ram: '16GiB',
+    disk: '10GiB',
+    gpu: '-',
+    az: 'zone-a',
+  },
+  {
+    id: 'bm-002',
+    name: 'web-server-2',
+    status: 'running',
+    ip: '10.62.0.31',
+    image: 'BM image',
+    flavor: 'BM flavor',
+    cpu: 8,
+    ram: '16GiB',
+    disk: '10GiB',
+    gpu: '-',
+    az: 'zone-a',
+  },
+  {
+    id: 'bm-003',
+    name: 'db-server-1',
+    status: 'running',
+    ip: '10.62.0.40',
+    image: 'BM image',
+    flavor: 'BM large',
+    cpu: 16,
+    ram: '64GiB',
+    disk: '500GiB',
+    gpu: '-',
+    az: 'zone-b',
+  },
+  {
+    id: 'bm-004',
+    name: 'db-server-2',
+    status: 'stopped',
+    ip: '10.62.0.41',
+    image: 'BM image',
+    flavor: 'BM large',
+    cpu: 16,
+    ram: '64GiB',
+    disk: '500GiB',
+    gpu: '-',
+    az: 'zone-b',
+  },
+  {
+    id: 'bm-005',
+    name: 'gpu-node-1',
+    status: 'running',
+    ip: '10.62.0.50',
+    image: 'BM GPU',
+    flavor: 'BM GPU',
+    cpu: 32,
+    ram: '128GiB',
+    disk: '1TiB',
+    gpu: 'A100 x4',
+    az: 'zone-c',
+  },
+  {
+    id: 'bm-006',
+    name: 'gpu-node-2',
+    status: 'running',
+    ip: '10.62.0.51',
+    image: 'BM GPU',
+    flavor: 'BM GPU',
+    cpu: 32,
+    ram: '128GiB',
+    disk: '1TiB',
+    gpu: 'A100 x4',
+    az: 'zone-c',
+  },
+  {
+    id: 'bm-007',
+    name: 'compute-1',
+    status: 'pending',
+    ip: '—',
+    image: 'BM image',
+    flavor: 'BM xlarge',
+    cpu: 64,
+    ram: '256GiB',
+    disk: '2TiB',
+    gpu: '-',
+    az: 'zone-a',
+  },
+  {
+    id: 'bm-008',
+    name: 'compute-2',
+    status: 'building',
+    ip: '—',
+    image: 'BM image',
+    flavor: 'BM xlarge',
+    cpu: 64,
+    ram: '256GiB',
+    disk: '2TiB',
+    gpu: '-',
+    az: 'zone-a',
+  },
+  {
+    id: 'bm-009',
+    name: 'storage-node-1',
+    status: 'running',
+    ip: '10.62.0.60',
+    image: 'BM storage',
+    flavor: 'BM storage',
+    cpu: 8,
+    ram: '32GiB',
+    disk: '10TiB',
+    gpu: '-',
+    az: 'zone-b',
+  },
+  {
+    id: 'bm-010',
+    name: 'storage-node-2',
+    status: 'error',
+    ip: '10.62.0.61',
+    image: 'BM storage',
+    flavor: 'BM storage',
+    cpu: 8,
+    ram: '32GiB',
+    disk: '10TiB',
+    gpu: '-',
+    az: 'zone-b',
+  },
 ];
 
 /* ----------------------------------------
@@ -153,7 +449,7 @@ export function InstanceListPage() {
   ]);
 
   const removeFilter = (filterId: string) => {
-    setActiveFilters(prev => prev.filter(f => f.id !== filterId));
+    setActiveFilters((prev) => prev.filter((f) => f.id !== filterId));
   };
 
   const clearAllFilters = () => {
@@ -162,62 +458,81 @@ export function InstanceListPage() {
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  
+
   // Create instance snapshot Drawer state
   const [isSnapshotDrawerOpen, setIsSnapshotDrawerOpen] = useState(false);
-  const [selectedInstanceForSnapshot, setSelectedInstanceForSnapshot] = useState<InstanceInfo | null>(null);
+  const [selectedInstanceForSnapshot, setSelectedInstanceForSnapshot] =
+    useState<InstanceInfo | null>(null);
 
   // Lock setting Drawer state
   const [isLockDrawerOpen, setIsLockDrawerOpen] = useState(false);
-  const [selectedInstanceForLock, setSelectedInstanceForLock] = useState<LockInstanceInfo | null>(null);
+  const [selectedInstanceForLock, setSelectedInstanceForLock] = useState<LockInstanceInfo | null>(
+    null
+  );
 
   // Edit instance Drawer state
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
-  const [selectedInstanceForEdit, setSelectedInstanceForEdit] = useState<EditInstanceInfo | null>(null);
+  const [selectedInstanceForEdit, setSelectedInstanceForEdit] = useState<EditInstanceInfo | null>(
+    null
+  );
 
   // Attach Volume Drawer state
   const [isAttachVolumeDrawerOpen, setIsAttachVolumeDrawerOpen] = useState(false);
-  const [selectedInstanceForAttachVolume, setSelectedInstanceForAttachVolume] = useState<{ id: string; name: string } | null>(null);
+  const [selectedInstanceForAttachVolume, setSelectedInstanceForAttachVolume] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
 
   // Detach Volume Drawer state
   const [isDetachVolumeDrawerOpen, setIsDetachVolumeDrawerOpen] = useState(false);
-  const [selectedInstanceForDetachVolume, setSelectedInstanceForDetachVolume] = useState<DetachVolumeInstanceInfo | null>(null);
+  const [selectedInstanceForDetachVolume, setSelectedInstanceForDetachVolume] =
+    useState<DetachVolumeInstanceInfo | null>(null);
 
   // Attach Interface Drawer state
   const [isAttachInterfaceDrawerOpen, setIsAttachInterfaceDrawerOpen] = useState(false);
-  const [selectedInstanceForAttachInterface, setSelectedInstanceForAttachInterface] = useState<AttachInterfaceInstanceInfo | null>(null);
+  const [selectedInstanceForAttachInterface, setSelectedInstanceForAttachInterface] =
+    useState<AttachInterfaceInstanceInfo | null>(null);
 
   // Detach Interface Drawer state
   const [isDetachInterfaceDrawerOpen, setIsDetachInterfaceDrawerOpen] = useState(false);
-  const [selectedInstanceForDetachInterface, setSelectedInstanceForDetachInterface] = useState<DetachInterfaceInstanceInfo | null>(null);
+  const [selectedInstanceForDetachInterface, setSelectedInstanceForDetachInterface] =
+    useState<DetachInterfaceInstanceInfo | null>(null);
 
   // Associate Floating IP Drawer state
   const [isAssociateFloatingIPDrawerOpen, setIsAssociateFloatingIPDrawerOpen] = useState(false);
-  const [selectedInstanceForAssociateFloatingIP, setSelectedInstanceForAssociateFloatingIP] = useState<{ id: string; name: string } | null>(null);
+  const [selectedInstanceForAssociateFloatingIP, setSelectedInstanceForAssociateFloatingIP] =
+    useState<{ id: string; name: string } | null>(null);
 
   // Disassociate Floating IP Drawer state
-  const [isDisassociateFloatingIPDrawerOpen, setIsDisassociateFloatingIPDrawerOpen] = useState(false);
-  const [selectedInstanceForDisassociateFloatingIP, setSelectedInstanceForDisassociateFloatingIP] = useState<DisassociateFloatingIPInstanceInfo | null>(null);
+  const [isDisassociateFloatingIPDrawerOpen, setIsDisassociateFloatingIPDrawerOpen] =
+    useState(false);
+  const [selectedInstanceForDisassociateFloatingIP, setSelectedInstanceForDisassociateFloatingIP] =
+    useState<DisassociateFloatingIPInstanceInfo | null>(null);
 
   // Manage Security Groups Drawer state
   const [isManageSecurityGroupsDrawerOpen, setIsManageSecurityGroupsDrawerOpen] = useState(false);
-  const [selectedInstanceForManageSecurityGroups, setSelectedInstanceForManageSecurityGroups] = useState<ManageSecurityGroupsInstanceInfo | null>(null);
+  const [selectedInstanceForManageSecurityGroups, setSelectedInstanceForManageSecurityGroups] =
+    useState<ManageSecurityGroupsInstanceInfo | null>(null);
 
   // Rebuild Instance Drawer state
   const [isRebuildDrawerOpen, setIsRebuildDrawerOpen] = useState(false);
-  const [selectedInstanceForRebuild, setSelectedInstanceForRebuild] = useState<RebuildInstanceInfo | null>(null);
+  const [selectedInstanceForRebuild, setSelectedInstanceForRebuild] =
+    useState<RebuildInstanceInfo | null>(null);
 
   // Resize Instance Drawer state
   const [isResizeDrawerOpen, setIsResizeDrawerOpen] = useState(false);
-  const [selectedInstanceForResize, setSelectedInstanceForResize] = useState<ResizeInstanceInfo | null>(null);
+  const [selectedInstanceForResize, setSelectedInstanceForResize] =
+    useState<ResizeInstanceInfo | null>(null);
 
   // Manage Tags Drawer state
   const [isManageTagsDrawerOpen, setIsManageTagsDrawerOpen] = useState(false);
-  const [selectedInstanceForManageTags, setSelectedInstanceForManageTags] = useState<ManageTagsInstanceInfo | null>(null);
+  const [selectedInstanceForManageTags, setSelectedInstanceForManageTags] =
+    useState<ManageTagsInstanceInfo | null>(null);
 
   // Rescue Instance Drawer state
   const [isRescueDrawerOpen, setIsRescueDrawerOpen] = useState(false);
-  const [selectedInstanceForRescue, setSelectedInstanceForRescue] = useState<RescueInstanceInfo | null>(null);
+  const [selectedInstanceForRescue, setSelectedInstanceForRescue] =
+    useState<RescueInstanceInfo | null>(null);
 
   // Table selection state
   const [selectedInstances, setSelectedInstances] = useState<string[]>([]);
@@ -227,7 +542,7 @@ export function InstanceListPage() {
   const shellPanel = useShellPanel();
   const navigate = useNavigate();
   const { addTab } = useTabs();
-  
+
   // Scroll container ref for maintaining scroll position
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const scrollPositionRef = useRef(0);
@@ -236,7 +551,7 @@ export function InstanceListPage() {
   useLayoutEffect(() => {
     const container = scrollContainerRef.current;
     if (!container) return;
-    
+
     if (shellPanel.isExpanded) {
       // When panel opens, restore scroll position
       container.scrollTop = scrollPositionRef.current;
@@ -302,18 +617,24 @@ export function InstanceListPage() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const filteredInstances = useMemo(() => 
-    mockInstances.filter((instance) =>
-    instance.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    instance.id.toLowerCase().includes(searchQuery.toLowerCase())
-    ), [searchQuery]
+  const filteredInstances = useMemo(
+    () =>
+      mockInstances.filter(
+        (instance) =>
+          instance.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          instance.id.toLowerCase().includes(searchQuery.toLowerCase())
+      ),
+    [searchQuery]
   );
 
-  const filteredBareMetalInstances = useMemo(() => 
-    mockBareMetalInstances.filter((instance) =>
-    instance.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    instance.id.toLowerCase().includes(searchQuery.toLowerCase())
-    ), [searchQuery]
+  const filteredBareMetalInstances = useMemo(
+    () =>
+      mockBareMetalInstances.filter(
+        (instance) =>
+          instance.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          instance.id.toLowerCase().includes(searchQuery.toLowerCase())
+      ),
+    [searchQuery]
   );
 
   const totalPages = Math.ceil(filteredInstances.length / rowsPerPage);
@@ -482,8 +803,8 @@ export function InstanceListPage() {
     { id: 'unpause', label: 'Unpause' },
     { id: 'resume', label: 'Resume' },
     { id: 'unshelve', label: 'Unshelve' },
-    { 
-      id: 'rescue', 
+    {
+      id: 'rescue',
       label: 'Rescue',
       onClick: () => handleRescue(instance),
     },
@@ -502,8 +823,8 @@ export function InstanceListPage() {
         { id: 'unpause-sub', label: 'Unpause' },
         { id: 'resume-sub', label: 'Resume' },
         { id: 'unshelve-sub', label: 'Unshelve' },
-        { 
-          id: 'rescue-sub', 
+        {
+          id: 'rescue-sub',
           label: 'Rescue',
           onClick: () => handleRescue(instance),
         },
@@ -514,19 +835,19 @@ export function InstanceListPage() {
       id: 'storage-snapshot',
       label: 'Storage&Snapshot',
       submenu: [
-        { 
-          id: 'attach-volume', 
+        {
+          id: 'attach-volume',
           label: 'Attach volume',
           onClick: () => handleAttachVolume(instance),
         },
-        { 
-          id: 'detach-volume', 
-          label: 'Detach volume', 
+        {
+          id: 'detach-volume',
+          label: 'Detach volume',
           status: 'danger',
           onClick: () => handleDetachVolume(instance),
         },
-        { 
-          id: 'create-snapshot', 
+        {
+          id: 'create-snapshot',
           label: 'Create instance snapshot',
           onClick: () => handleCreateSnapshot(instance),
         },
@@ -536,30 +857,30 @@ export function InstanceListPage() {
       id: 'network',
       label: 'Network',
       submenu: [
-        { 
-          id: 'attach-interface', 
+        {
+          id: 'attach-interface',
           label: 'Attach interface',
           onClick: () => handleAttachInterface(instance),
         },
-        { 
-          id: 'detach-interface', 
-          label: 'Detach interface', 
+        {
+          id: 'detach-interface',
+          label: 'Detach interface',
           status: 'danger',
           onClick: () => handleDetachInterface(instance),
         },
-        { 
-          id: 'associate-floating-ip', 
+        {
+          id: 'associate-floating-ip',
           label: 'Associate floating IP',
           onClick: () => handleAssociateFloatingIP(instance),
         },
-        { 
-          id: 'disassociate-floating-ip', 
-          label: 'Disassociate floating IP', 
+        {
+          id: 'disassociate-floating-ip',
+          label: 'Disassociate floating IP',
           status: 'danger',
           onClick: () => handleDisassociateFloatingIP(instance),
         },
-        { 
-          id: 'manage-security-groups', 
+        {
+          id: 'manage-security-groups',
           label: 'Manage security groups',
           onClick: () => handleManageSecurityGroups(instance),
         },
@@ -569,29 +890,29 @@ export function InstanceListPage() {
       id: 'configuration',
       label: 'Configuration',
       submenu: [
-        { 
-          id: 'lock-setting', 
+        {
+          id: 'lock-setting',
           label: 'Lock setting',
           onClick: () => handleLockSetting(instance),
         },
-        { 
-          id: 'rebuild', 
-          label: 'Rebuild', 
+        {
+          id: 'rebuild',
+          label: 'Rebuild',
           status: 'danger',
           onClick: () => handleRebuild(instance),
         },
-        { 
-          id: 'resize', 
+        {
+          id: 'resize',
           label: 'Resize',
           onClick: () => handleResize(instance),
         },
-        { 
-          id: 'manage-tags', 
+        {
+          id: 'manage-tags',
           label: 'Manage tags',
           onClick: () => handleManageTags(instance),
         },
-        { 
-          id: 'edit', 
+        {
+          id: 'edit',
           label: 'Edit',
           onClick: () => handleEditInstance(instance),
         },
@@ -610,9 +931,7 @@ export function InstanceListPage() {
       width: '59px',
       align: 'center',
       sortable: false,
-      render: (_, row) => (
-        <StatusIndicator status={statusMap[row.status]} layout="icon-only" />
-      ),
+      render: (_, row) => <StatusIndicator status={statusMap[row.status]} layout="icon-only" />,
     },
     {
       key: 'name',
@@ -621,7 +940,7 @@ export function InstanceListPage() {
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5 whitespace-nowrap">
-          <Link 
+          <Link
             to={`/compute/instances/${row.id}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
@@ -640,9 +959,10 @@ export function InstanceListPage() {
       width: '62px',
       align: 'center',
       sortable: false,
-      render: (_, row) => row.locked ? (
-        <IconLock size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
-      ) : null,
+      render: (_, row) =>
+        row.locked ? (
+          <IconLock size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
+        ) : null,
     },
     {
       key: 'fixedIp',
@@ -663,7 +983,7 @@ export function InstanceListPage() {
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
-          <Link 
+          <Link
             to={`/compute/images/${row.id}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
@@ -683,7 +1003,7 @@ export function InstanceListPage() {
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
-          <Link 
+          <Link
             to={`/compute/flavors/${row.id}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
@@ -733,7 +1053,7 @@ export function InstanceListPage() {
       align: 'center',
       render: (_, row) => (
         <HStack gap={1} className="justify-center">
-          <button 
+          <button
             className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
             onClick={(e) => {
               e.stopPropagation();
@@ -746,7 +1066,11 @@ export function InstanceListPage() {
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={getInstanceContextMenuItems(row)} trigger="click">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+                <IconDotsCircleHorizontal
+                  size={16}
+                  stroke={1.5}
+                  className="text-[var(--action-icon-color)]"
+                />
               </button>
             </ContextMenu>
           </div>
@@ -757,9 +1081,7 @@ export function InstanceListPage() {
 
   // Filter and order columns based on preferences
   const visibleColumns = useMemo(() => {
-    const visibleColumnIds = columnConfig
-      .filter((col) => col.visible)
-      .map((col) => col.id);
+    const visibleColumnIds = columnConfig.filter((col) => col.visible).map((col) => col.id);
 
     const columnMap = new Map(columns.map((col) => [col.key, col]));
 
@@ -776,9 +1098,7 @@ export function InstanceListPage() {
       width: '59px',
       align: 'center',
       sortable: false,
-      render: (_, row) => (
-        <StatusIndicator status={statusMap[row.status]} layout="icon-only" />
-      ),
+      render: (_, row) => <StatusIndicator status={statusMap[row.status]} layout="icon-only" />,
     },
     {
       key: 'name',
@@ -787,7 +1107,7 @@ export function InstanceListPage() {
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
-          <Link 
+          <Link
             to={`/compute/bare-metal/${row.id}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
@@ -813,7 +1133,7 @@ export function InstanceListPage() {
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
-          <Link 
+          <Link
             to={`/compute/images/${row.id}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
@@ -833,7 +1153,7 @@ export function InstanceListPage() {
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
-          <Link 
+          <Link
             to={`/compute/flavors/${row.id}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
@@ -883,7 +1203,7 @@ export function InstanceListPage() {
       align: 'center',
       render: (_, row) => (
         <HStack gap={1} className="justify-center">
-          <button 
+          <button
             className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
             onClick={(e) => {
               e.stopPropagation();
@@ -894,7 +1214,11 @@ export function InstanceListPage() {
             <IconTerminal2 size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
           </button>
           <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-            <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+            <IconDotsCircleHorizontal
+              size={16}
+              stroke={1.5}
+              className="text-[var(--action-icon-color)]"
+            />
           </button>
         </HStack>
       ),
@@ -907,7 +1231,7 @@ export function InstanceListPage() {
       <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
 
       {/* Main Content */}
-      <main 
+      <main
         className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'}`}
       >
         {/* Fixed Header Area */}
@@ -933,10 +1257,7 @@ export function InstanceListPage() {
             onForward={() => window.history.forward()}
             breadcrumb={
               <Breadcrumb
-                items={[
-                  { label: 'Proj-1', href: '/compute' },
-                  { label: 'Instances list' },
-                ]}
+                items={[{ label: 'Proj-1', href: '/compute' }, { label: 'Instances list' }]}
               />
             }
             actions={
@@ -950,125 +1271,136 @@ export function InstanceListPage() {
         </div>
 
         {/* Scrollable Content Area */}
-        <div 
+        <div
           ref={scrollContainerRef}
           className="flex-1 overflow-auto overscroll-contain sidebar-scroll"
           style={{ paddingBottom: shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0' }}
         >
+          {/* Page Content */}
+          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
+            <VStack gap={3}>
+              {/* Page Header */}
+              <div className="flex items-center justify-between h-8">
+                <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
+                  Instances list
+                </h1>
+                <Link to="/compute/instances/create">
+                  <Button size="md">Create instance</Button>
+                </Link>
+              </div>
 
-        {/* Page Content */}
-        <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
-          <VStack gap={3}>
-            {/* Page Header */}
-            <div className="flex items-center justify-between h-8">
-              <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
-                Instances list
-              </h1>
-              <Link to="/compute/instances/create">
-                <Button size="md">
-                  Create instance
-                </Button>
-              </Link>
-            </div>
+              {/* Type Tabs */}
+              <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
+                <TabList>
+                  <Tab value="vm">VM</Tab>
+                  <Tab value="bare-metal">Bare metal</Tab>
+                </TabList>
+              </Tabs>
 
-            {/* Type Tabs */}
-            <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
-              <TabList>
-                <Tab value="vm">VM</Tab>
-                <Tab value="bare-metal">Bare metal</Tab>
-              </TabList>
-            </Tabs>
-
-            {/* List Toolbar */}
-            <ListToolbar
-              primaryActions={
-                <ListToolbar.Actions>
-                  <div className="w-[280px]">
-                    <SearchInput
-                      placeholder="Search instance by attributes"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      onClear={() => setSearchQuery('')}
+              {/* List Toolbar */}
+              <ListToolbar
+                primaryActions={
+                  <ListToolbar.Actions>
+                    <div className="w-[280px]">
+                      <SearchInput
+                        placeholder="Search instance by attributes"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onClear={() => setSearchQuery('')}
+                        size="sm"
+                        fullWidth
+                      />
+                    </div>
+                    <Button
+                      variant="secondary"
                       size="sm"
-                      fullWidth
+                      icon={<IconDownload size={12} />}
+                      aria-label="Download"
                     />
-                  </div>
-                  <Button variant="secondary" size="sm" icon={<IconDownload size={12} />} aria-label="Download" />
-                </ListToolbar.Actions>
-              }
-              bulkActions={
-                <ListToolbar.Actions>
-                  <Button variant="muted" size="sm" leftIcon={<IconPlayerPlay size={12} />} disabled>
-                    Start
-                  </Button>
-                  <Button variant="muted" size="sm" leftIcon={<IconPlayerStop size={12} />} disabled>
-                    Stop
-                  </Button>
-                  <Button variant="muted" size="sm" leftIcon={<IconRefresh size={12} />} disabled>
-                    Reboot
-                  </Button>
-                  <Button variant="muted" size="sm" leftIcon={<IconTrash size={12} />} disabled>
-                    Delete
-                  </Button>
-                </ListToolbar.Actions>
-              }
-              filters={activeFilters}
-              onFilterRemove={removeFilter}
-              onFiltersClear={clearAllFilters}
-            />
-
-            {/* Pagination */}
-            {activeTab === 'vm' && filteredInstances.length > 0 && (
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={setCurrentPage}
-                showSettings
-                onSettingsClick={() => setIsPreferencesOpen(true)}
-                totalItems={mockInstances.length}
+                  </ListToolbar.Actions>
+                }
+                bulkActions={
+                  <ListToolbar.Actions>
+                    <Button
+                      variant="muted"
+                      size="sm"
+                      leftIcon={<IconPlayerPlay size={12} />}
+                      disabled
+                    >
+                      Start
+                    </Button>
+                    <Button
+                      variant="muted"
+                      size="sm"
+                      leftIcon={<IconPlayerStop size={12} />}
+                      disabled
+                    >
+                      Stop
+                    </Button>
+                    <Button variant="muted" size="sm" leftIcon={<IconRefresh size={12} />} disabled>
+                      Reboot
+                    </Button>
+                    <Button variant="muted" size="sm" leftIcon={<IconTrash size={12} />} disabled>
+                      Delete
+                    </Button>
+                  </ListToolbar.Actions>
+                }
+                filters={activeFilters}
+                onFilterRemove={removeFilter}
+                onFiltersClear={clearAllFilters}
               />
-            )}
-            {activeTab === 'bare-metal' && filteredBareMetalInstances.length > 0 && (
-              <Pagination
-                currentPage={currentBareMetalPage}
-                totalPages={totalBareMetalPages}
-                onPageChange={setCurrentBareMetalPage}
-                showSettings
-                onSettingsClick={() => setIsPreferencesOpen(true)}
-                totalItems={mockBareMetalInstances.length}
-                selectedCount={selectedBareMetalInstances.length}
-              />
-            )}
 
-            {/* VM Table */}
-            {activeTab === 'vm' && (
-              <Table<Instance>
-                columns={visibleColumns}
-                data={paginatedInstances}
-                rowKey="id"
-                emptyMessage="No instances found"
-                selectable
-                selectedKeys={selectedInstances}
-                onSelectionChange={setSelectedInstances}
-              />
-            )}
+              {/* Pagination */}
+              {activeTab === 'vm' && filteredInstances.length > 0 && (
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
+                  showSettings
+                  onSettingsClick={() => setIsPreferencesOpen(true)}
+                  totalItems={mockInstances.length}
+                />
+              )}
+              {activeTab === 'bare-metal' && filteredBareMetalInstances.length > 0 && (
+                <Pagination
+                  currentPage={currentBareMetalPage}
+                  totalPages={totalBareMetalPages}
+                  onPageChange={setCurrentBareMetalPage}
+                  showSettings
+                  onSettingsClick={() => setIsPreferencesOpen(true)}
+                  totalItems={mockBareMetalInstances.length}
+                  selectedCount={selectedBareMetalInstances.length}
+                />
+              )}
 
-            {/* Bare Metal Table */}
-            {activeTab === 'bare-metal' && (
-              <Table<BareMetalInstance>
-                columns={bareMetalColumns}
-                data={paginatedBareMetalInstances}
-                rowKey="id"
-                emptyMessage="No bare metal instances found"
-                selectable
-                selectedKeys={selectedBareMetalInstances}
-                onSelectionChange={setSelectedBareMetalInstances}
-              />
-            )}
+              {/* VM Table */}
+              {activeTab === 'vm' && (
+                <Table<Instance>
+                  columns={visibleColumns}
+                  data={paginatedInstances}
+                  rowKey="id"
+                  emptyMessage="No instances found"
+                  selectable
+                  selectedKeys={selectedInstances}
+                  onSelectionChange={setSelectedInstances}
+                />
+              )}
 
-          </VStack>
+              {/* Bare Metal Table */}
+              {activeTab === 'bare-metal' && (
+                <Table<BareMetalInstance>
+                  columns={bareMetalColumns}
+                  data={paginatedBareMetalInstances}
+                  rowKey="id"
+                  emptyMessage="No bare metal instances found"
+                  selectable
+                  selectedKeys={selectedBareMetalInstances}
+                  onSelectionChange={setSelectedBareMetalInstances}
+                />
+              )}
+            </VStack>
+          </div>
         </div>
-      </div>
       </main>
 
       {/* Scroll to Top Button */}
@@ -1102,7 +1434,14 @@ export function InstanceListPage() {
         }}
         instance={selectedInstanceForSnapshot}
         onSubmit={(snapshotName, description) => {
-          console.log('Creating snapshot:', snapshotName, 'description:', description, 'for instance:', selectedInstanceForSnapshot?.id);
+          console.log(
+            'Creating snapshot:',
+            snapshotName,
+            'description:',
+            description,
+            'for instance:',
+            selectedInstanceForSnapshot?.id
+          );
           // TODO: Implement actual snapshot creation API call
         }}
       />
@@ -1116,7 +1455,12 @@ export function InstanceListPage() {
         }}
         instance={selectedInstanceForLock}
         onSubmit={(isLocked) => {
-          console.log('Setting lock status:', isLocked, 'for instance:', selectedInstanceForLock?.id);
+          console.log(
+            'Setting lock status:',
+            isLocked,
+            'for instance:',
+            selectedInstanceForLock?.id
+          );
           // TODO: Implement actual lock setting API call
         }}
       />
@@ -1130,7 +1474,14 @@ export function InstanceListPage() {
         }}
         instance={selectedInstanceForEdit}
         onSubmit={(name, description) => {
-          console.log('Editing instance:', name, 'description:', description, 'for instance:', selectedInstanceForEdit?.id);
+          console.log(
+            'Editing instance:',
+            name,
+            'description:',
+            description,
+            'for instance:',
+            selectedInstanceForEdit?.id
+          );
           // TODO: Implement actual edit API call
         }}
       />
@@ -1157,7 +1508,12 @@ export function InstanceListPage() {
         }}
         instance={selectedInstanceForDetachVolume || { id: '', name: '' }}
         onDetach={(volumeId) => {
-          console.log('Detaching volume:', volumeId, 'from instance:', selectedInstanceForDetachVolume?.id);
+          console.log(
+            'Detaching volume:',
+            volumeId,
+            'from instance:',
+            selectedInstanceForDetachVolume?.id
+          );
         }}
       />
 
@@ -1170,7 +1526,13 @@ export function InstanceListPage() {
         }}
         instance={selectedInstanceForAttachInterface || { id: '', name: '' }}
         onAttach={(networkId, fixedIp) => {
-          console.log('Attaching interface:', networkId, fixedIp, 'to instance:', selectedInstanceForAttachInterface?.id);
+          console.log(
+            'Attaching interface:',
+            networkId,
+            fixedIp,
+            'to instance:',
+            selectedInstanceForAttachInterface?.id
+          );
         }}
       />
 
@@ -1183,7 +1545,12 @@ export function InstanceListPage() {
         }}
         instance={selectedInstanceForDetachInterface || { id: '', name: '' }}
         onDetach={(interfaceId) => {
-          console.log('Detaching interface:', interfaceId, 'from instance:', selectedInstanceForDetachInterface?.id);
+          console.log(
+            'Detaching interface:',
+            interfaceId,
+            'from instance:',
+            selectedInstanceForDetachInterface?.id
+          );
         }}
       />
 
@@ -1209,7 +1576,12 @@ export function InstanceListPage() {
         }}
         instance={selectedInstanceForDisassociateFloatingIP || { id: '', name: '' }}
         onDisassociate={(floatingIpId) => {
-          console.log('Disassociating floating IP:', floatingIpId, 'from instance:', selectedInstanceForDisassociateFloatingIP?.id);
+          console.log(
+            'Disassociating floating IP:',
+            floatingIpId,
+            'from instance:',
+            selectedInstanceForDisassociateFloatingIP?.id
+          );
         }}
       />
 
@@ -1235,7 +1607,13 @@ export function InstanceListPage() {
         }}
         instance={selectedInstanceForRebuild || { id: '', name: '', currentImage: '' }}
         onRebuild={(imageOption, selectedImageId) => {
-          console.log('Rebuilding instance:', selectedInstanceForRebuild?.id, 'with image:', imageOption, selectedImageId);
+          console.log(
+            'Rebuilding instance:',
+            selectedInstanceForRebuild?.id,
+            'with image:',
+            imageOption,
+            selectedImageId
+          );
         }}
       />
 
@@ -1246,9 +1624,23 @@ export function InstanceListPage() {
           setIsResizeDrawerOpen(false);
           setSelectedInstanceForResize(null);
         }}
-        instance={selectedInstanceForResize || { id: '', name: '', currentFlavor: { id: '', name: '', vcpu: 0, ram: '', disk: '' } }}
+        instance={
+          selectedInstanceForResize || {
+            id: '',
+            name: '',
+            currentFlavor: { id: '', name: '', vcpu: 0, ram: '', disk: '' },
+          }
+        }
         onResize={(targetFlavorId, approvalMethod, autoConfirmMinutes, autoConfirmAction) => {
-          console.log('Resizing instance:', selectedInstanceForResize?.id, 'to flavor:', targetFlavorId, approvalMethod, autoConfirmMinutes, autoConfirmAction);
+          console.log(
+            'Resizing instance:',
+            selectedInstanceForResize?.id,
+            'to flavor:',
+            targetFlavorId,
+            approvalMethod,
+            autoConfirmMinutes,
+            autoConfirmAction
+          );
         }}
       />
 
@@ -1274,7 +1666,13 @@ export function InstanceListPage() {
         }}
         instance={selectedInstanceForRescue || { id: '', name: '', currentImage: '', protocol: '' }}
         onRescue={(imageOption, selectedImageId) => {
-          console.log('Rescuing instance:', selectedInstanceForRescue?.id, 'with image:', imageOption, selectedImageId);
+          console.log(
+            'Rescuing instance:',
+            selectedInstanceForRescue?.id,
+            'with image:',
+            imageOption,
+            selectedImageId
+          );
         }}
       />
 
@@ -1298,8 +1696,3 @@ export function InstanceListPage() {
 }
 
 export default InstanceListPage;
-
-
-
-
-

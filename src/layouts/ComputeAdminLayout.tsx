@@ -1,12 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { TabBar, TopBar, TopBarAction, Breadcrumb } from '@/design-system';
 import {
-  TabBar,
-  TopBar,
-  TopBarAction,
-  Breadcrumb,
-} from '@/design-system';
-import { NotificationCenter, type NotificationItem } from '@/design-system/components/NotificationCenter';
+  NotificationCenter,
+  type NotificationItem,
+} from '@/design-system/components/NotificationCenter';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { IconBell } from '@tabler/icons-react';
@@ -128,9 +126,7 @@ export function ComputeAdminLayout() {
 
   // Handle mark notification as read
   const handleMarkAsRead = (id: string) => {
-    setNotifications((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, isRead: true } : n))
-    );
+    setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, isRead: true } : n)));
   };
 
   // Handle mark all as read
@@ -169,7 +165,7 @@ export function ComputeAdminLayout() {
 
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
+      <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
 
       <main
         className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
@@ -199,12 +195,7 @@ export function ComputeAdminLayout() {
             onBack={() => window.history.back()}
             onForward={() => window.history.forward()}
             breadcrumb={
-              <Breadcrumb
-                items={[
-                  { label: 'Compute Admin' },
-                  { label: currentLabel },
-                ]}
-              />
+              <Breadcrumb items={[{ label: 'Compute Admin' }, { label: currentLabel }]} />
             }
             actions={
               <div className="relative" ref={notificationRef}>
@@ -215,7 +206,10 @@ export function ComputeAdminLayout() {
                   onClick={() => setNotificationOpen(!notificationOpen)}
                 />
                 {notificationOpen && (
-                  <div className="fixed right-0 z-50" style={{ top: 'calc(var(--tabbar-height) + var(--topbar-height))' }}>
+                  <div
+                    className="fixed right-0 z-50"
+                    style={{ top: 'calc(var(--tabbar-height) + var(--topbar-height))' }}
+                  >
                     <NotificationCenter
                       notifications={notifications}
                       selectedId={selectedNotificationId}

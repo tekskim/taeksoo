@@ -209,11 +209,7 @@ export const SelectAllPattern: Story = {
     };
 
     const handleItemChange = (id: string) => {
-      setItems(
-        items.map((item) =>
-          item.id === id ? { ...item, checked: !item.checked } : item
-        )
-      );
+      setItems(items.map((item) => (item.id === id ? { ...item, checked: !item.checked } : item)));
     };
 
     return (
@@ -249,10 +245,7 @@ export const AllStates: Story = {
       <Checkbox label="Disabled" disabled />
       <Checkbox label="Disabled checked" disabled defaultChecked />
       <Checkbox label="Error" error errorMessage="This field is required" />
-      <Checkbox
-        label="With description"
-        description="This is a helpful description text."
-      />
+      <Checkbox label="With description" description="This is a helpful description text." />
     </div>
   ),
 };
@@ -271,9 +264,7 @@ export const GroupExample: Story = {
 
     const handleChange = (value: string) => {
       setSelected((prev) =>
-        prev.includes(value)
-          ? prev.filter((v) => v !== value)
-          : [...prev, value]
+        prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]
       );
     };
 

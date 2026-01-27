@@ -146,11 +146,21 @@ export const ThemesSolid: Story = {
 export const ThemesSubtle: Story = {
   render: () => (
     <div className="flex flex-wrap gap-2">
-      <Badge theme="blue" type="subtle">Blue</Badge>
-      <Badge theme="red" type="subtle">Red</Badge>
-      <Badge theme="green" type="subtle">Green</Badge>
-      <Badge theme="yellow" type="subtle">Yellow</Badge>
-      <Badge theme="gray" type="subtle">Gray</Badge>
+      <Badge theme="blue" type="subtle">
+        Blue
+      </Badge>
+      <Badge theme="red" type="subtle">
+        Red
+      </Badge>
+      <Badge theme="green" type="subtle">
+        Green
+      </Badge>
+      <Badge theme="yellow" type="subtle">
+        Yellow
+      </Badge>
+      <Badge theme="gray" type="subtle">
+        Gray
+      </Badge>
     </div>
   ),
 };
@@ -170,11 +180,21 @@ export const Sizes: Story = {
 export const WithDot: Story = {
   render: () => (
     <div className="flex flex-wrap gap-2">
-      <Badge theme="blue" dot>Active</Badge>
-      <Badge theme="green" dot>Online</Badge>
-      <Badge theme="red" dot>Error</Badge>
-      <Badge theme="yellow" dot>Warning</Badge>
-      <Badge theme="gray" dot>Offline</Badge>
+      <Badge theme="blue" dot>
+        Active
+      </Badge>
+      <Badge theme="green" dot>
+        Online
+      </Badge>
+      <Badge theme="red" dot>
+        Error
+      </Badge>
+      <Badge theme="yellow" dot>
+        Warning
+      </Badge>
+      <Badge theme="gray" dot>
+        Offline
+      </Badge>
     </div>
   ),
 };
@@ -183,11 +203,21 @@ export const WithDot: Story = {
 export const WithDotSubtle: Story = {
   render: () => (
     <div className="flex flex-wrap gap-2">
-      <Badge theme="blue" type="subtle" dot>Active</Badge>
-      <Badge theme="green" type="subtle" dot>Online</Badge>
-      <Badge theme="red" type="subtle" dot>Error</Badge>
-      <Badge theme="yellow" type="subtle" dot>Warning</Badge>
-      <Badge theme="gray" type="subtle" dot>Offline</Badge>
+      <Badge theme="blue" type="subtle" dot>
+        Active
+      </Badge>
+      <Badge theme="green" type="subtle" dot>
+        Online
+      </Badge>
+      <Badge theme="red" type="subtle" dot>
+        Error
+      </Badge>
+      <Badge theme="yellow" type="subtle" dot>
+        Warning
+      </Badge>
+      <Badge theme="gray" type="subtle" dot>
+        Offline
+      </Badge>
     </div>
   ),
 };
@@ -216,10 +246,18 @@ export const WithIcons: Story = {
 export const StatusBadges: Story = {
   render: () => (
     <div className="flex flex-wrap gap-2">
-      <Badge theme="green" type="subtle" dot>Active</Badge>
-      <Badge theme="yellow" type="subtle" dot>Pending</Badge>
-      <Badge theme="red" type="subtle" dot>Inactive</Badge>
-      <Badge theme="gray" type="subtle" dot>Draft</Badge>
+      <Badge theme="green" type="subtle" dot>
+        Active
+      </Badge>
+      <Badge theme="yellow" type="subtle" dot>
+        Pending
+      </Badge>
+      <Badge theme="red" type="subtle" dot>
+        Inactive
+      </Badge>
+      <Badge theme="gray" type="subtle" dot>
+        Draft
+      </Badge>
     </div>
   ),
 };
@@ -232,10 +270,18 @@ export const UseCases: Story = {
       <div>
         <p className="text-sm font-medium mb-2">Table Status</p>
         <div className="flex gap-2">
-          <Badge theme="green" type="subtle">Running</Badge>
-          <Badge theme="yellow" type="subtle">Building</Badge>
-          <Badge theme="red" type="subtle">Failed</Badge>
-          <Badge theme="gray" type="subtle">Stopped</Badge>
+          <Badge theme="green" type="subtle">
+            Running
+          </Badge>
+          <Badge theme="yellow" type="subtle">
+            Building
+          </Badge>
+          <Badge theme="red" type="subtle">
+            Failed
+          </Badge>
+          <Badge theme="gray" type="subtle">
+            Stopped
+          </Badge>
         </div>
       </div>
 
@@ -243,9 +289,15 @@ export const UseCases: Story = {
       <div>
         <p className="text-sm font-medium mb-2">Tags</p>
         <div className="flex gap-2">
-          <Badge theme="blue" type="subtle" size="sm">React</Badge>
-          <Badge theme="green" type="subtle" size="sm">TypeScript</Badge>
-          <Badge theme="yellow" type="subtle" size="sm">Tailwind</Badge>
+          <Badge theme="blue" type="subtle" size="sm">
+            React
+          </Badge>
+          <Badge theme="green" type="subtle" size="sm">
+            TypeScript
+          </Badge>
+          <Badge theme="yellow" type="subtle" size="sm">
+            Tailwind
+          </Badge>
         </div>
       </div>
 
@@ -254,7 +306,9 @@ export const UseCases: Story = {
         <p className="text-sm font-medium mb-2">Notifications</p>
         <div className="flex items-center gap-2">
           <span className="text-sm">Messages</span>
-          <Badge theme="red" size="sm">5</Badge>
+          <Badge theme="red" size="sm">
+            5
+          </Badge>
         </div>
       </div>
 
@@ -263,8 +317,12 @@ export const UseCases: Story = {
         <p className="text-sm font-medium mb-2">Versions</p>
         <div className="flex gap-2">
           <Badge theme="blue">v2.0.0</Badge>
-          <Badge theme="green" type="subtle">Stable</Badge>
-          <Badge theme="yellow" type="subtle">Beta</Badge>
+          <Badge theme="green" type="subtle">
+            Stable
+          </Badge>
+          <Badge theme="yellow" type="subtle">
+            Beta
+          </Badge>
         </div>
       </div>
     </div>

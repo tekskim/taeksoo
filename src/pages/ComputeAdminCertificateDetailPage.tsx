@@ -21,13 +21,7 @@ import {
 import type { TableColumn } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconEdit,
-  IconTrash,
-  IconBell,
-  IconDownload,
-  IconExternalLink,
-} from '@tabler/icons-react';
+import { IconEdit, IconTrash, IconBell, IconDownload, IconExternalLink } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -164,12 +158,13 @@ const listenerStatusMap: Record<ListenerStatus, 'active' | 'down' | 'error'> = {
    Status Mapping
    ---------------------------------------- */
 
-const certificateStatusMap: Record<CertificateStatus, 'active' | 'error' | 'shutoff' | 'building'> = {
-  'valid': 'active',
-  'expired': 'error',
-  'revoked': 'shutoff',
-  'pending': 'building',
-};
+const certificateStatusMap: Record<CertificateStatus, 'active' | 'error' | 'shutoff' | 'building'> =
+  {
+    valid: 'active',
+    expired: 'error',
+    revoked: 'shutoff',
+    pending: 'building',
+  };
 
 /* ----------------------------------------
    Type Guards
@@ -189,12 +184,13 @@ function isCACertificate(cert: CertificateDetail): cert is CACertificateDetail {
 
 export default function CertificateDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
-  
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } =
+    useTabs();
+
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeDetailTab, setActiveDetailTab] = useState('details');
   const [copiedId, setCopiedId] = useState(false);
-  
+
   // Listeners state
   const [listenerSearchTerm, setListenerSearchTerm] = useState('');
   const [listenerCurrentPage, setListenerCurrentPage] = useState(1);
@@ -220,7 +216,7 @@ export default function CertificateDetailPage() {
   ];
 
   // Convert tabs to TabBar format
-  const tabBarTabs = tabs.map(tab => ({
+  const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
     closable: tab.closable,
@@ -236,10 +232,11 @@ export default function CertificateDetailPage() {
   const filteredListeners = useMemo(() => {
     if (!listenerSearchTerm) return mockListeners;
     const query = listenerSearchTerm.toLowerCase();
-    return mockListeners.filter(listener =>
-      listener.name.toLowerCase().includes(query) ||
-      listener.protocol.toLowerCase().includes(query) ||
-      listener.loadBalancer.name.toLowerCase().includes(query)
+    return mockListeners.filter(
+      (listener) =>
+        listener.name.toLowerCase().includes(query) ||
+        listener.protocol.toLowerCase().includes(query) ||
+        listener.loadBalancer.name.toLowerCase().includes(query)
     );
   }, [listenerSearchTerm]);
 
@@ -377,43 +374,23 @@ export default function CertificateDetailPage() {
                   {isServerCertificate(certificate) ? (
                     // Server Certificate actions
                     <>
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        leftIcon={<IconDownload size={12} />}
-                      >
+                      <Button variant="secondary" size="sm" leftIcon={<IconDownload size={12} />}>
                         Download
                       </Button>
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        leftIcon={<IconTrash size={12} />}
-                      >
+                      <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
                         Delete
                       </Button>
                     </>
                   ) : (
                     // CA Certificate actions
                     <>
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        leftIcon={<IconEdit size={12} />}
-                      >
+                      <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
                         Edit
                       </Button>
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        leftIcon={<IconDownload size={12} />}
-                      >
+                      <Button variant="secondary" size="sm" leftIcon={<IconDownload size={12} />}>
                         Download
                       </Button>
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        leftIcon={<IconTrash size={12} />}
-                      >
+                      <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
                         Delete
                       </Button>
                     </>
@@ -435,11 +412,11 @@ export default function CertificateDetailPage() {
                     className="flex-1"
                   />
                   {isServerCertificate(certificate) && (
-                      <DetailHeader.InfoCard
-                        label="Type"
-                        value={certificate.type}
+                    <DetailHeader.InfoCard
+                      label="Type"
+                      value={certificate.type}
                       className="flex-1"
-                      />
+                    />
                   )}
                   <DetailHeader.InfoCard
                     label="Expires at"
@@ -480,13 +457,22 @@ export default function CertificateDetailPage() {
                           <>
                             <SectionCard.Header title="Certificate Metadata" />
                             <SectionCard.Content>
-                              <SectionCard.DataRow label="Classification" value={certificate.classification} />
+                              <SectionCard.DataRow
+                                label="Classification"
+                                value={certificate.classification}
+                              />
                               <SectionCard.DataRow label="Issuer" value={certificate.issuer} />
                               <SectionCard.DataRow label="Type" value={certificate.type} />
                               <SectionCard.DataRow label="CN" value={certificate.domain} />
                               <SectionCard.DataRow label="SAN" value={certificate.san} />
-                              <SectionCard.DataRow label="Signature type" value={certificate.signatureType} />
-                              <SectionCard.DataRow label="Valid from / To" value={`${certificate.validFrom} ~ ${certificate.validTo}`} />
+                              <SectionCard.DataRow
+                                label="Signature type"
+                                value={certificate.signatureType}
+                              />
+                              <SectionCard.DataRow
+                                label="Valid from / To"
+                                value={`${certificate.validFrom} ~ ${certificate.validTo}`}
+                              />
                             </SectionCard.Content>
                           </>
                         ) : (
@@ -494,11 +480,23 @@ export default function CertificateDetailPage() {
                           <>
                             <SectionCard.Header title="Certificate Metadata" />
                             <SectionCard.Content>
-                              <SectionCard.DataRow label="Classification" value={certificate.classification} />
-                              <SectionCard.DataRow label="Authority" value={certificate.authority} />
+                              <SectionCard.DataRow
+                                label="Classification"
+                                value={certificate.classification}
+                              />
+                              <SectionCard.DataRow
+                                label="Authority"
+                                value={certificate.authority}
+                              />
                               <SectionCard.DataRow label="Issuer" value={certificate.issuer} />
-                              <SectionCard.DataRow label="Signature type" value={certificate.signatureType} />
-                              <SectionCard.DataRow label="Valid from / To" value={`${certificate.validFrom} ~ ${certificate.validTo}`} />
+                              <SectionCard.DataRow
+                                label="Signature type"
+                                value={certificate.signatureType}
+                              />
+                              <SectionCard.DataRow
+                                label="Valid from / To"
+                                value={`${certificate.validFrom} ~ ${certificate.validTo}`}
+                              />
                             </SectionCard.Content>
                           </>
                         )}
@@ -529,19 +527,15 @@ export default function CertificateDetailPage() {
                       </div>
 
                       {/* Pagination */}
-                        <Pagination
-                          currentPage={listenerCurrentPage}
-                          totalPages={totalListenerPages}
-                          onPageChange={setListenerCurrentPage}
+                      <Pagination
+                        currentPage={listenerCurrentPage}
+                        totalPages={totalListenerPages}
+                        onPageChange={setListenerCurrentPage}
                         totalItems={filteredListeners.length}
-                        />
+                      />
 
                       {/* Table */}
-                      <Table
-                        columns={listenerColumns}
-                        data={paginatedListeners}
-                        rowKey="id"
-                      />
+                      <Table columns={listenerColumns} data={paginatedListeners} rowKey="id" />
                     </VStack>
                   </TabPanel>
                 </Tabs>

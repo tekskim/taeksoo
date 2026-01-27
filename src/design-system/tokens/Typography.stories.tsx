@@ -62,12 +62,42 @@ export const Headings: Story = {
   render: () => (
     <div className="flex flex-col">
       <h3 className="text-sm font-semibold mb-4">Headings</h3>
-      <TypographySample name="H1" fontSize="--font-size-40" lineHeight="--line-height-48" weight="bold" />
-      <TypographySample name="H2" fontSize="--font-size-32" lineHeight="--line-height-40" weight="bold" />
-      <TypographySample name="H3" fontSize="--font-size-24" lineHeight="--line-height-32" weight="bold" />
-      <TypographySample name="H4" fontSize="--font-size-18" lineHeight="--line-height-28" weight="bold" />
-      <TypographySample name="H5" fontSize="--font-size-16" lineHeight="--line-height-24" weight="bold" />
-      <TypographySample name="H6" fontSize="--font-size-14" lineHeight="--line-height-20" weight="bold" />
+      <TypographySample
+        name="H1"
+        fontSize="--font-size-40"
+        lineHeight="--line-height-48"
+        weight="bold"
+      />
+      <TypographySample
+        name="H2"
+        fontSize="--font-size-32"
+        lineHeight="--line-height-40"
+        weight="bold"
+      />
+      <TypographySample
+        name="H3"
+        fontSize="--font-size-24"
+        lineHeight="--line-height-32"
+        weight="bold"
+      />
+      <TypographySample
+        name="H4"
+        fontSize="--font-size-18"
+        lineHeight="--line-height-28"
+        weight="bold"
+      />
+      <TypographySample
+        name="H5"
+        fontSize="--font-size-16"
+        lineHeight="--line-height-24"
+        weight="bold"
+      />
+      <TypographySample
+        name="H6"
+        fontSize="--font-size-14"
+        lineHeight="--line-height-20"
+        weight="bold"
+      />
     </div>
   ),
 };
@@ -111,7 +141,9 @@ export const FontSizes: Story = {
             <tr key={v} className="border-b border-[var(--color-border-subtle)]">
               <td className="py-2 font-mono text-xs">{v}</td>
               <td className="py-2">{size}</td>
-              <td className="py-2" style={{ fontSize: `var(${v})` }}>Aa</td>
+              <td className="py-2" style={{ fontSize: `var(${v})` }}>
+                Aa
+              </td>
             </tr>
           ))}
         </tbody>

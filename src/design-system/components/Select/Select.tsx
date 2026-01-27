@@ -1,10 +1,4 @@
-import {
-  useState,
-  useRef,
-  useEffect,
-  useCallback,
-  useId,
-} from 'react';
+import { useState, useRef, useEffect, useCallback, useId } from 'react';
 import { createPortal } from 'react-dom';
 import { twMerge } from 'tailwind-merge';
 import { IconChevronDown, IconCheck, IconX } from '@tabler/icons-react';
@@ -128,78 +122,90 @@ export function Select({
   }, []);
 
   // Handle selection
-  const selectOption = useCallback((option: SelectOption) => {
-    if (option.disabled) return;
-    if (!isControlled) {
-      setInternalValue(option.value);
-    }
-    onChange?.(option.value);
-    closeDropdown();
-  }, [isControlled, onChange, closeDropdown]);
+  const selectOption = useCallback(
+    (option: SelectOption) => {
+      if (option.disabled) return;
+      if (!isControlled) {
+        setInternalValue(option.value);
+      }
+      onChange?.(option.value);
+      closeDropdown();
+    },
+    [isControlled, onChange, closeDropdown]
+  );
 
   // Handle clear
-  const handleClear = useCallback((e?: React.MouseEvent) => {
-    e?.stopPropagation();
-    if (!isControlled) {
-      setInternalValue('');
-    }
-    onChange?.('');
-    closeDropdown();
-  }, [isControlled, onChange, closeDropdown]);
+  const handleClear = useCallback(
+    (e?: React.MouseEvent) => {
+      e?.stopPropagation();
+      if (!isControlled) {
+        setInternalValue('');
+      }
+      onChange?.('');
+      closeDropdown();
+    },
+    [isControlled, onChange, closeDropdown]
+  );
 
   // Check if has value for clearable
   const hasValue = !!currentValue;
 
   // Keyboard navigation
-  const handleTriggerKeyDown = useCallback((e: React.KeyboardEvent) => {
-    if (disabled) return;
+  const handleTriggerKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (disabled) return;
 
-    switch (e.key) {
-      case 'Enter':
-      case ' ':
-      case 'ArrowDown':
-        e.preventDefault();
-        openDropdown();
-        break;
-      case 'ArrowUp':
-        e.preventDefault();
-        openDropdown();
-        break;
-    }
-  }, [disabled, openDropdown]);
+      switch (e.key) {
+        case 'Enter':
+        case ' ':
+        case 'ArrowDown':
+          e.preventDefault();
+          openDropdown();
+          break;
+        case 'ArrowUp':
+          e.preventDefault();
+          openDropdown();
+          break;
+      }
+    },
+    [disabled, openDropdown]
+  );
 
-  const handleListboxKeyDown = useCallback((e: React.KeyboardEvent) => {
-    switch (e.key) {
-      case 'ArrowDown':
-        e.preventDefault();
-        setFocusedIndex((prev) => {
-          const next = prev + 1;
-          return next >= enabledOptions.length ? 0 : next;
-        });
-        break;
-      case 'ArrowUp':
-        e.preventDefault();
-        setFocusedIndex((prev) => {
-          const next = prev - 1;
-          return next < 0 ? enabledOptions.length - 1 : next;
-        });
-        break;
-      case 'Enter':
-      case ' ':
-        e.preventDefault();
-        if (focusedIndex >= 0 && enabledOptions[focusedIndex]) {
-          selectOption(enabledOptions[focusedIndex]);
-        }
-        break;
-      case 'Escape':
-        e.preventDefault();
-        closeDropdown();
-        break;
-      case 'Tab':
-        closeDropdown();
-        break;
-    }
-  }, [enabledOptions, focusedIndex, selectOption, closeDropdown]);
+  const handleListboxKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      switch (e.key) {
+        case 'ArrowDown':
+          e.preventDefault();
+          setFocusedIndex((prev) => {
+            const next = prev + 1;
+            return next >= enabledOptions.length ? 0 : next;
+          });
+          break;
+        case 'ArrowUp':
+          e.preventDefault();
+          setFocusedIndex((prev) => {
+            const next = prev - 1;
+            return next < 0 ? enabledOptions.length - 1 : next;
+          });
+          break;
+        case 'Enter':
+        case ' ':
+          e.preventDefault();
+          if (focusedIndex >= 0 && enabledOptions[focusedIndex]) {
+            selectOption(enabledOptions[focusedIndex]);
+          }
+          break;
+        case 'Escape':
+          e.preventDefault();
+          closeDropdown();
+          break;
+        case 'Tab':
+          closeDropdown();
+          break;
+      }
+    },
+    [enabledOptions, focusedIndex, selectOption, closeDropdown]
+  );
 
   // Click outside to close
   useEffect(() => {
@@ -248,7 +254,7 @@ export function Select({
   // Styles
   const wrapperClasses = twMerge(
     'flex flex-col gap-[var(--input-label-gap)]',
-    fullWidth ? 'w-full' : widthStyles[width],
+    fullWidth ? 'w-full' : widthStyles[width]
   );
 
   // Size-based styles (height) - aligned with Input component
@@ -272,7 +278,8 @@ export function Select({
         ? 'border-[var(--select-border-focus)]'
         : 'border-[var(--select-border)]',
     // Disabled
-    disabled && 'bg-[var(--select-bg-disabled)] border-[var(--color-border-default)] cursor-not-allowed',
+    disabled &&
+      'bg-[var(--select-bg-disabled)] border-[var(--color-border-default)] cursor-not-allowed',
     className
   );
 
@@ -283,7 +290,7 @@ export function Select({
     'rounded-[var(--select-menu-radius)]',
     'shadow-[var(--select-menu-shadow)]',
     'overflow-hidden',
-    'focus:outline-none',
+    'focus:outline-none'
   );
 
   return (
@@ -295,9 +302,7 @@ export function Select({
           className="font-medium text-[var(--color-text-default)] text-[14px] leading-5"
         >
           {label}
-          {required && (
-            <span className="text-[var(--color-state-danger)] ml-0.5">*</span>
-          )}
+          {required && <span className="text-[var(--color-state-danger)] ml-0.5">*</span>}
         </label>
       )}
 
@@ -326,9 +331,7 @@ export function Select({
         <span
           className={twMerge(
             'text-[length:var(--font-size-12)] leading-[var(--line-height-18)]',
-            selectedOption
-              ? 'text-[var(--color-text-default)]'
-              : 'text-[var(--color-text-muted)]',
+            selectedOption ? 'text-[var(--color-text-default)]' : 'text-[var(--color-text-muted)]',
             disabled && 'text-[var(--color-text-subtle)]'
           )}
         >
@@ -395,7 +398,7 @@ export function Select({
                   'text-[length:var(--select-item-font-size)] leading-[var(--select-item-line-height)]',
                   'cursor-pointer transition-colors duration-[var(--duration-fast)]',
                   'border-b border-[var(--color-border-subtle)]',
-                  'text-[var(--color-text-muted)] hover:bg-[var(--select-item-hover-bg)] hover:text-[var(--color-text-default)]',
+                  'text-[var(--color-text-muted)] hover:bg-[var(--select-item-hover-bg)] hover:text-[var(--color-text-default)]'
                 )}
               >
                 <span>{clearLabel}</span>
@@ -414,7 +417,9 @@ export function Select({
                   onClick={() => selectOption(option)}
                   onMouseEnter={() => {
                     if (!option.disabled) {
-                      const enabledIndex = enabledOptions.findIndex((o) => o.value === option.value);
+                      const enabledIndex = enabledOptions.findIndex(
+                        (o) => o.value === option.value
+                      );
                       setFocusedIndex(enabledIndex);
                     }
                   }}
@@ -433,12 +438,15 @@ export function Select({
                         ? 'bg-[var(--select-item-selected-bg)] text-[var(--select-item-selected-text)]'
                         : isFocused
                           ? 'bg-[var(--select-item-hover-bg)] text-[var(--color-text-default)]'
-                          : 'text-[var(--color-text-default)] hover:bg-[var(--select-item-hover-bg)]',
+                          : 'text-[var(--color-text-default)] hover:bg-[var(--select-item-hover-bg)]'
                   )}
                 >
                   <span>{option.label}</span>
                   {isSelected && (
-                    <IconCheck size={14} className="shrink-0 text-[var(--select-item-selected-text)]" />
+                    <IconCheck
+                      size={14}
+                      className="shrink-0 text-[var(--select-item-selected-text)]"
+                    />
                   )}
                 </div>
               );
@@ -449,4 +457,3 @@ export function Select({
     </div>
   );
 }
-

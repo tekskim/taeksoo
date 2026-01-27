@@ -52,7 +52,7 @@ export function CreateInstanceSnapshotDrawer({
   const handleSubmit = async () => {
     setHasAttemptedSubmit(true);
     if (!snapshotName.trim()) return;
-    
+
     setIsSubmitting(true);
     try {
       await onSubmit?.(snapshotName, description);
@@ -78,15 +78,11 @@ export function CreateInstanceSnapshotDrawer({
       width={376}
       footer={
         <HStack gap={2} className="w-full">
-          <Button 
-            variant="secondary" 
-            onClick={handleClose}
-            className="flex-1 h-8"
-          >
+          <Button variant="secondary" onClick={handleClose} className="flex-1 h-8">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={handleSubmit}
             disabled={isSubmitting}
             className="flex-1 h-8"
@@ -114,20 +110,19 @@ export function CreateInstanceSnapshotDrawer({
             <p className="text-[11px] font-medium text-[var(--color-text-subtle)] mb-1.5">
               Instance
             </p>
-            <p className="text-[12px] text-[var(--color-text-default)]">
-              {instance?.name || '-'}
-            </p>
+            <p className="text-[12px] text-[var(--color-text-default)]">{instance?.name || '-'}</p>
           </div>
 
           {/* Warning Message */}
           <div className="w-full flex gap-2 p-3 bg-[var(--color-state-danger-bg)] rounded-lg">
-            <IconAlertCircle 
-              size={16} 
-              className="text-[var(--color-state-danger)] shrink-0 mt-0.5" 
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1}
             />
             <p className="text-[11px] text-[var(--color-text-default)] leading-4">
-              For data consistency, stop all write operations on the instance before creating a snapshot.
+              For data consistency, stop all write operations on the instance before creating a
+              snapshot.
             </p>
           </div>
         </VStack>
@@ -161,15 +156,9 @@ export function CreateInstanceSnapshotDrawer({
             <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
               Description
             </label>
-            <span className="text-[12px] text-[var(--color-text-subtle)]">
-              (optional)
-            </span>
+            <span className="text-[12px] text-[var(--color-text-subtle)]">(optional)</span>
           </div>
-          <Input
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            fullWidth
-          />
+          <Input value={description} onChange={(e) => setDescription(e.target.value)} fullWidth />
         </VStack>
       </VStack>
     </Drawer>

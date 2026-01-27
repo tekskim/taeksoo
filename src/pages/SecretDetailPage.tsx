@@ -60,8 +60,8 @@ const mockSecretData: Record<string, SecretData> = {
     labels: {},
     annotations: {},
     data: {
-      'Key1': 'supersecretvalue1',
-      'Key2': 'supersecretvalue2',
+      Key1: 'supersecretvalue1',
+      Key2: 'supersecretvalue2',
     },
   },
   '2': {
@@ -72,14 +72,14 @@ const mockSecretData: Record<string, SecretData> = {
     secretType: 'Opaque',
     createdAt: '2025-11-09 14:30',
     labels: {
-      'app': 'database',
+      app: 'database',
     },
     annotations: {
-      'description': 'Database credentials',
+      description: 'Database credentials',
     },
     data: {
-      'username': 'admin',
-      'password': 'dbpassword123',
+      username: 'admin',
+      password: 'dbpassword123',
     },
   },
   '3': {
@@ -124,8 +124,8 @@ const mockSecretData: Record<string, SecretData> = {
     },
     data: {
       'ca.crt': '-----BEGIN CERTIFICATE-----...',
-      'namespace': 'kube-system',
-      'token': 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...',
+      namespace: 'kube-system',
+      token: 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...',
     },
   },
 };
@@ -138,7 +138,16 @@ export function SecretDetailPage() {
   const { secretId } = useParams<{ secretId: string }>();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, addTab, updateActiveTabLabel } = useTabs();
+  const {
+    tabs,
+    activeTabId,
+    selectTab,
+    closeTab,
+    addNewTab,
+    moveTab,
+    addTab,
+    updateActiveTabLabel,
+  } = useTabs();
   const [activeTab, setActiveTab] = useState('data');
   const [visibleValues, setVisibleValues] = useState<Record<string, boolean>>({});
 
@@ -219,9 +228,9 @@ export function SecretDetailPage() {
 
   // Toggle value visibility
   const toggleValueVisibility = (key: string) => {
-    setVisibleValues(prev => ({
+    setVisibleValues((prev) => ({
       ...prev,
-      [key]: !prev[key]
+      [key]: !prev[key],
     }));
   };
 
@@ -248,7 +257,7 @@ export function SecretDetailPage() {
       >
         {/* Tab Bar */}
         <TabBar
-          tabs={tabs.map(tab => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
@@ -271,7 +280,7 @@ export function SecretDetailPage() {
           }
           actions={
             <>
-              <button 
+              <button
                 className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                 onClick={() => {
                   if (shellPanel.isExpanded) {
@@ -281,7 +290,15 @@ export function SecretDetailPage() {
                   }
                 }}
               >
-                <IconTerminal2 size={16} className={shellPanel.isExpanded ? "text-[var(--color-action-primary)]" : "text-[var(--color-text-muted)]"} stroke={1.5} />
+                <IconTerminal2
+                  size={16}
+                  className={
+                    shellPanel.isExpanded
+                      ? 'text-[var(--color-action-primary)]'
+                      : 'text-[var(--color-text-muted)]'
+                  }
+                  stroke={1.5}
+                />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
@@ -300,7 +317,7 @@ export function SecretDetailPage() {
         />
 
         {/* Content Area */}
-        <div 
+        <div
           className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll"
           style={{ paddingBottom: shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0' }}
         >
@@ -328,14 +345,14 @@ export function SecretDetailPage() {
                       secretData.status === 'Active'
                         ? 'active'
                         : secretData.status === 'Pending'
-                        ? 'pending'
-                        : 'error'
+                          ? 'pending'
+                          : 'error'
                     }
                   />
                   <DetailHeader.InfoCard
                     label="Namespace"
                     value={
-                      <span 
+                      <span
                         className="text-[var(--color-action-primary)] cursor-pointer hover:underline"
                         onClick={() => navigate(`/container/namespaces/${secretData.namespace}`)}
                       >
@@ -343,14 +360,8 @@ export function SecretDetailPage() {
                       </span>
                     }
                   />
-                  <DetailHeader.InfoCard
-                    label="Secret Type"
-                    value={secretData.secretType}
-                  />
-                  <DetailHeader.InfoCard
-                    label="Created At"
-                    value={secretData.createdAt}
-                  />
+                  <DetailHeader.InfoCard label="Secret Type" value={secretData.secretType} />
+                  <DetailHeader.InfoCard label="Created At" value={secretData.createdAt} />
                   <DetailHeader.InfoCard
                     label={`Labels (${labelsCount})`}
                     value={
@@ -426,12 +437,20 @@ export function SecretDetailPage() {
                                     <button
                                       className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                       onClick={() => toggleValueVisibility(key)}
-                                      aria-label={visibleValues[key] ? "Hide value" : "Show value"}
+                                      aria-label={visibleValues[key] ? 'Hide value' : 'Show value'}
                                     >
                                       {visibleValues[key] ? (
-                                        <IconEyeOff size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                                        <IconEyeOff
+                                          size={16}
+                                          className="text-[var(--color-text-muted)]"
+                                          stroke={1.5}
+                                        />
                                       ) : (
-                                        <IconEye size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                                        <IconEye
+                                          size={16}
+                                          className="text-[var(--color-text-muted)]"
+                                          stroke={1.5}
+                                        />
                                       )}
                                     </button>
                                     <button
@@ -439,7 +458,11 @@ export function SecretDetailPage() {
                                       onClick={() => copyToClipboard(value)}
                                       aria-label="Copy value"
                                     >
-                                      <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                                      <IconCopy
+                                        size={16}
+                                        className="text-[var(--color-text-muted)]"
+                                        stroke={1.5}
+                                      />
                                     </button>
                                   </HStack>
                                 </div>

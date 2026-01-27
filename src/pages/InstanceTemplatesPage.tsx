@@ -58,16 +58,136 @@ interface InstanceTemplate {
    ---------------------------------------- */
 
 const mockTemplates: InstanceTemplate[] = [
-  { id: 'tpl-001', name: 'hj-small', image: '-', flavor: '2025-01-03', vcpu: 8, ram: '16GiB', disk: '10GiB', network: 'in-net', floatingIp: 'None', access: 'Personal', favorite: true },
-  { id: 'tpl-002', name: 'web-server-template', image: '-', flavor: '2025-01-02', vcpu: 16, ram: '32GiB', disk: '50GiB', network: 'public-net', floatingIp: 'Auto', access: 'Project', favorite: true },
-  { id: 'tpl-003', name: 'db-template', image: '-', flavor: '2024-12-28', vcpu: 32, ram: '64GiB', disk: '200GiB', network: 'db-net', floatingIp: 'None', access: 'Personal', favorite: false },
-  { id: 'tpl-004', name: 'gpu-ml-template', image: '-', flavor: '2024-12-25', vcpu: 16, ram: '128GiB', disk: '500GiB', network: 'ml-net', floatingIp: 'Auto', access: 'Public', favorite: true },
-  { id: 'tpl-005', name: 'minimal-template', image: '-', flavor: '2024-12-20', vcpu: 2, ram: '4GiB', disk: '10GiB', network: 'in-net', floatingIp: 'None', access: 'Personal', favorite: false },
-  { id: 'tpl-006', name: 'k8s-worker', image: '-', flavor: '2024-12-18', vcpu: 8, ram: '16GiB', disk: '100GiB', network: 'k8s-net', floatingIp: 'None', access: 'Project', favorite: true },
-  { id: 'tpl-007', name: 'k8s-master', image: '-', flavor: '2024-12-18', vcpu: 4, ram: '8GiB', disk: '50GiB', network: 'k8s-net', floatingIp: 'Auto', access: 'Project', favorite: true },
-  { id: 'tpl-008', name: 'dev-environment', image: '-', flavor: '2024-12-15', vcpu: 4, ram: '8GiB', disk: '30GiB', network: 'dev-net', floatingIp: 'Auto', access: 'Personal', favorite: false },
-  { id: 'tpl-009', name: 'monitoring-stack', image: '-', flavor: '2024-12-10', vcpu: 8, ram: '16GiB', disk: '100GiB', network: 'monitor-net', floatingIp: 'Auto', access: 'Public', favorite: true },
-  { id: 'tpl-010', name: 'cache-server', image: '-', flavor: '2024-12-05', vcpu: 4, ram: '32GiB', disk: '20GiB', network: 'cache-net', floatingIp: 'None', access: 'Project', favorite: false },
+  {
+    id: 'tpl-001',
+    name: 'hj-small',
+    image: '-',
+    flavor: '2025-01-03',
+    vcpu: 8,
+    ram: '16GiB',
+    disk: '10GiB',
+    network: 'in-net',
+    floatingIp: 'None',
+    access: 'Personal',
+    favorite: true,
+  },
+  {
+    id: 'tpl-002',
+    name: 'web-server-template',
+    image: '-',
+    flavor: '2025-01-02',
+    vcpu: 16,
+    ram: '32GiB',
+    disk: '50GiB',
+    network: 'public-net',
+    floatingIp: 'Auto',
+    access: 'Project',
+    favorite: true,
+  },
+  {
+    id: 'tpl-003',
+    name: 'db-template',
+    image: '-',
+    flavor: '2024-12-28',
+    vcpu: 32,
+    ram: '64GiB',
+    disk: '200GiB',
+    network: 'db-net',
+    floatingIp: 'None',
+    access: 'Personal',
+    favorite: false,
+  },
+  {
+    id: 'tpl-004',
+    name: 'gpu-ml-template',
+    image: '-',
+    flavor: '2024-12-25',
+    vcpu: 16,
+    ram: '128GiB',
+    disk: '500GiB',
+    network: 'ml-net',
+    floatingIp: 'Auto',
+    access: 'Public',
+    favorite: true,
+  },
+  {
+    id: 'tpl-005',
+    name: 'minimal-template',
+    image: '-',
+    flavor: '2024-12-20',
+    vcpu: 2,
+    ram: '4GiB',
+    disk: '10GiB',
+    network: 'in-net',
+    floatingIp: 'None',
+    access: 'Personal',
+    favorite: false,
+  },
+  {
+    id: 'tpl-006',
+    name: 'k8s-worker',
+    image: '-',
+    flavor: '2024-12-18',
+    vcpu: 8,
+    ram: '16GiB',
+    disk: '100GiB',
+    network: 'k8s-net',
+    floatingIp: 'None',
+    access: 'Project',
+    favorite: true,
+  },
+  {
+    id: 'tpl-007',
+    name: 'k8s-master',
+    image: '-',
+    flavor: '2024-12-18',
+    vcpu: 4,
+    ram: '8GiB',
+    disk: '50GiB',
+    network: 'k8s-net',
+    floatingIp: 'Auto',
+    access: 'Project',
+    favorite: true,
+  },
+  {
+    id: 'tpl-008',
+    name: 'dev-environment',
+    image: '-',
+    flavor: '2024-12-15',
+    vcpu: 4,
+    ram: '8GiB',
+    disk: '30GiB',
+    network: 'dev-net',
+    floatingIp: 'Auto',
+    access: 'Personal',
+    favorite: false,
+  },
+  {
+    id: 'tpl-009',
+    name: 'monitoring-stack',
+    image: '-',
+    flavor: '2024-12-10',
+    vcpu: 8,
+    ram: '16GiB',
+    disk: '100GiB',
+    network: 'monitor-net',
+    floatingIp: 'Auto',
+    access: 'Public',
+    favorite: true,
+  },
+  {
+    id: 'tpl-010',
+    name: 'cache-server',
+    image: '-',
+    flavor: '2024-12-05',
+    vcpu: 4,
+    ram: '32GiB',
+    disk: '20GiB',
+    network: 'cache-net',
+    floatingIp: 'None',
+    access: 'Project',
+    favorite: false,
+  },
 ];
 
 /* ----------------------------------------
@@ -78,11 +198,16 @@ const mockTemplates: InstanceTemplate[] = [
 const filterFields: FilterField[] = [
   { key: 'name', label: 'Name', type: 'text' },
   { key: 'network', label: 'Network', type: 'text' },
-  { key: 'access', label: 'Access', type: 'select', options: [
-    { value: 'Personal', label: 'Personal' },
-    { value: 'Project', label: 'Project' },
-    { value: 'Public', label: 'Public' },
-  ]},
+  {
+    key: 'access',
+    label: 'Access',
+    type: 'select',
+    options: [
+      { value: 'Personal', label: 'Personal' },
+      { value: 'Project', label: 'Project' },
+      { value: 'Public', label: 'Public' },
+    ],
+  },
 ];
 
 export function InstanceTemplatesPage() {
@@ -92,7 +217,7 @@ export function InstanceTemplatesPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [activeTab, setActiveTab] = useState('favorites');
   const [templates, setTemplates] = useState(mockTemplates);
-  
+
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [templateToDelete, setTemplateToDelete] = useState<InstanceTemplate | null>(null);
@@ -181,9 +306,7 @@ export function InstanceTemplatesPage() {
 
   // Toggle favorite
   const toggleFavorite = (id: string) => {
-    setTemplates((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, favorite: !t.favorite } : t))
-    );
+    setTemplates((prev) => prev.map((t) => (t.id === id ? { ...t, favorite: !t.favorite } : t)));
   };
 
   // Selection handlers
@@ -197,9 +320,9 @@ export function InstanceTemplatesPage() {
     const currentPageIds = filteredTemplates
       .slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)
       .map((t) => t.id);
-    
+
     const allSelected = currentPageIds.every((id) => selectedTemplates.includes(id));
-    
+
     if (allSelected) {
       setSelectedTemplates((prev) => prev.filter((id) => !currentPageIds.includes(id)));
     } else {
@@ -214,19 +337,23 @@ export function InstanceTemplatesPage() {
   };
 
   // Tab counts
-  const tabCounts = useMemo(() => ({
-    favorites: templates.filter((t) => t.favorite).length,
-    personal: templates.filter((t) => t.access === 'Personal').length,
-    project: templates.filter((t) => t.access === 'Project').length,
-    public: templates.filter((t) => t.access === 'Public').length,
-    all: templates.length,
-  }), [templates]);
+  const tabCounts = useMemo(
+    () => ({
+      favorites: templates.filter((t) => t.favorite).length,
+      personal: templates.filter((t) => t.access === 'Personal').length,
+      project: templates.filter((t) => t.access === 'Project').length,
+      public: templates.filter((t) => t.access === 'Public').length,
+      all: templates.length,
+    }),
+    [templates]
+  );
 
   // Get current page IDs for "select all" checkbox state
   const currentPageIds = filteredTemplates
     .slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)
     .map((t) => t.id);
-  const allCurrentPageSelected = currentPageIds.length > 0 && currentPageIds.every((id) => selectedTemplates.includes(id));
+  const allCurrentPageSelected =
+    currentPageIds.length > 0 && currentPageIds.every((id) => selectedTemplates.includes(id));
   const someCurrentPageSelected = currentPageIds.some((id) => selectedTemplates.includes(id));
 
   // Table columns
@@ -301,19 +428,23 @@ export function InstanceTemplatesPage() {
             label: 'Duplicate',
             onClick: () => console.log('Duplicate template:', row.id),
           },
-{
-          id: 'delete',
-          label: 'Delete',
-          status: 'danger',
-          onClick: () => handleDeleteClick(row),
-        },
+          {
+            id: 'delete',
+            label: 'Delete',
+            status: 'danger',
+            onClick: () => handleDeleteClick(row),
+          },
         ];
-        
+
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={menuItems} trigger="click">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+                <IconDotsCircleHorizontal
+                  size={16}
+                  stroke={1.5}
+                  className="text-[var(--action-icon-color)]"
+                />
               </button>
             </ContextMenu>
           </div>
@@ -324,9 +455,7 @@ export function InstanceTemplatesPage() {
 
   // Filter and order columns based on preferences
   const visibleColumns = useMemo(() => {
-    const visibleColumnIds = columnConfig
-      .filter((col) => col.visible)
-      .map((col) => col.id);
+    const visibleColumnIds = columnConfig.filter((col) => col.visible).map((col) => col.id);
 
     const columnMap = new Map(columns.map((col) => [col.key, col]));
 
@@ -337,7 +466,7 @@ export function InstanceTemplatesPage() {
 
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
+      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
 
       <main
         className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
@@ -346,120 +475,125 @@ export function InstanceTemplatesPage() {
       >
         {/* Fixed Header Area */}
         <div className="shrink-0 bg-[var(--color-surface-default)]">
-        {/* Tab Bar */}
-        <TabBar
-          tabs={tabBarTabs}
-          activeTab={activeTabId}
-          onTabChange={selectTab}
-          onTabClose={closeTab}
-          onTabAdd={addNewTab}
+          {/* Tab Bar */}
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabAdd={addNewTab}
             onTabReorder={moveTab}
-          showAddButton={true}
-          showWindowControls={true}
-        />
+            showAddButton={true}
+            showWindowControls={true}
+          />
 
-        {/* Top Bar */}
-        <TopBar
-          showSidebarToggle={!sidebarOpen}
-          onSidebarToggle={() => setSidebarOpen(true)}
-          showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'Proj-1', href: '/project' },
-                { label: 'Instance templates' },
-              ]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
-        />
+          {/* Top Bar */}
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(true)}
+            showNavigation={true}
+            onBack={() => window.history.back()}
+            onForward={() => window.history.forward()}
+            breadcrumb={
+              <Breadcrumb
+                items={[{ label: 'Proj-1', href: '/project' }, { label: 'Instance templates' }]}
+              />
+            }
+            actions={
+              <TopBarAction
+                icon={<IconBell size={16} stroke={1} />}
+                aria-label="Notifications"
+                badge={true}
+              />
+            }
+          />
         </div>
 
         {/* Scrollable Content Area */}
         <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
-        {/* Page Content */}
-        <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
-          <VStack gap={3}>
-            {/* Page Header */}
-            <div className="flex items-center justify-between h-8">
-              <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
-                Instance templates
-              </h1>
-              <Button onClick={() => navigate('/compute/instance-templates/create')}>
-                Create template
-              </Button>
-            </div>
+          {/* Page Content */}
+          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
+            <VStack gap={3}>
+              {/* Page Header */}
+              <div className="flex items-center justify-between h-8">
+                <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
+                  Instance templates
+                </h1>
+                <Button onClick={() => navigate('/compute/instance-templates/create')}>
+                  Create template
+                </Button>
+              </div>
 
-            {/* Category Tabs */}
-            <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
-              <TabList>
-                <Tab value="favorites">Current tenant</Tab>
-                <Tab value="personal">Public</Tab>
-              </TabList>
-            </Tabs>
+              {/* Category Tabs */}
+              <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
+                <TabList>
+                  <Tab value="favorites">Current tenant</Tab>
+                  <Tab value="personal">Public</Tab>
+                </TabList>
+              </Tabs>
 
-            {/* List Toolbar */}
-            <ListToolbar
-              primaryActions={
-                <ListToolbar.Actions>
-                  <FilterSearchInput
-                    filters={filterFields}
-                    appliedFilters={appliedFilters}
-                    onFiltersChange={setAppliedFilters}
-                    placeholder="Search template by attributes"
-                    className="w-[var(--search-input-width)]"
-                  />
-                  <Button variant="secondary" size="sm" icon={<IconDownload size={12} />} aria-label="Download" />
-                </ListToolbar.Actions>
-              }
-              bulkActions={
-                <ListToolbar.Actions>
-                  <Button 
-                    variant="muted" 
-                    size="sm" 
-                    leftIcon={<IconTrash size={12} />} 
-                    disabled={selectedTemplates.length === 0}
-                    onClick={handleBulkDelete}
-                  >
-                    Delete
-                  </Button>
-                </ListToolbar.Actions>
-              }
-            />
-
-            {/* Pagination */}
-            {filteredTemplates.length > 0 && (
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={setCurrentPage}
-                showSettings
-                onSettingsClick={() => setIsPreferencesOpen(true)}
-                totalItems={filteredTemplates.length}
-                selectedCount={selectedTemplates.length}
+              {/* List Toolbar */}
+              <ListToolbar
+                primaryActions={
+                  <ListToolbar.Actions>
+                    <FilterSearchInput
+                      filters={filterFields}
+                      appliedFilters={appliedFilters}
+                      onFiltersChange={setAppliedFilters}
+                      placeholder="Search template by attributes"
+                      className="w-[var(--search-input-width)]"
+                    />
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      icon={<IconDownload size={12} />}
+                      aria-label="Download"
+                    />
+                  </ListToolbar.Actions>
+                }
+                bulkActions={
+                  <ListToolbar.Actions>
+                    <Button
+                      variant="muted"
+                      size="sm"
+                      leftIcon={<IconTrash size={12} />}
+                      disabled={selectedTemplates.length === 0}
+                      onClick={handleBulkDelete}
+                    >
+                      Delete
+                    </Button>
+                  </ListToolbar.Actions>
+                }
               />
-            )}
 
-            {/* Template Table */}
-            <Table<InstanceTemplate>
-              columns={visibleColumns}
-              data={filteredTemplates.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)}
-              rowKey="id"
-              emptyMessage="No templates found"
-              selectable
-              selectedKeys={selectedTemplates}
-              onSelectionChange={setSelectedTemplates}
-            />
-          </VStack>
-        </div>
+              {/* Pagination */}
+              {filteredTemplates.length > 0 && (
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
+                  showSettings
+                  onSettingsClick={() => setIsPreferencesOpen(true)}
+                  totalItems={filteredTemplates.length}
+                  selectedCount={selectedTemplates.length}
+                />
+              )}
+
+              {/* Template Table */}
+              <Table<InstanceTemplate>
+                columns={visibleColumns}
+                data={filteredTemplates.slice(
+                  (currentPage - 1) * rowsPerPage,
+                  currentPage * rowsPerPage
+                )}
+                rowKey="id"
+                emptyMessage="No templates found"
+                selectable
+                selectedKeys={selectedTemplates}
+                onSelectionChange={setSelectedTemplates}
+              />
+            </VStack>
+          </div>
         </div>
       </main>
 
@@ -492,4 +626,3 @@ export function InstanceTemplatesPage() {
 }
 
 export default InstanceTemplatesPage;
-

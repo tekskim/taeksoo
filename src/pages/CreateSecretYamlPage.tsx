@@ -1,22 +1,9 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  Button,
-  Breadcrumb,
-  HStack,
-  VStack,
-  TabBar,
-  TopBar,
-} from '@/design-system';
+import { Button, Breadcrumb, HStack, VStack, TabBar, TopBar } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconBell,
-  IconTerminal2,
-  IconFile,
-  IconCopy,
-  IconSearch,
-} from '@tabler/icons-react';
+import { IconBell, IconTerminal2, IconFile, IconCopy, IconSearch } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Default YAML Template
@@ -115,7 +102,8 @@ export function CreateSecretYamlPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Tab management
-  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } =
+    useTabs();
 
   // Update tab label
   useEffect(() => {
@@ -230,9 +218,7 @@ export function CreateSecretYamlPage() {
         />
 
         {/* Page Content */}
-        <div
-          className="flex-1 overflow-hidden min-w-[var(--layout-content-min-width)] flex flex-col"
-        >
+        <div className="flex-1 overflow-hidden min-w-[var(--layout-content-min-width)] flex flex-col">
           <div className="flex-1 flex flex-col pt-4 px-8 pb-6 bg-[var(--color-surface-default)] min-h-0">
             <VStack gap={6} className="flex-1 min-h-0">
               {/* Header */}
@@ -241,43 +227,40 @@ export function CreateSecretYamlPage() {
                   Create Secret
                 </h1>
                 <p className="text-[11px] leading-[16px] text-[var(--color-text-subtle)]">
-                  Secret is a Kubernetes resource used to securely store sensitive information such as passwords, tokens, and certificates for use by Pods.
+                  Secret is a Kubernetes resource used to securely store sensitive information such
+                  as passwords, tokens, and certificates for use by Pods.
                 </p>
               </VStack>
 
               {/* YAML Editor */}
-              <YamlEditor
-                value={yamlContent}
-                onChange={setYamlContent}
-                onCopy={handleCopy}
-              />
+              <YamlEditor value={yamlContent} onChange={setYamlContent} onCopy={handleCopy} />
 
               {/* Footer */}
               <div className="flex-shrink-0 h-[61px] flex items-center justify-between border-t border-[var(--color-border-strong)]">
-              {/* Left side - Read from File */}
-              <div>
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept=".yaml,.yml,.txt"
-                  onChange={handleFileChange}
-                  className="hidden"
-                />
-                <Button variant="secondary" size="md" onClick={handleReadFromFile}>
-                  Read from File
-                </Button>
-              </div>
+                {/* Left side - Read from File */}
+                <div>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept=".yaml,.yml,.txt"
+                    onChange={handleFileChange}
+                    className="hidden"
+                  />
+                  <Button variant="secondary" size="md" onClick={handleReadFromFile}>
+                    Read from File
+                  </Button>
+                </div>
 
-              {/* Right side - Cancel & Create */}
-              <HStack gap={3}>
-                <Button variant="secondary" size="md" onClick={handleCancel}>
-                  Cancel
-                </Button>
-                <Button variant="primary" size="md" onClick={handleCreate}>
-                  Create
-                </Button>
-              </HStack>
-            </div>
+                {/* Right side - Cancel & Create */}
+                <HStack gap={3}>
+                  <Button variant="secondary" size="md" onClick={handleCancel}>
+                    Cancel
+                  </Button>
+                  <Button variant="primary" size="md" onClick={handleCreate}>
+                    Create
+                  </Button>
+                </HStack>
+              </div>
             </VStack>
           </div>
         </div>

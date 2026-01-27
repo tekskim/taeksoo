@@ -1,4 +1,12 @@
-import { forwardRef, useId, useState, useEffect, useRef, type InputHTMLAttributes, type ReactNode } from 'react';
+import {
+  forwardRef,
+  useId,
+  useState,
+  useEffect,
+  useRef,
+  type InputHTMLAttributes,
+  type ReactNode,
+} from 'react';
 import { twMerge } from 'tailwind-merge';
 import { IconCheck, IconMinus } from '@tabler/icons-react';
 
@@ -48,7 +56,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
 
     // Internal ref for indeterminate state
     const internalRef = useRef<HTMLInputElement>(null);
-    
+
     // Combine refs
     const setRefs = (element: HTMLInputElement | null) => {
       (internalRef as React.MutableRefObject<HTMLInputElement | null>).current = element;
@@ -61,7 +69,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
 
     // Internal state for uncontrolled mode
     const [internalChecked, setInternalChecked] = useState(defaultChecked ?? false);
-    
+
     // Use controlled value if provided, otherwise use internal state
     const isControlled = checked !== undefined;
     const isCheckedValue = isControlled ? checked : internalChecked;
@@ -96,7 +104,10 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
         if (isChecked) {
           return [...base, 'bg-[var(--checkbox-disabled-checked-bg)]'];
         }
-        return [...base, 'bg-[var(--checkbox-disabled-bg)] border border-[var(--checkbox-disabled-border)]'];
+        return [
+          ...base,
+          'bg-[var(--checkbox-disabled-bg)] border border-[var(--checkbox-disabled-border)]',
+        ];
       }
 
       if (error) {
@@ -110,7 +121,11 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
         return [...base, 'bg-[var(--checkbox-checked-bg)]'];
       }
 
-      return [...base, 'bg-[var(--checkbox-bg)] border border-[var(--checkbox-border)]', 'group-hover:border-[var(--checkbox-border-hover)]'];
+      return [
+        ...base,
+        'bg-[var(--checkbox-bg)] border border-[var(--checkbox-border)]',
+        'group-hover:border-[var(--checkbox-border-hover)]',
+      ];
     };
 
     // Label styles based on state
@@ -151,21 +166,28 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
 
           {/* Custom checkbox box */}
           <span className={twMerge(getBoxStyles())}>
-            {isChecked && (
-              indeterminate ? (
+            {isChecked &&
+              (indeterminate ? (
                 <IconMinus
                   size={12}
                   strokeWidth={3}
-                  className={disabled ? 'text-[var(--checkbox-icon-disabled)]' : 'text-[var(--checkbox-icon-color)]'}
+                  className={
+                    disabled
+                      ? 'text-[var(--checkbox-icon-disabled)]'
+                      : 'text-[var(--checkbox-icon-color)]'
+                  }
                 />
               ) : (
                 <IconCheck
                   size={12}
                   strokeWidth={3}
-                  className={disabled ? 'text-[var(--checkbox-icon-disabled)]' : 'text-[var(--checkbox-icon-color)]'}
+                  className={
+                    disabled
+                      ? 'text-[var(--checkbox-icon-disabled)]'
+                      : 'text-[var(--checkbox-icon-color)]'
+                  }
                 />
-              )
-            )}
+              ))}
           </span>
 
           {/* Label */}
@@ -207,4 +229,3 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
 );
 
 Checkbox.displayName = 'Checkbox';
-

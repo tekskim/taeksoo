@@ -177,11 +177,12 @@ const poolStatusMap: Record<PoolStatus, 'active' | 'down' | 'error'> = {
 
 export function ComputeAdminLoadBalancerDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } =
+    useTabs();
   const [activeTab, setActiveTab] = useState('details');
   const [isCopied, setIsCopied] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  
+
   // Listeners state
   const [listenerSearchTerm, setListenerSearchTerm] = useState('');
   const [listenerCurrentPage, setListenerCurrentPage] = useState(1);
@@ -193,12 +194,12 @@ export function ComputeAdminLoadBalancerDetailPage() {
   const [poolCurrentPage, setPoolCurrentPage] = useState(1);
   const [selectedPools, setSelectedPools] = useState<string[]>([]);
   const poolsPerPage = 10;
-  
+
   // Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
 
   // Get load balancer based on URL id
-  const loadBalancer = id ? (mockLoadBalancersMap[id] || defaultLoadBalancer) : defaultLoadBalancer;
+  const loadBalancer = id ? mockLoadBalancersMap[id] || defaultLoadBalancer : defaultLoadBalancer;
 
   // Update tab label when load balancer name changes
   useEffect(() => {
@@ -214,7 +215,7 @@ export function ComputeAdminLoadBalancerDetailPage() {
   };
 
   // Convert tabs to TabBar format
-  const tabBarTabs = tabs.map(tab => ({
+  const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
     closable: tab.closable,
@@ -224,9 +225,10 @@ export function ComputeAdminLoadBalancerDetailPage() {
   const filteredListeners = useMemo(() => {
     if (!listenerSearchTerm) return mockListeners;
     const query = listenerSearchTerm.toLowerCase();
-    return mockListeners.filter(listener =>
-      listener.name.toLowerCase().includes(query) ||
-      listener.protocol.toLowerCase().includes(query)
+    return mockListeners.filter(
+      (listener) =>
+        listener.name.toLowerCase().includes(query) ||
+        listener.protocol.toLowerCase().includes(query)
     );
   }, [listenerSearchTerm]);
 
@@ -241,10 +243,11 @@ export function ComputeAdminLoadBalancerDetailPage() {
   const filteredPools = useMemo(() => {
     if (!poolSearchTerm) return mockPools;
     const query = poolSearchTerm.toLowerCase();
-    return mockPools.filter(pool =>
-      pool.name.toLowerCase().includes(query) ||
-      pool.protocol.toLowerCase().includes(query) ||
-      pool.algorithm.toLowerCase().includes(query)
+    return mockPools.filter(
+      (pool) =>
+        pool.name.toLowerCase().includes(query) ||
+        pool.protocol.toLowerCase().includes(query) ||
+        pool.algorithm.toLowerCase().includes(query)
     );
   }, [poolSearchTerm]);
 
@@ -316,14 +319,28 @@ export function ComputeAdminLoadBalancerDetailPage() {
       align: 'center',
       render: (_: unknown, row: Listener) => {
         const listenerMenuItems: ContextMenuItem[] = [
-          { id: 'edit', label: 'Edit', icon: <IconEdit size={14} stroke={1.5} />, onClick: () => console.log('Edit listener', row.id) },
-          { id: 'delete', label: 'Delete', status: 'danger', onClick: () => console.log('Delete listener', row.id) },
+          {
+            id: 'edit',
+            label: 'Edit',
+            icon: <IconEdit size={14} stroke={1.5} />,
+            onClick: () => console.log('Edit listener', row.id),
+          },
+          {
+            id: 'delete',
+            label: 'Delete',
+            status: 'danger',
+            onClick: () => console.log('Delete listener', row.id),
+          },
         ];
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={listenerMenuItems} trigger="click">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+                <IconDotsCircleHorizontal
+                  size={16}
+                  stroke={1.5}
+                  className="text-[var(--action-icon-color)]"
+                />
               </button>
             </ContextMenu>
           </div>
@@ -339,9 +356,7 @@ export function ComputeAdminLoadBalancerDetailPage() {
       label: 'Status',
       width: '64px',
       align: 'center',
-      render: (_, row) => (
-        <StatusIndicator status={poolStatusMap[row.status]} layout="icon-only" />
-      ),
+      render: (_, row) => <StatusIndicator status={poolStatusMap[row.status]} layout="icon-only" />,
     },
     {
       key: 'name',
@@ -415,14 +430,28 @@ export function ComputeAdminLoadBalancerDetailPage() {
       align: 'center',
       render: (_: unknown, row: Pool) => {
         const poolMenuItems: ContextMenuItem[] = [
-          { id: 'edit', label: 'Edit', icon: <IconEdit size={14} stroke={1.5} />, onClick: () => console.log('Edit pool', row.id) },
-          { id: 'delete', label: 'Delete', status: 'danger', onClick: () => console.log('Delete pool', row.id) },
+          {
+            id: 'edit',
+            label: 'Edit',
+            icon: <IconEdit size={14} stroke={1.5} />,
+            onClick: () => console.log('Edit pool', row.id),
+          },
+          {
+            id: 'delete',
+            label: 'Delete',
+            status: 'danger',
+            onClick: () => console.log('Delete pool', row.id),
+          },
         ];
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={poolMenuItems} trigger="click">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+                <IconDotsCircleHorizontal
+                  size={16}
+                  stroke={1.5}
+                  className="text-[var(--action-icon-color)]"
+                />
               </button>
             </ContextMenu>
           </div>
@@ -433,8 +462,10 @@ export function ComputeAdminLoadBalancerDetailPage() {
 
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
-      <main className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'}`}>
+      <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
+      <main
+        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'}`}
+      >
         {/* Fixed Header Area */}
         <div className="shrink-0 bg-[var(--color-surface-default)]">
           {/* Tab Bar */}
@@ -507,9 +538,9 @@ export function ComputeAdminLoadBalancerDetailPage() {
                       },
                     ]}
                   >
-                  <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-                    More Actions
-                  </Button>
+                    <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
+                      More Actions
+                    </Button>
                   </ContextMenu>
                 </DetailHeader.Actions>
                 <DetailHeader.InfoGrid>
@@ -549,15 +580,25 @@ export function ComputeAdminLoadBalancerDetailPage() {
                           <SectionCard.Header
                             title="Basic information"
                             actions={
-                              <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+                              <Button
+                                variant="secondary"
+                                size="sm"
+                                leftIcon={<IconEdit size={12} />}
+                              >
                                 Edit
                               </Button>
                             }
                           />
                           <SectionCard.Content>
                             <SectionCard.DataRow label="Name" value={loadBalancer.name} />
-                            <SectionCard.DataRow label="Description" value={loadBalancer.description} />
-                            <SectionCard.DataRow label="Admin state" value={loadBalancer.adminState} />
+                            <SectionCard.DataRow
+                              label="Description"
+                              value={loadBalancer.description}
+                            />
+                            <SectionCard.DataRow
+                              label="Admin state"
+                              value={loadBalancer.adminState}
+                            />
                             <SectionCard.DataRow label="Provider" value={loadBalancer.provider} />
                           </SectionCard.Content>
                         </SectionCard>
@@ -566,7 +607,10 @@ export function ComputeAdminLoadBalancerDetailPage() {
                         <SectionCard>
                           <SectionCard.Header title="Network" />
                           <SectionCard.Content>
-                            <SectionCard.DataRow label="VIP Address" value={loadBalancer.vipAddress} />
+                            <SectionCard.DataRow
+                              label="VIP Address"
+                              value={loadBalancer.vipAddress}
+                            />
                             <div className="flex flex-col gap-3 w-full">
                               <div className="h-px w-full bg-[var(--color-border-subtle)]" />
                               <div className="flex flex-col gap-1.5">
@@ -581,7 +625,9 @@ export function ComputeAdminLoadBalancerDetailPage() {
                                     {loadBalancer.ownedNetwork.name}
                                   </Link>
                                 ) : (
-                                  <span className="text-[12px] leading-4 text-[var(--color-text-default)]">-</span>
+                                  <span className="text-[12px] leading-4 text-[var(--color-text-default)]">
+                                    -
+                                  </span>
                                 )}
                               </div>
                             </div>
@@ -599,7 +645,9 @@ export function ComputeAdminLoadBalancerDetailPage() {
                                     {loadBalancer.subnet.name}
                                   </Link>
                                 ) : (
-                                  <span className="text-[12px] leading-4 text-[var(--color-text-default)]">-</span>
+                                  <span className="text-[12px] leading-4 text-[var(--color-text-default)]">
+                                    -
+                                  </span>
                                 )}
                               </div>
                             </div>
@@ -617,7 +665,9 @@ export function ComputeAdminLoadBalancerDetailPage() {
                                     {loadBalancer.floatingIp.name}
                                   </Link>
                                 ) : (
-                                  <span className="text-[12px] leading-4 text-[var(--color-text-default)]">-</span>
+                                  <span className="text-[12px] leading-4 text-[var(--color-text-default)]">
+                                    -
+                                  </span>
                                 )}
                               </div>
                             </div>
@@ -634,7 +684,11 @@ export function ComputeAdminLoadBalancerDetailPage() {
                           <h3 className="text-[16px] font-semibold text-[var(--color-text-default)]">
                             Listener
                           </h3>
-                          <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            leftIcon={<IconCirclePlus size={12} />}
+                          >
                             Create listener
                           </Button>
                         </div>
@@ -693,7 +747,11 @@ export function ComputeAdminLoadBalancerDetailPage() {
                           <h3 className="text-[16px] font-semibold text-[var(--color-text-default)]">
                             Pools
                           </h3>
-                          <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            leftIcon={<IconCirclePlus size={12} />}
+                          >
                             Create Pool
                           </Button>
                         </div>
@@ -755,4 +813,3 @@ export function ComputeAdminLoadBalancerDetailPage() {
 }
 
 export default ComputeAdminLoadBalancerDetailPage;
-

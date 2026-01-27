@@ -1,11 +1,18 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import SettingsPage from './SettingsPage';
 import { ChatbotPanel } from '@/components/ChatbotPanel';
-import { 
-  IconLayoutDashboard,
-  IconCheck,
-} from '@tabler/icons-react';
-import { Icons, ContextMenu, Modal, Button, NotificationCenter, WindowControls, Tooltip, IconWindowActive, IconWindowMinimized } from '@/design-system';
+import { IconLayoutDashboard, IconCheck } from '@tabler/icons-react';
+import {
+  Icons,
+  ContextMenu,
+  Modal,
+  Button,
+  NotificationCenter,
+  WindowControls,
+  Tooltip,
+  IconWindowActive,
+  IconWindowMinimized,
+} from '@/design-system';
 import { motion, Reorder } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useDarkMode } from '@/hooks/useDarkMode';
@@ -50,11 +57,7 @@ function DesktopIcon({ icon, label, onClick }: DesktopIconProps) {
       aria-label={label}
     >
       <div className="w-20 h-20 flex items-center justify-center rounded-lg">
-        <img 
-          src={icon} 
-          alt={label} 
-          className="w-16 h-16 object-cover object-center"
-        />
+        <img src={icon} alt={label} className="w-16 h-16 object-cover object-center" />
       </div>
       <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-white text-center whitespace-nowrap">
         {label}
@@ -99,20 +102,12 @@ interface DockIconItemProps {
   getContextMenuItems: (app: DockApp) => any[];
 }
 
-function DockIconItem({
-  app,
-  isDragging,
-  onAppClick,
-  getContextMenuItems,
-}: DockIconItemProps) {
+function DockIconItem({ app, isDragging, onAppClick, getContextMenuItems }: DockIconItemProps) {
   const isRunning = app.hasWindows;
   const isActive = app.hasActiveWindow;
 
   return (
-    <ContextMenu
-      trigger="contextmenu"
-      items={getContextMenuItems(app)}
-    >
+    <ContextMenu trigger="contextmenu" items={getContextMenuItems(app)}>
       <Tooltip content={app.name} position="bottom">
         <motion.div
           layoutId={app.id}
@@ -139,9 +134,9 @@ function DockIconItem({
               ${isActive ? 'border-[var(--color-action-primary)]' : ''}
             `}
           >
-            <img 
-              src={app.icon} 
-              alt={app.name} 
+            <img
+              src={app.icon}
+              alt={app.name}
               className="w-full h-full object-cover pointer-events-none"
               draggable={false}
             />
@@ -163,10 +158,10 @@ function DockIcons({
   onReorderApps,
 }: DockIconsProps) {
   const [isDragging, setIsDragging] = useState(false);
-  
+
   // 앱 순서를 로컬 상태로 관리 (Reorder용)
   const [localApps, setLocalApps] = useState(apps);
-  
+
   // apps prop이 변경되면 localApps 동기화
   useEffect(() => {
     setLocalApps(apps);
@@ -174,7 +169,7 @@ function DockIcons({
 
   const handleReorder = (newOrder: DockApp[]) => {
     setLocalApps(newOrder);
-    onReorderApps(newOrder.map(app => app.id));
+    onReorderApps(newOrder.map((app) => app.id));
   };
 
   const getContextMenuItems = (app: DockApp) => {
@@ -182,7 +177,7 @@ function DockIcons({
 
     // Window list
     if (app.windows.length > 0) {
-      app.windows.forEach(window => {
+      app.windows.forEach((window) => {
         // 윈도우 상태에 따른 아이콘 결정
         let windowIcon: React.ReactNode;
         if (window.isMinimized) {
@@ -331,7 +326,13 @@ interface TopBarProps {
   dockIcons?: React.ReactNode;
 }
 
-function DesktopTopBar({ onChatbotToggle, onOpenSettings, onNotificationToggle, notificationButtonRef, dockIcons }: TopBarProps) {
+function DesktopTopBar({
+  onChatbotToggle,
+  onOpenSettings,
+  onNotificationToggle,
+  notificationButtonRef,
+  dockIcons,
+}: TopBarProps) {
   const [selectedDomain, setSelectedDomain] = useState('domain-a');
   const { theme, setTheme } = useDarkMode();
   const [language, setLanguage] = useState(() => {
@@ -375,7 +376,7 @@ function DesktopTopBar({ onChatbotToggle, onOpenSettings, onNotificationToggle, 
   const handleLanguageChange = (lang: string) => {
     // Skip confirmation if selecting the same value
     if (lang === language) return;
-    
+
     const labels: Record<string, string> = { en: 'English', ko: 'Korean' };
     setPendingLanguage(lang);
     setShowLanguageConfirmModal(true);
@@ -383,12 +384,12 @@ function DesktopTopBar({ onChatbotToggle, onOpenSettings, onNotificationToggle, 
 
   const confirmLanguageChange = () => {
     if (!pendingLanguage) return;
-    
+
     setLanguage(pendingLanguage);
     localStorage.setItem('tds-language', pendingLanguage);
     // Settings 페이지와 동기화를 위한 커스텀 이벤트 발생
     window.dispatchEvent(new CustomEvent('language-changed'));
-    
+
     setShowLanguageConfirmModal(false);
     setPendingLanguage(null);
   };
@@ -452,7 +453,7 @@ function DesktopTopBar({ onChatbotToggle, onOpenSettings, onNotificationToggle, 
       <div className="flex items-center gap-8 h-full">
         {/* THAKI Cloud Logo */}
         <img src={ThakiLogoLight} alt="THAKI Cloud" className="h-5" />
-        
+
         {/* Dock Icons */}
         {dockIcons}
       </div>
@@ -467,14 +468,10 @@ function DesktopTopBar({ onChatbotToggle, onOpenSettings, onNotificationToggle, 
           size="sm"
           width="sm"
         />
-        
+
         {/* Right Icons */}
         <div className="flex items-center gap-3">
-          <ContextMenu
-            items={contextMenuItems}
-            trigger="click"
-            minTop={52}
-          >
+          <ContextMenu items={contextMenuItems} trigger="click" minTop={52}>
             <button className="w-5 h-5 flex items-center justify-center text-[#0f172a]/60 hover:text-[#0f172a] cursor-pointer transition-colors">
               <Icons.Finetuning size={20} stroke={1.5} />
             </button>
@@ -507,7 +504,7 @@ function DesktopTopBar({ onChatbotToggle, onOpenSettings, onNotificationToggle, 
               <Icons.UserCircle size={20} stroke={1.5} />
             </button>
           </ContextMenu>
-          <button 
+          <button
             ref={notificationButtonRef}
             onClick={onNotificationToggle}
             className="w-5 h-5 flex items-center justify-center text-[#0f172a]/60 hover:text-[#0f172a] cursor-pointer transition-colors"
@@ -518,16 +515,12 @@ function DesktopTopBar({ onChatbotToggle, onOpenSettings, onNotificationToggle, 
 
         {/* Separator + Chatbot */}
         <div className="flex items-center border-l border-[#e2e8f0] px-[10px]">
-          <button 
+          <button
             className="w-8 h-8 flex items-center justify-center cursor-pointer transition-opacity hover:opacity-80"
             onClick={onChatbotToggle}
             title="AI Chatbot"
           >
-            <img 
-              src={appIconAIChat} 
-              alt="AI Chatbot" 
-              className="w-8 h-8 object-contain" 
-            />
+            <img src={appIconAIChat} alt="AI Chatbot" className="w-8 h-8 object-contain" />
           </button>
         </div>
       </div>
@@ -540,12 +533,19 @@ function DesktopTopBar({ onChatbotToggle, onOpenSettings, onNotificationToggle, 
       >
         <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)] mb-6">
           {pendingLanguage && (
-            <>Are you sure you want to change the language to <strong>{pendingLanguage === 'en' ? 'English' : 'Korean'}</strong>?</>
+            <>
+              Are you sure you want to change the language to{' '}
+              <strong>{pendingLanguage === 'en' ? 'English' : 'Korean'}</strong>?
+            </>
           )}
         </p>
         <div className="flex justify-end gap-3">
-          <Button variant="secondary" onClick={cancelLanguageChange}>Cancel</Button>
-          <Button variant="primary" onClick={confirmLanguageChange}>Apply</Button>
+          <Button variant="secondary" onClick={cancelLanguageChange}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={confirmLanguageChange}>
+            Apply
+          </Button>
         </div>
       </Modal>
     </div>
@@ -564,38 +564,39 @@ interface AdminPanelProps {
 
 function AdminCenterPanel({ isOpen, onClose }: AdminPanelProps) {
   if (!isOpen) return null;
-  
+
   return (
     <>
       {/* Overlay backdrop */}
-      <div 
-        className="fixed inset-0 z-[500] bg-black/40" 
-        onClick={onClose}
-      />
+      <div className="fixed inset-0 z-[500] bg-black/40" onClick={onClose} />
       {/* Panel - centered on screen */}
-      <div 
-        className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white/15 backdrop-blur-md rounded-2xl px-10 py-6 flex gap-12 items-center z-[501] border border-white/30"
-      >
-        <button 
+      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white/15 backdrop-blur-md rounded-2xl px-10 py-6 flex gap-12 items-center z-[501] border border-white/30">
+        <button
           className="flex flex-col items-center gap-2 w-20 cursor-pointer transition-transform hover:-translate-y-0.5 bg-transparent border-none p-0"
           onClick={() => console.log('Storage Admin clicked')}
         >
           <img src={imgStorageAdmin} alt="Storage Admin" className="w-16 h-16 object-cover" />
-          <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-white text-center">Storage Admin</span>
+          <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-white text-center">
+            Storage Admin
+          </span>
         </button>
-        <button 
+        <button
           className="flex flex-col items-center gap-2 w-20 cursor-pointer transition-transform hover:-translate-y-0.5 bg-transparent border-none p-0"
           onClick={() => console.log('Compute Admin clicked')}
         >
           <img src={imgComputeAdmin} alt="Compute Admin" className="w-16 h-16 object-cover" />
-          <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-white text-center">Compute Admin</span>
+          <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-white text-center">
+            Compute Admin
+          </span>
         </button>
-        <button 
+        <button
           className="flex flex-col items-center gap-2 w-20 cursor-pointer transition-transform hover:-translate-y-0.5 bg-transparent border-none p-0"
           onClick={() => console.log('Cloud Builder clicked')}
         >
           <img src={imgCloud} alt="Cloud Builder" className="w-16 h-16 object-cover" />
-          <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-white text-center">Cloud Builder</span>
+          <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-white text-center">
+            Cloud Builder
+          </span>
         </button>
       </div>
     </>
@@ -647,7 +648,18 @@ interface PageWindowProps {
   zIndex: number;
 }
 
-function PageWindow({ windowId, isOpen, isMinimized, isActive, onClose, onMinimize, onFocus, title, children, zIndex }: PageWindowProps) {
+function PageWindow({
+  windowId,
+  isOpen,
+  isMinimized,
+  isActive,
+  onClose,
+  onMinimize,
+  onFocus,
+  title,
+  children,
+  zIndex,
+}: PageWindowProps) {
   const [isMaximized, setIsMaximized] = useState(false);
   const [position, setPosition] = useState({ x: 100, y: 100 });
   const [size, setSize] = useState({ width: 1200, height: 800 });
@@ -693,10 +705,7 @@ function PageWindow({ windowId, isOpen, isMinimized, isActive, onClose, onMinimi
       };
 
   return (
-    <div 
-      className="fixed inset-0 pointer-events-none"
-      style={{ zIndex: 2000 + zIndex }}
-    >
+    <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 2000 + zIndex }}>
       <div
         ref={windowRef}
         className={`absolute bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg shadow-2xl flex flex-col overflow-hidden pointer-events-auto ${
@@ -724,9 +733,7 @@ function PageWindow({ windowId, isOpen, isMinimized, isActive, onClose, onMinimi
         </div>
 
         {/* Window Content */}
-        <div className="flex-1 overflow-hidden">
-          {children}
-        </div>
+        <div className="flex-1 overflow-hidden">{children}</div>
       </div>
     </div>
   );
@@ -734,7 +741,9 @@ function PageWindow({ windowId, isOpen, isMinimized, isActive, onClose, onMinimi
 
 export function DesktopPage() {
   const [showSettings, setShowSettings] = useState(false);
-  const [settingsTab, setSettingsTab] = useState<'general' | 'account' | 'notifications' | 'information'>('general');
+  const [settingsTab, setSettingsTab] = useState<
+    'general' | 'account' | 'notifications' | 'information'
+  >('general');
   const [showChatbot, setShowChatbot] = useState(false);
   const [showAdminCenter, setShowAdminCenter] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
@@ -744,123 +753,185 @@ export function DesktopPage() {
   // Window Management System
   // Dock menu 시뮬레이션 모드 - 실제 앱 실행 없이 인터랙션만 테스트
   const isSimulationMode = true;
-  
+
   // Mock up 초기 상태: Compute, Storage, Container는 실행중
   // Compute 앱의 윈도우들: Instances (Focus in), Images (Focus out), Dashboard (Minimized)
   const [windows, setWindows] = useState<WindowState[]>(() => {
     const computeWindows: WindowState[] = [
-      { id: 'compute-instances', appId: 'compute', title: 'Instances', isMinimized: false, isActive: true, zIndex: 3, createdAt: Date.now() - 3000 },
-      { id: 'compute-images', appId: 'compute', title: 'Images', isMinimized: false, isActive: false, zIndex: 2, createdAt: Date.now() - 2000 },
-      { id: 'compute-dashboard', appId: 'compute', title: 'Dashboard', isMinimized: true, isActive: false, zIndex: 1, createdAt: Date.now() - 1000 },
+      {
+        id: 'compute-instances',
+        appId: 'compute',
+        title: 'Instances',
+        isMinimized: false,
+        isActive: true,
+        zIndex: 3,
+        createdAt: Date.now() - 3000,
+      },
+      {
+        id: 'compute-images',
+        appId: 'compute',
+        title: 'Images',
+        isMinimized: false,
+        isActive: false,
+        zIndex: 2,
+        createdAt: Date.now() - 2000,
+      },
+      {
+        id: 'compute-dashboard',
+        appId: 'compute',
+        title: 'Dashboard',
+        isMinimized: true,
+        isActive: false,
+        zIndex: 1,
+        createdAt: Date.now() - 1000,
+      },
     ];
-    const storageWindow: WindowState = { id: 'storage-1', appId: 'storage', title: 'Storage', isMinimized: false, isActive: false, zIndex: 1, createdAt: Date.now() - 5000 };
-    const containerWindow: WindowState = { id: 'container-1', appId: 'container', title: 'Container', isMinimized: false, isActive: false, zIndex: 1, createdAt: Date.now() - 4000 };
+    const storageWindow: WindowState = {
+      id: 'storage-1',
+      appId: 'storage',
+      title: 'Storage',
+      isMinimized: false,
+      isActive: false,
+      zIndex: 1,
+      createdAt: Date.now() - 5000,
+    };
+    const containerWindow: WindowState = {
+      id: 'container-1',
+      appId: 'container',
+      title: 'Container',
+      isMinimized: false,
+      isActive: false,
+      zIndex: 1,
+      createdAt: Date.now() - 4000,
+    };
     return [...computeWindows, storageWindow, containerWindow];
   });
   const [nextZIndex, setNextZIndex] = useState(10);
-  const [appConfigs] = useState<Record<AppId, { name: string; icon: string; component: React.ReactNode }>>({
-    'compute': { name: 'Compute', icon: imgCompute, component: <ComputeHomePage /> },
-    'storage': { name: 'Storage', icon: imgStorage, component: <StorageHomePage /> },
-    'container': { name: 'Container', icon: imgContainer, component: <ContainerDashboardPage /> },
-    'agent': { name: 'Agent Ops', icon: imgAgent, component: <HomePage /> },
+  const [appConfigs] = useState<
+    Record<AppId, { name: string; icon: string; component: React.ReactNode }>
+  >({
+    compute: { name: 'Compute', icon: imgCompute, component: <ComputeHomePage /> },
+    storage: { name: 'Storage', icon: imgStorage, component: <StorageHomePage /> },
+    container: { name: 'Container', icon: imgContainer, component: <ContainerDashboardPage /> },
+    agent: { name: 'Agent Ops', icon: imgAgent, component: <HomePage /> },
     'ai-platform': { name: 'AI Platform', icon: imgAi, component: null },
-    'iam': { name: 'IAM', icon: imgIam, component: null },
-    'settings': { name: 'Settings', icon: imgSettings, component: null },
+    iam: { name: 'IAM', icon: imgIam, component: null },
+    settings: { name: 'Settings', icon: imgSettings, component: null },
   });
   // Mock up: Compute, Storage, Container는 실행중, AI Platform, Agent Ops, Settings는 Pin만 되어있음
-  const [pinnedApps, setPinnedApps] = useState<Set<AppId>>(new Set(['ai-platform', 'agent', 'settings']));
-  const [dockAppOrder, setDockAppOrder] = useState<AppId[]>(['compute', 'storage', 'container', 'ai-platform', 'agent', 'settings']);
+  const [pinnedApps, setPinnedApps] = useState<Set<AppId>>(
+    new Set(['ai-platform', 'agent', 'settings'])
+  );
+  const [dockAppOrder, setDockAppOrder] = useState<AppId[]>([
+    'compute',
+    'storage',
+    'container',
+    'ai-platform',
+    'agent',
+    'settings',
+  ]);
 
   // Window management functions
-  const createWindow = useCallback((appId: AppId) => {
-    const config = appConfigs[appId];
-    if (!config) return;
-    
-    // 시뮬레이션 모드: 실제 UI 윈도우 없이 상태만 업데이트
-    const newWindow: WindowState = {
-      id: `${appId}-${Date.now()}`,
-      appId,
-      title: config.name,
-      isMinimized: false,
-      isActive: true,
-      zIndex: nextZIndex,
-      createdAt: Date.now(),
-    };
+  const createWindow = useCallback(
+    (appId: AppId) => {
+      const config = appConfigs[appId];
+      if (!config) return;
 
-    setWindows(prev => prev.map(w => ({ ...w, isActive: false })).concat(newWindow));
-    setNextZIndex(prev => prev + 1);
-    
-    if (isSimulationMode) {
-      console.log(`[Simulation] New window created for ${appId}: ${newWindow.title}`);
-    }
-  }, [appConfigs, nextZIndex, isSimulationMode]);
+      // 시뮬레이션 모드: 실제 UI 윈도우 없이 상태만 업데이트
+      const newWindow: WindowState = {
+        id: `${appId}-${Date.now()}`,
+        appId,
+        title: config.name,
+        isMinimized: false,
+        isActive: true,
+        zIndex: nextZIndex,
+        createdAt: Date.now(),
+      };
+
+      setWindows((prev) => prev.map((w) => ({ ...w, isActive: false })).concat(newWindow));
+      setNextZIndex((prev) => prev + 1);
+
+      if (isSimulationMode) {
+        console.log(`[Simulation] New window created for ${appId}: ${newWindow.title}`);
+      }
+    },
+    [appConfigs, nextZIndex, isSimulationMode]
+  );
 
   const closeWindow = useCallback((windowId: string) => {
-    setWindows(prev => prev.filter(w => w.id !== windowId));
+    setWindows((prev) => prev.filter((w) => w.id !== windowId));
   }, []);
 
   const minimizeWindow = useCallback((windowId: string) => {
-    setWindows(prev => prev.map(w => 
-      w.id === windowId ? { ...w, isMinimized: true, isActive: false } : w
-    ));
+    setWindows((prev) =>
+      prev.map((w) => (w.id === windowId ? { ...w, isMinimized: true, isActive: false } : w))
+    );
   }, []);
 
-  const focusWindow = useCallback((windowId: string) => {
-    setWindows(prev => {
-      const targetWindow = prev.find(w => w.id === windowId);
-      if (!targetWindow) return prev;
+  const focusWindow = useCallback(
+    (windowId: string) => {
+      setWindows((prev) => {
+        const targetWindow = prev.find((w) => w.id === windowId);
+        if (!targetWindow) return prev;
 
-      return prev.map(w => ({
-        ...w,
-        isActive: w.id === windowId,
-        isMinimized: w.id === windowId ? false : w.isMinimized,
-        zIndex: w.id === windowId ? nextZIndex : w.zIndex,
-      }));
-    });
-    setNextZIndex(prev => prev + 1);
-  }, [nextZIndex]);
+        return prev.map((w) => ({
+          ...w,
+          isActive: w.id === windowId,
+          isMinimized: w.id === windowId ? false : w.isMinimized,
+          zIndex: w.id === windowId ? nextZIndex : w.zIndex,
+        }));
+      });
+      setNextZIndex((prev) => prev + 1);
+    },
+    [nextZIndex]
+  );
 
   // 모든 윈도우의 포커스를 해제 (Focus out)
   const blurAllWindows = useCallback(() => {
-    setWindows(prev => prev.map(w => ({ ...w, isActive: false })));
+    setWindows((prev) => prev.map((w) => ({ ...w, isActive: false })));
   }, []);
 
-  const focusApp = useCallback((appId: AppId) => {
-    // 시뮬레이션 모드: 왼쪽 클릭 시 실제 앱 실행하지 않음
-    // 우클릭 ContextMenu만 테스트하는 용도
-    if (isSimulationMode) {
-      console.log(`[Simulation] Left-click on ${appId} - no action (use right-click for context menu)`);
-      return;
-    }
-    
-    const appWindows = windows.filter(w => w.appId === appId);
-    
-    // 1) 앱이 실행되고 있지 않은 경우 → 실행 (새 창)
-    if (appWindows.length === 0) {
-      createWindow(appId);
-      return;
-    }
+  const focusApp = useCallback(
+    (appId: AppId) => {
+      // 시뮬레이션 모드: 왼쪽 클릭 시 실제 앱 실행하지 않음
+      // 우클릭 ContextMenu만 테스트하는 용도
+      if (isSimulationMode) {
+        console.log(
+          `[Simulation] Left-click on ${appId} - no action (use right-click for context menu)`
+        );
+        return;
+      }
 
-    // 2) 앱이 실행중이나 Focus Out된 경우 → 가장 마지막에 Focus In 되었던 윈도우로 다시 Focus In
-    const activeWindows = appWindows.filter(w => !w.isMinimized);
-    if (activeWindows.length > 0) {
-      // zIndex가 가장 높은 윈도우 (가장 최근에 포커스된 윈도우)
-      const mostRecent = activeWindows.sort((a, b) => b.zIndex - a.zIndex)[0];
-      focusWindow(mostRecent.id);
-      return;
-    }
+      const appWindows = windows.filter((w) => w.appId === appId);
 
-    // 3) 앱이 실행중이나 모두 최소화된 경우 → 가장 나중에 최소화된 윈도우를 이전 크기로 복원(Restore)
-    const minimizedWindows = appWindows.filter(w => w.isMinimized);
-    if (minimizedWindows.length > 0) {
-      // 가장 나중에 최소화된 윈도우 (zIndex가 가장 높은 것)
-      const lastMinimized = minimizedWindows.sort((a, b) => b.zIndex - a.zIndex)[0];
-      focusWindow(lastMinimized.id);
-    }
-  }, [windows, createWindow, focusWindow, isSimulationMode]);
+      // 1) 앱이 실행되고 있지 않은 경우 → 실행 (새 창)
+      if (appWindows.length === 0) {
+        createWindow(appId);
+        return;
+      }
+
+      // 2) 앱이 실행중이나 Focus Out된 경우 → 가장 마지막에 Focus In 되었던 윈도우로 다시 Focus In
+      const activeWindows = appWindows.filter((w) => !w.isMinimized);
+      if (activeWindows.length > 0) {
+        // zIndex가 가장 높은 윈도우 (가장 최근에 포커스된 윈도우)
+        const mostRecent = activeWindows.sort((a, b) => b.zIndex - a.zIndex)[0];
+        focusWindow(mostRecent.id);
+        return;
+      }
+
+      // 3) 앱이 실행중이나 모두 최소화된 경우 → 가장 나중에 최소화된 윈도우를 이전 크기로 복원(Restore)
+      const minimizedWindows = appWindows.filter((w) => w.isMinimized);
+      if (minimizedWindows.length > 0) {
+        // 가장 나중에 최소화된 윈도우 (zIndex가 가장 높은 것)
+        const lastMinimized = minimizedWindows.sort((a, b) => b.zIndex - a.zIndex)[0];
+        focusWindow(lastMinimized.id);
+      }
+    },
+    [windows, createWindow, focusWindow, isSimulationMode]
+  );
 
   const togglePinApp = useCallback((appId: AppId) => {
-    setPinnedApps(prev => {
+    setPinnedApps((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(appId)) {
         newSet.delete(appId);
@@ -900,9 +971,7 @@ export function DesktopPage() {
   ]);
 
   const handleMarkAsRead = (id: string) => {
-    setNotifications((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, isRead: true } : n))
-    );
+    setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, isRead: true } : n)));
   };
 
   const handleMarkAllAsRead = () => {
@@ -910,20 +979,20 @@ export function DesktopPage() {
   };
 
   // 데스크탑 배경 클릭 시 모든 윈도우 포커스 해제
-  const handleDesktopClick = useCallback((e: React.MouseEvent) => {
-    // 클릭한 대상이 현재 요소 자체인 경우에만 blur (자식 요소 클릭은 무시)
-    if (e.target === e.currentTarget) {
-      blurAllWindows();
-    }
-  }, [blurAllWindows]);
+  const handleDesktopClick = useCallback(
+    (e: React.MouseEvent) => {
+      // 클릭한 대상이 현재 요소 자체인 경우에만 blur (자식 요소 클릭은 무시)
+      if (e.target === e.currentTarget) {
+        blurAllWindows();
+      }
+    },
+    [blurAllWindows]
+  );
 
   return (
-    <div 
-      className="fixed inset-0 bg-[#353535] overflow-hidden"
-      onClick={handleDesktopClick}
-    >
+    <div className="fixed inset-0 bg-[#353535] overflow-hidden" onClick={handleDesktopClick}>
       {/* Top Bar */}
-      <DesktopTopBar 
+      <DesktopTopBar
         onChatbotToggle={() => setShowChatbot(!showChatbot)}
         onOpenSettings={(tab) => {
           if (tab) {
@@ -935,14 +1004,14 @@ export function DesktopPage() {
         notificationButtonRef={notificationButtonRef}
         dockIcons={
           <DockIcons
-            apps={dockAppOrder.map(appId => ({
+            apps={dockAppOrder.map((appId) => ({
               id: appId,
               name: appConfigs[appId].name,
               icon: appConfigs[appId].icon,
               isPinned: pinnedApps.has(appId),
-              hasWindows: windows.some(w => w.appId === appId && !w.isMinimized),
-              hasActiveWindow: windows.some(w => w.appId === appId && w.isActive),
-              windows: windows.filter(w => w.appId === appId),
+              hasWindows: windows.some((w) => w.appId === appId && !w.isMinimized),
+              hasActiveWindow: windows.some((w) => w.appId === appId && w.isActive),
+              windows: windows.filter((w) => w.appId === appId),
             }))}
             onAppClick={focusApp}
             onAppRightClick={(appId) => {
@@ -968,7 +1037,7 @@ export function DesktopPage() {
               if (isSimulationMode) {
                 console.log(`[Simulation] Quit app: ${appId}`);
               }
-              setWindows(prev => prev.filter(w => w.appId !== appId));
+              setWindows((prev) => prev.filter((w) => w.appId !== appId));
             }}
             onReorderApps={setDockAppOrder}
           />
@@ -980,126 +1049,115 @@ export function DesktopPage() {
         className="absolute top-[110px] left-[44px] flex flex-row items-start gap-[72px]"
         onClick={handleDesktopClick}
       >
-        <DesktopIcon 
+        <DesktopIcon
           icon={imgIam}
           label="IAM"
           onClick={() => {
             console.log('IAM clicked - not implemented yet');
           }}
         />
-        <DesktopIcon 
+        <DesktopIcon
           icon={imgCompute}
           label="Compute"
           onClick={() => {
             console.log('Compute clicked');
           }}
         />
-        <DesktopIcon 
+        <DesktopIcon
           icon={imgStorage}
           label="Storage"
           onClick={() => {
             console.log('Storage clicked');
           }}
         />
-        <DesktopIcon 
+        <DesktopIcon
           icon={imgContainer}
           label="Container"
           onClick={() => {
             console.log('Container clicked');
           }}
         />
-        <DesktopIcon 
+        <DesktopIcon
           icon={imgAi}
           label="AI Platform"
           onClick={() => {
             console.log('AI Platform clicked - not implemented yet');
           }}
         />
-        <DesktopIcon
-          icon={imgAgent}
-          label="Agent Ops"
-          onClick={() => setShowAgent(true)}
-        />
-        <DesktopIcon 
-          icon={imgSettings}
-          label="Settings"
-          onClick={() => setShowSettings(true)}
-        />
-        <AdminCenterIcon 
+        <DesktopIcon icon={imgAgent} label="Agent Ops" onClick={() => setShowAgent(true)} />
+        <DesktopIcon icon={imgSettings} label="Settings" onClick={() => setShowSettings(true)} />
+        <AdminCenterIcon
           iconRef={adminCenterIconRef}
           onClick={() => setShowAdminCenter(!showAdminCenter)}
         />
       </div>
 
       {/* Admin center Panel */}
-      <AdminCenterPanel 
+      <AdminCenterPanel
         isOpen={showAdminCenter}
         onClose={() => setShowAdminCenter(false)}
         anchorRef={adminCenterIconRef}
       />
 
       {/* Settings Window */}
-      <SettingsPage 
-        isOpen={showSettings} 
+      <SettingsPage
+        isOpen={showSettings}
         onClose={() => setShowSettings(false)}
         initialTab={settingsTab}
       />
 
       {/* Chatbot Panel */}
-      <ChatbotPanel 
-        isOpen={showChatbot} 
-        onClose={() => setShowChatbot(false)} 
-      />
+      <ChatbotPanel isOpen={showChatbot} onClose={() => setShowChatbot(false)} />
 
       {/* Notification center */}
-      {showNotifications && notificationButtonRef.current && (() => {
-        return (
-          <>
-            {/* Click outside to close */}
-            <div 
-              className="fixed inset-0 z-[6000]" 
-              onClick={() => setShowNotifications(false)}
-            />
-            <div
-              className="fixed z-[6001] top-[52px] right-0"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <NotificationCenter
-                notifications={notifications}
-                onMarkAsRead={handleMarkAsRead}
-                onMarkAllAsRead={handleMarkAllAsRead}
-                onClose={() => setShowNotifications(false)}
-              />
-            </div>
-          </>
-        );
-      })()}
+      {showNotifications &&
+        notificationButtonRef.current &&
+        (() => {
+          return (
+            <>
+              {/* Click outside to close */}
+              <div className="fixed inset-0 z-[6000]" onClick={() => setShowNotifications(false)} />
+              <div
+                className="fixed z-[6001] top-[52px] right-0"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <NotificationCenter
+                  notifications={notifications}
+                  onMarkAsRead={handleMarkAsRead}
+                  onMarkAllAsRead={handleMarkAllAsRead}
+                  onClose={() => setShowNotifications(false)}
+                />
+              </div>
+            </>
+          );
+        })()}
 
       {/* App Windows - 시뮬레이션 모드에서는 실제 윈도우 UI를 표시하지 않음 */}
-      {!isSimulationMode && windows.map((window) => {
-        const config = appConfigs[window.appId];
-        if (!config || !config.component) return null;
+      {!isSimulationMode &&
+        windows.map((window) => {
+          const config = appConfigs[window.appId];
+          if (!config || !config.component) return null;
 
-        return (
-          <PageWindow
-            key={window.id}
-            windowId={window.id}
-            isOpen={true}
-            isMinimized={window.isMinimized}
-            isActive={window.isActive}
-            onClose={() => closeWindow(window.id)}
-            onMinimize={() => minimizeWindow(window.id)}
-            onFocus={() => focusWindow(window.id)}
-            title={window.title}
-            zIndex={window.zIndex}
-          >
-            {config.component}
-          </PageWindow>
-        );
-      })}
+          return (
+            <PageWindow
+              key={window.id}
+              windowId={window.id}
+              isOpen={true}
+              isMinimized={window.isMinimized}
+              isActive={window.isActive}
+              onClose={() => closeWindow(window.id)}
+              onMinimize={() => minimizeWindow(window.id)}
+              onFocus={() => focusWindow(window.id)}
+              title={window.title}
+              zIndex={window.zIndex}
+            >
+              {config.component}
+            </PageWindow>
+          );
+        })}
 
       {/* Main Page Navigation Button - Bottom Left */}
-      <Link 
+      <Link
         to="/"
         className="absolute bottom-6 left-6 flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-lg text-white text-sm font-medium transition-all hover:-translate-y-0.5"
       >

@@ -26,7 +26,8 @@ export default function IAMSessionPoliciesPage() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeTab, setActiveTab] = useState('general');
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
+    useTabs();
 
   // Session policy state
   const [sessionIdleTimeout, setSessionIdleTimeout] = useState(30); // Minutes
@@ -43,17 +44,14 @@ export default function IAMSessionPoliciesPage() {
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
   // Tab Bar tabs
-  const tabBarTabs = tabs.map(tab => ({
+  const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
     closable: tab.closable ?? true,
   }));
 
   // Breadcrumb items
-  const breadcrumbItems = [
-    { label: 'IAM', href: '/iam' },
-    { label: 'Session policies' },
-  ];
+  const breadcrumbItems = [{ label: 'IAM', href: '/iam' }, { label: 'Session policies' }];
 
   // Handle reset to default
   const handleResetToDefault = () => {
@@ -83,10 +81,7 @@ export default function IAMSessionPoliciesPage() {
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       {/* Sidebar */}
-      <IAMSidebar
-        isOpen={sidebarOpen}
-        onToggle={() => setSidebarOpen(!sidebarOpen)}
-      />
+      <IAMSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
 
       {/* Main Content */}
       <main
@@ -183,7 +178,8 @@ export default function IAMSessionPoliciesPage() {
                                 <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                               </HStack>
                               <p className="text-[12px] leading-4 text-[var(--color-text-subtle)]">
-                                Defines the absolute maximum duration a session can remain active, regardless of user activity.
+                                Defines the absolute maximum duration a session can remain active,
+                                regardless of user activity.
                               </p>
                             </VStack>
                             <VStack gap={2}>
@@ -255,7 +251,8 @@ export default function IAMSessionPoliciesPage() {
                                 <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                               </HStack>
                               <p className="text-[12px] leading-4 text-[var(--color-text-subtle)]">
-                                Defines how long additional authentication steps during login remain valid.
+                                Defines how long additional authentication steps during login remain
+                                valid.
                               </p>
                             </VStack>
                             <VStack gap={2}>
@@ -311,4 +308,3 @@ export default function IAMSessionPoliciesPage() {
     </div>
   );
 }
-

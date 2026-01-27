@@ -47,7 +47,7 @@ interface StatusCardProps {
 function StatusCard({ label, count, status }: StatusCardProps) {
   let bgColor = 'bg-[var(--color-surface-subtle,#f8fafc)]';
   let iconBg = 'bg-[var(--color-text-muted,#475569)]';
-  
+
   if (status === 'completed') {
     bgColor = 'bg-[var(--color-state-success-bg,#f0fdf4)]';
     iconBg = 'bg-[var(--color-success,#4ade80)]';
@@ -61,30 +61,22 @@ function StatusCard({ label, count, status }: StatusCardProps) {
 
   const getStatusIcon = () => {
     if (status === 'completed') {
-      return (
-        <IconTarget size={12} stroke={1} className="text-white" />
-      );
+      return <IconTarget size={12} stroke={1} className="text-white" />;
     } else if (status === 'error') {
-      return (
-        <IconAlertTriangle size={12} stroke={1} className="text-white" />
-      );
+      return <IconAlertTriangle size={12} stroke={1} className="text-white" />;
     } else if (status === 'processing') {
-      return (
-        <IconLoader2 size={12} stroke={1} className="text-white animate-spin" />
-      );
+      return <IconLoader2 size={12} stroke={1} className="text-white animate-spin" />;
     } else if (status === 'pending') {
-      return (
-        <IconRefresh size={12} stroke={1} className="text-white" />
-      );
+      return <IconRefresh size={12} stroke={1} className="text-white" />;
     } else if (status === 'draft') {
-      return (
-        <IconPencil size={12} stroke={1} className="text-white" />
-      );
+      return <IconPencil size={12} stroke={1} className="text-white" />;
     }
   };
 
   return (
-    <div className={`${bgColor} flex flex-[1_0_0] items-center justify-between min-h-px min-w-px px-4 py-3 relative rounded-lg shrink-0`}>
+    <div
+      className={`${bgColor} flex flex-[1_0_0] items-center justify-between min-h-px min-w-px px-4 py-3 relative rounded-lg shrink-0`}
+    >
       <div className="flex flex-col gap-1.5 items-start leading-4 not-italic relative shrink-0">
         <p className="font-medium text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
           {label}
@@ -93,7 +85,9 @@ function StatusCard({ label, count, status }: StatusCardProps) {
           {count}
         </p>
       </div>
-      <div className={`${iconBg} flex gap-0 items-center justify-center p-1 relative rounded-2xl shrink-0 size-6`}>
+      <div
+        className={`${iconBg} flex gap-0 items-center justify-center p-1 relative rounded-2xl shrink-0 size-6`}
+      >
         {getStatusIcon()}
       </div>
     </div>
@@ -115,11 +109,7 @@ export function AgentSidebar() {
         to="/"
         className="border-b border-[var(--color-border-default)] flex h-[36px] items-center justify-center w-full hover:bg-[var(--color-surface-muted)] transition-colors shrink-0"
       >
-        <img 
-          src={ThakiSymbol} 
-          alt="THAKI" 
-          className="h-[18px] w-[18px]"
-        />
+        <img src={ThakiSymbol} alt="THAKI" className="h-[18px] w-[18px]" />
       </Link>
 
       {/* Menu Items - Project Selector and Navigation */}
@@ -134,104 +124,120 @@ export function AgentSidebar() {
           />
         </div>
 
-          {/* Home */}
-          <Tooltip content="Home" position="right">
-            <Link
-              to="/agent"
-              className={`flex items-center justify-center size-[38px] rounded-lg transition-colors shrink-0 ${
-                location.pathname === '/agent' 
-                  ? 'bg-[var(--color-info-weak-bg,#eff6ff)]' 
-                  : 'bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-muted)]'
-              }`}
-            >
-              <IconHome 
-                size={20} 
-                stroke={1.5} 
-                className={location.pathname === '/agent' ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-muted)]'} 
-              />
-            </Link>
-          </Tooltip>
-
-          {/* Chat */}
-          <Tooltip content="Chat" position="right">
-            <Link
-              to="/chat"
+        {/* Home */}
+        <Tooltip content="Home" position="right">
+          <Link
+            to="/agent"
             className={`flex items-center justify-center size-[38px] rounded-lg transition-colors shrink-0 ${
-                location.pathname === '/chat' 
-                  ? 'bg-[var(--color-info-weak-bg,#eff6ff)]' 
-                  : 'bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-muted)]'
-              }`}
-            >
-              <IconMessage 
-                size={20} 
-                stroke={1.5} 
-                className={location.pathname === '/chat' ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-muted)]'} 
-              />
-            </Link>
-          </Tooltip>
+              location.pathname === '/agent'
+                ? 'bg-[var(--color-info-weak-bg,#eff6ff)]'
+                : 'bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-muted)]'
+            }`}
+          >
+            <IconHome
+              size={20}
+              stroke={1.5}
+              className={
+                location.pathname === '/agent'
+                  ? 'text-[var(--color-action-primary)]'
+                  : 'text-[var(--color-text-muted)]'
+              }
+            />
+          </Link>
+        </Tooltip>
 
-          {/* Robot */}
-          <Tooltip content="Agent" position="right">
-            <Link
+        {/* Chat */}
+        <Tooltip content="Chat" position="right">
+          <Link
+            to="/chat"
+            className={`flex items-center justify-center size-[38px] rounded-lg transition-colors shrink-0 ${
+              location.pathname === '/chat'
+                ? 'bg-[var(--color-info-weak-bg,#eff6ff)]'
+                : 'bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-muted)]'
+            }`}
+          >
+            <IconMessage
+              size={20}
+              stroke={1.5}
+              className={
+                location.pathname === '/chat'
+                  ? 'text-[var(--color-action-primary)]'
+                  : 'text-[var(--color-text-muted)]'
+              }
+            />
+          </Link>
+        </Tooltip>
+
+        {/* Robot */}
+        <Tooltip content="Agent" position="right">
+          <Link
             to="/agent/list"
             className={`flex items-center justify-center size-[38px] rounded-lg transition-colors shrink-0 ${
-              location.pathname === '/agent/list' || location.pathname.startsWith('/agent/list') || location.pathname.startsWith('/agent/create')
-                  ? 'bg-[var(--color-info-weak-bg,#eff6ff)]' 
-                  : 'bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-muted)]'
-              }`}
-            >
-              <IconRobot 
-                size={20} 
-                stroke={1.5} 
-              className={location.pathname === '/agent/list' || location.pathname.startsWith('/agent/list') || location.pathname.startsWith('/agent/create') ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-muted)]'} 
-              />
-            </Link>
-          </Tooltip>
+              location.pathname === '/agent/list' ||
+              location.pathname.startsWith('/agent/list') ||
+              location.pathname.startsWith('/agent/create')
+                ? 'bg-[var(--color-info-weak-bg,#eff6ff)]'
+                : 'bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-muted)]'
+            }`}
+          >
+            <IconRobot
+              size={20}
+              stroke={1.5}
+              className={
+                location.pathname === '/agent/list' ||
+                location.pathname.startsWith('/agent/list') ||
+                location.pathname.startsWith('/agent/create')
+                  ? 'text-[var(--color-action-primary)]'
+                  : 'text-[var(--color-text-muted)]'
+              }
+            />
+          </Link>
+        </Tooltip>
 
-          {/* Data sources - Coming soon */}
-          <Tooltip content="Data sources (Coming soon)" position="right">
-            <button
-              type="button"
-              disabled
-              className="flex items-center justify-center size-[38px] rounded-lg transition-colors shrink-0 bg-[var(--color-surface-default)] cursor-not-allowed opacity-50"
-            >
-              <IconDatabase 
-                size={20} 
-                stroke={1.5} 
-                className="text-[var(--color-text-disabled)]"
-              />
-            </button>
-          </Tooltip>
+        {/* Data sources - Coming soon */}
+        <Tooltip content="Data sources (Coming soon)" position="right">
+          <button
+            type="button"
+            disabled
+            className="flex items-center justify-center size-[38px] rounded-lg transition-colors shrink-0 bg-[var(--color-surface-default)] cursor-not-allowed opacity-50"
+          >
+            <IconDatabase size={20} stroke={1.5} className="text-[var(--color-text-disabled)]" />
+          </button>
+        </Tooltip>
 
-          {/* MCP tools */}
-          <Tooltip content="MCP tools" position="right">
-            <Link
-              to="/mcp-tools"
+        {/* MCP tools */}
+        <Tooltip content="MCP tools" position="right">
+          <Link
+            to="/mcp-tools"
             className={`flex items-center justify-center size-[38px] rounded-lg transition-colors shrink-0 ${
-                location.pathname === '/mcp-tools' 
-                  ? 'bg-[var(--color-info-weak-bg,#eff6ff)]' 
-                  : 'bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-muted)]'
-              }`}
-            >
-              <IconPuzzle 
-                size={20} 
-                stroke={1.5} 
-                className={location.pathname === '/mcp-tools' ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-muted)]'} 
-              />
-            </Link>
-          </Tooltip>
-        </div>
+              location.pathname === '/mcp-tools'
+                ? 'bg-[var(--color-info-weak-bg,#eff6ff)]'
+                : 'bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-muted)]'
+            }`}
+          >
+            <IconPuzzle
+              size={20}
+              stroke={1.5}
+              className={
+                location.pathname === '/mcp-tools'
+                  ? 'text-[var(--color-action-primary)]'
+                  : 'text-[var(--color-text-muted)]'
+              }
+            />
+          </Link>
+        </Tooltip>
+      </div>
 
-        {/* Settings (Bottom) */}
+      {/* Settings (Bottom) */}
       <div className="px-2 pb-3 w-full flex items-center justify-center shrink-0">
-          <Tooltip content="Settings" position="right">
-            <Link
-              to="/agent"
+        <Tooltip content="Settings" position="right">
+          <Link
+            to="/agent"
             className="flex items-center justify-center size-[38px] rounded-lg bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-muted)] transition-colors shrink-0"
-            >
-              <IconSettings size={20} stroke={1.5} className="text-[var(--color-text-default)]" />
-            </Link>
-          </Tooltip>
+          >
+            <IconSettings size={20} stroke={1.5} className="text-[var(--color-text-default)]" />
+          </Link>
+        </Tooltip>
       </div>
     </nav>
   );
@@ -339,17 +345,17 @@ export function StoragePage() {
 
   // Status mapping for StatusIndicator
   const statusMap: Record<DataSourceRow['status'], 'active' | 'shutoff' | 'pending'> = {
-    'completed': 'active',
-    'error': 'shutoff',
-    'processing': 'pending',
-    'pending': 'pending',
-    'draft': 'pending',
+    completed: 'active',
+    error: 'shutoff',
+    processing: 'pending',
+    pending: 'pending',
+    draft: 'pending',
   };
 
   // Filter data sources by search
   const filteredDataSources = useMemo(() => {
     if (!searchQuery) return dataSources;
-    
+
     return dataSources.filter(
       (ds) =>
         ds.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -370,13 +376,12 @@ export function StoragePage() {
       width: '48px',
       align: 'center',
       sortable: false,
-      render: (_, row) => (
+      render: (_, row) =>
         row.favorite ? (
           <IconStarFilled size={16} className="text-yellow-500" />
         ) : (
           <IconStar size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
-        )
-      ),
+        ),
     },
     {
       key: 'status',
@@ -384,9 +389,7 @@ export function StoragePage() {
       width: '64px',
       align: 'center',
       sortable: false,
-      render: (_, row) => (
-        <StatusIndicator status={statusMap[row.status]} layout="icon-only" />
-      ),
+      render: (_, row) => <StatusIndicator status={statusMap[row.status]} layout="icon-only" />,
     },
     {
       key: 'name',
@@ -414,16 +417,12 @@ export function StoragePage() {
                 <span className="text-[var(--color-text-default)]">
                   {current}/{total}
                 </span>
-                <span className="text-[var(--color-text-subtle)]">
-                  ({percentage}%)
-                </span>
+                <span className="text-[var(--color-text-subtle)]">({percentage}%)</span>
               </div>
               <div className="w-full h-1.5 bg-[var(--color-surface-subtle)] rounded-full overflow-hidden">
                 <div
                   className={`h-full transition-all ${
-                    hasError
-                      ? 'bg-[var(--color-danger)]'
-                      : 'bg-[var(--color-action-primary)]'
+                    hasError ? 'bg-[var(--color-danger)]' : 'bg-[var(--color-action-primary)]'
                   }`}
                   style={{ width: `${percentage}%` }}
                 />
@@ -461,15 +460,22 @@ export function StoragePage() {
           },
         ];
 
-    return (
-          <div className="flex gap-1 items-center justify-center" onClick={(e) => e.stopPropagation()}>
+        return (
+          <div
+            className="flex gap-1 items-center justify-center"
+            onClick={(e) => e.stopPropagation()}
+          >
             <ContextMenu items={menuItems} trigger="click">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
-                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+                <IconDotsCircleHorizontal
+                  size={16}
+                  stroke={1.5}
+                  className="text-[var(--action-icon-color)]"
+                />
               </button>
             </ContextMenu>
-      </div>
-    );
+          </div>
+        );
       },
     },
   ];
@@ -479,24 +485,19 @@ export function StoragePage() {
       title="Data sources"
       breadcrumbItems={[{ label: 'Data sources' }]}
       headerActions={
-                <Button
-                  variant="primary"
-          size="md"
-                  onClick={() => {}}
-                >
-                  Create data source
-                </Button>
+        <Button variant="primary" size="md" onClick={() => {}}>
+          Create data source
+        </Button>
       }
     >
-
-              {/* Status Cards */}
-              <div className="flex gap-2 items-center relative shrink-0 w-full">
-                <StatusCard label="Completed" count={5} status="completed" />
-                <StatusCard label="Error" count={0} status="error" />
-                <StatusCard label="Processing" count={5} status="processing" />
-                <StatusCard label="Pending" count={5} status="pending" />
-                <StatusCard label="Draft" count={5} status="draft" />
-              </div>
+      {/* Status Cards */}
+      <div className="flex gap-2 items-center relative shrink-0 w-full">
+        <StatusCard label="Completed" count={5} status="completed" />
+        <StatusCard label="Error" count={0} status="error" />
+        <StatusCard label="Processing" count={5} status="processing" />
+        <StatusCard label="Pending" count={5} status="pending" />
+        <StatusCard label="Draft" count={5} status="draft" />
+      </div>
 
       {/* List Toolbar, Pagination, Table - Grouped with 12px gap */}
       <div className="flex flex-col gap-3 w-full">
@@ -518,10 +519,10 @@ export function StoragePage() {
           }
           bulkActions={
             <ListToolbar.Actions>
-              <Button 
-                variant="muted" 
-                size="sm" 
-                leftIcon={<IconTrash size={12} />} 
+              <Button
+                variant="muted"
+                size="sm"
+                leftIcon={<IconTrash size={12} />}
                 disabled={selectedDataSources.length === 0}
               >
                 Delete
@@ -543,15 +544,15 @@ export function StoragePage() {
 
         {/* Table */}
         <Table<DataSourceRow>
-        columns={columns}
-        data={paginatedDataSources}
-        rowKey="id"
-        emptyMessage="No data sources found"
-        selectable
-        selectedKeys={selectedDataSources}
-        onSelectionChange={setSelectedDataSources}
-                              />
-                            </div>
+          columns={columns}
+          data={paginatedDataSources}
+          rowKey="id"
+          emptyMessage="No data sources found"
+          selectable
+          selectedKeys={selectedDataSources}
+          onSelectionChange={setSelectedDataSources}
+        />
+      </div>
     </AgentPageLayout>
   );
 }

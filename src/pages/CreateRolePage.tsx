@@ -80,8 +80,18 @@ const mockPolicies: Policy[] = [
     description: '-',
     editedAt: '2025-09-12',
     permissions: [
-      { application: 'Compute', partition: 'tenantA', resource: 'Instance', actions: ['Read', 'List'] },
-      { application: 'Compute', partition: 'tenantA', resource: 'Volume', actions: ['Read', 'List', 'Write'] },
+      {
+        application: 'Compute',
+        partition: 'tenantA',
+        resource: 'Instance',
+        actions: ['Read', 'List'],
+      },
+      {
+        application: 'Compute',
+        partition: 'tenantA',
+        resource: 'Volume',
+        actions: ['Read', 'List', 'Write'],
+      },
     ],
   },
   {
@@ -93,9 +103,24 @@ const mockPolicies: Policy[] = [
     description: '-',
     editedAt: '2025-09-12',
     permissions: [
-      { application: 'Compute', partition: 'tenantA', resource: 'AI_server', actions: ['Read', 'List', 'Write', 'Delete', 'Admin'] },
-      { application: 'Container', partition: '*all', resource: '*all', actions: ['Read', 'List', 'Write'] },
-      { application: 'IAM', partition: '-', resource: '*all', actions: ['Read', 'List', 'Write', 'Delete', 'Admin'] },
+      {
+        application: 'Compute',
+        partition: 'tenantA',
+        resource: 'AI_server',
+        actions: ['Read', 'List', 'Write', 'Delete', 'Admin'],
+      },
+      {
+        application: 'Container',
+        partition: '*all',
+        resource: '*all',
+        actions: ['Read', 'List', 'Write'],
+      },
+      {
+        application: 'IAM',
+        partition: '-',
+        resource: '*all',
+        actions: ['Read', 'List', 'Write', 'Delete', 'Admin'],
+      },
       { application: 'Storage', partition: '-', resource: 'block_01', actions: ['Read'] },
     ],
   },
@@ -108,8 +133,18 @@ const mockPolicies: Policy[] = [
     description: 'Full access to compute resources',
     editedAt: '2025-08-15',
     permissions: [
-      { application: 'Compute', partition: '*all', resource: 'Instance', actions: ['Read', 'List', 'Write', 'Delete', 'Admin'] },
-      { application: 'Compute', partition: '*all', resource: 'Volume', actions: ['Read', 'List', 'Write', 'Delete', 'Admin'] },
+      {
+        application: 'Compute',
+        partition: '*all',
+        resource: 'Instance',
+        actions: ['Read', 'List', 'Write', 'Delete', 'Admin'],
+      },
+      {
+        application: 'Compute',
+        partition: '*all',
+        resource: 'Volume',
+        actions: ['Read', 'List', 'Write', 'Delete', 'Admin'],
+      },
     ],
   },
   {
@@ -134,8 +169,18 @@ const mockPolicies: Policy[] = [
     description: 'Network administration policy',
     editedAt: '2025-07-20',
     permissions: [
-      { application: 'Network', partition: '*all', resource: 'VPC', actions: ['Read', 'List', 'Write', 'Delete', 'Admin'] },
-      { application: 'Network', partition: '*all', resource: 'Subnet', actions: ['Read', 'List', 'Write', 'Delete'] },
+      {
+        application: 'Network',
+        partition: '*all',
+        resource: 'VPC',
+        actions: ['Read', 'List', 'Write', 'Delete', 'Admin'],
+      },
+      {
+        application: 'Network',
+        partition: '*all',
+        resource: 'Subnet',
+        actions: ['Read', 'List', 'Write', 'Delete'],
+      },
     ],
   },
   {
@@ -147,8 +192,18 @@ const mockPolicies: Policy[] = [
     description: 'Container deployment permissions',
     editedAt: '2025-07-15',
     permissions: [
-      { application: 'Container', partition: 'tenantA', resource: 'Deployment', actions: ['Read', 'List', 'Write'] },
-      { application: 'Container', partition: 'tenantA', resource: 'Service', actions: ['Read', 'List', 'Write'] },
+      {
+        application: 'Container',
+        partition: 'tenantA',
+        resource: 'Deployment',
+        actions: ['Read', 'List', 'Write'],
+      },
+      {
+        application: 'Container',
+        partition: 'tenantA',
+        resource: 'Service',
+        actions: ['Read', 'List', 'Write'],
+      },
     ],
   },
   {
@@ -173,8 +228,18 @@ const mockPolicies: Policy[] = [
     description: 'Security audit permissions',
     editedAt: '2025-06-25',
     permissions: [
-      { application: 'Security', partition: '*all', resource: 'AuditLog', actions: ['Read', 'List'] },
-      { application: 'Security', partition: '*all', resource: 'Compliance', actions: ['Read', 'List'] },
+      {
+        application: 'Security',
+        partition: '*all',
+        resource: 'AuditLog',
+        actions: ['Read', 'List'],
+      },
+      {
+        application: 'Security',
+        partition: '*all',
+        resource: 'Compliance',
+        actions: ['Read', 'List'],
+      },
     ],
   },
   {
@@ -186,8 +251,18 @@ const mockPolicies: Policy[] = [
     description: 'Database administration policy',
     editedAt: '2025-06-20',
     permissions: [
-      { application: 'Database', partition: '*all', resource: 'Instance', actions: ['Read', 'List', 'Write', 'Delete', 'Admin'] },
-      { application: 'Database', partition: '*all', resource: 'Backup', actions: ['Read', 'List', 'Write', 'Delete'] },
+      {
+        application: 'Database',
+        partition: '*all',
+        resource: 'Instance',
+        actions: ['Read', 'List', 'Write', 'Delete', 'Admin'],
+      },
+      {
+        application: 'Database',
+        partition: '*all',
+        resource: 'Backup',
+        actions: ['Read', 'List', 'Write', 'Delete'],
+      },
     ],
   },
   {
@@ -289,7 +364,11 @@ function SectionStatusIcon({ status }: { status: SectionState }) {
   if (status === 'active') {
     return (
       <div className="w-4 h-4 shrink-0">
-        <IconProgress size={16} stroke={1.5} className="text-[var(--color-text-subtle)] animate-spin" />
+        <IconProgress
+          size={16}
+          stroke={1.5}
+          className="text-[var(--color-text-subtle)] animate-spin"
+        />
       </div>
     );
   }
@@ -298,7 +377,9 @@ function SectionStatusIcon({ status }: { status: SectionState }) {
     return null;
   }
 
-  return <div className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)]" />;
+  return (
+    <div className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)]" />
+  );
 }
 
 /* ----------------------------------------
@@ -312,7 +393,12 @@ interface SummarySidebarProps {
   isCreateEnabled: boolean;
 }
 
-function SummarySidebar({ sectionStatus, onCancel, onCreate, isCreateEnabled }: SummarySidebarProps) {
+function SummarySidebar({
+  sectionStatus,
+  onCancel,
+  onCreate,
+  isCreateEnabled,
+}: SummarySidebarProps) {
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
       <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-4">
@@ -335,7 +421,9 @@ function SummarySidebar({ sectionStatus, onCancel, onCreate, isCreateEnabled }: 
                       {SECTION_LABELS[sectionKey]}
                     </span>
                     {isWriting ? (
-                      <span className="text-[11px] text-[var(--color-text-subtle)]">Writing...</span>
+                      <span className="text-[11px] text-[var(--color-text-subtle)]">
+                        Writing...
+                      </span>
                     ) : (
                       <SectionStatusIcon status={sectionStatus[sectionKey]} />
                     )}
@@ -452,7 +540,8 @@ function BasicInformationSection({
                 </span>
               )}
               <span className="text-[11px] text-[var(--color-text-subtle)] leading-[16px]">
-                You can use letters, numbers, and special characters (+=,.@-_), and the length must be between 2-128 characters.
+                You can use letters, numbers, and special characters (+=,.@-_), and the length must
+                be between 2-128 characters.
               </span>
             </div>
           </div>
@@ -472,7 +561,8 @@ function BasicInformationSection({
               fullWidth
             />
             <span className="text-[11px] text-[var(--color-text-subtle)] leading-[16px] mt-1">
-              You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255 characters.
+              You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255
+              characters.
             </span>
           </div>
 
@@ -602,7 +692,7 @@ function AddPoliciesSection({
 
   // Toggle policy expansion
   const togglePolicyExpansion = (policyId: string) => {
-    setExpandedPolicies(prev => {
+    setExpandedPolicies((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(policyId)) {
         newSet.delete(policyId);
@@ -616,7 +706,7 @@ function AddPoliciesSection({
   // Toggle row selection
   const toggleRowSelection = (policyId: string) => {
     if (selectedPolicies.includes(policyId)) {
-      onSelectionChange(selectedPolicies.filter(id => id !== policyId));
+      onSelectionChange(selectedPolicies.filter((id) => id !== policyId));
     } else {
       onSelectionChange([...selectedPolicies, policyId]);
     }
@@ -625,7 +715,7 @@ function AddPoliciesSection({
   // Toggle all rows selection
   const toggleAllSelection = (checked: boolean) => {
     if (checked) {
-      onSelectionChange(paginatedPolicies.map(p => p.id));
+      onSelectionChange(paginatedPolicies.map((p) => p.id));
     } else {
       onSelectionChange([]);
     }
@@ -642,13 +732,17 @@ function AddPoliciesSection({
               <Button variant="secondary" size="sm" onClick={onEditCancel}>
                 Cancel
               </Button>
-              <Button variant="primary" size="sm" onClick={() => {
-                if (selectedPolicies.length === 0) {
-                  onPoliciesErrorChange('Please select at least one policy.');
-                  return;
-                }
-                onEditDone();
-              }}>
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={() => {
+                  if (selectedPolicies.length === 0) {
+                    onPoliciesErrorChange('Please select at least one policy.');
+                    return;
+                  }
+                  onEditDone();
+                }}
+              >
                 Done
               </Button>
             </HStack>
@@ -659,11 +753,14 @@ function AddPoliciesSection({
         <VStack gap={0} className="pt-2 pb-6">
           <div className="flex flex-col gap-2">
             <div className="flex gap-[3px]">
-              <span className="text-[14px] font-medium text-[var(--color-text-default)]">Policies</span>
+              <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                Policies
+              </span>
               <span className="text-[var(--color-state-danger)]">*</span>
             </div>
             <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-              Select policies to apply to this role. If policies include conditions, all conditions must be satisfied for the permission to be granted.
+              Select policies to apply to this role. If policies include conditions, all conditions
+              must be satisfied for the permission to be granted.
             </span>
           </div>
 
@@ -680,9 +777,9 @@ function AddPoliciesSection({
                 }}
                 className="w-full h-8 pl-3 pr-9 text-[12px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] placeholder:text-[var(--color-text-subtle)] focus:outline-none focus:border-[var(--color-action-primary)] focus:shadow-[0_0_0_1px_var(--color-action-primary)]"
               />
-              <IconSearch 
-                size={14} 
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-subtle)] pointer-events-none" 
+              <IconSearch
+                size={14}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-subtle)] pointer-events-none"
               />
             </div>
           </div>
@@ -709,8 +806,14 @@ function AddPoliciesSection({
               {/* Checkbox column */}
               <div className="w-[40px] flex items-center justify-center px-3 py-2">
                 <Checkbox
-                  checked={selectedPolicies.length > 0 && selectedPolicies.length === paginatedPolicies.length}
-                  indeterminate={selectedPolicies.length > 0 && selectedPolicies.length < paginatedPolicies.length}
+                  checked={
+                    selectedPolicies.length > 0 &&
+                    selectedPolicies.length === paginatedPolicies.length
+                  }
+                  indeterminate={
+                    selectedPolicies.length > 0 &&
+                    selectedPolicies.length < paginatedPolicies.length
+                  }
                   onChange={(e) => toggleAllSelection(e.target.checked)}
                 />
               </div>
@@ -762,7 +865,9 @@ function AddPoliciesSection({
                       )}
                     </button>
                     <HStack gap={1.5} align="center">
-                      <span className="text-[12px] font-medium text-[var(--color-action-primary)]">{policy.name}</span>
+                      <span className="text-[12px] font-medium text-[var(--color-action-primary)]">
+                        {policy.name}
+                      </span>
                       <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
                     </HStack>
                   </div>
@@ -799,9 +904,7 @@ function AddPoliciesSection({
           {/* Selection indicator */}
           <div className="mt-3">
             {policiesError && selectedPolicies.length === 0 ? (
-              <InlineMessage variant="error">
-                {policiesError}
-              </InlineMessage>
+              <InlineMessage variant="error">{policiesError}</InlineMessage>
             ) : (
               <SelectionIndicator
                 selectedItems={selectedPolicies.map((policyId) => {
@@ -814,7 +917,6 @@ function AddPoliciesSection({
               />
             )}
           </div>
-
         </VStack>
         {/* Skip and Next Buttons (only when not editing) */}
         {!isEditing && (
@@ -824,13 +926,16 @@ function AddPoliciesSection({
               <Button variant="secondary" onClick={onSkip}>
                 Skip
               </Button>
-              <Button variant="primary" onClick={() => {
-                if (selectedPolicies.length === 0) {
-                  onPoliciesErrorChange('Please select at least one policy.');
-                  return;
-                }
-                onNext();
-              }}>
+              <Button
+                variant="primary"
+                onClick={() => {
+                  if (selectedPolicies.length === 0) {
+                    onPoliciesErrorChange('Please select at least one policy.');
+                    return;
+                  }
+                  onNext();
+                }}
+              >
                 Next
               </Button>
             </HStack>
@@ -847,7 +952,8 @@ function AddPoliciesSection({
 
 export default function CreateRolePage() {
   const navigate = useNavigate();
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
+    useTabs();
 
   // Update tab label on mount
   useEffect(() => {
@@ -1020,7 +1126,7 @@ export default function CreateRolePage() {
       >
         {/* Tab Bar */}
         <TabBar
-          tabs={tabs.map(tab => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
@@ -1049,7 +1155,6 @@ export default function CreateRolePage() {
         {/* Scrollable content */}
         <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
           <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)] min-h-full">
-
             {/* Main content area */}
             <VStack gap={3} className="min-w-[1176px]">
               {/* Page Title */}

@@ -1,13 +1,5 @@
 import { useState, useEffect } from 'react';
-import {
-  VStack,
-  HStack,
-  TabBar,
-  TopBar,
-  Breadcrumb,
-  Button,
-  Tabs,
-} from '@/design-system';
+import { VStack, HStack, TabBar, TopBar, Breadcrumb, Button, Tabs } from '@/design-system';
 import { AIPlatformSidebar } from '@/components/AIPlatformSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
@@ -72,9 +64,7 @@ function ModelCard({
 
       {/* Model Info */}
       <VStack gap={1}>
-        <span className="text-[16px] font-semibold text-[var(--color-text-default)]">
-          {name}
-        </span>
+        <span className="text-[16px] font-semibold text-[var(--color-text-default)]">{name}</span>
         <span className="text-[13px] text-[var(--color-text-subtle)] line-clamp-2">
           {description}
         </span>
@@ -171,7 +161,8 @@ export function ModelsPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState('all');
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
+    useTabs();
 
   useEffect(() => {
     updateActiveTabLabel('Models');
@@ -190,7 +181,10 @@ export function ModelsPage() {
     // Search filter
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
-      if (!model.name.toLowerCase().includes(query) && !model.description.toLowerCase().includes(query)) {
+      if (
+        !model.name.toLowerCase().includes(query) &&
+        !model.description.toLowerCase().includes(query)
+      ) {
         return false;
       }
     }
@@ -209,7 +203,7 @@ export function ModelsPage() {
         style={{ left: `${sidebarWidth}px` }}
       >
         <TabBar
-          tabs={tabs.map(tab => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
@@ -221,13 +215,7 @@ export function ModelsPage() {
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'AI Platform' },
-                { label: 'Hub' },
-                { label: 'Models' },
-              ]}
-            />
+            <Breadcrumb items={[{ label: 'AI Platform' }, { label: 'Hub' }, { label: 'Models' }]} />
           }
           actions={
             <>
@@ -261,10 +249,10 @@ export function ModelsPage() {
 
               {/* Search */}
               <div className="relative">
-                <IconSearch 
-                  size={16} 
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]" 
-                  stroke={1.5} 
+                <IconSearch
+                  size={16}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]"
+                  stroke={1.5}
                 />
                 <input
                   type="text"
@@ -305,7 +293,7 @@ export function ModelsPage() {
                       No models found
                     </span>
                     <span className="text-[14px] text-[var(--color-text-subtle)]">
-                      {activeTab === 'fine-tuned' 
+                      {activeTab === 'fine-tuned'
                         ? 'No fine-tuned models available. Train a model to get started.'
                         : 'No models match your search criteria.'}
                     </span>

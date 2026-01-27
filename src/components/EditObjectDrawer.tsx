@@ -40,10 +40,14 @@ export function EditObjectDrawer({
   useEffect(() => {
     if (isOpen) {
       setName(objectName);
-      setTags(initialTags.length > 0 ? initialTags : [
-        { id: '1', key: '30', value: '30' },
-        { id: '2', key: '30', value: '30' },
-      ]);
+      setTags(
+        initialTags.length > 0
+          ? initialTags
+          : [
+              { id: '1', key: '30', value: '30' },
+              { id: '2', key: '30', value: '30' },
+            ]
+      );
     }
   }, [isOpen, objectName, initialTags]);
 
@@ -61,11 +65,7 @@ export function EditObjectDrawer({
   };
 
   const handleTagChange = (tagId: string, field: 'key' | 'value', value: string) => {
-    setTags(
-      tags.map((tag) =>
-        tag.id === tagId ? { ...tag, [field]: value } : tag
-      )
-    );
+    setTags(tags.map((tag) => (tag.id === tagId ? { ...tag, [field]: value } : tag)));
   };
 
   const handleSubmit = async () => {

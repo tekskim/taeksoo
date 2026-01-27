@@ -22,12 +22,7 @@ export interface EditKeyPairDrawerProps {
    EditKeyPairDrawer Component
    ---------------------------------------- */
 
-export function EditKeyPairDrawer({
-  isOpen,
-  onClose,
-  keyPair,
-  onSubmit,
-}: EditKeyPairDrawerProps) {
+export function EditKeyPairDrawer({ isOpen, onClose, keyPair, onSubmit }: EditKeyPairDrawerProps) {
   const [keyPairName, setKeyPairName] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -40,7 +35,7 @@ export function EditKeyPairDrawer({
 
   const handleSubmit = async () => {
     if (!keyPairName.trim()) return;
-    
+
     setIsSubmitting(true);
     try {
       await onSubmit?.(keyPairName);
@@ -63,15 +58,11 @@ export function EditKeyPairDrawer({
       width={376}
       footer={
         <HStack gap={2} className="w-full">
-          <Button 
-            variant="secondary" 
-            onClick={handleClose}
-            className="flex-1 h-8"
-          >
+          <Button variant="secondary" onClick={handleClose} className="flex-1 h-8">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={handleSubmit}
             disabled={isSubmitting}
             className="flex-1 h-8"
@@ -108,5 +99,3 @@ export function EditKeyPairDrawer({
 }
 
 export default EditKeyPairDrawer;
-
-

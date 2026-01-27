@@ -10,13 +10,21 @@ const ComputeAdminInstanceDetailPage = lazy(() => import('@/pages/ComputeAdminIn
 const ComputeAdminCreateInstancePage = lazy(() => import('@/pages/ComputeAdminCreateInstancePage'));
 
 // Instance Templates
-const ComputeAdminInstanceTemplatesPage = lazy(() => import('@/pages/ComputeAdminInstanceTemplatesPage'));
-const ComputeAdminInstanceTemplateDetailPage = lazy(() => import('@/pages/ComputeAdminInstanceTemplateDetailPage'));
+const ComputeAdminInstanceTemplatesPage = lazy(
+  () => import('@/pages/ComputeAdminInstanceTemplatesPage')
+);
+const ComputeAdminInstanceTemplateDetailPage = lazy(
+  () => import('@/pages/ComputeAdminInstanceTemplateDetailPage')
+);
 const ComputeAdminCreateTemplatePage = lazy(() => import('@/pages/ComputeAdminCreateTemplatePage'));
 
 // Instance Snapshots
-const ComputeAdminInstanceSnapshotsPage = lazy(() => import('@/pages/ComputeAdminInstanceSnapshotsPage'));
-const ComputeAdminInstanceSnapshotDetailPage = lazy(() => import('@/pages/ComputeAdminInstanceSnapshotDetailPage'));
+const ComputeAdminInstanceSnapshotsPage = lazy(
+  () => import('@/pages/ComputeAdminInstanceSnapshotsPage')
+);
+const ComputeAdminInstanceSnapshotDetailPage = lazy(
+  () => import('@/pages/ComputeAdminInstanceSnapshotDetailPage')
+);
 
 // Images
 const ComputeAdminImagesPage = lazy(() => import('@/pages/ComputeAdminImagesPage'));
@@ -29,20 +37,30 @@ const ComputeAdminCreateFlavorPage = lazy(() => import('@/pages/ComputeAdminCrea
 
 // Server Groups
 const ComputeAdminServerGroupsPage = lazy(() => import('@/pages/ComputeAdminServerGroupsPage'));
-const ComputeAdminServerGroupDetailPage = lazy(() => import('@/pages/ComputeAdminServerGroupDetailPage'));
+const ComputeAdminServerGroupDetailPage = lazy(
+  () => import('@/pages/ComputeAdminServerGroupDetailPage')
+);
 
 // Host Aggregates & Bare Metal
 const ComputeAdminHostAggregatesPage = lazy(() => import('@/pages/ComputeAdminHostAggregatesPage'));
 const ComputeAdminBareMetalNodesPage = lazy(() => import('@/pages/ComputeAdminBareMetalNodesPage'));
-const ComputeAdminBareMetalDetailPage = lazy(() => import('@/pages/ComputeAdminBareMetalDetailPage'));
+const ComputeAdminBareMetalDetailPage = lazy(
+  () => import('@/pages/ComputeAdminBareMetalDetailPage')
+);
 
 // Storage - Volumes
 const ComputeAdminVolumesPage = lazy(() => import('@/pages/ComputeAdminVolumesPage'));
 const ComputeAdminVolumeDetailPage = lazy(() => import('@/pages/ComputeAdminVolumeDetailPage'));
-const ComputeAdminVolumeSnapshotsPage = lazy(() => import('@/pages/ComputeAdminVolumeSnapshotsPage'));
-const ComputeAdminVolumeSnapshotDetailPage = lazy(() => import('@/pages/ComputeAdminVolumeSnapshotDetailPage'));
+const ComputeAdminVolumeSnapshotsPage = lazy(
+  () => import('@/pages/ComputeAdminVolumeSnapshotsPage')
+);
+const ComputeAdminVolumeSnapshotDetailPage = lazy(
+  () => import('@/pages/ComputeAdminVolumeSnapshotDetailPage')
+);
 const ComputeAdminVolumeBackupsPage = lazy(() => import('@/pages/ComputeAdminVolumeBackupsPage'));
-const ComputeAdminVolumeBackupDetailPage = lazy(() => import('@/pages/ComputeAdminVolumeBackupDetailPage'));
+const ComputeAdminVolumeBackupDetailPage = lazy(
+  () => import('@/pages/ComputeAdminVolumeBackupDetailPage')
+);
 
 // Network
 const ComputeAdminNetworksPage = lazy(() => import('@/pages/ComputeAdminNetworksPage'));
@@ -54,18 +72,26 @@ const ComputeAdminRouterDetailPage = lazy(() => import('@/pages/ComputeAdminRout
 const ComputeAdminPortsPage = lazy(() => import('@/pages/ComputeAdminPortsPage'));
 const ComputeAdminPortDetailPage = lazy(() => import('@/pages/ComputeAdminPortDetailPage'));
 const ComputeAdminFloatingIPsPage = lazy(() => import('@/pages/ComputeAdminFloatingIPsPage'));
-const ComputeAdminFloatingIPDetailPage = lazy(() => import('@/pages/ComputeAdminFloatingIPDetailPage'));
+const ComputeAdminFloatingIPDetailPage = lazy(
+  () => import('@/pages/ComputeAdminFloatingIPDetailPage')
+);
 
 // Security
 const ComputeAdminSecurityGroupsPage = lazy(() => import('@/pages/ComputeAdminSecurityGroupsPage'));
-const ComputeAdminSecurityGroupDetailPage = lazy(() => import('@/pages/ComputeAdminSecurityGroupDetailPage'));
+const ComputeAdminSecurityGroupDetailPage = lazy(
+  () => import('@/pages/ComputeAdminSecurityGroupDetailPage')
+);
 const ComputeAdminLoadBalancersPage = lazy(() => import('@/pages/ComputeAdminLoadBalancersPage'));
-const ComputeAdminLoadBalancerDetailPage = lazy(() => import('@/pages/ComputeAdminLoadBalancerDetailPage'));
+const ComputeAdminLoadBalancerDetailPage = lazy(
+  () => import('@/pages/ComputeAdminLoadBalancerDetailPage')
+);
 const ComputeAdminListenerDetailPage = lazy(() => import('@/pages/ComputeAdminListenerDetailPage'));
 const ComputeAdminPoolDetailPage = lazy(() => import('@/pages/ComputeAdminPoolDetailPage'));
 const ComputeAdminL7PolicyDetailPage = lazy(() => import('@/pages/ComputeAdminL7PolicyDetailPage'));
 const ComputeAdminCertificatesPage = lazy(() => import('@/pages/ComputeAdminCertificatesPage'));
-const ComputeAdminCertificateDetailPage = lazy(() => import('@/pages/ComputeAdminCertificateDetailPage'));
+const ComputeAdminCertificateDetailPage = lazy(
+  () => import('@/pages/ComputeAdminCertificateDetailPage')
+);
 
 // Other
 const ComputeAdminTopologyD3Page = lazy(() => import('@/pages/ComputeAdminTopologyD3Page'));
@@ -82,13 +108,28 @@ export const computeAdminRoutes = (
     <Route path="/compute-admin/instances/:id" element={<ComputeAdminInstanceDetailPage />} />
 
     {/* Instance Templates */}
-    <Route path="/compute-admin/instance-templates" element={<ComputeAdminInstanceTemplatesPage />} />
-    <Route path="/compute-admin/instance-templates/create" element={<ComputeAdminCreateTemplatePage />} />
-    <Route path="/compute-admin/instance-templates/:id" element={<ComputeAdminInstanceTemplateDetailPage />} />
+    <Route
+      path="/compute-admin/instance-templates"
+      element={<ComputeAdminInstanceTemplatesPage />}
+    />
+    <Route
+      path="/compute-admin/instance-templates/create"
+      element={<ComputeAdminCreateTemplatePage />}
+    />
+    <Route
+      path="/compute-admin/instance-templates/:id"
+      element={<ComputeAdminInstanceTemplateDetailPage />}
+    />
 
     {/* Instance Snapshots */}
-    <Route path="/compute-admin/instance-snapshots" element={<ComputeAdminInstanceSnapshotsPage />} />
-    <Route path="/compute-admin/instance-snapshots/:id" element={<ComputeAdminInstanceSnapshotDetailPage />} />
+    <Route
+      path="/compute-admin/instance-snapshots"
+      element={<ComputeAdminInstanceSnapshotsPage />}
+    />
+    <Route
+      path="/compute-admin/instance-snapshots/:id"
+      element={<ComputeAdminInstanceSnapshotDetailPage />}
+    />
 
     {/* Images */}
     <Route path="/compute-admin/images" element={<ComputeAdminImagesPage />} />
@@ -101,20 +142,32 @@ export const computeAdminRoutes = (
 
     {/* Server Groups */}
     <Route path="/compute-admin/server-groups" element={<ComputeAdminServerGroupsPage />} />
-    <Route path="/compute-admin/server-groups/:id" element={<ComputeAdminServerGroupDetailPage />} />
+    <Route
+      path="/compute-admin/server-groups/:id"
+      element={<ComputeAdminServerGroupDetailPage />}
+    />
 
     {/* Host Aggregates & Bare Metal */}
     <Route path="/compute-admin/host-aggregates" element={<ComputeAdminHostAggregatesPage />} />
     <Route path="/compute-admin/bare-metal-nodes" element={<ComputeAdminBareMetalNodesPage />} />
-    <Route path="/compute-admin/bare-metal-nodes/:id" element={<ComputeAdminBareMetalDetailPage />} />
+    <Route
+      path="/compute-admin/bare-metal-nodes/:id"
+      element={<ComputeAdminBareMetalDetailPage />}
+    />
 
     {/* Storage - Volumes */}
     <Route path="/compute-admin/volumes" element={<ComputeAdminVolumesPage />} />
     <Route path="/compute-admin/volumes/:id" element={<ComputeAdminVolumeDetailPage />} />
     <Route path="/compute-admin/volume-snapshots" element={<ComputeAdminVolumeSnapshotsPage />} />
-    <Route path="/compute-admin/volume-snapshots/:id" element={<ComputeAdminVolumeSnapshotDetailPage />} />
+    <Route
+      path="/compute-admin/volume-snapshots/:id"
+      element={<ComputeAdminVolumeSnapshotDetailPage />}
+    />
     <Route path="/compute-admin/volume-backups" element={<ComputeAdminVolumeBackupsPage />} />
-    <Route path="/compute-admin/volume-backups/:id" element={<ComputeAdminVolumeBackupDetailPage />} />
+    <Route
+      path="/compute-admin/volume-backups/:id"
+      element={<ComputeAdminVolumeBackupDetailPage />}
+    />
 
     {/* Network */}
     <Route path="/compute-admin/networks" element={<ComputeAdminNetworksPage />} />
@@ -130,9 +183,15 @@ export const computeAdminRoutes = (
 
     {/* Security */}
     <Route path="/compute-admin/security-groups" element={<ComputeAdminSecurityGroupsPage />} />
-    <Route path="/compute-admin/security-groups/:id" element={<ComputeAdminSecurityGroupDetailPage />} />
+    <Route
+      path="/compute-admin/security-groups/:id"
+      element={<ComputeAdminSecurityGroupDetailPage />}
+    />
     <Route path="/compute-admin/load-balancers" element={<ComputeAdminLoadBalancersPage />} />
-    <Route path="/compute-admin/load-balancers/:id" element={<ComputeAdminLoadBalancerDetailPage />} />
+    <Route
+      path="/compute-admin/load-balancers/:id"
+      element={<ComputeAdminLoadBalancerDetailPage />}
+    />
     <Route path="/compute-admin/listeners/:id" element={<ComputeAdminListenerDetailPage />} />
     <Route path="/compute-admin/pools/:id" element={<ComputeAdminPoolDetailPage />} />
     <Route path="/compute-admin/l7-policies/:id" element={<ComputeAdminL7PolicyDetailPage />} />

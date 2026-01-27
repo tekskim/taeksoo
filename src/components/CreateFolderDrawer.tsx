@@ -79,9 +79,19 @@ function FolderTreeItem({
 
         {/* Folder Icon */}
         {isExpanded && hasChildren ? (
-          <IconFolderOpen size={16} className={isSelected ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-subtle)]'} />
+          <IconFolderOpen
+            size={16}
+            className={
+              isSelected ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-subtle)]'
+            }
+          />
         ) : (
-          <IconFolder size={16} className={isSelected ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-subtle)]'} />
+          <IconFolder
+            size={16}
+            className={
+              isSelected ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-text-subtle)]'
+            }
+          />
         )}
 
         {/* Folder Name */}
@@ -303,7 +313,9 @@ export function CreateFolderDrawer({
             fullWidth
             error={!!error}
           />
-          <p className={`text-[11px] leading-4 ${error ? 'text-[var(--color-state-danger)]' : 'text-[var(--color-text-subtle)]'}`}>
+          <p
+            className={`text-[11px] leading-4 ${error ? 'text-[var(--color-state-danger)]' : 'text-[var(--color-text-subtle)]'}`}
+          >
             {error || 'Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"'}
           </p>
         </VStack>

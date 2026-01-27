@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { 
-  Drawer, 
-  Button, 
+import {
+  Drawer,
+  Button,
   SearchInput,
   Pagination,
   Radio,
@@ -69,10 +69,11 @@ export function ChangeCACertificateDrawer({
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
   // Filter certificates
-  const filteredCertificates = certificates.filter((cert) =>
-    cert.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    cert.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    cert.listeners.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredCertificates = certificates.filter(
+    (cert) =>
+      cert.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      cert.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      cert.listeners.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const totalPages = Math.ceil(filteredCertificates.length / ITEMS_PER_PAGE);
@@ -93,9 +94,9 @@ export function ChangeCACertificateDrawer({
 
   const handleSubmit = async () => {
     setHasAttemptedSubmit(true);
-    
+
     if (!selectedCertificateId) return;
-    
+
     setIsSubmitting(true);
     try {
       await onSubmit?.(selectedCertificateId);
@@ -124,15 +125,11 @@ export function ChangeCACertificateDrawer({
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
-          <Button 
-            variant="secondary" 
-            onClick={handleClose}
-            className="w-[152px] h-8"
-          >
+          <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={handleSubmit}
             disabled={isSubmitting}
             className="w-[152px] h-8"
@@ -189,7 +186,10 @@ export function ChangeCACertificateDrawer({
           />
 
           {/* Certificates Table */}
-          <div className="flex flex-col gap-[var(--table-row-gap)]" style={{ width: '648px', maxWidth: '648px' }}>
+          <div
+            className="flex flex-col gap-[var(--table-row-gap)]"
+            style={{ width: '648px', maxWidth: '648px' }}
+          >
             {/* Header */}
             <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
               <div className="w-[var(--table-checkbox-width)] flex items-center justify-center" />
@@ -212,17 +212,20 @@ export function ChangeCACertificateDrawer({
 
             {/* Rows */}
             {paginatedCertificates.map((cert) => (
-              <div 
+              <div
                 key={cert.id}
                 className={`flex items-stretch min-h-[var(--table-row-height)] border rounded-[var(--table-row-radius)] cursor-pointer transition-all ${
-                  selectedCertificateId === cert.id 
-                    ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]' 
+                  selectedCertificateId === cert.id
+                    ? 'bg-[var(--color-state-info-bg)] border-[var(--color-action-primary)]'
                     : 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] hover:bg-[var(--table-row-hover-bg)]'
                 }`}
                 onClick={() => setSelectedCertificateId(cert.id)}
               >
                 {/* Radio */}
-                <div className="w-[var(--table-checkbox-width)] flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
+                <div
+                  className="w-[var(--table-checkbox-width)] flex items-center justify-center"
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <Radio
                     name="certificate-select"
                     value={cert.id}
@@ -237,18 +240,30 @@ export function ChangeCACertificateDrawer({
                 {/* Name with ID */}
                 <div className="flex-1 flex flex-col justify-center gap-0.5 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
                   <HStack gap={1.5} align="center">
-                    <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] truncate">{cert.name}</span>
-                    <IconExternalLink size={12} stroke={1.5} className="shrink-0 text-[var(--color-action-primary)]" />
+                    <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] truncate">
+                      {cert.name}
+                    </span>
+                    <IconExternalLink
+                      size={12}
+                      stroke={1.5}
+                      className="shrink-0 text-[var(--color-action-primary)]"
+                    />
                   </HStack>
-                  <span className="text-[11px] text-[var(--color-text-subtle)] truncate">ID : {cert.id}</span>
+                  <span className="text-[11px] text-[var(--color-text-subtle)] truncate">
+                    ID : {cert.id}
+                  </span>
                 </div>
                 {/* Listeners */}
                 <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">{cert.listeners}</span>
+                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">
+                    {cert.listeners}
+                  </span>
                 </div>
                 {/* Expires At */}
                 <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
-                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">{cert.expiresAt}</span>
+                  <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] truncate">
+                    {cert.expiresAt}
+                  </span>
                 </div>
               </div>
             ))}
@@ -256,7 +271,11 @@ export function ChangeCACertificateDrawer({
 
           {/* Selection Indicator - directly under the table */}
           <SelectionIndicator
-            selectedItems={selectedCertificate ? [{ id: selectedCertificate.id, label: selectedCertificate.name }] : []}
+            selectedItems={
+              selectedCertificate
+                ? [{ id: selectedCertificate.id, label: selectedCertificate.name }]
+                : []
+            }
             onRemove={() => setSelectedCertificateId(null)}
             emptyText="No item Selected"
             error={hasAttemptedSubmit && !selectedCertificateId}

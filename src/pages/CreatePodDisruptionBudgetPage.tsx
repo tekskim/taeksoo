@@ -39,18 +39,13 @@ type SectionState = 'pre' | 'active' | 'done' | 'writing';
 // Section labels for display
 const SECTION_LABELS: Record<SectionStep, string> = {
   'basic-info': 'Basic Information',
-  'data': 'Budget',
-  'selector': 'Selector',
+  data: 'Budget',
+  selector: 'Selector',
   'labels-annotations': 'Labels & Annotations',
 };
 
 // Section order for navigation
-const SECTION_ORDER: SectionStep[] = [
-  'basic-info',
-  'data',
-  'selector',
-  'labels-annotations',
-];
+const SECTION_ORDER: SectionStep[] = ['basic-info', 'data', 'selector', 'labels-annotations'];
 
 // Namespace options
 const NAMESPACE_OPTIONS = [
@@ -148,7 +143,12 @@ interface SummarySidebarProps {
   isCreateDisabled: boolean;
 }
 
-function SummarySidebar({ sectionStatus, onCancel, onCreate, isCreateDisabled }: SummarySidebarProps) {
+function SummarySidebar({
+  sectionStatus,
+  onCancel,
+  onCreate,
+  isCreateDisabled,
+}: SummarySidebarProps) {
   // Map SectionState to WizardSectionState
   const mapState = (state: SectionState): WizardSectionState => {
     if (state === 'pre') return 'pending';
@@ -167,14 +167,14 @@ function SummarySidebar({ sectionStatus, onCancel, onCreate, isCreateDisabled }:
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
       <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
         <WizardSummary items={summaryItems} />
-        
+
         {/* Action Buttons */}
         <HStack gap={2}>
           <Button variant="secondary" onClick={onCancel} className="w-[80px]">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={onCreate}
             disabled={isCreateDisabled}
             className="flex-1"
@@ -522,9 +522,7 @@ function SelectorSection({
   // Update a selector rule
   const updateRule = (id: string, field: keyof SelectorRule, value: string) => {
     onSelectorRulesChange(
-      selectorRules.map((rule) =>
-        rule.id === id ? { ...rule, [field]: value } : rule
-      )
+      selectorRules.map((rule) => (rule.id === id ? { ...rule, [field]: value } : rule))
     );
   };
 
@@ -759,7 +757,7 @@ function LabelsAnnotationsSection({
                 Specify the labels used to identify and categorize the resource.
               </p>
             </VStack>
-            
+
             {labels.map((label, index) => (
               <HStack gap={2} key={index} className="w-full">
                 <Input
@@ -803,7 +801,7 @@ function LabelsAnnotationsSection({
                 Specify the annotations used to provide additional metadata for the resource.
               </p>
             </VStack>
-            
+
             {annotations.map((annotation, index) => (
               <HStack gap={2} key={index} className="w-full">
                 <Input
@@ -880,8 +878,8 @@ export function CreatePodDisruptionBudgetPage() {
   // Section states
   const [sectionStatus, setSectionStatus] = useState<Record<SectionStep, SectionState>>({
     'basic-info': 'active',
-    'data': 'pre',
-    'selector': 'pre',
+    data: 'pre',
+    selector: 'pre',
     'labels-annotations': 'pre',
   });
 
@@ -889,10 +887,13 @@ export function CreatePodDisruptionBudgetPage() {
   const [editingSection, setEditingSection] = useState<SectionStep | null>(null);
 
   // Validation errors
-  const [podDisruptionBudgetNameError, setPodDisruptionBudgetNameError] = useState<string | null>(null);
+  const [podDisruptionBudgetNameError, setPodDisruptionBudgetNameError] = useState<string | null>(
+    null
+  );
 
   // Tab management
-  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } =
+    useTabs();
 
   // Update tab label
   useEffect(() => {
@@ -1061,30 +1062,42 @@ export function CreatePodDisruptionBudgetPage() {
     setLabels([...labels, { key: '', value: '' }]);
   }, [labels]);
 
-  const removeLabel = useCallback((index: number) => {
-    setLabels(labels.filter((_, i) => i !== index));
-  }, [labels]);
+  const removeLabel = useCallback(
+    (index: number) => {
+      setLabels(labels.filter((_, i) => i !== index));
+    },
+    [labels]
+  );
 
-  const updateLabel = useCallback((index: number, field: 'key' | 'value', value: string) => {
-    const newLabels = [...labels];
-    newLabels[index][field] = value;
-    setLabels(newLabels);
-  }, [labels]);
+  const updateLabel = useCallback(
+    (index: number, field: 'key' | 'value', value: string) => {
+      const newLabels = [...labels];
+      newLabels[index][field] = value;
+      setLabels(newLabels);
+    },
+    [labels]
+  );
 
   // Annotation management
   const addAnnotation = useCallback(() => {
     setAnnotations([...annotations, { key: '', value: '' }]);
   }, [annotations]);
 
-  const removeAnnotation = useCallback((index: number) => {
-    setAnnotations(annotations.filter((_, i) => i !== index));
-  }, [annotations]);
+  const removeAnnotation = useCallback(
+    (index: number) => {
+      setAnnotations(annotations.filter((_, i) => i !== index));
+    },
+    [annotations]
+  );
 
-  const updateAnnotation = useCallback((index: number, field: 'key' | 'value', value: string) => {
-    const newAnnotations = [...annotations];
-    newAnnotations[index][field] = value;
-    setAnnotations(newAnnotations);
-  }, [annotations]);
+  const updateAnnotation = useCallback(
+    (index: number, field: 'key' | 'value', value: string) => {
+      const newAnnotations = [...annotations];
+      newAnnotations[index][field] = value;
+      setAnnotations(newAnnotations);
+    },
+    [annotations]
+  );
 
   // Check if create button should be disabled
   const isCreateDisabled = !podDisruptionBudgetName.trim();
@@ -1200,16 +1213,18 @@ export function CreatePodDisruptionBudgetPage() {
                       title={SECTION_LABELS['basic-info']}
                       onEdit={() => handleEdit('basic-info')}
                     >
-                      <SectionCard.DataRow label="Namespace" value={namespace || '-'} showDivider={false} />
+                      <SectionCard.DataRow
+                        label="Namespace"
+                        value={namespace || '-'}
+                        showDivider={false}
+                      />
                       <SectionCard.DataRow label="Name" value={podDisruptionBudgetName} />
                       <SectionCard.DataRow label="Description" value={description || '-'} />
                     </DoneSection>
                   )}
 
                   {/* Data Section */}
-                  {sectionStatus['data'] === 'pre' && (
-                    <PreSection title={SECTION_LABELS['data']} />
-                  )}
+                  {sectionStatus['data'] === 'pre' && <PreSection title={SECTION_LABELS['data']} />}
                   {sectionStatus['data'] === 'writing' && (
                     <WritingSection title={SECTION_LABELS['data']} />
                   )}
@@ -1230,18 +1245,15 @@ export function CreatePodDisruptionBudgetPage() {
                     />
                   )}
                   {sectionStatus['data'] === 'done' && (
-                    <DoneSection
-                      title={SECTION_LABELS['data']}
-                      onEdit={() => handleEdit('data')}
-                    >
-                      <SectionCard.DataRow 
-                        label="Min. available Pods" 
-                        value={`${minAvailablePods} ${minAvailableUnit === 'percent' ? '%' : 'Pods'}`} 
+                    <DoneSection title={SECTION_LABELS['data']} onEdit={() => handleEdit('data')}>
+                      <SectionCard.DataRow
+                        label="Min. available Pods"
+                        value={`${minAvailablePods} ${minAvailableUnit === 'percent' ? '%' : 'Pods'}`}
                       />
-                      <SectionCard.DataRow 
-                        label="Max. unavailable Pods" 
-                        value={`${maxUnavailablePods} ${maxUnavailableUnit === 'percent' ? '%' : 'Pods'}`} 
-                        showDivider={false} 
+                      <SectionCard.DataRow
+                        label="Max. unavailable Pods"
+                        value={`${maxUnavailablePods} ${maxUnavailableUnit === 'percent' ? '%' : 'Pods'}`}
+                        showDivider={false}
                       />
                     </DoneSection>
                   )}
@@ -1268,10 +1280,14 @@ export function CreatePodDisruptionBudgetPage() {
                       title={SECTION_LABELS['selector']}
                       onEdit={() => handleEdit('selector')}
                     >
-                      <SectionCard.DataRow 
-                        label="Selector Rules" 
-                        value={selectorRules.length > 0 ? `${selectorRules.length} rule(s) configured` : 'No rules configured'} 
-                        showDivider={false} 
+                      <SectionCard.DataRow
+                        label="Selector Rules"
+                        value={
+                          selectorRules.length > 0
+                            ? `${selectorRules.length} rule(s) configured`
+                            : 'No rules configured'
+                        }
+                        showDivider={false}
                       />
                     </DoneSection>
                   )}
@@ -1304,7 +1320,11 @@ export function CreatePodDisruptionBudgetPage() {
                       title={SECTION_LABELS['labels-annotations']}
                       onEdit={() => handleEdit('labels-annotations')}
                     >
-                      <SectionCard.DataRow label="Labels" value={getLabelsDisplay()} showDivider={false} />
+                      <SectionCard.DataRow
+                        label="Labels"
+                        value={getLabelsDisplay()}
+                        showDivider={false}
+                      />
                       <SectionCard.DataRow label="Annotations" value={getAnnotationsDisplay()} />
                     </DoneSection>
                   )}

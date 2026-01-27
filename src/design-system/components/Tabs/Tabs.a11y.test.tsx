@@ -26,7 +26,9 @@ describe('Tabs Accessibility', () => {
       <Tabs defaultValue="tab1">
         <TabList>
           <Tab value="tab1">Active Tab</Tab>
-          <Tab value="tab2" disabled>Disabled Tab</Tab>
+          <Tab value="tab2" disabled>
+            Disabled Tab
+          </Tab>
         </TabList>
         <TabPanel value="tab1">Content 1</TabPanel>
         <TabPanel value="tab2">Content 2</TabPanel>

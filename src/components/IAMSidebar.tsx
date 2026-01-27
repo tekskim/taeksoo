@@ -28,7 +28,7 @@ interface IAMSidebarProps {
 
 export function IAMSidebar({ isOpen = true, onToggle }: IAMSidebarProps) {
   const location = useLocation();
-  
+
   // Check if current path matches href
   const isActive = (href: string) => {
     // Exact match
@@ -41,7 +41,7 @@ export function IAMSidebar({ isOpen = true, onToggle }: IAMSidebarProps) {
     }
     return false;
   };
-  
+
   if (!isOpen) return null;
 
   return (
@@ -167,4 +167,3 @@ export function IAMSidebar({ isOpen = true, onToggle }: IAMSidebarProps) {
 }
 
 export default IAMSidebar;
-

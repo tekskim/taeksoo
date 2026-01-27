@@ -8,14 +8,3 @@ export {
   type SectionCardContentProps,
   type SectionCardDataRowProps,
 } from './SectionCard';
-
-
-
-
-
-
-
-
-
-
-

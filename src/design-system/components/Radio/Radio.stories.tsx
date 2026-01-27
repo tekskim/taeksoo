@@ -260,11 +260,7 @@ export const PlanSelection: Story = {
 
     return (
       <div className="w-[400px]">
-        <RadioGroup
-          label="Choose your plan"
-          value={plan}
-          onChange={setPlan}
-        >
+        <RadioGroup label="Choose your plan" value={plan} onChange={setPlan}>
           {plans.map((p) => (
             <div
               key={p.value}
@@ -283,9 +279,7 @@ export const PlanSelection: Story = {
                   {p.price}
                 </span>
               </div>
-              <p className="ml-6 mt-1 text-sm text-[var(--color-text-muted)]">
-                {p.description}
-              </p>
+              <p className="ml-6 mt-1 text-sm text-[var(--color-text-muted)]">{p.description}</p>
             </div>
           ))}
         </RadioGroup>

@@ -173,7 +173,11 @@ function SectionStatusIcon({ status }: { status: SectionState }) {
   if (status === 'active') {
     return (
       <div className="w-4 h-4 shrink-0">
-        <IconProgress size={16} stroke={1.5} className="text-[var(--color-text-subtle)] animate-spin" />
+        <IconProgress
+          size={16}
+          stroke={1.5}
+          className="text-[var(--color-text-subtle)] animate-spin"
+        />
       </div>
     );
   }
@@ -182,7 +186,9 @@ function SectionStatusIcon({ status }: { status: SectionState }) {
     return null;
   }
 
-  return <div className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)]" />;
+  return (
+    <div className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)]" />
+  );
 }
 
 /* ----------------------------------------
@@ -196,7 +202,12 @@ interface SummarySidebarProps {
   isCreateEnabled: boolean;
 }
 
-function SummarySidebar({ sectionStatus, onCancel, onCreate, isCreateEnabled }: SummarySidebarProps) {
+function SummarySidebar({
+  sectionStatus,
+  onCancel,
+  onCreate,
+  isCreateEnabled,
+}: SummarySidebarProps) {
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
       <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-4">
@@ -219,7 +230,9 @@ function SummarySidebar({ sectionStatus, onCancel, onCreate, isCreateEnabled }: 
                       {SECTION_LABELS[sectionKey]}
                     </span>
                     {isWriting ? (
-                      <span className="text-[11px] text-[var(--color-text-subtle)]">Writing...</span>
+                      <span className="text-[11px] text-[var(--color-text-subtle)]">
+                        Writing...
+                      </span>
                     ) : (
                       <SectionStatusIcon status={sectionStatus[sectionKey]} />
                     )}
@@ -297,7 +310,9 @@ function PasswordSection({
         ) : (
           <IconCircle size={16} className="text-white/50" />
         )}
-        <span className={`text-[11px] ${hasMinLength ? 'text-[var(--color-state-success)]' : 'text-white'}`}>
+        <span
+          className={`text-[11px] ${hasMinLength ? 'text-[var(--color-state-success)]' : 'text-white'}`}
+        >
           8-64 characters long
         </span>
       </div>
@@ -307,7 +322,9 @@ function PasswordSection({
         ) : (
           <IconCircle size={16} className="text-white/50" />
         )}
-        <span className={`text-[11px] ${hasUppercase ? 'text-[var(--color-state-success)]' : 'text-white'}`}>
+        <span
+          className={`text-[11px] ${hasUppercase ? 'text-[var(--color-state-success)]' : 'text-white'}`}
+        >
           At least one uppercase letter (A-Z)
         </span>
       </div>
@@ -317,7 +334,9 @@ function PasswordSection({
         ) : (
           <IconCircle size={16} className="text-white/50" />
         )}
-        <span className={`text-[11px] ${hasLowercase ? 'text-[var(--color-state-success)]' : 'text-white'}`}>
+        <span
+          className={`text-[11px] ${hasLowercase ? 'text-[var(--color-state-success)]' : 'text-white'}`}
+        >
           At least one lowercase letter (a-z)
         </span>
       </div>
@@ -327,7 +346,9 @@ function PasswordSection({
         ) : (
           <IconCircle size={16} className="text-white/50" />
         )}
-        <span className={`text-[11px] ${hasNumber ? 'text-[var(--color-state-success)]' : 'text-white'}`}>
+        <span
+          className={`text-[11px] ${hasNumber ? 'text-[var(--color-state-success)]' : 'text-white'}`}
+        >
           At least one number
         </span>
       </div>
@@ -337,7 +358,9 @@ function PasswordSection({
         ) : (
           <IconCircle size={16} className="text-white/50" />
         )}
-        <span className={`text-[11px] ${hasSpecialChar ? 'text-[var(--color-state-success)]' : 'text-white'}`}>
+        <span
+          className={`text-[11px] ${hasSpecialChar ? 'text-[var(--color-state-success)]' : 'text-white'}`}
+        >
           At least one special character
         </span>
       </div>
@@ -345,7 +368,8 @@ function PasswordSection({
   );
 
   // Check if passwords match
-  const passwordsMatch = password.length > 0 && confirmPassword.length > 0 && password === confirmPassword;
+  const passwordsMatch =
+    password.length > 0 && confirmPassword.length > 0 && password === confirmPassword;
 
   // Confirm password tooltip content
   const confirmPasswordTooltip = (
@@ -355,7 +379,9 @@ function PasswordSection({
       ) : (
         <IconCircle size={16} className="text-white/50" />
       )}
-      <span className={`text-[11px] ${passwordsMatch ? 'text-[var(--color-state-success)]' : 'text-white'}`}>
+      <span
+        className={`text-[11px] ${passwordsMatch ? 'text-[var(--color-state-success)]' : 'text-white'}`}
+      >
         Passwords match.
       </span>
     </div>
@@ -367,7 +393,8 @@ function PasswordSection({
         Temporary Password <span className="text-[var(--color-state-danger)]">*</span>
       </label>
       <span className="text-[12px] text-[var(--color-text-subtle)] leading-4 mb-2">
-        The temporary password will be valid for 7 days. The account holder must sign in and change the password within this period.
+        The temporary password will be valid for 7 days. The account holder must sign in and change
+        the password within this period.
       </span>
       <VStack gap={3}>
         <label className="flex items-center gap-1.5 cursor-pointer">
@@ -386,9 +413,7 @@ function PasswordSection({
             checked={passwordOption === 'manual'}
             onChange={() => onPasswordOptionChange('manual')}
           />
-          <span className="text-[12px] text-[var(--color-text-default)]">
-            Manually
-          </span>
+          <span className="text-[12px] text-[var(--color-text-default)]">Manually</span>
         </label>
       </VStack>
 
@@ -640,7 +665,8 @@ function BasicInformationSection({
               Username <span className="text-[var(--color-state-danger)]">*</span>
             </label>
             <span className="text-[12px] text-[var(--color-text-subtle)] leading-4 mb-2">
-              This is the account's unique identifier for signing in. It cannot be changed once created.
+              This is the account's unique identifier for signing in. It cannot be changed once
+              created.
             </span>
             <Input
               placeholder="Enter username"
@@ -659,8 +685,8 @@ function BasicInformationSection({
                 </span>
               )}
               <span className="text-[11px] text-[var(--color-text-subtle)] leading-[16px]">
-                You can use letters, numbers, and special characters (-_.), and the length must be between
-                3-64 characters.
+                You can use letters, numbers, and special characters (-_.), and the length must be
+                between 3-64 characters.
               </span>
             </div>
           </div>
@@ -734,7 +760,9 @@ function BasicInformationSection({
 
           {/* Status */}
           <div className="flex flex-col py-6">
-            <label className="text-[14px] font-medium text-[var(--color-text-default)] mb-2">Status</label>
+            <label className="text-[14px] font-medium text-[var(--color-text-default)] mb-2">
+              Status
+            </label>
             <span className="text-[12px] text-[var(--color-text-subtle)] leading-4 mb-2">
               Select the user's status. If 'Disabled', the user will be prevented from signing in.
             </span>
@@ -820,13 +848,17 @@ function DefaultDomainSection({
               <Button variant="secondary" size="sm" onClick={onEditCancel}>
                 Cancel
               </Button>
-              <Button variant="primary" size="sm" onClick={() => {
-                if (!selectedDomain) {
-                  onDomainErrorChange('Please select a domain.');
-                  return;
-                }
-                onEditDone();
-              }}>
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={() => {
+                  if (!selectedDomain) {
+                    onDomainErrorChange('Please select a domain.');
+                    return;
+                  }
+                  onEditDone();
+                }}
+              >
                 Done
               </Button>
             </HStack>
@@ -837,11 +869,14 @@ function DefaultDomainSection({
         <VStack gap={0} className="pt-2 pb-6">
           <div className="flex flex-col gap-2">
             <div className="flex gap-[3px]">
-              <span className="text-[14px] font-medium text-[var(--color-text-default)]">Domains</span>
+              <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                Domains
+              </span>
               <span className="text-[var(--color-state-danger)]">*</span>
             </div>
             <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-              Defines which domain is opened first when the administrator signs in. The selected domain is used as the initial workspace.
+              Defines which domain is opened first when the administrator signs in. The selected
+              domain is used as the initial workspace.
             </span>
           </div>
 
@@ -858,9 +893,9 @@ function DefaultDomainSection({
                 }}
                 className="w-full h-8 pl-3 pr-9 text-[12px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] placeholder:text-[var(--color-text-subtle)] focus:outline-none focus:border-[var(--color-action-primary)] focus:shadow-[0_0_0_1px_var(--color-action-primary)]"
               />
-              <IconSearch 
-                size={14} 
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-subtle)] pointer-events-none" 
+              <IconSearch
+                size={14}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-subtle)] pointer-events-none"
               />
             </div>
           </div>
@@ -950,34 +985,42 @@ function DefaultDomainSection({
           {/* Selection indicator */}
           <div className="mt-3">
             {domainError && !selectedDomain ? (
-              <InlineMessage variant="error">
-                {domainError}
-              </InlineMessage>
+              <InlineMessage variant="error">{domainError}</InlineMessage>
             ) : (
               <SelectionIndicator
-                selectedItems={selectedDomain ? [{
-                  id: selectedDomain,
-                  label: mockDomains.find((d) => d.id === selectedDomain)?.name || selectedDomain
-                }] : []}
+                selectedItems={
+                  selectedDomain
+                    ? [
+                        {
+                          id: selectedDomain,
+                          label:
+                            mockDomains.find((d) => d.id === selectedDomain)?.name ||
+                            selectedDomain,
+                        },
+                      ]
+                    : []
+                }
                 onRemove={() => onSelectionChange(null)}
                 emptyText="No Item Selected"
               />
             )}
           </div>
-
         </VStack>
         {/* Next Button (only when not editing) */}
         {!isEditing && (
           <>
             <div className="w-full h-px bg-[var(--color-border-subtle)]" />
             <HStack justify="end" className="pt-3">
-              <Button variant="primary" onClick={() => {
-                if (!selectedDomain) {
-                  onDomainErrorChange('Please select a domain.');
-                  return;
-                }
-                onNext();
-              }}>
+              <Button
+                variant="primary"
+                onClick={() => {
+                  if (!selectedDomain) {
+                    onDomainErrorChange('Please select a domain.');
+                    return;
+                  }
+                  onNext();
+                }}
+              >
                 Next
               </Button>
             </HStack>
@@ -994,7 +1037,8 @@ function DefaultDomainSection({
 
 export default function CreateSystemAdministratorPage() {
   const navigate = useNavigate();
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
+    useTabs();
 
   // Update tab label on mount
   useEffect(() => {
@@ -1155,9 +1199,7 @@ export default function CreateSystemAdministratorPage() {
 
   // Get display values for done sections
   const getPasswordOptionDisplay = () => {
-    return passwordOption === 'temporary'
-      ? 'Auto-generated password'
-      : 'Manually';
+    return passwordOption === 'temporary' ? 'Auto-generated password' : 'Manually';
   };
 
   const getSelectedDomainDisplay = () => {
@@ -1182,7 +1224,7 @@ export default function CreateSystemAdministratorPage() {
       >
         {/* Tab Bar */}
         <TabBar
-          tabs={tabs.map(tab => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
@@ -1211,7 +1253,6 @@ export default function CreateSystemAdministratorPage() {
         {/* Scrollable content */}
         <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
           <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)] min-h-full">
-
             {/* Main content area */}
             <VStack gap={3} className="min-w-[1176px]">
               {/* Page Title */}

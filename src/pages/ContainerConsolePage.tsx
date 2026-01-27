@@ -1,9 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
-import {
-  IconTerminal2,
-  IconCircleFilled,
-} from '@tabler/icons-react';
+import { IconTerminal2, IconCircleFilled } from '@tabler/icons-react';
 import { Select, Button, TabBar, TopBar, Breadcrumb } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -42,9 +39,7 @@ function ConnectionStatusIndicator({ status }: { status: ConnectionStatus }) {
   return (
     <div className="flex items-center gap-2.5 px-3">
       <IconCircleFilled size={16} className={config.color} />
-      <span className={`text-[12px] font-medium ${config.color}`}>
-        {config.label}
-      </span>
+      <span className={`text-[12px] font-medium ${config.color}`}>{config.label}</span>
     </div>
   );
 }
@@ -58,7 +53,7 @@ export function ContainerConsolePage() {
   const [searchParams] = useSearchParams();
   const instanceName = searchParams.get('name') || instanceId || 'kubectl';
   const navigate = useNavigate();
-  
+
   const [connectionStatus, setConnectionStatus] = useState<ConnectionStatus>('connecting');
   const [commandHistory, setCommandHistory] = useState<string[]>([
     '# Run kubectl commands inside here',
@@ -69,12 +64,12 @@ export function ContainerConsolePage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const contentRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  
+
   // Tab management
   const { tabs, activeTabId, selectTab, closeTab, addTab, addNewTab, moveTab } = useTabs();
-  
+
   // Convert tabs to TabBar format with terminal icon for console tabs
-  const tabBarTabs = tabs.map(tab => ({
+  const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
     closable: tab.closable,
@@ -83,7 +78,7 @@ export function ContainerConsolePage() {
 
   // Handle tab change
   const handleTabChange = (tabId: string) => {
-    const tab = tabs.find(t => t.id === tabId);
+    const tab = tabs.find((t) => t.id === tabId);
     if (tab) {
       selectTab(tabId);
       navigate(tab.path);
@@ -129,26 +124,26 @@ export function ContainerConsolePage() {
   }, []);
 
   // Handle command input
-  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && currentInput.trim()) {
-      // Add command to history
-      setCommandHistory(prev => [...prev, `> ${currentInput}`]);
-      
-      // Simulate command response
-      setTimeout(() => {
-        setCommandHistory(prev => [...prev, `Executing: ${currentInput}...`, '']);
-      }, 100);
-      
-      setCurrentInput('');
-    }
-  }, [currentInput]);
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === 'Enter' && currentInput.trim()) {
+        // Add command to history
+        setCommandHistory((prev) => [...prev, `> ${currentInput}`]);
+
+        // Simulate command response
+        setTimeout(() => {
+          setCommandHistory((prev) => [...prev, `Executing: ${currentInput}...`, '']);
+        }, 100);
+
+        setCurrentInput('');
+      }
+    },
+    [currentInput]
+  );
 
   // Handle clear
   const handleClear = useCallback(() => {
-    setCommandHistory([
-      '# Run kubectl commands inside here',
-      '# e.g. kubectl get all',
-    ]);
+    setCommandHistory(['# Run kubectl commands inside here', '# e.g. kubectl get all']);
     setCurrentInput('');
   }, []);
 
@@ -158,11 +153,8 @@ export function ContainerConsolePage() {
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       {/* Container Sidebar */}
-      <ContainerSidebar 
-        isOpen={sidebarOpen} 
-        onToggle={() => setSidebarOpen(!sidebarOpen)} 
-      />
-      
+      <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+
       <main
         className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
         style={{ left: `${sidebarWidth}px` }}
@@ -198,7 +190,7 @@ export function ContainerConsolePage() {
             }
           />
         </div>
-          
+
         {/* Console Content - Full height */}
         <div className="flex flex-col flex-1">
           {/* Console Area - Dark background with monospace font */}
@@ -213,7 +205,7 @@ export function ContainerConsolePage() {
                 {line}
               </div>
             ))}
-            
+
             {/* Current Input Line */}
             <div className="flex items-center">
               <span className="text-white">&gt; </span>
@@ -260,4 +252,3 @@ export function ContainerConsolePage() {
 }
 
 export default ContainerConsolePage;
-

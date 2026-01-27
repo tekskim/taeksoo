@@ -3,17 +3,19 @@ import { Route } from 'react-router-dom';
 
 // Lazy load all design system pages for code splitting
 // DesignSystemPage and GradientShowcasePage use named exports
-const DesignSystemPage = lazy(() => 
+const DesignSystemPage = lazy(() =>
   import('@/pages/DesignSystemPage')
-    .then(m => ({ default: m.DesignSystemPage }))
-    .catch(err => {
+    .then((m) => ({ default: m.DesignSystemPage }))
+    .catch((err) => {
       console.error('Failed to load DesignSystemPage:', err);
       throw err;
     })
 );
 const DrawersPage = lazy(() => import('@/pages/DrawersPage'));
 const ModalsPage = lazy(() => import('@/pages/ModalsPage'));
-const GradientShowcasePage = lazy(() => import('@/pages/GradientShowcasePage').then(m => ({ default: m.GradientShowcasePage })));
+const GradientShowcasePage = lazy(() =>
+  import('@/pages/GradientShowcasePage').then((m) => ({ default: m.GradientShowcasePage }))
+);
 const ColorPalettePage = lazy(() => import('@/pages/ColorPalettePage'));
 const MetallicPalettePage = lazy(() => import('@/pages/MetallicPalettePage'));
 
@@ -30,4 +32,3 @@ export const designRoutes = (
     <Route path="/design/metallic" element={<MetallicPalettePage />} />
   </>
 );
-

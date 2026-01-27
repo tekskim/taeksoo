@@ -46,11 +46,46 @@ interface AllocateFloatingIPDrawerProps {
 
 // Mock data
 const mockNetworks: NetworkItem[] = [
-  { id: 'net-1', name: 'net-03', status: 'active', external: true, shared: 'Public', subnetCidr: '192.168.10.0/22' },
-  { id: 'net-2', name: 'net-03', status: 'active', external: true, shared: 'Public', subnetCidr: '192.168.10.0/22' },
-  { id: 'net-3', name: 'net-03', status: 'active', external: true, shared: 'Public', subnetCidr: '192.168.10.0/22' },
-  { id: 'net-4', name: 'net-03', status: 'active', external: true, shared: 'Public', subnetCidr: '192.168.10.0/22' },
-  { id: 'net-5', name: 'net-03', status: 'active', external: true, shared: 'Public', subnetCidr: '192.168.10.0/22' },
+  {
+    id: 'net-1',
+    name: 'net-03',
+    status: 'active',
+    external: true,
+    shared: 'Public',
+    subnetCidr: '192.168.10.0/22',
+  },
+  {
+    id: 'net-2',
+    name: 'net-03',
+    status: 'active',
+    external: true,
+    shared: 'Public',
+    subnetCidr: '192.168.10.0/22',
+  },
+  {
+    id: 'net-3',
+    name: 'net-03',
+    status: 'active',
+    external: true,
+    shared: 'Public',
+    subnetCidr: '192.168.10.0/22',
+  },
+  {
+    id: 'net-4',
+    name: 'net-03',
+    status: 'active',
+    external: true,
+    shared: 'Public',
+    subnetCidr: '192.168.10.0/22',
+  },
+  {
+    id: 'net-5',
+    name: 'net-03',
+    status: 'active',
+    external: true,
+    shared: 'Public',
+    subnetCidr: '192.168.10.0/22',
+  },
 ];
 
 const mockDnsOptions = [
@@ -112,9 +147,10 @@ export function AllocateFloatingIPDrawer({
   };
 
   // Filter networks
-  const filteredNetworks = networks.filter((net) =>
-    net.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    net.subnetCidr.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredNetworks = networks.filter(
+    (net) =>
+      net.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      net.subnetCidr.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   // Sort networks
@@ -145,7 +181,7 @@ export function AllocateFloatingIPDrawer({
 
   const handleSubmit = () => {
     setHasAttemptedSubmit(true);
-    
+
     if (!selectedNetworkId) return;
 
     onSubmit?.({
@@ -174,13 +210,17 @@ export function AllocateFloatingIPDrawer({
           <VStack gap={4} className="w-full">
             <VStack gap={2} className="w-full">
               <HStack justify="space-between" className="w-full">
-                <span className="text-[14px] font-medium text-[var(--color-text-default)]">Floating IP Quota</span>
-                <span className="text-[12px] text-[var(--color-text-default)]">{floatingIPQuota.used}/{floatingIPQuota.total}</span>
+                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                  Floating IP Quota
+                </span>
+                <span className="text-[12px] text-[var(--color-text-default)]">
+                  {floatingIPQuota.used}/{floatingIPQuota.total}
+                </span>
               </HStack>
               <div className="w-full h-1 flex pr-1">
-                <div 
-                  className="h-1 rounded-lg bg-[var(--color-state-success)] z-[3] -mr-1" 
-                  style={{ width: `${(floatingIPQuota.used / floatingIPQuota.total) * 100}%` }} 
+                <div
+                  className="h-1 rounded-lg bg-[var(--color-state-success)] z-[3] -mr-1"
+                  style={{ width: `${(floatingIPQuota.used / floatingIPQuota.total) * 100}%` }}
                 />
                 <div className="flex-1 h-1 rounded-lg bg-[var(--color-border-subtle)] z-[1]" />
               </div>
@@ -211,9 +251,7 @@ export function AllocateFloatingIPDrawer({
             <span className="text-[14px] font-medium text-[var(--color-text-default)]">
               Description
             </span>
-            <span className="text-[12px] text-[var(--color-text-subtle)]">
-              (Optional)
-            </span>
+            <span className="text-[12px] text-[var(--color-text-subtle)]">(Optional)</span>
           </HStack>
           <Input
             value={description}
@@ -250,7 +288,10 @@ export function AllocateFloatingIPDrawer({
           />
 
           {/* Network Table */}
-          <div className="flex flex-col gap-[var(--table-row-gap)] w-full" style={{ maxWidth: '648px' }}>
+          <div
+            className="flex flex-col gap-[var(--table-row-gap)] w-full"
+            style={{ maxWidth: '648px' }}
+          >
             {/* Header */}
             <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
               <div className="w-[var(--table-checkbox-width)] flex items-center justify-center" />
@@ -317,7 +358,11 @@ export function AllocateFloatingIPDrawer({
                     >
                       {network.name}
                     </a>
-                    <IconExternalLink size={12} stroke={1.5} className="shrink-0 text-[var(--color-action-primary)]" />
+                    <IconExternalLink
+                      size={12}
+                      stroke={1.5}
+                      className="shrink-0 text-[var(--color-action-primary)]"
+                    />
                   </HStack>
                   <span className="text-[11px] text-[var(--color-text-subtle)] truncate">
                     ID : {network.id}
@@ -344,7 +389,9 @@ export function AllocateFloatingIPDrawer({
 
           {/* Selection Indicator */}
           <SelectionIndicator
-            selectedItems={selectedNetwork ? [{ id: selectedNetwork.id, label: selectedNetwork.name }] : []}
+            selectedItems={
+              selectedNetwork ? [{ id: selectedNetwork.id, label: selectedNetwork.name }] : []
+            }
             onRemove={() => setSelectedNetworkId(null)}
             emptyText="No item Selected"
             error={hasAttemptedSubmit && !selectedNetworkId}
@@ -451,7 +498,8 @@ export function AllocateFloatingIPDrawer({
                   </span>
                 )}
                 <span className="text-[11px] text-[var(--color-text-subtle)]">
-                  Allowed: 1–63 characters; lowercase letters, numbers, "-"; no leading/trailing hyphens.
+                  Allowed: 1–63 characters; lowercase letters, numbers, "-"; no leading/trailing
+                  hyphens.
                 </span>
               </VStack>
             </VStack>

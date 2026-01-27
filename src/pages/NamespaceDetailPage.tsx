@@ -80,7 +80,7 @@ const mockNamespaceData: Record<string, NamespaceData> = {
     annotations: {},
     resources: { active: 122, processing: 0, error: 0, total: 138 },
   },
-  'default': {
+  default: {
     name: 'default',
     status: 'Active',
     createdAt: '2025-11-06 12:57',
@@ -320,9 +320,7 @@ function StatCard({ label, value, color }: StatCardProps) {
   return (
     <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
       <VStack gap={1.5}>
-        <span className={`text-[11px] font-medium ${colorStyles[color].text}`}>
-          {label}
-        </span>
+        <span className={`text-[11px] font-medium ${colorStyles[color].text}`}>{label}</span>
         <span className={`text-[24px] font-semibold leading-[36px] ${colorStyles[color].text}`}>
           {value}
         </span>
@@ -330,7 +328,6 @@ function StatCard({ label, value, color }: StatCardProps) {
     </div>
   );
 }
-
 
 /* ----------------------------------------
    Resources Tab Content
@@ -396,11 +393,7 @@ function ResourcesTab({ resources }: ResourcesTabProps) {
         onPageChange={setCurrentPage}
         totalItems={resources.length}
       />
-      <Table
-        columns={columns}
-        data={resources}
-        rowKey="id"
-      />
+      <Table columns={columns} data={resources} rowKey="id" />
     </VStack>
   );
 }
@@ -414,19 +407,40 @@ interface WorkloadsTabProps {
 }
 
 // Helper function to get context menu items based on workload type
-function getWorkloadMenuItems(type: string, workload: WorkloadRow, onAction: (action: string, workload: WorkloadRow) => void): ContextMenuItem[] {
+function getWorkloadMenuItems(
+  type: string,
+  workload: WorkloadRow,
+  onAction: (action: string, workload: WorkloadRow) => void
+): ContextMenuItem[] {
   const commonItems: ContextMenuItem[] = [
     { id: 'edit-config', label: 'Edit Config', onClick: () => onAction('edit-config', workload) },
     { id: 'edit-yaml', label: 'Edit YAML', onClick: () => onAction('edit-yaml', workload) },
-    { id: 'download-yaml', label: 'Download YAML', onClick: () => onAction('download-yaml', workload) },
-    { id: 'delete', label: 'Delete', status: 'danger', onClick: () => onAction('delete', workload) },
+    {
+      id: 'download-yaml',
+      label: 'Download YAML',
+      onClick: () => onAction('download-yaml', workload),
+    },
+    {
+      id: 'delete',
+      label: 'Delete',
+      status: 'danger',
+      onClick: () => onAction('delete', workload),
+    },
   ];
 
   switch (type) {
     case 'Deployment':
       return [
-        { id: 'execute-shell', label: 'Execute Shell', onClick: () => onAction('execute-shell', workload) },
-        { id: 'pause-orchestration', label: 'Pause Orchestration', onClick: () => onAction('pause-orchestration', workload) },
+        {
+          id: 'execute-shell',
+          label: 'Execute Shell',
+          onClick: () => onAction('execute-shell', workload),
+        },
+        {
+          id: 'pause-orchestration',
+          label: 'Pause Orchestration',
+          onClick: () => onAction('pause-orchestration', workload),
+        },
         { id: 'redeploy', label: 'Redeploy', onClick: () => onAction('redeploy', workload) },
         { id: 'rollback', label: 'Rollback', onClick: () => onAction('rollback', workload) },
         ...commonItems,
@@ -434,31 +448,51 @@ function getWorkloadMenuItems(type: string, workload: WorkloadRow, onAction: (ac
     case 'DaemonSet':
     case 'StatefulSet':
       return [
-        { id: 'execute-shell', label: 'Execute Shell', onClick: () => onAction('execute-shell', workload) },
+        {
+          id: 'execute-shell',
+          label: 'Execute Shell',
+          onClick: () => onAction('execute-shell', workload),
+        },
         { id: 'redeploy', label: 'Redeploy', onClick: () => onAction('redeploy', workload) },
         ...commonItems,
       ];
     case 'CronJob':
       return [
-        { id: 'execute-shell', label: 'Execute Shell', onClick: () => onAction('execute-shell', workload) },
+        {
+          id: 'execute-shell',
+          label: 'Execute Shell',
+          onClick: () => onAction('execute-shell', workload),
+        },
         { id: 'run-now', label: 'Run Now', onClick: () => onAction('run-now', workload) },
         { id: 'suspend', label: 'Suspend', onClick: () => onAction('suspend', workload) },
         ...commonItems,
       ];
     case 'Job':
       return [
-        { id: 'execute-shell', label: 'Execute Shell', onClick: () => onAction('execute-shell', workload) },
+        {
+          id: 'execute-shell',
+          label: 'Execute Shell',
+          onClick: () => onAction('execute-shell', workload),
+        },
         ...commonItems,
       ];
     case 'Pod':
       return [
-        { id: 'execute-shell', label: 'Execute Shell', onClick: () => onAction('execute-shell', workload) },
+        {
+          id: 'execute-shell',
+          label: 'Execute Shell',
+          onClick: () => onAction('execute-shell', workload),
+        },
         { id: 'view-logs', label: 'View Logs', onClick: () => onAction('view-logs', workload) },
         ...commonItems,
       ];
     default:
       return [
-        { id: 'execute-shell', label: 'Execute Shell', onClick: () => onAction('execute-shell', workload) },
+        {
+          id: 'execute-shell',
+          label: 'Execute Shell',
+          onClick: () => onAction('execute-shell', workload),
+        },
         ...commonItems,
       ];
   }
@@ -542,15 +576,16 @@ function WorkloadsTab({ workloads }: WorkloadsTabProps) {
       width: '64px',
       align: 'center',
       render: (_: unknown, row: WorkloadRow) => (
-        <ContextMenu
-          items={getWorkloadMenuItems(row.type, row, handleMenuAction)}
-          trigger="click"
-        >
+        <ContextMenu items={getWorkloadMenuItems(row.type, row, handleMenuAction)} trigger="click">
           <button
             className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
             onClick={(e) => e.stopPropagation()}
           >
-            <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+            <IconDotsCircleHorizontal
+              size={16}
+              stroke={1.5}
+              className="text-[var(--action-icon-color)]"
+            />
           </button>
         </ContextMenu>
       ),
@@ -631,11 +666,7 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
         onPageChange={setCurrentPage}
         totalItems={conditions.length}
       />
-      <Table
-        columns={columns}
-        data={conditions}
-        rowKey="id"
-      />
+      <Table columns={columns} data={conditions} rowKey="id" />
     </VStack>
   );
 }
@@ -661,7 +692,8 @@ export function NamespaceDetailPage() {
   };
 
   // Tab management
-  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } =
+    useTabs();
 
   // Update tab label
   useEffect(() => {
@@ -780,12 +812,15 @@ export function NamespaceDetailPage() {
                   <DetailHeader.InfoCard
                     label="Status"
                     value={namespace.status}
-                    status={namespace.status === 'Active' ? 'active' : namespace.status === 'Terminating' ? 'error' : 'pending'}
+                    status={
+                      namespace.status === 'Active'
+                        ? 'active'
+                        : namespace.status === 'Terminating'
+                          ? 'error'
+                          : 'pending'
+                    }
                   />
-                  <DetailHeader.InfoCard
-                    label="Created At"
-                    value={namespace.createdAt}
-                  />
+                  <DetailHeader.InfoCard label="Created At" value={namespace.createdAt} />
                   <DetailHeader.InfoCard
                     label={`Labels (${Object.keys(namespace.labels).length})`}
                     value={
@@ -802,7 +837,11 @@ export function NamespaceDetailPage() {
                   />
                   <DetailHeader.InfoCard
                     label={`Annotations (${Object.keys(namespace.annotations).length})`}
-                    value={Object.keys(namespace.annotations).length > 0 ? Object.keys(namespace.annotations).length.toString() : '-'}
+                    value={
+                      Object.keys(namespace.annotations).length > 0
+                        ? Object.keys(namespace.annotations).length.toString()
+                        : '-'
+                    }
                   />
                 </DetailHeader.InfoGrid>
               </DetailHeader>
@@ -816,7 +855,11 @@ export function NamespaceDetailPage() {
                 {/* Stat Cards */}
                 <HStack gap={3} className="w-full">
                   <StatCard label="Active" value={namespace.resources.active} color="green" />
-                  <StatCard label="Processing" value={namespace.resources.processing} color="blue" />
+                  <StatCard
+                    label="Processing"
+                    value={namespace.resources.processing}
+                    color="blue"
+                  />
                   <StatCard label="Error" value={namespace.resources.error} color="red" />
                   <StatCard label="Total" value={namespace.resources.total} color="black" />
                 </HStack>

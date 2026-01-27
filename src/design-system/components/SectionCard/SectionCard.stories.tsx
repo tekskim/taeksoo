@@ -100,8 +100,8 @@ export const ActiveState: Story = {
 export const WithHeaderActions: Story = {
   render: () => (
     <SectionCard>
-      <SectionCard.Header 
-        title="Configuration" 
+      <SectionCard.Header
+        title="Configuration"
         actions={
           <Button size="sm" variant="secondary" leftIcon={<IconEdit size={14} />}>
             Edit
@@ -144,16 +144,16 @@ export const WithLink: Story = {
     <SectionCard>
       <SectionCard.Header title="Related Resources" />
       <SectionCard.Content>
-        <SectionCard.DataRow 
-          label="Network" 
-          value="vpc-network-01" 
-          isLink 
+        <SectionCard.DataRow
+          label="Network"
+          value="vpc-network-01"
+          isLink
           linkHref="/network/vpc-001"
         />
-        <SectionCard.DataRow 
-          label="Subnet" 
-          value="subnet-primary" 
-          isLink 
+        <SectionCard.DataRow
+          label="Subnet"
+          value="subnet-primary"
+          isLink
           linkHref="/network/subnet-001"
         />
       </SectionCard.Content>

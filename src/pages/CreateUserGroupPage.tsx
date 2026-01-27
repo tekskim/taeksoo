@@ -62,31 +62,231 @@ const SECTION_ORDER: SectionStep[] = ['basic-info', 'add-users'];
    ---------------------------------------- */
 
 const mockUsers: User[] = [
-  { id: 'user-1', username: 'thaki-kim', userGroups: 'dev-admin-group (+2)', roles: 'compute-admin (+3)', lastSignIn: '2025-09-12', status: 'active', createdAt: '2025-09-12' },
-  { id: 'user-2', username: 'thaki-kim', userGroups: 'dev-admin-group (+2)', roles: 'compute-admin (+3)', lastSignIn: '2025-09-12', status: 'active', createdAt: '2025-09-12' },
-  { id: 'user-3', username: 'thaki-kim', userGroups: 'dev-admin-group (+2)', roles: 'compute-admin (+3)', lastSignIn: '2025-09-12', status: 'active', createdAt: '2025-09-12' },
-  { id: 'user-4', username: 'thaki-kim', userGroups: 'dev-admin-group (+2)', roles: 'compute-admin (+3)', lastSignIn: '2025-09-12', status: 'active', createdAt: '2025-09-12' },
-  { id: 'user-5', username: 'thaki-kim', userGroups: 'dev-admin-group (+2)', roles: 'compute-admin (+3)', lastSignIn: '2025-09-12', status: 'active', createdAt: '2025-09-12' },
-  { id: 'user-6', username: 'thaki-kim', userGroups: 'dev-admin-group (+2)', roles: 'compute-admin (+3)', lastSignIn: '2025-09-12', status: 'active', createdAt: '2025-09-12' },
-  { id: 'user-7', username: 'thaki-kim', userGroups: 'dev-admin-group (+2)', roles: 'compute-admin (+3)', lastSignIn: '2025-09-12', status: 'active', createdAt: '2025-09-12' },
-  { id: 'user-8', username: 'admin-user', userGroups: 'admins (+1)', roles: 'full-access (+5)', lastSignIn: '2025-09-10', status: 'active', createdAt: '2025-09-10' },
-  { id: 'user-9', username: 'dev-user', userGroups: 'developers (+3)', roles: 'write-access (+2)', lastSignIn: '2025-09-08', status: 'active', createdAt: '2025-09-08' },
-  { id: 'user-10', username: 'viewer-user', userGroups: 'viewers', roles: 'read-only', lastSignIn: '2025-09-05', status: 'inactive', createdAt: '2025-09-05' },
-  { id: 'user-11', username: 'test-user-1', userGroups: 'testers (+1)', roles: 'qa-role (+2)', lastSignIn: '2025-09-01', status: 'active', createdAt: '2025-09-01' },
-  { id: 'user-12', username: 'test-user-2', userGroups: 'testers (+1)', roles: 'qa-role (+2)', lastSignIn: '2025-08-28', status: 'active', createdAt: '2025-08-28' },
-  { id: 'user-13', username: 'ops-user', userGroups: 'ops-team (+2)', roles: 'infra-admin (+3)', lastSignIn: '2025-08-25', status: 'active', createdAt: '2025-08-25' },
-  { id: 'user-14', username: 'support-user', userGroups: 'support (+1)', roles: 'support-role', lastSignIn: '2025-08-20', status: 'active', createdAt: '2025-08-20' },
-  { id: 'user-15', username: 'manager-user', userGroups: 'managers (+2)', roles: 'manager-role (+4)', lastSignIn: '2025-08-15', status: 'active', createdAt: '2025-08-15' },
-  { id: 'user-16', username: 'analyst-user', userGroups: 'analysts', roles: 'read-analytics', lastSignIn: '2025-08-10', status: 'active', createdAt: '2025-08-10' },
-  { id: 'user-17', username: 'security-user', userGroups: 'security (+3)', roles: 'security-admin (+5)', lastSignIn: '2025-08-05', status: 'active', createdAt: '2025-08-05' },
-  { id: 'user-18', username: 'finance-user', userGroups: 'finance (+1)', roles: 'finance-role (+2)', lastSignIn: '2025-08-01', status: 'inactive', createdAt: '2025-08-01' },
-  { id: 'user-19', username: 'hr-user', userGroups: 'hr-team (+2)', roles: 'hr-role (+3)', lastSignIn: '2025-07-28', status: 'active', createdAt: '2025-07-28' },
-  { id: 'user-20', username: 'legal-user', userGroups: 'legal', roles: 'legal-role', lastSignIn: '2025-07-25', status: 'active', createdAt: '2025-07-25' },
-  { id: 'user-21', username: 'marketing-user', userGroups: 'marketing (+1)', roles: 'marketing-role (+2)', lastSignIn: '2025-07-20', status: 'active', createdAt: '2025-07-20' },
-  { id: 'user-22', username: 'sales-user', userGroups: 'sales (+2)', roles: 'sales-role (+3)', lastSignIn: '2025-07-15', status: 'active', createdAt: '2025-07-15' },
-  { id: 'user-23', username: 'customer-user', userGroups: 'customers', roles: 'customer-role', lastSignIn: '2025-07-10', status: 'active', createdAt: '2025-07-10' },
-  { id: 'user-24', username: 'partner-user', userGroups: 'partners (+1)', roles: 'partner-role (+2)', lastSignIn: '2025-07-05', status: 'active', createdAt: '2025-07-05' },
-  { id: 'user-25', username: 'vendor-user', userGroups: 'vendors', roles: 'vendor-role', lastSignIn: '2025-07-01', status: 'inactive', createdAt: '2025-07-01' },
+  {
+    id: 'user-1',
+    username: 'thaki-kim',
+    userGroups: 'dev-admin-group (+2)',
+    roles: 'compute-admin (+3)',
+    lastSignIn: '2025-09-12',
+    status: 'active',
+    createdAt: '2025-09-12',
+  },
+  {
+    id: 'user-2',
+    username: 'thaki-kim',
+    userGroups: 'dev-admin-group (+2)',
+    roles: 'compute-admin (+3)',
+    lastSignIn: '2025-09-12',
+    status: 'active',
+    createdAt: '2025-09-12',
+  },
+  {
+    id: 'user-3',
+    username: 'thaki-kim',
+    userGroups: 'dev-admin-group (+2)',
+    roles: 'compute-admin (+3)',
+    lastSignIn: '2025-09-12',
+    status: 'active',
+    createdAt: '2025-09-12',
+  },
+  {
+    id: 'user-4',
+    username: 'thaki-kim',
+    userGroups: 'dev-admin-group (+2)',
+    roles: 'compute-admin (+3)',
+    lastSignIn: '2025-09-12',
+    status: 'active',
+    createdAt: '2025-09-12',
+  },
+  {
+    id: 'user-5',
+    username: 'thaki-kim',
+    userGroups: 'dev-admin-group (+2)',
+    roles: 'compute-admin (+3)',
+    lastSignIn: '2025-09-12',
+    status: 'active',
+    createdAt: '2025-09-12',
+  },
+  {
+    id: 'user-6',
+    username: 'thaki-kim',
+    userGroups: 'dev-admin-group (+2)',
+    roles: 'compute-admin (+3)',
+    lastSignIn: '2025-09-12',
+    status: 'active',
+    createdAt: '2025-09-12',
+  },
+  {
+    id: 'user-7',
+    username: 'thaki-kim',
+    userGroups: 'dev-admin-group (+2)',
+    roles: 'compute-admin (+3)',
+    lastSignIn: '2025-09-12',
+    status: 'active',
+    createdAt: '2025-09-12',
+  },
+  {
+    id: 'user-8',
+    username: 'admin-user',
+    userGroups: 'admins (+1)',
+    roles: 'full-access (+5)',
+    lastSignIn: '2025-09-10',
+    status: 'active',
+    createdAt: '2025-09-10',
+  },
+  {
+    id: 'user-9',
+    username: 'dev-user',
+    userGroups: 'developers (+3)',
+    roles: 'write-access (+2)',
+    lastSignIn: '2025-09-08',
+    status: 'active',
+    createdAt: '2025-09-08',
+  },
+  {
+    id: 'user-10',
+    username: 'viewer-user',
+    userGroups: 'viewers',
+    roles: 'read-only',
+    lastSignIn: '2025-09-05',
+    status: 'inactive',
+    createdAt: '2025-09-05',
+  },
+  {
+    id: 'user-11',
+    username: 'test-user-1',
+    userGroups: 'testers (+1)',
+    roles: 'qa-role (+2)',
+    lastSignIn: '2025-09-01',
+    status: 'active',
+    createdAt: '2025-09-01',
+  },
+  {
+    id: 'user-12',
+    username: 'test-user-2',
+    userGroups: 'testers (+1)',
+    roles: 'qa-role (+2)',
+    lastSignIn: '2025-08-28',
+    status: 'active',
+    createdAt: '2025-08-28',
+  },
+  {
+    id: 'user-13',
+    username: 'ops-user',
+    userGroups: 'ops-team (+2)',
+    roles: 'infra-admin (+3)',
+    lastSignIn: '2025-08-25',
+    status: 'active',
+    createdAt: '2025-08-25',
+  },
+  {
+    id: 'user-14',
+    username: 'support-user',
+    userGroups: 'support (+1)',
+    roles: 'support-role',
+    lastSignIn: '2025-08-20',
+    status: 'active',
+    createdAt: '2025-08-20',
+  },
+  {
+    id: 'user-15',
+    username: 'manager-user',
+    userGroups: 'managers (+2)',
+    roles: 'manager-role (+4)',
+    lastSignIn: '2025-08-15',
+    status: 'active',
+    createdAt: '2025-08-15',
+  },
+  {
+    id: 'user-16',
+    username: 'analyst-user',
+    userGroups: 'analysts',
+    roles: 'read-analytics',
+    lastSignIn: '2025-08-10',
+    status: 'active',
+    createdAt: '2025-08-10',
+  },
+  {
+    id: 'user-17',
+    username: 'security-user',
+    userGroups: 'security (+3)',
+    roles: 'security-admin (+5)',
+    lastSignIn: '2025-08-05',
+    status: 'active',
+    createdAt: '2025-08-05',
+  },
+  {
+    id: 'user-18',
+    username: 'finance-user',
+    userGroups: 'finance (+1)',
+    roles: 'finance-role (+2)',
+    lastSignIn: '2025-08-01',
+    status: 'inactive',
+    createdAt: '2025-08-01',
+  },
+  {
+    id: 'user-19',
+    username: 'hr-user',
+    userGroups: 'hr-team (+2)',
+    roles: 'hr-role (+3)',
+    lastSignIn: '2025-07-28',
+    status: 'active',
+    createdAt: '2025-07-28',
+  },
+  {
+    id: 'user-20',
+    username: 'legal-user',
+    userGroups: 'legal',
+    roles: 'legal-role',
+    lastSignIn: '2025-07-25',
+    status: 'active',
+    createdAt: '2025-07-25',
+  },
+  {
+    id: 'user-21',
+    username: 'marketing-user',
+    userGroups: 'marketing (+1)',
+    roles: 'marketing-role (+2)',
+    lastSignIn: '2025-07-20',
+    status: 'active',
+    createdAt: '2025-07-20',
+  },
+  {
+    id: 'user-22',
+    username: 'sales-user',
+    userGroups: 'sales (+2)',
+    roles: 'sales-role (+3)',
+    lastSignIn: '2025-07-15',
+    status: 'active',
+    createdAt: '2025-07-15',
+  },
+  {
+    id: 'user-23',
+    username: 'customer-user',
+    userGroups: 'customers',
+    roles: 'customer-role',
+    lastSignIn: '2025-07-10',
+    status: 'active',
+    createdAt: '2025-07-10',
+  },
+  {
+    id: 'user-24',
+    username: 'partner-user',
+    userGroups: 'partners (+1)',
+    roles: 'partner-role (+2)',
+    lastSignIn: '2025-07-05',
+    status: 'active',
+    createdAt: '2025-07-05',
+  },
+  {
+    id: 'user-25',
+    username: 'vendor-user',
+    userGroups: 'vendors',
+    roles: 'vendor-role',
+    lastSignIn: '2025-07-01',
+    status: 'inactive',
+    createdAt: '2025-07-01',
+  },
 ];
 
 /* ----------------------------------------
@@ -173,7 +373,11 @@ function SectionStatusIcon({ status }: { status: SectionState }) {
   if (status === 'active') {
     return (
       <div className="w-4 h-4 shrink-0">
-        <IconProgress size={16} stroke={1.5} className="text-[var(--color-text-subtle)] animate-spin" />
+        <IconProgress
+          size={16}
+          stroke={1.5}
+          className="text-[var(--color-text-subtle)] animate-spin"
+        />
       </div>
     );
   }
@@ -182,7 +386,9 @@ function SectionStatusIcon({ status }: { status: SectionState }) {
     return null;
   }
 
-  return <div className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)]" />;
+  return (
+    <div className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)]" />
+  );
 }
 
 /* ----------------------------------------
@@ -196,7 +402,12 @@ interface SummarySidebarProps {
   isCreateEnabled: boolean;
 }
 
-function SummarySidebar({ sectionStatus, onCancel, onCreate, isCreateEnabled }: SummarySidebarProps) {
+function SummarySidebar({
+  sectionStatus,
+  onCancel,
+  onCreate,
+  isCreateEnabled,
+}: SummarySidebarProps) {
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
       <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-4">
@@ -219,7 +430,9 @@ function SummarySidebar({ sectionStatus, onCancel, onCreate, isCreateEnabled }: 
                       {SECTION_LABELS[sectionKey]}
                     </span>
                     {isWriting ? (
-                      <span className="text-[11px] text-[var(--color-text-subtle)]">Writing...</span>
+                      <span className="text-[11px] text-[var(--color-text-subtle)]">
+                        Writing...
+                      </span>
                     ) : (
                       <SectionStatusIcon status={sectionStatus[sectionKey]} />
                     )}
@@ -320,7 +533,8 @@ function BasicInformationSection({
               Group name <span className="text-[var(--color-state-danger)]">*</span>
             </label>
             <span className="text-[12px] text-[var(--color-text-subtle)] leading-4 mb-2">
-              Enter a unique name for the user group. This will be used to identify the group across the system.
+              Enter a unique name for the user group. This will be used to identify the group across
+              the system.
             </span>
             <Input
               placeholder="Enter group name"
@@ -339,8 +553,8 @@ function BasicInformationSection({
                 </span>
               )}
               <span className="text-[11px] text-[var(--color-text-subtle)] leading-[16px]">
-                You can use letters, numbers, and special characters (-_.), and the length must be between
-                3-64 characters.
+                You can use letters, numbers, and special characters (-_.), and the length must be
+                between 3-64 characters.
               </span>
             </div>
           </div>
@@ -360,7 +574,8 @@ function BasicInformationSection({
               fullWidth
             />
             <span className="text-[11px] text-[var(--color-text-subtle)] leading-[16px] mt-1">
-              You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255 characters.
+              You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255
+              characters.
             </span>
           </div>
 
@@ -431,9 +646,7 @@ function AddUsersSection({
       label: 'Status',
       width: '64px',
       align: 'center',
-      render: (_, row) => (
-        <StatusIndicator status={row.status} />
-      ),
+      render: (_, row) => <StatusIndicator status={row.status} />,
     },
     {
       key: 'username',
@@ -441,7 +654,9 @@ function AddUsersSection({
       sortable: true,
       render: (_, row) => (
         <HStack gap={1.5} align="center">
-          <span className="text-[12px] font-medium text-[var(--color-action-primary)]">{row.username}</span>
+          <span className="text-[12px] font-medium text-[var(--color-action-primary)]">
+            {row.username}
+          </span>
           <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
         </HStack>
       ),
@@ -489,13 +704,17 @@ function AddUsersSection({
               <Button variant="secondary" size="sm" onClick={onEditCancel}>
                 Cancel
               </Button>
-              <Button variant="primary" size="sm" onClick={() => {
-                if (selectedUsers.length === 0) {
-                  onUsersErrorChange('Please select at least one user.');
-                  return;
-                }
-                onEditDone();
-              }}>
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={() => {
+                  if (selectedUsers.length === 0) {
+                    onUsersErrorChange('Please select at least one user.');
+                    return;
+                  }
+                  onEditDone();
+                }}
+              >
                 Done
               </Button>
             </HStack>
@@ -506,11 +725,14 @@ function AddUsersSection({
         <VStack gap={0} className="pt-2 pb-6">
           <div className="flex flex-col gap-2">
             <div className="flex gap-[3px]">
-              <span className="text-[14px] font-medium text-[var(--color-text-default)]">Users</span>
+              <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                Users
+              </span>
               <span className="text-[var(--color-state-danger)]">*</span>
             </div>
             <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-              Select users to include in this group. All selected users will receive the group's assigned roles and policies.
+              Select users to include in this group. All selected users will receive the group's
+              assigned roles and policies.
             </span>
           </div>
 
@@ -527,9 +749,9 @@ function AddUsersSection({
                 }}
                 className="w-full h-8 pl-3 pr-9 text-[12px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] placeholder:text-[var(--color-text-subtle)] focus:outline-none focus:border-[var(--color-action-primary)] focus:shadow-[0_0_0_1px_var(--color-action-primary)]"
               />
-              <IconSearch 
-                size={14} 
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-subtle)] pointer-events-none" 
+              <IconSearch
+                size={14}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-subtle)] pointer-events-none"
               />
             </div>
           </div>
@@ -564,9 +786,7 @@ function AddUsersSection({
           {/* Selection indicator */}
           <div className="mt-3">
             {usersError && selectedUsers.length === 0 ? (
-              <InlineMessage variant="error">
-                {usersError}
-              </InlineMessage>
+              <InlineMessage variant="error">{usersError}</InlineMessage>
             ) : (
               <SelectionIndicator
                 selectedItems={selectedUsers.map((userId) => {
@@ -579,7 +799,6 @@ function AddUsersSection({
               />
             )}
           </div>
-
         </VStack>
         {/* Skip and Next Buttons (only when not editing) */}
         {!isEditing && (
@@ -589,13 +808,16 @@ function AddUsersSection({
               <Button variant="secondary" onClick={onSkip}>
                 Skip
               </Button>
-              <Button variant="primary" onClick={() => {
-                if (selectedUsers.length === 0) {
-                  onUsersErrorChange('Please select at least one user.');
-                  return;
-                }
-                onNext();
-              }}>
+              <Button
+                variant="primary"
+                onClick={() => {
+                  if (selectedUsers.length === 0) {
+                    onUsersErrorChange('Please select at least one user.');
+                    return;
+                  }
+                  onNext();
+                }}
+              >
                 Next
               </Button>
             </HStack>
@@ -612,7 +834,8 @@ function AddUsersSection({
 
 export default function CreateUserGroupPage() {
   const navigate = useNavigate();
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
+    useTabs();
 
   // Update tab label on mount
   useEffect(() => {
@@ -785,7 +1008,7 @@ export default function CreateUserGroupPage() {
       >
         {/* Tab Bar */}
         <TabBar
-          tabs={tabs.map(tab => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
@@ -814,7 +1037,6 @@ export default function CreateUserGroupPage() {
         {/* Scrollable content */}
         <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
           <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)] min-h-full">
-
             {/* Main content area */}
             <VStack gap={3} className="min-w-[1176px]">
               {/* Page Title */}
@@ -852,7 +1074,11 @@ export default function CreateUserGroupPage() {
                       title={SECTION_LABELS['basic-info']}
                       onEdit={() => handleEdit('basic-info')}
                     >
-                      <SectionCard.DataRow label="Group name" value={groupName} showDivider={false} />
+                      <SectionCard.DataRow
+                        label="Group name"
+                        value={groupName}
+                        showDivider={false}
+                      />
                       <SectionCard.DataRow label="Description" value={description || '-'} />
                     </DoneSection>
                   )}

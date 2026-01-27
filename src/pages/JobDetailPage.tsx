@@ -141,7 +141,14 @@ const mockPodsData: PodRow[] = [
     ip: '10.11.0.11',
     node: 'nodeName',
     createdAt: '2025-07-25 09:12:20',
-    containers: ['container-0', 'container-1', 'container-2', 'container-3', 'container-4', 'container-5'],
+    containers: [
+      'container-0',
+      'container-1',
+      'container-2',
+      'container-3',
+      'container-4',
+      'container-5',
+    ],
   },
 ];
 
@@ -229,11 +236,15 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       render: (value: string) => (
         <StatusIndicator
           status={
-            value === 'Running' ? 'active' :
-            value === 'Succeeded' ? 'active' :
-            value === 'Pending' ? 'building' :
-            value === 'Failed' ? 'error' :
-            'muted'
+            value === 'Running'
+              ? 'active'
+              : value === 'Succeeded'
+                ? 'active'
+                : value === 'Pending'
+                  ? 'building'
+                  : value === 'Failed'
+                    ? 'error'
+                    : 'muted'
           }
         />
       ),
@@ -301,7 +312,11 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       render: (_: unknown, row: PodRow) => (
         <ContextMenu items={createPodMenuItems(row)} trigger="click" align="left">
           <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-            <IconDotsCircleHorizontal size={16} className="text-[var(--color-text-subtle)]" stroke={1.5} />
+            <IconDotsCircleHorizontal
+              size={16}
+              className="text-[var(--color-text-subtle)]"
+              stroke={1.5}
+            />
           </button>
         </ContextMenu>
       ),
@@ -471,7 +486,11 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
       render: (_: unknown, row: EventRow) => (
         <ContextMenu items={createEventMenuItems(row)} trigger="click" align="left">
           <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-            <IconDotsCircleHorizontal size={16} className="text-[var(--color-text-subtle)]" stroke={1.5} />
+            <IconDotsCircleHorizontal
+              size={16}
+              className="text-[var(--color-text-subtle)]"
+              stroke={1.5}
+            />
           </button>
         </ContextMenu>
       ),
@@ -536,7 +555,8 @@ export function JobDetailPage() {
   const job = mockJobData[jobId || '1'] || mockJobData['1'];
 
   // Tab management
-  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } =
+    useTabs();
 
   // Update tab label
   useEffect(() => {
@@ -675,27 +695,20 @@ export function JobDetailPage() {
                     label="Status"
                     value={job.status === 'Completed' ? 'Active' : job.status}
                     status={
-                      job.status === 'Completed' ? 'active' :
-                      job.status === 'Running' ? 'building' :
-                      job.status === 'Pending' ? 'building' :
-                      job.status === 'Failed' ? 'error' :
-                      'muted'
+                      job.status === 'Completed'
+                        ? 'active'
+                        : job.status === 'Running'
+                          ? 'building'
+                          : job.status === 'Pending'
+                            ? 'building'
+                            : job.status === 'Failed'
+                              ? 'error'
+                              : 'muted'
                     }
                   />
-                  <DetailHeader.InfoCard
-                    label="Namespace"
-                    value={job.namespace}
-                    copyable
-                  />
-                  <DetailHeader.InfoCard
-                    label="Image"
-                    value={job.image}
-                    copyable
-                  />
-                  <DetailHeader.InfoCard
-                    label="Created At"
-                    value={job.createdAt}
-                  />
+                  <DetailHeader.InfoCard label="Namespace" value={job.namespace} copyable />
+                  <DetailHeader.InfoCard label="Image" value={job.image} copyable />
+                  <DetailHeader.InfoCard label="Created At" value={job.createdAt} />
                 </DetailHeader.InfoGrid>
 
                 {/* Second row: Duration, Labels, Annotations */}
@@ -716,9 +729,11 @@ export function JobDetailPage() {
                         Labels ({Object.keys(job.labels).length})
                       </span>
                       <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
-                        {Object.entries(job.labels).slice(0, 1).map(([key, val]) => (
-                          <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
-                        ))}
+                        {Object.entries(job.labels)
+                          .slice(0, 1)
+                          .map(([key, val]) => (
+                            <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
+                          ))}
                         {Object.keys(job.labels).length > 1 && (
                           <span className="text-[11px] text-[var(--color-text-default)] cursor-pointer hover:underline">
                             (+{Object.keys(job.labels).length - 1})
@@ -733,9 +748,11 @@ export function JobDetailPage() {
                         Annotations ({Object.keys(job.annotations).length})
                       </span>
                       <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
-                        {Object.entries(job.annotations).slice(0, 1).map(([key, val]) => (
-                          <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
-                        ))}
+                        {Object.entries(job.annotations)
+                          .slice(0, 1)
+                          .map(([key, val]) => (
+                            <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
+                          ))}
                         {Object.keys(job.annotations).length > 1 && (
                           <span className="text-[11px] text-[var(--color-text-default)] cursor-pointer hover:underline">
                             (+{Object.keys(job.annotations).length - 1})
@@ -756,7 +773,11 @@ export function JobDetailPage() {
                 </TabList>
 
                 <TabPanel value="pods">
-                  <PodsTab pods={mockPodsData} onViewLogs={handleViewLogs} onExecuteShell={handleExecuteShell} />
+                  <PodsTab
+                    pods={mockPodsData}
+                    onViewLogs={handleViewLogs}
+                    onExecuteShell={handleExecuteShell}
+                  />
                 </TabPanel>
                 <TabPanel value="conditions">
                   <ConditionsTab conditions={mockConditionsData} />

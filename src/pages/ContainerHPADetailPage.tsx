@@ -180,7 +180,10 @@ function MetricsTab() {
             <SectionCard.DataRow label="Name" value={mockMetricData.name} />
             <SectionCard.DataRow label="Target Name" value={mockMetricData.targetType} />
             <SectionCard.DataRow label="Value" value={mockMetricData.value} />
-            <SectionCard.DataRow label="Referent API Version" value={mockMetricData.referentApiVersion} />
+            <SectionCard.DataRow
+              label="Referent API Version"
+              value={mockMetricData.referentApiVersion}
+            />
             <SectionCard.DataRow label="Referent Kind" value={mockMetricData.referentKind} />
             <SectionCard.DataRow label="Referent Name" value={mockMetricData.referentName} />
           </SectionCard.Content>
@@ -218,7 +221,10 @@ function BehaviorTab() {
               ))}
             </SectionCard.DataRow>
             <SectionCard.DataRow label="Select Policy" value={mockScaleDownBehavior.selectPolicy} />
-            <SectionCard.DataRow label="Stabilization window seconds" value={mockScaleDownBehavior.stabilizationWindowSeconds} />
+            <SectionCard.DataRow
+              label="Stabilization window seconds"
+              value={mockScaleDownBehavior.stabilizationWindowSeconds}
+            />
           </SectionCard.Content>
         </SectionCard>
 
@@ -232,7 +238,10 @@ function BehaviorTab() {
               ))}
             </SectionCard.DataRow>
             <SectionCard.DataRow label="Select Policy" value={mockScaleUpBehavior.selectPolicy} />
-            <SectionCard.DataRow label="Stabilization window seconds" value={mockScaleUpBehavior.stabilizationWindowSeconds} />
+            <SectionCard.DataRow
+              label="Stabilization window seconds"
+              value={mockScaleUpBehavior.stabilizationWindowSeconds}
+            />
           </SectionCard.Content>
         </SectionCard>
       </HStack>
@@ -295,7 +304,8 @@ export function ContainerHPADetailPage() {
   const hpa = mockHPAData[hpaId || ''] || mockHPAData['1'];
 
   // Tab management
-  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } =
+    useTabs();
 
   // Update tab label
   useEffect(() => {
@@ -437,19 +447,9 @@ export function ContainerHPADetailPage() {
                     value={hpa.status}
                     status={getStatusType(hpa.status)}
                   />
-                  <DetailHeader.InfoCard
-                    label="Namespace"
-                    value={hpa.namespace}
-                    copyable
-                  />
-                  <DetailHeader.InfoCard
-                    label="Target Reference"
-                    value={hpa.targetReference}
-                  />
-                  <DetailHeader.InfoCard
-                    label="Created At"
-                    value={hpa.createdAt}
-                  />
+                  <DetailHeader.InfoCard label="Namespace" value={hpa.namespace} copyable />
+                  <DetailHeader.InfoCard label="Target Reference" value={hpa.targetReference} />
+                  <DetailHeader.InfoCard label="Created At" value={hpa.createdAt} />
                 </DetailHeader.InfoGrid>
 
                 {/* Second row: Labels, Annotations */}
@@ -460,9 +460,11 @@ export function ContainerHPADetailPage() {
                         Labels ({Object.keys(hpa.labels).length})
                       </span>
                       <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
-                        {Object.entries(hpa.labels).slice(0, 1).map(([key, val]) => (
-                          <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
-                        ))}
+                        {Object.entries(hpa.labels)
+                          .slice(0, 1)
+                          .map(([key, val]) => (
+                            <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
+                          ))}
                         {Object.keys(hpa.labels).length > 1 && (
                           <span className="text-[11px] text-[var(--color-text-default)] cursor-pointer hover:underline">
                             (+{Object.keys(hpa.labels).length - 1})
@@ -477,9 +479,11 @@ export function ContainerHPADetailPage() {
                         Annotations ({Object.keys(hpa.annotations).length})
                       </span>
                       <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
-                        {Object.entries(hpa.annotations).slice(0, 1).map(([key, val]) => (
-                          <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
-                        ))}
+                        {Object.entries(hpa.annotations)
+                          .slice(0, 1)
+                          .map(([key, val]) => (
+                            <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
+                          ))}
                         {Object.keys(hpa.annotations).length > 1 && (
                           <span className="text-[11px] text-[var(--color-text-default)] cursor-pointer hover:underline">
                             (+{Object.keys(hpa.annotations).length - 1})

@@ -1,9 +1,5 @@
 import { useState, useEffect } from 'react';
-import { 
-  Drawer, 
-  Button, 
-  Input,
-} from '@/design-system';
+import { Drawer, Button, Input } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 
 /* ----------------------------------------
@@ -51,7 +47,7 @@ export function EditUserGroupDrawer({
     if (!name.trim()) {
       return;
     }
-    
+
     setIsSubmitting(true);
     try {
       await onSubmit?.({
@@ -82,15 +78,11 @@ export function EditUserGroupDrawer({
       width={376}
       footer={
         <HStack gap={2} justify="center" className="w-full">
-          <Button 
-            variant="secondary" 
-            onClick={handleClose}
-            className="flex-1 h-8"
-          >
+          <Button variant="secondary" onClick={handleClose} className="flex-1 h-8">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={handleSubmit}
             disabled={isSubmitting || !isNameValid || !isDescriptionValid}
             className="flex-1 h-8"
@@ -128,7 +120,8 @@ export function EditUserGroupDrawer({
             fullWidth
           />
           <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
-            You can use letters, numbers, and special characters (+=,.@-_), and the length must be between 2-128 characters.
+            You can use letters, numbers, and special characters (+=,.@-_), and the length must be
+            between 2-128 characters.
           </p>
         </VStack>
 
@@ -144,7 +137,8 @@ export function EditUserGroupDrawer({
             fullWidth
           />
           <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
-            You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255 characters.
+            You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255
+            characters.
           </p>
         </VStack>
       </VStack>

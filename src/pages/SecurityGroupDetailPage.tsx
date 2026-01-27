@@ -43,7 +43,16 @@ interface SecurityGroupDetail {
 }
 
 type RuleDirection = 'Ingress' | 'Egress';
-type RuleProtocol = 'Custom ICMP' | 'TCP' | 'UDP' | 'Any' | 'ICMP' | 'SSH' | 'HTTP' | 'HTTPS' | 'RDP';
+type RuleProtocol =
+  | 'Custom ICMP'
+  | 'TCP'
+  | 'UDP'
+  | 'Any'
+  | 'ICMP'
+  | 'SSH'
+  | 'HTTP'
+  | 'HTTPS'
+  | 'RDP';
 
 interface SecurityGroupRule {
   id: string;
@@ -69,20 +78,73 @@ interface Port {
 
 // Security group data map by ID - synced with SecurityGroupsPage mock data
 const mockSecurityGroupsMap: Record<string, SecurityGroupDetail> = {
-  'sg-001': { id: 'sg-001', name: 'sg-01', description: 'Web server access group', createdAt: '2024-01-15' },
-  'sg-002': { id: 'sg-002', name: 'default', description: 'Default security group', createdAt: '2024-01-10' },
-  'sg-003': { id: 'sg-003', name: 'db-sg', description: 'Database access group', createdAt: '2024-02-01' },
-  'sg-004': { id: 'sg-004', name: 'app-sg', description: 'Application server security group', createdAt: '2024-02-15' },
-  'sg-005': { id: 'sg-005', name: 'lb-sg', description: 'Load balancer security group', createdAt: '2024-03-01' },
-  'sg-006': { id: 'sg-006', name: 'cache-sg', description: 'Cache server access group', createdAt: '2024-03-10' },
-  'sg-007': { id: 'sg-007', name: 'monitor-sg', description: 'Monitoring access group', createdAt: '2024-04-01' },
-  'sg-008': { id: 'sg-008', name: 'vpn-sg', description: 'VPN access group', createdAt: '2024-04-15' },
-  'sg-009': { id: 'sg-009', name: 'admin-sg', description: 'Admin access group', createdAt: '2024-05-01' },
-  'sg-010': { id: 'sg-010', name: 'test-sg', description: 'Test environment security group', createdAt: '2024-05-10' },
+  'sg-001': {
+    id: 'sg-001',
+    name: 'sg-01',
+    description: 'Web server access group',
+    createdAt: '2024-01-15',
+  },
+  'sg-002': {
+    id: 'sg-002',
+    name: 'default',
+    description: 'Default security group',
+    createdAt: '2024-01-10',
+  },
+  'sg-003': {
+    id: 'sg-003',
+    name: 'db-sg',
+    description: 'Database access group',
+    createdAt: '2024-02-01',
+  },
+  'sg-004': {
+    id: 'sg-004',
+    name: 'app-sg',
+    description: 'Application server security group',
+    createdAt: '2024-02-15',
+  },
+  'sg-005': {
+    id: 'sg-005',
+    name: 'lb-sg',
+    description: 'Load balancer security group',
+    createdAt: '2024-03-01',
+  },
+  'sg-006': {
+    id: 'sg-006',
+    name: 'cache-sg',
+    description: 'Cache server access group',
+    createdAt: '2024-03-10',
+  },
+  'sg-007': {
+    id: 'sg-007',
+    name: 'monitor-sg',
+    description: 'Monitoring access group',
+    createdAt: '2024-04-01',
+  },
+  'sg-008': {
+    id: 'sg-008',
+    name: 'vpn-sg',
+    description: 'VPN access group',
+    createdAt: '2024-04-15',
+  },
+  'sg-009': {
+    id: 'sg-009',
+    name: 'admin-sg',
+    description: 'Admin access group',
+    createdAt: '2024-05-01',
+  },
+  'sg-010': {
+    id: 'sg-010',
+    name: 'test-sg',
+    description: 'Test environment security group',
+    createdAt: '2024-05-10',
+  },
 };
 
 const defaultSecurityGroupDetail: SecurityGroupDetail = {
-  id: 'unknown', name: 'Unknown Security group', description: '-', createdAt: '-',
+  id: 'unknown',
+  name: 'Unknown Security group',
+  description: '-',
+  createdAt: '-',
 };
 
 const mockRules: SecurityGroupRule[] = Array.from({ length: 115 }, (_, i) => ({
@@ -111,7 +173,7 @@ export default function SecurityGroupDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeTab, setActiveTab] = useState('rules');
-  
+
   // Rules state
   const [selectedRules, setSelectedRules] = useState<string[]>([]);
   const [ruleSearchTerm, setRuleSearchTerm] = useState('');
@@ -127,15 +189,18 @@ export default function SecurityGroupDetailPage() {
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [ruleToDelete, setRuleToDelete] = useState<SecurityGroupRule | null>(null);
-  
+
   // Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } =
+    useTabs();
 
   // Get security group data based on URL ID
-  const securityGroup = id ? (mockSecurityGroupsMap[id] || defaultSecurityGroupDetail) : defaultSecurityGroupDetail;
+  const securityGroup = id
+    ? mockSecurityGroupsMap[id] || defaultSecurityGroupDetail
+    : defaultSecurityGroupDetail;
   const rules = mockRules;
   const ports = mockPorts;
 
@@ -160,13 +225,26 @@ export default function SecurityGroupDetailPage() {
 
   // Context menu items for rules
   const getRuleContextMenuItems = (rule: SecurityGroupRule): ContextMenuItem[] => [
-    { id: 'delete', label: 'Delete', status: 'danger', onClick: () => { setRuleToDelete(rule); setDeleteModalOpen(true); } },
+    {
+      id: 'delete',
+      label: 'Delete',
+      status: 'danger',
+      onClick: () => {
+        setRuleToDelete(rule);
+        setDeleteModalOpen(true);
+      },
+    },
   ];
 
   // Context menu items for ports
   const getPortContextMenuItems = (port: Port): ContextMenuItem[] => [
     { id: 'view', label: 'View details', onClick: () => console.log('View port:', port.id) },
-    { id: 'detach', label: 'Detach', status: 'danger', onClick: () => console.log('Detach port:', port.id) },
+    {
+      id: 'detach',
+      label: 'Detach',
+      status: 'danger',
+      onClick: () => console.log('Detach port:', port.id),
+    },
   ];
 
   // Status mapping for ports
@@ -180,10 +258,11 @@ export default function SecurityGroupDetailPage() {
   const filteredRules = useMemo(() => {
     if (!ruleSearchTerm) return rules;
     const query = ruleSearchTerm.toLowerCase();
-    return rules.filter(rule =>
-      rule.direction.toLowerCase().includes(query) ||
-      rule.protocol.toLowerCase().includes(query) ||
-      rule.remote.toLowerCase().includes(query)
+    return rules.filter(
+      (rule) =>
+        rule.direction.toLowerCase().includes(query) ||
+        rule.protocol.toLowerCase().includes(query) ||
+        rule.remote.toLowerCase().includes(query)
     );
   }, [rules, ruleSearchTerm]);
 
@@ -197,10 +276,11 @@ export default function SecurityGroupDetailPage() {
   const filteredPorts = useMemo(() => {
     if (!portSearchTerm) return ports;
     const query = portSearchTerm.toLowerCase();
-    return ports.filter(port =>
-      port.name.toLowerCase().includes(query) ||
-      port.subnet.toLowerCase().includes(query) ||
-      port.access.toLowerCase().includes(query)
+    return ports.filter(
+      (port) =>
+        port.name.toLowerCase().includes(query) ||
+        port.subnet.toLowerCase().includes(query) ||
+        port.access.toLowerCase().includes(query)
     );
   }, [ports, portSearchTerm]);
 
@@ -217,9 +297,7 @@ export default function SecurityGroupDetailPage() {
       label: 'Status',
       width: '64px',
       align: 'center',
-      render: (_, row) => (
-        <StatusIndicator status={portStatusMap[row.status]} layout="icon-only" />
-      ),
+      render: (_, row) => <StatusIndicator status={portStatusMap[row.status]} layout="icon-only" />,
     },
     {
       key: 'name',
@@ -244,7 +322,7 @@ export default function SecurityGroupDetailPage() {
       key: 'dhcp',
       label: 'DHCP',
       flex: 1,
-      render: (value: boolean) => value ? 'Yes' : 'No',
+      render: (value: boolean) => (value ? 'Yes' : 'No'),
     },
     {
       key: 'access',
@@ -260,7 +338,11 @@ export default function SecurityGroupDetailPage() {
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getPortContextMenuItems(row)} trigger="click">
             <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-              <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+              <IconDotsCircleHorizontal
+                size={16}
+                stroke={1.5}
+                className="text-[var(--action-icon-color)]"
+              />
             </button>
           </ContextMenu>
         </div>
@@ -305,7 +387,11 @@ export default function SecurityGroupDetailPage() {
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getRuleContextMenuItems(row)} trigger="click">
             <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-              <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+              <IconDotsCircleHorizontal
+                size={16}
+                stroke={1.5}
+                className="text-[var(--action-icon-color)]"
+              />
             </button>
           </ContextMenu>
         </div>
@@ -315,7 +401,7 @@ export default function SecurityGroupDetailPage() {
 
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
+      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
 
       <main
         className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
@@ -443,7 +529,11 @@ export default function SecurityGroupDetailPage() {
                         <h3 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
                           Rules
                         </h3>
-                        <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          leftIcon={<IconCirclePlus size={12} />}
+                        >
                           Create rule
                         </Button>
                       </div>
@@ -518,4 +608,3 @@ export default function SecurityGroupDetailPage() {
     </div>
   );
 }
-

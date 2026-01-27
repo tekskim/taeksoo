@@ -33,12 +33,7 @@ import {
 import type { WizardSummaryItem, WizardSectionState } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconBell,
-  IconEdit,
-  IconUpload,
-  IconExternalLink,
-} from '@tabler/icons-react';
+import { IconBell, IconEdit, IconUpload, IconExternalLink } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -55,12 +50,7 @@ const SECTION_LABELS: Record<SectionStep, string> = {
 };
 
 // Section order for navigation
-const SECTION_ORDER: SectionStep[] = [
-  'basic-info',
-  'source',
-  'specification',
-  'advanced',
-];
+const SECTION_ORDER: SectionStep[] = ['basic-info', 'source', 'specification', 'advanced'];
 
 // Tenant type for owned tenant selection
 interface Tenant {
@@ -90,7 +80,12 @@ interface SummarySidebarProps {
   isCreateDisabled: boolean;
 }
 
-function SummarySidebar({ sectionStatus, onCancel, onCreate, isCreateDisabled }: SummarySidebarProps) {
+function SummarySidebar({
+  sectionStatus,
+  onCancel,
+  onCreate,
+  isCreateDisabled,
+}: SummarySidebarProps) {
   const summaryItems: WizardSummaryItem[] = SECTION_ORDER.map((key) => ({
     key,
     label: SECTION_LABELS[key],
@@ -101,15 +96,15 @@ function SummarySidebar({ sectionStatus, onCancel, onCreate, isCreateDisabled }:
     <div className="w-[312px] shrink-0 sticky top-4 self-start">
       <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
         <WizardSummary items={summaryItems} />
-        
+
         {/* Action Buttons */}
         <div className="flex flex-col w-full">
           <div className="flex gap-2 items-center justify-end w-full">
             <Button variant="secondary" onClick={onCancel}>
               Cancel
             </Button>
-            <Button 
-              variant="primary" 
+            <Button
+              variant="primary"
               onClick={onCreate}
               disabled={isCreateDisabled}
               className="flex-1"
@@ -136,7 +131,7 @@ export function ComputeAdminCreateImagePage() {
   const [description, setDescription] = useState('');
   const [isProtected, setIsProtected] = useState(false);
   const [visibility, setVisibility] = useState<'public' | 'shared' | 'private'>('public');
-  
+
   // Owned tenant state
   const [tenantSearch, setTenantSearch] = useState('');
   const [selectedTenantIds, setSelectedTenantIds] = useState<string[]>([]);
@@ -147,7 +142,7 @@ export function ComputeAdminCreateImagePage() {
   const [sharedTenantSearch, setSharedTenantSearch] = useState('');
   const [sharedTenantIds, setSharedTenantIds] = useState<string[]>([]);
   const [sharedTenantCurrentPage, setSharedTenantCurrentPage] = useState(1);
-  
+
   // Source section state
   const [sourceType, setSourceType] = useState<'file' | 'url'>('file');
   const [sourceUrl, setSourceUrl] = useState('');
@@ -200,9 +195,10 @@ export function ComputeAdminCreateImagePage() {
   // Filter tenants by search
   const filteredTenants = useMemo(() => {
     if (!tenantSearch.trim()) return mockTenants;
-    return mockTenants.filter((tenant) =>
-      tenant.name.toLowerCase().includes(tenantSearch.toLowerCase()) ||
-      tenant.id.includes(tenantSearch)
+    return mockTenants.filter(
+      (tenant) =>
+        tenant.name.toLowerCase().includes(tenantSearch.toLowerCase()) ||
+        tenant.id.includes(tenantSearch)
     );
   }, [tenantSearch]);
 
@@ -217,9 +213,10 @@ export function ComputeAdminCreateImagePage() {
   // Filter shared tenants by search
   const filteredSharedTenants = useMemo(() => {
     if (!sharedTenantSearch.trim()) return mockTenants;
-    return mockTenants.filter((tenant) =>
-      tenant.name.toLowerCase().includes(sharedTenantSearch.toLowerCase()) ||
-      tenant.id.includes(sharedTenantSearch)
+    return mockTenants.filter(
+      (tenant) =>
+        tenant.name.toLowerCase().includes(sharedTenantSearch.toLowerCase()) ||
+        tenant.id.includes(sharedTenantSearch)
     );
   }, [sharedTenantSearch]);
 
@@ -238,9 +235,7 @@ export function ComputeAdminCreateImagePage() {
       label: 'Status',
       width: '64px',
       align: 'center',
-      render: (_, row) => (
-        <StatusIndicator status={row.status} layout="icon-only" />
-      ),
+      render: (_, row) => <StatusIndicator status={row.status} layout="icon-only" />,
     },
     {
       key: 'name',
@@ -302,39 +297,42 @@ export function ComputeAdminCreateImagePage() {
   };
 
   // Section navigation
-  const goToNextSection = useCallback((currentSection: SectionStep) => {
-    // Validate basic-info section
-    if (currentSection === 'basic-info') {
-      let hasError = false;
-      
-      if (!imageName.trim()) {
-        setShowImageNameError(true);
-        hasError = true;
-      } else {
-        setShowImageNameError(false);
-      }
-      
-      if (selectedTenantIds.length === 0) {
-        setShowTenantError(true);
-        hasError = true;
-      } else {
-        setShowTenantError(false);
-      }
-      
-      if (hasError) return;
-    }
+  const goToNextSection = useCallback(
+    (currentSection: SectionStep) => {
+      // Validate basic-info section
+      if (currentSection === 'basic-info') {
+        let hasError = false;
 
-    const currentIndex = SECTION_ORDER.indexOf(currentSection);
-    const nextSection = SECTION_ORDER[currentIndex + 1];
-    
-    if (nextSection) {
-      setSectionStatus((prev) => ({
-        ...prev,
-        [currentSection]: 'done',
-        [nextSection]: 'active',
-      }));
-    }
-  }, [selectedTenantIds, imageName]);
+        if (!imageName.trim()) {
+          setShowImageNameError(true);
+          hasError = true;
+        } else {
+          setShowImageNameError(false);
+        }
+
+        if (selectedTenantIds.length === 0) {
+          setShowTenantError(true);
+          hasError = true;
+        } else {
+          setShowTenantError(false);
+        }
+
+        if (hasError) return;
+      }
+
+      const currentIndex = SECTION_ORDER.indexOf(currentSection);
+      const nextSection = SECTION_ORDER[currentIndex + 1];
+
+      if (nextSection) {
+        setSectionStatus((prev) => ({
+          ...prev,
+          [currentSection]: 'done',
+          [nextSection]: 'active',
+        }));
+      }
+    },
+    [selectedTenantIds, imageName]
+  );
 
   const editSection = useCallback((section: SectionStep) => {
     setSectionStatus((prev) => {
@@ -352,7 +350,8 @@ export function ComputeAdminCreateImagePage() {
   }, []);
 
   // Check if create button should be enabled
-  const isCreateDisabled = !imageName.trim() || selectedTenantIds.length === 0 || sectionStatus['basic-info'] === 'active';
+  const isCreateDisabled =
+    !imageName.trim() || selectedTenantIds.length === 0 || sectionStatus['basic-info'] === 'active';
 
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
@@ -406,7 +405,7 @@ export function ComputeAdminCreateImagePage() {
                   <VStack gap={4} className="flex-1">
                     {/* Basic information Section */}
                     <SectionCard isActive={sectionStatus['basic-info'] === 'active'}>
-                      <SectionCard.Header 
+                      <SectionCard.Header
                         title={SECTION_LABELS['basic-info']}
                         showDivider={sectionStatus['basic-info'] === 'active'}
                         actions={
@@ -427,8 +426,8 @@ export function ComputeAdminCreateImagePage() {
                           <FormField required error={showImageNameError}>
                             <FormField.Label>Image name</FormField.Label>
                             <FormField.Control>
-                              <Input 
-                                value={imageName} 
+                              <Input
+                                value={imageName}
                                 onChange={(e) => {
                                   setImageName(e.target.value);
                                   if (e.target.value.trim()) {
@@ -446,22 +445,24 @@ export function ComputeAdminCreateImagePage() {
                               </FormField.ErrorMessage>
                             )}
                             <FormField.HelperText>
-                              You can use letters, numbers, and special characters (+=,.@-_), and the length must be between 2-128 characters.
+                              You can use letters, numbers, and special characters (+=,.@-_), and
+                              the length must be between 2-128 characters.
                             </FormField.HelperText>
                           </FormField>
 
                           <FormField>
                             <FormField.Label>Description</FormField.Label>
                             <FormField.Control>
-                              <Input 
-                                value={description} 
+                              <Input
+                                value={description}
                                 onChange={(e) => setDescription(e.target.value)}
                                 placeholder="Enter description"
-                                fullWidth 
+                                fullWidth
                               />
                             </FormField.Control>
                             <FormField.HelperText>
-                              You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255 characters.
+                              You can use letters, numbers, and special characters (+=,.@-_()[]),
+                              and maximum 255 characters.
                             </FormField.HelperText>
                           </FormField>
 
@@ -514,8 +515,13 @@ export function ComputeAdminCreateImagePage() {
 
                             {/* Selection Indicator */}
                             <SelectionIndicator
-                              selectedItems={selectedTenants.map(t => ({ id: t.id, label: `${t.name} (ID: ${t.id})` }))}
-                              onRemove={(id) => setSelectedTenantIds(prev => prev.filter(tid => tid !== id))}
+                              selectedItems={selectedTenants.map((t) => ({
+                                id: t.id,
+                                label: `${t.name} (ID: ${t.id})`,
+                              }))}
+                              onRemove={(id) =>
+                                setSelectedTenantIds((prev) => prev.filter((tid) => tid !== id))
+                              }
                               error={showTenantError}
                               errorMessage="Please select a tenant."
                             />
@@ -530,9 +536,15 @@ export function ComputeAdminCreateImagePage() {
                               <span className="text-[var(--color-state-danger)]">*</span>
                             </div>
                             <span className="text-[12px] font-normal leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
-                              Specifies the availability scope of the image based on its visibility setting.
+                              Specifies the availability scope of the image based on its visibility
+                              setting.
                             </span>
-                            <RadioGroup value={visibility} onChange={(val) => setVisibility(val as 'public' | 'shared' | 'private')}>
+                            <RadioGroup
+                              value={visibility}
+                              onChange={(val) =>
+                                setVisibility(val as 'public' | 'shared' | 'private')
+                              }
+                            >
                               <Radio value="public" label="Public" />
                               <Radio value="shared" label="Shared" />
                               <Radio value="private" label="Private" />
@@ -582,8 +594,13 @@ export function ComputeAdminCreateImagePage() {
 
                                 {/* Selection Indicator */}
                                 <SelectionIndicator
-                                  selectedItems={selectedSharedTenants.map(t => ({ id: t.id, label: `${t.name} (ID: ${t.id})` }))}
-                                  onRemove={(id) => setSharedTenantIds(prev => prev.filter(tid => tid !== id))}
+                                  selectedItems={selectedSharedTenants.map((t) => ({
+                                    id: t.id,
+                                    label: `${t.name} (ID: ${t.id})`,
+                                  }))}
+                                  onRemove={(id) =>
+                                    setSharedTenantIds((prev) => prev.filter((tid) => tid !== id))
+                                  }
                                 />
                               </div>
                             )}
@@ -599,10 +616,7 @@ export function ComputeAdminCreateImagePage() {
                               </span>
                             </div>
                             <HStack gap={2} align="center">
-                              <Toggle 
-                                checked={isProtected} 
-                                onChange={setIsProtected}
-                              />
+                              <Toggle checked={isProtected} onChange={setIsProtected} />
                               <span className="text-[12px] text-[var(--color-text-default)]">
                                 {isProtected ? 'Yes' : 'No'}
                               </span>
@@ -610,10 +624,7 @@ export function ComputeAdminCreateImagePage() {
                           </div>
 
                           <div className="flex items-center justify-end w-full">
-                            <Button 
-                              variant="primary" 
-                              onClick={() => goToNextSection('basic-info')}
-                            >
+                            <Button variant="primary" onClick={() => goToNextSection('basic-info')}>
                               Next
                             </Button>
                           </div>
@@ -621,29 +632,55 @@ export function ComputeAdminCreateImagePage() {
                       )}
                       {sectionStatus['basic-info'] === 'done' && (
                         <SectionCard.Content>
-                          <SectionCard.DataRow label="Image name" value={imageName || '-'} showDivider />
-                          <SectionCard.DataRow label="Description" value={description || '-'} showDivider />
-                          <SectionCard.DataRow 
-                            label="Owned tenant" 
-                            value={selectedTenants.length > 0 ? selectedTenants.map(t => `${t.name} (ID: ${t.id})`).join(', ') : '-'} 
-                            showDivider 
+                          <SectionCard.DataRow
+                            label="Image name"
+                            value={imageName || '-'}
+                            showDivider
                           />
-                          <SectionCard.DataRow label="Visibility" value={visibility.charAt(0).toUpperCase() + visibility.slice(1)} showDivider />
+                          <SectionCard.DataRow
+                            label="Description"
+                            value={description || '-'}
+                            showDivider
+                          />
+                          <SectionCard.DataRow
+                            label="Owned tenant"
+                            value={
+                              selectedTenants.length > 0
+                                ? selectedTenants.map((t) => `${t.name} (ID: ${t.id})`).join(', ')
+                                : '-'
+                            }
+                            showDivider
+                          />
+                          <SectionCard.DataRow
+                            label="Visibility"
+                            value={visibility.charAt(0).toUpperCase() + visibility.slice(1)}
+                            showDivider
+                          />
                           {visibility === 'shared' && (
-                            <SectionCard.DataRow 
-                              label="Shared with" 
-                              value={selectedSharedTenants.length > 0 ? selectedSharedTenants.map(t => `${t.name} (ID: ${t.id})`).join(', ') : '-'} 
-                              showDivider 
+                            <SectionCard.DataRow
+                              label="Shared with"
+                              value={
+                                selectedSharedTenants.length > 0
+                                  ? selectedSharedTenants
+                                      .map((t) => `${t.name} (ID: ${t.id})`)
+                                      .join(', ')
+                                  : '-'
+                              }
+                              showDivider
                             />
                           )}
-                          <SectionCard.DataRow label="Protected" value={isProtected ? 'Yes' : 'No'} showDivider />
+                          <SectionCard.DataRow
+                            label="Protected"
+                            value={isProtected ? 'Yes' : 'No'}
+                            showDivider
+                          />
                         </SectionCard.Content>
                       )}
                     </SectionCard>
 
                     {/* Source Section */}
                     <SectionCard isActive={sectionStatus['source'] === 'active'}>
-                      <SectionCard.Header 
+                      <SectionCard.Header
                         title={SECTION_LABELS['source']}
                         showDivider={sectionStatus['source'] === 'active'}
                         actions={
@@ -676,10 +713,10 @@ export function ComputeAdminCreateImagePage() {
 
                           {/* Upload type Tabs */}
                           <div className="flex flex-col gap-3 w-full">
-                            <Tabs 
-                              value={sourceType} 
-                              onChange={(value) => setSourceType(value as 'file' | 'url')} 
-                              variant="underline" 
+                            <Tabs
+                              value={sourceType}
+                              onChange={(value) => setSourceType(value as 'file' | 'url')}
+                              variant="underline"
                               size="sm"
                             >
                               <TabList>
@@ -707,11 +744,11 @@ export function ComputeAdminCreateImagePage() {
                             {/* File URL */}
                             {sourceType === 'url' && (
                               <VStack gap={3} align="stretch">
-                                <Input 
-                                  value={sourceUrl} 
+                                <Input
+                                  value={sourceUrl}
                                   onChange={(e) => setSourceUrl(e.target.value)}
                                   placeholder="e.g. https://example.com/image.qcow2"
-                                  fullWidth 
+                                  fullWidth
                                 />
                                 <span className="text-[11px] font-normal leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
                                   The URL must start with http:// or https://.
@@ -724,8 +761,8 @@ export function ComputeAdminCreateImagePage() {
                           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
                           <div className="flex items-center justify-end w-full">
-                            <Button 
-                              variant="primary" 
+                            <Button
+                              variant="primary"
                               onClick={() => goToNextSection('source')}
                               disabled={sourceType === 'url' && !sourceUrl.trim()}
                             >
@@ -736,10 +773,10 @@ export function ComputeAdminCreateImagePage() {
                       )}
                       {sectionStatus['source'] === 'done' && (
                         <SectionCard.Content>
-                          <SectionCard.DataRow 
-                            label="Upload type" 
-                            value={sourceType === 'file' ? 'Upload File' : 'File URL'} 
-                            showDivider 
+                          <SectionCard.DataRow
+                            label="Upload type"
+                            value={sourceType === 'file' ? 'Upload File' : 'File URL'}
+                            showDivider
                           />
                           {sourceType === 'url' && (
                             <SectionCard.DataRow label="URL" value={sourceUrl || '-'} showDivider />
@@ -750,13 +787,15 @@ export function ComputeAdminCreateImagePage() {
 
                     {/* Specification Section */}
                     <SectionCard isActive={sectionStatus['specification'] === 'active'}>
-                      <SectionCard.Header 
+                      <SectionCard.Header
                         title={SECTION_LABELS['specification']}
                         showDivider={sectionStatus['specification'] === 'active'}
                         actions={
                           sectionStatus['specification'] === 'done' && (
                             <HStack gap={3} align="center">
-                              <span className="text-[12px] text-[var(--color-text-subtle)]">Auto-filled</span>
+                              <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                Auto-filled
+                              </span>
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -775,7 +814,8 @@ export function ComputeAdminCreateImagePage() {
                           <FormField required>
                             <FormField.Label>Disk format</FormField.Label>
                             <FormField.HelperText>
-                              Select the disk format for the image. It must match the actual type of the uploaded file.
+                              Select the disk format for the image. It must match the actual type of
+                              the uploaded file.
                             </FormField.HelperText>
                             <FormField.Control>
                               <Select
@@ -827,11 +867,11 @@ export function ComputeAdminCreateImagePage() {
                               This metadata helps categorize image.
                             </FormField.HelperText>
                             <FormField.Control>
-                              <Input 
-                                value={osVersion} 
+                              <Input
+                                value={osVersion}
                                 onChange={(e) => setOsVersion(e.target.value)}
                                 placeholder="e.g. 22.04, 8, 2019"
-                                fullWidth 
+                                fullWidth
                               />
                             </FormField.Control>
                           </FormField>
@@ -840,23 +880,21 @@ export function ComputeAdminCreateImagePage() {
                           <FormField required>
                             <FormField.Label>OS admin</FormField.Label>
                             <FormField.HelperText>
-                              Enter the default administrator account used when launching instances from this image.
+                              Enter the default administrator account used when launching instances
+                              from this image.
                             </FormField.HelperText>
                             <FormField.Control>
-                              <Input 
-                                value={osAdmin} 
+                              <Input
+                                value={osAdmin}
                                 onChange={(e) => setOsAdmin(e.target.value)}
                                 placeholder="e.g. ubuntu(ubuntu), administrator(windows)"
-                                fullWidth 
+                                fullWidth
                               />
                             </FormField.Control>
                           </FormField>
 
                           {/* Advanced Section */}
-                          <Disclosure 
-                            open={specAdvancedOpen} 
-                            onChange={setSpecAdvancedOpen}
-                          >
+                          <Disclosure open={specAdvancedOpen} onChange={setSpecAdvancedOpen}>
                             <DisclosureTrigger>Advanced</DisclosureTrigger>
                             <DisclosurePanel>
                               <VStack gap={4} align="stretch" className="pt-3">
@@ -866,17 +904,20 @@ export function ComputeAdminCreateImagePage() {
                                     Min system disk
                                   </span>
                                   <span className="text-[12px] font-normal leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
-                                    Defines the minimum disk size required to boot an instance from this image.
+                                    Defines the minimum disk size required to boot an instance from
+                                    this image.
                                   </span>
                                   <HStack gap={2} align="center">
-                                    <NumberInput 
+                                    <NumberInput
                                       value={minDisk}
                                       onChange={setMinDisk}
                                       min={0}
                                       max={500}
                                       className="w-[80px]"
                                     />
-                                    <span className="text-[12px] text-[var(--color-text-default)]">GiB</span>
+                                    <span className="text-[12px] text-[var(--color-text-default)]">
+                                      GiB
+                                    </span>
                                   </HStack>
                                   <span className="text-[11px] font-normal leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
                                     0-500 GiB
@@ -889,17 +930,20 @@ export function ComputeAdminCreateImagePage() {
                                     Min RAM
                                   </span>
                                   <span className="text-[12px] font-normal leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
-                                    Defines the minimum amount of RAM required to boot an instance from this image.
+                                    Defines the minimum amount of RAM required to boot an instance
+                                    from this image.
                                   </span>
                                   <HStack gap={2} align="center">
-                                    <NumberInput 
+                                    <NumberInput
                                       value={minRam}
                                       onChange={setMinRam}
                                       min={0}
                                       max={500}
                                       className="w-[80px]"
                                     />
-                                    <span className="text-[12px] text-[var(--color-text-default)]">GiB</span>
+                                    <span className="text-[12px] text-[var(--color-text-default)]">
+                                      GiB
+                                    </span>
                                   </HStack>
                                   <span className="text-[11px] font-normal leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
                                     0-500 GiB
@@ -910,8 +954,8 @@ export function ComputeAdminCreateImagePage() {
                           </Disclosure>
 
                           <div className="flex items-center justify-end w-full">
-                            <Button 
-                              variant="primary" 
+                            <Button
+                              variant="primary"
                               onClick={() => goToNextSection('specification')}
                               disabled={!diskFormat || !os || !osVersion.trim() || !osAdmin.trim()}
                             >
@@ -922,19 +966,31 @@ export function ComputeAdminCreateImagePage() {
                       )}
                       {sectionStatus['specification'] === 'done' && (
                         <SectionCard.Content>
-                          <SectionCard.DataRow label="Disk format" value={diskFormat.toUpperCase()} showDivider />
-                          <SectionCard.DataRow label="OS" value={os || '-'} showDivider />
-                          <SectionCard.DataRow label="OS Version" value={osVersion || '-'} showDivider />
-                          <SectionCard.DataRow label="OS Admin" value={osAdmin || '-'} showDivider />
-                          <SectionCard.DataRow 
-                            label="Min system Disk" 
-                            value={minDisk !== undefined ? `${minDisk} GiB` : '-'} 
-                            showDivider 
+                          <SectionCard.DataRow
+                            label="Disk format"
+                            value={diskFormat.toUpperCase()}
+                            showDivider
                           />
-                          <SectionCard.DataRow 
-                            label="Min RAM" 
-                            value={minRam !== undefined ? `${minRam} GiB` : '-'} 
-                            showDivider 
+                          <SectionCard.DataRow label="OS" value={os || '-'} showDivider />
+                          <SectionCard.DataRow
+                            label="OS Version"
+                            value={osVersion || '-'}
+                            showDivider
+                          />
+                          <SectionCard.DataRow
+                            label="OS Admin"
+                            value={osAdmin || '-'}
+                            showDivider
+                          />
+                          <SectionCard.DataRow
+                            label="Min system Disk"
+                            value={minDisk !== undefined ? `${minDisk} GiB` : '-'}
+                            showDivider
+                          />
+                          <SectionCard.DataRow
+                            label="Min RAM"
+                            value={minRam !== undefined ? `${minRam} GiB` : '-'}
+                            showDivider
                           />
                         </SectionCard.Content>
                       )}
@@ -942,13 +998,15 @@ export function ComputeAdminCreateImagePage() {
 
                     {/* Advanced Section */}
                     <SectionCard isActive={sectionStatus['advanced'] === 'active'}>
-                      <SectionCard.Header 
+                      <SectionCard.Header
                         title={SECTION_LABELS['advanced']}
                         showDivider={sectionStatus['advanced'] === 'active'}
                         actions={
                           sectionStatus['advanced'] === 'done' && (
                             <HStack gap={3} align="center">
-                              <span className="text-[12px] text-[var(--color-text-subtle)]">Auto-filled</span>
+                              <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                Auto-filled
+                              </span>
                               <Button
                                 variant="secondary"
                                 size="sm"
@@ -970,14 +1028,12 @@ export function ComputeAdminCreateImagePage() {
                                 QEMU guest agent
                               </span>
                               <span className="text-[12px] font-normal leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
-                                Enables communication and status retrieval between the hypervisor and the instance.
+                                Enables communication and status retrieval between the hypervisor
+                                and the instance.
                               </span>
                             </div>
                             <HStack gap={2} align="center">
-                              <Toggle 
-                                checked={qemuGuestAgent} 
-                                onChange={setQemuGuestAgent}
-                              />
+                              <Toggle checked={qemuGuestAgent} onChange={setQemuGuestAgent} />
                               <span className="text-[12px] text-[var(--color-text-default)]">
                                 {qemuGuestAgent ? 'On' : 'Off'}
                               </span>
@@ -1027,8 +1083,8 @@ export function ComputeAdminCreateImagePage() {
 
                           {/* Action Buttons */}
                           <div className="flex items-center justify-end gap-2 w-full">
-                            <Button 
-                              variant="secondary" 
+                            <Button
+                              variant="secondary"
                               onClick={() => {
                                 // Reset to default values
                                 setQemuGuestAgent(true);
@@ -1038,8 +1094,8 @@ export function ComputeAdminCreateImagePage() {
                             >
                               Cancel
                             </Button>
-                            <Button 
-                              variant="primary" 
+                            <Button
+                              variant="primary"
                               onClick={() => {
                                 setSectionStatus((prev) => ({
                                   ...prev,
@@ -1054,20 +1110,28 @@ export function ComputeAdminCreateImagePage() {
                       )}
                       {sectionStatus['advanced'] === 'done' && (
                         <SectionCard.Content>
-                          <SectionCard.DataRow 
-                            label="QEMU Guest Agent" 
-                            value={qemuGuestAgent ? 'On' : 'Off'} 
-                            showDivider 
+                          <SectionCard.DataRow
+                            label="QEMU Guest Agent"
+                            value={qemuGuestAgent ? 'On' : 'Off'}
+                            showDivider
                           />
-                          <SectionCard.DataRow 
-                            label="CPU Policy" 
-                            value={cpuPolicy === 'none' ? 'None' : cpuPolicy.charAt(0).toUpperCase() + cpuPolicy.slice(1)} 
-                            showDivider 
+                          <SectionCard.DataRow
+                            label="CPU Policy"
+                            value={
+                              cpuPolicy === 'none'
+                                ? 'None'
+                                : cpuPolicy.charAt(0).toUpperCase() + cpuPolicy.slice(1)
+                            }
+                            showDivider
                           />
-                          <SectionCard.DataRow 
-                            label="CPU Thread Policy" 
-                            value={cpuThreadPolicy === 'none' ? 'None' : cpuThreadPolicy.charAt(0).toUpperCase() + cpuThreadPolicy.slice(1)} 
-                            showDivider 
+                          <SectionCard.DataRow
+                            label="CPU Thread Policy"
+                            value={
+                              cpuThreadPolicy === 'none'
+                                ? 'None'
+                                : cpuThreadPolicy.charAt(0).toUpperCase() + cpuThreadPolicy.slice(1)
+                            }
+                            showDivider
                           />
                         </SectionCard.Content>
                       )}
@@ -1075,7 +1139,7 @@ export function ComputeAdminCreateImagePage() {
                   </VStack>
 
                   {/* Right Column - Summary Sidebar */}
-                  <SummarySidebar 
+                  <SummarySidebar
                     sectionStatus={sectionStatus}
                     onCancel={handleCancel}
                     onCreate={handleCreate}

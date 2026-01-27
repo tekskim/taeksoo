@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { 
-  Drawer, 
-  Button, 
+import {
+  Drawer,
+  Button,
   SearchInput,
   Pagination,
   Select,
@@ -10,7 +10,12 @@ import {
   Input,
 } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
-import { IconExternalLink, IconChevronDown, IconCirclePlus, IconCircleMinus } from '@tabler/icons-react';
+import {
+  IconExternalLink,
+  IconChevronDown,
+  IconCirclePlus,
+  IconCircleMinus,
+} from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -49,10 +54,25 @@ export interface ManageMembersDrawerProps {
    ---------------------------------------- */
 
 const mockInstances: InstanceItem[] = [
-  { id: 'inst-1', name: 'my-server-3', status: 'active', ipAddresses: ['10.63.0.47', '10.63.0.48', '10.63.0.49'] },
-  { id: 'inst-2', name: 'my-server-4', status: 'active', ipAddresses: ['10.63.0.50', '10.63.0.51'] },
+  {
+    id: 'inst-1',
+    name: 'my-server-3',
+    status: 'active',
+    ipAddresses: ['10.63.0.47', '10.63.0.48', '10.63.0.49'],
+  },
+  {
+    id: 'inst-2',
+    name: 'my-server-4',
+    status: 'active',
+    ipAddresses: ['10.63.0.50', '10.63.0.51'],
+  },
   { id: 'inst-3', name: 'my-server-5', status: 'building', ipAddresses: ['10.63.0.52'] },
-  { id: 'inst-4', name: 'my-server-6', status: 'active', ipAddresses: ['10.63.0.53', '10.63.0.54'] },
+  {
+    id: 'inst-4',
+    name: 'my-server-6',
+    status: 'active',
+    ipAddresses: ['10.63.0.53', '10.63.0.54'],
+  },
   { id: 'inst-5', name: 'my-server-7', status: 'error', ipAddresses: ['10.63.0.55'] },
 ];
 
@@ -157,9 +177,10 @@ export function ManageMembersDrawer({
 
   // Filtering and sorting
   const filteredInstances = instances
-    .filter(item =>
-      item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.ipAddresses.some(ip => ip.includes(searchQuery))
+    .filter(
+      (item) =>
+        item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.ipAddresses.some((ip) => ip.includes(searchQuery))
     )
     .sort((a, b) => {
       const comparison = a.name.localeCompare(b.name);
@@ -180,7 +201,7 @@ export function ManageMembersDrawer({
       port: 80,
       weight: 1,
     };
-    setMembers(prev => [...prev, newMember]);
+    setMembers((prev) => [...prev, newMember]);
   };
 
   const handleAddExternalMember = () => {
@@ -191,23 +212,23 @@ export function ManageMembersDrawer({
       weight: 1,
       isExternal: true,
     };
-    setMembers(prev => [...prev, newMember]);
+    setMembers((prev) => [...prev, newMember]);
   };
 
   const handleRemoveMember = (memberId: string) => {
-    setMembers(prev => prev.filter(m => m.id !== memberId));
+    setMembers((prev) => prev.filter((m) => m.id !== memberId));
   };
 
   const handlePortChange = (memberId: string, port: number) => {
-    setMembers(prev => prev.map(m => m.id === memberId ? { ...m, port } : m));
+    setMembers((prev) => prev.map((m) => (m.id === memberId ? { ...m, port } : m)));
   };
 
   const handleWeightChange = (memberId: string, weight: number) => {
-    setMembers(prev => prev.map(m => m.id === memberId ? { ...m, weight } : m));
+    setMembers((prev) => prev.map((m) => (m.id === memberId ? { ...m, weight } : m)));
   };
 
   const handleIpAddressChange = (memberId: string, ipAddress: string) => {
-    setMembers(prev => prev.map(m => m.id === memberId ? { ...m, ipAddress } : m));
+    setMembers((prev) => prev.map((m) => (m.id === memberId ? { ...m, ipAddress } : m)));
   };
 
   const handleSubmit = () => {
@@ -218,9 +239,9 @@ export function ManageMembersDrawer({
   };
 
   return (
-    <Drawer 
-      isOpen={isOpen} 
-      onClose={onClose} 
+    <Drawer
+      isOpen={isOpen}
+      onClose={onClose}
       title="Manage Members"
       width={696}
       footer={
@@ -228,11 +249,7 @@ export function ManageMembersDrawer({
           <Button variant="secondary" onClick={onClose} className="w-[152px] h-8">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
-            onClick={handleSubmit}
-            className="w-[152px] h-8"
-          >
+          <Button variant="primary" onClick={handleSubmit} className="w-[152px] h-8">
             Save
           </Button>
         </HStack>
@@ -244,9 +261,7 @@ export function ManageMembersDrawer({
           <p className="text-[11px] font-medium text-[var(--color-text-subtle)] leading-4 mb-1.5">
             Pool name
           </p>
-          <p className="text-[12px] text-[var(--color-text-default)] leading-4">
-            {pool.name}
-          </p>
+          <p className="text-[12px] text-[var(--color-text-default)] leading-4">{pool.name}</p>
         </div>
 
         {/* Available Instances Section */}
@@ -278,20 +293,31 @@ export function ManageMembersDrawer({
             {/* Header */}
             <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
               <div className="w-[59px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center justify-center">
-                <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">Status</span>
+                <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
+                  Status
+                </span>
               </div>
-              <div 
+              <div
                 className="w-[180px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
-                onClick={() => setSortDirection(prev => prev === 'asc' ? 'desc' : 'asc')}
+                onClick={() => setSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'))}
               >
-                <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">Name</span>
-                <IconChevronDown size={12} className={`transition-transform ${sortDirection === 'desc' ? 'rotate-180' : ''}`} />
+                <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
+                  Name
+                </span>
+                <IconChevronDown
+                  size={12}
+                  className={`transition-transform ${sortDirection === 'desc' ? 'rotate-180' : ''}`}
+                />
               </div>
               <div className="w-[180px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center border-l border-[var(--color-border-default)]">
-                <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">IP</span>
+                <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
+                  IP
+                </span>
               </div>
               <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] flex items-center border-l border-[var(--color-border-default)]">
-                <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">Action</span>
+                <span className="text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
+                  Action
+                </span>
               </div>
             </div>
 
@@ -320,14 +346,16 @@ export function ManageMembersDrawer({
                   <div className="w-[180px] px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center">
                     <Select
                       value={selectedIp}
-                      onChange={(value) => setSelectedIps(prev => ({ ...prev, [item.id]: value }))}
-                      options={item.ipAddresses.map(ip => ({ value: ip, label: ip }))}
+                      onChange={(value) =>
+                        setSelectedIps((prev) => ({ ...prev, [item.id]: value }))
+                      }
+                      options={item.ipAddresses.map((ip) => ({ value: ip, label: ip }))}
                       className="w-full"
                     />
                   </div>
                   <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center">
-                    <Button 
-                      variant="secondary" 
+                    <Button
+                      variant="secondary"
                       size="sm"
                       onClick={() => handleAddMember(item, selectedIp)}
                       className="w-fit"
@@ -356,9 +384,9 @@ export function ManageMembersDrawer({
           {/* Member Cards */}
           {members.length > 0 && (
             <div className="grid grid-cols-3 gap-3">
-              {members.map((member) => (
+              {members.map((member) =>
                 member.isExternal ? (
-                  <div 
+                  <div
                     key={member.id}
                     className="w-[200px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md px-4 pt-3 pb-4 flex flex-col gap-3"
                   >
@@ -404,7 +432,12 @@ export function ManageMembersDrawer({
                     </VStack>
 
                     {/* Remove Button */}
-                    <Button variant="secondary" size="sm" onClick={() => handleRemoveMember(member.id)} className="w-fit">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => handleRemoveMember(member.id)}
+                      className="w-fit"
+                    >
                       <IconCircleMinus size={12} />
                       Remove
                     </Button>
@@ -418,7 +451,7 @@ export function ManageMembersDrawer({
                     onRemove={() => handleRemoveMember(member.id)}
                   />
                 )
-              ))}
+              )}
             </div>
           )}
         </VStack>

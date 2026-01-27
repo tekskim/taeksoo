@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { SNBMenuItem } from './SNBMenuItem';
-import { 
-  IconHome, 
-  IconSettings, 
-  IconFolder, 
+import {
+  IconHome,
+  IconSettings,
+  IconFolder,
   IconServer,
   IconDatabase,
   IconCloud,
@@ -122,18 +122,9 @@ export const TextTypeSelected: Story = {
 export const AllStates: Story = {
   render: () => (
     <div className="flex gap-2">
-      <SNBMenuItem
-        icon={<IconHome size={22} stroke={1.5} />}
-        status="default"
-      />
-      <SNBMenuItem
-        icon={<IconHome size={22} stroke={1.5} />}
-        status="hover"
-      />
-      <SNBMenuItem
-        icon={<IconHome size={22} stroke={1.5} />}
-        status="selected"
-      />
+      <SNBMenuItem icon={<IconHome size={22} stroke={1.5} />} status="default" />
+      <SNBMenuItem icon={<IconHome size={22} stroke={1.5} />} status="hover" />
+      <SNBMenuItem icon={<IconHome size={22} stroke={1.5} />} status="selected" />
     </div>
   ),
 };
@@ -176,14 +167,8 @@ export const NavigationMenu: Story = {
 export const WithIsSelected: Story = {
   render: () => (
     <div className="flex gap-2">
-      <SNBMenuItem
-        icon={<IconHome size={22} stroke={1.5} />}
-        isSelected={false}
-      />
-      <SNBMenuItem
-        icon={<IconSettings size={22} stroke={1.5} />}
-        isSelected={true}
-      />
+      <SNBMenuItem icon={<IconHome size={22} stroke={1.5} />} isSelected={false} />
+      <SNBMenuItem icon={<IconSettings size={22} stroke={1.5} />} isSelected={true} />
     </div>
   ),
 };

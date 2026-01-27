@@ -200,7 +200,9 @@ export const WithDisabledTab: Story = {
       <TabList>
         <Tab value="tab1">Active</Tab>
         <Tab value="tab2">Also Active</Tab>
-        <Tab value="tab3" disabled>Disabled</Tab>
+        <Tab value="tab3" disabled>
+          Disabled
+        </Tab>
       </TabList>
       <TabPanel value="tab1">
         <div className="p-4">First tab content</div>
@@ -257,22 +259,34 @@ export const WithBadges: Story = {
       <TabList>
         <Tab value="all">
           <span className="flex items-center gap-2">
-            All <Badge size="sm" theme="gray" type="subtle">128</Badge>
+            All{' '}
+            <Badge size="sm" theme="gray" type="subtle">
+              128
+            </Badge>
           </span>
         </Tab>
         <Tab value="active">
           <span className="flex items-center gap-2">
-            Active <Badge size="sm" theme="green" type="subtle">42</Badge>
+            Active{' '}
+            <Badge size="sm" theme="green" type="subtle">
+              42
+            </Badge>
           </span>
         </Tab>
         <Tab value="pending">
           <span className="flex items-center gap-2">
-            Pending <Badge size="sm" theme="yellow" type="subtle">15</Badge>
+            Pending{' '}
+            <Badge size="sm" theme="yellow" type="subtle">
+              15
+            </Badge>
           </span>
         </Tab>
         <Tab value="error">
           <span className="flex items-center gap-2">
-            Error <Badge size="sm" theme="red" type="subtle">3</Badge>
+            Error{' '}
+            <Badge size="sm" theme="red" type="subtle">
+              3
+            </Badge>
           </span>
         </Tab>
       </TabList>
@@ -352,14 +366,10 @@ export const BoxedToggle: Story = {
           <Tab value="calendar">Calendar</Tab>
         </TabList>
         <TabPanel value="list">
-          <div className="p-4 text-center text-[var(--color-text-muted)]">
-            List view content
-          </div>
+          <div className="p-4 text-center text-[var(--color-text-muted)]">List view content</div>
         </TabPanel>
         <TabPanel value="grid">
-          <div className="p-4 text-center text-[var(--color-text-muted)]">
-            Grid view content
-          </div>
+          <div className="p-4 text-center text-[var(--color-text-muted)]">Grid view content</div>
         </TabPanel>
         <TabPanel value="calendar">
           <div className="p-4 text-center text-[var(--color-text-muted)]">

@@ -27,12 +27,7 @@ import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import { CreateSubnetDrawer } from '@/components/CreateSubnetDrawer';
 import { EditNetworkDrawer } from '@/components/EditNetworkDrawer';
-import {
-  IconDotsCircleHorizontal,
-  IconTrash,
-  IconDownload,
-  IconBell,
-} from '@tabler/icons-react';
+import { IconDotsCircleHorizontal, IconTrash, IconDownload, IconBell } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
@@ -57,16 +52,106 @@ interface Network {
    ---------------------------------------- */
 
 const mockNetworks: Network[] = [
-  { id: 'net-001', name: 'net-01', subnetCidr: '10.62.0.0/24', external: true, shared: true, adminState: 'Up', diskTag: 'Project', status: 'active' },
-  { id: 'net-002', name: 'internal-net', subnetCidr: '192.168.1.0/24', external: false, shared: false, adminState: 'Up', diskTag: 'Project', status: 'active' },
-  { id: 'net-003', name: 'dev-network', subnetCidr: '10.10.0.0/16', external: false, shared: true, adminState: 'Up', diskTag: 'Project', status: 'active' },
-  { id: 'net-004', name: 'prod-net', subnetCidr: '172.16.0.0/12', external: true, shared: false, adminState: 'Up', diskTag: 'Project', status: 'building' },
-  { id: 'net-005', name: 'test-network', subnetCidr: '10.20.0.0/24', external: false, shared: false, adminState: 'Down', diskTag: 'Project', status: 'active' },
-  { id: 'net-006', name: 'dmz-net', subnetCidr: '10.30.0.0/24', external: true, shared: true, adminState: 'Up', diskTag: 'Project', status: 'active' },
-  { id: 'net-007', name: 'management-net', subnetCidr: '10.0.0.0/8', external: false, shared: false, adminState: 'Down', diskTag: 'Project', status: 'error' },
-  { id: 'net-008', name: 'backup-network', subnetCidr: '192.168.100.0/24', external: false, shared: true, adminState: 'Up', diskTag: 'Project', status: 'active' },
-  { id: 'net-009', name: 'external-gateway', subnetCidr: '203.0.113.0/24', external: true, shared: true, adminState: 'Up', diskTag: 'Shared', status: 'active' },
-  { id: 'net-010', name: 'provider-net', subnetCidr: '198.51.100.0/24', external: true, shared: true, adminState: 'Up', diskTag: 'External', status: 'active' },
+  {
+    id: 'net-001',
+    name: 'net-01',
+    subnetCidr: '10.62.0.0/24',
+    external: true,
+    shared: true,
+    adminState: 'Up',
+    diskTag: 'Project',
+    status: 'active',
+  },
+  {
+    id: 'net-002',
+    name: 'internal-net',
+    subnetCidr: '192.168.1.0/24',
+    external: false,
+    shared: false,
+    adminState: 'Up',
+    diskTag: 'Project',
+    status: 'active',
+  },
+  {
+    id: 'net-003',
+    name: 'dev-network',
+    subnetCidr: '10.10.0.0/16',
+    external: false,
+    shared: true,
+    adminState: 'Up',
+    diskTag: 'Project',
+    status: 'active',
+  },
+  {
+    id: 'net-004',
+    name: 'prod-net',
+    subnetCidr: '172.16.0.0/12',
+    external: true,
+    shared: false,
+    adminState: 'Up',
+    diskTag: 'Project',
+    status: 'building',
+  },
+  {
+    id: 'net-005',
+    name: 'test-network',
+    subnetCidr: '10.20.0.0/24',
+    external: false,
+    shared: false,
+    adminState: 'Down',
+    diskTag: 'Project',
+    status: 'active',
+  },
+  {
+    id: 'net-006',
+    name: 'dmz-net',
+    subnetCidr: '10.30.0.0/24',
+    external: true,
+    shared: true,
+    adminState: 'Up',
+    diskTag: 'Project',
+    status: 'active',
+  },
+  {
+    id: 'net-007',
+    name: 'management-net',
+    subnetCidr: '10.0.0.0/8',
+    external: false,
+    shared: false,
+    adminState: 'Down',
+    diskTag: 'Project',
+    status: 'error',
+  },
+  {
+    id: 'net-008',
+    name: 'backup-network',
+    subnetCidr: '192.168.100.0/24',
+    external: false,
+    shared: true,
+    adminState: 'Up',
+    diskTag: 'Project',
+    status: 'active',
+  },
+  {
+    id: 'net-009',
+    name: 'external-gateway',
+    subnetCidr: '203.0.113.0/24',
+    external: true,
+    shared: true,
+    adminState: 'Up',
+    diskTag: 'Shared',
+    status: 'active',
+  },
+  {
+    id: 'net-010',
+    name: 'provider-net',
+    subnetCidr: '198.51.100.0/24',
+    external: true,
+    shared: true,
+    adminState: 'Up',
+    diskTag: 'External',
+    status: 'active',
+  },
 ];
 
 /* ----------------------------------------
@@ -74,9 +159,9 @@ const mockNetworks: Network[] = [
    ---------------------------------------- */
 
 const networkStatusMap: Record<NetworkStatus, 'active' | 'error' | 'building'> = {
-  'active': 'active',
-  'error': 'error',
-  'building': 'building',
+  active: 'active',
+  error: 'error',
+  building: 'building',
 };
 
 /* ----------------------------------------
@@ -87,23 +172,43 @@ const networkStatusMap: Record<NetworkStatus, 'active' | 'error' | 'building'> =
 const filterFields: FilterField[] = [
   { key: 'name', label: 'Name', type: 'text' },
   { key: 'subnetCidr', label: 'Subnet CIDR', type: 'text' },
-  { key: 'external', label: 'External', type: 'select', options: [
-    { value: 'true', label: 'Yes' },
-    { value: 'false', label: 'No' },
-  ]},
-  { key: 'shared', label: 'Shared', type: 'select', options: [
-    { value: 'true', label: 'Yes' },
-    { value: 'false', label: 'No' },
-  ]},
-  { key: 'adminState', label: 'Admin State', type: 'select', options: [
-    { value: 'Up', label: 'Up' },
-    { value: 'Down', label: 'Down' },
-  ]},
-  { key: 'status', label: 'Status', type: 'select', options: [
-    { value: 'active', label: 'Active' },
-    { value: 'error', label: 'Error' },
-    { value: 'building', label: 'Building' },
-  ]},
+  {
+    key: 'external',
+    label: 'External',
+    type: 'select',
+    options: [
+      { value: 'true', label: 'Yes' },
+      { value: 'false', label: 'No' },
+    ],
+  },
+  {
+    key: 'shared',
+    label: 'Shared',
+    type: 'select',
+    options: [
+      { value: 'true', label: 'Yes' },
+      { value: 'false', label: 'No' },
+    ],
+  },
+  {
+    key: 'adminState',
+    label: 'Admin State',
+    type: 'select',
+    options: [
+      { value: 'Up', label: 'Up' },
+      { value: 'Down', label: 'Down' },
+    ],
+  },
+  {
+    key: 'status',
+    label: 'Status',
+    type: 'select',
+    options: [
+      { value: 'active', label: 'Active' },
+      { value: 'error', label: 'Error' },
+      { value: 'building', label: 'Building' },
+    ],
+  },
 ];
 
 export function NetworksPage() {
@@ -114,7 +219,7 @@ export function NetworksPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [networks] = useState(mockNetworks);
   const [activeTab, setActiveTab] = useState('current');
-  
+
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [networkToDelete, setNetworkToDelete] = useState<Network | null>(null);
@@ -165,22 +270,30 @@ export function NetworksPage() {
   const getContextMenuItems = (network: Network): ContextMenuItem[] => [
     { id: 'create-subnet', label: 'Create subnet', onClick: () => handleCreateSubnet(network) },
     { id: 'edit', label: 'Edit', onClick: () => handleEditNetwork(network) },
-    { id: 'delete', label: 'Delete', status: 'danger', onClick: () => { setNetworkToDelete(network); setDeleteModalOpen(true); } },
+    {
+      id: 'delete',
+      label: 'Delete',
+      status: 'danger',
+      onClick: () => {
+        setNetworkToDelete(network);
+        setDeleteModalOpen(true);
+      },
+    },
   ];
 
   // Filter networks based on search and tab
   const filteredNetworks = useMemo(() => {
     let filtered = networks;
-    
+
     // Filter by tab
     if (activeTab === 'current') {
-      filtered = filtered.filter(n => n.diskTag === 'Project');
+      filtered = filtered.filter((n) => n.diskTag === 'Project');
     } else if (activeTab === 'shared') {
-      filtered = filtered.filter(n => n.diskTag === 'Shared');
+      filtered = filtered.filter((n) => n.diskTag === 'Shared');
     } else if (activeTab === 'external') {
-      filtered = filtered.filter(n => n.diskTag === 'External');
+      filtered = filtered.filter((n) => n.diskTag === 'External');
     }
-    
+
     // Filter by applied filters
     if (appliedFilters.length > 0) {
       filtered = filtered.filter((n) => {
@@ -190,7 +303,7 @@ export function NetworksPage() {
         });
       });
     }
-    
+
     return filtered;
   }, [networks, appliedFilters, activeTab]);
 
@@ -238,13 +351,13 @@ export function NetworksPage() {
       key: 'external',
       label: 'External',
       flex: 1,
-      render: (value: boolean) => value ? 'Yes' : 'No',
+      render: (value: boolean) => (value ? 'Yes' : 'No'),
     },
     {
       key: 'diskTag',
       label: activeTab === 'current' ? 'Shared' : 'Is Current Tenant',
       flex: 1,
-      render: (_, row) => row.shared ? 'On' : 'Off',
+      render: (_, row) => (row.shared ? 'On' : 'Off'),
     },
     {
       key: 'adminState',
@@ -260,7 +373,11 @@ export function NetworksPage() {
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getContextMenuItems(row)} trigger="click">
             <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-              <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+              <IconDotsCircleHorizontal
+                size={16}
+                stroke={1.5}
+                className="text-[var(--action-icon-color)]"
+              />
             </button>
           </ContextMenu>
         </div>
@@ -270,17 +387,17 @@ export function NetworksPage() {
 
   // Filter and order columns based on preferences
   const visibleColumns = useMemo(() => {
-    const visibleColumnIds = columnConfig
-      .filter((col) => col.visible)
-      .map((col) => col.id);
+    const visibleColumnIds = columnConfig.filter((col) => col.visible).map((col) => col.id);
 
     const columnMap = new Map(columns.map((col) => [col.key, col]));
 
-    return visibleColumnIds
-      .map((id) => columnMap.get(id))
-      .filter((col): col is TableColumn<Network> => col !== undefined)
-      // Hide 'external' column when on External tab
-      .filter((col) => !(activeTab === 'external' && col.key === 'external'));
+    return (
+      visibleColumnIds
+        .map((id) => columnMap.get(id))
+        .filter((col): col is TableColumn<Network> => col !== undefined)
+        // Hide 'external' column when on External tab
+        .filter((col) => !(activeTab === 'external' && col.key === 'external'))
+    );
   }, [columns, columnConfig, activeTab]);
 
   const handleContextMenuSelect = (itemId: string) => {
@@ -293,7 +410,7 @@ export function NetworksPage() {
 
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
+      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
 
       <main
         className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
@@ -322,12 +439,7 @@ export function NetworksPage() {
             onBack={() => window.history.back()}
             onForward={() => window.history.forward()}
             breadcrumb={
-              <Breadcrumb
-                items={[
-                  { label: 'Proj-1', href: '/project' },
-                  { label: 'Networks' },
-                ]}
-              />
+              <Breadcrumb items={[{ label: 'Proj-1', href: '/project' }, { label: 'Networks' }]} />
             }
             actions={
               <TopBarAction
@@ -343,76 +455,86 @@ export function NetworksPage() {
         <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
           {/* Main Content */}
           <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
-          <VStack gap={3}>
-            {/* Page Header */}
-            <div className="flex justify-between items-center h-8 w-full">
-              <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
-                Networks
-              </h1>
-              <Button variant="primary" size="md" onClick={() => navigate('/compute/networks/create')}>
-                Create network
-              </Button>
-            </div>
+            <VStack gap={3}>
+              {/* Page Header */}
+              <div className="flex justify-between items-center h-8 w-full">
+                <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
+                  Networks
+                </h1>
+                <Button
+                  variant="primary"
+                  size="md"
+                  onClick={() => navigate('/compute/networks/create')}
+                >
+                  Create network
+                </Button>
+              </div>
 
-            {/* Tabs */}
-            <Tabs value={activeTab} onChange={setActiveTab} size="sm">
-              <TabList>
-                <Tab value="current">Current tenant</Tab>
-                <Tab value="shared">Shared</Tab>
-                <Tab value="external">External</Tab>
-              </TabList>
-            </Tabs>
+              {/* Tabs */}
+              <Tabs value={activeTab} onChange={setActiveTab} size="sm">
+                <TabList>
+                  <Tab value="current">Current tenant</Tab>
+                  <Tab value="shared">Shared</Tab>
+                  <Tab value="external">External</Tab>
+                </TabList>
+              </Tabs>
 
-            {/* Toolbar */}
-            <ListToolbar
-              primaryActions={
-                <ListToolbar.Actions>
-                  <FilterSearchInput
-                    filters={filterFields}
-                    appliedFilters={appliedFilters}
-                    onFiltersChange={setAppliedFilters}
-                    placeholder="Search network by attributes"
-                    className="w-[var(--search-input-width)]"
-                  />
-                  <Button variant="secondary" size="sm" iconOnly icon={<IconDownload size={12} />} aria-label="Download" />
-                </ListToolbar.Actions>
-              }
-              bulkActions={
-                <ListToolbar.Actions>
-                  <Button
-                    variant="muted"
-                    size="sm"
-                    leftIcon={<IconTrash size={12} />}
-                    disabled={selectedNetworks.length === 0}
-                  >
-                    Delete
-                  </Button>
-                </ListToolbar.Actions>
-              }
-            />
+              {/* Toolbar */}
+              <ListToolbar
+                primaryActions={
+                  <ListToolbar.Actions>
+                    <FilterSearchInput
+                      filters={filterFields}
+                      appliedFilters={appliedFilters}
+                      onFiltersChange={setAppliedFilters}
+                      placeholder="Search network by attributes"
+                      className="w-[var(--search-input-width)]"
+                    />
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      iconOnly
+                      icon={<IconDownload size={12} />}
+                      aria-label="Download"
+                    />
+                  </ListToolbar.Actions>
+                }
+                bulkActions={
+                  <ListToolbar.Actions>
+                    <Button
+                      variant="muted"
+                      size="sm"
+                      leftIcon={<IconTrash size={12} />}
+                      disabled={selectedNetworks.length === 0}
+                    >
+                      Delete
+                    </Button>
+                  </ListToolbar.Actions>
+                }
+              />
 
-            {/* Pagination */}
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              totalItems={filteredNetworks.length}
-              selectedCount={selectedNetworks.length}
-              onPageChange={setCurrentPage}
-              showSettings
-              onSettingsClick={() => setIsPreferencesOpen(true)}
-            />
+              {/* Pagination */}
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                totalItems={filteredNetworks.length}
+                selectedCount={selectedNetworks.length}
+                onPageChange={setCurrentPage}
+                showSettings
+                onSettingsClick={() => setIsPreferencesOpen(true)}
+              />
 
-            {/* Table */}
-            <Table
-              columns={visibleColumns}
-              data={paginatedNetworks}
-              rowKey="id"
-              selectable
-              selectedKeys={selectedNetworks}
-              onSelectionChange={setSelectedNetworks}
-            />
-          </VStack>
-        </div>
+              {/* Table */}
+              <Table
+                columns={visibleColumns}
+                data={paginatedNetworks}
+                rowKey="id"
+                selectable
+                selectedKeys={selectedNetworks}
+                onSelectionChange={setSelectedNetworks}
+              />
+            </VStack>
+          </div>
         </div>
       </main>
 
@@ -453,11 +575,15 @@ export function NetworksPage() {
       <EditNetworkDrawer
         isOpen={editNetworkOpen}
         onClose={() => setEditNetworkOpen(false)}
-        network={selectedNetworkForDrawer ? {
-          id: selectedNetworkForDrawer.id,
-          name: selectedNetworkForDrawer.name,
-          adminStateUp: selectedNetworkForDrawer.adminState === 'Up',
-        } : { id: '', name: '' }}
+        network={
+          selectedNetworkForDrawer
+            ? {
+                id: selectedNetworkForDrawer.id,
+                name: selectedNetworkForDrawer.name,
+                adminStateUp: selectedNetworkForDrawer.adminState === 'Up',
+              }
+            : { id: '', name: '' }
+        }
       />
     </div>
   );

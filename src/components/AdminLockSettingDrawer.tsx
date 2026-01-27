@@ -1,9 +1,5 @@
 import { useState, useEffect } from 'react';
-import { 
-  Drawer, 
-  Button, 
-  Toggle,
-} from '@/design-system';
+import { Drawer, Button, Toggle } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 
 /* ----------------------------------------
@@ -63,15 +59,11 @@ export function AdminLockSettingDrawer({
       width={376}
       footer={
         <HStack gap={2} justify="center" className="w-full">
-          <Button 
-            variant="secondary" 
-            onClick={handleClose}
-            className="flex-1 h-8"
-          >
+          <Button variant="secondary" onClick={handleClose} className="flex-1 h-8">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={handleSubmit}
             disabled={isSubmitting}
             className="flex-1 h-8"
@@ -89,7 +81,8 @@ export function AdminLockSettingDrawer({
               Lock Setting
             </h2>
             <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-              When a system administrator is locked, sign-in is disabled and modifications or deletion of the account are restricted.
+              When a system administrator is locked, sign-in is disabled and modifications or
+              deletion of the account are restricted.
             </p>
           </VStack>
 
@@ -112,10 +105,7 @@ export function AdminLockSettingDrawer({
             Lock Status
           </span>
           <HStack gap={2} align="center">
-            <Toggle
-              checked={locked}
-              onChange={setLocked}
-            />
+            <Toggle checked={locked} onChange={setLocked} />
             <span className="text-[12px] text-[var(--color-text-default)] leading-4">
               {locked ? 'Locked' : 'Unlocked'}
             </span>

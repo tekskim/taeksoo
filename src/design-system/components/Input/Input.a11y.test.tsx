@@ -19,9 +19,7 @@ describe('Input Accessibility', () => {
   });
 
   it('should have no accessibility violations with error', async () => {
-    const { container } = render(
-      <Input label="Email" error="Invalid email format" />
-    );
+    const { container } = render(<Input label="Email" error="Invalid email format" />);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });

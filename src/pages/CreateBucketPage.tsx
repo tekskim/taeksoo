@@ -16,12 +16,7 @@ import {
 } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconBell,
-  IconEdit,
-  IconCheck,
-  IconProgress,
-} from '@tabler/icons-react';
+import { IconBell, IconEdit, IconCheck, IconProgress } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -50,11 +45,7 @@ const SECTION_LABELS: Record<SectionStep, string> = {
 };
 
 // Section order for navigation
-const SECTION_ORDER: SectionStep[] = [
-  'basic-info',
-  'settings',
-  'policy',
-];
+const SECTION_ORDER: SectionStep[] = ['basic-info', 'settings', 'policy'];
 
 /* ----------------------------------------
    PreSection Component (대기 상태)
@@ -110,8 +101,8 @@ interface DoneSectionProps {
 function DoneSection({ title, onEdit, children }: DoneSectionProps) {
   return (
     <SectionCard>
-      <SectionCard.Header 
-        title={title} 
+      <SectionCard.Header
+        title={title}
         showDivider
         actions={
           <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />} onClick={onEdit}>
@@ -119,9 +110,7 @@ function DoneSection({ title, onEdit, children }: DoneSectionProps) {
           </Button>
         }
       />
-      <SectionCard.Content>
-        {children}
-      </SectionCard.Content>
+      <SectionCard.Content>{children}</SectionCard.Content>
     </SectionCard>
   );
 }
@@ -139,21 +128,25 @@ function SectionStatusIcon({ status }: { status: SectionState }) {
       </div>
     );
   }
-  
+
   // active → spinning progress (currently working)
   if (status === 'active') {
     return (
       <div className="w-4 h-4 shrink-0">
-        <IconProgress size={16} stroke={1.5} className="text-[var(--color-text-subtle)] animate-spin" />
+        <IconProgress
+          size={16}
+          stroke={1.5}
+          className="text-[var(--color-text-subtle)] animate-spin"
+        />
       </div>
     );
   }
-  
+
   // writing → no icon, show "Writing..." text instead (handled in parent)
   if (status === 'writing') {
     return null;
   }
-  
+
   // pre → empty circle (waiting)
   return (
     <div className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)]" />
@@ -171,7 +164,12 @@ interface SummarySidebarProps {
   isCreateEnabled: boolean;
 }
 
-function SummarySidebar({ sectionStatus, onCancel, onCreate, isCreateEnabled }: SummarySidebarProps) {
+function SummarySidebar({
+  sectionStatus,
+  onCancel,
+  onCreate,
+  isCreateEnabled,
+}: SummarySidebarProps) {
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
       <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-4">
@@ -184,17 +182,16 @@ function SummarySidebar({ sectionStatus, onCancel, onCreate, isCreateEnabled }: 
             <div className="flex flex-col">
               {SECTION_ORDER.map((sectionKey) => {
                 const isWriting = sectionStatus[sectionKey] === 'writing';
-                
+
                 return (
-                  <div
-                    key={sectionKey}
-                    className="flex items-center justify-between py-1"
-                  >
+                  <div key={sectionKey} className="flex items-center justify-between py-1">
                     <span className="text-[12px] leading-5 text-[var(--color-text-default)]">
                       {SECTION_LABELS[sectionKey]}
                     </span>
                     {isWriting ? (
-                      <span className="text-[11px] text-[var(--color-text-subtle)]">Writing...</span>
+                      <span className="text-[11px] text-[var(--color-text-subtle)]">
+                        Writing...
+                      </span>
                     ) : (
                       <SectionStatusIcon status={sectionStatus[sectionKey]} />
                     )}
@@ -207,12 +204,7 @@ function SummarySidebar({ sectionStatus, onCancel, onCreate, isCreateEnabled }: 
 
         {/* Action Buttons */}
         <div className="flex flex-row gap-2">
-          <Button
-            variant="secondary"
-            size="md"
-            onClick={onCancel}
-            className="flex-[0.3]"
-          >
+          <Button variant="secondary" size="md" onClick={onCancel} className="flex-[0.3]">
             Cancel
           </Button>
           <Button
@@ -270,49 +262,55 @@ function BasicInformationSection({
 }: BasicInformationSectionProps) {
   const handleNext = () => {
     let hasError = false;
-    
+
     if (!bucketName.trim()) {
       onBucketNameErrorChange('Bucket name is required.');
       hasError = true;
     }
-    
+
     if (!owner) {
       onOwnerErrorChange('Owner is required.');
       hasError = true;
     }
-    
+
     if (hasError) return;
     onNext();
   };
 
   const handleDone = () => {
     let hasError = false;
-    
+
     if (!bucketName.trim()) {
       onBucketNameErrorChange('Bucket name is required.');
       hasError = true;
     }
-    
+
     if (!owner) {
       onOwnerErrorChange('Owner is required.');
       hasError = true;
     }
-    
+
     if (hasError) return;
     onEditDone();
   };
 
   return (
     <SectionCard isActive>
-      <SectionCard.Header 
-        title="Basic Information" 
+      <SectionCard.Header
+        title="Basic Information"
         showDivider
-        actions={isEditing ? (
-          <HStack gap={2}>
-            <Button variant="secondary" size="sm" onClick={onEditCancel}>Cancel</Button>
-            <Button variant="primary" size="sm" onClick={handleDone}>Done</Button>
-          </HStack>
-        ) : undefined}
+        actions={
+          isEditing ? (
+            <HStack gap={2}>
+              <Button variant="secondary" size="sm" onClick={onEditCancel}>
+                Cancel
+              </Button>
+              <Button variant="primary" size="sm" onClick={handleDone}>
+                Done
+              </Button>
+            </HStack>
+          ) : undefined
+        }
       />
       <SectionCard.Content>
         <VStack gap={0}>
@@ -338,7 +336,8 @@ function BasicInformationSection({
                 </span>
               )}
               <span className="text-[11px] text-[var(--color-text-subtle)] leading-[16px]">
-                The name should start with upper letter, lower letter or chinese, and be a string of 1 to 128, characters can only contain "0-9, a-z, A-Z, "-'_.".
+                The name should start with upper letter, lower letter or chinese, and be a string of
+                1 to 128, characters can only contain "0-9, a-z, A-Z, "-'_.".
               </span>
             </div>
           </div>
@@ -352,9 +351,7 @@ function BasicInformationSection({
               Region <span className="text-[var(--color-state-danger)]">*</span>
             </label>
             <Select
-              options={[
-                { value: 'default', label: 'Default' },
-              ]}
+              options={[{ value: 'default', label: 'Default' }]}
               value={region}
               onChange={onRegionChange}
               fullWidth
@@ -451,15 +448,21 @@ function SettingsSection({
 }: SettingsSectionProps) {
   return (
     <SectionCard isActive>
-      <SectionCard.Header 
-        title="Settings" 
+      <SectionCard.Header
+        title="Settings"
         showDivider
-        actions={isEditing ? (
-          <HStack gap={2}>
-            <Button variant="secondary" size="sm" onClick={onEditCancel}>Cancel</Button>
-            <Button variant="primary" size="sm" onClick={onEditDone}>Done</Button>
-          </HStack>
-        ) : undefined}
+        actions={
+          isEditing ? (
+            <HStack gap={2}>
+              <Button variant="secondary" size="sm" onClick={onEditCancel}>
+                Cancel
+              </Button>
+              <Button variant="primary" size="sm" onClick={onEditDone}>
+                Done
+              </Button>
+            </HStack>
+          ) : undefined
+        }
       />
       <SectionCard.Content>
         <VStack gap={0}>
@@ -487,7 +490,9 @@ function SettingsSection({
               </label>
             </HStack>
             <span className="text-[11px] text-[var(--color-text-subtle)] leading-[16px] mt-1">
-              Store objects using a write-once-read-many (WORM) model to prevent objects from being deleted or overwritten for a fixed amount of time or indefinitely. Object Locking works only in versioned buckets.
+              Store objects using a write-once-read-many (WORM) model to prevent objects from being
+              deleted or overwritten for a fixed amount of time or indefinitely. Object Locking
+              works only in versioned buckets.
             </span>
 
             {/* Object Locking Options - shown when enabled */}
@@ -510,10 +515,12 @@ function SettingsSection({
                   />
                   <div className="flex flex-col gap-1 mt-1">
                     <span className="text-[11px] text-[var(--color-text-subtle)] leading-[16px]">
-                      In COMPLIANCE an object version cannot be overwritten or deleted for the duration of the period.
+                      In COMPLIANCE an object version cannot be overwritten or deleted for the
+                      duration of the period.
                     </span>
                     <span className="text-[11px] text-[var(--color-text-subtle)] leading-[16px]">
-                      In GOVERNANCE mode, users cannot overwrite or delete an object version or alter its lock settings unless they have special permissions.
+                      In GOVERNANCE mode, users cannot overwrite or delete an object version or
+                      alter its lock settings unless they have special permissions.
                     </span>
                   </div>
                 </div>
@@ -530,7 +537,8 @@ function SettingsSection({
                     fullWidth
                   />
                   <span className="text-[11px] text-[var(--color-text-subtle)] leading-[16px] mt-1">
-                    The number of days that you want to specify for the default retention period that will be applied to new objects placed in this bucket.
+                    The number of days that you want to specify for the default retention period
+                    that will be applied to new objects placed in this bucket.
                   </span>
                 </div>
               </div>
@@ -543,9 +551,7 @@ function SettingsSection({
           {/* Tags */}
           <VStack gap={4} className="py-6">
             <HStack justify="between" align="center">
-              <span className="text-[14px] font-medium text-[var(--color-text-default)]">
-                Tags
-              </span>
+              <span className="text-[14px] font-medium text-[var(--color-text-default)]">Tags</span>
               <Button variant="secondary" size="sm" onClick={onAddTag}>
                 Add
               </Button>
@@ -608,7 +614,9 @@ function SettingsSection({
               fullWidth
             />
             <span className="text-[11px] text-[var(--color-text-subtle)] leading-[16px] mt-1">
-              When creating a bucket, a placement target can be provided as part of the LocationConstraint to override the default placement targets from the user and zonegroup.
+              When creating a bucket, a placement target can be provided as part of the
+              LocationConstraint to override the default placement targets from the user and
+              zonegroup.
             </span>
           </div>
 
@@ -667,15 +675,21 @@ function PolicySection({
 }: PolicySectionProps) {
   return (
     <SectionCard isActive>
-      <SectionCard.Header 
-        title="Policy" 
+      <SectionCard.Header
+        title="Policy"
         showDivider
-        actions={isEditing ? (
-          <HStack gap={2}>
-            <Button variant="secondary" size="sm" onClick={onEditCancel}>Cancel</Button>
-            <Button variant="primary" size="sm" onClick={onEditDone}>Done</Button>
-          </HStack>
-        ) : undefined}
+        actions={
+          isEditing ? (
+            <HStack gap={2}>
+              <Button variant="secondary" size="sm" onClick={onEditCancel}>
+                Cancel
+              </Button>
+              <Button variant="primary" size="sm" onClick={onEditDone}>
+                Done
+              </Button>
+            </HStack>
+          ) : undefined
+        }
       />
       <SectionCard.Content>
         <VStack gap={0}>
@@ -695,7 +709,9 @@ function PolicySection({
               rows={3}
               fullWidth
               style={{
-                borderColor: policyValid ? 'var(--color-state-success)' : 'var(--color-state-danger)',
+                borderColor: policyValid
+                  ? 'var(--color-state-success)'
+                  : 'var(--color-state-danger)',
               }}
             />
             {policyValid ? (
@@ -719,7 +735,9 @@ function PolicySection({
             </label>
             <div className="flex items-center gap-6 px-4 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px]">
               <HStack gap={1.5} align="center">
-                <span className="text-[14px] font-medium text-[var(--color-text-default)]">Grantee</span>
+                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                  Grantee
+                </span>
                 <Select
                   options={[
                     { value: 'owner', label: 'Owner' },
@@ -732,17 +750,19 @@ function PolicySection({
                 />
               </HStack>
               <HStack gap={1.5} align="center">
-                <span className="text-[14px] font-medium text-[var(--color-text-default)]">Permissions</span>
+                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                  Permissions
+                </span>
                 <Select
                   options={
                     grantee === 'owner'
                       ? [{ value: 'full-control', label: 'Full control' }]
                       : grantee === 'everyone'
-                      ? [
-                          { value: 'read', label: 'Read' },
-                          { value: 'read-write', label: 'Read and write' },
-                        ]
-                      : [{ value: 'read', label: 'Read' }]
+                        ? [
+                            { value: 'read', label: 'Read' },
+                            { value: 'read-write', label: 'Read and write' },
+                          ]
+                        : [{ value: 'read', label: 'Read' }]
                   }
                   value={permissions}
                   onChange={onPermissionsChange}
@@ -751,7 +771,8 @@ function PolicySection({
               </HStack>
             </div>
             <span className="text-[11px] text-[var(--color-text-subtle)] leading-[16px] mt-1">
-              Any changes to the ACL will overwrite previous one. You can choose any of the available options to modify the specified user group.
+              Any changes to the ACL will overwrite previous one. You can choose any of the
+              available options to modify the specified user group.
             </span>
           </div>
 
@@ -824,10 +845,10 @@ export default function CreateBucketPage() {
   const handleEdit = useCallback((section: SectionStep) => {
     setEditingSection(section);
     const sectionIndex = SECTION_ORDER.indexOf(section);
-    
+
     setSectionStatus((prev) => {
       const newStatus = { ...prev };
-      
+
       // Set all sections to their appropriate state
       SECTION_ORDER.forEach((s, idx) => {
         if (s === section) {
@@ -845,7 +866,7 @@ export default function CreateBucketPage() {
           }
         }
       });
-      
+
       return newStatus;
     });
   }, []);
@@ -854,7 +875,7 @@ export default function CreateBucketPage() {
     if (editingSection) {
       setSectionStatus((prev) => {
         const newStatus = { ...prev, [editingSection]: 'done' };
-        
+
         // Find the first 'writing' or 'pre' section after the edited one and make it active
         const editedIndex = SECTION_ORDER.indexOf(editingSection);
         for (let i = editedIndex + 1; i < SECTION_ORDER.length; i++) {
@@ -868,7 +889,7 @@ export default function CreateBucketPage() {
             break;
           }
         }
-        
+
         return newStatus;
       });
       setEditingSection(null);
@@ -879,7 +900,7 @@ export default function CreateBucketPage() {
     if (editingSection) {
       setSectionStatus((prev) => {
         const newStatus = { ...prev, [editingSection]: 'done' };
-        
+
         // Find the first 'writing' or 'pre' section after the edited one and make it active
         const editedIndex = SECTION_ORDER.indexOf(editingSection);
         for (let i = editedIndex + 1; i < SECTION_ORDER.length; i++) {
@@ -893,7 +914,7 @@ export default function CreateBucketPage() {
             break;
           }
         }
-        
+
         return newStatus;
       });
       setEditingSection(null);
@@ -921,10 +942,7 @@ export default function CreateBucketPage() {
 
   // Tag management
   const addTag = useCallback(() => {
-    setTags((prev) => [
-      ...prev,
-      { id: `tag-${Date.now()}`, key: '', value: '' },
-    ]);
+    setTags((prev) => [...prev, { id: `tag-${Date.now()}`, key: '', value: '' }]);
   }, []);
 
   const removeTag = useCallback((id: string) => {
@@ -932,11 +950,7 @@ export default function CreateBucketPage() {
   }, []);
 
   const updateTag = useCallback((id: string, field: 'key' | 'value', value: string) => {
-    setTags((prev) =>
-      prev.map((tag) =>
-        tag.id === id ? { ...tag, [field]: value } : tag
-      )
-    );
+    setTags((prev) => prev.map((tag) => (tag.id === id ? { ...tag, [field]: value } : tag)));
   }, []);
 
   // Validate bucket policy JSON
@@ -954,10 +968,13 @@ export default function CreateBucketPage() {
   }, []);
 
   // Handle bucket policy change
-  const handlePolicyChange = useCallback((value: string) => {
-    setBucketPolicy(value);
-    validatePolicy(value);
-  }, [validatePolicy]);
+  const handlePolicyChange = useCallback(
+    (value: string) => {
+      setBucketPolicy(value);
+      validatePolicy(value);
+    },
+    [validatePolicy]
+  );
 
   // Clear policy
   const handleClearPolicy = useCallback(() => {
@@ -980,7 +997,18 @@ export default function CreateBucketPage() {
       permissions,
     });
     navigate('/storage/buckets');
-  }, [bucketName, region, owner, objectLocking, tags, placementTarget, bucketPolicy, grantee, permissions, navigate]);
+  }, [
+    bucketName,
+    region,
+    owner,
+    objectLocking,
+    tags,
+    placementTarget,
+    bucketPolicy,
+    grantee,
+    permissions,
+    navigate,
+  ]);
 
   // Handle cancel
   const handleCancel = useCallback(() => {
@@ -1107,8 +1135,15 @@ export default function CreateBucketPage() {
                     />
                   )}
                   {sectionStatus['basic-info'] === 'done' && (
-                    <DoneSection title={SECTION_LABELS['basic-info']} onEdit={() => handleEdit('basic-info')}>
-                      <SectionCard.DataRow label="Bucket Name" value={bucketName || '-'} showDivider={false} />
+                    <DoneSection
+                      title={SECTION_LABELS['basic-info']}
+                      onEdit={() => handleEdit('basic-info')}
+                    >
+                      <SectionCard.DataRow
+                        label="Bucket Name"
+                        value={bucketName || '-'}
+                        showDivider={false}
+                      />
                       <SectionCard.DataRow label="Region" value={getRegionDisplay()} />
                       <SectionCard.DataRow label="Owner" value={owner || '-'} />
                     </DoneSection>
@@ -1143,16 +1178,41 @@ export default function CreateBucketPage() {
                     />
                   )}
                   {sectionStatus['settings'] === 'done' && (
-                    <DoneSection title={SECTION_LABELS['settings']} onEdit={() => handleEdit('settings')}>
-                      <SectionCard.DataRow label="Object Locking" value={objectLocking === 'disabled' ? 'Disabled' : 'Enabled'} showDivider={false} />
+                    <DoneSection
+                      title={SECTION_LABELS['settings']}
+                      onEdit={() => handleEdit('settings')}
+                    >
+                      <SectionCard.DataRow
+                        label="Object Locking"
+                        value={objectLocking === 'disabled' ? 'Disabled' : 'Enabled'}
+                        showDivider={false}
+                      />
                       {objectLocking === 'enabled' && (
                         <>
-                          <SectionCard.DataRow label="Mode" value={lockingMode === 'compliance' ? 'COMPLIANCE / GOVERNANCE' : lockingMode === 'compliance-only' ? 'COMPLIANCE' : 'GOVERNANCE'} />
-                          <SectionCard.DataRow label="Retention Days" value={retentionDays || '-'} />
+                          <SectionCard.DataRow
+                            label="Mode"
+                            value={
+                              lockingMode === 'compliance'
+                                ? 'COMPLIANCE / GOVERNANCE'
+                                : lockingMode === 'compliance-only'
+                                  ? 'COMPLIANCE'
+                                  : 'GOVERNANCE'
+                            }
+                          />
+                          <SectionCard.DataRow
+                            label="Retention Days"
+                            value={retentionDays || '-'}
+                          />
                         </>
                       )}
-                      <SectionCard.DataRow label="Tags" value={tags.length > 0 ? `${tags.length} tag(s)` : 'None'} />
-                      <SectionCard.DataRow label="Placement target" value={placementTarget || '-'} />
+                      <SectionCard.DataRow
+                        label="Tags"
+                        value={tags.length > 0 ? `${tags.length} tag(s)` : 'None'}
+                      />
+                      <SectionCard.DataRow
+                        label="Placement target"
+                        value={placementTarget || '-'}
+                      />
                     </DoneSection>
                   )}
 
@@ -1200,8 +1260,15 @@ export default function CreateBucketPage() {
                     />
                   )}
                   {sectionStatus['policy'] === 'done' && (
-                    <DoneSection title={SECTION_LABELS['policy']} onEdit={() => handleEdit('policy')}>
-                      <SectionCard.DataRow label="Bucket policy" value={bucketPolicy === '{}' ? 'Empty' : 'Configured'} showDivider={false} />
+                    <DoneSection
+                      title={SECTION_LABELS['policy']}
+                      onEdit={() => handleEdit('policy')}
+                    >
+                      <SectionCard.DataRow
+                        label="Bucket policy"
+                        value={bucketPolicy === '{}' ? 'Empty' : 'Configured'}
+                        showDivider={false}
+                      />
                       <SectionCard.DataRow label="Grantee" value={getGranteeDisplay()} />
                       <SectionCard.DataRow label="Permissions" value={getPermissionsDisplay()} />
                     </DoneSection>

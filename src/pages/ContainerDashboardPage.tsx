@@ -60,7 +60,10 @@ function CapacityProgressBar({ label, used, total, unit, percentage }: CapacityP
   const status = getStatus(percentage);
 
   // Design system color tokens - with dark mode support
-  const statusColors: Record<CapacityStatus, { bg: string; darkBg: string; fill: string; text: string }> = {
+  const statusColors: Record<
+    CapacityStatus,
+    { bg: string; darkBg: string; fill: string; text: string }
+  > = {
     success: {
       bg: 'var(--color-green-100)',
       darkBg: 'rgba(34, 197, 94, 0.15)', // green-500 with 15% opacity for dark mode
@@ -101,17 +104,17 @@ function CapacityProgressBar({ label, used, total, unit, percentage }: CapacityP
         <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)]">
           {label}
         </span>
-        
+
         {/* Value and Badge */}
         <div className="flex items-center gap-[var(--spacing-2)]">
           <span className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
             {used} / {total} {unit}
           </span>
-          <div 
+          <div
             className="flex items-center px-1.5 py-0.5 rounded-[var(--radius-md)]"
             style={{ backgroundColor: isDarkMode ? colors.darkBg : colors.bg }}
           >
-            <span 
+            <span
               className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] font-medium"
               style={{ color: isDarkMode ? colors.fill : colors.text }}
             >
@@ -120,9 +123,9 @@ function CapacityProgressBar({ label, used, total, unit, percentage }: CapacityP
           </div>
         </div>
       </div>
-      
+
       {/* Progress bar - using design system tokens */}
-      <div 
+      <div
         ref={containerRef}
         className="relative h-[var(--progress-bar-height)] w-full cursor-pointer"
         onMouseEnter={() => setShowTooltip(true)}
@@ -130,28 +133,31 @@ function CapacityProgressBar({ label, used, total, unit, percentage }: CapacityP
         onMouseMove={handleMouseMove}
       >
         {/* Background */}
-        <div 
+        <div
           className="absolute inset-0 rounded-[var(--progress-bar-radius)]"
           style={{ backgroundColor: 'var(--color-border-subtle)' }}
         />
         {/* Filled segment */}
-        <div 
+        <div
           className="absolute inset-y-0 left-0 rounded-[var(--progress-bar-radius)] transition-all"
-          style={{ 
+          style={{
             width: `${Math.min(percentage, 100)}%`,
             backgroundColor: isDarkMode ? 'var(--color-text-muted)' : '#0F172A',
             minWidth: percentage > 0 ? 4 : 0,
           }}
         />
-        
+
         {/* Tooltip - follows cursor */}
         {showTooltip && (
-          <div 
+          <div
             className="absolute z-10 backdrop-blur-[40px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] shadow-[0px_0px_4px_0px_rgba(0,0,0,0.1)] px-2 py-1.5 flex flex-col gap-1 pointer-events-none"
             style={{ left: mousePos.x + 12, top: mousePos.y - 40 }}
           >
             <div className="flex items-center gap-1.5">
-              <div className="w-[5px] h-[5px] rounded-[1px]" style={{ backgroundColor: isDarkMode ? 'var(--color-text-muted)' : '#0F172A' }} />
+              <div
+                className="w-[5px] h-[5px] rounded-[1px]"
+                style={{ backgroundColor: isDarkMode ? 'var(--color-text-muted)' : '#0F172A' }}
+              />
               <span className="text-[11px] leading-[14px] text-[var(--color-text-default)] whitespace-nowrap">
                 Used: {used} {unit} ({percentage}%)
               </span>
@@ -183,25 +189,37 @@ function ControlPlaneCard({ name, uptime, status = 'healthy' }: ControlPlaneCard
   return (
     <div className="flex-1 bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-[6px] px-4 py-3 flex items-center gap-3">
       {/* Status Icon */}
-      <div className={`w-5 h-5 rounded-full flex items-center justify-center ${
-        status === 'healthy' ? 'bg-[var(--color-state-success-bg)]' : 
-        status === 'warning' ? 'bg-[var(--color-state-warning-bg)]' : 
-        'bg-[var(--color-state-danger-bg)]'
-      }`}>
-        <IconCheck size={12} className={`${
-          status === 'healthy' ? 'text-[var(--color-state-success)]' : 
-          status === 'warning' ? 'text-[var(--color-state-warning)]' : 
-          'text-[var(--color-state-danger)]'
-        }`} stroke={2} />
+      <div
+        className={`w-5 h-5 rounded-full flex items-center justify-center ${
+          status === 'healthy'
+            ? 'bg-[var(--color-state-success-bg)]'
+            : status === 'warning'
+              ? 'bg-[var(--color-state-warning-bg)]'
+              : 'bg-[var(--color-state-danger-bg)]'
+        }`}
+      >
+        <IconCheck
+          size={12}
+          className={`${
+            status === 'healthy'
+              ? 'text-[var(--color-state-success)]'
+              : status === 'warning'
+                ? 'text-[var(--color-state-warning)]'
+                : 'text-[var(--color-state-danger)]'
+          }`}
+          stroke={2}
+        />
       </div>
-      
+
       {/* Info */}
       <div className="flex-1">
         <div className="flex items-center justify-between">
           <span className="text-[14px] font-medium text-[var(--color-text-default)]">{name}</span>
           <IconHelp size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
         </div>
-        <span className="text-[12px] text-[var(--color-text-muted)] opacity-60">Uptime: {uptime}</span>
+        <span className="text-[12px] text-[var(--color-text-muted)] opacity-60">
+          Uptime: {uptime}
+        </span>
       </div>
     </div>
   );
@@ -223,33 +241,89 @@ interface EventRow {
 }
 
 const eventsData: EventRow[] = [
-  { id: '1', reason: 'Pulling', object: 'Pod object', message: 'Pulling image "nginx:lastest"', name: 'testpod.1872cb50f1f3985b', firstSeen: '2d8h', lastSeen: '5m2s', count: 666 },
-  { id: '2', reason: 'Failed', object: 'Pod object', message: 'Failed to pull image "nginx:lastest": rpc error: code = NotFound desc = failed to pull and unpack image...', name: 'testpod.1872cb51519dc95b', firstSeen: '2d8h', lastSeen: '5m2s', count: 664 },
-  { id: '3', reason: 'FailedGetScale', object: 'HorizontalPodAutoscaler object', message: 'Back-off pulling image "nginx:lastest"', name: 'test.1870aa1e813aa422', firstSeen: '9d', lastSeen: '54s', count: 53607 },
-  { id: '4', reason: 'BackOff', object: 'Pod object', message: 'Error: ImagePullBackOff', name: 'testpod.1872cb51804912b6', firstSeen: '2d8h', lastSeen: '4s', count: 14495 },
-  { id: '5', reason: 'Failed', object: 'Pod object', message: 'Error: ImagePullBackOff', name: 'testpod.1872cb5180493d50', firstSeen: '2d8h', lastSeen: '4s', count: 14495 },
+  {
+    id: '1',
+    reason: 'Pulling',
+    object: 'Pod object',
+    message: 'Pulling image "nginx:lastest"',
+    name: 'testpod.1872cb50f1f3985b',
+    firstSeen: '2d8h',
+    lastSeen: '5m2s',
+    count: 666,
+  },
+  {
+    id: '2',
+    reason: 'Failed',
+    object: 'Pod object',
+    message:
+      'Failed to pull image "nginx:lastest": rpc error: code = NotFound desc = failed to pull and unpack image...',
+    name: 'testpod.1872cb51519dc95b',
+    firstSeen: '2d8h',
+    lastSeen: '5m2s',
+    count: 664,
+  },
+  {
+    id: '3',
+    reason: 'FailedGetScale',
+    object: 'HorizontalPodAutoscaler object',
+    message: 'Back-off pulling image "nginx:lastest"',
+    name: 'test.1870aa1e813aa422',
+    firstSeen: '9d',
+    lastSeen: '54s',
+    count: 53607,
+  },
+  {
+    id: '4',
+    reason: 'BackOff',
+    object: 'Pod object',
+    message: 'Error: ImagePullBackOff',
+    name: 'testpod.1872cb51804912b6',
+    firstSeen: '2d8h',
+    lastSeen: '4s',
+    count: 14495,
+  },
+  {
+    id: '5',
+    reason: 'Failed',
+    object: 'Pod object',
+    message: 'Error: ImagePullBackOff',
+    name: 'testpod.1872cb5180493d50',
+    firstSeen: '2d8h',
+    lastSeen: '4s',
+    count: 14495,
+  },
 ];
 
 const eventsColumns: TableColumn<EventRow>[] = [
   { key: 'reason', label: 'Reason', width: '120px', sortable: true },
-  { 
-    key: 'object', 
-    label: 'Object', 
-    width: '120px', 
+  {
+    key: 'object',
+    label: 'Object',
+    width: '120px',
     sortable: true,
     render: (value: string) => (
-      <span className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline line-clamp-2 break-all" title={value}>{value}</span>
-    )
+      <span
+        className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline line-clamp-2 break-all"
+        title={value}
+      >
+        {value}
+      </span>
+    ),
   },
   { key: 'message', label: 'Message', flex: 1, sortable: true },
-  { 
-    key: 'name', 
-    label: 'Name', 
-    width: '180px', 
+  {
+    key: 'name',
+    label: 'Name',
+    width: '180px',
     sortable: true,
     render: (value: string) => (
-      <span className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline line-clamp-2 break-all" title={value}>{value}</span>
-    )
+      <span
+        className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline line-clamp-2 break-all"
+        title={value}
+      >
+        {value}
+      </span>
+    ),
   },
   { key: 'firstSeen', label: 'First seen', width: '100px', sortable: true },
   { key: 'lastSeen', label: 'Last seen', width: '100px', sortable: true },
@@ -264,7 +338,8 @@ export function ContainerDashboardPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeTab, setActiveTab] = useState('events');
   const [currentPage, setCurrentPage] = useState(1);
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, updateActiveTabLabel, moveTab } =
+    useTabs();
 
   // Update tab label to "Dashboard" on mount
   useEffect(() => {
@@ -286,12 +361,12 @@ export function ContainerDashboardPage() {
       >
         {/* Tab Bar */}
         <TabBar
-          tabs={tabs.map(tab => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
-onTabAdd={addNewTab}
-            onTabReorder={moveTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
         />
 
         {/* Top Bar */}
@@ -300,10 +375,7 @@ onTabAdd={addNewTab}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           breadcrumb={
             <Breadcrumb
-              items={[
-                { label: 'default-cluster', href: '/container' },
-                { label: 'Dashboard' },
-              ]}
+              items={[{ label: 'default-cluster', href: '/container' }, { label: 'Dashboard' }]}
             />
           }
           actions={
@@ -339,23 +411,35 @@ onTabAdd={addNewTab}
                   <SectionCard.Content>
                     <div className="grid grid-cols-2 gap-4">
                       <SectionCard.DataRow label="Architecture">amd64</SectionCard.DataRow>
-                      <SectionCard.DataRow label="Kubernetes version">v1.33.4+k3s1</SectionCard.DataRow>
+                      <SectionCard.DataRow label="Kubernetes version">
+                        v1.33.4+k3s1
+                      </SectionCard.DataRow>
                       <SectionCard.DataRow label="Total resources">295</SectionCard.DataRow>
                       <SectionCard.DataRow label="Created at">2025-11-09 12:57</SectionCard.DataRow>
-                      <SectionCard.DataRow label={
-                        <span className="flex items-center gap-1">
-                          Deployments
-                          <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
-                        </span>
-                      }>
+                      <SectionCard.DataRow
+                        label={
+                          <span className="flex items-center gap-1">
+                            Deployments
+                            <IconExternalLink
+                              size={12}
+                              className="text-[var(--color-action-primary)]"
+                            />
+                          </span>
+                        }
+                      >
                         15
                       </SectionCard.DataRow>
-                      <SectionCard.DataRow label={
-                        <span className="flex items-center gap-1">
-                          Nodes
-                          <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
-                        </span>
-                      }>
+                      <SectionCard.DataRow
+                        label={
+                          <span className="flex items-center gap-1">
+                            Nodes
+                            <IconExternalLink
+                              size={12}
+                              className="text-[var(--color-action-primary)]"
+                            />
+                          </span>
+                        }
+                      >
                         1
                       </SectionCard.DataRow>
                     </div>
@@ -411,19 +495,15 @@ onTabAdd={addNewTab}
               <DetailHeader>
                 <DetailHeader.Title>Control Plane Components</DetailHeader.Title>
                 <DetailHeader.InfoGrid>
-                  <DetailHeader.InfoCard 
-                    label="Etcd" 
-                    value="Uptime: 15d 4h 23m" 
+                  <DetailHeader.InfoCard label="Etcd" value="Uptime: 15d 4h 23m" status="active" />
+                  <DetailHeader.InfoCard
+                    label="Scheduler"
+                    value="Uptime: 15d 4h 23m"
                     status="active"
                   />
-                  <DetailHeader.InfoCard 
-                    label="Scheduler" 
-                    value="Uptime: 15d 4h 23m" 
-                    status="active"
-                  />
-                  <DetailHeader.InfoCard 
-                    label="Controller manager" 
-                    value="Uptime: 15d 4h 23m" 
+                  <DetailHeader.InfoCard
+                    label="Controller manager"
+                    value="Uptime: 15d 4h 23m"
                     status="active"
                   />
                 </DetailHeader.InfoGrid>
@@ -455,11 +535,7 @@ onTabAdd={addNewTab}
                               onSettingsClick={() => {}}
                             />
                           </div>
-                          <Table<EventRow>
-                            columns={eventsColumns}
-                            data={eventsData}
-                            rowKey="id"
-                          />
+                          <Table<EventRow> columns={eventsColumns} data={eventsData} rowKey="id" />
                         </VStack>
                       </TabPanel>
 
@@ -481,4 +557,3 @@ onTabAdd={addNewTab}
 }
 
 export default ContainerDashboardPage;
-

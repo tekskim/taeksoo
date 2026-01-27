@@ -1,8 +1,8 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import '@fontsource-variable/mona-sans'
-import './index.css'
-import App from './App.tsx'
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import '@fontsource-variable/mona-sans';
+import './index.css';
+import App from './App.tsx';
 
 // Error boundary for debugging
 window.addEventListener('error', (event) => {
@@ -20,15 +20,15 @@ try {
   if (!rootElement) {
     throw new Error('Root element not found');
   }
-  
+
   console.log('Root element found, creating root...');
   const root = createRoot(rootElement);
-  
+
   console.log('Rendering App component...');
   root.render(
     <StrictMode>
       <App />
-    </StrictMode>,
+    </StrictMode>
   );
   console.log('App rendered successfully');
 } catch (error) {

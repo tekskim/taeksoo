@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
-import { 
-  Drawer, 
-  Button, 
+import {
+  Drawer,
+  Button,
   SearchInput,
   Pagination,
   Radio,
@@ -35,15 +35,57 @@ export interface SetDefaultDomainDrawerProps {
    ---------------------------------------- */
 
 const mockDomains: DomainItem[] = [
-  { id: 'domain-1', name: 'default', description: 'Default domain', status: 'active', createdAt: '2025-09-12' },
-  { id: 'domain-2', name: 'engineering', description: 'Engineering team domain', status: 'active', createdAt: '2025-09-12' },
-  { id: 'domain-3', name: 'marketing', description: '-', status: 'active', createdAt: '2025-09-12' },
-  { id: 'domain-4', name: 'sales', description: 'Sales department', status: 'active', createdAt: '2025-09-12' },
-  { id: 'domain-5', name: 'hr', description: 'Human resources', status: 'active', createdAt: '2025-09-12' },
+  {
+    id: 'domain-1',
+    name: 'default',
+    description: 'Default domain',
+    status: 'active',
+    createdAt: '2025-09-12',
+  },
+  {
+    id: 'domain-2',
+    name: 'engineering',
+    description: 'Engineering team domain',
+    status: 'active',
+    createdAt: '2025-09-12',
+  },
+  {
+    id: 'domain-3',
+    name: 'marketing',
+    description: '-',
+    status: 'active',
+    createdAt: '2025-09-12',
+  },
+  {
+    id: 'domain-4',
+    name: 'sales',
+    description: 'Sales department',
+    status: 'active',
+    createdAt: '2025-09-12',
+  },
+  {
+    id: 'domain-5',
+    name: 'hr',
+    description: 'Human resources',
+    status: 'active',
+    createdAt: '2025-09-12',
+  },
   { id: 'domain-6', name: 'finance', description: '-', status: 'active', createdAt: '2025-09-12' },
-  { id: 'domain-7', name: 'operations', description: 'Operations team', status: 'active', createdAt: '2025-09-12' },
+  {
+    id: 'domain-7',
+    name: 'operations',
+    description: 'Operations team',
+    status: 'active',
+    createdAt: '2025-09-12',
+  },
   { id: 'domain-8', name: 'support', description: '-', status: 'active', createdAt: '2025-09-12' },
-  { id: 'domain-9', name: 'research', description: 'R&D domain', status: 'active', createdAt: '2025-09-12' },
+  {
+    id: 'domain-9',
+    name: 'research',
+    description: 'R&D domain',
+    status: 'active',
+    createdAt: '2025-09-12',
+  },
   { id: 'domain-10', name: 'legal', description: '-', status: 'active', createdAt: '2025-09-12' },
 ];
 
@@ -60,7 +102,9 @@ export function SetDefaultDomainDrawer({
 }: SetDefaultDomainDrawerProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedDomainId, setSelectedDomainId] = useState<string | null>(currentDefaultDomainId ?? null);
+  const [selectedDomainId, setSelectedDomainId] = useState<string | null>(
+    currentDefaultDomainId ?? null
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
   const itemsPerPage = 10;
@@ -69,9 +113,10 @@ export function SetDefaultDomainDrawer({
   const filteredDomains = useMemo(() => {
     if (!searchQuery.trim()) return mockDomains;
     const query = searchQuery.toLowerCase();
-    return mockDomains.filter(domain =>
-      domain.name.toLowerCase().includes(query) ||
-      domain.description.toLowerCase().includes(query)
+    return mockDomains.filter(
+      (domain) =>
+        domain.name.toLowerCase().includes(query) ||
+        domain.description.toLowerCase().includes(query)
     );
   }, [searchQuery]);
 
@@ -94,11 +139,11 @@ export function SetDefaultDomainDrawer({
 
   const handleSubmit = async () => {
     setHasAttemptedSubmit(true);
-    
+
     if (!selectedDomainId) {
       return;
     }
-    
+
     setIsSubmitting(true);
     try {
       await onSubmit?.(selectedDomainId);
@@ -116,11 +161,11 @@ export function SetDefaultDomainDrawer({
     onClose();
   };
 
-  const selectedDomain = selectedDomainId 
-    ? mockDomains.find(d => d.id === selectedDomainId)
+  const selectedDomain = selectedDomainId
+    ? mockDomains.find((d) => d.id === selectedDomainId)
     : null;
 
-  const selectedItems = selectedDomain 
+  const selectedItems = selectedDomain
     ? [{ id: selectedDomain.id, label: selectedDomain.name }]
     : [];
 
@@ -133,15 +178,11 @@ export function SetDefaultDomainDrawer({
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">
-          <Button 
-            variant="secondary" 
-            onClick={handleClose}
-            className="w-[152px] h-8"
-          >
+          <Button variant="secondary" onClick={handleClose} className="w-[152px] h-8">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={handleSubmit}
             disabled={isSubmitting}
             className="w-[152px] h-8"
@@ -159,7 +200,8 @@ export function SetDefaultDomainDrawer({
               Set default domain
             </h2>
             <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-              Defines which domain is opened first when the system administrator signs in. The selected domain is used as the initial workspace.
+              Defines which domain is opened first when the system administrator signs in. The
+              selected domain is used as the initial workspace.
             </p>
           </VStack>
 

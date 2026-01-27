@@ -55,9 +55,9 @@ describe('Textarea', () => {
       const user = userEvent.setup();
 
       render(<Textarea onChange={handleChange} />);
-      
+
       await user.type(screen.getByRole('textbox'), 'test');
-      
+
       expect(handleChange).toHaveBeenCalled();
     });
   });

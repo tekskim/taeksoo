@@ -66,14 +66,7 @@ export interface DetailHeaderActionsProps extends HTMLAttributes<HTMLDivElement>
 
 function DetailHeaderActions({ children, className, ...props }: DetailHeaderActionsProps) {
   return (
-    <div
-      className={twMerge(
-        'flex items-center gap-1',
-        'mb-3',
-        className
-      )}
-      {...props}
-    >
+    <div className={twMerge('flex items-center gap-1', 'mb-3', className)} {...props}>
       {children}
     </div>
   );
@@ -90,14 +83,7 @@ export interface DetailHeaderInfoGridProps extends HTMLAttributes<HTMLDivElement
 
 function DetailHeaderInfoGrid({ children, className, ...props }: DetailHeaderInfoGridProps) {
   return (
-    <div
-      className={twMerge(
-        'flex items-center gap-3',
-        'w-full',
-        className
-      )}
-      {...props}
-    >
+    <div className={twMerge('flex items-center gap-3', 'w-full', className)} {...props}>
       {children}
     </div>
   );
@@ -107,7 +93,10 @@ function DetailHeaderInfoGrid({ children, className, ...props }: DetailHeaderInf
    DetailHeader.InfoCard
    ---------------------------------------- */
 
-export interface DetailHeaderInfoCardProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
+export interface DetailHeaderInfoCardProps extends Omit<
+  HTMLAttributes<HTMLDivElement>,
+  'children'
+> {
   /** Label for the info card */
   label: string;
   /** Value to display - can be string or ReactNode */
@@ -156,14 +145,14 @@ function DetailHeaderInfoCard({
           <StatusIndicator status={status} layout="icon-only" size="lg" />
         </div>
       )}
-      
+
       <div className={twMerge('flex flex-col gap-1.5 min-w-0', status && 'pr-6')}>
         <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)] whitespace-nowrap">
           {label}
         </span>
         <div className="flex items-center gap-1.5 min-w-0 min-h-[26px]">
           {isStringValue ? (
-            <span 
+            <span
               className="text-[12px] leading-4 font-normal truncate text-[var(--color-text-default)]"
               title={value}
             >
@@ -201,10 +190,4 @@ DetailHeader.Actions = DetailHeaderActions;
 DetailHeader.InfoGrid = DetailHeaderInfoGrid;
 DetailHeader.InfoCard = DetailHeaderInfoCard;
 
-export {
-  DetailHeaderTitle,
-  DetailHeaderActions,
-  DetailHeaderInfoGrid,
-  DetailHeaderInfoCard,
-};
-
+export { DetailHeaderTitle, DetailHeaderActions, DetailHeaderInfoGrid, DetailHeaderInfoCard };

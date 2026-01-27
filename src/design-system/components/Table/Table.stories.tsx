@@ -15,11 +15,46 @@ interface User {
 }
 
 const sampleUsers: User[] = [
-  { id: '1', name: 'John Doe', email: 'john@example.com', role: 'Admin', status: 'active', createdAt: '2024-01-15' },
-  { id: '2', name: 'Jane Smith', email: 'jane@example.com', role: 'Editor', status: 'active', createdAt: '2024-01-20' },
-  { id: '3', name: 'Bob Wilson', email: 'bob@example.com', role: 'Viewer', status: 'inactive', createdAt: '2024-02-01' },
-  { id: '4', name: 'Alice Brown', email: 'alice@example.com', role: 'Editor', status: 'pending', createdAt: '2024-02-10' },
-  { id: '5', name: 'Charlie Davis', email: 'charlie@example.com', role: 'Viewer', status: 'active', createdAt: '2024-02-15' },
+  {
+    id: '1',
+    name: 'John Doe',
+    email: 'john@example.com',
+    role: 'Admin',
+    status: 'active',
+    createdAt: '2024-01-15',
+  },
+  {
+    id: '2',
+    name: 'Jane Smith',
+    email: 'jane@example.com',
+    role: 'Editor',
+    status: 'active',
+    createdAt: '2024-01-20',
+  },
+  {
+    id: '3',
+    name: 'Bob Wilson',
+    email: 'bob@example.com',
+    role: 'Viewer',
+    status: 'inactive',
+    createdAt: '2024-02-01',
+  },
+  {
+    id: '4',
+    name: 'Alice Brown',
+    email: 'alice@example.com',
+    role: 'Editor',
+    status: 'pending',
+    createdAt: '2024-02-10',
+  },
+  {
+    id: '5',
+    name: 'Charlie Davis',
+    email: 'charlie@example.com',
+    role: 'Viewer',
+    status: 'active',
+    createdAt: '2024-02-15',
+  },
 ];
 
 const basicColumns: TableColumn<User>[] = [
@@ -117,7 +152,11 @@ export const WithCustomRendering: Story = {
             pending: { theme: 'yellow' as const, label: 'Pending' },
           };
           const config = statusConfig[value as keyof typeof statusConfig];
-          return <Badge theme={config.theme} type="subtle" size="sm">{config.label}</Badge>;
+          return (
+            <Badge theme={config.theme} type="subtle" size="sm">
+              {config.label}
+            </Badge>
+          );
         },
       },
     ];
@@ -206,12 +245,7 @@ export const RowClickable: Story = {
     };
 
     return (
-      <Table
-        columns={basicColumns}
-        data={sampleUsers}
-        rowKey="id"
-        onRowClick={handleRowClick}
-      />
+      <Table columns={basicColumns} data={sampleUsers} rowKey="id" onRowClick={handleRowClick} />
     );
   },
 };
@@ -241,13 +275,7 @@ export const Scrollable: Story = {
     }));
 
     return (
-      <Table
-        columns={basicColumns}
-        data={manyUsers}
-        rowKey="id"
-        maxHeight="300px"
-        stickyHeader
-      />
+      <Table columns={basicColumns} data={manyUsers} rowKey="id" maxHeight="300px" stickyHeader />
     );
   },
 };
@@ -296,7 +324,11 @@ export const ComplexExample: Story = {
             pending: { theme: 'yellow' as const, label: 'Pending' },
           };
           const { theme, label } = config[value as keyof typeof config];
-          return <Badge theme={theme} type="subtle" size="sm" dot>{label}</Badge>;
+          return (
+            <Badge theme={theme} type="subtle" size="sm" dot>
+              {label}
+            </Badge>
+          );
         },
       },
       {
@@ -304,9 +336,7 @@ export const ComplexExample: Story = {
         label: 'Created',
         width: '120px',
         sortable: true,
-        render: (value) => (
-          <span className="text-[var(--color-text-muted)]">{value}</span>
-        ),
+        render: (value) => <span className="text-[var(--color-text-muted)]">{value}</span>,
       },
       {
         key: 'actions',

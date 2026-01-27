@@ -7,7 +7,11 @@ import { IconInfinity, IconHelp } from '@tabler/icons-react';
    Types
    ---------------------------------------- */
 
-export type ServerGroupPolicy = 'anti-affinity' | 'affinity' | 'soft-anti-affinity' | 'soft-affinity';
+export type ServerGroupPolicy =
+  | 'anti-affinity'
+  | 'affinity'
+  | 'soft-anti-affinity'
+  | 'soft-affinity';
 
 export interface QuotaInfo {
   used: number;
@@ -26,10 +30,14 @@ export interface CreateServerGroupDrawerProps {
    ---------------------------------------- */
 
 const policyDescriptions: Record<ServerGroupPolicy, string> = {
-  'anti-affinity': 'Instances in this group will be placed on different compute hosts. If no suitable host is available, instance creation will fail.',
-  'affinity': 'Instances in this group will be placed on the same compute host. If no suitable host is available, instance creation will fail.',
-  'soft-anti-affinity': 'Instances will preferably be placed on different hosts, but may share a host if necessary.',
-  'soft-affinity': 'Instances will preferably be placed on the same host, but may be spread across hosts if necessary.',
+  'anti-affinity':
+    'Instances in this group will be placed on different compute hosts. If no suitable host is available, instance creation will fail.',
+  affinity:
+    'Instances in this group will be placed on the same compute host. If no suitable host is available, instance creation will fail.',
+  'soft-anti-affinity':
+    'Instances will preferably be placed on different hosts, but may share a host if necessary.',
+  'soft-affinity':
+    'Instances will preferably be placed on the same host, but may be spread across hosts if necessary.',
 };
 
 /* ----------------------------------------
@@ -44,8 +52,8 @@ interface QuotaProgressBarProps {
 
 function QuotaProgressBar({ label, used, total }: QuotaProgressBarProps) {
   const isUnlimited = total === null;
-  const percentage = isUnlimited ? 20 : (total > 0 ? (used / total) * 100 : 0);
-  const nextPercentage = isUnlimited ? 20 : (total > 0 ? ((used + 1) / total) * 100 : 0);
+  const percentage = isUnlimited ? 20 : total > 0 ? (used / total) * 100 : 0;
+  const nextPercentage = isUnlimited ? 20 : total > 0 ? ((used + 1) / total) * 100 : 0;
 
   return (
     <VStack gap={2} className="w-full">
@@ -54,26 +62,22 @@ function QuotaProgressBar({ label, used, total }: QuotaProgressBarProps) {
           {label}
         </span>
         <HStack gap={0} className="items-center">
-          <span className="text-[12px] text-[var(--color-text-default)] leading-4">
-            {used}/
-          </span>
+          <span className="text-[12px] text-[var(--color-text-default)] leading-4">{used}/</span>
           {isUnlimited ? (
             <IconInfinity size={16} className="text-[var(--color-text-default)]" stroke={1} />
           ) : (
-            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
-              {total}
-            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">{total}</span>
           )}
         </HStack>
       </HStack>
       <div className="w-full h-1 bg-[var(--color-border-subtle)] rounded-lg relative overflow-hidden">
         {/* Current usage (darker green) */}
-        <div 
+        <div
           className="absolute left-0 top-0 h-full bg-[#4ade80] rounded-lg z-[2]"
           style={{ width: `${Math.min(percentage, 100)}%` }}
         />
         {/* Next usage preview (lighter green) */}
-        <div 
+        <div
           className="absolute left-0 top-0 h-full bg-[#bbf7d0] rounded-lg z-[1]"
           style={{ width: `${Math.min(nextPercentage, 100)}%` }}
         />
@@ -123,7 +127,7 @@ export function CreateServerGroupDrawer({
   const handleSubmit = async () => {
     setHasAttemptedSubmit(true);
     if (!groupName.trim()) return;
-    
+
     setIsSubmitting(true);
     try {
       await onSubmit?.(groupName, policy);
@@ -160,15 +164,11 @@ export function CreateServerGroupDrawer({
 
           {/* Buttons */}
           <HStack gap={2} className="w-full border-t border-[var(--color-border-default)] pt-4">
-            <Button 
-              variant="secondary" 
-              onClick={handleClose}
-              className="flex-1 h-8"
-            >
+            <Button variant="secondary" onClick={handleClose} className="flex-1 h-8">
               Cancel
             </Button>
-            <Button 
-              variant="primary" 
+            <Button
+              variant="primary"
               onClick={handleSubmit}
               disabled={isSubmitting}
               className="flex-1 h-8"
@@ -218,29 +218,26 @@ export function CreateServerGroupDrawer({
           <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
             Create type
           </label>
-          <RadioGroup 
-            value={policy} 
-            onChange={(value) => setPolicy(value as ServerGroupPolicy)}
-          >
+          <RadioGroup value={policy} onChange={(value) => setPolicy(value as ServerGroupPolicy)}>
             <VStack gap={3}>
-              <PolicyRadioOption 
-                value="anti-affinity" 
-                label="Anti-affinity" 
+              <PolicyRadioOption
+                value="anti-affinity"
+                label="Anti-affinity"
                 tooltip={policyDescriptions['anti-affinity']}
               />
-              <PolicyRadioOption 
-                value="affinity" 
-                label="Affinity" 
+              <PolicyRadioOption
+                value="affinity"
+                label="Affinity"
                 tooltip={policyDescriptions['affinity']}
               />
-              <PolicyRadioOption 
-                value="soft-anti-affinity" 
-                label="Soft-Anti-affinity" 
+              <PolicyRadioOption
+                value="soft-anti-affinity"
+                label="Soft-Anti-affinity"
                 tooltip={policyDescriptions['soft-anti-affinity']}
               />
-              <PolicyRadioOption 
-                value="soft-affinity" 
-                label="Soft-affinity" 
+              <PolicyRadioOption
+                value="soft-affinity"
+                label="Soft-affinity"
                 tooltip={policyDescriptions['soft-affinity']}
               />
             </VStack>
@@ -252,5 +249,3 @@ export function CreateServerGroupDrawer({
 }
 
 export default CreateServerGroupDrawer;
-
-

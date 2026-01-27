@@ -65,9 +65,9 @@ const mockStorageClassData: Record<string, StorageClassData> = {
       'storageclass.kubernetes.io/is-default-class': 'true',
     },
     parameters: {
-      'foo': 'bar',
-      'type': 'gp3',
-      'fsType': 'ext4',
+      foo: 'bar',
+      type: 'gp3',
+      fsType: 'ext4',
     },
     reclaimPolicy: 'Delete',
     volumeBindingMode: 'WaitForFirstConsumer',
@@ -81,13 +81,13 @@ const mockStorageClassData: Record<string, StorageClassData> = {
     isDefault: false,
     createdAt: '2025-07-25 09:12:20',
     labels: {
-      'app': 'storage',
+      app: 'storage',
     },
     annotations: {
-      'description': 'Standard storage class',
+      description: 'Standard storage class',
     },
     parameters: {
-      'type': 'standard',
+      type: 'standard',
     },
     reclaimPolicy: 'Retain',
     volumeBindingMode: 'Immediate',
@@ -103,8 +103,8 @@ const mockStorageClassData: Record<string, StorageClassData> = {
     labels: {},
     annotations: {},
     parameters: {
-      'clusterID': 'ceph-cluster-1',
-      'pool': 'replicapool',
+      clusterID: 'ceph-cluster-1',
+      pool: 'replicapool',
     },
     reclaimPolicy: 'Delete',
     volumeBindingMode: 'Immediate',
@@ -121,7 +121,16 @@ export function StorageClassDetailPage() {
   const { storageClassId } = useParams<{ storageClassId: string }>();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, addTab, updateActiveTabLabel } = useTabs();
+  const {
+    tabs,
+    activeTabId,
+    selectTab,
+    closeTab,
+    addNewTab,
+    moveTab,
+    addTab,
+    updateActiveTabLabel,
+  } = useTabs();
   const [activeTab, setActiveTab] = useState('parameters');
 
   // Shell Panel state
@@ -216,7 +225,7 @@ export function StorageClassDetailPage() {
       >
         {/* Tab Bar */}
         <TabBar
-          tabs={tabs.map(tab => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
@@ -239,7 +248,7 @@ export function StorageClassDetailPage() {
           }
           actions={
             <>
-              <button 
+              <button
                 className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                 onClick={() => {
                   if (shellPanel.isExpanded) {
@@ -249,7 +258,15 @@ export function StorageClassDetailPage() {
                   }
                 }}
               >
-                <IconTerminal2 size={16} className={shellPanel.isExpanded ? "text-[var(--color-action-primary)]" : "text-[var(--color-text-muted)]"} stroke={1.5} />
+                <IconTerminal2
+                  size={16}
+                  className={
+                    shellPanel.isExpanded
+                      ? 'text-[var(--color-action-primary)]'
+                      : 'text-[var(--color-text-muted)]'
+                  }
+                  stroke={1.5}
+                />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
@@ -268,7 +285,7 @@ export function StorageClassDetailPage() {
         />
 
         {/* Content Area */}
-        <div 
+        <div
           className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll"
           style={{ paddingBottom: shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0' }}
         >
@@ -296,26 +313,22 @@ export function StorageClassDetailPage() {
                       scData.status === 'Active'
                         ? 'active'
                         : scData.status === 'Pending'
-                        ? 'pending'
-                        : 'error'
+                          ? 'pending'
+                          : 'error'
                     }
                   />
-                  <DetailHeader.InfoCard
-                    label="Default"
-                    value={scData.isDefault ? 'Yes' : 'No'}
-                  />
-                  <DetailHeader.InfoCard
-                    label="Created At"
-                    value={scData.createdAt}
-                  />
+                  <DetailHeader.InfoCard label="Default" value={scData.isDefault ? 'Yes' : 'No'} />
+                  <DetailHeader.InfoCard label="Created At" value={scData.createdAt} />
                   <DetailHeader.InfoCard
                     label={`Labels (${labelsCount})`}
                     value={
                       labelsCount > 0 ? (
                         <div className="flex flex-wrap items-center gap-1 min-w-0">
-                          {Object.entries(scData.labels).slice(0, 1).map(([key, val]) => (
-                            <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
-                          ))}
+                          {Object.entries(scData.labels)
+                            .slice(0, 1)
+                            .map(([key, val]) => (
+                              <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
+                            ))}
                           {labelsCount > 1 && (
                             <span className="text-[11px] text-[var(--color-text-default)] cursor-pointer hover:underline">
                               (+{labelsCount - 1})
@@ -332,9 +345,11 @@ export function StorageClassDetailPage() {
                     value={
                       annotationsCount > 0 ? (
                         <div className="flex flex-wrap items-center gap-1 min-w-0">
-                          {Object.entries(scData.annotations).slice(0, 1).map(([key, val]) => (
-                            <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
-                          ))}
+                          {Object.entries(scData.annotations)
+                            .slice(0, 1)
+                            .map(([key, val]) => (
+                              <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
+                            ))}
                           {annotationsCount > 1 && (
                             <span className="text-[11px] text-[var(--color-text-default)] cursor-pointer hover:underline">
                               (+{annotationsCount - 1})
@@ -366,46 +381,46 @@ export function StorageClassDetailPage() {
                         Parameters
                       </h3>
 
-                        {parametersEntries.length > 0 ? (
-                          <div className="flex gap-2 w-full">
-                            {/* Key Column */}
-                            <div className="flex-1">
-                              <label className="text-[11px] font-medium text-[var(--color-text-default)] mb-2 block">
-                                Key
-                              </label>
-                              <VStack gap={2}>
-                                {parametersEntries.map(([key]) => (
-                                  <div
-                                    key={key}
-                                    className="w-full h-[36px] px-[10px] py-[8px] bg-[var(--color-border-default)] border border-[var(--color-border-strong)] rounded-[6px] text-[12px] text-[var(--color-text-subtle)]"
-                                  >
-                                    {key}
-                                  </div>
-                                ))}
-                              </VStack>
-                            </div>
-                            {/* Value Column */}
-                            <div className="flex-1">
-                              <label className="text-[11px] font-medium text-[var(--color-text-default)] mb-2 block">
-                                Value
-                              </label>
-                              <VStack gap={2}>
-                                {parametersEntries.map(([key, val]) => (
-                                  <div
-                                    key={key}
-                                    className="w-full h-[36px] px-[10px] py-[8px] bg-[var(--color-border-default)] border border-[var(--color-border-strong)] rounded-[6px] text-[12px] text-[var(--color-text-subtle)]"
-                                  >
-                                    {val}
-                                  </div>
-                                ))}
-                              </VStack>
-                            </div>
+                      {parametersEntries.length > 0 ? (
+                        <div className="flex gap-2 w-full">
+                          {/* Key Column */}
+                          <div className="flex-1">
+                            <label className="text-[11px] font-medium text-[var(--color-text-default)] mb-2 block">
+                              Key
+                            </label>
+                            <VStack gap={2}>
+                              {parametersEntries.map(([key]) => (
+                                <div
+                                  key={key}
+                                  className="w-full h-[36px] px-[10px] py-[8px] bg-[var(--color-border-default)] border border-[var(--color-border-strong)] rounded-[6px] text-[12px] text-[var(--color-text-subtle)]"
+                                >
+                                  {key}
+                                </div>
+                              ))}
+                            </VStack>
                           </div>
-                        ) : (
-                          <p className="text-[12px] text-[var(--color-text-subtle)]">
-                            No parameters defined.
-                          </p>
-                        )}
+                          {/* Value Column */}
+                          <div className="flex-1">
+                            <label className="text-[11px] font-medium text-[var(--color-text-default)] mb-2 block">
+                              Value
+                            </label>
+                            <VStack gap={2}>
+                              {parametersEntries.map(([key, val]) => (
+                                <div
+                                  key={key}
+                                  className="w-full h-[36px] px-[10px] py-[8px] bg-[var(--color-border-default)] border border-[var(--color-border-strong)] rounded-[6px] text-[12px] text-[var(--color-text-subtle)]"
+                                >
+                                  {val}
+                                </div>
+                              ))}
+                            </VStack>
+                          </div>
+                        </div>
+                      ) : (
+                        <p className="text-[12px] text-[var(--color-text-subtle)]">
+                          No parameters defined.
+                        </p>
+                      )}
                     </VStack>
                   </div>
                 </TabPanel>
@@ -420,91 +435,91 @@ export function StorageClassDetailPage() {
                         Customize
                       </h3>
 
-                        {/* Reclaim Policy */}
-                        <VStack gap={1.5} align="start">
-                          <label className="text-[14px] font-medium text-[var(--color-text-default)]">
-                            Reclaim Policy
-                          </label>
-                          <VStack gap={1} align="start">
-                            <Radio
-                              label="Delete volumes and underlying device when volume claim is deleted"
-                              checked={scData.reclaimPolicy === 'Delete'}
-                              onChange={() => {}}
-                              disabled
-                            />
-                            <Radio
-                              label="Retain the volume for manual cleanup"
-                              checked={scData.reclaimPolicy === 'Retain'}
-                              onChange={() => {}}
-                              disabled
-                            />
-                          </VStack>
+                      {/* Reclaim Policy */}
+                      <VStack gap={1.5} align="start">
+                        <label className="text-[14px] font-medium text-[var(--color-text-default)]">
+                          Reclaim Policy
+                        </label>
+                        <VStack gap={1} align="start">
+                          <Radio
+                            label="Delete volumes and underlying device when volume claim is deleted"
+                            checked={scData.reclaimPolicy === 'Delete'}
+                            onChange={() => {}}
+                            disabled
+                          />
+                          <Radio
+                            label="Retain the volume for manual cleanup"
+                            checked={scData.reclaimPolicy === 'Retain'}
+                            onChange={() => {}}
+                            disabled
+                          />
                         </VStack>
+                      </VStack>
 
-                        {/* Allow Volume Expansion */}
-                        <VStack gap={1.5} align="start">
-                          <label className="text-[14px] font-medium text-[var(--color-text-default)]">
-                            Allow Volume Expansion
-                          </label>
-                          <VStack gap={1} align="start">
-                            <Radio
-                              label="Enabled"
-                              checked={scData.allowVolumeExpansion === true}
-                              onChange={() => {}}
-                              disabled
-                            />
-                            <Radio
-                              label="Disabled"
-                              checked={scData.allowVolumeExpansion === false}
-                              onChange={() => {}}
-                              disabled
-                            />
-                          </VStack>
+                      {/* Allow Volume Expansion */}
+                      <VStack gap={1.5} align="start">
+                        <label className="text-[14px] font-medium text-[var(--color-text-default)]">
+                          Allow Volume Expansion
+                        </label>
+                        <VStack gap={1} align="start">
+                          <Radio
+                            label="Enabled"
+                            checked={scData.allowVolumeExpansion === true}
+                            onChange={() => {}}
+                            disabled
+                          />
+                          <Radio
+                            label="Disabled"
+                            checked={scData.allowVolumeExpansion === false}
+                            onChange={() => {}}
+                            disabled
+                          />
                         </VStack>
+                      </VStack>
 
-                        {/* Volume Binding Mode */}
-                        <VStack gap={1.5} align="start">
-                          <label className="text-[14px] font-medium text-[var(--color-text-default)]">
-                            Volume Binding Mode
-                          </label>
-                          <VStack gap={1} align="start">
-                            <Radio
-                              label="Bind and provision a persistent volume once the PersistentVolumeClaim is created"
-                              checked={scData.volumeBindingMode === 'Immediate'}
-                              onChange={() => {}}
-                              disabled
-                            />
-                            <Radio
-                              label="Bind and provision a persistent volume once a Pod using the PersistentVolumeClaim is created"
-                              checked={scData.volumeBindingMode === 'WaitForFirstConsumer'}
-                              onChange={() => {}}
-                              disabled
-                            />
-                          </VStack>
+                      {/* Volume Binding Mode */}
+                      <VStack gap={1.5} align="start">
+                        <label className="text-[14px] font-medium text-[var(--color-text-default)]">
+                          Volume Binding Mode
+                        </label>
+                        <VStack gap={1} align="start">
+                          <Radio
+                            label="Bind and provision a persistent volume once the PersistentVolumeClaim is created"
+                            checked={scData.volumeBindingMode === 'Immediate'}
+                            onChange={() => {}}
+                            disabled
+                          />
+                          <Radio
+                            label="Bind and provision a persistent volume once a Pod using the PersistentVolumeClaim is created"
+                            checked={scData.volumeBindingMode === 'WaitForFirstConsumer'}
+                            onChange={() => {}}
+                            disabled
+                          />
                         </VStack>
+                      </VStack>
 
-                        {/* Mount Options */}
-                        <VStack gap={2} align="start" className="w-full">
-                          <label className="text-[14px] font-medium text-[var(--color-text-default)]">
-                            Mount Options
-                          </label>
-                          {scData.mountOptions.length > 0 ? (
-                            <VStack gap={2} className="w-full">
-                              {scData.mountOptions.map((option, index) => (
-                                <div
-                                  key={index}
-                                  className="w-full h-[32px] px-[10px] py-[8px] bg-[#e5e7eb] rounded-[6px] text-[12px] text-[var(--color-text-subtle)] flex items-center"
-                                >
-                                  {option}
-                                </div>
-                              ))}
-                            </VStack>
-                          ) : (
-                            <p className="text-[12px] text-[var(--color-text-subtle)]">
-                              No mount options defined.
-                            </p>
-                          )}
-                        </VStack>
+                      {/* Mount Options */}
+                      <VStack gap={2} align="start" className="w-full">
+                        <label className="text-[14px] font-medium text-[var(--color-text-default)]">
+                          Mount Options
+                        </label>
+                        {scData.mountOptions.length > 0 ? (
+                          <VStack gap={2} className="w-full">
+                            {scData.mountOptions.map((option, index) => (
+                              <div
+                                key={index}
+                                className="w-full h-[32px] px-[10px] py-[8px] bg-[#e5e7eb] rounded-[6px] text-[12px] text-[var(--color-text-subtle)] flex items-center"
+                              >
+                                {option}
+                              </div>
+                            ))}
+                          </VStack>
+                        ) : (
+                          <p className="text-[12px] text-[var(--color-text-subtle)]">
+                            No mount options defined.
+                          </p>
+                        )}
+                      </VStack>
                     </VStack>
                   </div>
                 </TabPanel>

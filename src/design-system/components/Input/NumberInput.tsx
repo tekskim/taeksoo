@@ -1,9 +1,4 @@
-import {
-  forwardRef,
-  type InputHTMLAttributes,
-  useState,
-  useCallback,
-} from 'react';
+import { forwardRef, type InputHTMLAttributes, useState, useCallback } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { IconChevronUp, IconChevronDown } from '@tabler/icons-react';
 
@@ -11,8 +6,10 @@ import { IconChevronUp, IconChevronDown } from '@tabler/icons-react';
    NumberInput Types
    ---------------------------------------- */
 
-export interface NumberInputProps
-  extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type' | 'onChange' | 'value' | 'defaultValue'> {
+export interface NumberInputProps extends Omit<
+  InputHTMLAttributes<HTMLInputElement>,
+  'type' | 'onChange' | 'value' | 'defaultValue'
+> {
   /** Label text */
   label?: string;
   /** Helper text */
@@ -69,21 +66,27 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
     const currentValue = isControlled ? controlledValue : internalValue;
 
     // Clamp value within min/max bounds
-    const clampValue = useCallback((val: number) => {
-      let clamped = val;
-      if (min !== undefined && clamped < min) clamped = min;
-      if (max !== undefined && clamped > max) clamped = max;
-      return clamped;
-    }, [min, max]);
+    const clampValue = useCallback(
+      (val: number) => {
+        let clamped = val;
+        if (min !== undefined && clamped < min) clamped = min;
+        if (max !== undefined && clamped > max) clamped = max;
+        return clamped;
+      },
+      [min, max]
+    );
 
     // Update value
-    const updateValue = useCallback((newValue: number) => {
-      const clamped = clampValue(newValue);
-      if (!isControlled) {
-        setInternalValue(clamped);
-      }
-      onChange?.(clamped);
-    }, [isControlled, clampValue, onChange]);
+    const updateValue = useCallback(
+      (newValue: number) => {
+        const clamped = clampValue(newValue);
+        if (!isControlled) {
+          setInternalValue(clamped);
+        }
+        onChange?.(clamped);
+      },
+      [isControlled, clampValue, onChange]
+    );
 
     // Increment/Decrement handlers
     const increment = () => {
@@ -146,7 +149,9 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
       '[&::-webkit-outer-spin-button]:appearance-none',
       '[&::-webkit-inner-spin-button]:appearance-none',
       error ? 'border-[var(--input-border-error)]' : 'border-[var(--input-border)]',
-      disabled ? 'bg-[var(--input-bg-disabled)] text-[var(--input-text-disabled)] cursor-not-allowed' : '',
+      disabled
+        ? 'bg-[var(--input-bg-disabled)] text-[var(--input-text-disabled)] cursor-not-allowed'
+        : '',
       className
     );
 
@@ -204,7 +209,10 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
                 tabIndex={-1}
                 className={buttonClasses}
                 onClick={increment}
-                disabled={disabled || (max !== undefined && currentValue !== undefined && currentValue >= max)}
+                disabled={
+                  disabled ||
+                  (max !== undefined && currentValue !== undefined && currentValue >= max)
+                }
                 aria-label="Increase value"
               >
                 <IconChevronUp size={12} strokeWidth={2} />
@@ -214,7 +222,10 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
                 tabIndex={-1}
                 className={buttonClasses}
                 onClick={decrement}
-                disabled={disabled || (min !== undefined && currentValue !== undefined && currentValue <= min)}
+                disabled={
+                  disabled ||
+                  (min !== undefined && currentValue !== undefined && currentValue <= min)
+                }
                 aria-label="Decrease value"
               >
                 <IconChevronDown size={12} strokeWidth={2} />
@@ -224,13 +235,19 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
         </div>
 
         {error && (
-          <p id={`${inputId}-error`} className="text-[length:var(--font-size-11)] text-[var(--color-state-danger)]">
+          <p
+            id={`${inputId}-error`}
+            className="text-[length:var(--font-size-11)] text-[var(--color-state-danger)]"
+          >
             {error}
           </p>
         )}
 
         {helperText && !error && (
-          <p id={`${inputId}-helper`} className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+          <p
+            id={`${inputId}-helper`}
+            className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]"
+          >
             {helperText}
           </p>
         )}
@@ -240,4 +257,3 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
 );
 
 NumberInput.displayName = 'NumberInput';
-

@@ -18,23 +18,14 @@ export interface EditRouterDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   router: RouterInfo;
-  onSubmit?: (
-    name: string,
-    description: string,
-    adminStateUp: boolean
-  ) => void;
+  onSubmit?: (name: string, description: string, adminStateUp: boolean) => void;
 }
 
 /* ----------------------------------------
    EditRouterDrawer Component
    ---------------------------------------- */
 
-export function EditRouterDrawer({
-  isOpen,
-  onClose,
-  router,
-  onSubmit,
-}: EditRouterDrawerProps) {
+export function EditRouterDrawer({ isOpen, onClose, router, onSubmit }: EditRouterDrawerProps) {
   const [routerName, setRouterName] = useState(router.name);
   const [description, setDescription] = useState(router.description || '');
   const [adminStateUp, setAdminStateUp] = useState(router.adminStateUp ?? true);
@@ -53,14 +44,10 @@ export function EditRouterDrawer({
 
   const handleSubmit = async () => {
     if (!routerName.trim()) return;
-    
+
     setIsSubmitting(true);
     try {
-      await onSubmit?.(
-        routerName,
-        description,
-        adminStateUp
-      );
+      await onSubmit?.(routerName, description, adminStateUp);
       onClose();
     } finally {
       setIsSubmitting(false);
@@ -71,7 +58,6 @@ export function EditRouterDrawer({
     onClose();
   };
 
-
   return (
     <Drawer
       isOpen={isOpen}
@@ -81,15 +67,11 @@ export function EditRouterDrawer({
       width={376}
       footer={
         <HStack gap={2} className="w-full">
-          <Button 
-            variant="secondary" 
-            onClick={handleClose}
-            className="flex-1 h-8"
-          >
+          <Button variant="secondary" onClick={handleClose} className="flex-1 h-8">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={handleSubmit}
             disabled={isSubmitting}
             className="flex-1 h-8"
@@ -159,10 +141,7 @@ export function EditRouterDrawer({
           {/* Admin State Toggle (Collapsible) */}
           {isAdvancedExpanded && (
             <HStack gap={2} className="items-center">
-              <Toggle 
-                checked={adminStateUp} 
-                onChange={(e) => setAdminStateUp(e.target.checked)} 
-              />
+              <Toggle checked={adminStateUp} onChange={(e) => setAdminStateUp(e.target.checked)} />
               <span className="text-[12px] text-[var(--color-text-default)] leading-4">
                 {adminStateUp ? 'Up' : 'Down'}
               </span>
@@ -175,4 +154,3 @@ export function EditRouterDrawer({
 }
 
 export default EditRouterDrawer;
-

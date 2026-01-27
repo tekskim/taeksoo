@@ -6,23 +6,23 @@ import { Checkbox } from '../Checkbox/Checkbox';
 
 /**
  * # FormField
- * 
+ *
  * 폼 필드를 구성하는 Compound Component입니다.
  * 라벨, 입력 컨트롤, 도움말, 에러 메시지를 일관된 구조로 조합합니다.
- * 
+ *
  * ## 언제 사용하나요?
  * - 폼 입력 필드에 라벨과 도움말을 추가할 때
  * - 필수 필드 표시가 필요할 때
  * - 유효성 검사 에러 메시지를 표시할 때
  * - 일관된 폼 레이아웃을 구성할 때
- * 
+ *
  * ## 구성 요소
  * - **FormField**: 컨테이너 (Context Provider)
  * - **FormField.Label**: 라벨 (필수 표시 포함)
  * - **FormField.Control**: 입력 컨트롤 래퍼
  * - **FormField.HelperText**: 도움말 텍스트
  * - **FormField.ErrorMessage**: 에러 메시지
- * 
+ *
  * ## 접근성
  * - `htmlFor`와 `id`로 라벨과 입력 연결
  * - 에러 메시지에 `role="alert"` 적용
@@ -35,7 +35,8 @@ const meta = {
     layout: 'centered',
     docs: {
       description: {
-        component: '폼 필드를 구성하는 Compound Component입니다. 라벨, 컨트롤, 도움말, 에러 메시지를 조합합니다.',
+        component:
+          '폼 필드를 구성하는 Compound Component입니다. 라벨, 컨트롤, 도움말, 에러 메시지를 조합합니다.',
       },
     },
   },
@@ -81,9 +82,7 @@ export const Default: Story = {
       <FormField.Control>
         <Input id="username" placeholder="Enter username" fullWidth />
       </FormField.Control>
-      <FormField.HelperText>
-        Your username must be unique.
-      </FormField.HelperText>
+      <FormField.HelperText>Your username must be unique.</FormField.HelperText>
     </FormField>
   ),
 };
@@ -95,9 +94,7 @@ export const Required: Story = {
       <FormField.Control>
         <Input id="email" type="email" placeholder="Enter email" fullWidth />
       </FormField.Control>
-      <FormField.HelperText>
-        We'll never share your email.
-      </FormField.HelperText>
+      <FormField.HelperText>We'll never share your email.</FormField.HelperText>
     </FormField>
   ),
 };
@@ -110,12 +107,8 @@ export const WithError: Story = {
       <FormField.Control>
         <Input id="password" type="password" placeholder="Enter password" fullWidth error />
       </FormField.Control>
-      <FormField.HelperText>
-        This won't be shown when there's an error.
-      </FormField.HelperText>
-      <FormField.ErrorMessage>
-        Password must be at least 8 characters.
-      </FormField.ErrorMessage>
+      <FormField.HelperText>This won't be shown when there's an error.</FormField.HelperText>
+      <FormField.ErrorMessage>Password must be at least 8 characters.</FormField.ErrorMessage>
     </FormField>
   ),
 };
@@ -127,9 +120,7 @@ export const Disabled: Story = {
       <FormField.Control>
         <Input id="readonly" value="Cannot edit this" disabled fullWidth />
       </FormField.Control>
-      <FormField.HelperText>
-        This field is disabled.
-      </FormField.HelperText>
+      <FormField.HelperText>This field is disabled.</FormField.HelperText>
     </FormField>
   ),
 };
@@ -156,9 +147,7 @@ export const WithSelect: Story = {
           ]}
         />
       </FormField.Control>
-      <FormField.HelperText>
-        Select your country of residence.
-      </FormField.HelperText>
+      <FormField.HelperText>Select your country of residence.</FormField.HelperText>
     </FormField>
   ),
 };
@@ -222,9 +211,7 @@ export const CompleteForm: Story = {
         <FormField.Control>
           <Input id="form-email" type="email" placeholder="john@example.com" fullWidth />
         </FormField.Control>
-        <FormField.HelperText>
-          We'll send a confirmation to this email.
-        </FormField.HelperText>
+        <FormField.HelperText>We'll send a confirmation to this email.</FormField.HelperText>
       </FormField>
 
       <FormField id="form-password" required error>
@@ -232,9 +219,7 @@ export const CompleteForm: Story = {
         <FormField.Control>
           <Input id="form-password" type="password" placeholder="••••••••" fullWidth error />
         </FormField.Control>
-        <FormField.ErrorMessage>
-          Password must contain at least one number.
-        </FormField.ErrorMessage>
+        <FormField.ErrorMessage>Password must contain at least one number.</FormField.ErrorMessage>
       </FormField>
 
       <FormField id="form-role">
@@ -251,9 +236,7 @@ export const CompleteForm: Story = {
             ]}
           />
         </FormField.Control>
-        <FormField.HelperText>
-          Choose the appropriate access level.
-        </FormField.HelperText>
+        <FormField.HelperText>Choose the appropriate access level.</FormField.HelperText>
       </FormField>
     </div>
   ),

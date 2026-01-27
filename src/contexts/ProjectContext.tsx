@@ -77,11 +77,7 @@ export function ProjectProvider({ children }: ProjectProviderProps) {
     setSelectedProjectId,
   };
 
-  return (
-    <ProjectContext.Provider value={value}>
-      {children}
-    </ProjectContext.Provider>
-  );
+  return <ProjectContext.Provider value={value}>{children}</ProjectContext.Provider>;
 }
 
 /* ----------------------------------------
@@ -95,4 +91,3 @@ export function useProject() {
   }
   return context;
 }
-

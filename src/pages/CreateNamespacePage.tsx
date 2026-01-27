@@ -42,11 +42,7 @@ const SECTION_LABELS: Record<SectionStep, string> = {
 };
 
 // Section order for navigation
-const SECTION_ORDER: SectionStep[] = [
-  'basic-info',
-  'pod-security',
-  'labels-annotations',
-];
+const SECTION_ORDER: SectionStep[] = ['basic-info', 'pod-security', 'labels-annotations'];
 
 // Pod Security profile options
 const PSA_PROFILE_OPTIONS = [
@@ -144,7 +140,12 @@ interface SummarySidebarProps {
   isCreateDisabled: boolean;
 }
 
-function SummarySidebar({ sectionStatus, onCancel, onCreate, isCreateDisabled }: SummarySidebarProps) {
+function SummarySidebar({
+  sectionStatus,
+  onCancel,
+  onCreate,
+  isCreateDisabled,
+}: SummarySidebarProps) {
   // Map SectionState to WizardSectionState
   const mapState = (state: SectionState): WizardSectionState => {
     if (state === 'pre') return 'pending';
@@ -163,14 +164,14 @@ function SummarySidebar({ sectionStatus, onCancel, onCreate, isCreateDisabled }:
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
       <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
         <WizardSummary items={summaryItems} />
-        
+
         {/* Action Buttons */}
         <HStack gap={2}>
           <Button variant="secondary" onClick={onCancel} className="w-[80px]">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={onCreate}
             disabled={isCreateDisabled}
             className="flex-1"
@@ -539,7 +540,7 @@ function LabelsAnnotationsSection({
                 Specify the labels used to identify and categorize the resource.
               </p>
             </VStack>
-            
+
             {labels.map((label, index) => (
               <HStack gap={2} key={index} className="w-full">
                 <Input
@@ -583,7 +584,7 @@ function LabelsAnnotationsSection({
                 Specify the annotations used to provide additional metadata for the resource.
               </p>
             </VStack>
-            
+
             {annotations.map((annotation, index) => (
               <HStack gap={2} key={index} className="w-full">
                 <Input
@@ -672,7 +673,8 @@ export function CreateNamespacePage() {
   const [namespaceNameError, setNamespaceNameError] = useState<string | null>(null);
 
   // Tab management
-  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } =
+    useTabs();
 
   // Update tab label
   useEffect(() => {
@@ -843,30 +845,42 @@ export function CreateNamespacePage() {
     setLabels([...labels, { key: '', value: '' }]);
   }, [labels]);
 
-  const removeLabel = useCallback((index: number) => {
-    setLabels(labels.filter((_, i) => i !== index));
-  }, [labels]);
+  const removeLabel = useCallback(
+    (index: number) => {
+      setLabels(labels.filter((_, i) => i !== index));
+    },
+    [labels]
+  );
 
-  const updateLabel = useCallback((index: number, field: 'key' | 'value', value: string) => {
-    const newLabels = [...labels];
-    newLabels[index][field] = value;
-    setLabels(newLabels);
-  }, [labels]);
+  const updateLabel = useCallback(
+    (index: number, field: 'key' | 'value', value: string) => {
+      const newLabels = [...labels];
+      newLabels[index][field] = value;
+      setLabels(newLabels);
+    },
+    [labels]
+  );
 
   // Annotation management
   const addAnnotation = useCallback(() => {
     setAnnotations([...annotations, { key: '', value: '' }]);
   }, [annotations]);
 
-  const removeAnnotation = useCallback((index: number) => {
-    setAnnotations(annotations.filter((_, i) => i !== index));
-  }, [annotations]);
+  const removeAnnotation = useCallback(
+    (index: number) => {
+      setAnnotations(annotations.filter((_, i) => i !== index));
+    },
+    [annotations]
+  );
 
-  const updateAnnotation = useCallback((index: number, field: 'key' | 'value', value: string) => {
-    const newAnnotations = [...annotations];
-    newAnnotations[index][field] = value;
-    setAnnotations(newAnnotations);
-  }, [annotations]);
+  const updateAnnotation = useCallback(
+    (index: number, field: 'key' | 'value', value: string) => {
+      const newAnnotations = [...annotations];
+      newAnnotations[index][field] = value;
+      setAnnotations(newAnnotations);
+    },
+    [annotations]
+  );
 
   // Check if create button should be disabled
   const isCreateDisabled = !namespaceName.trim();
@@ -988,7 +1002,11 @@ export function CreateNamespacePage() {
                       title={SECTION_LABELS['basic-info']}
                       onEdit={() => handleEdit('basic-info')}
                     >
-                      <SectionCard.DataRow label="Namespace Name" value={namespaceName} showDivider={false} />
+                      <SectionCard.DataRow
+                        label="Namespace Name"
+                        value={namespaceName}
+                        showDivider={false}
+                      />
                       <SectionCard.DataRow label="Description" value={description || '-'} />
                     </DoneSection>
                   )}
@@ -1031,7 +1049,11 @@ export function CreateNamespacePage() {
                       title={SECTION_LABELS['pod-security']}
                       onEdit={() => handleEdit('pod-security')}
                     >
-                      <SectionCard.DataRow label="Configuration" value={getPodSecurityDisplay()} showDivider={false} />
+                      <SectionCard.DataRow
+                        label="Configuration"
+                        value={getPodSecurityDisplay()}
+                        showDivider={false}
+                      />
                     </DoneSection>
                   )}
 
@@ -1063,7 +1085,11 @@ export function CreateNamespacePage() {
                       title={SECTION_LABELS['labels-annotations']}
                       onEdit={() => handleEdit('labels-annotations')}
                     >
-                      <SectionCard.DataRow label="Labels" value={getLabelsDisplay()} showDivider={false} />
+                      <SectionCard.DataRow
+                        label="Labels"
+                        value={getLabelsDisplay()}
+                        showDivider={false}
+                      />
                       <SectionCard.DataRow label="Annotations" value={getAnnotationsDisplay()} />
                     </DoneSection>
                   )}

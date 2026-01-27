@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { 
-  WizardSection, 
+import {
+  WizardSection,
   WizardSectionStatusIcon,
   PreSection,
   WritingSection,
@@ -119,10 +119,7 @@ export const PreSectionExample: Story = {
 export const WritingSectionExample: Story = {
   name: 'Writing Section',
   render: () => (
-    <WritingSection 
-      title="Storage Settings" 
-      onEdit={() => console.log('Edit clicked')} 
-    />
+    <WritingSection title="Storage Settings" onEdit={() => console.log('Edit clicked')} />
   ),
 };
 
@@ -130,10 +127,7 @@ export const WritingSectionExample: Story = {
 export const SkippedSectionExample: Story = {
   name: 'Skipped Section',
   render: () => (
-    <SkippedSection 
-      title="Advanced Options" 
-      onEdit={() => console.log('Edit clicked')} 
-    />
+    <SkippedSection title="Advanced Options" onEdit={() => console.log('Edit clicked')} />
   ),
 };
 
@@ -141,10 +135,7 @@ export const SkippedSectionExample: Story = {
 export const DoneSectionExample: Story = {
   name: 'Done Section',
   render: () => (
-    <DoneSection 
-      title="Basic Information" 
-      onEdit={() => console.log('Edit clicked')}
-    >
+    <DoneSection title="Basic Information" onEdit={() => console.log('Edit clicked')}>
       <SectionCard.DataRow label="Instance Name" value="production-server-01" showDivider={false} />
       <SectionCard.DataRow label="Description" value="Main production web server" />
       <SectionCard.DataRow label="Region" value="us-east-1" />
@@ -157,7 +148,10 @@ export const AllStates: Story = {
   name: 'All States',
   render: () => (
     <VStack gap={4}>
-      <WizardSection title="Step 1: Basic Info" status="done" onEdit={() => {}}
+      <WizardSection
+        title="Step 1: Basic Info"
+        status="done"
+        onEdit={() => {}}
         summaryContent={
           <>
             <SectionCard.DataRow label="Name" value="my-instance" showDivider={false} />
@@ -187,23 +181,30 @@ export const FullWizardExample: Story = {
   render: () => (
     <VStack gap={4}>
       {/* Completed Step */}
-      <WizardSection 
-        title="Basic Information" 
-        status="done" 
+      <WizardSection
+        title="Basic Information"
+        status="done"
         onEdit={() => console.log('Edit Basic Info')}
         summaryContent={
           <>
-            <SectionCard.DataRow label="Instance Name" value="web-server-prod-01" showDivider={false} />
-            <SectionCard.DataRow label="Description" value="Production web server for main application" />
+            <SectionCard.DataRow
+              label="Instance Name"
+              value="web-server-prod-01"
+              showDivider={false}
+            />
+            <SectionCard.DataRow
+              label="Description"
+              value="Production web server for main application"
+            />
             <SectionCard.DataRow label="Project" value="E-commerce Platform" />
           </>
         }
       />
-      
+
       {/* Completed Step */}
-      <WizardSection 
-        title="Instance Type" 
-        status="done" 
+      <WizardSection
+        title="Instance Type"
+        status="done"
         onEdit={() => console.log('Edit Instance Type')}
         summaryContent={
           <>
@@ -213,7 +214,7 @@ export const FullWizardExample: Story = {
           </>
         }
       />
-      
+
       {/* Active Step */}
       <WizardSection title="Network Configuration" status="active">
         <SectionCard isActive>
@@ -225,7 +226,7 @@ export const FullWizardExample: Story = {
           </SectionCard.Content>
         </SectionCard>
       </WizardSection>
-      
+
       {/* Pending Steps */}
       <WizardSection title="Storage" status="pre" />
       <WizardSection title="Security" status="pre" />
@@ -239,22 +240,22 @@ export const WithSkippedSteps: Story = {
   name: 'With Skipped Steps',
   render: () => (
     <VStack gap={4}>
-      <WizardSection 
-        title="Required Settings" 
-        status="done" 
+      <WizardSection
+        title="Required Settings"
+        status="done"
         onEdit={() => {}}
         summaryContent={
           <SectionCard.DataRow label="Name" value="my-resource" showDivider={false} />
         }
       />
-      <WizardSection 
-        title="Optional: Tags" 
-        status="skipped" 
+      <WizardSection
+        title="Optional: Tags"
+        status="skipped"
         onEdit={() => console.log('Configure tags')}
       />
-      <WizardSection 
-        title="Optional: Monitoring" 
-        status="skipped" 
+      <WizardSection
+        title="Optional: Monitoring"
+        status="skipped"
         onEdit={() => console.log('Configure monitoring')}
       />
       <WizardSection title="Review" status="active">

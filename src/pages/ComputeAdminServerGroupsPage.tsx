@@ -18,11 +18,7 @@ import {
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
-import {
-  IconTrash,
-  IconDownload,
-  IconBell,
-} from '@tabler/icons-react';
+import { IconTrash, IconDownload, IconBell } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
@@ -45,16 +41,118 @@ interface ServerGroup {
    ---------------------------------------- */
 
 const mockServerGroups: ServerGroup[] = [
-  { id: 'sg-001', name: 'server-1', tenantId: 'tenant-001', tenantName: 'project-alpha', policy: 'Anti-affinity', instances: [{ id: 'inst-001', name: 'tk-instance' }] },
-  { id: 'sg-002', name: 'web-servers', tenantId: 'tenant-002', tenantName: 'project-beta', policy: 'Anti-affinity', instances: [{ id: 'inst-002', name: 'web-01' }, { id: 'inst-003', name: 'web-02' }, { id: 'inst-004', name: 'web-03' }] },
-  { id: 'sg-003', name: 'db-cluster', tenantId: 'tenant-001', tenantName: 'project-alpha', policy: 'Affinity', instances: [{ id: 'inst-005', name: 'db-primary' }, { id: 'inst-006', name: 'db-replica' }] },
-  { id: 'sg-004', name: 'cache-group', tenantId: 'tenant-003', tenantName: 'project-gamma', policy: 'Soft-anti-affinity', instances: [{ id: 'inst-007', name: 'redis-01' }, { id: 'inst-008', name: 'redis-02' }] },
-  { id: 'sg-005', name: 'app-servers', tenantId: 'tenant-002', tenantName: 'project-beta', policy: 'Anti-affinity', instances: [{ id: 'inst-009', name: 'app-01' }, { id: 'inst-010', name: 'app-02' }, { id: 'inst-011', name: 'app-03' }, { id: 'inst-012', name: 'app-04' }] },
-  { id: 'sg-006', name: 'monitoring', tenantId: 'tenant-001', tenantName: 'project-alpha', policy: 'Soft-affinity', instances: [{ id: 'inst-013', name: 'prometheus' }, { id: 'inst-014', name: 'grafana' }] },
-  { id: 'sg-007', name: 'k8s-workers', tenantId: 'tenant-004', tenantName: 'project-k8s', policy: 'Anti-affinity', instances: [{ id: 'inst-015', name: 'worker-01' }, { id: 'inst-016', name: 'worker-02' }, { id: 'inst-017', name: 'worker-03' }] },
-  { id: 'sg-008', name: 'k8s-masters', tenantId: 'tenant-004', tenantName: 'project-k8s', policy: 'Anti-affinity', instances: [{ id: 'inst-018', name: 'master-01' }, { id: 'inst-019', name: 'master-02' }, { id: 'inst-020', name: 'master-03' }] },
-  { id: 'sg-009', name: 'storage-nodes', tenantId: 'tenant-003', tenantName: 'project-gamma', policy: 'Affinity', instances: [{ id: 'inst-021', name: 'storage-01' }, { id: 'inst-022', name: 'storage-02' }] },
-  { id: 'sg-010', name: 'load-balancers', tenantId: 'tenant-002', tenantName: 'project-beta', policy: 'Anti-affinity', instances: [{ id: 'inst-023', name: 'lb-01' }, { id: 'inst-024', name: 'lb-02' }] },
+  {
+    id: 'sg-001',
+    name: 'server-1',
+    tenantId: 'tenant-001',
+    tenantName: 'project-alpha',
+    policy: 'Anti-affinity',
+    instances: [{ id: 'inst-001', name: 'tk-instance' }],
+  },
+  {
+    id: 'sg-002',
+    name: 'web-servers',
+    tenantId: 'tenant-002',
+    tenantName: 'project-beta',
+    policy: 'Anti-affinity',
+    instances: [
+      { id: 'inst-002', name: 'web-01' },
+      { id: 'inst-003', name: 'web-02' },
+      { id: 'inst-004', name: 'web-03' },
+    ],
+  },
+  {
+    id: 'sg-003',
+    name: 'db-cluster',
+    tenantId: 'tenant-001',
+    tenantName: 'project-alpha',
+    policy: 'Affinity',
+    instances: [
+      { id: 'inst-005', name: 'db-primary' },
+      { id: 'inst-006', name: 'db-replica' },
+    ],
+  },
+  {
+    id: 'sg-004',
+    name: 'cache-group',
+    tenantId: 'tenant-003',
+    tenantName: 'project-gamma',
+    policy: 'Soft-anti-affinity',
+    instances: [
+      { id: 'inst-007', name: 'redis-01' },
+      { id: 'inst-008', name: 'redis-02' },
+    ],
+  },
+  {
+    id: 'sg-005',
+    name: 'app-servers',
+    tenantId: 'tenant-002',
+    tenantName: 'project-beta',
+    policy: 'Anti-affinity',
+    instances: [
+      { id: 'inst-009', name: 'app-01' },
+      { id: 'inst-010', name: 'app-02' },
+      { id: 'inst-011', name: 'app-03' },
+      { id: 'inst-012', name: 'app-04' },
+    ],
+  },
+  {
+    id: 'sg-006',
+    name: 'monitoring',
+    tenantId: 'tenant-001',
+    tenantName: 'project-alpha',
+    policy: 'Soft-affinity',
+    instances: [
+      { id: 'inst-013', name: 'prometheus' },
+      { id: 'inst-014', name: 'grafana' },
+    ],
+  },
+  {
+    id: 'sg-007',
+    name: 'k8s-workers',
+    tenantId: 'tenant-004',
+    tenantName: 'project-k8s',
+    policy: 'Anti-affinity',
+    instances: [
+      { id: 'inst-015', name: 'worker-01' },
+      { id: 'inst-016', name: 'worker-02' },
+      { id: 'inst-017', name: 'worker-03' },
+    ],
+  },
+  {
+    id: 'sg-008',
+    name: 'k8s-masters',
+    tenantId: 'tenant-004',
+    tenantName: 'project-k8s',
+    policy: 'Anti-affinity',
+    instances: [
+      { id: 'inst-018', name: 'master-01' },
+      { id: 'inst-019', name: 'master-02' },
+      { id: 'inst-020', name: 'master-03' },
+    ],
+  },
+  {
+    id: 'sg-009',
+    name: 'storage-nodes',
+    tenantId: 'tenant-003',
+    tenantName: 'project-gamma',
+    policy: 'Affinity',
+    instances: [
+      { id: 'inst-021', name: 'storage-01' },
+      { id: 'inst-022', name: 'storage-02' },
+    ],
+  },
+  {
+    id: 'sg-010',
+    name: 'load-balancers',
+    tenantId: 'tenant-002',
+    tenantName: 'project-beta',
+    policy: 'Anti-affinity',
+    instances: [
+      { id: 'inst-023', name: 'lb-01' },
+      { id: 'inst-024', name: 'lb-02' },
+    ],
+  },
 ];
 
 /* ----------------------------------------
@@ -65,12 +163,17 @@ const mockServerGroups: ServerGroup[] = [
 const filterFields: FilterField[] = [
   { key: 'name', label: 'Name', type: 'text' },
   { key: 'tenantName', label: 'Tenant', type: 'text' },
-  { key: 'policy', label: 'Policy', type: 'select', options: [
-    { value: 'Anti-affinity', label: 'Anti-affinity' },
-    { value: 'Affinity', label: 'Affinity' },
-    { value: 'Soft-anti-affinity', label: 'Soft-anti-affinity' },
-    { value: 'Soft-affinity', label: 'Soft-affinity' },
-  ]},
+  {
+    key: 'policy',
+    label: 'Policy',
+    type: 'select',
+    options: [
+      { value: 'Anti-affinity', label: 'Anti-affinity' },
+      { value: 'Affinity', label: 'Affinity' },
+      { value: 'Soft-anti-affinity', label: 'Soft-anti-affinity' },
+      { value: 'Soft-affinity', label: 'Soft-affinity' },
+    ],
+  },
 ];
 
 export function ComputeAdminServerGroupsPage() {
@@ -79,7 +182,7 @@ export function ComputeAdminServerGroupsPage() {
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [serverGroups, setServerGroups] = useState(mockServerGroups);
-  
+
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [serverGroupToDelete, setServerGroupToDelete] = useState<ServerGroup | null>(null);
@@ -130,7 +233,7 @@ export function ComputeAdminServerGroupsPage() {
   // Filter server groups by search
   const filteredServerGroups = useMemo(() => {
     if (appliedFilters.length === 0) return serverGroups;
-    
+
     return serverGroups.filter((sg) => {
       return appliedFilters.every((filter) => {
         const value = String(sg[filter.field as keyof ServerGroup] || '').toLowerCase();
@@ -213,14 +316,17 @@ export function ComputeAdminServerGroupsPage() {
         const instanceCount = row.instances.length;
         const firstInstance = row.instances[0];
         const additionalCount = instanceCount - 1;
-        
+
         return (
           <div className="flex flex-col gap-0.5">
             <span className="text-[12px] text-[var(--color-text-default)]">
-              {firstInstance?.name || '-'}{additionalCount > 0 && ` (+${additionalCount})`}
+              {firstInstance?.name || '-'}
+              {additionalCount > 0 && ` (+${additionalCount})`}
             </span>
             {firstInstance && (
-              <span className="text-[11px] text-[var(--color-text-subtle)]">ID: {firstInstance.id}</span>
+              <span className="text-[11px] text-[var(--color-text-subtle)]">
+                ID: {firstInstance.id}
+              </span>
             )}
           </div>
         );
@@ -239,7 +345,7 @@ export function ComputeAdminServerGroupsPage() {
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
-          <button 
+          <button
             className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors"
             onClick={() => handleDeleteClick(row)}
           >
@@ -252,9 +358,7 @@ export function ComputeAdminServerGroupsPage() {
 
   // Filter and order columns based on preferences
   const visibleColumns = useMemo(() => {
-    const visibleColumnIds = columnConfig
-      .filter((col) => col.visible)
-      .map((col) => col.id);
+    const visibleColumnIds = columnConfig.filter((col) => col.visible).map((col) => col.id);
 
     const columnMap = new Map(columns.map((col) => [col.key, col]));
 
@@ -265,7 +369,7 @@ export function ComputeAdminServerGroupsPage() {
 
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
+      <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
 
       <main
         className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
@@ -274,109 +378,114 @@ export function ComputeAdminServerGroupsPage() {
       >
         {/* Fixed Header Area */}
         <div className="shrink-0 bg-[var(--color-surface-default)]">
-        {/* Tab Bar */}
-        <TabBar
-          tabs={tabBarTabs}
-          activeTab={activeTabId}
-          onTabChange={selectTab}
-          onTabClose={closeTab}
-          onTabAdd={addNewTab}
+          {/* Tab Bar */}
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabAdd={addNewTab}
             onTabReorder={moveTab}
-          showAddButton={true}
-          showWindowControls={true}
-        />
+            showAddButton={true}
+            showWindowControls={true}
+          />
 
-        {/* Top Bar */}
-        <TopBar
-          showSidebarToggle={!sidebarOpen}
-          onSidebarToggle={() => setSidebarOpen(true)}
-          showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'Compute Admin', href: '/compute-admin' },
-                { label: 'Server Groups' },
-              ]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
-        />
+          {/* Top Bar */}
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(true)}
+            showNavigation={true}
+            onBack={() => window.history.back()}
+            onForward={() => window.history.forward()}
+            breadcrumb={
+              <Breadcrumb
+                items={[
+                  { label: 'Compute Admin', href: '/compute-admin' },
+                  { label: 'Server Groups' },
+                ]}
+              />
+            }
+            actions={
+              <TopBarAction
+                icon={<IconBell size={16} stroke={1} />}
+                aria-label="Notifications"
+                badge={true}
+              />
+            }
+          />
         </div>
 
         {/* Scrollable Content Area */}
         <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
-        {/* Page Content */}
-        <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
-          <VStack gap={3}>
-            {/* Page Header */}
-            <div className="flex items-center justify-between h-8">
-              <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
-                Server Groups
-              </h1>
-            </div>
+          {/* Page Content */}
+          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
+            <VStack gap={3}>
+              {/* Page Header */}
+              <div className="flex items-center justify-between h-8">
+                <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
+                  Server Groups
+                </h1>
+              </div>
 
-            {/* List Toolbar */}
-            <ListToolbar
-              primaryActions={
-                <ListToolbar.Actions>
-                  <FilterSearchInput
-                    filters={filterFields}
-                    appliedFilters={appliedFilters}
-                    onFiltersChange={setAppliedFilters}
+              {/* List Toolbar */}
+              <ListToolbar
+                primaryActions={
+                  <ListToolbar.Actions>
+                    <FilterSearchInput
+                      filters={filterFields}
+                      appliedFilters={appliedFilters}
+                      onFiltersChange={setAppliedFilters}
                       placeholder="Search server group by attributes"
-                    className="w-[var(--search-input-width)]"
-                  />
-                  <Button variant="secondary" size="sm" icon={<IconDownload size={12} />} aria-label="Download" />
-                </ListToolbar.Actions>
-              }
-              bulkActions={
-                <ListToolbar.Actions>
-                  <Button
-                    variant="muted"
-                    size="sm"
-                    leftIcon={<IconTrash size={12} />}
-                    disabled={selectedServerGroups.length === 0}
-                    onClick={handleBulkDelete}
-                  >
-                    Delete
-                  </Button>
-                </ListToolbar.Actions>
-              }
-            />
-
-            {/* Pagination */}
-            {filteredServerGroups.length > 0 && (
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={setCurrentPage}
-                showSettings
-                onSettingsClick={() => setIsPreferencesOpen(true)}
-                totalItems={filteredServerGroups.length}
-                selectedCount={selectedServerGroups.length}
+                      className="w-[var(--search-input-width)]"
+                    />
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      icon={<IconDownload size={12} />}
+                      aria-label="Download"
+                    />
+                  </ListToolbar.Actions>
+                }
+                bulkActions={
+                  <ListToolbar.Actions>
+                    <Button
+                      variant="muted"
+                      size="sm"
+                      leftIcon={<IconTrash size={12} />}
+                      disabled={selectedServerGroups.length === 0}
+                      onClick={handleBulkDelete}
+                    >
+                      Delete
+                    </Button>
+                  </ListToolbar.Actions>
+                }
               />
-            )}
 
-            {/* Server groups Table */}
-            <Table<ServerGroup>
-              columns={visibleColumns}
-              data={paginatedServerGroups}
-              rowKey="id"
-              emptyMessage="No server groups found"
-              selectable
-              selectedKeys={selectedServerGroups}
-              onSelectionChange={setSelectedServerGroups}
-            />
-          </VStack>
-        </div>
+              {/* Pagination */}
+              {filteredServerGroups.length > 0 && (
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
+                  showSettings
+                  onSettingsClick={() => setIsPreferencesOpen(true)}
+                  totalItems={filteredServerGroups.length}
+                  selectedCount={selectedServerGroups.length}
+                />
+              )}
+
+              {/* Server groups Table */}
+              <Table<ServerGroup>
+                columns={visibleColumns}
+                data={paginatedServerGroups}
+                rowKey="id"
+                emptyMessage="No server groups found"
+                selectable
+                selectedKeys={selectedServerGroups}
+                onSelectionChange={setSelectedServerGroups}
+              />
+            </VStack>
+          </div>
         </div>
       </main>
 

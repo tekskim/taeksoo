@@ -57,7 +57,7 @@ function buildTableColumns(
   }: {
     onRowAction: (actionId: string, row: Record<string, string> & { id: string }) => void;
     linkifyColumnKeys?: string[];
-  },
+  }
 ): TableColumn<Record<string, string> & { id: string }>[] {
   return cols.map((c) => {
     const column: TableColumn<Record<string, string> & { id: string }> = {
@@ -112,7 +112,11 @@ function buildTableColumns(
     }
 
     if (c.kind === 'mono') {
-      column.render = (value) => <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">{value ?? '-'}</span>;
+      column.render = (value) => (
+        <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">
+          {value ?? '-'}
+        </span>
+      );
       return column;
     }
 
@@ -167,7 +171,9 @@ export function CloudBuilderConsolePage() {
   const [selected, setSelected] = useState<string[]>([]);
 
   const [confirmRemoveOpen, setConfirmRemoveOpen] = useState(false);
-  const [rowToRemove, setRowToRemove] = useState<(Record<string, string> & { id: string }) | null>(null);
+  const [rowToRemove, setRowToRemove] = useState<(Record<string, string> & { id: string }) | null>(
+    null
+  );
 
   const [statusModalOpen, setStatusModalOpen] = useState(false);
   const [statusModal, setStatusModal] = useState<null | {
@@ -280,13 +286,29 @@ export function CloudBuilderConsolePage() {
         const items: ContextMenuItem[] =
           config.slug === 'compute-services'
             ? [
-                { id: 'enable', label: 'Enable', onClick: () => onRowAction('set-status-enabled', row) },
-                { id: 'disable', label: 'Disable', onClick: () => onRowAction('set-status-disabled', row) },
+                {
+                  id: 'enable',
+                  label: 'Enable',
+                  onClick: () => onRowAction('set-status-enabled', row),
+                },
+                {
+                  id: 'disable',
+                  label: 'Disable',
+                  onClick: () => onRowAction('set-status-disabled', row),
+                },
               ]
             : statusAction
               ? [
-                  { id: 'enable', label: 'Enable', onClick: () => onRowAction('set-status-enabled', row) },
-                  { id: 'disable', label: 'Disable', onClick: () => onRowAction('set-status-disabled', row) },
+                  {
+                    id: 'enable',
+                    label: 'Enable',
+                    onClick: () => onRowAction('set-status-enabled', row),
+                  },
+                  {
+                    id: 'disable',
+                    label: 'Disable',
+                    onClick: () => onRowAction('set-status-disabled', row),
+                  },
                 ]
               : (viewConfig.actionMenu?.items ?? []).map((it) => {
                   if (it.kind === 'link') {
@@ -314,7 +336,11 @@ export function CloudBuilderConsolePage() {
               aria-label="Row actions"
               className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors"
             >
-              <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
+              <IconDotsCircleHorizontal
+                size={16}
+                stroke={1.5}
+                className="text-[var(--color-text-muted)]"
+              />
             </button>
           </ContextMenu>
         );
@@ -489,7 +515,11 @@ export function CloudBuilderConsolePage() {
       <Modal
         isOpen={statusModalOpen}
         onClose={closeStatusModal}
-        title={statusModal?.nextStatus === 'Disabled' ? 'Disable compute service' : 'Enable compute service'}
+        title={
+          statusModal?.nextStatus === 'Disabled'
+            ? 'Disable compute service'
+            : 'Enable compute service'
+        }
         description={
           statusModal?.nextStatus === 'Disabled'
             ? 'Change this service status to Disabled?'
@@ -545,5 +575,3 @@ export function CloudBuilderConsolePage() {
 }
 
 export default CloudBuilderConsolePage;
-
-

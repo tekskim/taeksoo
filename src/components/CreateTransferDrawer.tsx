@@ -30,9 +30,7 @@ function InfoBox({ label, value }: { label: string; value: string }) {
         <span className="text-[11px] font-medium text-[var(--color-text-subtle)] leading-4">
           {label}
         </span>
-        <span className="text-[12px] text-[var(--color-text-default)] leading-4">
-          {value}
-        </span>
+        <span className="text-[12px] text-[var(--color-text-default)] leading-4">{value}</span>
       </VStack>
     </div>
   );
@@ -63,7 +61,7 @@ export function CreateTransferDrawer({
   const handleSubmit = async () => {
     setHasAttemptedSubmit(true);
     if (!transferName.trim()) return;
-    
+
     setIsSubmitting(true);
     try {
       await onSubmit?.(transferName);
@@ -87,15 +85,11 @@ export function CreateTransferDrawer({
       width={376}
       footer={
         <HStack gap={2} className="w-full">
-          <Button 
-            variant="secondary" 
-            onClick={handleClose}
-            className="flex-1 h-8"
-          >
+          <Button variant="secondary" onClick={handleClose} className="flex-1 h-8">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={handleSubmit}
             disabled={isSubmitting}
             className="flex-1 h-8"
@@ -113,15 +107,13 @@ export function CreateTransferDrawer({
               Create Transfer
             </h2>
             <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-              Create a transfer request to share this volume with another project. The recipient will need the generated Transfer ID and Auth Key to accept it.
+              Create a transfer request to share this volume with another project. The recipient
+              will need the generated Transfer ID and Auth Key to accept it.
             </p>
           </VStack>
 
           {/* Volume Info */}
-          <InfoBox 
-            label="Volume" 
-            value={volume ? `${volume.name} (${volume.size}GiB)` : '-'} 
-          />
+          <InfoBox label="Volume" value={volume ? `${volume.name} (${volume.size}GiB)` : '-'} />
         </VStack>
 
         {/* Transfer Name Input */}
@@ -152,5 +144,3 @@ export function CreateTransferDrawer({
 }
 
 export default CreateTransferDrawer;
-
-

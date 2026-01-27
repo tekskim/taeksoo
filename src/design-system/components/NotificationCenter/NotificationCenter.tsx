@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
-import { IconCircleCheck, IconAlertCircle, IconCheckbox, IconChevronUp, IconChevronDown } from '@tabler/icons-react';
+import {
+  IconCircleCheck,
+  IconAlertCircle,
+  IconCheckbox,
+  IconChevronUp,
+  IconChevronDown,
+} from '@tabler/icons-react';
 import { Tabs, TabList, Tab } from '../Tabs';
 import { Chip } from '../Chip';
 
@@ -109,7 +115,8 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
         >
           <IconCheckbox size={16} stroke={1.5} />
           {/* Tooltip */}
-          <span className="
+          <span
+            className="
             absolute top-full right-0 mt-1
             px-2 py-1
             bg-[var(--color-text-default)]
@@ -122,20 +129,33 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
             transition-opacity
             pointer-events-none
             z-10
-          ">
+          "
+          >
             Mark all as read
           </span>
         </button>
 
         {/* Tabs - full width */}
-        <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm" className="w-full">
+        <Tabs
+          value={activeTab}
+          onChange={setActiveTab}
+          variant="underline"
+          size="sm"
+          className="w-full"
+        >
           <TabList className="w-full px-4">
             <Tab value="all">All</Tab>
             <Tab value="unread">
-              Unread{unreadCount > 0 && <span className="ml-1 text-[var(--color-text-muted)]">({unreadCount})</span>}
+              Unread
+              {unreadCount > 0 && (
+                <span className="ml-1 text-[var(--color-text-muted)]">({unreadCount})</span>
+              )}
             </Tab>
             <Tab value="error">
-              Error{errorCount > 0 && <span className="ml-1 text-[var(--color-text-muted)]">({errorCount})</span>}
+              Error
+              {errorCount > 0 && (
+                <span className="ml-1 text-[var(--color-text-muted)]">({errorCount})</span>
+              )}
             </Tab>
           </TabList>
         </Tabs>
@@ -187,18 +207,27 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
   const getIcon = (type: NotificationType) => {
     switch (type) {
       case 'success':
-        return <IconCircleCheck size={20} stroke={1.5} className="text-[var(--color-state-success)]" />;
+        return (
+          <IconCircleCheck size={20} stroke={1.5} className="text-[var(--color-state-success)]" />
+        );
       case 'error':
-        return <IconAlertCircle size={20} stroke={1.5} className="text-[var(--color-state-danger)]" />;
+        return (
+          <IconAlertCircle size={20} stroke={1.5} className="text-[var(--color-state-danger)]" />
+        );
       case 'warning':
-        return <IconAlertCircle size={20} stroke={1.5} className="text-[var(--color-state-warning)]" />;
+        return (
+          <IconAlertCircle size={20} stroke={1.5} className="text-[var(--color-state-warning)]" />
+        );
       case 'info':
       default:
-        return <IconCircleCheck size={20} stroke={1.5} className="text-[var(--color-state-info)]" />;
+        return (
+          <IconCircleCheck size={20} stroke={1.5} className="text-[var(--color-state-info)]" />
+        );
     }
   };
 
-  const hasDetail = notification.detail && (notification.detail.code || notification.detail.message);
+  const hasDetail =
+    notification.detail && (notification.detail.code || notification.detail.message);
 
   return (
     <div
@@ -222,9 +251,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
         className="flex gap-3 p-3 cursor-pointer"
       >
         {/* Icon */}
-        <div className="shrink-0 pt-0.5">
-          {getIcon(notification.type)}
-        </div>
+        <div className="shrink-0 pt-0.5">{getIcon(notification.type)}</div>
 
         {/* Content */}
         <div className="flex-1 min-w-0">
@@ -234,9 +261,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
           </p>
 
           {/* Project Tag */}
-          {notification.project && (
-            <Chip value={notification.project} variant="default" />
-          )}
+          {notification.project && <Chip value={notification.project} variant="default" />}
         </div>
 
         {/* Right side - Unread indicator & Time */}
@@ -249,9 +274,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
           </div>
 
           {/* Time */}
-          <span className="text-[12px] text-[var(--color-text-muted)]">
-            {notification.time}
-          </span>
+          <span className="text-[12px] text-[var(--color-text-muted)]">{notification.time}</span>
         </div>
       </div>
 

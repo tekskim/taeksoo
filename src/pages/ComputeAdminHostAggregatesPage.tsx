@@ -53,69 +53,77 @@ interface AvailabilityZone {
    ---------------------------------------- */
 
 const mockHostAggregates: HostAggregate[] = [
-  { 
-    id: 'ha-001', 
-    name: 'compute-general', 
-    availabilityZone: 'zone-a', 
+  {
+    id: 'ha-001',
+    name: 'compute-general',
+    availabilityZone: 'zone-a',
     hosts: ['host-a', 'host-b', 'host-c', 'host-d'],
     metadata: [
       { key: 'ssd', value: 'true' },
       { key: 'cpu_allocation_ratio', value: '16.0' },
       { key: 'ram_allocation_ratio', value: '1.5' },
     ],
-    createdAt: 'Dec 25, 2025'
+    createdAt: 'Dec 25, 2025',
   },
-  { 
-    id: 'ha-002', 
-    name: 'compute-gpu', 
-    availabilityZone: 'zone-a', 
+  {
+    id: 'ha-002',
+    name: 'compute-gpu',
+    availabilityZone: 'zone-a',
     hosts: ['gpu-host-1', 'gpu-host-2'],
     metadata: [
       { key: 'gpu', value: 'nvidia-a100' },
       { key: 'gpu_count', value: '8' },
     ],
-    createdAt: 'Dec 25, 2025'
+    createdAt: 'Dec 25, 2025',
   },
-  { 
-    id: 'ha-003', 
-    name: 'compute-memory', 
-    availabilityZone: 'zone-b', 
+  {
+    id: 'ha-003',
+    name: 'compute-memory',
+    availabilityZone: 'zone-b',
     hosts: ['mem-host-1', 'mem-host-2', 'mem-host-3'],
     metadata: [
       { key: 'memory', value: 'high' },
       { key: 'ram_allocation_ratio', value: '1.0' },
     ],
-    createdAt: 'Dec 25, 2025'
+    createdAt: 'Dec 25, 2025',
   },
-  { 
-    id: 'ha-004', 
-    name: 'compute-storage', 
-    availabilityZone: 'zone-b', 
+  {
+    id: 'ha-004',
+    name: 'compute-storage',
+    availabilityZone: 'zone-b',
     hosts: ['storage-1', 'storage-2'],
     metadata: [
       { key: 'storage', value: 'nvme' },
       { key: 'disk_allocation_ratio', value: '1.0' },
     ],
-    createdAt: 'Dec 25, 2025'
+    createdAt: 'Dec 25, 2025',
   },
-  { 
-    id: 'ha-005', 
-    name: 'compute-bare-metal', 
-    availabilityZone: 'zone-c', 
+  {
+    id: 'ha-005',
+    name: 'compute-bare-metal',
+    availabilityZone: 'zone-c',
     hosts: ['bm-host-1'],
-    metadata: [
-      { key: 'bare-metal', value: 'true' },
-    ],
-    createdAt: 'Dec 25, 2025'
+    metadata: [{ key: 'bare-metal', value: 'true' }],
+    createdAt: 'Dec 25, 2025',
   },
 ];
 
 const mockAvailabilityZones: AvailabilityZone[] = [
-  { id: 'az-001', name: 'zone-a', hosts: ['host-a', 'host-b', 'host-c', 'host-d'], available: true },
+  {
+    id: 'az-001',
+    name: 'zone-a',
+    hosts: ['host-a', 'host-b', 'host-c', 'host-d'],
+    available: true,
+  },
   { id: 'az-002', name: 'zone-b', hosts: ['host-e', 'host-f', 'host-g'], available: true },
   { id: 'az-003', name: 'zone-c', hosts: ['host-h', 'host-i'], available: true },
   { id: 'az-004', name: 'zone-d', hosts: ['host-j'], available: false },
-  { id: 'az-005', name: 'zone-e', hosts: ['host-k', 'host-l', 'host-m', 'host-n'], available: true },
+  {
+    id: 'az-005',
+    name: 'zone-e',
+    hosts: ['host-k', 'host-l', 'host-m', 'host-n'],
+    available: true,
+  },
 ];
 
 /* ----------------------------------------
@@ -127,9 +135,7 @@ const filterFields: FilterField[] = [
   { key: 'availabilityZone', label: 'Availability Zone', type: 'text' },
 ];
 
-const azFilterFields: FilterField[] = [
-  { key: 'name', label: 'Name', type: 'text' },
-];
+const azFilterFields: FilterField[] = [{ key: 'name', label: 'Name', type: 'text' }];
 
 export function ComputeAdminHostAggregatesPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -138,7 +144,7 @@ export function ComputeAdminHostAggregatesPage() {
   const [hostAggregates, setHostAggregates] = useState(mockHostAggregates);
   const [activeTab, setActiveTab] = useState('host-aggregates');
   const [expandedRows, setExpandedRows] = useState<string[]>([]);
-  
+
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<HostAggregate | null>(null);
 
@@ -181,8 +187,8 @@ export function ComputeAdminHostAggregatesPage() {
   };
 
   const toggleRowExpansion = (id: string) => {
-    setExpandedRows(prev => 
-      prev.includes(id) ? prev.filter(rowId => rowId !== id) : [...prev, id]
+    setExpandedRows((prev) =>
+      prev.includes(id) ? prev.filter((rowId) => rowId !== id) : [...prev, id]
     );
   };
 
@@ -222,13 +228,17 @@ export function ComputeAdminHostAggregatesPage() {
   const getContextMenuItems = (row: HostAggregate): ContextMenuItem[] => [
     { id: 'edit', label: 'Edit', onClick: () => console.log('Edit:', row.id) },
     { id: 'manage-host', label: 'Manage host', onClick: () => console.log('Manage host:', row.id) },
-    { id: 'manage-metadata', label: 'Manage metadata', onClick: () => console.log('Manage metadata:', row.id) },
+    {
+      id: 'manage-metadata',
+      label: 'Manage metadata',
+      onClick: () => console.log('Manage metadata:', row.id),
+    },
     { id: 'delete', label: 'Delete', status: 'danger', onClick: () => handleDeleteClick(row) },
   ];
 
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
+      <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
 
       <main
         className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
@@ -262,7 +272,11 @@ export function ComputeAdminHostAggregatesPage() {
               />
             }
             actions={
-              <TopBarAction icon={<IconBell size={16} stroke={1} />} aria-label="Notifications" badge={true} />
+              <TopBarAction
+                icon={<IconBell size={16} stroke={1} />}
+                aria-label="Notifications"
+                badge={true}
+              />
             }
           />
         </div>
@@ -302,7 +316,12 @@ export function ComputeAdminHostAggregatesPage() {
                       placeholder="Search host aggregates by attributes"
                       className="w-[280px]"
                     />
-                    <Button variant="secondary" size="sm" icon={<IconDownload size={12} />} aria-label="Download" />
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      icon={<IconDownload size={12} />}
+                      aria-label="Download"
+                    />
                   </div>
 
                   {/* Pagination */}
@@ -341,48 +360,70 @@ export function ComputeAdminHostAggregatesPage() {
                       const isExpanded = expandedRows.includes(row.id);
                       const firstHost = row.hosts[0];
                       const additionalHosts = row.hosts.length - 1;
-                      
+
                       return (
-                        <div key={row.id} className="flex flex-col w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
+                        <div
+                          key={row.id}
+                          className="flex flex-col w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]"
+                        >
                           {/* Row Content */}
                           <div className="flex items-center min-h-[40px] w-full">
                             {/* Name Cell with Expand Icon */}
                             <div className="flex items-center gap-2 px-3 py-2 min-w-0 flex-1">
-                              <button 
+                              <button
                                 onClick={() => toggleRowExpansion(row.id)}
                                 className="shrink-0 p-0.5 rounded hover:bg-[var(--color-surface-muted)] transition-colors"
                               >
                                 {isExpanded ? (
-                                  <IconChevronDown size={12} stroke={1.5} className="text-[var(--color-text-default)]" />
+                                  <IconChevronDown
+                                    size={12}
+                                    stroke={1.5}
+                                    className="text-[var(--color-text-default)]"
+                                  />
                                 ) : (
-                                  <IconChevronRight size={12} stroke={1.5} className="text-[var(--color-text-default)]" />
+                                  <IconChevronRight
+                                    size={12}
+                                    stroke={1.5}
+                                    className="text-[var(--color-text-default)]"
+                                  />
                                 )}
                               </button>
-                              <span className="text-[12px] text-[var(--color-text-default)]">{row.name}</span>
+                              <span className="text-[12px] text-[var(--color-text-default)]">
+                                {row.name}
+                              </span>
                             </div>
 
                             {/* Availability Zone Cell */}
                             <div className="flex items-center px-3 py-2 min-w-0 flex-1">
-                              <span className="text-[12px] text-[var(--color-text-default)]">{row.availabilityZone}</span>
+                              <span className="text-[12px] text-[var(--color-text-default)]">
+                                {row.availabilityZone}
+                              </span>
                             </div>
 
                             {/* Hosts Cell */}
                             <div className="flex items-center px-3 py-2 min-w-0 flex-1">
                               <span className="text-[12px] text-[var(--color-text-default)]">
-                                {firstHost}{additionalHosts > 0 && ` (+${additionalHosts})`}
+                                {firstHost}
+                                {additionalHosts > 0 && ` (+${additionalHosts})`}
                               </span>
                             </div>
 
                             {/* Created at Cell */}
                             <div className="flex items-center px-3 py-2 min-w-0 flex-1">
-                              <span className="text-[12px] text-[var(--color-text-default)]">{row.createdAt}</span>
+                              <span className="text-[12px] text-[var(--color-text-default)]">
+                                {row.createdAt}
+                              </span>
                             </div>
 
                             {/* Action Cell */}
                             <div className="flex items-center justify-center px-1.5 py-1.5 w-[72px]">
                               <ContextMenu items={getContextMenuItems(row)} trigger="click">
                                 <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
-                                  <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+                                  <IconDotsCircleHorizontal
+                                    size={16}
+                                    stroke={1.5}
+                                    className="text-[var(--action-icon-color)]"
+                                  />
                                 </button>
                               </ContextMenu>
                             </div>
@@ -395,20 +436,31 @@ export function ComputeAdminHostAggregatesPage() {
                                 {/* Metadata Table Header */}
                                 <div className="flex items-center h-[40px] w-full bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
                                   <div className="flex items-center px-3 py-2 flex-1">
-                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">Metadata</span>
+                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                      Metadata
+                                    </span>
                                   </div>
                                   <div className="flex items-center px-3 py-2 flex-1 border-l border-[var(--color-border-default)]">
-                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">Value</span>
+                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                      Value
+                                    </span>
                                   </div>
                                 </div>
                                 {/* Metadata Table Rows */}
                                 {row.metadata.map((meta, index) => (
-                                  <div key={index} className="flex items-center min-h-[40px] w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
+                                  <div
+                                    key={index}
+                                    className="flex items-center min-h-[40px] w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)]"
+                                  >
                                     <div className="flex items-center px-3 py-2 flex-1">
-                                      <span className="text-[12px] text-[var(--color-text-default)]">{meta.key}</span>
+                                      <span className="text-[12px] text-[var(--color-text-default)]">
+                                        {meta.key}
+                                      </span>
                                     </div>
                                     <div className="flex items-center px-3 py-2 flex-1">
-                                      <span className="text-[12px] text-[var(--color-text-default)]">{meta.value}</span>
+                                      <span className="text-[12px] text-[var(--color-text-default)]">
+                                        {meta.value}
+                                      </span>
                                     </div>
                                   </div>
                                 ))}
@@ -440,7 +492,12 @@ export function ComputeAdminHostAggregatesPage() {
                       placeholder="Search availability zones by attributes"
                       className="w-[280px]"
                     />
-                    <Button variant="secondary" size="sm" icon={<IconDownload size={12} />} aria-label="Download" />
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      icon={<IconDownload size={12} />}
+                      aria-label="Download"
+                    />
                   </div>
 
                   {/* Pagination */}
@@ -459,7 +516,11 @@ export function ComputeAdminHostAggregatesPage() {
                     <div className="flex items-stretch min-h-[40px] w-full bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
                       <div className="flex items-center gap-1.5 px-3 py-2 text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] min-w-0 overflow-hidden flex-1">
                         <span>Name</span>
-                        <IconChevronDown size={12} stroke={1.5} className="text-[var(--color-text-default)]" />
+                        <IconChevronDown
+                          size={12}
+                          stroke={1.5}
+                          className="text-[var(--color-text-default)]"
+                        />
                       </div>
                       <div className="flex items-center px-3 py-2 text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] min-w-0 overflow-hidden flex-1 border-l border-[var(--color-border-default)]">
                         <span>Hosts</span>
@@ -473,18 +534,24 @@ export function ComputeAdminHostAggregatesPage() {
                     {paginatedAZs.map((az) => {
                       const firstHost = az.hosts[0];
                       const additionalHosts = az.hosts.length - 1;
-                      
+
                       return (
-                        <div key={az.id} className="flex items-center min-h-[40px] w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
+                        <div
+                          key={az.id}
+                          className="flex items-center min-h-[40px] w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]"
+                        >
                           {/* Name Cell */}
                           <div className="flex items-center px-3 py-2 min-w-0 flex-1">
-                            <span className="text-[12px] text-[var(--color-text-default)]">{az.name}</span>
+                            <span className="text-[12px] text-[var(--color-text-default)]">
+                              {az.name}
+                            </span>
                           </div>
 
                           {/* Hosts Cell */}
                           <div className="flex items-center px-3 py-2 min-w-0 flex-1">
                             <span className="text-[12px] text-[var(--color-text-default)]">
-                              {firstHost}{additionalHosts > 0 && ` (+${additionalHosts})`}
+                              {firstHost}
+                              {additionalHosts > 0 && ` (+${additionalHosts})`}
                             </span>
                           </div>
 

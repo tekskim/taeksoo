@@ -101,20 +101,216 @@ interface Port {
 // Network data map by ID
 // Mock data - synchronized with NetworksPage
 const mockNetworksMap: Record<string, NetworkDetail> = {
-  'net-001': { id: 'net-001', name: 'net-01', status: 'active', adminState: 'Up', access: 'Project', external: true, createdAt: '2025-09-15', networkName: 'net-01', availabilityZone: 'nova', availabilityZoneHint: '-', description: 'Public external network', mtu: 1500, portSecurity: true, routerExternal: true, providerNetworkType: 'flat', providerPhysicalNetwork: 'external', segmentationId: '-' },
-  'net-002': { id: 'net-002', name: 'internal-net', status: 'active', adminState: 'Up', access: 'Project', external: false, createdAt: '2025-09-10', networkName: 'internal-net', availabilityZone: 'nova', availabilityZoneHint: '-', description: 'Private network for project', mtu: 1450, portSecurity: true, routerExternal: false, providerNetworkType: 'vxlan', providerPhysicalNetwork: '-', segmentationId: '100' },
-  'net-003': { id: 'net-003', name: 'dev-network', status: 'active', adminState: 'Up', access: 'Project', external: false, createdAt: '2025-09-05', networkName: 'dev-network', availabilityZone: 'keystone', availabilityZoneHint: '-', description: 'Development network', mtu: 1500, portSecurity: false, routerExternal: false, providerNetworkType: 'vlan', providerPhysicalNetwork: 'mgmt', segmentationId: '200' },
-  'net-004': { id: 'net-004', name: 'prod-net', status: 'building', adminState: 'Up', access: 'Project', external: true, createdAt: '2025-09-01', networkName: 'prod-net', availabilityZone: 'nova', availabilityZoneHint: '-', description: 'Production network', mtu: 9000, portSecurity: false, routerExternal: false, providerNetworkType: 'vlan', providerPhysicalNetwork: 'storage', segmentationId: '300' },
-  'net-005': { id: 'net-005', name: 'test-network', status: 'active', adminState: 'Down', access: 'Project', external: false, createdAt: '2025-08-25', networkName: 'test-network', availabilityZone: 'nova', availabilityZoneHint: '-', description: 'Test network', mtu: 1500, portSecurity: true, routerExternal: false, providerNetworkType: 'vxlan', providerPhysicalNetwork: '-', segmentationId: '400' },
-  'net-006': { id: 'net-006', name: 'dmz-net', status: 'active', adminState: 'Up', access: 'Project', external: true, createdAt: '2025-08-20', networkName: 'dmz-net', availabilityZone: 'nova', availabilityZoneHint: '-', description: 'DMZ network', mtu: 1500, portSecurity: true, routerExternal: true, providerNetworkType: 'flat', providerPhysicalNetwork: 'dmz', segmentationId: '-' },
-  'net-007': { id: 'net-007', name: 'management-net', status: 'error', adminState: 'Down', access: 'Project', external: false, createdAt: '2025-08-15', networkName: 'management-net', availabilityZone: 'nova', availabilityZoneHint: '-', description: 'Management network', mtu: 1500, portSecurity: false, routerExternal: false, providerNetworkType: 'vlan', providerPhysicalNetwork: 'mgmt', segmentationId: '500' },
-  'net-008': { id: 'net-008', name: 'backup-network', status: 'active', adminState: 'Up', access: 'Project', external: false, createdAt: '2025-08-10', networkName: 'backup-network', availabilityZone: 'nova', availabilityZoneHint: '-', description: 'Backup network', mtu: 1500, portSecurity: true, routerExternal: false, providerNetworkType: 'vxlan', providerPhysicalNetwork: '-', segmentationId: '600' },
-  'net-009': { id: 'net-009', name: 'external-gateway', status: 'active', adminState: 'Up', access: 'Shared', external: true, createdAt: '2025-08-05', networkName: 'external-gateway', availabilityZone: 'nova', availabilityZoneHint: '-', description: 'External gateway network', mtu: 1500, portSecurity: true, routerExternal: true, providerNetworkType: 'flat', providerPhysicalNetwork: 'external', segmentationId: '-' },
-  'net-010': { id: 'net-010', name: 'provider-net', status: 'active', adminState: 'Up', access: 'External', external: true, createdAt: '2025-08-01', networkName: 'provider-net', availabilityZone: 'nova', availabilityZoneHint: '-', description: 'Provider network', mtu: 1500, portSecurity: true, routerExternal: true, providerNetworkType: 'flat', providerPhysicalNetwork: 'provider', segmentationId: '-' },
+  'net-001': {
+    id: 'net-001',
+    name: 'net-01',
+    status: 'active',
+    adminState: 'Up',
+    access: 'Project',
+    external: true,
+    createdAt: '2025-09-15',
+    networkName: 'net-01',
+    availabilityZone: 'nova',
+    availabilityZoneHint: '-',
+    description: 'Public external network',
+    mtu: 1500,
+    portSecurity: true,
+    routerExternal: true,
+    providerNetworkType: 'flat',
+    providerPhysicalNetwork: 'external',
+    segmentationId: '-',
+  },
+  'net-002': {
+    id: 'net-002',
+    name: 'internal-net',
+    status: 'active',
+    adminState: 'Up',
+    access: 'Project',
+    external: false,
+    createdAt: '2025-09-10',
+    networkName: 'internal-net',
+    availabilityZone: 'nova',
+    availabilityZoneHint: '-',
+    description: 'Private network for project',
+    mtu: 1450,
+    portSecurity: true,
+    routerExternal: false,
+    providerNetworkType: 'vxlan',
+    providerPhysicalNetwork: '-',
+    segmentationId: '100',
+  },
+  'net-003': {
+    id: 'net-003',
+    name: 'dev-network',
+    status: 'active',
+    adminState: 'Up',
+    access: 'Project',
+    external: false,
+    createdAt: '2025-09-05',
+    networkName: 'dev-network',
+    availabilityZone: 'keystone',
+    availabilityZoneHint: '-',
+    description: 'Development network',
+    mtu: 1500,
+    portSecurity: false,
+    routerExternal: false,
+    providerNetworkType: 'vlan',
+    providerPhysicalNetwork: 'mgmt',
+    segmentationId: '200',
+  },
+  'net-004': {
+    id: 'net-004',
+    name: 'prod-net',
+    status: 'building',
+    adminState: 'Up',
+    access: 'Project',
+    external: true,
+    createdAt: '2025-09-01',
+    networkName: 'prod-net',
+    availabilityZone: 'nova',
+    availabilityZoneHint: '-',
+    description: 'Production network',
+    mtu: 9000,
+    portSecurity: false,
+    routerExternal: false,
+    providerNetworkType: 'vlan',
+    providerPhysicalNetwork: 'storage',
+    segmentationId: '300',
+  },
+  'net-005': {
+    id: 'net-005',
+    name: 'test-network',
+    status: 'active',
+    adminState: 'Down',
+    access: 'Project',
+    external: false,
+    createdAt: '2025-08-25',
+    networkName: 'test-network',
+    availabilityZone: 'nova',
+    availabilityZoneHint: '-',
+    description: 'Test network',
+    mtu: 1500,
+    portSecurity: true,
+    routerExternal: false,
+    providerNetworkType: 'vxlan',
+    providerPhysicalNetwork: '-',
+    segmentationId: '400',
+  },
+  'net-006': {
+    id: 'net-006',
+    name: 'dmz-net',
+    status: 'active',
+    adminState: 'Up',
+    access: 'Project',
+    external: true,
+    createdAt: '2025-08-20',
+    networkName: 'dmz-net',
+    availabilityZone: 'nova',
+    availabilityZoneHint: '-',
+    description: 'DMZ network',
+    mtu: 1500,
+    portSecurity: true,
+    routerExternal: true,
+    providerNetworkType: 'flat',
+    providerPhysicalNetwork: 'dmz',
+    segmentationId: '-',
+  },
+  'net-007': {
+    id: 'net-007',
+    name: 'management-net',
+    status: 'error',
+    adminState: 'Down',
+    access: 'Project',
+    external: false,
+    createdAt: '2025-08-15',
+    networkName: 'management-net',
+    availabilityZone: 'nova',
+    availabilityZoneHint: '-',
+    description: 'Management network',
+    mtu: 1500,
+    portSecurity: false,
+    routerExternal: false,
+    providerNetworkType: 'vlan',
+    providerPhysicalNetwork: 'mgmt',
+    segmentationId: '500',
+  },
+  'net-008': {
+    id: 'net-008',
+    name: 'backup-network',
+    status: 'active',
+    adminState: 'Up',
+    access: 'Project',
+    external: false,
+    createdAt: '2025-08-10',
+    networkName: 'backup-network',
+    availabilityZone: 'nova',
+    availabilityZoneHint: '-',
+    description: 'Backup network',
+    mtu: 1500,
+    portSecurity: true,
+    routerExternal: false,
+    providerNetworkType: 'vxlan',
+    providerPhysicalNetwork: '-',
+    segmentationId: '600',
+  },
+  'net-009': {
+    id: 'net-009',
+    name: 'external-gateway',
+    status: 'active',
+    adminState: 'Up',
+    access: 'Shared',
+    external: true,
+    createdAt: '2025-08-05',
+    networkName: 'external-gateway',
+    availabilityZone: 'nova',
+    availabilityZoneHint: '-',
+    description: 'External gateway network',
+    mtu: 1500,
+    portSecurity: true,
+    routerExternal: true,
+    providerNetworkType: 'flat',
+    providerPhysicalNetwork: 'external',
+    segmentationId: '-',
+  },
+  'net-010': {
+    id: 'net-010',
+    name: 'provider-net',
+    status: 'active',
+    adminState: 'Up',
+    access: 'External',
+    external: true,
+    createdAt: '2025-08-01',
+    networkName: 'provider-net',
+    availabilityZone: 'nova',
+    availabilityZoneHint: '-',
+    description: 'Provider network',
+    mtu: 1500,
+    portSecurity: true,
+    routerExternal: true,
+    providerNetworkType: 'flat',
+    providerPhysicalNetwork: 'provider',
+    segmentationId: '-',
+  },
 };
 
 const defaultNetworkDetail: NetworkDetail = {
-  id: 'unknown', name: 'Unknown Network', status: 'active', adminState: 'Up', access: 'Project', external: false, createdAt: '-', networkName: '-', availabilityZone: '-', availabilityZoneHint: '-', description: '-', mtu: 1500, portSecurity: true, routerExternal: false, providerNetworkType: '-', providerPhysicalNetwork: '-', segmentationId: '-',
+  id: 'unknown',
+  name: 'Unknown Network',
+  status: 'active',
+  adminState: 'Up',
+  access: 'Project',
+  external: false,
+  createdAt: '-',
+  networkName: '-',
+  availabilityZone: '-',
+  availabilityZoneHint: '-',
+  description: '-',
+  mtu: 1500,
+  portSecurity: true,
+  routerExternal: false,
+  providerNetworkType: '-',
+  providerPhysicalNetwork: '-',
+  segmentationId: '-',
 };
 
 const mockSubnets: Subnet[] = Array.from({ length: 115 }, (_, i) => ({
@@ -135,7 +331,7 @@ const mockPorts: Port[] = Array.from({ length: 115 }, (_, i) => ({
   attachedTo: {
     name: 'web-01',
     id: '29tgj234',
-    type: i % 3 === 0 ? 'router' as const : 'instance' as const,
+    type: i % 3 === 0 ? ('router' as const) : ('instance' as const),
   },
   ownedNetwork: {
     name: 'net-01',
@@ -152,15 +348,15 @@ const mockPorts: Port[] = Array.from({ length: 115 }, (_, i) => ({
    ---------------------------------------- */
 
 const subnetStatusMap: Record<SubnetStatus, 'active' | 'building' | 'error'> = {
-  'active': 'active',
-  'building': 'building',
-  'error': 'error',
+  active: 'active',
+  building: 'building',
+  error: 'error',
 };
 
 const portStatusMap: Record<Port['status'], 'active' | 'building' | 'shutoff'> = {
-  'active': 'active',
-  'build': 'building',
-  'down': 'shutoff',
+  active: 'active',
+  build: 'building',
+  down: 'shutoff',
 };
 
 /* ----------------------------------------
@@ -170,34 +366,43 @@ const portStatusMap: Record<Port['status'], 'active' | 'building' | 'shutoff'> =
 export default function NetworkDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { tabs, activeTabId, addTab, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
-  
+  const {
+    tabs,
+    activeTabId,
+    addTab,
+    closeTab,
+    selectTab,
+    addNewTab,
+    updateActiveTabLabel,
+    moveTab,
+  } = useTabs();
+
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeDetailTab, setActiveDetailTab] = useState('details');
-  
+
   // Subnet state
   const [subnetSearchTerm, setSubnetSearchTerm] = useState('');
   const [subnetCurrentPage, setSubnetCurrentPage] = useState(1);
   const [subnetSortBy, setSubnetSortBy] = useState<string>('name');
   const [subnetSortDirection, setSubnetSortDirection] = useState<'asc' | 'desc'>('asc');
   const subnetsPerPage = 10;
-  
+
   // Port state
   const [portSearchTerm, setPortSearchTerm] = useState('');
   const [portCurrentPage, setPortCurrentPage] = useState(1);
   const [portSortBy, setPortSortBy] = useState<string>('name');
   const [portSortDirection, setPortSortDirection] = useState<'asc' | 'desc'>('asc');
   const portsPerPage = 10;
-  
+
   // Selection state
   const [selectedSubnets, setSelectedSubnets] = useState<string[]>([]);
   const [selectedPorts, setSelectedPorts] = useState<string[]>([]);
-  
+
   // Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
-  
+
   // Get network data based on the ID from URL
-  const network = id ? (mockNetworksMap[id] || defaultNetworkDetail) : defaultNetworkDetail;
+  const network = id ? mockNetworksMap[id] || defaultNetworkDetail : defaultNetworkDetail;
   const subnets = mockSubnets;
   const ports = mockPorts;
 
@@ -216,10 +421,11 @@ export default function NetworkDetailPage() {
 
   // Filter and paginate subnets
   const filteredSubnets = useMemo(() => {
-    return subnets.filter(subnet =>
-      subnet.name.toLowerCase().includes(subnetSearchTerm.toLowerCase()) ||
-      subnet.id.toLowerCase().includes(subnetSearchTerm.toLowerCase()) ||
-      subnet.cidr.toLowerCase().includes(subnetSearchTerm.toLowerCase())
+    return subnets.filter(
+      (subnet) =>
+        subnet.name.toLowerCase().includes(subnetSearchTerm.toLowerCase()) ||
+        subnet.id.toLowerCase().includes(subnetSearchTerm.toLowerCase()) ||
+        subnet.cidr.toLowerCase().includes(subnetSearchTerm.toLowerCase())
     );
   }, [subnets, subnetSearchTerm]);
 
@@ -228,10 +434,10 @@ export default function NetworkDetailPage() {
     sorted.sort((a, b) => {
       const aValue = a[subnetSortBy as keyof Subnet];
       const bValue = b[subnetSortBy as keyof Subnet];
-      
+
       if (typeof aValue === 'string' && typeof bValue === 'string') {
-        return subnetSortDirection === 'asc' 
-          ? aValue.localeCompare(bValue) 
+        return subnetSortDirection === 'asc'
+          ? aValue.localeCompare(bValue)
           : bValue.localeCompare(aValue);
       }
       if (typeof aValue === 'number' && typeof bValue === 'number') {
@@ -251,7 +457,7 @@ export default function NetworkDetailPage() {
 
   const handleSubnetSort = (key: string) => {
     if (subnetSortBy === key) {
-      setSubnetSortDirection(prev => prev === 'asc' ? 'desc' : 'asc');
+      setSubnetSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'));
     } else {
       setSubnetSortBy(key);
       setSubnetSortDirection('asc');
@@ -260,10 +466,11 @@ export default function NetworkDetailPage() {
 
   // Filter and paginate ports
   const filteredPorts = useMemo(() => {
-    return ports.filter(port =>
-      port.name.toLowerCase().includes(portSearchTerm.toLowerCase()) ||
-      port.id.toLowerCase().includes(portSearchTerm.toLowerCase()) ||
-      port.macAddress.toLowerCase().includes(portSearchTerm.toLowerCase())
+    return ports.filter(
+      (port) =>
+        port.name.toLowerCase().includes(portSearchTerm.toLowerCase()) ||
+        port.id.toLowerCase().includes(portSearchTerm.toLowerCase()) ||
+        port.macAddress.toLowerCase().includes(portSearchTerm.toLowerCase())
     );
   }, [ports, portSearchTerm]);
 
@@ -272,10 +479,10 @@ export default function NetworkDetailPage() {
     sorted.sort((a, b) => {
       const aValue = a[portSortBy as keyof Port];
       const bValue = b[portSortBy as keyof Port];
-      
+
       if (typeof aValue === 'string' && typeof bValue === 'string') {
-        return portSortDirection === 'asc' 
-          ? aValue.localeCompare(bValue) 
+        return portSortDirection === 'asc'
+          ? aValue.localeCompare(bValue)
           : bValue.localeCompare(aValue);
       }
       return 0;
@@ -292,7 +499,7 @@ export default function NetworkDetailPage() {
 
   const handlePortSort = (key: string) => {
     if (portSortBy === key) {
-      setPortSortDirection(prev => prev === 'asc' ? 'desc' : 'asc');
+      setPortSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'));
     } else {
       setPortSortBy(key);
       setPortSortDirection('asc');
@@ -354,13 +561,22 @@ export default function NetworkDetailPage() {
       render: (_: unknown, row: Subnet) => {
         const subnetMenuItems: ContextMenuItem[] = [
           { id: 'edit', label: 'Edit', onClick: () => console.log('Edit subnet', row.id) },
-          { id: 'delete', label: 'Delete', status: 'danger', onClick: () => console.log('Delete subnet', row.id) },
+          {
+            id: 'delete',
+            label: 'Delete',
+            status: 'danger',
+            onClick: () => console.log('Delete subnet', row.id),
+          },
         ];
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={subnetMenuItems} trigger="click">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
+                <IconDotsCircleHorizontal
+                  size={16}
+                  stroke={1.5}
+                  className="text-[var(--action-icon-color)]"
+                />
               </button>
             </ContextMenu>
           </div>
@@ -376,9 +592,7 @@ export default function NetworkDetailPage() {
       label: 'Status',
       width: '64px',
       align: 'center',
-      render: (_, row) => (
-        <StatusIndicator status={portStatusMap[row.status]} layout="icon-only" />
-      ),
+      render: (_, row) => <StatusIndicator status={portStatusMap[row.status]} layout="icon-only" />,
     },
     {
       key: 'name',
@@ -405,34 +619,43 @@ export default function NetworkDetailPage() {
       key: 'attachedTo',
       label: 'Attached to',
       flex: 1,
-      render: (_, row) => row.attachedTo ? (
-        <div className="flex items-center justify-between w-full">
-          <div className="flex flex-col gap-0.5">
-            <Link
-              to={row.attachedTo.type === 'router' ? `/routers/${row.attachedTo.id}` : `/instances/${row.attachedTo.id}`}
-              className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {row.attachedTo.name}
-              <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
-            </Link>
-            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-              ID : {row.attachedTo.id}
-            </span>
-          </div>
-          <Tooltip content={row.attachedTo.type === 'router' ? 'Router' : 'Instance'} position="top" delay={0}>
-            <div className="flex-shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[4px] p-1 cursor-pointer hover:bg-[var(--color-surface-muted)] transition-colors">
-              {row.attachedTo.type === 'router' ? (
-                <IconRouter size={12} className="text-[var(--color-text-subtle)]" />
-              ) : (
-                <IconCube size={12} className="text-[var(--color-text-subtle)]" />
-              )}
+      render: (_, row) =>
+        row.attachedTo ? (
+          <div className="flex items-center justify-between w-full">
+            <div className="flex flex-col gap-0.5">
+              <Link
+                to={
+                  row.attachedTo.type === 'router'
+                    ? `/routers/${row.attachedTo.id}`
+                    : `/instances/${row.attachedTo.id}`
+                }
+                className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {row.attachedTo.name}
+                <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+              </Link>
+              <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+                ID : {row.attachedTo.id}
+              </span>
             </div>
-          </Tooltip>
-        </div>
-      ) : (
-        <span className="text-[var(--color-text-subtle)]">-</span>
-      ),
+            <Tooltip
+              content={row.attachedTo.type === 'router' ? 'Router' : 'Instance'}
+              position="top"
+              delay={0}
+            >
+              <div className="flex-shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[4px] p-1 cursor-pointer hover:bg-[var(--color-surface-muted)] transition-colors">
+                {row.attachedTo.type === 'router' ? (
+                  <IconRouter size={12} className="text-[var(--color-text-subtle)]" />
+                ) : (
+                  <IconCube size={12} className="text-[var(--color-text-subtle)]" />
+                )}
+              </div>
+            </Tooltip>
+          </div>
+        ) : (
+          <span className="text-[var(--color-text-subtle)]">-</span>
+        ),
     },
     {
       key: 'ownedNetwork',
@@ -465,7 +688,8 @@ export default function NetworkDetailPage() {
         const additionalCount = sgCount - 1;
         return (
           <span className="text-[var(--color-text-default)]">
-            {displaySg}{additionalCount > 0 && ` (+${additionalCount})`}
+            {displaySg}
+            {additionalCount > 0 && ` (+${additionalCount})`}
           </span>
         );
       },
@@ -490,7 +714,7 @@ export default function NetworkDetailPage() {
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-      
+
       <main
         className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
           sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'
@@ -500,7 +724,7 @@ export default function NetworkDetailPage() {
         <div className="shrink-0 bg-[var(--color-surface-default)]">
           {/* Tab Bar */}
           <TabBar
-            tabs={tabs.map(tab => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+            tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
             activeTab={activeTabId}
             onTabChange={selectTab}
             onTabClose={closeTab}
@@ -546,11 +770,7 @@ export default function NetworkDetailPage() {
                   </Button>
                 </DetailHeader.Actions>
                 <DetailHeader.InfoGrid>
-                  <DetailHeader.InfoCard
-                    label="Status"
-                    value="Available"
-                    status="active"
-                  />
+                  <DetailHeader.InfoCard label="Status" value="Available" status="active" />
                   <DetailHeader.InfoCard label="ID" value={network.id} copyable />
                   <DetailHeader.InfoCard label="Admin state" value={network.adminState} />
                   <DetailHeader.InfoCard label="Access" value={network.access} />
@@ -561,7 +781,12 @@ export default function NetworkDetailPage() {
 
               {/* Network Tabs */}
               <div className="w-full">
-                <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline" size="sm">
+                <Tabs
+                  value={activeDetailTab}
+                  onChange={setActiveDetailTab}
+                  variant="underline"
+                  size="sm"
+                >
                   <TabList>
                     <Tab value="details">Details</Tab>
                     <Tab value="subnets">Subnets</Tab>
@@ -573,18 +798,24 @@ export default function NetworkDetailPage() {
                     <VStack gap={4} className="pt-4">
                       {/* Basic information */}
                       <SectionCard>
-                        <SectionCard.Header 
-                          title="Basic information" 
+                        <SectionCard.Header
+                          title="Basic information"
                           actions={
                             <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
                               Edit
                             </Button>
-                          } 
+                          }
                         />
                         <SectionCard.Content>
                           <SectionCard.DataRow label="Network name" value={network.networkName} />
-                          <SectionCard.DataRow label="AZ(Availability zone)" value={network.availabilityZone} />
-                          <SectionCard.DataRow label="AZ(Availability zone) Hint" value={network.availabilityZoneHint} />
+                          <SectionCard.DataRow
+                            label="AZ(Availability zone)"
+                            value={network.availabilityZone}
+                          />
+                          <SectionCard.DataRow
+                            label="AZ(Availability zone) Hint"
+                            value={network.availabilityZoneHint}
+                          />
                           <SectionCard.DataRow label="Description" value={network.description} />
                         </SectionCard.Content>
                       </SectionCard>
@@ -594,11 +825,26 @@ export default function NetworkDetailPage() {
                         <SectionCard.Header title="Specification" />
                         <SectionCard.Content>
                           <SectionCard.DataRow label="MTU" value={String(network.mtu)} />
-                          <SectionCard.DataRow label="Port security" value={network.portSecurity ? 'Yes' : 'No'} />
-                          <SectionCard.DataRow label="Router external" value={network.routerExternal ? 'Yes' : 'No'} />
-                          <SectionCard.DataRow label="Provider network Type" value={network.providerNetworkType} />
-                          <SectionCard.DataRow label="Provider physical Network" value={network.providerPhysicalNetwork} />
-                          <SectionCard.DataRow label="Segmentation ID" value={network.segmentationId} />
+                          <SectionCard.DataRow
+                            label="Port security"
+                            value={network.portSecurity ? 'Yes' : 'No'}
+                          />
+                          <SectionCard.DataRow
+                            label="Router external"
+                            value={network.routerExternal ? 'Yes' : 'No'}
+                          />
+                          <SectionCard.DataRow
+                            label="Provider network Type"
+                            value={network.providerNetworkType}
+                          />
+                          <SectionCard.DataRow
+                            label="Provider physical Network"
+                            value={network.providerPhysicalNetwork}
+                          />
+                          <SectionCard.DataRow
+                            label="Segmentation ID"
+                            value={network.segmentationId}
+                          />
                         </SectionCard.Content>
                       </SectionCard>
                     </VStack>
@@ -612,7 +858,11 @@ export default function NetworkDetailPage() {
                         <h3 className="text-[16px] leading-[24px] font-semibold text-[var(--color-text-default)]">
                           Subnets
                         </h3>
-                        <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          leftIcon={<IconCirclePlus size={12} />}
+                        >
                           Create subnet
                         </Button>
                       </div>

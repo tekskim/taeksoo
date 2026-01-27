@@ -15,7 +15,14 @@ export interface AddL7PolicyDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   pools?: PoolOption[];
-  onSubmit?: (policyName: string, description: string, action: string, targetPool: string, position: number, adminStateUp: boolean) => void;
+  onSubmit?: (
+    policyName: string,
+    description: string,
+    action: string,
+    targetPool: string,
+    position: number,
+    adminStateUp: boolean
+  ) => void;
 }
 
 /* ----------------------------------------
@@ -69,7 +76,7 @@ export function AddL7PolicyDrawer({
     setHasAttemptedSubmit(true);
     if (!policyName.trim()) return;
     if (action === 'forward_to_pool' && !targetPool) return;
-    
+
     setIsSubmitting(true);
     try {
       await onSubmit?.(policyName, description, action, targetPool, position, adminStateUp);
@@ -93,15 +100,11 @@ export function AddL7PolicyDrawer({
       width={376}
       footer={
         <HStack gap={2} className="w-full">
-          <Button 
-            variant="secondary" 
-            onClick={handleClose}
-            className="flex-1 h-8"
-          >
+          <Button variant="secondary" onClick={handleClose} className="flex-1 h-8">
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             onClick={handleSubmit}
             disabled={isSubmitting}
             className="flex-1 h-8"
@@ -164,7 +167,7 @@ export function AddL7PolicyDrawer({
             options={ACTION_OPTIONS}
             fullWidth
           />
-          
+
           {/* Target Pool Select (shown when action is forward_to_pool) */}
           {action === 'forward_to_pool' && (
             <>
@@ -191,9 +194,7 @@ export function AddL7PolicyDrawer({
             <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
               Position
             </label>
-            <span className="text-[12px] text-[var(--color-text-subtle)]">
-              (Optional)
-            </span>
+            <span className="text-[12px] text-[var(--color-text-subtle)]">(Optional)</span>
           </HStack>
           <Input
             type="number"
@@ -210,10 +211,7 @@ export function AddL7PolicyDrawer({
             Admin State
           </label>
           <HStack gap={2} className="items-center">
-            <Toggle
-              checked={adminStateUp}
-              onChange={(e) => setAdminStateUp(e.target.checked)}
-            />
+            <Toggle checked={adminStateUp} onChange={(e) => setAdminStateUp(e.target.checked)} />
             <span className="text-[12px] text-[var(--color-text-default)] leading-4">
               {adminStateUp ? 'Up' : 'Down'}
             </span>
@@ -225,4 +223,3 @@ export function AddL7PolicyDrawer({
 }
 
 export default AddL7PolicyDrawer;
-

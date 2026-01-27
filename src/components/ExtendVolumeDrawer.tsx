@@ -41,8 +41,8 @@ interface QuotaProgressBarProps {
 
 function QuotaProgressBar({ label, used, total }: QuotaProgressBarProps) {
   const isUnlimited = total === null;
-  const percentage = isUnlimited ? 20 : (total > 0 ? (used / total) * 100 : 0);
-  const nextPercentage = isUnlimited ? 20 : (total > 0 ? ((used + 1) / total) * 100 : 0);
+  const percentage = isUnlimited ? 20 : total > 0 ? (used / total) * 100 : 0;
+  const nextPercentage = isUnlimited ? 20 : total > 0 ? ((used + 1) / total) * 100 : 0;
 
   return (
     <VStack gap={2} className="w-full">
@@ -51,26 +51,22 @@ function QuotaProgressBar({ label, used, total }: QuotaProgressBarProps) {
           {label}
         </span>
         <HStack gap={0} className="items-center">
-          <span className="text-[12px] text-[var(--color-text-default)] leading-4">
-            {used}/
-          </span>
+          <span className="text-[12px] text-[var(--color-text-default)] leading-4">{used}/</span>
           {isUnlimited ? (
             <IconInfinity size={16} className="text-[var(--color-text-default)]" stroke={1} />
           ) : (
-            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
-              {total}
-            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">{total}</span>
           )}
         </HStack>
       </HStack>
       <div className="w-full h-1 bg-[var(--color-border-subtle)] rounded-lg relative overflow-hidden">
         {/* Current usage (darker green) */}
-        <div 
+        <div
           className="absolute left-0 top-0 h-full bg-[#4ade80] rounded-lg z-[2]"
           style={{ width: `${Math.min(percentage, 100)}%` }}
         />
         {/* Next usage preview (lighter green) */}
-        <div 
+        <div
           className="absolute left-0 top-0 h-full bg-[#bbf7d0] rounded-lg z-[1]"
           style={{ width: `${Math.min(nextPercentage, 100)}%` }}
         />
@@ -107,7 +103,7 @@ export function ExtendVolumeDrawer({
 
   const handleSubmit = async () => {
     if (capacity <= (volume?.size ?? 0)) return;
-    
+
     setIsSubmitting(true);
     try {
       await onSubmit?.(capacity);
@@ -126,7 +122,6 @@ export function ExtendVolumeDrawer({
     const clampedValue = Math.min(Math.max(value, minCapacity), maxCapacity);
     setCapacity(clampedValue);
   };
-
 
   return (
     <Drawer
@@ -153,15 +148,11 @@ export function ExtendVolumeDrawer({
 
           {/* Buttons */}
           <HStack gap={2} className="w-full border-t border-[var(--color-border-default)] pt-4">
-            <Button 
-              variant="secondary" 
-              onClick={handleClose}
-              className="flex-1 h-8"
-            >
+            <Button variant="secondary" onClick={handleClose} className="flex-1 h-8">
               Cancel
             </Button>
-            <Button 
-              variant="primary" 
+            <Button
+              variant="primary"
               onClick={handleSubmit}
               disabled={capacity <= (volume?.size ?? 0) || isSubmitting}
               className="flex-1 h-8"
@@ -181,15 +172,14 @@ export function ExtendVolumeDrawer({
               Extend Volume
             </h2>
             <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-              Increase the size of this volume to expand its storage capacity. The volume size can only be increased and cannot be reduced once extended.
+              Increase the size of this volume to expand its storage capacity. The volume size can
+              only be increased and cannot be reduced once extended.
             </p>
           </VStack>
 
           {/* Volume Info Box */}
           <div className="w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg">
-            <p className="text-[11px] font-medium text-[var(--color-text-subtle)] mb-1.5">
-              Volume
-            </p>
+            <p className="text-[11px] font-medium text-[var(--color-text-subtle)] mb-1.5">Volume</p>
             <p className="text-[12px] text-[var(--color-text-default)]">
               {volume ? `${volume.name} (${volume.size}GiB)` : '-'}
             </p>
@@ -206,7 +196,7 @@ export function ExtendVolumeDrawer({
               {minCapacity} - {maxCapacity} GiB
             </span>
           </HStack>
-          
+
           {/* Slider */}
           <VStack gap={2} className="w-full">
             <Slider
@@ -215,7 +205,7 @@ export function ExtendVolumeDrawer({
               value={capacity}
               onChange={handleCapacityChange}
             />
-            
+
             {/* Capacity Input */}
             <Input
               type="number"
@@ -233,5 +223,3 @@ export function ExtendVolumeDrawer({
 }
 
 export default ExtendVolumeDrawer;
-
-

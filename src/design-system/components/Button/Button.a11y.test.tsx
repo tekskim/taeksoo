@@ -12,9 +12,7 @@ describe('Button Accessibility', () => {
   });
 
   it('should have no accessibility violations with icon and aria-label', async () => {
-    const { container } = render(
-      <Button icon={<IconPlus />} aria-label="Add item" />
-    );
+    const { container } = render(<Button icon={<IconPlus />} aria-label="Add item" />);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
@@ -33,7 +31,7 @@ describe('Button Accessibility', () => {
 
   it('should have no accessibility violations for all variants', async () => {
     const variants = ['primary', 'secondary', 'outline', 'ghost', 'danger'] as const;
-    
+
     for (const variant of variants) {
       const { container } = render(<Button variant={variant}>Button</Button>);
       const results = await axe(container);
@@ -43,7 +41,9 @@ describe('Button Accessibility', () => {
 
   it('should have no accessibility violations as link', async () => {
     const { container } = render(
-      <Button as="a" href="/test">Link Button</Button>
+      <Button as="a" href="/test">
+        Link Button
+      </Button>
     );
     const results = await axe(container);
     expect(results).toHaveNoViolations();
