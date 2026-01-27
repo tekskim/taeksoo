@@ -670,8 +670,6 @@ export function LoadBalancerDetailPage() {
                             onPageChange={setListenerCurrentPage}
                             totalItems={filteredListeners.length}
                             selectedCount={selectedListeners.length}
-                            showSettings
-                            onSettingsClick={() => setIsPreferencesOpen(true)}
                           />
                         </div>
 
@@ -731,8 +729,6 @@ export function LoadBalancerDetailPage() {
                             onPageChange={setPoolCurrentPage}
                             totalItems={filteredPools.length}
                             selectedCount={selectedPools.length}
-                            showSettings
-                            onSettingsClick={() => setIsPreferencesOpen(true)}
                           />
                         </div>
 

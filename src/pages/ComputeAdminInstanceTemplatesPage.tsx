@@ -17,7 +17,7 @@ import {
   type FilterField,
   type AppliedFilter,
 } from '@/design-system';
-import { Sidebar } from '@/components/Sidebar';
+import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import {
@@ -266,7 +266,7 @@ export function ComputeAdminInstanceTemplatesPage() {
 
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
+      <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
 
       <main
         className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
@@ -297,7 +297,7 @@ export function ComputeAdminInstanceTemplatesPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'Proj-1', href: '/project' },
+                { label: 'Compute Admin', href: '/compute-admin' },
                 { label: 'Instance templates' },
               ]}
             />

@@ -219,6 +219,12 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
                   active={isActive('/compute-admin/flavors')}
                 />
                 <MenuItem
+                  icon={<IconLayoutGrid size={16} stroke={1.5} />}
+                  label="Server Groups"
+                  href="/compute-admin/server-groups"
+                  active={isActive('/compute-admin/server-groups')}
+                />
+                <MenuItem
                   icon={<IconServer size={16} stroke={1.5} />}
                   label="Host aggregates"
                   href="/compute-admin/host-aggregates"

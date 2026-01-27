@@ -534,8 +534,6 @@ export default function CertificateDetailPage() {
                           totalPages={totalListenerPages}
                           onPageChange={setListenerCurrentPage}
                         totalItems={filteredListeners.length}
-                        showSettings
-                        onSettingsClick={() => setIsPreferencesOpen(true)}
                         />
 
                       {/* Table */}

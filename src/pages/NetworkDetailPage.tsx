@@ -637,8 +637,6 @@ export default function NetworkDetailPage() {
                           onPageChange={setSubnetCurrentPage}
                           totalItems={filteredSubnets.length}
                           selectedCount={selectedSubnets.length}
-                          showSettings
-                          onSettingsClick={() => setIsPreferencesOpen(true)}
                         />
                       </div>
 
@@ -687,8 +685,6 @@ export default function NetworkDetailPage() {
                           onPageChange={setPortCurrentPage}
                           totalItems={filteredPorts.length}
                           selectedCount={selectedPorts.length}
-                          showSettings
-                          onSettingsClick={() => setIsPreferencesOpen(true)}
                         />
                       </div>
 

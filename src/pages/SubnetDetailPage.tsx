@@ -491,8 +491,6 @@ export default function SubnetDetailPage() {
                           onPageChange={setPortCurrentPage}
                         totalItems={filteredPorts.length}
                         selectedCount={selectedPorts.length}
-                        showSettings
-                        onSettingsClick={() => setIsPreferencesOpen(true)}
                         />
 
                       {/* Table */}

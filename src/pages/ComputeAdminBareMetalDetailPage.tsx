@@ -20,7 +20,7 @@ import {
   ContextMenu,
 } from '@/design-system';
 import { Link } from 'react-router-dom';
-import { Sidebar } from '@/components/Sidebar';
+import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
   IconPlayerPlay,
@@ -306,7 +306,7 @@ export function ComputeAdminBareMetalDetailPage() {
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       {/* Sidebar */}
-      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
+      <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
 
       {/* Main Content */}
       <main className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${sidebarOpen ? 'left-[200px]' : 'left-0'}`}>
@@ -331,7 +331,7 @@ export function ComputeAdminBareMetalDetailPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'Proj-1', href: '/project' },
+                { label: 'Compute Admin', href: '/compute-admin' },
                 { label: 'Bare metal nodes', href: '/compute-admin/bare-metal-nodes' },
                 { label: bareMetal.name },
               ]}
@@ -508,8 +508,6 @@ export function ComputeAdminBareMetalDetailPage() {
                       totalPages={1}
                       totalItems={mockAttachedInterfaces.length}
                       onPageChange={() => {}}
-                      showSettings
-                      onSettingsClick={() => setIsPreferencesOpen(true)}
                     />
 
                     {/* Table */}
@@ -630,8 +628,6 @@ export function ComputeAdminBareMetalDetailPage() {
                       totalPages={actionLogTotalPages}
                       onPageChange={setActionLogCurrentPage}
                       totalItems={filteredActionLogs.length}
-                      showSettings
-                      onSettingsClick={() => setIsPreferencesOpen(true)}
                     />
 
                     {/* Action Logs Table */}

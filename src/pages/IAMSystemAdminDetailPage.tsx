@@ -519,7 +519,6 @@ export default function IAMSystemAdminDetailPage() {
                       currentPage={sessionsCurrentPage}
                       totalPages={sessionsTotalPages || 1}
                       onPageChange={setSessionsCurrentPage}
-                      showSettings
                       totalItems={filteredSessions.length}
                     />
 

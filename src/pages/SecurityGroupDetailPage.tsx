@@ -478,8 +478,6 @@ export default function SecurityGroupDetailPage() {
                         totalItems={filteredRules.length}
                         selectedCount={selectedRules.length}
                         onPageChange={setRuleCurrentPage}
-                        showSettings
-                        onSettingsClick={() => setIsPreferencesOpen(true)}
                       />
 
                       {/* Table */}

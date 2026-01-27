@@ -454,8 +454,6 @@ export function FlavorDetailPage() {
                         totalPages={instanceTotalPages}
                         onPageChange={setInstanceCurrentPage}
                       totalItems={filteredInstances.length}
-                      showSettings
-                      onSettingsClick={() => setIsPreferencesOpen(true)}
                       />
 
                     {/* Instances Table */}

@@ -677,8 +677,6 @@ export default function PortDetailPage() {
                           onPageChange={setFixedIpCurrentPage}
                           totalItems={filteredFixedIPs.length}
                           selectedCount={selectedFixedIPs.length}
-                          showSettings
-                          onSettingsClick={() => setIsPreferencesOpen(true)}
                         />
                       </div>
 
@@ -725,8 +723,6 @@ export default function PortDetailPage() {
                           onPageChange={setAapCurrentPage}
                           totalItems={filteredAaps.length}
                           selectedCount={selectedAaps.length}
-                          showSettings
-                          onSettingsClick={() => setIsPreferencesOpen(true)}
                         />
                       </div>
 
@@ -774,8 +770,6 @@ export default function PortDetailPage() {
                           onPageChange={setSgCurrentPage}
                           totalItems={filteredSgs.length}
                           selectedCount={selectedSgs.length}
-                          showSettings
-                          onSettingsClick={() => setIsPreferencesOpen(true)}
                         />
                       </div>
 

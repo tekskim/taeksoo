@@ -21,7 +21,7 @@ import {
   type ContextMenuItem,
 } from '@/design-system';
 import { Link } from 'react-router-dom';
-import { Sidebar } from '@/components/Sidebar';
+import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
   IconTerminal2,
@@ -535,7 +535,7 @@ export function ComputeAdminInstanceDetailPage() {
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       {/* Sidebar */}
-      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
+      <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
 
       {/* Main Content */}
       <main className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${sidebarOpen ? 'left-[200px]' : 'left-0'}`}>
@@ -560,7 +560,7 @@ export function ComputeAdminInstanceDetailPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'Proj-1', href: '/project' },
+                { label: 'Compute Admin', href: '/compute-admin' },
                 { label: 'Instances list', href: '/compute-admin/instances' },
                 { label: instance.name },
               ]}
@@ -786,8 +786,6 @@ export function ComputeAdminInstanceDetailPage() {
                       totalPages={1}
                       totalItems={10}
                       onPageChange={() => {}}
-                      showSettings
-                      onSettingsClick={() => setIsPreferencesOpen(true)}
                     />
 
                     {/* Table */}
@@ -871,8 +869,6 @@ export function ComputeAdminInstanceDetailPage() {
                       totalPages={interfaceTotalPages}
                       onPageChange={setInterfaceCurrentPage}
                       totalItems={mockAttachedInterfaces.length}
-                      showSettings
-                      onSettingsClick={() => setIsPreferencesOpen(true)}
                     />
 
                     {/* Table */}
@@ -982,8 +978,6 @@ export function ComputeAdminInstanceDetailPage() {
                       totalPages={floatingIpTotalPages}
                       onPageChange={setFloatingIpCurrentPage}
                       totalItems={mockFloatingIPs.length}
-                      showSettings
-                      onSettingsClick={() => setIsPreferencesOpen(true)}
                     />
 
                     {/* Table */}
@@ -1061,8 +1055,6 @@ export function ComputeAdminInstanceDetailPage() {
                       totalPages={securityTotalPages}
                       onPageChange={setSecurityCurrentPage}
                       totalItems={mockSecurityGroups.length}
-                      showSettings
-                      onSettingsClick={() => setIsPreferencesOpen(true)}
                     />
 
                     {/* Table */}
@@ -1132,8 +1124,6 @@ export function ComputeAdminInstanceDetailPage() {
                       totalPages={snapshotTotalPages}
                       onPageChange={setSnapshotCurrentPage}
                       totalItems={filteredSnapshots.length}
-                      showSettings
-                      onSettingsClick={() => setIsPreferencesOpen(true)}
                     />
 
                     {/* Table */}
@@ -1330,8 +1320,6 @@ export function ComputeAdminInstanceDetailPage() {
                       totalPages={actionLogTotalPages}
                       onPageChange={setActionLogCurrentPage}
                       totalItems={filteredActionLogs.length}
-                      showSettings
-                      onSettingsClick={() => setIsPreferencesOpen(true)}
                     />
 
                     {/* Action Logs Table */}

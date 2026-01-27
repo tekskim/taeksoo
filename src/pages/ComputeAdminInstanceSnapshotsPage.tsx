@@ -373,7 +373,7 @@ export function ComputeAdminInstanceSnapshotsPage() {
           breadcrumb={
             <Breadcrumb
               items={[
-                { label: 'Proj-1', href: '/project' },
+                { label: 'Compute Admin', href: '/compute-admin' },
                 { label: 'Instance snapshots' },
               ]}
             />

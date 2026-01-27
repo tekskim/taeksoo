@@ -23,7 +23,7 @@ import {
   type FilterItem,
   type ContextMenuItem,
 } from '@/design-system';
-import { Sidebar } from '@/components/Sidebar';
+import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
 import {
@@ -795,7 +795,7 @@ export function ComputeAdminInstanceListPage() {
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       {/* Sidebar */}
-      <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
+      <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
 
       {/* Main Content */}
       <main 
@@ -825,7 +825,7 @@ export function ComputeAdminInstanceListPage() {
             breadcrumb={
               <Breadcrumb
                 items={[
-                  { label: 'Proj-1', href: '/compute' },
+                  { label: 'Compute Admin', href: '/compute-admin' },
                   { label: 'Instances list' },
                 ]}
               />

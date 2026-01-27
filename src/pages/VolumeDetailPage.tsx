@@ -572,8 +572,6 @@ export function VolumeDetailPage() {
                         totalPages={snapshotTotalPages}
                         onPageChange={setSnapshotCurrentPage}
                       totalItems={filteredSnapshots.length}
-                      showSettings
-                      onSettingsClick={() => setIsPreferencesOpen(true)}
                       />
 
                     {/* Snapshots Table */}
@@ -626,8 +624,6 @@ export function VolumeDetailPage() {
                         totalPages={backupTotalPages}
                         onPageChange={setBackupCurrentPage}
                       totalItems={filteredBackups.length}
-                      showSettings
-                      onSettingsClick={() => setIsPreferencesOpen(true)}
                       />
 
                     {/* Backups Table */}
