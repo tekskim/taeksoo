@@ -17,23 +17,12 @@ import {
   StatusIndicator,
   SearchInput,
   Pagination,
-  ContextMenu,
+  Badge,
   type TableColumn,
-  type ContextMenuItem,
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconLink,
-  IconTrash,
-  IconBell,
-  IconExternalLink,
-  IconDotsCircleHorizontal,
-  IconChevronDown,
-  IconCirclePlus,
-  IconEdit,
-  IconSettings,
-} from '@tabler/icons-react';
+import { IconTrash, IconBell, IconEdit, IconDownload } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -69,6 +58,8 @@ interface Port {
   fixedIp: string;
   macAddress: string;
   type: string;
+  adminState: 'Up' | 'Down';
+  createdAt: string;
 }
 
 interface StaticRoute {
@@ -280,6 +271,8 @@ const mockPorts: Port[] = Array.from({ length: 115 }, (_, i) => ({
   fixedIp: `10.62.0.${i + 1}`,
   macAddress: `fa:16:3e:${String(i + 1).padStart(2, '0')}:ab:cd`,
   type: i % 2 === 0 ? 'Internal Interface' : 'External Interface',
+  adminState: i % 5 === 0 ? ('Down' as const) : ('Up' as const),
+  createdAt: `Dec ${15 - (i % 15)}, 2025`,
 }));
 
 const mockStaticRoutes: StaticRoute[] = Array.from({ length: 115 }, (_, i) => ({
@@ -429,23 +422,18 @@ export default function RouterDetailPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5 min-w-0">
-          <div className="flex items-center gap-1">
-            <Link
-              to={`/compute-admin/ports/${row.id}`}
-              className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {row.name}
-            </Link>
-            <IconExternalLink
-              size={12}
-              className="flex-shrink-0 text-[var(--color-action-primary)]"
-            />
-          </div>
+          <Link
+            to={`/compute-admin/ports/${row.id}`}
+            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.name}
+          </Link>
           <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] truncate">
-            ID : {row.id}
+            ID: {row.id}
           </span>
         </div>
       ),
@@ -466,33 +454,36 @@ export default function RouterDetailPage() {
       flex: 1,
     },
     {
+      key: 'adminState',
+      label: 'Admin State',
+      flex: 1,
+      render: (value: 'Up' | 'Down') => (
+        <Badge variant={value === 'Up' ? 'success' : 'error'} size="sm">
+          {value}
+        </Badge>
+      ),
+    },
+    {
+      key: 'createdAt',
+      label: 'Created At',
+      flex: 1,
+      sortable: true,
+    },
+    {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: '72px',
       align: 'center',
-      render: (_: unknown, row: Port) => {
-        const portMenuItems: ContextMenuItem[] = [
-          {
-            id: 'disconnect',
-            label: 'Disconnect',
-            status: 'danger',
-            onClick: () => console.log('Disconnect port', row.id),
-          },
-        ];
-        return (
-          <div onClick={(e) => e.stopPropagation()}>
-            <ContextMenu items={portMenuItems} trigger="click">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                <IconDotsCircleHorizontal
-                  size={16}
-                  stroke={1.5}
-                  className="text-[var(--action-icon-color)]"
-                />
-              </button>
-            </ContextMenu>
-          </div>
-        );
-      },
+      render: (_: unknown, row: Port) => (
+        <div onClick={(e) => e.stopPropagation()}>
+          <button
+            className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors"
+            onClick={() => console.log('Delete port', row.id)}
+          >
+            <IconTrash size={16} stroke={1.5} className="text-[var(--color-state-danger)]" />
+          </button>
+        </div>
+      ),
     },
   ];
 
@@ -512,31 +503,18 @@ export default function RouterDetailPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: '72px',
       align: 'center',
-      render: (_: unknown, row: StaticRoute) => {
-        const routeMenuItems: ContextMenuItem[] = [
-          {
-            id: 'delete',
-            label: 'Delete',
-            status: 'danger',
-            onClick: () => console.log('Delete route', row.id),
-          },
-        ];
-        return (
-          <div onClick={(e) => e.stopPropagation()}>
-            <ContextMenu items={routeMenuItems} trigger="click">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                <IconDotsCircleHorizontal
-                  size={16}
-                  stroke={1.5}
-                  className="text-[var(--action-icon-color)]"
-                />
-              </button>
-            </ContextMenu>
-          </div>
-        );
-      },
+      render: (_: unknown, row: StaticRoute) => (
+        <div onClick={(e) => e.stopPropagation()}>
+          <button
+            className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors"
+            onClick={() => console.log('Delete route', row.id)}
+          >
+            <IconTrash size={16} stroke={1.5} className="text-[var(--color-state-danger)]" />
+          </button>
+        </div>
+      ),
     },
   ];
 
@@ -590,27 +568,12 @@ export default function RouterDetailPage() {
               <DetailHeader>
                 <DetailHeader.Title>{router.name}</DetailHeader.Title>
                 <DetailHeader.Actions>
-                  <Button variant="secondary" size="sm" leftIcon={<IconLink size={12} />}>
-                    Connect subnet
+                  <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+                    Edit
                   </Button>
                   <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
                     Delete
                   </Button>
-                  <ContextMenu
-                    items={[
-                      { label: 'Disconnect subnet', onClick: () => {}, variant: 'danger' },
-                      { label: 'External gateway Setting', onClick: () => {} },
-                      { label: 'Enable SNAT', onClick: () => {} },
-                      { label: 'Disable SNAT', onClick: () => {} },
-                      { label: 'Create static Route', onClick: () => {} },
-                      { label: 'Edit', onClick: () => {} },
-                    ]}
-                    trigger="click"
-                  >
-                    <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-                      More Actions
-                    </Button>
-                  </ContextMenu>
                 </DetailHeader.Actions>
                 <DetailHeader.InfoGrid>
                   <DetailHeader.InfoCard
@@ -619,8 +582,8 @@ export default function RouterDetailPage() {
                     status={routerStatusMap[router.status]}
                   />
                   <DetailHeader.InfoCard label="ID" value={router.id} copyable />
-                  <DetailHeader.InfoCard label="Admin state" value={router.adminState} />
-                  <DetailHeader.InfoCard label="Access" value={router.access} />
+                  <DetailHeader.InfoCard label="Tenant" value="tenantA" />
+                  <DetailHeader.InfoCard label="Admin State" value={router.adminState} />
                   <DetailHeader.InfoCard
                     label="External gateway"
                     value={router.externalGateway ? 'Yes' : 'No'}
@@ -658,32 +621,14 @@ export default function RouterDetailPage() {
                         />
                         <SectionCard.Content>
                           <SectionCard.DataRow label="Router name" value={router.routerName} />
-                          <SectionCard.DataRow
-                            label="AZ(Availability zone)"
-                            value={router.availabilityZone}
-                          />
-                          <SectionCard.DataRow
-                            label="AZ(Availability zone) Hint"
-                            value={router.availabilityZoneHint}
-                          />
                           <SectionCard.DataRow label="Description" value={router.description} />
+                          <SectionCard.DataRow label="Admin State" value={router.adminState} />
                         </SectionCard.Content>
                       </SectionCard>
 
                       {/* External network */}
                       <SectionCard>
-                        <SectionCard.Header
-                          title="External network"
-                          actions={
-                            <Button
-                              variant="secondary"
-                              size="sm"
-                              leftIcon={<IconSettings size={12} />}
-                            >
-                              Setting
-                            </Button>
-                          }
-                        />
+                        <SectionCard.Header title="External network" />
                         <SectionCard.Content>
                           <SectionCard.DataRow
                             label="Network"
@@ -691,33 +636,28 @@ export default function RouterDetailPage() {
                               router.network ? (
                                 <Link
                                   to={`/compute-admin/networks/${router.network.id}`}
-                                  className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                                  className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                                 >
                                   {router.network.name}
-                                  <IconExternalLink
-                                    size={12}
-                                    className="text-[var(--color-action-primary)]"
-                                  />
                                 </Link>
                               ) : (
                                 '-'
                               )
                             }
                           />
-                          <SectionCard.DataRow label="SNAT" value={router.snat ? 'Yes' : 'No'} />
+                          <SectionCard.DataRow
+                            label="SNAT"
+                            value={router.snat ? 'Enabled' : 'Disabled'}
+                          />
                           <SectionCard.DataRow
                             label="Subnet"
                             value={
                               router.subnet ? (
                                 <Link
                                   to={`/compute-admin/subnets/${router.subnet.id}`}
-                                  className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                                  className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                                 >
                                   {router.subnet.name}
-                                  <IconExternalLink
-                                    size={12}
-                                    className="text-[var(--color-action-primary)]"
-                                  />
                                 </Link>
                               ) : (
                                 '-'
@@ -738,13 +678,6 @@ export default function RouterDetailPage() {
                         <h3 className="text-[16px] leading-[24px] font-semibold text-[var(--color-text-default)]">
                           Ports
                         </h3>
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          leftIcon={<IconCirclePlus size={12} />}
-                        >
-                          Connect subnet
-                        </Button>
                       </div>
 
                       {/* Action Bar */}
@@ -759,14 +692,21 @@ export default function RouterDetailPage() {
                             placeholder="Search interface by attributes"
                           />
                         </div>
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          iconOnly
+                          icon={<IconDownload size={12} />}
+                          aria-label="Download"
+                        />
                         <div className="h-4 w-px bg-[var(--color-border-default)]" />
                         <Button
                           variant="secondary"
                           size="sm"
-                          leftIcon={<IconLink size={12} />}
+                          leftIcon={<IconTrash size={12} />}
                           disabled={selectedPorts.length === 0}
                         >
-                          Disconnect
+                          Delete
                         </Button>
                       </div>
 
@@ -802,13 +742,6 @@ export default function RouterDetailPage() {
                         <h3 className="text-[16px] leading-[24px] font-semibold text-[var(--color-text-default)]">
                           Static Route
                         </h3>
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          leftIcon={<IconCirclePlus size={12} />}
-                        >
-                          Create static Route
-                        </Button>
                       </div>
 
                       {/* Action Bar */}
@@ -823,12 +756,19 @@ export default function RouterDetailPage() {
                             placeholder="Search static route by attributes"
                           />
                         </div>
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          iconOnly
+                          icon={<IconDownload size={12} />}
+                          aria-label="Download"
+                        />
                         <div className="h-4 w-px bg-[var(--color-border-default)]" />
                         <Button
                           variant="secondary"
                           size="sm"
                           leftIcon={<IconTrash size={12} />}
-                          disabled
+                          disabled={selectedRoutes.length === 0}
                         >
                           Delete
                         </Button>
