@@ -1,4 +1,1 @@
-export {
-  columnWidths,
-  type ColumnWidthKey,
-} from './columnWidths';
+export { columnWidths, type ColumnWidthKey } from './columnWidths';

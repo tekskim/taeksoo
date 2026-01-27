@@ -13,7 +13,6 @@ import {
   TabPanel,
   DetailHeader,
   SectionCard,
-  columnWidths,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -96,17 +95,17 @@ const defaultSnapshot: VolumeSnapshotDetail = {
    ---------------------------------------- */
 
 const statusDisplayMap: Record<SnapshotStatus, string> = {
-  'available': 'Available',
-  'creating': 'Creating',
-  'error': 'Error',
-  'deleting': 'Deleting',
+  available: 'Available',
+  creating: 'Creating',
+  error: 'Error',
+  deleting: 'Deleting',
 };
 
 const statusIndicatorMap: Record<SnapshotStatus, 'active' | 'building' | 'error' | 'pending'> = {
-  'available': 'active',
-  'creating': 'building',
-  'error': 'error',
-  'deleting': 'pending',
+  available: 'active',
+  creating: 'building',
+  error: 'error',
+  deleting: 'pending',
 };
 
 /* ----------------------------------------
@@ -118,12 +117,13 @@ export function VolumeSnapshotDetailPage() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeDetailTab, setActiveDetailTab] = useState('details');
-  
+
   // Get snapshot data based on the ID
   const snapshot = id && mockSnapshotDetails[id] ? mockSnapshotDetails[id] : defaultSnapshot;
 
   // Global tab management
-  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, addNewTab, updateActiveTabLabel, moveTab } =
+    useTabs();
 
   // Update tab label when snapshot name changes
   useEffect(() => {
@@ -191,7 +191,6 @@ export function VolumeSnapshotDetailPage() {
 
         {/* Scrollable Content Area */}
         <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
-
           {/* Page Content */}
           <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
             <VStack gap={6} className="min-w-[1176px]">
@@ -207,10 +206,10 @@ export function VolumeSnapshotDetailPage() {
                   </Button>
                 </DetailHeader.Actions>
                 <DetailHeader.InfoGrid>
-                  <DetailHeader.InfoCard 
-                    label="Status" 
-                    value={statusDisplayMap[snapshot.status]} 
-                    status={statusIndicatorMap[snapshot.status]} 
+                  <DetailHeader.InfoCard
+                    label="Status"
+                    value={statusDisplayMap[snapshot.status]}
+                    status={statusIndicatorMap[snapshot.status]}
                   />
                   <DetailHeader.InfoCard label="ID" value={snapshot.id} copyable />
                   <DetailHeader.InfoCard label="Size" value={snapshot.size} />
@@ -220,7 +219,12 @@ export function VolumeSnapshotDetailPage() {
 
               {/* Snapshot Tabs */}
               <div className="w-full">
-                <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline" size="sm">
+                <Tabs
+                  value={activeDetailTab}
+                  onChange={setActiveDetailTab}
+                  variant="underline"
+                  size="sm"
+                >
                   <TabList>
                     <Tab value="details">Details</Tab>
                   </TabList>
@@ -230,9 +234,13 @@ export function VolumeSnapshotDetailPage() {
                     <VStack gap={4} className="pt-4">
                       {/* Basic information */}
                       <SectionCard>
-                        <SectionCard.Header 
-                          title="Basic information" 
-                          actions={<Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>Edit</Button>}
+                        <SectionCard.Header
+                          title="Basic information"
+                          actions={
+                            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+                              Edit
+                            </Button>
+                          }
                         />
                         <SectionCard.Content>
                           <SectionCard.DataRow label="Volume snapshot name" value={snapshot.name} />
@@ -245,7 +253,7 @@ export function VolumeSnapshotDetailPage() {
                         <SectionCard.Header title="Source" />
                         <SectionCard.Content>
                           <SectionCard.DataRow label="Volume">
-                            <Link 
+                            <Link
                               to={`/compute/volumes/${snapshot.sourceVolumeId}`}
                               className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline"
                             >
@@ -274,6 +282,3 @@ export function VolumeSnapshotDetailPage() {
     </div>
   );
 }
-
-
-

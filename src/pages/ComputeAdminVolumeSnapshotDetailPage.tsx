@@ -199,7 +199,10 @@ export function ComputeAdminVolumeSnapshotDetailPage() {
                 <DetailHeader.Title>{snapshot.name}</DetailHeader.Title>
                 <DetailHeader.Actions>
                   <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                    Create volume
+                    Update status
+                  </Button>
+                  <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+                    Manage metadata
                   </Button>
                   <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
                     Delete
@@ -212,6 +215,8 @@ export function ComputeAdminVolumeSnapshotDetailPage() {
                     status={statusIndicatorMap[snapshot.status]}
                   />
                   <DetailHeader.InfoCard label="ID" value={snapshot.id} copyable />
+                  <DetailHeader.InfoCard label="Tenant" value="tenantA" />
+                  <DetailHeader.InfoCard label="Host" value="host" />
                   <DetailHeader.InfoCard label="Size" value={snapshot.size} />
                   <DetailHeader.InfoCard label="Created at" value={snapshot.createdAt} />
                 </DetailHeader.InfoGrid>

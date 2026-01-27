@@ -20,8 +20,7 @@ import {
   ContextMenu,
   columnWidths,
 } from '@/design-system';
-import type { TableColumn, ContextMenuItem
-} from '@/design-system';
+import type { TableColumn, ContextMenuItem } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
