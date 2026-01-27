@@ -41,6 +41,7 @@ import { FlavorsPage } from '@/pages/FlavorsPage';
 import { FlavorDetailPage } from '@/pages/FlavorDetailPage';
 import { ComputeAdminFlavorsPage } from '@/pages/ComputeAdminFlavorsPage';
 import { ComputeAdminFlavorDetailPage } from '@/pages/ComputeAdminFlavorDetailPage';
+import { ComputeAdminCreateFlavorPage } from '@/pages/ComputeAdminCreateFlavorPage';
 import { KeyPairsPage } from '@/pages/KeyPairsPage';
 import { KeyPairDetailPage } from '@/pages/KeyPairDetailPage';
 import { ServerGroupsPage } from '@/pages/ServerGroupsPage';
@@ -373,6 +374,7 @@ function AppRoutes() {
         <Route path="/compute-admin/images/create" element={<ComputeAdminCreateImagePage />} />
         <Route path="/compute-admin/images/:id" element={<ComputeAdminImageDetailPage />} />
         <Route path="/compute-admin/flavors" element={<ComputeAdminFlavorsPage />} />
+        <Route path="/compute-admin/flavors/create" element={<ComputeAdminCreateFlavorPage />} />
         <Route path="/compute-admin/flavors/:id" element={<ComputeAdminFlavorDetailPage />} />
         <Route path="/compute-admin/key-pairs" element={<KeyPairsPage />} />
         <Route path="/compute-admin/key-pairs/:id" element={<KeyPairDetailPage />} />

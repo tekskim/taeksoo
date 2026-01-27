@@ -106,8 +106,7 @@ export function ComputeAdminFlavorsPage() {
     { id: 'name', label: 'Name', visible: true, locked: true },
     { id: 'vcpu', label: 'vCPU', visible: true },
     { id: 'ram', label: 'RAM', visible: true },
-    { id: 'ephemeralDisk', label: 'Ephemeral disk', visible: true },
-    { id: 'internalNetworkBandwidth', label: 'Internal network Bandwidth', visible: true },
+    { id: 'ephemeralDisk', label: 'Root Disk', visible: true },
     { id: 'access', label: 'Access', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
@@ -166,13 +165,18 @@ export function ComputeAdminFlavorsPage() {
       flex: 1,
       sortable: true,
       render: (_, row) => (
-        <Link
-          to={`/compute-admin/flavors/${row.id}`}
-          className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {row.name}
-        </Link>
+        <div className="flex flex-col gap-0.5">
+          <Link
+            to={`/compute-admin/flavors/${row.id}`}
+            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.name}
+          </Link>
+          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+            ID : {row.id}
+          </span>
+        </div>
       ),
     },
     {
@@ -189,13 +193,7 @@ export function ComputeAdminFlavorsPage() {
     },
     {
       key: 'ephemeralDisk',
-      label: 'Ephemeral disk',
-      flex: 1,
-      sortable: true,
-    },
-    {
-      key: 'internalNetworkBandwidth',
-      label: 'Internal network Bandwidth',
+      label: 'Root Disk',
       flex: 1,
       sortable: true,
     },
@@ -229,7 +227,7 @@ export function ComputeAdminFlavorsPage() {
     {
       key: 'access',
       label: 'Public',
-      width: '100px',
+      flex: 1,
       render: (_, row) => (
         <span>{row.access === 'Public' ? 'On' : 'Off'}</span>
       ),
@@ -242,14 +240,20 @@ export function ComputeAdminFlavorsPage() {
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
           {
-            id: 'create-instance',
-            label: 'Create instance',
-            onClick: () => console.log('Create instance with flavor:', row.id),
+            id: 'manage-metadata',
+            label: 'Manage Metadata',
+            onClick: () => console.log('Manage metadata for flavor:', row.id),
           },
           {
-            id: 'create-instance-template',
-            label: 'Create instance template',
-            onClick: () => console.log('Create instance template with flavor:', row.id),
+            id: 'manage-access',
+            label: 'Manage Access',
+            onClick: () => console.log('Manage access for flavor:', row.id),
+          },
+          {
+            id: 'delete',
+            label: 'Delete',
+            status: 'danger',
+            onClick: () => console.log('Delete flavor:', row.id),
           },
         ];
         
@@ -357,6 +361,11 @@ export function ComputeAdminFlavorsPage() {
               <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
                 Flavors
               </h1>
+              <Link to="/compute-admin/flavors/create">
+                <Button size="md">
+                  Create Flavor
+                </Button>
+              </Link>
             </div>
 
             {/* Category Tabs */}
