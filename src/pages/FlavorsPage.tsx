@@ -23,11 +23,7 @@ import {
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
-import {
-  IconDotsCircleHorizontal,
-  IconDownload,
-  IconBell,
-} from '@tabler/icons-react';
+import { IconDotsCircleHorizontal, IconDownload, IconBell } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
@@ -59,21 +55,191 @@ interface Flavor {
    ---------------------------------------- */
 
 const mockFlavors: Flavor[] = [
-  { id: 'flv-001', name: 'c5.large', category: 'Compute Optimized', vcpu: 2, ram: '16GiB', ephemeralDisk: '0GiB', internalNetworkBandwidth: '-', access: 'Public', type: 'CPU' },
-  { id: 'flv-002', name: 'c5.xlarge', category: 'Compute Optimized', vcpu: 4, ram: '32GiB', ephemeralDisk: '0GiB', internalNetworkBandwidth: '10Gbps', access: 'Public', type: 'CPU' },
-  { id: 'flv-003', name: 'm5.large', category: 'General Purpose', vcpu: 2, ram: '8GiB', ephemeralDisk: '0GiB', internalNetworkBandwidth: '-', access: 'Public', type: 'CPU' },
-  { id: 'flv-004', name: 'm5.xlarge', category: 'General Purpose', vcpu: 4, ram: '16GiB', ephemeralDisk: '0GiB', internalNetworkBandwidth: '10Gbps', access: 'Public', type: 'CPU' },
-  { id: 'flv-005', name: 'r5.large', category: 'Memory Optimized', vcpu: 2, ram: '16GiB', ephemeralDisk: '0GiB', internalNetworkBandwidth: '-', access: 'Public', type: 'CPU' },
-  { id: 'flv-006', name: 'r5.xlarge', category: 'Memory Optimized', vcpu: 4, ram: '32GiB', ephemeralDisk: '0GiB', internalNetworkBandwidth: '10Gbps', access: 'Public', type: 'CPU' },
-  { id: 'flv-007', name: 't3.micro', category: 'Burstable', vcpu: 2, ram: '1GiB', ephemeralDisk: '0GiB', internalNetworkBandwidth: '-', access: 'Public', type: 'CPU' },
-  { id: 'flv-008', name: 't3.small', category: 'Burstable', vcpu: 2, ram: '2GiB', ephemeralDisk: '0GiB', internalNetworkBandwidth: '-', access: 'Public', type: 'CPU' },
-  { id: 'flv-009', name: 'g4dn.xlarge', category: 'GPU Accelerated', vcpu: 4, ram: '16GiB', ephemeralDisk: '125GiB', internalNetworkBandwidth: '25Gbps', access: 'Public', type: 'GPU', gpuType: 'NVIDIA T4', numaNodes: '1', cpuPolicy: 'Dedicated', cpuThreadPolicy: 'Prefer' },
-  { id: 'flv-010', name: 'g4dn.2xlarge', category: 'GPU Accelerated', vcpu: 8, ram: '32GiB', ephemeralDisk: '225GiB', internalNetworkBandwidth: '25Gbps', access: 'Public', type: 'GPU', gpuType: 'NVIDIA T4', numaNodes: '2', cpuPolicy: 'Dedicated', cpuThreadPolicy: 'Isolate' },
-  { id: 'flv-011', name: 'p3.2xlarge', category: 'GPU Compute', vcpu: 8, ram: '61GiB', ephemeralDisk: '0GiB', internalNetworkBandwidth: '10Gbps', access: 'Public', type: 'GPU', gpuType: 'NVIDIA V100', numaNodes: '2', cpuPolicy: 'Shared', cpuThreadPolicy: 'Require' },
-  { id: 'flv-012', name: 'inf1.xlarge', category: 'ML Inference', vcpu: 4, ram: '8GiB', ephemeralDisk: '0GiB', internalNetworkBandwidth: '25Gbps', access: 'Public', type: 'MPU', gpuType: 'AWS Inferentia', numaNodes: '1', cpuPolicy: 'Dedicated', cpuThreadPolicy: 'Prefer' },
-  { id: 'flv-013', name: 'inf1.2xlarge', category: 'ML Inference', vcpu: 8, ram: '16GiB', ephemeralDisk: '0GiB', internalNetworkBandwidth: '25Gbps', access: 'Public', type: 'MPU', gpuType: 'AWS Inferentia', numaNodes: '2', cpuPolicy: 'Shared', cpuThreadPolicy: 'Isolate' },
-  { id: 'flv-014', name: 'custom.small', category: 'Custom', vcpu: 2, ram: '4GiB', ephemeralDisk: '20GiB', internalNetworkBandwidth: '-', access: 'Private', type: 'Custom' },
-  { id: 'flv-015', name: 'custom.medium', category: 'Custom', vcpu: 4, ram: '8GiB', ephemeralDisk: '50GiB', internalNetworkBandwidth: '10Gbps', access: 'Private', type: 'Custom' },
+  {
+    id: 'flv-001',
+    name: 'c5.large',
+    category: 'Compute Optimized',
+    vcpu: 2,
+    ram: '16GiB',
+    ephemeralDisk: '0GiB',
+    internalNetworkBandwidth: '-',
+    access: 'Public',
+    type: 'CPU',
+  },
+  {
+    id: 'flv-002',
+    name: 'c5.xlarge',
+    category: 'Compute Optimized',
+    vcpu: 4,
+    ram: '32GiB',
+    ephemeralDisk: '0GiB',
+    internalNetworkBandwidth: '10Gbps',
+    access: 'Public',
+    type: 'CPU',
+  },
+  {
+    id: 'flv-003',
+    name: 'm5.large',
+    category: 'General Purpose',
+    vcpu: 2,
+    ram: '8GiB',
+    ephemeralDisk: '0GiB',
+    internalNetworkBandwidth: '-',
+    access: 'Public',
+    type: 'CPU',
+  },
+  {
+    id: 'flv-004',
+    name: 'm5.xlarge',
+    category: 'General Purpose',
+    vcpu: 4,
+    ram: '16GiB',
+    ephemeralDisk: '0GiB',
+    internalNetworkBandwidth: '10Gbps',
+    access: 'Public',
+    type: 'CPU',
+  },
+  {
+    id: 'flv-005',
+    name: 'r5.large',
+    category: 'Memory Optimized',
+    vcpu: 2,
+    ram: '16GiB',
+    ephemeralDisk: '0GiB',
+    internalNetworkBandwidth: '-',
+    access: 'Public',
+    type: 'CPU',
+  },
+  {
+    id: 'flv-006',
+    name: 'r5.xlarge',
+    category: 'Memory Optimized',
+    vcpu: 4,
+    ram: '32GiB',
+    ephemeralDisk: '0GiB',
+    internalNetworkBandwidth: '10Gbps',
+    access: 'Public',
+    type: 'CPU',
+  },
+  {
+    id: 'flv-007',
+    name: 't3.micro',
+    category: 'Burstable',
+    vcpu: 2,
+    ram: '1GiB',
+    ephemeralDisk: '0GiB',
+    internalNetworkBandwidth: '-',
+    access: 'Public',
+    type: 'CPU',
+  },
+  {
+    id: 'flv-008',
+    name: 't3.small',
+    category: 'Burstable',
+    vcpu: 2,
+    ram: '2GiB',
+    ephemeralDisk: '0GiB',
+    internalNetworkBandwidth: '-',
+    access: 'Public',
+    type: 'CPU',
+  },
+  {
+    id: 'flv-009',
+    name: 'g4dn.xlarge',
+    category: 'GPU Accelerated',
+    vcpu: 4,
+    ram: '16GiB',
+    ephemeralDisk: '125GiB',
+    internalNetworkBandwidth: '25Gbps',
+    access: 'Public',
+    type: 'GPU',
+    gpuType: 'NVIDIA T4',
+    numaNodes: '1',
+    cpuPolicy: 'Dedicated',
+    cpuThreadPolicy: 'Prefer',
+  },
+  {
+    id: 'flv-010',
+    name: 'g4dn.2xlarge',
+    category: 'GPU Accelerated',
+    vcpu: 8,
+    ram: '32GiB',
+    ephemeralDisk: '225GiB',
+    internalNetworkBandwidth: '25Gbps',
+    access: 'Public',
+    type: 'GPU',
+    gpuType: 'NVIDIA T4',
+    numaNodes: '2',
+    cpuPolicy: 'Dedicated',
+    cpuThreadPolicy: 'Isolate',
+  },
+  {
+    id: 'flv-011',
+    name: 'p3.2xlarge',
+    category: 'GPU Compute',
+    vcpu: 8,
+    ram: '61GiB',
+    ephemeralDisk: '0GiB',
+    internalNetworkBandwidth: '10Gbps',
+    access: 'Public',
+    type: 'GPU',
+    gpuType: 'NVIDIA V100',
+    numaNodes: '2',
+    cpuPolicy: 'Shared',
+    cpuThreadPolicy: 'Require',
+  },
+  {
+    id: 'flv-012',
+    name: 'inf1.xlarge',
+    category: 'ML Inference',
+    vcpu: 4,
+    ram: '8GiB',
+    ephemeralDisk: '0GiB',
+    internalNetworkBandwidth: '25Gbps',
+    access: 'Public',
+    type: 'MPU',
+    gpuType: 'AWS Inferentia',
+    numaNodes: '1',
+    cpuPolicy: 'Dedicated',
+    cpuThreadPolicy: 'Prefer',
+  },
+  {
+    id: 'flv-013',
+    name: 'inf1.2xlarge',
+    category: 'ML Inference',
+    vcpu: 8,
+    ram: '16GiB',
+    ephemeralDisk: '0GiB',
+    internalNetworkBandwidth: '25Gbps',
+    access: 'Public',
+    type: 'MPU',
+    gpuType: 'AWS Inferentia',
+    numaNodes: '2',
+    cpuPolicy: 'Shared',
+    cpuThreadPolicy: 'Isolate',
+  },
+  {
+    id: 'flv-014',
+    name: 'custom.small',
+    category: 'Custom',
+    vcpu: 2,
+    ram: '4GiB',
+    ephemeralDisk: '20GiB',
+    internalNetworkBandwidth: '-',
+    access: 'Private',
+    type: 'Custom',
+  },
+  {
+    id: 'flv-015',
+    name: 'custom.medium',
+    category: 'Custom',
+    vcpu: 4,
+    ram: '8GiB',
+    ephemeralDisk: '50GiB',
+    internalNetworkBandwidth: '10Gbps',
+    access: 'Private',
+    type: 'Custom',
+  },
 ];
 
 /* ----------------------------------------
@@ -84,10 +250,15 @@ const mockFlavors: Flavor[] = [
 const filterFields: FilterField[] = [
   { key: 'name', label: 'Name', type: 'text' },
   { key: 'category', label: 'Category', type: 'text' },
-  { key: 'access', label: 'Access', type: 'select', options: [
-    { value: 'Public', label: 'Public' },
-    { value: 'Private', label: 'Private' },
-  ]},
+  {
+    key: 'access',
+    label: 'Access',
+    type: 'select',
+    options: [
+      { value: 'Public', label: 'Public' },
+      { value: 'Private', label: 'Private' },
+    ],
+  },
 ];
 
 export function FlavorsPage() {
@@ -162,129 +333,134 @@ export function FlavorsPage() {
   const totalPages = Math.ceil(filteredFlavors.length / rowsPerPage);
 
   // Table columns (using columnWidths preset)
-  const columns: TableColumn<Flavor>[] = useMemo(() => [
-    {
-      key: 'name',
-      label: 'Name',
-      flex: 1,
-      sortable: true,
-      render: (_, row) => (
-        <Link
-          to={`/compute/flavors/${row.id}`}
-          className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {row.name}
-        </Link>
-      ),
-    },
-    {
-      key: 'category',
-      label: 'Category',
-      flex: 1,
-      minWidth: '120px',
-      sortable: true,
-    },
-    {
-      key: 'vcpu',
-      label: 'vCPU',
-      width: columnWidths.vcpu,
-      sortable: true,
-    },
-    {
-      key: 'ram',
-      label: 'RAM',
-      width: columnWidths.ram,
-      sortable: true,
-    },
-    {
-      key: 'ephemeralDisk',
-      label: 'Ephemeral disk',
-      width: columnWidths.ephemeralDisk,
-      sortable: true,
-    },
-    {
-      key: 'internalNetworkBandwidth',
-      label: 'Internal network Bandwidth',
-      flex: 1,
-      minWidth: '160px',
-      sortable: true,
-    },
-    // GPU/MPU-specific columns (only shown when GPU or MPU tab is active)
-    ...((activeTab === 'gpu' || activeTab === 'mpu') ? [
+  const columns: TableColumn<Flavor>[] = useMemo(
+    () => [
       {
-        key: 'gpuType',
-        label: 'GPU Type',
-        width: columnWidths.gpuType,
+        key: 'name',
+        label: 'Name',
+        flex: 1,
+        sortable: true,
+        render: (_, row) => (
+          <Link
+            to={`/compute/flavors/${row.id}`}
+            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.name}
+          </Link>
+        ),
+      },
+      {
+        key: 'category',
+        label: 'Category',
+        flex: 1,
+        minWidth: '120px',
         sortable: true,
       },
       {
-        key: 'numaNodes',
-        label: 'NUMA Nodes',
-        width: columnWidths.numaNodes,
+        key: 'vcpu',
+        label: 'vCPU',
+        width: columnWidths.vcpu,
         sortable: true,
       },
       {
-        key: 'cpuPolicy',
-        label: 'CPU Policy',
-        width: columnWidths.cpuPolicy,
+        key: 'ram',
+        label: 'RAM',
+        width: columnWidths.ram,
         sortable: true,
       },
       {
-        key: 'cpuThreadPolicy',
-        label: 'CPU Thread Policy',
-        width: columnWidths.cpuThreadPolicy,
+        key: 'ephemeralDisk',
+        label: 'Ephemeral disk',
+        width: columnWidths.ephemeralDisk,
         sortable: true,
       },
-    ] as TableColumn<Flavor>[] : []),
-    {
-      key: 'access',
-      label: 'Public',
-      width: columnWidths.access,
-      render: (_, row) => (
-        <span>{row.access === 'Public' ? 'On' : 'Off'}</span>
-      ),
-    },
-    {
-      key: 'actions',
-      label: 'Action',
-      width: columnWidths.actions,
-      align: 'center',
-      render: (_, row) => {
-        const menuItems: ContextMenuItem[] = [
-          {
-            id: 'create-instance',
-            label: 'Create instance',
-            onClick: () => console.log('Create instance with flavor:', row.id),
-          },
-          {
-            id: 'create-instance-template',
-            label: 'Create instance template',
-            onClick: () => console.log('Create instance template with flavor:', row.id),
-          },
-        ];
-        
-        return (
-          <div onClick={(e) => e.stopPropagation()}>
-            <ContextMenu items={menuItems} trigger="click">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                <IconDotsCircleHorizontal size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
-              </button>
-            </ContextMenu>
-          </div>
-        );
+      {
+        key: 'internalNetworkBandwidth',
+        label: 'Internal network Bandwidth',
+        flex: 1,
+        minWidth: '160px',
+        sortable: true,
       },
-    },
-  ], [activeTab]);
+      // GPU/MPU-specific columns (only shown when GPU or MPU tab is active)
+      ...(activeTab === 'gpu' || activeTab === 'mpu'
+        ? ([
+            {
+              key: 'gpuType',
+              label: 'GPU Type',
+              width: columnWidths.gpuType,
+              sortable: true,
+            },
+            {
+              key: 'numaNodes',
+              label: 'NUMA Nodes',
+              width: columnWidths.numaNodes,
+              sortable: true,
+            },
+            {
+              key: 'cpuPolicy',
+              label: 'CPU Policy',
+              width: columnWidths.cpuPolicy,
+              sortable: true,
+            },
+            {
+              key: 'cpuThreadPolicy',
+              label: 'CPU Thread Policy',
+              width: columnWidths.cpuThreadPolicy,
+              sortable: true,
+            },
+          ] as TableColumn<Flavor>[])
+        : []),
+      {
+        key: 'access',
+        label: 'Public',
+        width: columnWidths.access,
+        render: (_, row) => <span>{row.access === 'Public' ? 'On' : 'Off'}</span>,
+      },
+      {
+        key: 'actions',
+        label: 'Action',
+        width: columnWidths.actions,
+        align: 'center',
+        render: (_, row) => {
+          const menuItems: ContextMenuItem[] = [
+            {
+              id: 'create-instance',
+              label: 'Create instance',
+              onClick: () => console.log('Create instance with flavor:', row.id),
+            },
+            {
+              id: 'create-instance-template',
+              label: 'Create instance template',
+              onClick: () => console.log('Create instance template with flavor:', row.id),
+            },
+          ];
+
+          return (
+            <div onClick={(e) => e.stopPropagation()}>
+              <ContextMenu items={menuItems} trigger="click">
+                <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
+                  <IconDotsCircleHorizontal
+                    size={16}
+                    stroke={1.5}
+                    className="text-[var(--action-icon-color)]"
+                  />
+                </button>
+              </ContextMenu>
+            </div>
+          );
+        },
+      },
+    ],
+    [activeTab]
+  );
 
   // Filter and order columns based on preferences
   const visibleColumns = useMemo(() => {
     // GPU-specific column keys that should always show when GPU tab is active
     const gpuColumnKeys = ['gpuType', 'numaNodes', 'cpuPolicy', 'cpuThreadPolicy'];
-    
-    const visibleColumnIds = columnConfig
-      .filter((col) => col.visible)
-      .map((col) => col.id);
+
+    const visibleColumnIds = columnConfig.filter((col) => col.visible).map((col) => col.id);
 
     const columnMap = new Map(columns.map((col) => [col.key, col]));
 
@@ -292,13 +468,13 @@ export function FlavorsPage() {
     const baseColumns = visibleColumnIds
       .map((id) => columnMap.get(id))
       .filter((col): col is TableColumn<Flavor> => col !== undefined);
-    
+
     // If GPU or MPU tab is active, insert GPU columns before the 'access' column
     if (activeTab === 'gpu' || activeTab === 'mpu') {
       const gpuColumns = gpuColumnKeys
         .map((key) => columnMap.get(key))
         .filter((col): col is TableColumn<Flavor> => col !== undefined);
-      
+
       const accessIndex = baseColumns.findIndex((col) => col.key === 'access');
       if (accessIndex !== -1) {
         baseColumns.splice(accessIndex, 0, ...gpuColumns);
@@ -306,13 +482,13 @@ export function FlavorsPage() {
         baseColumns.push(...gpuColumns);
       }
     }
-    
+
     return baseColumns;
   }, [columns, columnConfig, activeTab]);
 
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(prev => !prev)} />
+      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
 
       <main
         className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
@@ -321,103 +497,106 @@ export function FlavorsPage() {
       >
         {/* Fixed Header Area */}
         <div className="shrink-0 bg-[var(--color-surface-default)]">
-        {/* Tab Bar */}
-        <TabBar
-          tabs={tabBarTabs}
-          activeTab={activeTabId}
-          onTabChange={selectTab}
-          onTabClose={closeTab}
-          onTabAdd={addNewTab}
+          {/* Tab Bar */}
+          <TabBar
+            tabs={tabBarTabs}
+            activeTab={activeTabId}
+            onTabChange={selectTab}
+            onTabClose={closeTab}
+            onTabAdd={addNewTab}
             onTabReorder={moveTab}
-          showAddButton={true}
-          showWindowControls={true}
-        />
+            showAddButton={true}
+            showWindowControls={true}
+          />
 
-        {/* Top Bar */}
-        <TopBar
-          showSidebarToggle={!sidebarOpen}
-          onSidebarToggle={() => setSidebarOpen(true)}
-          showNavigation={true}
-          onBack={() => window.history.back()}
-          onForward={() => window.history.forward()}
-          breadcrumb={
-            <Breadcrumb
-              items={[
-                { label: 'Proj-1', href: '/project' },
-                { label: 'Flavors' },
-              ]}
-            />
-          }
-          actions={
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1} />}
-              aria-label="Notifications"
-              badge={true}
-            />
-          }
-        />
+          {/* Top Bar */}
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
+            onSidebarToggle={() => setSidebarOpen(true)}
+            showNavigation={true}
+            onBack={() => window.history.back()}
+            onForward={() => window.history.forward()}
+            breadcrumb={
+              <Breadcrumb items={[{ label: 'Proj-1', href: '/project' }, { label: 'Flavors' }]} />
+            }
+            actions={
+              <TopBarAction
+                icon={<IconBell size={16} stroke={1} />}
+                aria-label="Notifications"
+                badge={true}
+              />
+            }
+          />
         </div>
 
         {/* Scrollable Content Area */}
         <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
-        {/* Page Content */}
-        <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
-          <VStack gap={3}>
-            {/* Page Header */}
-            <div className="flex items-center justify-between h-8">
-              <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
-                Flavors
-              </h1>
-            </div>
+          {/* Page Content */}
+          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
+            <VStack gap={3}>
+              {/* Page Header */}
+              <div className="flex items-center justify-between h-8">
+                <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
+                  Flavors
+                </h1>
+              </div>
 
-            {/* Category Tabs */}
-            <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
-              <TabList>
-                <Tab value="cpu">CPU</Tab>
-                <Tab value="gpu">GPU</Tab>
-                <Tab value="mpu">MPU</Tab>
-                <Tab value="custom">Custom</Tab>
-              </TabList>
-            </Tabs>
+              {/* Category Tabs */}
+              <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
+                <TabList>
+                  <Tab value="cpu">CPU</Tab>
+                  <Tab value="gpu">GPU</Tab>
+                  <Tab value="mpu">MPU</Tab>
+                  <Tab value="custom">Custom</Tab>
+                </TabList>
+              </Tabs>
 
-            {/* List Toolbar */}
-            <ListToolbar
-              primaryActions={
-                <ListToolbar.Actions>
-                  <FilterSearchInput
-                    filters={filterFields}
-                    appliedFilters={appliedFilters}
-                    onFiltersChange={setAppliedFilters}
-                    placeholder="Search flavor by attributes"
-                    className="w-[var(--search-input-width)]"
-                  />
-                  <Button variant="secondary" size="sm" icon={<IconDownload size={12} />} aria-label="Download" />
-                </ListToolbar.Actions>
-              }
-            />
-
-            {/* Pagination */}
-            {filteredFlavors.length > 0 && (
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={setCurrentPage}
-                showSettings
-                onSettingsClick={() => setIsPreferencesOpen(true)}
-                totalItems={filteredFlavors.length}
-                selectedCount={selectedFlavors.length}
+              {/* List Toolbar */}
+              <ListToolbar
+                primaryActions={
+                  <ListToolbar.Actions>
+                    <FilterSearchInput
+                      filters={filterFields}
+                      appliedFilters={appliedFilters}
+                      onFiltersChange={setAppliedFilters}
+                      placeholder="Search flavor by attributes"
+                      className="w-[var(--search-input-width)]"
+                    />
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      icon={<IconDownload size={12} />}
+                      aria-label="Download"
+                    />
+                  </ListToolbar.Actions>
+                }
               />
-            )}
 
-            {/* Flavor Table */}
-            <Table<Flavor>
-              columns={visibleColumns}
-              data={filteredFlavors.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)}
-              rowKey="id"
-              emptyMessage="No flavors found"
-            />
-          </VStack>
-        </div>
+              {/* Pagination */}
+              {filteredFlavors.length > 0 && (
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
+                  showSettings
+                  onSettingsClick={() => setIsPreferencesOpen(true)}
+                  totalItems={filteredFlavors.length}
+                  selectedCount={selectedFlavors.length}
+                />
+              )}
+
+              {/* Flavor Table */}
+              <Table<Flavor>
+                columns={visibleColumns}
+                data={filteredFlavors.slice(
+                  (currentPage - 1) * rowsPerPage,
+                  currentPage * rowsPerPage
+                )}
+                rowKey="id"
+                emptyMessage="No flavors found"
+              />
+            </VStack>
+          </div>
         </div>
       </main>
 
@@ -436,4 +615,3 @@ export function FlavorsPage() {
 }
 
 export default FlavorsPage;
-

@@ -16,7 +16,6 @@ import {
   SectionCard,
   DetailHeader,
   DatePicker,
-  columnWidths,
 } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
