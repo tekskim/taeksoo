@@ -61,6 +61,7 @@ const ComputeAdminVolumeBackupsPage = lazy(() => import('@/pages/ComputeAdminVol
 const ComputeAdminVolumeBackupDetailPage = lazy(
   () => import('@/pages/ComputeAdminVolumeBackupDetailPage')
 );
+const ComputeAdminVolumeTypesPage = lazy(() => import('@/pages/ComputeAdminVolumeTypesPage'));
 
 // Network
 const ComputeAdminNetworksPage = lazy(() => import('@/pages/ComputeAdminNetworksPage'));
@@ -168,6 +169,7 @@ export const computeAdminRoutes = (
       path="/compute-admin/volume-backups/:id"
       element={<ComputeAdminVolumeBackupDetailPage />}
     />
+    <Route path="/compute-admin/volume-types" element={<ComputeAdminVolumeTypesPage />} />
 
     {/* Network */}
     <Route path="/compute-admin/networks" element={<ComputeAdminNetworksPage />} />

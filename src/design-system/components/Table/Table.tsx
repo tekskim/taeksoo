@@ -272,7 +272,7 @@ export function Table<T extends Record<string, any>>({
                     key={key}
                     className={`
                     flex items-stretch
-                    h-[var(--table-row-height)]
+                    min-h-[var(--table-row-height)]
                     w-full
                     rounded-[var(--table-row-radius)]
                     transition-all
