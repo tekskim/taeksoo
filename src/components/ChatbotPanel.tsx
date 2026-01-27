@@ -23,7 +23,7 @@ export function ChatbotPanel({ isOpen, onClose }: ChatbotPanelProps) {
   // This pattern is intentional for animation - same as design-system Drawer
   useEffect(() => {
     if (isOpen) {
-      setShouldRender(true); // eslint-disable-line
+      setShouldRender(true);  
       // Small delay to ensure DOM is ready for animation
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
