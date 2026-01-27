@@ -388,21 +388,6 @@ export function ComputeAdminVolumeDetailPage() {
     backupCurrentPage * backupsPerPage
   );
 
-  // Context menu items for snapshot actions
-  const getSnapshotContextMenuItems = (_snapshot: VolumeSnapshot): ContextMenuItem[] => [
-    { id: 'create-volume', label: 'Create volume', onClick: () => {} },
-    { id: 'edit', label: 'Edit', onClick: () => {} },
-    { id: 'delete', label: 'Delete', onClick: () => {}, status: 'danger' },
-  ];
-
-  // Context menu items for backup actions
-  const getBackupContextMenuItems = (_backup: VolumeBackup): ContextMenuItem[] => [
-    { id: 'create-volume', label: 'Create volume', onClick: () => {} },
-    { id: 'restore-backup', label: 'Restore backup', onClick: () => {} },
-    { id: 'edit', label: 'Edit', onClick: () => {} },
-    { id: 'delete', label: 'Delete', onClick: () => {}, status: 'danger' },
-  ];
-
   // Snapshot table columns
   const snapshotColumns: TableColumn<VolumeSnapshot>[] = [
     {
