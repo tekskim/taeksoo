@@ -129,9 +129,10 @@ export function TableStyleGuidePage() {
     { id: 'row-height', label: '3. 행 높이 정책' },
     { id: 'column-alignment', label: '4. 컬럼 정렬 정책' },
     { id: 'text-handling', label: '5. 텍스트 처리 정책' },
-    { id: 'migration', label: '6. 마이그레이션 가이드' },
-    { id: 'examples', label: '7. 통합 코드 예시' },
-    { id: 'faq', label: '8. FAQ' },
+    { id: 'comparison', label: '6. thaki-ui 비교' },
+    { id: 'migration', label: '7. 마이그레이션 가이드' },
+    { id: 'examples', label: '8. 통합 코드 예시' },
+    { id: 'faq', label: '9. FAQ' },
     { id: 'appendix', label: '부록' },
   ];
 
@@ -583,12 +584,95 @@ export function TableStyleGuidePage() {
             </SectionCard.Content>
           </SectionCard>
 
-          {/* Section 6: Migration */}
-          <SectionCard id="migration">
-            <SectionCard.Header title="6. 마이그레이션 가이드" />
+          {/* Section 6: Comparison with thaki-ui */}
+          <SectionCard id="comparison">
+            <SectionCard.Header title="6. thaki-ui와의 비교" />
             <SectionCard.Content className="space-y-6">
               <div>
-                <h4 className="text-[13px] font-medium mb-2">5.1 Import 변경</h4>
+                <h4 className="text-[13px] font-medium mb-2">6.1 컬럼 사이징 방식 비교</h4>
+                <GuideTable
+                  headers={['항목', 'TDS (SSOT)', 'thaki-ui']}
+                  rows={[
+                    ['사이징 방식', 'flex + minWidth 조합', 'width 고정값만 사용'],
+                    ['고정 컬럼', 'width: fixedColumns.xxx', 'width: 60 등 하드코딩'],
+                    ['유연 컬럼', 'flex: 1, minWidth: columnMinWidths.xxx', 'width 없으면 자동 분배'],
+                    ['테이블 레이아웃', 'flexbox 기반', 'table-fixed (CSS table)'],
+                    ['minWidth 지원', '✅ 지원', '❌ 미지원'],
+                    ['maxWidth 지원', '✅ 지원', '❌ 미지원'],
+                  ]}
+                />
+              </div>
+
+              <div>
+                <h4 className="text-[13px] font-medium mb-2">6.2 컬럼 정의 비교</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-[11px] font-medium text-[var(--color-text-muted)] mb-2">TDS (SSOT)</p>
+                    <CodeBlock
+                      code={`const columns = [
+  { key: 'status', width: fixedColumns.status, align: 'center' },
+  { key: 'name', flex: 1, minWidth: columnMinWidths.name },
+  { key: 'createdAt', flex: 1, minWidth: columnMinWidths.createdAt },
+  { key: 'actions', width: fixedColumns.actions, align: 'center' },
+];`}
+                    />
+                  </div>
+                  <div>
+                    <p className="text-[11px] font-medium text-[var(--color-text-muted)] mb-2">thaki-ui</p>
+                    <CodeBlock
+                      code={`const columns = [
+  { key: 'status', width: 60, align: 'center' },
+  { key: 'username' },  // width 없음 → 자동 분배
+  { key: 'groups' },
+  { key: 'actions', width: 80, align: 'center' },
+];`}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h4 className="text-[13px] font-medium mb-2">6.3 thaki-ui 문제점과 TDS 해결책</h4>
+                <GuideTable
+                  headers={['문제', 'thaki-ui', 'TDS 해결책']}
+                  rows={[
+                    ['minWidth 미지원', '컬럼이 과도하게 좁아질 수 있음', 'minWidth로 최소 너비 보장'],
+                    ['비율 제어 불가', '자동 균등 분배만 가능', 'flex 값으로 비율 조정 가능'],
+                    ['값 일관성', '하드코딩된 값 분산', '중앙 프리셋으로 일관성 보장'],
+                    ['가로 스크롤 정책', '고정 min-w-[600px]', '컬럼 합계 기반 동적 스크롤'],
+                  ]}
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="p-4 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
+                  <p className="text-[12px] font-medium text-red-700 dark:text-red-400 mb-2">thaki-ui: 비율 제어 불가</p>
+                  <CodeBlock
+                    code={`{ key: 'name' }   // 1/3
+{ key: 'email' }  // 1/3
+{ key: 'role' }   // 1/3
+// 모두 균등 분배만 가능`}
+                  />
+                </div>
+                <div className="p-4 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800">
+                  <p className="text-[12px] font-medium text-green-700 dark:text-green-400 mb-2">TDS: flex로 비율 제어</p>
+                  <CodeBlock
+                    code={`{ key: 'name', flex: 2 }   // 2/4 (더 넓게)
+{ key: 'email', flex: 1 }  // 1/4
+{ key: 'role', flex: 1 }   // 1/4
+// 원하는 비율로 조정 가능`}
+                  />
+                </div>
+              </div>
+            </SectionCard.Content>
+          </SectionCard>
+
+          {/* Section 7: Migration */}
+          <SectionCard id="migration">
+            <SectionCard.Header title="7. 마이그레이션 가이드" />
+            <SectionCard.Content className="space-y-6">
+              <div>
+                <h4 className="text-[13px] font-medium mb-2">7.1 Import 변경</h4>
                 <CodeBlock
                   code={`// Before
 import { columnWidths } from '@/design-system';
@@ -599,7 +683,7 @@ import { fixedColumns, columnMinWidths } from '@/design-system';`}
               </div>
 
               <div>
-                <h4 className="text-[13px] font-medium mb-2">5.2 고정 컬럼 변환</h4>
+                <h4 className="text-[13px] font-medium mb-2">7.2 고정 컬럼 변환</h4>
                 <CodeBlock
                   code={`// Before
 {
@@ -618,7 +702,7 @@ import { fixedColumns, columnMinWidths } from '@/design-system';`}
               </div>
 
               <div>
-                <h4 className="text-[13px] font-medium mb-2">5.3 유연 컬럼 변환</h4>
+                <h4 className="text-[13px] font-medium mb-2">7.3 유연 컬럼 변환</h4>
                 <CodeBlock
                   code={`// Before
 {
@@ -639,9 +723,9 @@ import { fixedColumns, columnMinWidths } from '@/design-system';`}
             </SectionCard.Content>
           </SectionCard>
 
-          {/* Section 7: Examples */}
+          {/* Section 8: Examples */}
           <SectionCard id="examples">
-            <SectionCard.Header title="7. 통합 코드 예시" />
+            <SectionCard.Header title="8. 통합 코드 예시" />
             <SectionCard.Content className="space-y-6">
               <div>
                 <h4 className="text-[13px] font-medium mb-2">6.1 기본 리스트 페이지</h4>
@@ -704,9 +788,9 @@ import { fixedColumns, columnMinWidths } from '@/design-system';`}
             </SectionCard.Content>
           </SectionCard>
 
-          {/* Section 8: FAQ */}
+          {/* Section 9: FAQ */}
           <SectionCard id="faq">
-            <SectionCard.Header title="8. FAQ" />
+            <SectionCard.Header title="9. FAQ" />
             <SectionCard.Content className="space-y-4">
               {[
                 {
