@@ -932,8 +932,11 @@ function CopyableText({ value }: { value: string }) {
   const handleCopy = () => navigator.clipboard.writeText(value);
   return (
     <span className="inline-flex items-center gap-1">
-      <span className="font-mono text-xs">{value}</span>
-      <button onClick={handleCopy} className="text-slate-400 hover:text-slate-600">
+      <span className="text-[length:var(--font-size-11)]">{value}</span>
+      <button
+        onClick={handleCopy}
+        className="text-[var(--color-text-subtle)] hover:text-[var(--color-text-muted)]"
+      >
         <IconCopy size={12} />
       </button>
     </span>
@@ -945,7 +948,7 @@ function LinkText({ value, href }: { value: string; href?: string }) {
   return (
     <Link
       to={href || '#'}
-      className="text-blue-500 hover:underline inline-flex items-center gap-0.5"
+      className="text-[var(--color-action-primary)] hover:underline inline-flex items-center gap-0.5 font-medium"
     >
       {value}
       <IconExternalLink size={12} />
@@ -958,7 +961,10 @@ function ViewDetailLink({ count }: { count: number }) {
   return (
     <span>
       <span className="font-medium">{count}</span>
-      <Link to="#" className="text-blue-500 hover:underline ml-2 text-xs">
+      <Link
+        to="#"
+        className="text-[var(--color-action-primary)] hover:underline ml-2 text-[length:var(--font-size-11)] font-medium"
+      >
         View detail
       </Link>
     </span>
@@ -979,12 +985,12 @@ function ListenersSection({
   return (
     <div className="mt-3 pt-3 border-t border-[var(--color-border-subtle)]">
       <div className="flex items-center justify-between">
-        <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] font-semibold">
+        <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] font-medium">
           Listeners ({listeners.length})
         </span>
         <Link
           to="#"
-          className="text-[var(--color-action-primary)] hover:underline text-[length:var(--font-size-11)]"
+          className="text-[var(--color-action-primary)] hover:underline text-[length:var(--font-size-11)] font-medium"
         >
           View detail
         </Link>
@@ -998,12 +1004,12 @@ function RoutersSection({ routers }: { routers: RouterItem[] }) {
   return (
     <div className="mt-3 pt-3 border-t border-[var(--color-border-subtle)]">
       <div className="flex items-center justify-between">
-        <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] font-semibold">
+        <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] font-medium">
           Routers ({routers.length})
         </span>
         <Link
           to="#"
-          className="text-[var(--color-action-primary)] hover:underline text-[length:var(--font-size-11)]"
+          className="text-[var(--color-action-primary)] hover:underline text-[length:var(--font-size-11)] font-medium"
         >
           View detail
         </Link>
@@ -1017,12 +1023,12 @@ function SubnetsSection({ subnets }: { subnets: SubnetItem[] }) {
   return (
     <div className="mt-3 pt-3 border-t border-[var(--color-border-subtle)]">
       <div className="flex items-center justify-between">
-        <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] font-semibold">
+        <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] font-medium">
           Subnets ({subnets.length})
         </span>
         <Link
           to="#"
-          className="text-[var(--color-action-primary)] hover:underline text-[length:var(--font-size-11)]"
+          className="text-[var(--color-action-primary)] hover:underline text-[length:var(--font-size-11)] font-medium"
         >
           View detail
         </Link>
@@ -1032,15 +1038,21 @@ function SubnetsSection({ subnets }: { subnets: SubnetItem[] }) {
 }
 
 function Popover({ data, position, onClose }: PopoverProps) {
-  const [pos, setPos] = useState(position);
+  const [pos, setPos] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const popoverRef = useRef<HTMLDivElement>(null);
 
-  // Update position when prop changes
+  // Center popover on screen when opened
   useEffect(() => {
-    setPos(position);
-  }, [position.x, position.y]);
+    if (popoverRef.current) {
+      const rect = popoverRef.current.getBoundingClientRect();
+      setPos({
+        x: (window.innerWidth - rect.width) / 2,
+        y: (window.innerHeight - rect.height) / 2,
+      });
+    }
+  }, [data]);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if ((e.target as HTMLElement).closest('button, a')) return; // Don't drag when clicking buttons/links
@@ -1085,7 +1097,7 @@ function Popover({ data, position, onClose }: PopoverProps) {
   return (
     <div
       ref={popoverRef}
-      className={`fixed z-50 bg-white border border-slate-200 rounded-xl shadow-xl min-w-[240px] max-w-[var(--search-input-width)] ${isDragging ? 'cursor-grabbing' : ''}`}
+      className={`fixed z-50 bg-white border border-slate-200 rounded-xl shadow-xl min-w-[240px] max-w-[var(--search-input-width)] font-['Mona_Sans'] ${isDragging ? 'cursor-grabbing' : ''}`}
       style={{ left: pos.x, top: pos.y }}
     >
       {/* Header - Draggable */}
@@ -1098,9 +1110,9 @@ function Popover({ data, position, onClose }: PopoverProps) {
         </span>
         <button
           onClick={onClose}
-          className="text-[var(--color-text-subtle)] hover:text-[var(--color-text-muted)]"
+          className="flex items-center justify-center w-[var(--window-control-size)] h-[var(--window-control-size)] rounded-[var(--window-control-radius)] text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] transition-colors"
         >
-          <IconX size={16} />
+          <IconX size={12} stroke={1} />
         </button>
       </div>
 
@@ -1109,7 +1121,7 @@ function Popover({ data, position, onClose }: PopoverProps) {
         {/* Status */}
         <div className="flex justify-between">
           <span className="text-[var(--color-text-muted)]">Status:</span>
-          <span className="font-medium">{statusText}</span>
+          <span>{statusText}</span>
         </div>
 
         {/* Name */}
@@ -1130,7 +1142,7 @@ function Popover({ data, position, onClose }: PopoverProps) {
         {data.adminState && (
           <div className="flex justify-between">
             <span className="text-[var(--color-text-muted)]">Admin state:</span>
-            <span className="font-medium">{data.adminState}</span>
+            <span>{data.adminState}</span>
           </div>
         )}
 
@@ -1140,54 +1152,30 @@ function Popover({ data, position, onClose }: PopoverProps) {
             {data.shared !== undefined && (
               <div className="flex justify-between">
                 <span className="text-[var(--color-text-muted)]">Shared:</span>
-                <span className="font-medium">{data.shared ? 'On' : 'Off'}</span>
+                <span>{data.shared ? 'On' : 'Off'}</span>
               </div>
             )}
             {data.mtu && (
               <div className="flex justify-between">
                 <span className="text-[var(--color-text-muted)]">MTU:</span>
-                <span className="font-medium">{data.mtu}</span>
+                <span>{data.mtu}</span>
               </div>
             )}
 
             {/* VPC Subnets grouped by router */}
             {data.vpcSubnetGroups && data.vpcSubnetGroups.length > 0 && (
               <div className="mt-3 pt-3 border-t border-[var(--color-border-subtle)]">
-                <div className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] mb-2 font-semibold">
-                  Subnets ({data.vpcSubnetGroups.reduce((acc, g) => acc + g.subnets.length, 0)}{' '}
-                  total)
-                </div>
-                <div className="space-y-3 max-h-48 overflow-y-auto">
-                  {data.vpcSubnetGroups.map((group, idx) => (
-                    <div key={idx} className="text-[length:var(--font-size-10)]">
-                      <div className="flex items-center gap-1 text-[var(--color-text-default)] mb-1">
-                        {group.routerName ? (
-                          <>
-                            <span className="text-indigo-500">📍</span>
-                            <span className="font-medium">{group.routerName}</span>
-                          </>
-                        ) : (
-                          <>
-                            <span className="text-amber-500">⚠️</span>
-                            <span className="font-medium text-amber-600">Unrouted</span>
-                          </>
-                        )}
-                      </div>
-                      <div className="pl-4 space-y-0.5">
-                        {group.subnets.map((subnet, sIdx) => (
-                          <div
-                            key={sIdx}
-                            className="flex items-center justify-between text-[var(--color-text-default)]"
-                          >
-                            <span>{subnet.name}</span>
-                            <span className="font-mono text-[var(--color-text-subtle)]">
-                              {subnet.cidr}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
+                <div className="flex items-center justify-between">
+                  <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] font-medium">
+                    Subnets ({data.vpcSubnetGroups.reduce((acc, g) => acc + g.subnets.length, 0)}{' '}
+                    total)
+                  </span>
+                  <Link
+                    to="#"
+                    className="text-[var(--color-action-primary)] hover:underline text-[length:var(--font-size-11)] font-medium"
+                  >
+                    View detail
+                  </Link>
                 </div>
               </div>
             )}
@@ -1200,7 +1188,7 @@ function Popover({ data, position, onClose }: PopoverProps) {
             {data.snat !== undefined && (
               <div className="flex justify-between">
                 <span className="text-[var(--color-text-muted)]">SNAT:</span>
-                <span className="font-medium">{data.snat ? 'On' : 'Off'}</span>
+                <span>{data.snat ? 'On' : 'Off'}</span>
               </div>
             )}
             {data.externalGateway && (
@@ -1232,12 +1220,12 @@ function Popover({ data, position, onClose }: PopoverProps) {
             {data.routerList && data.routerList.length > 0 && (
               <div className="mt-3 pt-3 border-t border-[var(--color-border-subtle)]">
                 <div className="flex items-center justify-between">
-                  <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] font-semibold">
+                  <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] font-medium">
                     Routers ({data.routerList.length})
                   </span>
                   <Link
                     to="#"
-                    className="text-[var(--color-action-primary)] hover:underline text-[length:var(--font-size-11)]"
+                    className="text-[var(--color-action-primary)] hover:underline text-[length:var(--font-size-11)] font-medium"
                   >
                     View detail
                   </Link>
@@ -1249,12 +1237,12 @@ function Popover({ data, position, onClose }: PopoverProps) {
             {data.instanceList && data.instanceList.length > 0 && (
               <div className="mt-3 pt-3 border-t border-[var(--color-border-subtle)]">
                 <div className="flex items-center justify-between">
-                  <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] font-semibold">
+                  <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] font-medium">
                     Instances ({data.instanceList.length})
                   </span>
                   <Link
                     to="#"
-                    className="text-[var(--color-action-primary)] hover:underline text-[length:var(--font-size-11)]"
+                    className="text-[var(--color-action-primary)] hover:underline text-[length:var(--font-size-11)] font-medium"
                   >
                     View detail
                   </Link>
@@ -1266,12 +1254,12 @@ function Popover({ data, position, onClose }: PopoverProps) {
             {data.loadBalancerList && data.loadBalancerList.length > 0 && (
               <div className="mt-3 pt-3 border-t border-[var(--color-border-subtle)]">
                 <div className="flex items-center justify-between">
-                  <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] font-semibold">
+                  <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] font-medium">
                     Load balancers ({data.loadBalancerList.length})
                   </span>
                   <Link
                     to="#"
-                    className="text-[var(--color-action-primary)] hover:underline text-[length:var(--font-size-11)]"
+                    className="text-[var(--color-action-primary)] hover:underline text-[length:var(--font-size-11)] font-medium"
                   >
                     View detail
                   </Link>
@@ -2749,7 +2737,7 @@ export function TopologyD3Page() {
                   />
                 </div>
 
-                {/* Router filter */}
+                {/* Router filter - hidden */}
                 <Select
                   value={filterRouter}
                   onChange={setFilterRouter}
@@ -2758,10 +2746,10 @@ export function TopologyD3Page() {
                     { value: 'all', label: `All Routers (${routers.length})` },
                     ...routers.map((r) => ({ value: r.id, label: r.name })),
                   ]}
-                  className="w-[160px]"
+                  className="w-[160px] hidden"
                 />
 
-                {/* VPC filter */}
+                {/* VPC filter - hidden */}
                 <Select
                   value={filterVpc}
                   onChange={setFilterVpc}
@@ -2770,10 +2758,10 @@ export function TopologyD3Page() {
                     { value: 'all', label: `All VPCs (${networks.length})` },
                     ...networks.map((n) => ({ value: n.id, label: n.name })),
                   ]}
-                  className="w-[160px]"
+                  className="w-[160px] hidden"
                 />
 
-                {/* Status filter */}
+                {/* Status filter - hidden */}
                 <Select
                   value={filterStatus}
                   onChange={setFilterStatus}
@@ -2784,10 +2772,10 @@ export function TopologyD3Page() {
                     { value: 'inactive', label: 'Inactive' },
                     { value: 'error', label: 'Error' },
                   ]}
-                  className="w-[120px]"
+                  className="w-[120px] hidden"
                 />
 
-                {/* Reset button */}
+                {/* Reset button - hidden */}
                 {(searchTerm ||
                   filterRouter !== 'all' ||
                   filterVpc !== 'all' ||
@@ -2797,6 +2785,7 @@ export function TopologyD3Page() {
                     size="sm"
                     onClick={resetFilters}
                     leftIcon={<IconRefresh size={14} />}
+                    className="hidden"
                   >
                     Reset
                   </Button>
