@@ -119,6 +119,8 @@ import ComputeAdminFirewallDetailPage from '@/pages/ComputeAdminFirewallDetailPa
 import ComputeAdminFirewallPolicyDetailPage from '@/pages/ComputeAdminFirewallPolicyDetailPage';
 import ComputeAdminFirewallRuleDetailPage from '@/pages/ComputeAdminFirewallRuleDetailPage';
 import ComputeAdminCreateFirewallRulePage from '@/pages/ComputeAdminCreateFirewallRulePage';
+import ComputeAdminTenantsPage from '@/pages/ComputeAdminTenantsPage';
+import ComputeAdminTenantDetailPage from '@/pages/ComputeAdminTenantDetailPage';
 import { ComputeAdminTopologyD3Page } from '@/pages/ComputeAdminTopologyD3Page';
 import ComputeAdminConsolePage from '@/pages/ComputeAdminConsolePage';
 import ComputeAdminVolumeTypesPage from '@/pages/ComputeAdminVolumeTypesPage';
@@ -505,6 +507,8 @@ function AppRoutes() {
         path="/compute-admin/firewall/create-rule"
         element={<ComputeAdminCreateFirewallRulePage />}
       />
+      <Route path="/compute-admin/tenants" element={<ComputeAdminTenantsPage />} />
+      <Route path="/compute-admin/tenants/:id" element={<ComputeAdminTenantDetailPage />} />
       <Route path="/compute-admin/topology" element={<ComputeAdminTopologyD3Page />} />
       <Route path="/compute-admin/console/:instanceId" element={<ComputeAdminConsolePage />} />
 
