@@ -1426,6 +1426,47 @@ function Popover({ data, position, onClose }: PopoverProps) {
               </div>
             )}
 
+            {/* Routers Section */}
+            {data.routerList && data.routerList.length > 0 && (
+              <div className="mt-3 pt-3 border-t border-slate-100">
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-500 font-medium">
+                    Routers ({data.routerList.length})
+                  </span>
+                  <Link to="#" className="text-blue-500 hover:underline text-xs">
+                    View detail
+                  </Link>
+                </div>
+              </div>
+            )}
+
+            {/* Instances Section */}
+            {data.instanceList && data.instanceList.length > 0 && (
+              <div className="mt-3 pt-3 border-t border-slate-100">
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-500 font-medium">
+                    Instances ({data.instanceList.length})
+                  </span>
+                  <Link to="#" className="text-blue-500 hover:underline text-xs">
+                    View detail
+                  </Link>
+                </div>
+              </div>
+            )}
+
+            {/* Load balancers Section */}
+            {data.loadBalancerList && data.loadBalancerList.length > 0 && (
+              <div className="mt-3 pt-3 border-t border-slate-100">
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-500 font-medium">
+                    Load balancers ({data.loadBalancerList.length})
+                  </span>
+                  <Link to="#" className="text-blue-500 hover:underline text-xs">
+                    View detail
+                  </Link>
+                </div>
+              </div>
+            )}
           </>
         )}
 
