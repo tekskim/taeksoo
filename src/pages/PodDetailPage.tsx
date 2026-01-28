@@ -20,7 +20,8 @@ import {
   Chip,
   type TableColumn,
   type ContextMenuItem,
-  columnWidths,
+  fixedColumns,
+  columnMinWidths,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -237,7 +238,7 @@ function ContainersTab({ containers, onExecuteShell, onViewLogs }: ContainersTab
     {
       key: 'status',
       label: 'Status',
-      width: columnWidths.status,
+      width: fixedColumns.status,
       align: 'center',
       render: (value: string) => (
         <StatusIndicator
@@ -256,7 +257,7 @@ function ContainersTab({ containers, onExecuteShell, onViewLogs }: ContainersTab
     {
       key: 'ready',
       label: 'Ready',
-      width: columnWidths.ready,
+      flex: 1, minWidth: columnMinWidths.ready,
       sortable: true,
       render: (value: boolean) =>
         value ? (
@@ -280,7 +281,7 @@ function ContainersTab({ containers, onExecuteShell, onViewLogs }: ContainersTab
     {
       key: 'initContainer',
       label: 'Init Container',
-      width: columnWidths.initContainer,
+      flex: 1, minWidth: columnMinWidths.initContainer,
       sortable: true,
       render: (value: boolean) =>
         value ? (
@@ -292,19 +293,19 @@ function ContainersTab({ containers, onExecuteShell, onViewLogs }: ContainersTab
     {
       key: 'restarts',
       label: 'Restarts',
-      width: columnWidths.restarts,
+      flex: 1, minWidth: columnMinWidths.restarts,
       sortable: true,
     },
     {
       key: 'createdAt',
       label: 'Created At',
-      width: columnWidths.createdAt,
+      flex: 1, minWidth: columnMinWidths.createdAt,
       sortable: true,
     },
     {
       key: 'action',
       label: 'Action',
-      width: columnWidths.action,
+      flex: 1, minWidth: columnMinWidths.action,
       align: 'center',
       render: (_: unknown, row: ContainerRow) => (
         <ContextMenu items={createContainerMenuItems(row)} trigger="click" align="left">
@@ -433,14 +434,14 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
   };
 
   const columns: TableColumn<EventRow>[] = [
-    { key: 'lastSeen', label: 'Last Seen', width: columnWidths.lastSeen, sortable: true },
-    { key: 'type', label: 'Type', width: columnWidths.type, sortable: true },
+    { key: 'lastSeen', label: 'Last Seen', flex: 1, minWidth: columnMinWidths.lastSeen, sortable: true },
+    { key: 'type', label: 'Type', flex: 1, minWidth: columnMinWidths.type, sortable: true },
     { key: 'reason', label: 'Reason', flex: 1, sortable: true },
     { key: 'subobject', label: 'Subobject', flex: 1, sortable: true },
     { key: 'source', label: 'Source', flex: 1, sortable: true },
     { key: 'message', label: 'Message', flex: 1.5, sortable: true },
-    { key: 'firstSeen', label: 'First Seen', width: columnWidths.firstSeen, sortable: true },
-    { key: 'count', label: 'Count', width: columnWidths.count, sortable: true },
+    { key: 'firstSeen', label: 'First Seen', flex: 1, minWidth: columnMinWidths.firstSeen, sortable: true },
+    { key: 'count', label: 'Count', flex: 1, minWidth: columnMinWidths.count, sortable: true },
     {
       key: 'name',
       label: 'Name',
@@ -458,7 +459,7 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
     {
       key: 'action',
       label: 'Action',
-      width: columnWidths.action,
+      flex: 1, minWidth: columnMinWidths.action,
       align: 'center',
       render: (_: unknown, row: EventRow) => (
         <ContextMenu items={createEventMenuItems(row)} trigger="click" align="left">

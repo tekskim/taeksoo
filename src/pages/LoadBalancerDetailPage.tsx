@@ -18,7 +18,8 @@ import {
   Pagination,
   StatusIndicator,
   ContextMenu,
-  columnWidths,
+  fixedColumns,
+  columnMinWidths,
 } from '@/design-system';
 import type { TableColumn, ContextMenuItem } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
@@ -264,7 +265,7 @@ export function LoadBalancerDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: columnWidths.status,
+      width: fixedColumns.status,
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={listenerStatusMap[row.status]} layout="icon-only" />
@@ -316,7 +317,7 @@ export function LoadBalancerDetailPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: columnWidths.actions,
+      width: fixedColumns.actions,
       align: 'center',
       render: (_: unknown, row: Listener) => {
         const listenerMenuItems: ContextMenuItem[] = [
@@ -355,7 +356,7 @@ export function LoadBalancerDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: columnWidths.status,
+      width: fixedColumns.status,
       align: 'center',
       render: (_, row) => <StatusIndicator status={poolStatusMap[row.status]} layout="icon-only" />,
     },
@@ -382,19 +383,19 @@ export function LoadBalancerDetailPage() {
     {
       key: 'protocol',
       label: 'Protocol',
-      width: columnWidths.protocol,
+      flex: 1, minWidth: columnMinWidths.protocol,
       sortable: true,
     },
     {
       key: 'algorithm',
       label: 'Algorithm',
-      width: columnWidths.algorithm,
+      flex: 1, minWidth: columnMinWidths.algorithm,
       sortable: true,
     },
     {
       key: 'listener',
       label: 'Listener',
-      width: columnWidths.listener,
+      flex: 1, minWidth: columnMinWidths.listener,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -414,18 +415,18 @@ export function LoadBalancerDetailPage() {
     {
       key: 'members',
       label: 'Members',
-      width: columnWidths.members,
+      flex: 1, minWidth: columnMinWidths.members,
       sortable: true,
     },
     {
       key: 'adminState',
       label: 'Admin state',
-      width: columnWidths.adminState,
+      flex: 1, minWidth: columnMinWidths.adminState,
     },
     {
       key: 'actions',
       label: 'Action',
-      width: columnWidths.actions,
+      width: fixedColumns.actions,
       align: 'center',
       render: (_: unknown, row: Pool) => {
         const poolMenuItems: ContextMenuItem[] = [

@@ -15,7 +15,8 @@ import {
   Button,
   Pagination,
   type TableColumn,
-  columnWidths,
+  fixedColumns,
+  columnMinWidths,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -328,9 +329,9 @@ const eventsColumns: TableColumn<EventRow>[] = [
       </span>
     ),
   },
-  { key: 'firstSeen', label: 'First seen', width: columnWidths.firstSeen, sortable: true },
-  { key: 'lastSeen', label: 'Last seen', width: columnWidths.lastSeen, sortable: true },
-  { key: 'count', label: 'Count', width: columnWidths.count, sortable: true },
+  { key: 'firstSeen', label: 'First seen', flex: 1, minWidth: columnMinWidths.firstSeen, sortable: true },
+  { key: 'lastSeen', label: 'Last seen', flex: 1, minWidth: columnMinWidths.lastSeen, sortable: true },
+  { key: 'count', label: 'Count', flex: 1, minWidth: columnMinWidths.count, sortable: true },
 ];
 
 /* ----------------------------------------

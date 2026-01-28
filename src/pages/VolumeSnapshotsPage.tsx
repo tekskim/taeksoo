@@ -13,7 +13,8 @@ import {
   ContextMenu,
   ConfirmModal,
   StatusIndicator,
-  columnWidths,
+  fixedColumns,
+  columnMinWidths,
   type TableColumn,
   type ContextMenuItem,
   type FilterField,
@@ -282,12 +283,12 @@ export function VolumeSnapshotsPage() {
     return filteredSnapshots.slice(start, end);
   }, [filteredSnapshots, currentPage, rowsPerPage]);
 
-  // Table columns
+  // Table columns (using fixedColumns / columnMinWidths preset)
   const columns: TableColumn<VolumeSnapshot>[] = [
     {
       key: 'status',
       label: 'Status',
-      width: columnWidths.status,
+      width: fixedColumns.status,
       align: 'center',
       sortable: false,
       render: (_, row) => (
@@ -298,7 +299,7 @@ export function VolumeSnapshotsPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
-      minWidth: columnWidths.name,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row) => (
         <Link
@@ -313,13 +314,15 @@ export function VolumeSnapshotsPage() {
     {
       key: 'size',
       label: 'Size',
-      width: columnWidths.size,
+      flex: 1,
+      minWidth: columnMinWidths.size,
       sortable: true,
     },
     {
       key: 'sourceVolume',
       label: 'Source volume',
-      width: columnWidths.sourceVolume,
+      flex: 1,
+      minWidth: columnMinWidths.sourceVolume,
       sortable: false,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -340,13 +343,14 @@ export function VolumeSnapshotsPage() {
     {
       key: 'createdAt',
       label: 'Created at',
-      width: columnWidths.createdAt,
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
     },
     {
       key: 'actions',
       label: 'Action',
-      width: columnWidths.actions,
+      width: fixedColumns.actions,
       align: 'center',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [

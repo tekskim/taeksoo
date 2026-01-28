@@ -13,7 +13,8 @@ import {
   ConfirmModal,
   StatusIndicator,
   ContextMenu,
-  columnWidths,
+  fixedColumns,
+  columnMinWidths,
   type TableColumn,
   type FilterField,
   type AppliedFilter,
@@ -271,12 +272,12 @@ export function RoutersPage() {
     return filteredRouters.slice(start, start + rowsPerPage);
   }, [filteredRouters, currentPage, rowsPerPage]);
 
-  // Table columns
+  // Table columns (using fixedColumns / columnMinWidths preset)
   const columns: TableColumn<Router>[] = [
     {
       key: 'status',
       label: 'Status',
-      width: columnWidths.status,
+      width: fixedColumns.status,
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={routerStatusMap[row.status]} layout="icon-only" />
@@ -286,6 +287,7 @@ export function RoutersPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (_, row) => (
         <Link
@@ -301,18 +303,21 @@ export function RoutersPage() {
       key: 'externalGateway',
       label: 'External gateway',
       flex: 1,
+      minWidth: columnMinWidths.externalGateway,
       render: (value: boolean) => (value ? 'Yes' : 'No'),
     },
     {
       key: 'externalFixedIp',
       label: 'External fixed IP',
       flex: 1,
+      minWidth: columnMinWidths.externalFixedIp,
       sortable: true,
     },
     {
       key: 'externalNetwork',
       label: 'External network',
       flex: 1,
+      minWidth: columnMinWidths.externalNetwork,
       sortable: true,
       render: (_, row) =>
         row.externalNetworkId ? (
@@ -337,12 +342,13 @@ export function RoutersPage() {
       key: 'adminState',
       label: 'Admin state',
       flex: 1,
+      minWidth: columnMinWidths.adminState,
       render: (value: boolean) => (value ? 'Up' : 'Down'),
     },
     {
       key: 'actions',
       label: 'Action',
-      width: columnWidths.actions,
+      width: fixedColumns.actions,
       align: 'center',
       render: () => (
         <div onClick={(e) => e.stopPropagation()}>

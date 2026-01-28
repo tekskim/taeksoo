@@ -1,24 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import {
-  Button,
-  VStack,
-  TabBar,
-  TopBar,
-  TopBarAction,
-  Breadcrumb,
-  Tabs,
-  TabList,
-  Tab,
-  TabPanel,
-  DetailHeader,
-  SectionCard,
-  Table,
-  SearchInput,
-  Pagination,
-  StatusIndicator,
-  ContextMenu,
-} from '@/design-system';
+import { Button, VStack, TabBar, TopBar, TopBarAction, Breadcrumb, Tabs, TabList, Tab, TabPanel, DetailHeader, SectionCard, Table, SearchInput, Pagination, StatusIndicator, ContextMenu, fixedColumns, columnMinWidths } from '@/design-system';
 import type { TableColumn, ContextMenuItem } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -33,8 +15,7 @@ import {
   IconPlus,
   IconCertificate,
   IconShieldLock,
-  IconListDetails,
-} from '@tabler/icons-react';
+  IconListDetails } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -120,8 +101,7 @@ const mockListenersMap: Record<string, ListenerDetail> = {
     memberDataTimeout: '50000 ms',
     tcpInspectTimeout: '0 ms',
     allowedCidrs: '10.62.0.32/24(+3)',
-    loadBalancer: { name: 'web-lb-01', id: 'lb-001' },
-  },
+    loadBalancer: { name: 'web-lb-01', id: 'lb-001' } },
   '38fk29dk': {
     id: '38fk29dk',
     name: 'listener-https-443',
@@ -138,8 +118,7 @@ const mockListenersMap: Record<string, ListenerDetail> = {
     memberDataTimeout: '50000 ms',
     tcpInspectTimeout: '0 ms',
     allowedCidrs: '0.0.0.0/0',
-    loadBalancer: { name: 'api-lb', id: 'lb-002' },
-  },
+    loadBalancer: { name: 'api-lb', id: 'lb-002' } },
   '9dk38fj2': {
     id: '9dk38fj2',
     name: 'listener-tcp-8080',
@@ -156,9 +135,7 @@ const mockListenersMap: Record<string, ListenerDetail> = {
     memberDataTimeout: '60000 ms',
     tcpInspectTimeout: '5000 ms',
     allowedCidrs: '10.0.0.0/8',
-    loadBalancer: { name: 'app-lb', id: 'lb-003' },
-  },
-};
+    loadBalancer: { name: 'app-lb', id: 'lb-003' } } };
 
 const defaultListenerDetail: ListenerDetail = {
   id: 'listener-default',
@@ -176,8 +153,7 @@ const defaultListenerDetail: ListenerDetail = {
   memberDataTimeout: '-',
   tcpInspectTimeout: '-',
   allowedCidrs: '-',
-  loadBalancer: { name: '-', id: '' },
-};
+  loadBalancer: { name: '-', id: '' } };
 
 /* ----------------------------------------
    Mock Pools Data
@@ -190,8 +166,7 @@ const mockPools: Pool[] = Array.from({ length: 115 }, (_, i) => ({
   protocol: 'HTTP',
   algorithm: 'Round Robin',
   members: 1,
-  adminState: i % 10 === 0 ? 'Down' : 'Up',
-}));
+  adminState: i % 10 === 0 ? 'Down' : 'Up' }));
 
 /* ----------------------------------------
    Mock L7 Policies Data
@@ -203,8 +178,7 @@ const mockL7Policies: L7Policy[] = Array.from({ length: 115 }, (_, i) => ({
   status: 'active' as L7PolicyStatus,
   behavior: 'Reject' as const,
   position: null,
-  adminState: 'Up' as const,
-}));
+  adminState: 'Up' as const }));
 
 /* ----------------------------------------
    Mock Certificates Data
@@ -221,8 +195,7 @@ const mockCertificates: Certificate[] = Array.from({ length: 115 }, (_, i) => {
     type,
     domain: type === 'CA' ? 'N/A' : `*.domain${i}.com`,
     issuer: ['DigiCert', "Let's Encrypt", 'Comodo', 'GlobalSign', 'Sectigo'][i % 5],
-    expiresAt: `2026-${String((i % 12) + 1).padStart(2, '0')}-${String((i % 28) + 1).padStart(2, '0')}`,
-  };
+    expiresAt: `2026-${String((i % 12) + 1).padStart(2, '0')}-${String((i % 28) + 1).padStart(2, '0')}` };
 });
 
 /* ----------------------------------------
@@ -232,26 +205,22 @@ const mockCertificates: Certificate[] = Array.from({ length: 115 }, (_, i) => {
 const listenerStatusMap: Record<ListenerStatus, 'active' | 'down' | 'error'> = {
   active: 'active',
   down: 'down',
-  error: 'error',
-};
+  error: 'error' };
 
 const poolStatusMap: Record<PoolStatus, 'active' | 'down' | 'error'> = {
   active: 'active',
   down: 'down',
-  error: 'error',
-};
+  error: 'error' };
 
 const l7PolicyStatusMap: Record<L7PolicyStatus, 'active' | 'down' | 'error'> = {
   active: 'active',
   down: 'down',
-  error: 'error',
-};
+  error: 'error' };
 
 const certificateStatusMap: Record<CertificateStatus, 'active' | 'error' | 'pending'> = {
   active: 'active',
   error: 'error',
-  pending: 'pending',
-};
+  pending: 'pending' };
 
 /* ----------------------------------------
    ListenerDetailPage Component
@@ -301,8 +270,7 @@ export default function ListenerDetailPage() {
     { label: 'Load balancers', href: '/compute-admin/load-balancers' },
     {
       label: listener.loadBalancer?.name || 'Unknown',
-      href: `/load-balancers/${listener.loadBalancer?.id}`,
-    },
+      href: `/load-balancers/${listener.loadBalancer?.id}` },
     { label: listener.name },
   ];
 
@@ -310,8 +278,7 @@ export default function ListenerDetailPage() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    closable: tab.closable,
-  }));
+    closable: tab.closable }));
 
   const handleCopyId = () => {
     navigator.clipboard.writeText(listener.id);
@@ -379,10 +346,9 @@ export default function ListenerDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: fixedColumns.status,
       align: 'center',
-      render: (_, row) => <StatusIndicator status={poolStatusMap[row.status]} layout="icon-only" />,
-    },
+      render: (_, row) => <StatusIndicator status={poolStatusMap[row.status]} layout="icon-only" /> },
     {
       key: 'name',
       label: 'Name',
@@ -401,35 +367,30 @@ export default function ListenerDetailPage() {
             ID : {row.id}
           </span>
         </div>
-      ),
-    },
+      ) },
     {
       key: 'protocol',
       label: 'Protocol',
       flex: 1,
-      sortable: true,
-    },
+      sortable: true },
     {
       key: 'algorithm',
       label: 'Algorithm',
       flex: 1,
-      sortable: true,
-    },
+      sortable: true },
     {
       key: 'members',
       label: 'Members',
       flex: 1,
-      sortable: true,
-    },
+      sortable: true },
     {
       key: 'adminState',
       label: 'Admin state',
-      flex: 1,
-    },
+      flex: 1 },
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: fixedColumns.actions,
       align: 'center',
       render: (_: unknown, row: Pool) => {
         const poolMenuItems: ContextMenuItem[] = [
@@ -437,8 +398,7 @@ export default function ListenerDetailPage() {
             id: 'delete',
             label: 'Delete',
             status: 'danger',
-            onClick: () => console.log('Delete pool', row.id),
-          },
+            onClick: () => console.log('Delete pool', row.id) },
         ];
         return (
           <div onClick={(e) => e.stopPropagation()}>
@@ -453,8 +413,7 @@ export default function ListenerDetailPage() {
             </ContextMenu>
           </div>
         );
-      },
-    },
+      } },
   ];
 
   // L7 Policy columns
@@ -462,12 +421,11 @@ export default function ListenerDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: fixedColumns.status,
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={l7PolicyStatusMap[row.status]} layout="icon-only" />
-      ),
-    },
+      ) },
     {
       key: 'name',
       label: 'Name',
@@ -486,29 +444,25 @@ export default function ListenerDetailPage() {
             ID : {row.id}
           </span>
         </div>
-      ),
-    },
+      ) },
     {
       key: 'behavior',
       label: 'Behavior',
-      flex: 1,
-    },
+      flex: 1 },
     {
       key: 'position',
       label: 'Position',
       flex: 1,
       sortable: true,
-      render: (_, row) => (row.position !== null ? row.position : '-'),
-    },
+      render: (_, row) => (row.position !== null ? row.position : '-') },
     {
       key: 'adminState',
       label: 'Admin state',
-      flex: 1,
-    },
+      flex: 1 },
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: fixedColumns.actions,
       align: 'center',
       render: (_: unknown, row: L7Policy) => {
         const policyMenuItems: ContextMenuItem[] = [
@@ -516,14 +470,12 @@ export default function ListenerDetailPage() {
             id: 'edit',
             label: 'Edit',
             icon: <IconEdit size={14} stroke={1.5} />,
-            onClick: () => console.log('Edit policy', row.id),
-          },
+            onClick: () => console.log('Edit policy', row.id) },
           {
             id: 'delete',
             label: 'Delete',
             status: 'danger',
-            onClick: () => console.log('Delete policy', row.id),
-          },
+            onClick: () => console.log('Delete policy', row.id) },
         ];
         return (
           <div onClick={(e) => e.stopPropagation()}>
@@ -538,8 +490,7 @@ export default function ListenerDetailPage() {
             </ContextMenu>
           </div>
         );
-      },
-    },
+      } },
   ];
 
   // Certificate columns
@@ -547,12 +498,11 @@ export default function ListenerDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: fixedColumns.status,
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={certificateStatusMap[row.status]} layout="icon-only" />
-      ),
-    },
+      ) },
     {
       key: 'name',
       label: 'Name',
@@ -571,35 +521,30 @@ export default function ListenerDetailPage() {
             ID : {row.id}
           </span>
         </div>
-      ),
-    },
+      ) },
     {
       key: 'type',
       label: 'Type',
       flex: 1,
-      sortable: true,
-    },
+      sortable: true },
     {
       key: 'domain',
       label: 'SAN',
-      flex: 1,
-    },
+      flex: 1 },
     {
       key: 'issuer',
       label: 'Issuer',
       flex: 1,
-      sortable: true,
-    },
+      sortable: true },
     {
       key: 'expiresAt',
       label: 'Expires at',
       flex: 1,
-      sortable: true,
-    },
+      sortable: true },
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: fixedColumns.actions,
       align: 'center',
       render: (_: unknown, row: Certificate) => {
         const getCertMenuItems = (): ContextMenuItem[] => {
@@ -610,8 +555,7 @@ export default function ListenerDetailPage() {
                   id: 'change-server-cert',
                   label: 'Change server Certificate',
                   icon: <IconCertificate size={14} stroke={1.5} />,
-                  onClick: () => console.log('Change server certificate', row.id),
-                },
+                  onClick: () => console.log('Change server certificate', row.id) },
               ];
             case 'CA':
               return [
@@ -619,8 +563,7 @@ export default function ListenerDetailPage() {
                   id: 'change-ca-cert',
                   label: 'Change CA Certificate',
                   icon: <IconCertificate size={14} stroke={1.5} />,
-                  onClick: () => console.log('Change CA certificate', row.id),
-                },
+                  onClick: () => console.log('Change CA certificate', row.id) },
               ];
             case 'SNI':
               return [
@@ -628,8 +571,7 @@ export default function ListenerDetailPage() {
                   id: 'remove-sni-cert',
                   label: 'Remove',
                   status: 'danger',
-                  onClick: () => console.log('Remove SNI certificate', row.id),
-                },
+                  onClick: () => console.log('Remove SNI certificate', row.id) },
               ];
             default:
               return [];
@@ -649,8 +591,7 @@ export default function ListenerDetailPage() {
             </ContextMenu>
           </div>
         );
-      },
-    },
+      } },
   ];
 
   return (
@@ -718,45 +659,38 @@ export default function ListenerDetailPage() {
                         id: 'create-default-pool',
                         label: 'Create default pool',
                         icon: <IconPool size={14} stroke={1.5} />,
-                        onClick: () => console.log('Create default pool clicked'),
-                      },
+                        onClick: () => console.log('Create default pool clicked') },
                       {
                         id: 'delete-default-pool',
                         label: 'Delete default pool',
                         icon: <IconTrash size={14} stroke={1.5} />,
                         status: 'danger',
-                        onClick: () => console.log('Delete default pool clicked'),
-                      },
+                        onClick: () => console.log('Delete default pool clicked') },
                       {
                         id: 'edit-default-pool',
                         label: 'Edit default pool',
                         icon: <IconEdit size={14} stroke={1.5} />,
-                        onClick: () => console.log('Edit default pool clicked'),
-                      },
+                        onClick: () => console.log('Edit default pool clicked') },
                       {
                         id: 'add-l7-policy',
                         label: 'Add L7 policy',
                         icon: <IconPlus size={14} stroke={1.5} />,
-                        onClick: () => console.log('Add L7 policy clicked'),
-                      },
+                        onClick: () => console.log('Add L7 policy clicked') },
                       {
                         id: 'change-server-certificates',
                         label: 'Change server certificates',
                         icon: <IconCertificate size={14} stroke={1.5} />,
-                        onClick: () => console.log('Change server certificates clicked'),
-                      },
+                        onClick: () => console.log('Change server certificates clicked') },
                       {
                         id: 'change-ca-certificate',
                         label: 'Change CA certificate',
                         icon: <IconShieldLock size={14} stroke={1.5} />,
-                        onClick: () => console.log('Change CA certificate clicked'),
-                      },
+                        onClick: () => console.log('Change CA certificate clicked') },
                       {
                         id: 'manage-sni-certificate',
                         label: 'Manage SNI certificate',
                         icon: <IconListDetails size={14} stroke={1.5} />,
-                        onClick: () => console.log('Manage SNI certificate clicked'),
-                      },
+                        onClick: () => console.log('Manage SNI certificate clicked') },
                     ]}
                   >
                     <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>

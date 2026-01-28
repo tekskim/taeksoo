@@ -1,24 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import {
-  Button,
-  VStack,
-  TabBar,
-  TopBar,
-  TopBarAction,
-  Breadcrumb,
-  Tabs,
-  TabList,
-  Tab,
-  TabPanel,
-  DetailHeader,
-  SectionCard,
-  Table,
-  SearchInput,
-  Pagination,
-  ContextMenu,
-  Modal,
-} from '@/design-system';
+import { Button, VStack, TabBar, TopBar, TopBarAction, Breadcrumb, Tabs, TabList, Tab, TabPanel, DetailHeader, SectionCard, Table, SearchInput, Pagination, ContextMenu, Modal, fixedColumns, columnMinWidths } from '@/design-system';
 import type { TableColumn, ContextMenuItem } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -31,8 +13,7 @@ import {
   IconCopy,
   IconDotsCircleHorizontal,
   IconCirclePlus,
-  IconAlertCircle,
-} from '@tabler/icons-react';
+  IconAlertCircle } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -92,8 +73,7 @@ const mockPortsMap: Record<string, PortDetail> = {
     ownedNetwork: { name: 'net-01', id: 'net-001' },
     subnet: { name: 'subnet-01', id: 'subnet-001' },
     macAddress: 'fa:16:3e:34:85:32',
-    attachedTo: { name: 'web-01', id: 'inst-001', type: 'instance' },
-  },
+    attachedTo: { name: 'web-01', id: 'inst-001', type: 'instance' } },
   'port-002': {
     id: 'port-002',
     name: 'port-02',
@@ -104,8 +84,7 @@ const mockPortsMap: Record<string, PortDetail> = {
     ownedNetwork: { name: 'net-02', id: 'net-002' },
     subnet: { name: 'subnet-02', id: 'subnet-002' },
     macAddress: 'fa:16:3e:34:85:33',
-    attachedTo: { name: 'app-server', id: 'inst-002', type: 'instance' },
-  },
+    attachedTo: { name: 'app-server', id: 'inst-002', type: 'instance' } },
   'port-003': {
     id: 'port-003',
     name: 'port-03',
@@ -116,8 +95,7 @@ const mockPortsMap: Record<string, PortDetail> = {
     ownedNetwork: { name: 'net-03', id: 'net-003' },
     subnet: { name: 'subnet-03', id: 'subnet-003' },
     macAddress: 'fa:16:3e:34:85:34',
-    attachedTo: null,
-  },
+    attachedTo: null },
   'port-004': {
     id: 'port-004',
     name: 'db-port',
@@ -128,8 +106,7 @@ const mockPortsMap: Record<string, PortDetail> = {
     ownedNetwork: { name: 'net-01', id: 'net-001' },
     subnet: { name: 'subnet-01', id: 'subnet-001' },
     macAddress: 'fa:16:3e:34:85:35',
-    attachedTo: { name: 'db-server', id: 'inst-003', type: 'instance' },
-  },
+    attachedTo: { name: 'db-server', id: 'inst-003', type: 'instance' } },
   'port-005': {
     id: 'port-005',
     name: 'router-port-1',
@@ -140,8 +117,7 @@ const mockPortsMap: Record<string, PortDetail> = {
     ownedNetwork: { name: 'net-01', id: 'net-001' },
     subnet: { name: 'subnet-01', id: 'subnet-001' },
     macAddress: 'fa:16:3e:34:85:36',
-    attachedTo: { name: 'main-router', id: 'router-001', type: 'router' },
-  },
+    attachedTo: { name: 'main-router', id: 'router-001', type: 'router' } },
   'port-006': {
     id: 'port-006',
     name: 'lb-port',
@@ -152,8 +128,7 @@ const mockPortsMap: Record<string, PortDetail> = {
     ownedNetwork: { name: 'net-02', id: 'net-002' },
     subnet: { name: 'subnet-02', id: 'subnet-002' },
     macAddress: 'fa:16:3e:34:85:37',
-    attachedTo: { name: 'load-balancer-01', id: 'lb-001', type: 'instance' },
-  },
+    attachedTo: { name: 'load-balancer-01', id: 'lb-001', type: 'instance' } },
   'port-007': {
     id: 'port-007',
     name: 'cache-port',
@@ -164,8 +139,7 @@ const mockPortsMap: Record<string, PortDetail> = {
     ownedNetwork: { name: 'net-01', id: 'net-001' },
     subnet: { name: 'subnet-01', id: 'subnet-001' },
     macAddress: 'fa:16:3e:34:85:38',
-    attachedTo: { name: 'redis-01', id: 'inst-004', type: 'instance' },
-  },
+    attachedTo: { name: 'redis-01', id: 'inst-004', type: 'instance' } },
   'port-008': {
     id: 'port-008',
     name: 'monitor-port',
@@ -176,8 +150,7 @@ const mockPortsMap: Record<string, PortDetail> = {
     ownedNetwork: { name: 'net-03', id: 'net-003' },
     subnet: { name: 'subnet-03', id: 'subnet-003' },
     macAddress: 'fa:16:3e:34:85:39',
-    attachedTo: { name: 'prometheus', id: 'inst-005', type: 'instance' },
-  },
+    attachedTo: { name: 'prometheus', id: 'inst-005', type: 'instance' } },
   'port-009': {
     id: 'port-009',
     name: 'test-port',
@@ -188,8 +161,7 @@ const mockPortsMap: Record<string, PortDetail> = {
     ownedNetwork: { name: 'net-04', id: 'net-004' },
     subnet: { name: 'subnet-04', id: 'subnet-004' },
     macAddress: 'fa:16:3e:34:85:40',
-    attachedTo: null,
-  },
+    attachedTo: null },
   'port-010': {
     id: 'port-010',
     name: 'vpn-port',
@@ -200,9 +172,7 @@ const mockPortsMap: Record<string, PortDetail> = {
     ownedNetwork: { name: 'net-01', id: 'net-001' },
     subnet: { name: 'subnet-01', id: 'subnet-001' },
     macAddress: 'fa:16:3e:34:85:41',
-    attachedTo: { name: 'vpn-gateway', id: 'vpn-001', type: 'instance' },
-  },
-};
+    attachedTo: { name: 'vpn-gateway', id: 'vpn-001', type: 'instance' } } };
 
 const defaultPortDetail: PortDetail = {
   id: 'unknown',
@@ -214,29 +184,25 @@ const defaultPortDetail: PortDetail = {
   ownedNetwork: { name: '-', id: '' },
   subnet: { name: '-', id: '' },
   macAddress: '-',
-  attachedTo: null,
-};
+  attachedTo: null };
 
 const mockFixedIPs: FixedIP[] = Array.from({ length: 115 }, (_, i) => ({
   id: `fixed-ip-${String(i + 1).padStart(3, '0')}`,
   fixedIp: `10.0.0.${5 + i}`,
   floatingIp: i % 3 === 0 ? { address: `10.0.0.${5 + i}`, id: '29tgj234' } : null,
   ownedSubnet: { name: 'subnet-01', id: '29tgj234' },
-  createdAt: '2025-09-01',
-}));
+  createdAt: '2025-09-01' }));
 
 const mockAllowedAddressPairs: AllowedAddressPair[] = Array.from({ length: 115 }, (_, i) => ({
   id: `aap-${String(i + 1).padStart(3, '0')}`,
   ipAddress: `10.0.0.${5 + (i % 250)}`,
-  macAddress: `fa:12:34:56:78:${String(90 + (i % 10)).padStart(2, '0')}`,
-}));
+  macAddress: `fa:12:34:56:78:${String(90 + (i % 10)).padStart(2, '0')}` }));
 
 const mockSecurityGroups: SecurityGroup[] = Array.from({ length: 115 }, (_, i) => ({
   id: '29tgj234',
   name: `10.0.0.${5 + (i % 250)}`,
   description: '-',
-  createdAt: '2025-09-03',
-}));
+  createdAt: '2025-09-03' }));
 
 /* ----------------------------------------
    Status Mapping
@@ -245,8 +211,7 @@ const mockSecurityGroups: SecurityGroup[] = Array.from({ length: 115 }, (_, i) =
 const portStatusMap: Record<PortStatus, 'active' | 'shutoff' | 'building'> = {
   active: 'active',
   down: 'shutoff',
-  build: 'building',
-};
+  build: 'building' };
 
 /* ----------------------------------------
    PortDetailPage Component
@@ -355,8 +320,7 @@ export default function PortDetailPage() {
     {
       key: 'fixedIp',
       label: 'Fixed IP',
-      flex: 1,
-    },
+      flex: 1 },
     {
       key: 'floatingIp',
       label: 'Floating IP',
@@ -377,8 +341,7 @@ export default function PortDetailPage() {
           </div>
         ) : (
           <span className="text-[var(--color-text-subtle)]">-</span>
-        ),
-    },
+        ) },
     {
       key: 'ownedSubnet',
       label: 'Owned subnet',
@@ -397,12 +360,11 @@ export default function PortDetailPage() {
             ID : {row.ownedSubnet.id}
           </span>
         </div>
-      ),
-    },
+      ) },
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: fixedColumns.actions,
       align: 'center',
       render: (_: unknown, row: FixedIP) => {
         const fixedIpMenuItems: ContextMenuItem[] = [
@@ -410,14 +372,12 @@ export default function PortDetailPage() {
             id: 'disassociate-floating-ip',
             label: 'Disassociate floating IP',
             status: 'danger',
-            onClick: () => console.log('Disassociate floating IP', row.id),
-          },
+            onClick: () => console.log('Disassociate floating IP', row.id) },
           {
             id: 'release-fixed-ip',
             label: 'Release fixed IP',
             status: 'danger',
-            onClick: () => console.log('Release fixed IP', row.id),
-          },
+            onClick: () => console.log('Release fixed IP', row.id) },
         ];
         return (
           <div onClick={(e) => e.stopPropagation()}>
@@ -432,8 +392,7 @@ export default function PortDetailPage() {
             </ContextMenu>
           </div>
         );
-      },
-    },
+      } },
   ];
 
   // Allowed Address Pairs columns
@@ -441,17 +400,15 @@ export default function PortDetailPage() {
     {
       key: 'ipAddress',
       label: 'IP Address',
-      flex: 1,
-    },
+      flex: 1 },
     {
       key: 'macAddress',
       label: 'MAC Address',
-      flex: 1,
-    },
+      flex: 1 },
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: fixedColumns.actions,
       align: 'center',
       render: (_: unknown, row: AllowedAddressPair) => {
         const pairMenuItems: ContextMenuItem[] = [
@@ -459,8 +416,7 @@ export default function PortDetailPage() {
             id: 'delete',
             label: 'Delete',
             status: 'danger',
-            onClick: () => console.log('Delete address pair', row.id),
-          },
+            onClick: () => console.log('Delete address pair', row.id) },
         ];
         return (
           <div onClick={(e) => e.stopPropagation()}>
@@ -475,8 +431,7 @@ export default function PortDetailPage() {
             </ContextMenu>
           </div>
         );
-      },
-    },
+      } },
   ];
 
   // Security groups columns
@@ -500,24 +455,21 @@ export default function PortDetailPage() {
             ID : {row.id}
           </span>
         </div>
-      ),
-    },
+      ) },
     {
       key: 'description',
       label: 'Description',
       flex: 1,
-      sortable: true,
-    },
+      sortable: true },
     {
       key: 'createdAt',
       label: 'Created at',
       flex: 1,
-      sortable: true,
-    },
+      sortable: true },
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: fixedColumns.actions,
       align: 'center',
       render: (_: unknown, row: SecurityGroup) => {
         const sgMenuItems: ContextMenuItem[] = [
@@ -528,8 +480,7 @@ export default function PortDetailPage() {
             onClick: () => {
               setSecurityGroupToDetach(row);
               setDetachModalOpen(true);
-            },
-          },
+            } },
         ];
         return (
           <div onClick={(e) => e.stopPropagation()}>
@@ -544,8 +495,7 @@ export default function PortDetailPage() {
             </ContextMenu>
           </div>
         );
-      },
-    },
+      } },
   ];
 
   const handleDetachSecurityGroup = () => {
@@ -567,8 +517,7 @@ export default function PortDetailPage() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    closable: tab.closable,
-  }));
+    closable: tab.closable }));
 
   const handleCopyMac = () => {
     navigator.clipboard.writeText(port.macAddress);

@@ -1,22 +1,5 @@
 import { useState, useMemo } from 'react';
-import {
-  Button,
-  FilterSearchInput,
-  Table,
-  Pagination,
-  VStack,
-  TabBar,
-  TopBar,
-  TopBarAction,
-  Breadcrumb,
-  ListToolbar,
-  ContextMenu,
-  ConfirmModal,
-  type TableColumn,
-  type ContextMenuItem,
-  type FilterField,
-  type AppliedFilter,
-} from '@/design-system';
+import { Button, FilterSearchInput, Table, Pagination, VStack, TabBar, TopBar, TopBarAction, Breadcrumb, ListToolbar, ContextMenu, ConfirmModal, type TableColumn, type ContextMenuItem, type FilterField, type AppliedFilter, fixedColumns, columnMinWidths } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
@@ -53,8 +36,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     ingressRules: 3,
     egressRules: 3,
     createdAt: '2024-01-15',
-    status: 'active',
-  },
+    status: 'active' },
   {
     id: 'sg-002',
     name: 'default',
@@ -62,8 +44,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     ingressRules: 2,
     egressRules: 2,
     createdAt: '2024-01-10',
-    status: 'active',
-  },
+    status: 'active' },
   {
     id: 'sg-003',
     name: 'db-sg',
@@ -71,8 +52,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     ingressRules: 5,
     egressRules: 1,
     createdAt: '2024-02-01',
-    status: 'active',
-  },
+    status: 'active' },
   {
     id: 'sg-004',
     name: 'app-sg',
@@ -80,8 +60,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     ingressRules: 8,
     egressRules: 4,
     createdAt: '2024-02-15',
-    status: 'active',
-  },
+    status: 'active' },
   {
     id: 'sg-005',
     name: 'lb-sg',
@@ -89,8 +68,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     ingressRules: 4,
     egressRules: 2,
     createdAt: '2024-03-01',
-    status: 'active',
-  },
+    status: 'active' },
   {
     id: 'sg-006',
     name: 'cache-sg',
@@ -98,8 +76,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     ingressRules: 2,
     egressRules: 1,
     createdAt: '2024-03-10',
-    status: 'active',
-  },
+    status: 'active' },
   {
     id: 'sg-007',
     name: 'monitor-sg',
@@ -107,8 +84,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     ingressRules: 6,
     egressRules: 3,
     createdAt: '2024-04-01',
-    status: 'error',
-  },
+    status: 'error' },
   {
     id: 'sg-008',
     name: 'vpn-sg',
@@ -116,8 +92,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     ingressRules: 10,
     egressRules: 5,
     createdAt: '2024-04-15',
-    status: 'active',
-  },
+    status: 'active' },
   {
     id: 'sg-009',
     name: 'admin-sg',
@@ -125,8 +100,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     ingressRules: 15,
     egressRules: 8,
     createdAt: '2024-05-01',
-    status: 'active',
-  },
+    status: 'active' },
   {
     id: 'sg-010',
     name: 'test-sg',
@@ -134,8 +108,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     ingressRules: 1,
     egressRules: 1,
     createdAt: '2024-05-10',
-    status: 'active',
-  },
+    status: 'active' },
 ];
 
 /* ----------------------------------------
@@ -144,8 +117,7 @@ const mockSecurityGroups: SecurityGroup[] = [
 
 const sgStatusMap: Record<SecurityGroupStatus, 'active' | 'error'> = {
   active: 'active',
-  error: 'error',
-};
+  error: 'error' };
 
 /* ----------------------------------------
    Component
@@ -206,8 +178,7 @@ export function ComputeAdminSecurityGroupsPage() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    closable: tab.closable,
-  }));
+    closable: tab.closable }));
 
   // Context menu items
   const getContextMenuItems = (sg: SecurityGroup): ContextMenuItem[] => [
@@ -220,8 +191,7 @@ export function ComputeAdminSecurityGroupsPage() {
       onClick: () => {
         setGroupToDelete(sg);
         setDeleteModalOpen(true);
-      },
-    },
+      } },
   ];
 
   // Filter security groups based on search
@@ -264,36 +234,31 @@ export function ComputeAdminSecurityGroupsPage() {
             ID : {row.id}
           </span>
         </div>
-      ),
-    },
+      ) },
     {
       key: 'description',
       label: 'Description',
       flex: 1,
-      sortable: true,
-    },
+      sortable: true },
     {
       key: 'ingressRules',
       label: 'Ingress rules',
       flex: 1,
-      sortable: true,
-    },
+      sortable: true },
     {
       key: 'egressRules',
       label: 'Egress rules',
       flex: 1,
-      sortable: true,
-    },
+      sortable: true },
     {
       key: 'createdAt',
       label: 'Created at',
       flex: 1,
-      sortable: true,
-    },
+      sortable: true },
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: fixedColumns.actions,
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
@@ -307,8 +272,7 @@ export function ComputeAdminSecurityGroupsPage() {
             </button>
           </ContextMenu>
         </div>
-      ),
-    },
+      ) },
   ];
 
   // Filter and order columns based on preferences
@@ -491,8 +455,7 @@ export function ComputeAdminSecurityGroupsPage() {
         securityGroup={{
           id: selectedGroupForDrawer?.id || '',
           name: selectedGroupForDrawer?.name || '',
-          description: selectedGroupForDrawer?.description,
-        }}
+          description: selectedGroupForDrawer?.description }}
       />
     </div>
   );

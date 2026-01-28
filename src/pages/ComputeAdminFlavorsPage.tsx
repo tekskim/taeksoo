@@ -1,24 +1,5 @@
 import { useState, useMemo } from 'react';
-import {
-  FilterSearchInput,
-  Table,
-  Pagination,
-  VStack,
-  TabBar,
-  TopBar,
-  TopBarAction,
-  Breadcrumb,
-  Tabs,
-  TabList,
-  Tab,
-  ListToolbar,
-  Button,
-  ContextMenu,
-  type TableColumn,
-  type ContextMenuItem,
-  type FilterField,
-  type AppliedFilter,
-} from '@/design-system';
+import { FilterSearchInput, Table, Pagination, VStack, TabBar, TopBar, TopBarAction, Breadcrumb, Tabs, TabList, Tab, ListToolbar, Button, ContextMenu, type TableColumn, type ContextMenuItem, type FilterField, type AppliedFilter, fixedColumns, columnMinWidths } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
@@ -63,8 +44,7 @@ const mockFlavors: Flavor[] = [
     ephemeralDisk: '0GiB',
     internalNetworkBandwidth: '-',
     access: 'Public',
-    type: 'CPU',
-  },
+    type: 'CPU' },
   {
     id: 'flv-002',
     name: 'c5.xlarge',
@@ -74,8 +54,7 @@ const mockFlavors: Flavor[] = [
     ephemeralDisk: '0GiB',
     internalNetworkBandwidth: '10Gbps',
     access: 'Public',
-    type: 'CPU',
-  },
+    type: 'CPU' },
   {
     id: 'flv-003',
     name: 'm5.large',
@@ -85,8 +64,7 @@ const mockFlavors: Flavor[] = [
     ephemeralDisk: '0GiB',
     internalNetworkBandwidth: '-',
     access: 'Public',
-    type: 'CPU',
-  },
+    type: 'CPU' },
   {
     id: 'flv-004',
     name: 'm5.xlarge',
@@ -96,8 +74,7 @@ const mockFlavors: Flavor[] = [
     ephemeralDisk: '0GiB',
     internalNetworkBandwidth: '10Gbps',
     access: 'Public',
-    type: 'CPU',
-  },
+    type: 'CPU' },
   {
     id: 'flv-005',
     name: 'r5.large',
@@ -107,8 +84,7 @@ const mockFlavors: Flavor[] = [
     ephemeralDisk: '0GiB',
     internalNetworkBandwidth: '-',
     access: 'Public',
-    type: 'CPU',
-  },
+    type: 'CPU' },
   {
     id: 'flv-006',
     name: 'r5.xlarge',
@@ -118,8 +94,7 @@ const mockFlavors: Flavor[] = [
     ephemeralDisk: '0GiB',
     internalNetworkBandwidth: '10Gbps',
     access: 'Public',
-    type: 'CPU',
-  },
+    type: 'CPU' },
   {
     id: 'flv-007',
     name: 't3.micro',
@@ -129,8 +104,7 @@ const mockFlavors: Flavor[] = [
     ephemeralDisk: '0GiB',
     internalNetworkBandwidth: '-',
     access: 'Public',
-    type: 'CPU',
-  },
+    type: 'CPU' },
   {
     id: 'flv-008',
     name: 't3.small',
@@ -140,8 +114,7 @@ const mockFlavors: Flavor[] = [
     ephemeralDisk: '0GiB',
     internalNetworkBandwidth: '-',
     access: 'Public',
-    type: 'CPU',
-  },
+    type: 'CPU' },
   {
     id: 'flv-009',
     name: 'g4dn.xlarge',
@@ -155,8 +128,7 @@ const mockFlavors: Flavor[] = [
     gpuType: 'NVIDIA T4',
     numaNodes: '1',
     cpuPolicy: 'Dedicated',
-    cpuThreadPolicy: 'Prefer',
-  },
+    cpuThreadPolicy: 'Prefer' },
   {
     id: 'flv-010',
     name: 'g4dn.2xlarge',
@@ -170,8 +142,7 @@ const mockFlavors: Flavor[] = [
     gpuType: 'NVIDIA T4',
     numaNodes: '2',
     cpuPolicy: 'Dedicated',
-    cpuThreadPolicy: 'Isolate',
-  },
+    cpuThreadPolicy: 'Isolate' },
   {
     id: 'flv-011',
     name: 'p3.2xlarge',
@@ -185,8 +156,7 @@ const mockFlavors: Flavor[] = [
     gpuType: 'NVIDIA V100',
     numaNodes: '2',
     cpuPolicy: 'Shared',
-    cpuThreadPolicy: 'Require',
-  },
+    cpuThreadPolicy: 'Require' },
   {
     id: 'flv-012',
     name: 'inf1.xlarge',
@@ -200,8 +170,7 @@ const mockFlavors: Flavor[] = [
     gpuType: 'AWS Inferentia',
     numaNodes: '1',
     cpuPolicy: 'Dedicated',
-    cpuThreadPolicy: 'Prefer',
-  },
+    cpuThreadPolicy: 'Prefer' },
   {
     id: 'flv-013',
     name: 'inf1.2xlarge',
@@ -215,8 +184,7 @@ const mockFlavors: Flavor[] = [
     gpuType: 'AWS Inferentia',
     numaNodes: '2',
     cpuPolicy: 'Shared',
-    cpuThreadPolicy: 'Isolate',
-  },
+    cpuThreadPolicy: 'Isolate' },
   {
     id: 'flv-014',
     name: 'custom.small',
@@ -226,8 +194,7 @@ const mockFlavors: Flavor[] = [
     ephemeralDisk: '20GiB',
     internalNetworkBandwidth: '-',
     access: 'Private',
-    type: 'Custom',
-  },
+    type: 'Custom' },
   {
     id: 'flv-015',
     name: 'custom.medium',
@@ -237,8 +204,7 @@ const mockFlavors: Flavor[] = [
     ephemeralDisk: '50GiB',
     internalNetworkBandwidth: '10Gbps',
     access: 'Private',
-    type: 'Custom',
-  },
+    type: 'Custom' },
 ];
 
 /* ----------------------------------------
@@ -255,8 +221,7 @@ const filterFields: FilterField[] = [
     options: [
       { value: 'Public', label: 'Public' },
       { value: 'Private', label: 'Private' },
-    ],
-  },
+    ] },
 ];
 
 export function ComputeAdminFlavorsPage() {
@@ -290,8 +255,7 @@ export function ComputeAdminFlavorsPage() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    closable: tab.closable,
-  }));
+    closable: tab.closable }));
 
   // Filter flavors by tab and search
   const filteredFlavors = useMemo(() => {
@@ -349,26 +313,22 @@ export function ComputeAdminFlavorsPage() {
               ID : {row.id}
             </span>
           </div>
-        ),
-      },
+        ) },
       {
         key: 'vcpu',
         label: 'vCPU',
         flex: 1,
-        sortable: true,
-      },
+        sortable: true },
       {
         key: 'ram',
         label: 'RAM',
         flex: 1,
-        sortable: true,
-      },
+        sortable: true },
       {
         key: 'ephemeralDisk',
         label: 'Root Disk',
         flex: 1,
-        sortable: true,
-      },
+        sortable: true },
       // GPU/MPU-specific columns (only shown when GPU or MPU tab is active)
       ...(activeTab === 'gpu' || activeTab === 'mpu'
         ? ([
@@ -376,57 +336,49 @@ export function ComputeAdminFlavorsPage() {
               key: 'gpuType',
               label: 'GPU Type',
               flex: 1,
-              sortable: true,
-            },
+              sortable: true },
             {
               key: 'numaNodes',
               label: 'NUMA Nodes',
               flex: 1,
-              sortable: true,
-            },
+              sortable: true },
             {
               key: 'cpuPolicy',
               label: 'CPU Policy',
               flex: 1,
-              sortable: true,
-            },
+              sortable: true },
             {
               key: 'cpuThreadPolicy',
               label: 'CPU Thread Policy',
               flex: 1,
-              sortable: true,
-            },
+              sortable: true },
           ] as TableColumn<Flavor>[])
         : []),
       {
         key: 'access',
         label: 'Public',
         flex: 1,
-        render: (_, row) => <span>{row.access === 'Public' ? 'On' : 'Off'}</span>,
-      },
+        render: (_, row) => <span>{row.access === 'Public' ? 'On' : 'Off'}</span> },
       {
         key: 'actions',
         label: 'Action',
-        width: '64px',
+        width: fixedColumns.actions,
         align: 'center',
         render: (_, row) => {
           const menuItems: ContextMenuItem[] = [
             {
               id: 'manage-metadata',
               label: 'Manage Metadata',
-              onClick: () => console.log('Manage metadata for flavor:', row.id),
-            },
+              onClick: () => console.log('Manage metadata for flavor:', row.id) },
             {
               id: 'manage-access',
               label: 'Manage Access',
-              onClick: () => console.log('Manage access for flavor:', row.id),
-            },
+              onClick: () => console.log('Manage access for flavor:', row.id) },
             {
               id: 'delete',
               label: 'Delete',
               status: 'danger',
-              onClick: () => console.log('Delete flavor:', row.id),
-            },
+              onClick: () => console.log('Delete flavor:', row.id) },
           ];
 
           return (
@@ -442,8 +394,7 @@ export function ComputeAdminFlavorsPage() {
               </ContextMenu>
             </div>
           );
-        },
-      },
+        } },
     ],
     [activeTab]
   );

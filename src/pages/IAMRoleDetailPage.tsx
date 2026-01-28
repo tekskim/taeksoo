@@ -16,7 +16,8 @@ import {
   ContextMenu,
   TabBar,
   Chip,
-  columnWidths,
+  fixedColumns,
+  columnMinWidths,
   type TableColumn,
   type ContextMenuItem,
 } from '@/design-system';
@@ -486,7 +487,7 @@ export default function IAMRoleDetailPage() {
     {
       key: 'id',
       label: 'Action',
-      width: columnWidths.actionWide,
+      width: fixedColumns.actionWide,
       align: 'center',
       render: (_value, row) => (
         <ContextMenu
@@ -534,7 +535,7 @@ export default function IAMRoleDetailPage() {
     {
       key: 'createdAt',
       label: 'Created at',
-      width: columnWidths.createdAt,
+      flex: 1, minWidth: columnMinWidths.createdAt,
       sortable: true,
     },
   ];
@@ -569,7 +570,7 @@ export default function IAMRoleDetailPage() {
     {
       key: 'createdAt',
       label: 'Created at',
-      width: columnWidths.createdAt,
+      flex: 1, minWidth: columnMinWidths.createdAt,
       sortable: true,
     },
   ];

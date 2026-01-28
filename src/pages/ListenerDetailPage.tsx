@@ -18,7 +18,8 @@ import {
   Pagination,
   StatusIndicator,
   ContextMenu,
-  columnWidths,
+  fixedColumns,
+  columnMinWidths,
 } from '@/design-system';
 import type { TableColumn, ContextMenuItem } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
@@ -380,7 +381,7 @@ export default function ListenerDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: columnWidths.status,
+      width: fixedColumns.status,
       align: 'center',
       render: (_, row) => <StatusIndicator status={poolStatusMap[row.status]} layout="icon-only" />,
     },
@@ -430,7 +431,7 @@ export default function ListenerDetailPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: columnWidths.actions,
+      width: fixedColumns.actions,
       align: 'center',
       render: (_: unknown, row: Pool) => {
         const poolMenuItems: ContextMenuItem[] = [
@@ -463,7 +464,7 @@ export default function ListenerDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: columnWidths.status,
+      width: fixedColumns.status,
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={l7PolicyStatusMap[row.status]} layout="icon-only" />
@@ -509,7 +510,7 @@ export default function ListenerDetailPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: columnWidths.actions,
+      width: fixedColumns.actions,
       align: 'center',
       render: (_: unknown, row: L7Policy) => {
         const policyMenuItems: ContextMenuItem[] = [
@@ -548,7 +549,7 @@ export default function ListenerDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: columnWidths.status,
+      width: fixedColumns.status,
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={certificateStatusMap[row.status]} layout="icon-only" />
@@ -600,7 +601,7 @@ export default function ListenerDetailPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: columnWidths.actions,
+      width: fixedColumns.actions,
       align: 'center',
       render: (_: unknown, row: Certificate) => {
         const getCertMenuItems = (): ContextMenuItem[] => {

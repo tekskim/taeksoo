@@ -25,7 +25,8 @@ import {
   IconRocky,
   InlineMessage,
   SelectionIndicator,
-  columnWidths,
+  fixedColumns,
+  columnMinWidths,
 } from '@/design-system';
 import type { WizardSummaryItem, WizardSectionState, TableColumn } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
@@ -456,7 +457,7 @@ export function CreateVolumePage() {
     {
       key: 'status',
       label: 'Status',
-      width: columnWidths.status,
+      width: fixedColumns.status,
       align: 'center',
       render: (value: ImageRow['status']) => <StatusIndicator status={value} />,
     },
@@ -479,11 +480,11 @@ export function CreateVolumePage() {
         </div>
       ),
     },
-    { key: 'version', label: 'Version', width: columnWidths.version, sortable: true },
-    { key: 'size', label: 'Size', width: columnWidths.size, sortable: true },
-    { key: 'minDisk', label: 'Min disk', width: columnWidths.minDisk, sortable: true },
-    { key: 'minRAM', label: 'Min RAM', width: columnWidths.minRAM, sortable: true },
-    { key: 'visibility', label: 'Visibility', width: columnWidths.visibility, sortable: true },
+    { key: 'version', label: 'Version', flex: 1, minWidth: columnMinWidths.version, sortable: true },
+    { key: 'size', label: 'Size', flex: 1, minWidth: columnMinWidths.size, sortable: true },
+    { key: 'minDisk', label: 'Min disk', flex: 1, minWidth: columnMinWidths.minDisk, sortable: true },
+    { key: 'minRAM', label: 'Min RAM', flex: 1, minWidth: columnMinWidths.minRAM, sortable: true },
+    { key: 'visibility', label: 'Visibility', flex: 1, minWidth: columnMinWidths.visibility, sortable: true },
   ];
 
   // Snapshot table columns
@@ -491,7 +492,7 @@ export function CreateVolumePage() {
     {
       key: 'status',
       label: 'Status',
-      width: columnWidths.status,
+      width: fixedColumns.status,
       align: 'center',
       render: (value: SnapshotRow['status']) => <StatusIndicator status={value} />,
     },

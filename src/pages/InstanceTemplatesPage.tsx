@@ -15,7 +15,8 @@ import {
   ListToolbar,
   ContextMenu,
   ConfirmModal,
-  columnWidths,
+  fixedColumns,
+  columnMinWidths,
   type TableColumn,
   type ContextMenuItem,
   type FilterField,
@@ -357,12 +358,12 @@ export function InstanceTemplatesPage() {
     currentPageIds.length > 0 && currentPageIds.every((id) => selectedTemplates.includes(id));
   const someCurrentPageSelected = currentPageIds.some((id) => selectedTemplates.includes(id));
 
-  // Table columns (using columnWidths preset)
+  // Table columns (using fixedColumns / columnMinWidths preset)
   const columns: TableColumn<InstanceTemplate>[] = [
     {
       key: 'favorite',
       label: '',
-      width: columnWidths.favorite,
+      width: fixedColumns.favorite,
       align: 'center',
       headerRender: () => (
         <div className="flex items-center justify-center w-full">
@@ -389,7 +390,7 @@ export function InstanceTemplatesPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
-      minWidth: columnWidths.name,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (_, row) => (
         <Link
@@ -404,19 +405,21 @@ export function InstanceTemplatesPage() {
     {
       key: 'image',
       label: 'Description',
-      width: columnWidths.description,
+      flex: 1,
+      minWidth: columnMinWidths.description,
       sortable: true,
     },
     {
       key: 'flavor',
       label: 'Created at',
-      width: columnWidths.createdAt,
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
     },
     {
       key: 'actions',
       label: 'Action',
-      width: columnWidths.actions,
+      width: fixedColumns.actions,
       align: 'center',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [

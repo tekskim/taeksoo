@@ -1,23 +1,5 @@
 import { useState, useMemo } from 'react';
-import {
-  Button,
-  FilterSearchInput,
-  Table,
-  Pagination,
-  VStack,
-  TabBar,
-  TopBar,
-  TopBarAction,
-  Breadcrumb,
-  ListToolbar,
-  ContextMenu,
-  ConfirmModal,
-  StatusIndicator,
-  type TableColumn,
-  type ContextMenuItem,
-  type FilterField,
-  type AppliedFilter,
-} from '@/design-system';
+import { Button, FilterSearchInput, Table, Pagination, VStack, TabBar, TopBar, TopBarAction, Breadcrumb, ListToolbar, ContextMenu, ConfirmModal, StatusIndicator, type TableColumn, type ContextMenuItem, type FilterField, type AppliedFilter, fixedColumns, columnMinWidths } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
@@ -64,8 +46,7 @@ const mockLoadBalancers: LoadBalancer[] = [
     listenerId: '29tgj234',
     listenerCount: 2,
     createdAt: '2025-10-03',
-    status: 'active',
-  },
+    status: 'active' },
   {
     id: 'lb-002',
     name: 'api-lb',
@@ -78,8 +59,7 @@ const mockLoadBalancers: LoadBalancer[] = [
     listenerId: '38fk29dk',
     listenerCount: 0,
     createdAt: '2025-10-02',
-    status: 'active',
-  },
+    status: 'active' },
   {
     id: 'lb-003',
     name: 'app-lb',
@@ -92,8 +72,7 @@ const mockLoadBalancers: LoadBalancer[] = [
     listenerId: '9dk38fj2',
     listenerCount: 1,
     createdAt: '2025-10-01',
-    status: 'building',
-  },
+    status: 'building' },
   {
     id: 'lb-004',
     name: 'db-lb',
@@ -106,8 +85,7 @@ const mockLoadBalancers: LoadBalancer[] = [
     listenerId: 'k29dk38f',
     listenerCount: 0,
     createdAt: '2025-09-28',
-    status: 'active',
-  },
+    status: 'active' },
   {
     id: 'lb-005',
     name: 'cache-lb',
@@ -120,8 +98,7 @@ const mockLoadBalancers: LoadBalancer[] = [
     listenerId: 'fj29dk38',
     listenerCount: 0,
     createdAt: '2025-09-25',
-    status: 'active',
-  },
+    status: 'active' },
   {
     id: 'lb-006',
     name: 'internal-lb',
@@ -134,8 +111,7 @@ const mockLoadBalancers: LoadBalancer[] = [
     listenerId: '8fj29dk3',
     listenerCount: 3,
     createdAt: '2025-09-20',
-    status: 'error',
-  },
+    status: 'error' },
   {
     id: 'lb-007',
     name: 'streaming-lb',
@@ -148,8 +124,7 @@ const mockLoadBalancers: LoadBalancer[] = [
     listenerId: 'dk38fj29',
     listenerCount: 0,
     createdAt: '2025-09-15',
-    status: 'active',
-  },
+    status: 'active' },
   {
     id: 'lb-008',
     name: 'mail-lb',
@@ -162,8 +137,7 @@ const mockLoadBalancers: LoadBalancer[] = [
     listenerId: '29dk38fj',
     listenerCount: 0,
     createdAt: '2025-09-10',
-    status: 'pending',
-  },
+    status: 'pending' },
   {
     id: 'lb-009',
     name: 'vpn-lb',
@@ -176,8 +150,7 @@ const mockLoadBalancers: LoadBalancer[] = [
     listenerId: '3fj29dk8',
     listenerCount: 0,
     createdAt: '2025-09-05',
-    status: 'active',
-  },
+    status: 'active' },
   {
     id: 'lb-010',
     name: 'monitoring-lb',
@@ -190,8 +163,7 @@ const mockLoadBalancers: LoadBalancer[] = [
     listenerId: 'j29dk38f',
     listenerCount: 4,
     createdAt: '2025-09-01',
-    status: 'active',
-  },
+    status: 'active' },
 ];
 
 /* ----------------------------------------
@@ -202,8 +174,7 @@ const lbStatusMap: Record<LoadBalancerStatus, 'active' | 'error' | 'building' | 
   active: 'active',
   error: 'error',
   building: 'building',
-  pending: 'pending',
-};
+  pending: 'pending' };
 
 /* ----------------------------------------
    Component
@@ -223,8 +194,7 @@ const filterFields: FilterField[] = [
       { value: 'error', label: 'Error' },
       { value: 'building', label: 'Building' },
       { value: 'pending', label: 'Pending' },
-    ],
-  },
+    ] },
 ];
 
 export function ComputeAdminLoadBalancersPage() {
@@ -280,8 +250,7 @@ export function ComputeAdminLoadBalancersPage() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    closable: tab.closable,
-  }));
+    closable: tab.closable }));
 
   // Context menu items
   const getContextMenuItems = (lb: LoadBalancer): ContextMenuItem[] => [
@@ -289,19 +258,16 @@ export function ComputeAdminLoadBalancersPage() {
       id: 'associate-floating-ip',
       label: 'Associate floating IP',
       onClick: () => handleAssociateFloatingIP(lb),
-      disabled: !!lb.floatingIp,
-    },
+      disabled: !!lb.floatingIp },
     {
       id: 'disassociate-floating-ip',
       label: 'Disassociate floating IP',
       onClick: () => console.log('Disassociate floating IP:', lb.id),
-      disabled: !lb.floatingIp,
-    },
+      disabled: !lb.floatingIp },
     {
       id: 'create-listener',
       label: 'Create listener',
-      onClick: () => console.log('Create listener:', lb.id),
-    },
+      onClick: () => console.log('Create listener:', lb.id) },
     { id: 'edit', label: 'Edit', onClick: () => handleEditLB(lb) },
     {
       id: 'delete',
@@ -310,8 +276,7 @@ export function ComputeAdminLoadBalancersPage() {
       onClick: () => {
         setLbToDelete(lb);
         setDeleteModalOpen(true);
-      },
-    },
+      } },
   ];
 
   // Filter load balancers based on search
@@ -342,10 +307,9 @@ export function ComputeAdminLoadBalancersPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: fixedColumns.status,
       align: 'center',
-      render: (_, row) => <StatusIndicator status={lbStatusMap[row.status]} layout="icon-only" />,
-    },
+      render: (_, row) => <StatusIndicator status={lbStatusMap[row.status]} layout="icon-only" /> },
     {
       key: 'name',
       label: 'Name',
@@ -364,13 +328,11 @@ export function ComputeAdminLoadBalancersPage() {
             ID : {row.id}
           </span>
         </div>
-      ),
-    },
+      ) },
     {
       key: 'vipAddress',
       label: 'VIP Address',
-      flex: 1,
-    },
+      flex: 1 },
     {
       key: 'ownedNetwork',
       label: 'Owned network',
@@ -389,8 +351,7 @@ export function ComputeAdminLoadBalancersPage() {
             ID : {row.ownedNetworkId.substring(0, 8)}
           </span>
         </div>
-      ),
-    },
+      ) },
     {
       key: 'floatingIp',
       label: 'Floating IP',
@@ -411,8 +372,7 @@ export function ComputeAdminLoadBalancersPage() {
           </div>
         ) : (
           '-'
-        ),
-    },
+        ) },
     {
       key: 'listeners',
       label: 'Listeners',
@@ -428,18 +388,16 @@ export function ComputeAdminLoadBalancersPage() {
             </span>
           </div>
         </div>
-      ),
-    },
+      ) },
     {
       key: 'createdAt',
       label: 'Created at',
       flex: 1,
-      sortable: true,
-    },
+      sortable: true },
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: fixedColumns.actions,
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
@@ -453,8 +411,7 @@ export function ComputeAdminLoadBalancersPage() {
             </button>
           </ContextMenu>
         </div>
-      ),
-    },
+      ) },
   ];
 
   // Filter and order columns based on preferences
@@ -638,8 +595,7 @@ export function ComputeAdminLoadBalancersPage() {
           id: selectedLBForDrawer?.id || '',
           name: selectedLBForDrawer?.name || '',
           networkId: selectedLBForDrawer?.ownedNetworkId || '',
-          networkName: selectedLBForDrawer?.ownedNetwork || '',
-        }}
+          networkName: selectedLBForDrawer?.ownedNetwork || '' }}
       />
 
       <EditLoadBalancerDrawer
@@ -647,8 +603,7 @@ export function ComputeAdminLoadBalancersPage() {
         onClose={() => setEditLBOpen(false)}
         loadBalancer={{
           id: selectedLBForDrawer?.id || '',
-          name: selectedLBForDrawer?.name || '',
-        }}
+          name: selectedLBForDrawer?.name || '' }}
       />
     </div>
   );

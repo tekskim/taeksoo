@@ -29,7 +29,8 @@ import {
   Tooltip,
   InlineMessage,
   SelectionIndicator,
-  columnWidths,
+  fixedColumns,
+  columnMinWidths,
 } from '@/design-system';
 import type { WizardSummaryItem, WizardSectionState, TableColumn } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
@@ -732,7 +733,7 @@ export default function CreateLoadBalancerPage() {
       {
         key: 'select',
         label: '',
-        width: columnWidths.select,
+        width: fixedColumns.select,
         render: (_value, row) => (
           <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
             <Radio
@@ -749,7 +750,7 @@ export default function CreateLoadBalancerPage() {
       {
         key: 'status',
         label: 'Status',
-        width: columnWidths.status,
+        width: fixedColumns.status,
         align: 'center' as const,
         render: (_value, row) => <StatusIndicator status={row.status} />,
       },
@@ -798,7 +799,7 @@ export default function CreateLoadBalancerPage() {
       {
         key: 'select',
         label: '',
-        width: columnWidths.select,
+        width: fixedColumns.select,
         render: (_value, row) => (
           <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
             <Radio
@@ -813,7 +814,7 @@ export default function CreateLoadBalancerPage() {
       {
         key: 'status',
         label: 'Status',
-        width: columnWidths.status,
+        width: fixedColumns.status,
         align: 'center' as const,
         render: (_value, row) => <StatusIndicator status={row.status} />,
       },
@@ -880,7 +881,7 @@ export default function CreateLoadBalancerPage() {
       {
         key: 'select',
         label: '',
-        width: columnWidths.select,
+        width: fixedColumns.select,
         render: (_value, row) => (
           <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
             <Radio
@@ -895,7 +896,7 @@ export default function CreateLoadBalancerPage() {
       {
         key: 'status',
         label: 'Status',
-        width: columnWidths.status,
+        width: fixedColumns.status,
         align: 'center' as const,
         render: (_value, row) => <StatusIndicator status={row.status} />,
       },
@@ -956,7 +957,7 @@ export default function CreateLoadBalancerPage() {
       {
         key: 'select',
         label: '',
-        width: columnWidths.select,
+        width: fixedColumns.select,
         render: (_value, row) => (
           <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
             <Checkbox
@@ -981,7 +982,7 @@ export default function CreateLoadBalancerPage() {
       {
         key: 'status',
         label: 'Status',
-        width: columnWidths.status,
+        width: fixedColumns.status,
         align: 'center' as const,
         render: (_value, row) => <StatusIndicator status={row.status} />,
       },

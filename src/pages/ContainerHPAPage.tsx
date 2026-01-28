@@ -15,7 +15,8 @@ import {
   ContextMenu,
   type TableColumn,
   type ContextMenuItem,
-  columnWidths,
+  fixedColumns,
+  columnMinWidths,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -223,7 +224,7 @@ export function ContainerHPAPage() {
     {
       key: 'status',
       label: 'Status',
-      width: columnWidths.status,
+      width: fixedColumns.status,
       align: 'center',
       sortable: false,
       render: (value) => <StatusIndicator status={getStatusType(value)} showIcon />,
@@ -269,13 +270,13 @@ export function ContainerHPAPage() {
     {
       key: 'createdAt',
       label: 'Created At',
-      width: columnWidths.createdAt,
+      flex: 1, minWidth: columnMinWidths.createdAt,
       sortable: true,
     },
     {
       key: 'action',
       label: 'Action',
-      width: columnWidths.action,
+      flex: 1, minWidth: columnMinWidths.action,
       align: 'center',
       sticky: 'right',
       render: (_, row) => {

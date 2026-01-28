@@ -13,7 +13,8 @@ import {
   ContextMenu,
   TabBar,
   StatusIndicator,
-  columnWidths,
+  fixedColumns,
+  columnMinWidths,
   type TableColumn,
   type ContextMenuItem,
 } from '@/design-system';
@@ -177,12 +178,12 @@ export default function IAMSystemAdministratorsPage() {
     { id: 'delete', label: 'Delete account', danger: true },
   ];
 
-  // Table columns
+  // Table columns (using fixedColumns / columnMinWidths preset)
   const columns: TableColumn<SystemAdmin>[] = [
     {
       key: 'status',
       label: 'Status',
-      width: columnWidths.status,
+      width: fixedColumns.status,
       align: 'center',
       render: (value) => (
         <StatusIndicator
@@ -194,6 +195,7 @@ export default function IAMSystemAdministratorsPage() {
       key: 'username',
       label: 'Username',
       flex: 1,
+      minWidth: columnMinWidths.username,
       sortable: true,
       render: (value) => (
         <Link
@@ -207,7 +209,7 @@ export default function IAMSystemAdministratorsPage() {
     {
       key: 'locked',
       label: 'Locked',
-      width: columnWidths.lockedWide,
+      width: fixedColumns.lockedWide,
       align: 'center',
       render: (value) => (
         <div className="flex items-center justify-center w-full">
@@ -221,23 +223,25 @@ export default function IAMSystemAdministratorsPage() {
       key: 'lastSignIn',
       label: 'Last sign-in',
       flex: 1,
+      minWidth: columnMinWidths.lastSignIn,
       sortable: true,
     },
     {
       key: 'mfa',
       label: 'MFA',
-      flex: 1,
+      width: fixedColumns.mfa,
     },
     {
       key: 'createdAt',
       label: 'Created at',
-      width: columnWidths.createdAt,
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
     },
     {
       key: 'id',
       label: 'Action',
-      width: columnWidths.actionWide,
+      width: fixedColumns.actionWide,
       align: 'center',
       render: (_value, row) => (
         <ContextMenu items={contextMenuItems} onSelect={(itemId) => console.log(itemId, row.id)}>

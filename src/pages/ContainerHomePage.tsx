@@ -13,7 +13,8 @@ import {
   SearchInput,
   Pagination,
   type TableColumn,
-  columnWidths,
+  fixedColumns,
+  columnMinWidths,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -145,7 +146,7 @@ export function ContainerHomePage() {
     {
       key: 'status',
       label: 'Status',
-      width: columnWidths.status,
+      width: fixedColumns.status,
       align: 'center',
       sortable: true,
       render: (value: string) => (
@@ -171,13 +172,13 @@ export function ContainerHomePage() {
     {
       key: 'kubernetesVersion',
       label: 'Kubernetes version',
-      width: columnWidths.kubernetesVersion,
+      flex: 1, minWidth: columnMinWidths.kubernetesVersion,
       sortable: true,
     },
-    { key: 'createdAt', label: 'Created at', width: columnWidths.createdAt, sortable: true },
-    { key: 'cpu', label: 'CPU', width: columnWidths.cpu, sortable: true },
-    { key: 'memory', label: 'Memory', width: columnWidths.memory, sortable: true },
-    { key: 'pods', label: 'Pods', width: columnWidths.pods, sortable: true },
+    { key: 'createdAt', label: 'Created at', flex: 1, minWidth: columnMinWidths.createdAt, sortable: true },
+    { key: 'cpu', label: 'CPU', flex: 1, minWidth: columnMinWidths.cpu, sortable: true },
+    { key: 'memory', label: 'Memory', flex: 1, minWidth: columnMinWidths.memory, sortable: true },
+    { key: 'pods', label: 'Pods', flex: 1, minWidth: columnMinWidths.pods, sortable: true },
   ];
 
   return (

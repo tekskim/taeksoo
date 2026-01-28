@@ -16,7 +16,8 @@ import {
   StatusIndicator,
   ContextMenu,
   TabBar,
-  columnWidths,
+  fixedColumns,
+  columnMinWidths,
   type TableColumn,
   type ContextMenuItem,
 } from '@/design-system';
@@ -434,7 +435,7 @@ export default function IAMUserGroupDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: columnWidths.status,
+      width: fixedColumns.status,
       align: 'center',
       render: (value) => <StatusIndicator status={value as 'active' | 'error' | 'shutoff'} />,
     },
@@ -466,13 +467,13 @@ export default function IAMUserGroupDetailPage() {
     {
       key: 'createdAt',
       label: 'Created at',
-      width: columnWidths.createdAt,
+      flex: 1, minWidth: columnMinWidths.createdAt,
       sortable: true,
     },
     {
       key: 'id',
       label: 'Action',
-      width: columnWidths.actionWide,
+      width: fixedColumns.actionWide,
       align: 'center',
       render: (_value, row) => (
         <ContextMenu
@@ -531,13 +532,13 @@ export default function IAMUserGroupDetailPage() {
     {
       key: 'createdAt',
       label: 'Created at',
-      width: columnWidths.createdAt,
+      flex: 1, minWidth: columnMinWidths.createdAt,
       sortable: true,
     },
     {
       key: 'id',
       label: 'Action',
-      width: columnWidths.actionWide,
+      width: fixedColumns.actionWide,
       align: 'center',
       render: (_value, row) => (
         <ContextMenu

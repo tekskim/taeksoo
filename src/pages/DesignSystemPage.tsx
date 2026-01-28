@@ -90,7 +90,8 @@ import {
   IconUbuntu,
   IconRocky,
   IconGrid,
-  columnWidths,
+  fixedColumns,
+  columnMinWidths,
 } from '@/design-system';
 import type { WizardSectionState, WizardSummaryItem } from '@/design-system';
 import type { NotificationItem } from '@/design-system/components/NotificationCenter';
@@ -630,7 +631,7 @@ function OpenSectionTableDemo() {
     {
       key: 'select',
       label: '',
-      width: columnWidths.select,
+      width: fixedColumns.select,
       render: (_: unknown, row: DemoImageRow) => (
         <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Radio
@@ -644,7 +645,7 @@ function OpenSectionTableDemo() {
     {
       key: 'status',
       label: 'Status',
-      width: columnWidths.status,
+      width: fixedColumns.status,
       align: 'center',
       render: (_: unknown, row: DemoImageRow) => <StatusIndicator status={row.status} />,
     },
@@ -652,7 +653,7 @@ function OpenSectionTableDemo() {
       key: 'name',
       label: 'Name',
       sortable: true,
-      width: columnWidths.name,
+      width: columnMinWidths.name,
       render: (value: string, row: DemoImageRow) => (
         <VStack gap={0}>
           <span className="text-[var(--color-action-primary)] text-[length:var(--font-size-12)] leading-[var(--line-height-18)] font-medium">
@@ -2008,7 +2009,7 @@ function TableDemo() {
       key: 'status',
       label: 'Status',
       sortable: true,
-      width: columnWidths.status,
+      width: fixedColumns.status,
       align: 'center' as const,
       render: (value: string) => (
         <StatusIndicator
@@ -2037,7 +2038,7 @@ function TableDemo() {
     {
       key: 'locked',
       label: 'Locked',
-      width: columnWidths.locked,
+      width: fixedColumns.locked,
       align: 'center' as const,
       render: (value: boolean) =>
         value ? (
@@ -2082,7 +2083,7 @@ function TableDemo() {
     {
       key: 'actions',
       label: 'Action',
-      width: columnWidths.actions,
+      width: fixedColumns.actions,
       align: 'center' as const,
       render: () => (
         <div className="flex items-center gap-1">
@@ -2102,7 +2103,7 @@ function TableDemo() {
     {
       key: 'name',
       label: 'Name',
-      width: columnWidths.name,
+      width: columnMinWidths.name,
       render: (value: string, row: InstanceData) => (
         <div className="flex flex-col gap-0.5">
           <span className="font-medium text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">
@@ -2114,7 +2115,7 @@ function TableDemo() {
         </div>
       ),
     },
-    { key: 'fixedIp', label: 'Fixed IP', width: columnWidths.fixedIp },
+    { key: 'fixedIp', label: 'Fixed IP', width: columnMinWidths.fixedIp },
     {
       key: 'attachedTo',
       label: 'Attached to',
@@ -2162,7 +2163,7 @@ function TableDemo() {
     {
       key: 'name',
       label: 'Name',
-      width: columnWidths.name,
+      width: columnMinWidths.name,
       render: (value: string) => (
         <span className="font-medium text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">
           {value}
@@ -2195,7 +2196,7 @@ function TableDemo() {
         </div>
       ),
     },
-    { key: 'createdAt', label: 'Created at', width: columnWidths.createdAt },
+    { key: 'createdAt', label: 'Created at', width: columnMinWidths.createdAt },
   ];
 
   // Columns without copy button (40px row height demo)
@@ -2203,7 +2204,7 @@ function TableDemo() {
     {
       key: 'name',
       label: 'Name',
-      width: columnWidths.name,
+      width: columnMinWidths.name,
       render: (value: string) => (
         <span className="font-medium text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">
           {value}
@@ -2220,7 +2221,7 @@ function TableDemo() {
         </span>
       ),
     },
-    { key: 'createdAt', label: 'Created at', width: columnWidths.createdAt },
+    { key: 'createdAt', label: 'Created at', width: columnMinWidths.createdAt },
   ];
 
   // Compact columns for horizontal scroll demo
@@ -2228,7 +2229,7 @@ function TableDemo() {
     {
       key: 'status',
       label: 'Status',
-      width: columnWidths.status,
+      width: fixedColumns.status,
       align: 'center' as const,
       render: (value: string) => (
         <StatusIndicator
@@ -2240,24 +2241,24 @@ function TableDemo() {
     {
       key: 'name',
       label: 'Name',
-      width: columnWidths.name,
+      width: columnMinWidths.name,
       render: (value: string) => (
         <span className="font-medium text-[var(--color-action-primary)] cursor-pointer hover:underline hover:underline-offset-2">
           {value}
         </span>
       ),
     },
-    { key: 'fixedIp', label: 'Fixed IP', width: columnWidths.fixedIp },
-    { key: 'image', label: 'Image', width: columnWidths.image },
-    { key: 'flavor', label: 'Flavor', width: columnWidths.flavor },
+    { key: 'fixedIp', label: 'Fixed IP', width: columnMinWidths.fixedIp },
+    { key: 'image', label: 'Image', width: columnMinWidths.image },
+    { key: 'flavor', label: 'Flavor', width: columnMinWidths.flavor },
   ];
 
   // Empty state columns
   const emptyColumns = [
-    { key: 'status', label: 'Status', width: columnWidths.status },
+    { key: 'status', label: 'Status', width: fixedColumns.status },
     { key: 'name', label: 'Name', flex: 1 },
-    { key: 'fixedIp', label: 'Fixed IP', width: columnWidths.fixedIp },
-    { key: 'image', label: 'Image', width: columnWidths.image },
+    { key: 'fixedIp', label: 'Fixed IP', width: columnMinWidths.fixedIp },
+    { key: 'image', label: 'Image', width: columnMinWidths.image },
   ];
 
   return (
@@ -2603,7 +2604,7 @@ function TableDemo() {
         <div className="p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)] font-mono text-[length:var(--font-size-11)]">
           <span className="text-[var(--color-text-subtle)]">// Import</span>
           <br />
-          <span className="text-[var(--color-state-info)]">import</span> {'{'} columnWidths {'}'}{' '}
+          <span className="text-[var(--color-state-info)]">import</span> {'{'} fixedColumns, columnMinWidths {'}'}{' '}
           <span className="text-[var(--color-state-info)]">from</span>{' '}
           <span className="text-[var(--color-state-success)]">'@/design-system'</span>;<br />
           <br />
@@ -2613,11 +2614,11 @@ function TableDemo() {
           <br />
           <span className="text-[var(--color-state-info)]">const</span> columns = [<br />
           &nbsp;&nbsp;{'{'} key: <span className="text-[var(--color-state-success)]">'select'</span>
-          , width: columnWidths.<span className="text-[var(--color-action-primary)]">select</span>{' '}
+          , width: columnMinWidths.<span className="text-[var(--color-action-primary)]">select</span>{' '}
           {'}'}, <span className="text-[var(--color-text-subtle)]">// 고정 40px</span>
           <br />
           &nbsp;&nbsp;{'{'} key: <span className="text-[var(--color-state-success)]">'status'</span>
-          , width: columnWidths.<span className="text-[var(--color-action-primary)]">status</span>{' '}
+          , width: columnMinWidths.<span className="text-[var(--color-action-primary)]">status</span>{' '}
           {'}'}, <span className="text-[var(--color-text-subtle)]">// 고정 64px</span>
           <br />
           &nbsp;&nbsp;{'{'} key: <span className="text-[var(--color-state-success)]">'name'</span>,
@@ -2625,7 +2626,7 @@ function TableDemo() {
           <span className="text-[var(--color-text-subtle)]">// 남은 공간 채움</span>
           <br />
           &nbsp;&nbsp;{'{'} key:{' '}
-          <span className="text-[var(--color-state-success)]">'actions'</span>, width: columnWidths.
+          <span className="text-[var(--color-state-success)]">'actions'</span>, width: columnMinWidths.
           <span className="text-[var(--color-action-primary)]">actions</span> {'}'},{' '}
           <span className="text-[var(--color-text-subtle)]">// 고정 64px</span>
           <br />
@@ -2634,7 +2635,7 @@ function TableDemo() {
         <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
           전체 프리셋 목록:{' '}
           <code className="text-[var(--color-action-primary)]">
-            src/design-system/presets/columnWidths.ts
+            src/design-system/presets/columnMinWidths.ts
           </code>
         </p>
       </VStack>

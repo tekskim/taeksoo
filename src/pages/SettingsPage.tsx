@@ -7,7 +7,8 @@ import {
   WindowControls,
   Pagination,
   Table,
-  columnWidths,
+  fixedColumns,
+  columnMinWidths,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system/components/Table/Table';
 import { IconShieldCheck, IconCheck, IconEye, IconEyeOff } from '@tabler/icons-react';
@@ -101,9 +102,9 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
 
   // Session table columns
   const sessionColumns: TableColumn[] = [
-    { key: 'ipAddress', label: 'IP Address', width: columnWidths.ipAddress },
+    { key: 'ipAddress', label: 'IP Address', flex: 1, minWidth: columnMinWidths.ipAddress },
     { key: 'device', label: 'Device', flex: 1 },
-    { key: 'timestamp', label: 'Timestamp', width: columnWidths.timestamp },
+    { key: 'timestamp', label: 'Timestamp', flex: 1, minWidth: columnMinWidths.timestamp },
   ];
 
   // Reset focus when window opens

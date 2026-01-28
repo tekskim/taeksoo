@@ -1,26 +1,5 @@
 import { useState, useMemo } from 'react';
-import {
-  Button,
-  FilterSearchInput,
-  Table,
-  Pagination,
-  VStack,
-  TabBar,
-  TopBar,
-  TopBarAction,
-  Breadcrumb,
-  ListToolbar,
-  ContextMenu,
-  ConfirmModal,
-  StatusIndicator,
-  Tabs,
-  TabList,
-  Tab,
-  type TableColumn,
-  type ContextMenuItem,
-  type FilterField,
-  type AppliedFilter,
-} from '@/design-system';
+import { Button, FilterSearchInput, Table, Pagination, VStack, TabBar, TopBar, TopBarAction, Breadcrumb, ListToolbar, ContextMenu, ConfirmModal, StatusIndicator, Tabs, TabList, Tab, type TableColumn, type ContextMenuItem, type FilterField, type AppliedFilter, fixedColumns, columnMinWidths } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
@@ -62,8 +41,7 @@ const mockCertificates: Certificate[] = [
     expiresAt: '2025-10-05',
     createdAt: '2025-10-03',
     type: 'server',
-    status: 'active',
-  },
+    status: 'active' },
   {
     id: 'cert-002',
     name: 'api-cert',
@@ -74,8 +52,7 @@ const mockCertificates: Certificate[] = [
     expiresAt: '2026-01-15',
     createdAt: '2025-09-28',
     type: 'server',
-    status: 'active',
-  },
+    status: 'active' },
   {
     id: 'cert-003',
     name: 'wildcard-cert',
@@ -86,8 +63,7 @@ const mockCertificates: Certificate[] = [
     expiresAt: '2025-12-01',
     createdAt: '2025-09-20',
     type: 'server',
-    status: 'active',
-  },
+    status: 'active' },
   {
     id: 'cert-004',
     name: 'staging-cert',
@@ -98,8 +74,7 @@ const mockCertificates: Certificate[] = [
     expiresAt: '2025-11-15',
     createdAt: '2025-09-15',
     type: 'server',
-    status: 'pending',
-  },
+    status: 'pending' },
   {
     id: 'cert-005',
     name: 'internal-cert',
@@ -110,8 +85,7 @@ const mockCertificates: Certificate[] = [
     expiresAt: '2026-03-20',
     createdAt: '2025-09-10',
     type: 'server',
-    status: 'active',
-  },
+    status: 'active' },
   {
     id: 'cert-006',
     name: 'root-ca',
@@ -122,8 +96,7 @@ const mockCertificates: Certificate[] = [
     expiresAt: '2030-01-01',
     createdAt: '2025-01-01',
     type: 'ca',
-    status: 'active',
-  },
+    status: 'active' },
   {
     id: 'cert-007',
     name: 'intermediate-ca',
@@ -134,8 +107,7 @@ const mockCertificates: Certificate[] = [
     expiresAt: '2028-06-15',
     createdAt: '2025-06-15',
     type: 'ca',
-    status: 'active',
-  },
+    status: 'active' },
   {
     id: 'cert-008',
     name: 'expired-cert',
@@ -146,8 +118,7 @@ const mockCertificates: Certificate[] = [
     expiresAt: '2025-08-01',
     createdAt: '2024-08-01',
     type: 'server',
-    status: 'error',
-  },
+    status: 'error' },
   {
     id: 'cert-009',
     name: 'dev-ca',
@@ -158,8 +129,7 @@ const mockCertificates: Certificate[] = [
     expiresAt: '2027-12-31',
     createdAt: '2025-01-15',
     type: 'ca',
-    status: 'active',
-  },
+    status: 'active' },
   {
     id: 'cert-010',
     name: 'client-auth-cert',
@@ -170,8 +140,7 @@ const mockCertificates: Certificate[] = [
     expiresAt: '2026-06-01',
     createdAt: '2025-06-01',
     type: 'server',
-    status: 'active',
-  },
+    status: 'active' },
 ];
 
 /* ----------------------------------------
@@ -181,8 +150,7 @@ const mockCertificates: Certificate[] = [
 const certStatusMap: Record<CertificateStatus, 'active' | 'error' | 'pending'> = {
   active: 'active',
   error: 'error',
-  pending: 'pending',
-};
+  pending: 'pending' };
 
 /* ----------------------------------------
    Component
@@ -200,8 +168,7 @@ const filterFields: FilterField[] = [
       { value: 'active', label: 'Active' },
       { value: 'error', label: 'Error' },
       { value: 'pending', label: 'Pending' },
-    ],
-  },
+    ] },
 ];
 
 export function ComputeAdminCertificatesPage() {
@@ -240,8 +207,7 @@ export function ComputeAdminCertificatesPage() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    closable: tab.closable,
-  }));
+    closable: tab.closable }));
 
   // Context menu items
   const getContextMenuItems = (cert: Certificate): ContextMenuItem[] => [
@@ -249,8 +215,7 @@ export function ComputeAdminCertificatesPage() {
       id: 'download',
       label: 'Download',
       onClick: () => console.log('Download:', cert.id),
-      divider: true,
-    },
+      divider: true },
     {
       id: 'delete',
       label: 'Delete',
@@ -258,8 +223,7 @@ export function ComputeAdminCertificatesPage() {
       onClick: () => {
         setCertToDelete(cert);
         setDeleteModalOpen(true);
-      },
-    },
+      } },
   ];
 
   // Filter certificates based on search and tab
@@ -293,10 +257,9 @@ export function ComputeAdminCertificatesPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: fixedColumns.status,
       align: 'center',
-      render: (_, row) => <StatusIndicator status={certStatusMap[row.status]} layout="icon-only" />,
-    },
+      render: (_, row) => <StatusIndicator status={certStatusMap[row.status]} layout="icon-only" /> },
     {
       key: 'name',
       label: 'Name',
@@ -315,8 +278,7 @@ export function ComputeAdminCertificatesPage() {
             ID : {row.id}
           </span>
         </div>
-      ),
-    },
+      ) },
     { key: 'domain', label: 'SAN', flex: 1 },
     {
       key: 'listener',
@@ -342,8 +304,7 @@ export function ComputeAdminCertificatesPage() {
               ID : {row.listenerId}
             </span>
           </div>
-        ),
-    },
+        ) },
     {
       key: 'expiresAt',
       label: 'Expires at',
@@ -352,13 +313,12 @@ export function ComputeAdminCertificatesPage() {
       render: (value: string) => {
         const isExpired = new Date(value) < new Date();
         return <span className={isExpired ? 'text-[var(--color-text-danger)]' : ''}>{value}</span>;
-      },
-    },
+      } },
     { key: 'createdAt', label: 'Created at', flex: 1, sortable: true },
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: fixedColumns.actions,
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
@@ -372,8 +332,7 @@ export function ComputeAdminCertificatesPage() {
             </button>
           </ContextMenu>
         </div>
-      ),
-    },
+      ) },
   ];
 
   // Filter and order columns based on preferences

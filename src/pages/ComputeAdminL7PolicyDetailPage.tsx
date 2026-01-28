@@ -1,23 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import {
-  Button,
-  VStack,
-  TabBar,
-  TopBar,
-  TopBarAction,
-  Breadcrumb,
-  Tabs,
-  TabList,
-  Tab,
-  TabPanel,
-  DetailHeader,
-  SectionCard,
-  Table,
-  SearchInput,
-  Pagination,
-  ContextMenu,
-} from '@/design-system';
+import { Button, VStack, TabBar, TopBar, TopBarAction, Breadcrumb, Tabs, TabList, Tab, TabPanel, DetailHeader, SectionCard, Table, SearchInput, Pagination, ContextMenu, fixedColumns, columnMinWidths } from '@/design-system';
 import type { TableColumn, ContextMenuItem } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -26,8 +9,7 @@ import {
   IconTrash,
   IconBell,
   IconCirclePlus,
-  IconDotsCircleHorizontal,
-} from '@tabler/icons-react';
+  IconDotsCircleHorizontal } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -89,8 +71,7 @@ const mockL7PolicyDetail: L7PolicyDetail = {
   behavior: 'Forward to Pool',
   behaviorDetail: {
     name: 'web-server-10',
-    id: 'pool-001',
-  },
+    id: 'pool-001' },
   position: 50,
   // Association
   listener: {
@@ -98,10 +79,7 @@ const mockL7PolicyDetail: L7PolicyDetail = {
     id: 'listener-001',
     loadBalancer: {
       name: 'web-lb-01',
-      id: 'lb-001',
-    },
-  },
-};
+      id: 'lb-001' } } };
 
 /* ----------------------------------------
    Mock L7 Rules Data
@@ -118,8 +96,7 @@ const mockL7Rules: L7Rule[] = Array.from({ length: 25 }, (_, i) => ({
   value: i % 2 === 0 ? '/api/*' : 'www.example.com',
   key: i % 3 === 0 ? 'X-Custom-Header' : null,
   invert: i % 4 === 0,
-  adminState: i % 5 === 0 ? 'Down' : 'Up',
-}));
+  adminState: i % 5 === 0 ? 'Down' : 'Up' }));
 
 /* ----------------------------------------
    Status Mapping
@@ -128,14 +105,12 @@ const mockL7Rules: L7Rule[] = Array.from({ length: 25 }, (_, i) => ({
 const l7PolicyStatusMap: Record<L7PolicyStatus, 'active' | 'building' | 'error'> = {
   active: 'active',
   down: 'building',
-  error: 'error',
-};
+  error: 'error' };
 
 const l7RuleStatusMap: Record<L7RuleStatus, 'active' | 'building' | 'error'> = {
   active: 'active',
   down: 'building',
-  error: 'error',
-};
+  error: 'error' };
 
 /* ----------------------------------------
    L7PolicyDetailPage Component
@@ -174,8 +149,7 @@ export default function L7PolicyDetailPage() {
     { label: 'Load balancers', href: '/compute-admin/load-balancers' },
     {
       label: l7Policy.listener?.loadBalancer?.name || 'Unknown',
-      href: `/load-balancers/${l7Policy.listener?.loadBalancer?.id}`,
-    },
+      href: `/load-balancers/${l7Policy.listener?.loadBalancer?.id}` },
     { label: l7Policy.listener?.name || 'Unknown', href: `/listeners/${l7Policy.listener?.id}` },
     { label: l7Policy.name },
   ];
@@ -184,8 +158,7 @@ export default function L7PolicyDetailPage() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    closable: tab.closable,
-  }));
+    closable: tab.closable }));
 
   const handleCopyId = () => {
     navigator.clipboard.writeText(l7Policy.id);
@@ -216,42 +189,36 @@ export default function L7PolicyDetailPage() {
       key: 'type',
       label: 'Rule type',
       flex: 1,
-      sortable: true,
-    },
+      sortable: true },
     {
       key: 'compareType',
       label: 'Compare type',
       flex: 1,
-      sortable: true,
-    },
+      sortable: true },
     {
       key: 'key',
       label: 'Key',
       flex: 1,
       sortable: true,
-      render: (_, row) => row.key || '-',
-    },
+      render: (_, row) => row.key || '-' },
     {
       key: 'value',
       label: 'Value',
       flex: 1,
-      sortable: true,
-    },
+      sortable: true },
     {
       key: 'invert',
       label: 'Invert',
       flex: 1,
-      render: (_, row) => (row.invert ? 'On' : 'Off'),
-    },
+      render: (_, row) => (row.invert ? 'On' : 'Off') },
     {
       key: 'adminState',
       label: 'Admin state',
-      flex: 1,
-    },
+      flex: 1 },
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: fixedColumns.actions,
       align: 'center',
       render: (_: unknown, row: L7Rule) => {
         const ruleMenuItems: ContextMenuItem[] = [
@@ -260,8 +227,7 @@ export default function L7PolicyDetailPage() {
             id: 'delete',
             label: 'Delete',
             status: 'danger',
-            onClick: () => console.log('Delete rule', row.id),
-          },
+            onClick: () => console.log('Delete rule', row.id) },
         ];
         return (
           <div onClick={(e) => e.stopPropagation()}>
@@ -276,8 +242,7 @@ export default function L7PolicyDetailPage() {
             </ContextMenu>
           </div>
         );
-      },
-    },
+      } },
   ];
 
   return (
