@@ -335,7 +335,13 @@ export function IAMHomePage() {
         <span className="text-[var(--color-action-primary)]">{value}</span>
       ),
     },
-    { key: 'ipAddress', label: 'IP address', flex: 1, minWidth: columnMinWidths.ipAddress, sortable: true },
+    {
+      key: 'ipAddress',
+      label: 'IP address',
+      flex: 1,
+      minWidth: columnMinWidths.ipAddress,
+      sortable: true,
+    },
   ];
 
   return (

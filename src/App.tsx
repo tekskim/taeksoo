@@ -114,6 +114,11 @@ import ComputeAdminPoolDetailPage from '@/pages/ComputeAdminPoolDetailPage';
 import ComputeAdminL7PolicyDetailPage from '@/pages/ComputeAdminL7PolicyDetailPage';
 import { ComputeAdminCertificatesPage } from '@/pages/ComputeAdminCertificatesPage';
 import ComputeAdminCertificateDetailPage from '@/pages/ComputeAdminCertificateDetailPage';
+import ComputeAdminFirewallsPage from '@/pages/ComputeAdminFirewallsPage';
+import ComputeAdminFirewallDetailPage from '@/pages/ComputeAdminFirewallDetailPage';
+import ComputeAdminFirewallPolicyDetailPage from '@/pages/ComputeAdminFirewallPolicyDetailPage';
+import ComputeAdminFirewallRuleDetailPage from '@/pages/ComputeAdminFirewallRuleDetailPage';
+import ComputeAdminCreateFirewallRulePage from '@/pages/ComputeAdminCreateFirewallRulePage';
 import { ComputeAdminTopologyD3Page } from '@/pages/ComputeAdminTopologyD3Page';
 import ComputeAdminConsolePage from '@/pages/ComputeAdminConsolePage';
 import ComputeAdminVolumeTypesPage from '@/pages/ComputeAdminVolumeTypesPage';
@@ -485,6 +490,20 @@ function AppRoutes() {
       <Route
         path="/compute-admin/certificates/:id"
         element={<ComputeAdminCertificateDetailPage />}
+      />
+      <Route path="/compute-admin/firewall" element={<ComputeAdminFirewallsPage />} />
+      <Route path="/compute-admin/firewalls/:id" element={<ComputeAdminFirewallDetailPage />} />
+      <Route
+        path="/compute-admin/firewall-policies/:id"
+        element={<ComputeAdminFirewallPolicyDetailPage />}
+      />
+      <Route
+        path="/compute-admin/firewall-rules/:id"
+        element={<ComputeAdminFirewallRuleDetailPage />}
+      />
+      <Route
+        path="/compute-admin/firewall/create-rule"
+        element={<ComputeAdminCreateFirewallRulePage />}
       />
       <Route path="/compute-admin/topology" element={<ComputeAdminTopologyD3Page />} />
       <Route path="/compute-admin/console/:instanceId" element={<ComputeAdminConsolePage />} />
