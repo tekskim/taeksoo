@@ -24,8 +24,8 @@ import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import { AssociateFloatingIPToLBDrawer } from '@/components/AssociateFloatingIPToLBDrawer';
 import { EditLoadBalancerDrawer } from '@/components/EditLoadBalancerDrawer';
-import { IconDotsCircleHorizontal, IconTrash, IconDownload, IconBell } from '@tabler/icons-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { IconTrash, IconDownload, IconBell } from '@tabler/icons-react';
+import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
    Types
@@ -36,6 +36,8 @@ type LoadBalancerStatus = 'active' | 'error' | 'building' | 'pending';
 interface LoadBalancer {
   id: string;
   name: string;
+  tenant: string;
+  tenantId: string;
   vipAddress: string;
   ownedNetwork: string;
   ownedNetworkId: string;
@@ -56,6 +58,8 @@ const mockLoadBalancers: LoadBalancer[] = [
   {
     id: 'lb-001',
     name: 'web-lb-01',
+    tenant: 'tenantA',
+    tenantId: 'tenant-001',
     vipAddress: '192.168.10.13',
     ownedNetwork: 'net-02',
     ownedNetworkId: 'net-002',
@@ -70,6 +74,8 @@ const mockLoadBalancers: LoadBalancer[] = [
   {
     id: 'lb-002',
     name: 'api-lb',
+    tenant: 'tenantA',
+    tenantId: 'tenant-001',
     vipAddress: '192.168.10.14',
     ownedNetwork: 'net-01',
     ownedNetworkId: 'net-001',
@@ -84,6 +90,8 @@ const mockLoadBalancers: LoadBalancer[] = [
   {
     id: 'lb-003',
     name: 'app-lb',
+    tenant: 'tenantB',
+    tenantId: 'tenant-002',
     vipAddress: '192.168.10.15',
     ownedNetwork: 'net-03',
     ownedNetworkId: 'net-003',
@@ -98,6 +106,8 @@ const mockLoadBalancers: LoadBalancer[] = [
   {
     id: 'lb-004',
     name: 'db-lb',
+    tenant: 'tenantA',
+    tenantId: 'tenant-001',
     vipAddress: '192.168.10.16',
     ownedNetwork: 'net-01',
     ownedNetworkId: 'net-001',
@@ -112,6 +122,8 @@ const mockLoadBalancers: LoadBalancer[] = [
   {
     id: 'lb-005',
     name: 'cache-lb',
+    tenant: 'tenantC',
+    tenantId: 'tenant-003',
     vipAddress: '192.168.10.17',
     ownedNetwork: 'net-02',
     ownedNetworkId: 'net-002',
@@ -126,6 +138,8 @@ const mockLoadBalancers: LoadBalancer[] = [
   {
     id: 'lb-006',
     name: 'internal-lb',
+    tenant: 'tenantB',
+    tenantId: 'tenant-002',
     vipAddress: '192.168.10.18',
     ownedNetwork: 'net-04',
     ownedNetworkId: 'net-004',
@@ -140,6 +154,8 @@ const mockLoadBalancers: LoadBalancer[] = [
   {
     id: 'lb-007',
     name: 'streaming-lb',
+    tenant: 'tenantA',
+    tenantId: 'tenant-001',
     vipAddress: '192.168.10.19',
     ownedNetwork: 'net-01',
     ownedNetworkId: 'net-001',
@@ -154,6 +170,8 @@ const mockLoadBalancers: LoadBalancer[] = [
   {
     id: 'lb-008',
     name: 'mail-lb',
+    tenant: 'tenantC',
+    tenantId: 'tenant-003',
     vipAddress: '192.168.10.20',
     ownedNetwork: 'net-02',
     ownedNetworkId: 'net-002',
@@ -168,6 +186,8 @@ const mockLoadBalancers: LoadBalancer[] = [
   {
     id: 'lb-009',
     name: 'vpn-lb',
+    tenant: 'tenantB',
+    tenantId: 'tenant-002',
     vipAddress: '192.168.10.21',
     ownedNetwork: 'net-03',
     ownedNetworkId: 'net-003',
@@ -182,6 +202,8 @@ const mockLoadBalancers: LoadBalancer[] = [
   {
     id: 'lb-010',
     name: 'monitoring-lb',
+    tenant: 'tenantA',
+    tenantId: 'tenant-001',
     vipAddress: '192.168.10.22',
     ownedNetwork: 'net-01',
     ownedNetworkId: 'net-001',
@@ -213,6 +235,7 @@ const lbStatusMap: Record<LoadBalancerStatus, 'active' | 'error' | 'building' | 
 // Filter fields configuration
 const filterFields: FilterField[] = [
   { id: 'name', label: 'Name', type: 'text' },
+  { id: 'tenant', label: 'Tenant', type: 'text' },
   { id: 'vipAddress', label: 'VIP Address', type: 'text' },
   { id: 'ownedNetwork', label: 'Network', type: 'text' },
   {
@@ -229,7 +252,6 @@ const filterFields: FilterField[] = [
 ];
 
 export function ComputeAdminLoadBalancersPage() {
-  const navigate = useNavigate();
   const [selectedLBs, setSelectedLBs] = useState<string[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
@@ -264,6 +286,7 @@ export function ComputeAdminLoadBalancersPage() {
   const defaultColumnConfig: ColumnConfig[] = [
     { id: 'status', label: 'Status', visible: true, locked: true },
     { id: 'name', label: 'Name', visible: true, locked: true },
+    { id: 'tenant', label: 'Tenant', visible: true },
     { id: 'vipAddress', label: 'VIP Address', visible: true },
     { id: 'ownedNetwork', label: 'Owned network', visible: true },
     { id: 'floatingIp', label: 'Floating IP', visible: true },
@@ -368,6 +391,26 @@ export function ComputeAdminLoadBalancersPage() {
       ),
     },
     {
+      key: 'tenant',
+      label: 'Tenant',
+      flex: 1,
+      sortable: true,
+      render: (_, row) => (
+        <div className="flex flex-col gap-0.5">
+          <Link
+            to={`/compute-admin/tenants/${row.tenantId}`}
+            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.tenant}
+          </Link>
+          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+            ID: {row.tenantId}
+          </span>
+        </div>
+      ),
+    },
+    {
       key: 'vipAddress',
       label: 'VIP Address',
       flex: 1,
@@ -446,11 +489,7 @@ export function ComputeAdminLoadBalancersPage() {
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getContextMenuItems(row)} trigger="click">
             <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-              <IconDotsCircleHorizontal
-                size={16}
-                stroke={1.5}
-                className="text-[var(--action-icon-color)]"
-              />
+              <IconTrash size={16} stroke={1.5} className="text-[var(--color-state-danger)]" />
             </button>
           </ContextMenu>
         </div>
@@ -535,13 +574,6 @@ export function ComputeAdminLoadBalancersPage() {
                 <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
                   Load balancers
                 </h1>
-                <Button
-                  variant="primary"
-                  size="md"
-                  onClick={() => navigate('/compute-admin/load-balancers/create')}
-                >
-                  Create Load Balancer
-                </Button>
               </div>
 
               {/* Toolbar */}
