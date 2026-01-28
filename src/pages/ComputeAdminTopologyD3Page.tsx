@@ -2731,7 +2731,7 @@ export function ComputeAdminTopologyD3Page() {
                   />
                 </div>
 
-                {/* Router filter */}
+                {/* Router filter - hidden */}
                 <Select
                   value={filterRouter}
                   onChange={setFilterRouter}
@@ -2740,10 +2740,10 @@ export function ComputeAdminTopologyD3Page() {
                     { value: 'all', label: `All Routers (${routers.length})` },
                     ...routers.map((r) => ({ value: r.id, label: r.name })),
                   ]}
-                  className="w-[160px]"
+                  className="w-[160px] hidden"
                 />
 
-                {/* VPC filter */}
+                {/* VPC filter - hidden */}
                 <Select
                   value={filterVpc}
                   onChange={setFilterVpc}
@@ -2752,10 +2752,10 @@ export function ComputeAdminTopologyD3Page() {
                     { value: 'all', label: `All VPCs (${networks.length})` },
                     ...networks.map((n) => ({ value: n.id, label: n.name })),
                   ]}
-                  className="w-[160px]"
+                  className="w-[160px] hidden"
                 />
 
-                {/* Status filter */}
+                {/* Status filter - hidden */}
                 <Select
                   value={filterStatus}
                   onChange={setFilterStatus}
@@ -2766,10 +2766,10 @@ export function ComputeAdminTopologyD3Page() {
                     { value: 'inactive', label: 'Inactive' },
                     { value: 'error', label: 'Error' },
                   ]}
-                  className="w-[120px]"
+                  className="w-[120px] hidden"
                 />
 
-                {/* Reset button */}
+                {/* Reset button - hidden */}
                 {(searchTerm ||
                   filterRouter !== 'all' ||
                   filterVpc !== 'all' ||
@@ -2779,6 +2779,7 @@ export function ComputeAdminTopologyD3Page() {
                     size="sm"
                     onClick={resetFilters}
                     leftIcon={<IconRefresh size={14} />}
+                    className="hidden"
                   >
                     Reset
                   </Button>
