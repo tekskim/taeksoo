@@ -94,6 +94,9 @@ const ComputeAdminCertificateDetailPage = lazy(
   () => import('@/pages/ComputeAdminCertificateDetailPage')
 );
 
+// Firewall
+const ComputeAdminFirewallsPage = lazy(() => import('@/pages/ComputeAdminFirewallsPage'));
+
 // Other
 const ComputeAdminTopologyD3Page = lazy(() => import('@/pages/ComputeAdminTopologyD3Page'));
 const ComputeAdminConsolePage = lazy(() => import('@/pages/ComputeAdminConsolePage'));
@@ -199,6 +202,9 @@ export const computeAdminRoutes = (
     <Route path="/compute-admin/l7-policies/:id" element={<ComputeAdminL7PolicyDetailPage />} />
     <Route path="/compute-admin/certificates" element={<ComputeAdminCertificatesPage />} />
     <Route path="/compute-admin/certificates/:id" element={<ComputeAdminCertificateDetailPage />} />
+
+    {/* Firewall */}
+    <Route path="/compute-admin/firewall" element={<ComputeAdminFirewallsPage />} />
 
     {/* Other */}
     <Route path="/compute-admin/topology" element={<ComputeAdminTopologyD3Page />} />
