@@ -1018,15 +1018,21 @@ function SubnetsSection({ subnets }: { subnets: SubnetItem[] }) {
 }
 
 function Popover({ data, position, onClose }: PopoverProps) {
-  const [pos, setPos] = useState(position);
+  const [pos, setPos] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const popoverRef = useRef<HTMLDivElement>(null);
 
-  // Update position when prop changes
+  // Center popover on screen when opened
   useEffect(() => {
-    setPos(position);
-  }, [position.x, position.y]);
+    if (popoverRef.current) {
+      const rect = popoverRef.current.getBoundingClientRect();
+      setPos({
+        x: (window.innerWidth - rect.width) / 2,
+        y: (window.innerHeight - rect.height) / 2,
+      });
+    }
+  }, [data]);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if ((e.target as HTMLElement).closest('button, a')) return; // Don't drag when clicking buttons/links
