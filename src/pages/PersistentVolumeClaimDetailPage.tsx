@@ -22,7 +22,7 @@ import {
   Table,
   Pagination,
   SearchInput,
-  columnWidths,
+  columnMinWidths,
   type ContextMenuItem,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
@@ -912,30 +912,35 @@ export function PersistentVolumeClaimDetailPage() {
                             key: 'lastSeen',
                             label: 'Last Seen',
                             sortable: true,
-                            width: columnWidths.lastSeen,
+                            flex: 1,
+                            minWidth: columnMinWidths.lastSeen,
                           },
                           {
                             key: 'type',
                             label: 'Type',
                             sortable: true,
-                            width: columnWidths.type,
+                            flex: 1,
+                            minWidth: columnMinWidths.type,
                           },
                           {
                             key: 'reason',
                             label: 'Reason',
                             sortable: true,
-                            width: columnWidths.reason,
+                            flex: 1,
+                            minWidth: columnMinWidths.reason,
                           },
                           {
                             key: 'subobject',
                             label: 'Subobject',
-                            width: columnWidths.subobject,
+                            flex: 1,
+                            minWidth: columnMinWidths.subobject,
                           },
                           {
                             key: 'source',
                             label: 'Source',
                             sortable: true,
-                            width: columnWidths.source,
+                            flex: 1,
+                            minWidth: columnMinWidths.source,
                           },
                           {
                             key: 'message',
@@ -947,19 +952,22 @@ export function PersistentVolumeClaimDetailPage() {
                             key: 'firstSeen',
                             label: 'First Seen',
                             sortable: true,
-                            width: columnWidths.firstSeen,
+                            flex: 1,
+                            minWidth: columnMinWidths.firstSeen,
                           },
                           {
                             key: 'count',
                             label: 'Count',
                             sortable: true,
-                            width: columnWidths.count,
+                            flex: 1,
+                            minWidth: columnMinWidths.count,
                           },
                           {
                             key: 'name',
                             label: 'Name',
                             sortable: true,
-                            width: columnWidths.name,
+                            flex: 1,
+                            minWidth: columnMinWidths.name,
                             render: (value: string) => (
                               <span className="text-[var(--color-action-primary)] cursor-pointer hover:underline font-medium">
                                 {value}

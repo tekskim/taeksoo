@@ -393,7 +393,7 @@ export default function PortDetailPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: fixedColumns.actions,
       align: 'center',
       render: (_: unknown, row: FixedIP) => {
         return (
@@ -425,7 +425,7 @@ export default function PortDetailPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: fixedColumns.actions,
       align: 'center',
       render: (_: unknown, row: AllowedAddressPair) => {
         return (

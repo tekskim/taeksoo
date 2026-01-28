@@ -15,7 +15,8 @@ import {
   Table,
   type TableColumn,
   type TimeRangeValue,
-  columnWidths,
+  fixedColumns,
+  columnMinWidths,
 } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
 import { DataViewDrawer } from '@/components/DataViewDrawer';
@@ -988,7 +989,8 @@ export function OverallPerformancePage() {
     {
       key: 'id',
       label: 'Detail performance',
-      width: columnWidths.id,
+      flex: 1,
+      minWidth: columnMinWidths.id,
       align: 'center' as const,
       render: () => (
         <button className="p-1.5 hover:bg-[var(--color-surface-subtle)] rounded transition-colors">
@@ -1006,7 +1008,8 @@ export function OverallPerformancePage() {
     {
       key: 'id',
       label: 'Detail performance',
-      width: columnWidths.id,
+      flex: 1,
+      minWidth: columnMinWidths.id,
       align: 'center' as const,
       render: () => (
         <button className="p-1.5 hover:bg-[var(--color-surface-subtle)] rounded transition-colors">
@@ -1039,7 +1042,8 @@ export function OverallPerformancePage() {
     {
       key: 'id',
       label: 'Action',
-      width: columnWidths.id,
+      flex: 1,
+      minWidth: columnMinWidths.id,
       align: 'center' as const,
       render: () => (
         <button className="p-1.5 hover:bg-[var(--color-surface-subtle)] rounded transition-colors">
@@ -1625,7 +1629,7 @@ export function OverallPerformancePage() {
                               {
                                 key: 'actions',
                                 label: 'Action',
-                                width: columnWidths.actions,
+                                width: fixedColumns.actions,
                                 align: 'center' as const,
                                 render: () => (
                                   <button className="p-1.5 hover:bg-[var(--color-surface-subtle)] rounded transition-colors">

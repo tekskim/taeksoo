@@ -17,6 +17,7 @@ import {
   type ContextMenuItem,
   type FilterField,
   type AppliedFilter,
+  fixedColumns,
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -357,7 +358,7 @@ export function ComputeAdminInstanceSnapshotsPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: fixedColumns.status,
       align: 'center',
       sortable: false,
       render: (_, row) => <StatusIndicator status={statusMap[row.status]} layout="icon-only" />,
@@ -443,7 +444,7 @@ export function ComputeAdminInstanceSnapshotsPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: fixedColumns.actions,
       align: 'center',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [

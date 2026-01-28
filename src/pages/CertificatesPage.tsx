@@ -20,7 +20,8 @@ import {
   type ContextMenuItem,
   type FilterField,
   type AppliedFilter,
-  columnWidths,
+  fixedColumns,
+  columnMinWidths,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -289,12 +290,12 @@ export function CertificatesPage() {
     return filteredCerts.slice(start, start + rowsPerPage);
   }, [filteredCerts, currentPage, rowsPerPage]);
 
-  // Table columns
+  // Table columns (using fixedColumns / columnMinWidths preset)
   const columns: TableColumn<Certificate>[] = [
     {
       key: 'status',
       label: 'Status',
-      width: columnWidths.status,
+      width: fixedColumns.status,
       align: 'center',
       render: (_, row) => <StatusIndicator status={certStatusMap[row.status]} layout="icon-only" />,
     },
@@ -302,6 +303,7 @@ export function CertificatesPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -318,11 +320,12 @@ export function CertificatesPage() {
         </div>
       ),
     },
-    { key: 'domain', label: 'SAN', flex: 1 },
+    { key: 'domain', label: 'SAN', flex: 1, minWidth: columnMinWidths.domain },
     {
       key: 'listener',
       label: 'Listener',
       flex: 1,
+      minWidth: columnMinWidths.listener,
       sortable: true,
       render: (_, row) =>
         row.listener === '-' ? (
@@ -349,17 +352,24 @@ export function CertificatesPage() {
       key: 'expiresAt',
       label: 'Expires at',
       flex: 1,
+      minWidth: columnMinWidths.expiresAt,
       sortable: true,
       render: (value: string) => {
         const isExpired = new Date(value) < new Date();
         return <span className={isExpired ? 'text-[var(--color-text-danger)]' : ''}>{value}</span>;
       },
     },
-    { key: 'createdAt', label: 'Created at', width: columnWidths.createdAt, sortable: true },
+    {
+      key: 'createdAt',
+      label: 'Created at',
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
+      sortable: true,
+    },
     {
       key: 'actions',
       label: 'Action',
-      width: columnWidths.actions,
+      width: fixedColumns.actions,
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>

@@ -17,7 +17,7 @@ import {
   ContextMenu,
   ConfirmModal,
   StatusIndicator,
-  columnWidths,
+  fixedColumns,
   type TableColumn,
   type ContextMenuItem,
   type FilterField,
@@ -349,12 +349,12 @@ export function ComputeImagesPage() {
     setSelectedImages([]);
   };
 
-  // Table columns (using columnWidths preset)
+  // Table columns (using fixedColumns / columnMinWidths preset)
   const columns: TableColumn<Image>[] = [
     {
       key: 'status',
       label: 'Status',
-      width: columnWidths.status,
+      width: fixedColumns.status,
       align: 'center',
       render: (_, row) => <StatusIndicator status={row.status} layout="icon-only" />,
     },
@@ -411,7 +411,7 @@ export function ComputeImagesPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: columnWidths.actions,
+      width: fixedColumns.actions,
       align: 'center',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [

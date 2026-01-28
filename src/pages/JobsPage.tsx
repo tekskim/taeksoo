@@ -14,7 +14,8 @@ import {
   ContextMenu,
   type TableColumn,
   type ContextMenuItem,
-  columnWidths,
+  fixedColumns,
+  columnMinWidths,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -190,7 +191,7 @@ export function JobsPage() {
     {
       key: 'status',
       label: 'Status',
-      width: columnWidths.status,
+      width: fixedColumns.status,
       sortable: true,
       align: 'center',
       render: (value: string) => (
@@ -241,23 +242,26 @@ export function JobsPage() {
     {
       key: 'completions',
       label: 'Completions',
-      width: columnWidths.completions,
+      flex: 1,
+      minWidth: columnMinWidths.completions,
     },
     {
       key: 'duration',
       label: 'Duration',
-      width: columnWidths.duration,
+      flex: 1,
+      minWidth: columnMinWidths.duration,
     },
     {
       key: 'createdAt',
       label: 'Created At',
-      width: columnWidths.createdAt,
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
     },
     {
       key: 'actions',
       label: 'Action',
-      width: columnWidths.actions,
+      width: fixedColumns.actions,
       align: 'center',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [

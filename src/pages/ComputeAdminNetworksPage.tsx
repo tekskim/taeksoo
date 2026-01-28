@@ -19,6 +19,7 @@ import {
   type ContextMenuItem,
   type FilterField,
   type AppliedFilter,
+  fixedColumns,
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -343,7 +344,7 @@ export function ComputeAdminNetworksPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '59px',
+      width: fixedColumns.status,
       align: 'center',
       sortable: false,
       render: (_, row) => (
@@ -428,7 +429,7 @@ export function ComputeAdminNetworksPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '72px',
+      width: fixedColumns.actionWide,
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>

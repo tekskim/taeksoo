@@ -14,6 +14,7 @@ import {
   type TableColumn,
   type FilterField,
   type AppliedFilter,
+  fixedColumns,
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -275,7 +276,7 @@ export function ComputeAdminBareMetalNodesPage() {
       {
         key: 'status',
         label: 'Status',
-        width: '59px',
+        width: fixedColumns.status,
         align: 'center',
         render: (_, row) => (
           <StatusIndicator status={getStatusIndicator(row.status)} layout="icon-only" />
@@ -378,7 +379,7 @@ export function ComputeAdminBareMetalNodesPage() {
       {
         key: 'actions',
         label: 'Action',
-        width: '120px',
+        width: fixedColumns.actionXl,
         align: 'center',
         render: (_, row) => (
           <div onClick={(e) => e.stopPropagation()}>

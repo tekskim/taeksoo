@@ -22,6 +22,7 @@ import {
   type AppliedFilter,
   type FilterItem,
   type ContextMenuItem,
+  fixedColumns,
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -1116,7 +1117,7 @@ export function ComputeAdminInstanceListPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: fixedColumns.status,
       align: 'center',
       sortable: false,
       render: (_, row) => <StatusIndicator status={statusMap[row.status]} layout="icon-only" />,
@@ -1145,7 +1146,7 @@ export function ComputeAdminInstanceListPage() {
     {
       key: 'locked',
       label: 'Locked',
-      width: '68px',
+      width: fixedColumns.locked,
       align: 'center',
       sortable: false,
       render: (_, row) =>
@@ -1227,37 +1228,42 @@ export function ComputeAdminInstanceListPage() {
     {
       key: 'vcpu',
       label: 'vCPU',
-      width: '80px',
+      flex: 1,
+      minWidth: columnMinWidths.vcpu,
       sortable: true,
     },
     {
       key: 'ram',
       label: 'RAM',
-      width: '80px',
+      flex: 1,
+      minWidth: columnMinWidths.ram,
       sortable: true,
     },
     {
       key: 'disk',
       label: 'Disk',
-      width: '80px',
+      flex: 1,
+      minWidth: columnMinWidths.disk,
       sortable: true,
     },
     {
       key: 'gpu',
       label: 'GPU',
-      width: columnWidths.gpu,
+      flex: 1,
+      minWidth: columnMinWidths.gpu,
       sortable: true,
     },
     {
       key: 'az',
       label: 'AZ',
-      width: '80px',
+      flex: 1,
+      minWidth: columnMinWidths.az,
       sortable: true,
     },
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: fixedColumns.actions,
       align: 'center',
       render: (_, row) => (
         <HStack gap={1} className="justify-center">
@@ -1303,7 +1309,7 @@ export function ComputeAdminInstanceListPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: fixedColumns.status,
       align: 'center',
       sortable: false,
       render: (_, row) => <StatusIndicator status={statusMap[row.status]} layout="icon-only" />,
@@ -1381,37 +1387,42 @@ export function ComputeAdminInstanceListPage() {
     {
       key: 'cpu',
       label: 'CPU',
-      width: '80px',
+      flex: 1,
+      minWidth: columnMinWidths.cpu,
       sortable: true,
     },
     {
       key: 'ram',
       label: 'RAM',
-      width: '80px',
+      flex: 1,
+      minWidth: columnMinWidths.ram,
       sortable: true,
     },
     {
       key: 'disk',
       label: 'Disk',
-      width: '80px',
+      flex: 1,
+      minWidth: columnMinWidths.disk,
       sortable: true,
     },
     {
       key: 'gpu',
       label: 'GPU',
-      width: columnWidths.gpu,
+      flex: 1,
+      minWidth: columnMinWidths.gpu,
       sortable: true,
     },
     {
       key: 'az',
       label: 'AZ',
-      width: '80px',
+      flex: 1,
+      minWidth: columnMinWidths.az,
       sortable: true,
     },
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: fixedColumns.actions,
       align: 'center',
       render: (_, row) => (
         <HStack gap={1} className="justify-center">

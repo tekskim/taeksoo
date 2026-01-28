@@ -18,6 +18,8 @@ import {
   type ContextMenuItem,
   type FilterField,
   type AppliedFilter,
+  fixedColumns,
+  columnMinWidths,
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -290,7 +292,7 @@ export function ComputeAdminFloatingIPsPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: fixedColumns.status,
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={floatingIPStatusMap[row.status]} layout="icon-only" />
@@ -314,7 +316,8 @@ export function ComputeAdminFloatingIPsPage() {
     {
       key: 'associatedTo',
       label: 'Associated to',
-      width: '160px',
+      flex: 1,
+      minWidth: columnMinWidths.associatedTo,
       align: 'right',
       render: (_, row) =>
         row.associatedTo ? (
@@ -352,7 +355,8 @@ export function ComputeAdminFloatingIPsPage() {
     {
       key: 'network',
       label: 'Network',
-      width: '140px',
+      flex: 1,
+      minWidth: columnMinWidths.network,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5 min-w-0">
@@ -380,7 +384,7 @@ export function ComputeAdminFloatingIPsPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: fixedColumns.actions,
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>

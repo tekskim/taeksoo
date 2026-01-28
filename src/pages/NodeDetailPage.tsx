@@ -23,7 +23,8 @@ import {
   SectionCard,
   type TableColumn,
   type ContextMenuItem,
-  columnWidths,
+  fixedColumns,
+  columnMinWidths,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -381,7 +382,7 @@ function PodsTab({ pods }: PodsTabProps) {
     {
       key: 'status',
       label: 'Status',
-      width: columnWidths.status,
+      width: fixedColumns.status,
       align: 'center',
       render: (value: string) => (
         <StatusIndicator
@@ -402,8 +403,14 @@ function PodsTab({ pods }: PodsTabProps) {
     },
     { key: 'namespace', label: 'Namespace', flex: 1, sortable: true },
     { key: 'image', label: 'Image', flex: 1 },
-    { key: 'ready', label: 'Ready', width: columnWidths.ready, align: 'left' },
-    { key: 'restarts', label: 'Restarts', width: columnWidths.restarts, align: 'left' },
+    { key: 'ready', label: 'Ready', flex: 1, minWidth: columnMinWidths.ready, align: 'left' },
+    {
+      key: 'restarts',
+      label: 'Restarts',
+      flex: 1,
+      minWidth: columnMinWidths.restarts,
+      align: 'left',
+    },
     { key: 'ip', label: 'IP', flex: 1 },
     { key: 'node', label: 'Node', flex: 1 },
     { key: 'createdAt', label: 'Created At', flex: 1, sortable: true },
@@ -656,14 +663,26 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
 
   const columns: TableColumn<EventRow>[] = [
-    { key: 'lastSeen', label: 'Last Seen', width: columnWidths.lastSeen, sortable: true },
-    { key: 'type', label: 'Type', width: columnWidths.type, sortable: true },
+    {
+      key: 'lastSeen',
+      label: 'Last Seen',
+      flex: 1,
+      minWidth: columnMinWidths.lastSeen,
+      sortable: true,
+    },
+    { key: 'type', label: 'Type', flex: 1, minWidth: columnMinWidths.type, sortable: true },
     { key: 'reason', label: 'Reason', flex: 1, sortable: true },
     { key: 'subobject', label: 'Subobject', flex: 1, sortable: true },
     { key: 'source', label: 'Source', flex: 1, sortable: true },
     { key: 'message', label: 'Message', flex: 1.5, sortable: true },
-    { key: 'firstSeen', label: 'First Seen', width: columnWidths.firstSeen, sortable: true },
-    { key: 'count', label: 'Count', width: columnWidths.count, sortable: true },
+    {
+      key: 'firstSeen',
+      label: 'First Seen',
+      flex: 1,
+      minWidth: columnMinWidths.firstSeen,
+      sortable: true,
+    },
+    { key: 'count', label: 'Count', flex: 1, minWidth: columnMinWidths.count, sortable: true },
     {
       key: 'name',
       label: 'Name',
@@ -676,7 +695,8 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
     {
       key: 'action',
       label: 'Action',
-      width: columnWidths.action,
+      flex: 1,
+      minWidth: columnMinWidths.action,
       align: 'center',
       render: () => (
         <button className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors">

@@ -14,6 +14,7 @@ import {
   type TableColumn,
   type FilterField,
   type AppliedFilter,
+  fixedColumns,
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -341,7 +342,7 @@ export function ComputeAdminServerGroupsPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '72px',
+      width: fixedColumns.actionWide,
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>

@@ -19,7 +19,7 @@ import {
   Table,
   type ContextMenuItem,
   type TableColumn,
-  columnWidths,
+  columnMinWidths,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -276,7 +276,8 @@ export function NetworkPolicyDetailPage() {
     {
       key: 'createdAt',
       label: 'Created At',
-      width: columnWidths.createdAt,
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
     },
   ];

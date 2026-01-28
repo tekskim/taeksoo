@@ -19,6 +19,7 @@ import {
   Pagination,
   Badge,
   type TableColumn,
+  fixedColumns,
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -414,7 +415,7 @@ export default function RouterDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: fixedColumns.status,
       align: 'center',
       render: (_, row) => <StatusIndicator status={portStatusMap[row.status]} layout="icon-only" />,
     },
@@ -472,7 +473,7 @@ export default function RouterDetailPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '72px',
+      width: fixedColumns.actionWide,
       align: 'center',
       render: (_: unknown, row: Port) => (
         <div onClick={(e) => e.stopPropagation()}>
@@ -503,7 +504,7 @@ export default function RouterDetailPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '72px',
+      width: fixedColumns.actionWide,
       align: 'center',
       render: (_: unknown, row: StaticRoute) => (
         <div onClick={(e) => e.stopPropagation()}>

@@ -20,7 +20,8 @@ import {
   ContextMenu,
   type TableColumn,
   type ContextMenuItem,
-  columnWidths,
+  fixedColumns,
+  columnMinWidths,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -474,7 +475,7 @@ export function FlavorDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: columnWidths.status,
+      width: fixedColumns.status,
       align: 'center',
       render: (_, row) => <StatusIndicator status={row.status} layout="icon-only" />,
     },
@@ -506,7 +507,7 @@ export function FlavorDetailPage() {
     {
       key: 'locked',
       label: 'Locked',
-      width: columnWidths.locked,
+      width: fixedColumns.locked,
       align: 'center',
       render: (_, row) =>
         row.locked ? (
@@ -518,34 +519,38 @@ export function FlavorDetailPage() {
     {
       key: 'image',
       label: 'Image',
-      width: columnWidths.image,
+      flex: 1,
+      minWidth: columnMinWidths.image,
       sortable: true,
       render: (value) => <span>{value}</span>,
     },
     {
       key: 'fixedIP',
       label: 'Fixed IP',
-      width: columnWidths.fixedIp,
+      flex: 1,
+      minWidth: columnMinWidths.fixedIp,
       render: (value) => <span>{value}</span>,
     },
     {
       key: 'az',
       label: 'AZ',
-      width: columnWidths.az,
+      flex: 1,
+      minWidth: columnMinWidths.az,
       sortable: true,
       render: (value) => <span>{value}</span>,
     },
     {
       key: 'createdAt',
       label: 'Created at',
-      width: columnWidths.createdAt,
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
       render: (value) => <span>{value}</span>,
     },
     {
       key: 'action',
       label: 'Action',
-      width: columnWidths.actions,
+      width: fixedColumns.actions,
       align: 'center',
       render: (_, row) => (
         <div className="flex items-center justify-center gap-1">

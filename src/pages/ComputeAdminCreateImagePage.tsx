@@ -29,6 +29,7 @@ import {
   Radio,
   RadioGroup,
   type TableColumn,
+  fixedColumns,
 } from '@/design-system';
 import type { WizardSummaryItem, WizardSectionState } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
@@ -233,7 +234,7 @@ export function ComputeAdminCreateImagePage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: fixedColumns.status,
       align: 'center',
       render: (_, row) => <StatusIndicator status={row.status} layout="icon-only" />,
     },

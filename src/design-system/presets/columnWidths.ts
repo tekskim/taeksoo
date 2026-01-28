@@ -1,57 +1,73 @@
 /**
  * Table Column Width Presets
  *
- * 테이블 컬럼의 표준 너비를 정의합니다.
- * 일관된 UI를 위해 이 프리셋을 사용하세요.
+ * 테이블 컬럼 너비 정책:
+ * 1. 완전 고정 컬럼 (fixedColumns): 아이콘/버튼만 표시, 크기 불변
+ * 2. 유연 컬럼 (columnMinWidths): flex + minWidth 조합으로 사용
  *
  * @example
- * import { columnWidths } from '@/design-system';
+ * import { fixedColumns, columnMinWidths } from '@/design-system';
  *
  * const columns = [
- *   { key: 'select', width: columnWidths.select },   // 고정 40px
- *   { key: 'status', width: columnWidths.status },   // 고정 64px
- *   { key: 'name', flex: 1 },                        // 가변 (남은 공간 채움)
- *   { key: 'actions', width: columnWidths.actions }, // 고정 64px
+ *   { key: 'status', width: fixedColumns.status },           // 완전 고정
+ *   { key: 'name', flex: 1, minWidth: columnMinWidths.name }, // 유연
+ *   { key: 'createdAt', flex: 1, minWidth: columnMinWidths.createdAt }, // 유연
+ *   { key: 'actions', width: fixedColumns.actions },         // 완전 고정
  * ];
  *
  * @note
- * - sortable 컬럼은 소팅 아이콘(~16px) 공간 필요
- * - 컬럼 8개 이상 테이블은 flex + minWidth 권장
- * - 총 고정 너비 800px 초과 시 오버플로우 위험
+ * - 컬럼 숨김 기능 사용 시에도 레이아웃이 깨지지 않음
+ * - 유연 컬럼들이 남은 공간을 자동으로 채움
+ * - minWidth로 최소 가독성 보장
  *
  * @changelog
+ * 2026-01-27: 컬럼 너비 정책 리팩토링
+ *   - fixedColumns / columnMinWidths 이원화
+ *   - 컬럼 숨김 시 여백 문제 해결
  * 2026-01-26: 헤더 truncate 방지를 위한 너비 조정
- *   - gpu: 64px → 80px
- *   - type: 80px → 100px
- *   - protocol: 70px → 90px
- *   - adminState: 64px → 100px
  */
 
-export const columnWidths = {
+// =============================================================================
+// 완전 고정 컬럼 (Fixed Columns)
+// 아이콘/버튼만 표시되어 크기가 변할 필요 없는 컬럼
+// 사용: { key: 'status', width: fixedColumns.status }
+// =============================================================================
+
+export const fixedColumns = {
+  // 선택/체크박스
+  select: '40px',
+  checkbox: '40px',
+  radio: '40px',
+  favorite: '40px',
+
+  // 상태 아이콘
+  status: '64px',
+
+  // 잠금
+  locked: '68px',
+  lockedWide: '70px',
+
+  // 액션 메뉴
+  actions: '64px',
+  action: '64px',
+  actionWide: '72px',
+  actionXl: '80px',
+
+  // 기타 아이콘/버튼
+  identify: '80px',
+  mfa: '80px',
+} as const;
+
+// =============================================================================
+// 유연 컬럼 minWidth 값 (Flexible Column Min Widths)
+// flex: 1과 함께 사용하여 공간을 유연하게 채움
+// 사용: { key: 'name', flex: 1, minWidth: columnMinWidths.name }
+// =============================================================================
+
+export const columnMinWidths = {
   // ============================================================================
   // 공통 (Common)
   // ============================================================================
-
-  // 선택/체크박스 ---------------------------------------------------------------
-  select: '40px',
-  checkbox: '40px',
-  favorite: '40px',
-
-  // 액션 ----------------------------------------------------------------------
-  actions: '64px',
-  actionWide: '72px',
-  actionXl: '80px',
-  locked: '68px',
-  lockedWide: '70px',
-  identify: '80px',
-
-  // 상태 ----------------------------------------------------------------------
-  status: '64px',
-  statusLg: '160px',
-  ready: '80px',
-  health: '80px',
-  condition: '90px',
-  phase: '100px',
 
   // 식별자/이름 ----------------------------------------------------------------
   id: '64px',
@@ -62,6 +78,13 @@ export const columnWidths = {
   nameXxl: '250px',
   hostname: '150px',
   node: '150px',
+
+  // 상태 (텍스트 포함) ---------------------------------------------------------
+  statusLg: '160px',
+  ready: '80px',
+  health: '80px',
+  condition: '90px',
+  phase: '100px',
 
   // 시간/날짜 ------------------------------------------------------------------
   createdAt: '140px',
@@ -81,6 +104,7 @@ export const columnWidths = {
   timestamp: '160px',
   duration: '100px',
   age: '150px',
+  creationDate: '140px',
 
   // 숫자/카운트 ----------------------------------------------------------------
   count: '80px',
@@ -109,6 +133,7 @@ export const columnWidths = {
   // 리소스 --------------------------------------------------------------------
   cpu: '80px',
   vcpu: '80px',
+  vCPU: '80px',
   ram: '80px',
   memory: '100px',
   disk: '80px',
@@ -119,6 +144,7 @@ export const columnWidths = {
   image: '110px',
   flavor: '90px',
   az: '80px',
+  availabilityZone: '80px',
   sourceInstance: '140px',
   instances: '100px',
 
@@ -126,6 +152,7 @@ export const columnWidths = {
   size: '100px',
   minDisk: '100px',
   minRam: '100px',
+  minRAM: '100px',
   diskTag: '100px',
   bootable: '80px',
   diskFormat: '100px',
@@ -172,12 +199,14 @@ export const columnWidths = {
   // IP 주소 -------------------------------------------------------------------
   ip: '130px',
   fixedIp: '130px',
+  fixedIP: '130px',
   floatingIp: '130px',
   ipAddress: '130px',
   vipAddress: '130px',
   gatewayIp: '130px',
   cidr: '130px',
   subnetCidr: '120px',
+  mgmtIp: '130px',
 
   // 네트워크 ------------------------------------------------------------------
   network: '140px',
@@ -190,6 +219,7 @@ export const columnWidths = {
 
   // MAC/포트 ------------------------------------------------------------------
   macAddress: '150px',
+  macPrimary: '150px',
   port: '70px',
   portRange: '100px',
 
@@ -385,7 +415,6 @@ export const columnWidths = {
   userGroupCount: '100px',
 
   // 인증/권한 -----------------------------------------------------------------
-  mfa: '80px',
   policies: '150px',
   iamRoles: '150px',
   attachedRoles: '150px',
@@ -455,46 +484,53 @@ export const columnWidths = {
   endpoints: '150px',
   backendName: '150px',
   rpName: '120px',
-
-  // ============================================================================
-  // 키 별칭 (Aliases) - 대소문자/네이밍 호환
-  // ============================================================================
-
-  action: '64px', // → actions
-  creationDate: '140px', // → createdAt
-  fixedIP: '130px', // → fixedIp
-  macPrimary: '150px', // → macAddress
-  mgmtIp: '130px', // → ip
-  availabilityZone: '80px', // → az
-  vCPU: '80px', // → vcpu
-  minRAM: '100px', // → minRam
 } as const;
 
 // =============================================================================
-// Type Export
+// 레거시 호환 (columnWidths)
+// @deprecated - fixedColumns와 columnMinWidths 사용 권장
 // =============================================================================
 
+export const columnWidths = {
+  ...fixedColumns,
+  ...columnMinWidths,
+} as const;
+
+// =============================================================================
+// Type Exports
+// =============================================================================
+
+export type FixedColumnKey = keyof typeof fixedColumns;
+export type ColumnMinWidthKey = keyof typeof columnMinWidths;
 export type ColumnWidthKey = keyof typeof columnWidths;
 
 // =============================================================================
 // 사용 가이드
 // =============================================================================
 //
-// 1. 고정 너비:
-//    { key: 'status', width: columnWidths.status }
+// [권장 패턴]
 //
-// 2. 가변 너비 (flex):
-//    { key: 'name', flex: 1 }
-//    { key: 'description', flex: 2 }  // 2배 공간
+// 1. 완전 고정 컬럼 (아이콘/버튼):
+//    { key: 'status', width: fixedColumns.status }
+//    { key: 'actions', width: fixedColumns.actions }
 //
-// 3. 반응형 (flex + minWidth):
-//    { key: 'name', flex: 1, minWidth: '120px' }
+// 2. 유연 컬럼 (텍스트/데이터):
+//    { key: 'name', flex: 1, minWidth: columnMinWidths.name }
+//    { key: 'createdAt', flex: 1, minWidth: columnMinWidths.createdAt }
 //
-// 4. 혼합 사용:
-//    [
-//      { key: 'status', width: columnWidths.status },  // 고정
-//      { key: 'name', flex: 1 },                       // 가변
-//      { key: 'actions', width: columnWidths.actions } // 고정
-//    ]
+// [전체 예시]
+//
+// columns={[
+//   { key: 'status', width: fixedColumns.status },           // 고정 64px
+//   { key: 'name', flex: 1, minWidth: columnMinWidths.name }, // 유연, 최소 180px
+//   { key: 'type', flex: 1, minWidth: columnMinWidths.type }, // 유연, 최소 100px
+//   { key: 'createdAt', flex: 1, minWidth: columnMinWidths.createdAt }, // 유연
+//   { key: 'actions', width: fixedColumns.actions },         // 고정 64px
+// ]}
+//
+// [장점]
+// - 컬럼 숨김 시에도 남은 flex 컬럼들이 공간을 채움
+// - minWidth로 최소 가독성 보장
+// - 고정 컬럼(status, actions)은 항상 일정한 크기 유지
 //
 // =============================================================================

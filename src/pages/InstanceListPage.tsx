@@ -16,7 +16,8 @@ import {
   Tab,
   ListToolbar,
   ContextMenu,
-  columnWidths,
+  fixedColumns,
+  columnMinWidths,
   type TableColumn,
   type StatusType,
   type FilterField,
@@ -1302,12 +1303,12 @@ export function InstanceListPage() {
     { id: 'delete', label: 'Delete', status: 'danger' },
   ];
 
-  // Table columns definition (using columnWidths preset)
+  // Table columns definition (using fixedColumns / columnMinWidths preset)
   const columns: TableColumn<Instance>[] = [
     {
       key: 'status',
       label: 'Status',
-      width: columnWidths.status,
+      width: fixedColumns.status,
       align: 'center',
       sortable: false,
       render: (_, row) => <StatusIndicator status={statusMap[row.status]} layout="icon-only" />,
@@ -1316,7 +1317,7 @@ export function InstanceListPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
-      minWidth: '140px',
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5 min-w-0">
@@ -1342,7 +1343,7 @@ export function InstanceListPage() {
     {
       key: 'locked',
       label: 'Locked',
-      width: columnWidths.locked,
+      width: fixedColumns.locked,
       align: 'center',
       sortable: false,
       render: (_, row) =>
@@ -1354,21 +1355,21 @@ export function InstanceListPage() {
       key: 'fixedIp',
       label: 'Fixed IP',
       flex: 1,
-      minWidth: '100px',
+      minWidth: columnMinWidths.fixedIp,
       sortable: false,
     },
     {
       key: 'floatingIp',
       label: 'Floating IP',
       flex: 1,
-      minWidth: '100px',
+      minWidth: columnMinWidths.floatingIp,
       sortable: false,
     },
     {
       key: 'image',
       label: 'Image',
       flex: 1,
-      minWidth: '120px',
+      minWidth: columnMinWidths.image,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -1389,7 +1390,7 @@ export function InstanceListPage() {
       key: 'flavor',
       label: 'Flavor',
       flex: 1,
-      minWidth: '100px',
+      minWidth: columnMinWidths.flavor,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -1409,37 +1410,42 @@ export function InstanceListPage() {
     {
       key: 'vcpu',
       label: 'vCPU',
-      width: columnWidths.vcpu,
+      flex: 1,
+      minWidth: columnMinWidths.vcpu,
       sortable: true,
     },
     {
       key: 'ram',
       label: 'RAM',
-      width: columnWidths.ram,
+      flex: 1,
+      minWidth: columnMinWidths.ram,
       sortable: true,
     },
     {
       key: 'disk',
       label: 'Disk',
-      width: columnWidths.disk,
+      flex: 1,
+      minWidth: columnMinWidths.disk,
       sortable: true,
     },
     {
       key: 'gpu',
       label: 'GPU',
-      width: columnWidths.gpu,
+      flex: 1,
+      minWidth: columnMinWidths.gpu,
       sortable: true,
     },
     {
       key: 'az',
       label: 'AZ',
-      width: columnWidths.az,
+      flex: 1,
+      minWidth: columnMinWidths.az,
       sortable: true,
     },
     {
       key: 'actions',
       label: 'Action',
-      width: columnWidths.actions,
+      width: fixedColumns.actions,
       align: 'center',
       render: (_, row) => (
         <HStack gap={1} className="justify-center">
@@ -1480,12 +1486,12 @@ export function InstanceListPage() {
       .filter((col): col is TableColumn<Instance> => col !== undefined);
   }, [columns, columnConfig]);
 
-  // Bare Metal Table columns definition (using columnWidths preset)
+  // Bare Metal Table columns definition (using fixedColumns / columnMinWidths preset)
   const bareMetalColumns: TableColumn<BareMetalInstance>[] = [
     {
       key: 'status',
       label: 'Status',
-      width: columnWidths.status,
+      width: fixedColumns.status,
       align: 'center',
       sortable: false,
       render: (_, row) => <StatusIndicator status={statusMap[row.status]} layout="icon-only" />,
@@ -1494,7 +1500,7 @@ export function InstanceListPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
-      minWidth: '140px',
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -1515,14 +1521,14 @@ export function InstanceListPage() {
       key: 'ip',
       label: 'Fixed IP',
       flex: 1,
-      minWidth: '100px',
+      minWidth: columnMinWidths.ip,
       sortable: false,
     },
     {
       key: 'image',
       label: 'Image',
       flex: 1,
-      minWidth: '120px',
+      minWidth: columnMinWidths.image,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -1543,7 +1549,7 @@ export function InstanceListPage() {
       key: 'flavor',
       label: 'Flavor',
       flex: 1,
-      minWidth: '100px',
+      minWidth: columnMinWidths.flavor,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -1563,37 +1569,42 @@ export function InstanceListPage() {
     {
       key: 'cpu',
       label: 'CPU',
-      width: columnWidths.cpu,
+      flex: 1,
+      minWidth: columnMinWidths.cpu,
       sortable: true,
     },
     {
       key: 'ram',
       label: 'RAM',
-      width: columnWidths.ram,
+      flex: 1,
+      minWidth: columnMinWidths.ram,
       sortable: true,
     },
     {
       key: 'disk',
       label: 'Disk',
-      width: columnWidths.disk,
+      flex: 1,
+      minWidth: columnMinWidths.disk,
       sortable: true,
     },
     {
       key: 'gpu',
       label: 'GPU',
-      width: columnWidths.gpu,
+      flex: 1,
+      minWidth: columnMinWidths.gpu,
       sortable: true,
     },
     {
       key: 'az',
       label: 'AZ',
-      width: columnWidths.az,
+      flex: 1,
+      minWidth: columnMinWidths.az,
       sortable: true,
     },
     {
       key: 'actions',
       label: 'Action',
-      width: columnWidths.actions,
+      width: fixedColumns.actions,
       align: 'center',
       render: (_, row) => (
         <HStack gap={1} className="justify-center">

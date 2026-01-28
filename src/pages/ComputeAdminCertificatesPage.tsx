@@ -20,6 +20,7 @@ import {
   type ContextMenuItem,
   type FilterField,
   type AppliedFilter,
+  fixedColumns,
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -293,7 +294,7 @@ export function ComputeAdminCertificatesPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: fixedColumns.status,
       align: 'center',
       render: (_, row) => <StatusIndicator status={certStatusMap[row.status]} layout="icon-only" />,
     },
@@ -358,7 +359,7 @@ export function ComputeAdminCertificatesPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: fixedColumns.actions,
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>

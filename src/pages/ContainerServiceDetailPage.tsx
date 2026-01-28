@@ -19,7 +19,8 @@ import {
   Chip,
   type TableColumn,
   type ContextMenuItem,
-  columnWidths,
+  fixedColumns,
+  columnMinWidths,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -264,7 +265,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
     {
       key: 'status',
       label: 'Status',
-      width: columnWidths.status,
+      width: fixedColumns.status,
       align: 'center',
       sortable: true,
       render: (value: string) => (
@@ -284,7 +285,8 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
     {
       key: 'name',
       label: 'Name',
-      width: columnWidths.name,
+      flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row: PodRow) => (
         <span
@@ -299,7 +301,8 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
     {
       key: 'image',
       label: 'Image',
-      width: columnWidths.image,
+      flex: 1,
+      minWidth: columnMinWidths.image,
       sortable: true,
     },
     {
@@ -340,7 +343,8 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
     {
       key: 'action',
       label: 'Action',
-      width: columnWidths.action,
+      flex: 1,
+      minWidth: columnMinWidths.action,
       align: 'center',
       render: (_: unknown, row: PodRow) => (
         <ContextMenu items={createPodMenuItems(row)} trigger="click" align="left">
@@ -395,13 +399,15 @@ function PortsTab({ ports }: PortsTabProps) {
     {
       key: 'name',
       label: 'Name',
-      width: columnWidths.name,
+      flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
     },
     {
       key: 'port',
       label: 'Port',
-      width: columnWidths.port,
+      flex: 1,
+      minWidth: columnMinWidths.port,
       sortable: true,
     },
     {
@@ -470,13 +476,15 @@ function SelectorsTab({ selectors }: SelectorsTabProps) {
     {
       key: 'key',
       label: 'Key',
-      width: columnWidths.key,
+      flex: 1,
+      minWidth: columnMinWidths.key,
       sortable: true,
     },
     {
       key: 'value',
       label: 'Value',
-      width: columnWidths.value,
+      flex: 1,
+      minWidth: columnMinWidths.value,
       sortable: true,
     },
   ];

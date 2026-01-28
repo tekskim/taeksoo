@@ -24,6 +24,7 @@ import {
   RadioGroup,
   Select,
   type TableColumn,
+  fixedColumns,
 } from '@/design-system';
 import type { WizardSummaryItem, WizardSectionState } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
@@ -219,7 +220,7 @@ export default function CreateNetworkPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: fixedColumns.status,
       align: 'center',
       sortable: false,
       render: (_, row) => <StatusIndicator status={row.status} layout="icon-only" />,

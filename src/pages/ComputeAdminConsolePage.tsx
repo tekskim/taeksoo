@@ -290,7 +290,7 @@ function generateSampleLogs(_instanceName: string): string {
     `${formatDate(now)} ${formatTime(now)}  I1029 02:06:17.837176    1 node_register.go:66] "Registration Server started" socketPath="/registration/driver.csi.io-reg.sock"`,
     `${formatDate(now)} ${formatTime(now)}  I1029 02:06:17.837245    1 node_register.go:96] "Skipping HTTP server"`,
     `${formatDate(now)} ${formatTime(now)}  I1029 02:06:18.515514    1 main.go:97] "Received GetInfo call" request="&InfoRequest{}"`,
-    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:18.529723    1 main.go:109] "Received NotifyRegistrationStatus call" status="&RegistrationStatus{PluginRegistered:true,Error:,}"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:18.529723    1 main.go:109] "Received NotifyRegistrationStatus call" status="&RegistrationStatus{PluginRegistered:true,Error: }"`,
   ];
 
   return logs.join('\n');

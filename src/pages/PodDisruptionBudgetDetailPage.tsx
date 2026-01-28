@@ -20,7 +20,8 @@ import {
   Table,
   type ContextMenuItem,
   type TableColumn,
-  columnWidths,
+  fixedColumns,
+  columnMinWidths,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -242,7 +243,8 @@ export function PodDisruptionBudgetDetailPage() {
     {
       key: 'createdAt',
       label: 'Created At',
-      width: columnWidths.createdAt,
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
     },
   ];
@@ -280,13 +282,15 @@ export function PodDisruptionBudgetDetailPage() {
     {
       key: 'lastSeen',
       label: 'Last Seen',
-      width: columnWidths.lastSeen,
+      flex: 1,
+      minWidth: columnMinWidths.lastSeen,
       sortable: true,
     },
     {
       key: 'type',
       label: 'Type',
-      width: columnWidths.type,
+      flex: 1,
+      minWidth: columnMinWidths.type,
       sortable: true,
     },
     {
@@ -304,7 +308,8 @@ export function PodDisruptionBudgetDetailPage() {
     {
       key: 'source',
       label: 'Source',
-      width: columnWidths.source,
+      flex: 1,
+      minWidth: columnMinWidths.source,
       sortable: true,
     },
     {
@@ -316,13 +321,15 @@ export function PodDisruptionBudgetDetailPage() {
     {
       key: 'firstSeen',
       label: 'First Seen',
-      width: columnWidths.firstSeen,
+      flex: 1,
+      minWidth: columnMinWidths.firstSeen,
       sortable: true,
     },
     {
       key: 'count',
       label: 'Count',
-      width: columnWidths.count,
+      flex: 1,
+      minWidth: columnMinWidths.count,
       sortable: true,
     },
     {
@@ -342,7 +349,7 @@ export function PodDisruptionBudgetDetailPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: columnWidths.actions,
+      width: fixedColumns.actions,
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>

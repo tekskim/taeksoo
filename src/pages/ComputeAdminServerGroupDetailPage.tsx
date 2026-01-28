@@ -17,6 +17,7 @@ import {
   Pagination,
   StatusIndicator,
   type TableColumn,
+  fixedColumns,
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -190,7 +191,7 @@ export function ComputeAdminServerGroupDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '59px',
+      width: fixedColumns.status,
       align: 'center',
       render: (_, row) => <StatusIndicator status={row.status} layout="icon-only" />,
     },
@@ -216,7 +217,7 @@ export function ComputeAdminServerGroupDetailPage() {
     {
       key: 'locked',
       label: 'Locked',
-      width: '80px',
+      width: fixedColumns.locked,
       align: 'center',
       render: (_, row) =>
         row.locked ? (

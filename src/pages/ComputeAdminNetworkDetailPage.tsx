@@ -22,6 +22,7 @@ import {
   Badge,
   type TableColumn,
   type ContextMenuItem,
+  fixedColumns,
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -538,7 +539,7 @@ export default function NetworkDetailPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '72px',
+      width: fixedColumns.actionWide,
       align: 'center',
       render: (_: unknown, row: Subnet) => {
         const subnetMenuItems: ContextMenuItem[] = [
@@ -572,7 +573,7 @@ export default function NetworkDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: fixedColumns.status,
       align: 'center',
       render: (_, row) => <StatusIndicator status={portStatusMap[row.status]} layout="icon-only" />,
     },
@@ -691,7 +692,7 @@ export default function NetworkDetailPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '72px',
+      width: fixedColumns.actionWide,
       align: 'center',
       render: (_: unknown, row: Port) => {
         const portMenuItems: ContextMenuItem[] = [
@@ -725,7 +726,7 @@ export default function NetworkDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: fixedColumns.status,
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={dhcpAgentStatusMap[row.status]} layout="icon-only" />
@@ -756,7 +757,7 @@ export default function NetworkDetailPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '72px',
+      width: fixedColumns.actionWide,
       align: 'center',
       render: (_: unknown, row: DhcpAgent) => (
         <div onClick={(e) => e.stopPropagation()}>
