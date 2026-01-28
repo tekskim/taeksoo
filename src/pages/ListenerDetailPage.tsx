@@ -27,14 +27,9 @@ import {
   IconEdit,
   IconTrash,
   IconBell,
-  IconChevronDown,
   IconCirclePlus,
   IconDotsCircleHorizontal,
-  IconPool,
-  IconPlus,
   IconCertificate,
-  IconShieldLock,
-  IconListDetails,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -706,64 +701,12 @@ export default function ListenerDetailPage() {
                 <DetailHeader.Title>{listener.name}</DetailHeader.Title>
 
                 <DetailHeader.Actions>
-                  <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                    Edit
+                  <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+                    Delete Default Pool
                   </Button>
                   <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
                     Delete
                   </Button>
-                  <ContextMenu
-                    trigger="click"
-                    items={[
-                      {
-                        id: 'create-default-pool',
-                        label: 'Create default pool',
-                        icon: <IconPool size={14} stroke={1.5} />,
-                        onClick: () => console.log('Create default pool clicked'),
-                      },
-                      {
-                        id: 'delete-default-pool',
-                        label: 'Delete default pool',
-                        icon: <IconTrash size={14} stroke={1.5} />,
-                        status: 'danger',
-                        onClick: () => console.log('Delete default pool clicked'),
-                      },
-                      {
-                        id: 'edit-default-pool',
-                        label: 'Edit default pool',
-                        icon: <IconEdit size={14} stroke={1.5} />,
-                        onClick: () => console.log('Edit default pool clicked'),
-                      },
-                      {
-                        id: 'add-l7-policy',
-                        label: 'Add L7 policy',
-                        icon: <IconPlus size={14} stroke={1.5} />,
-                        onClick: () => console.log('Add L7 policy clicked'),
-                      },
-                      {
-                        id: 'change-server-certificates',
-                        label: 'Change server certificates',
-                        icon: <IconCertificate size={14} stroke={1.5} />,
-                        onClick: () => console.log('Change server certificates clicked'),
-                      },
-                      {
-                        id: 'change-ca-certificate',
-                        label: 'Change CA certificate',
-                        icon: <IconShieldLock size={14} stroke={1.5} />,
-                        onClick: () => console.log('Change CA certificate clicked'),
-                      },
-                      {
-                        id: 'manage-sni-certificate',
-                        label: 'Manage SNI certificate',
-                        icon: <IconListDetails size={14} stroke={1.5} />,
-                        onClick: () => console.log('Manage SNI certificate clicked'),
-                      },
-                    ]}
-                  >
-                    <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-                      More Actions
-                    </Button>
-                  </ContextMenu>
                 </DetailHeader.Actions>
 
                 <DetailHeader.InfoGrid>

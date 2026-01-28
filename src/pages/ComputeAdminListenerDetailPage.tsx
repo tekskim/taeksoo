@@ -27,14 +27,9 @@ import {
   IconEdit,
   IconTrash,
   IconBell,
-  IconChevronDown,
-  IconCirclePlus,
   IconDotsCircleHorizontal,
-  IconPool,
-  IconPlus,
   IconCertificate,
-  IconShieldLock,
-  IconListDetails,
+  IconDownload,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -177,7 +172,7 @@ const defaultListenerDetail: ListenerDetail = {
   memberDataTimeout: '-',
   tcpInspectTimeout: '-',
   allowedCidrs: '-',
-  loadBalancer: { name: '-', id: '' },
+  loadBalancer: { name: 'web-lb-01', id: 'lb-001' },
 };
 
 /* ----------------------------------------
@@ -530,11 +525,7 @@ export default function ListenerDetailPage() {
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={policyMenuItems} trigger="click">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                <IconDotsCircleHorizontal
-                  size={16}
-                  stroke={1.5}
-                  className="text-[var(--action-icon-color)]"
-                />
+                <IconTrash size={16} stroke={1.5} className="text-[var(--color-state-danger)]" />
               </button>
             </ContextMenu>
           </div>
@@ -706,64 +697,12 @@ export default function ListenerDetailPage() {
                 <DetailHeader.Title>{listener.name}</DetailHeader.Title>
 
                 <DetailHeader.Actions>
-                  <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                    Edit
+                  <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+                    Delete Default Pool
                   </Button>
                   <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
                     Delete
                   </Button>
-                  <ContextMenu
-                    trigger="click"
-                    items={[
-                      {
-                        id: 'create-default-pool',
-                        label: 'Create default pool',
-                        icon: <IconPool size={14} stroke={1.5} />,
-                        onClick: () => console.log('Create default pool clicked'),
-                      },
-                      {
-                        id: 'delete-default-pool',
-                        label: 'Delete default pool',
-                        icon: <IconTrash size={14} stroke={1.5} />,
-                        status: 'danger',
-                        onClick: () => console.log('Delete default pool clicked'),
-                      },
-                      {
-                        id: 'edit-default-pool',
-                        label: 'Edit default pool',
-                        icon: <IconEdit size={14} stroke={1.5} />,
-                        onClick: () => console.log('Edit default pool clicked'),
-                      },
-                      {
-                        id: 'add-l7-policy',
-                        label: 'Add L7 policy',
-                        icon: <IconPlus size={14} stroke={1.5} />,
-                        onClick: () => console.log('Add L7 policy clicked'),
-                      },
-                      {
-                        id: 'change-server-certificates',
-                        label: 'Change server certificates',
-                        icon: <IconCertificate size={14} stroke={1.5} />,
-                        onClick: () => console.log('Change server certificates clicked'),
-                      },
-                      {
-                        id: 'change-ca-certificate',
-                        label: 'Change CA certificate',
-                        icon: <IconShieldLock size={14} stroke={1.5} />,
-                        onClick: () => console.log('Change CA certificate clicked'),
-                      },
-                      {
-                        id: 'manage-sni-certificate',
-                        label: 'Manage SNI certificate',
-                        icon: <IconListDetails size={14} stroke={1.5} />,
-                        onClick: () => console.log('Manage SNI certificate clicked'),
-                      },
-                    ]}
-                  >
-                    <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-                      More Actions
-                    </Button>
-                  </ContextMenu>
                 </DetailHeader.Actions>
 
                 <DetailHeader.InfoGrid>
@@ -791,7 +730,6 @@ export default function ListenerDetailPage() {
                     <Tab value="details">Details</Tab>
                     <Tab value="pools">Default pool</Tab>
                     <Tab value="l7-policies">L7 Policies</Tab>
-                    <Tab value="certificates">Certificates</Tab>
                   </TabList>
 
                   {/* Details Tab */}
@@ -799,17 +737,11 @@ export default function ListenerDetailPage() {
                     <VStack gap={4} className="pt-4">
                       {/* Basic information */}
                       <SectionCard>
-                        <SectionCard.Header
-                          title="Basic information"
-                          actions={
-                            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                              Edit
-                            </Button>
-                          }
-                        />
+                        <SectionCard.Header title="Basic information" />
                         <SectionCard.Content>
                           <SectionCard.DataRow label="Name" value={listener.name} />
                           <SectionCard.DataRow label="Description" value={listener.description} />
+                          <SectionCard.DataRow label="Admin state" value={listener.adminState} />
                           <SectionCard.DataRow label="Protocol" value={listener.protocol} />
                           <SectionCard.DataRow label="Port" value={String(listener.port)} />
                           <SectionCard.DataRow
@@ -840,7 +772,6 @@ export default function ListenerDetailPage() {
                             label="Allowed CIDRs"
                             value={listener.allowedCidrs}
                           />
-                          <SectionCard.DataRow label="Admin state" value={listener.adminState} />
                         </SectionCard.Content>
                       </SectionCard>
 
@@ -881,26 +812,31 @@ export default function ListenerDetailPage() {
                         <SectionCard.Header
                           title="Default Pool"
                           actions={
-                            <>
-                              <Button
-                                variant="secondary"
-                                size="sm"
-                                leftIcon={<IconEdit size={12} />}
-                              >
-                                Edit
-                              </Button>
-                              <Button
-                                variant="secondary"
-                                size="sm"
-                                leftIcon={<IconTrash size={12} />}
-                              >
-                                Delete
-                              </Button>
-                            </>
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              leftIcon={<IconTrash size={12} />}
+                            >
+                              Delete Default Pool
+                            </Button>
                           }
                         />
                         <SectionCard.Content>
-                          <SectionCard.DataRow label="Name" value={mockPools[0]?.name || '-'} />
+                          <SectionCard.DataRow
+                            label="Name"
+                            value={
+                              mockPools[0] ? (
+                                <Link
+                                  to={`/compute-admin/pools/${mockPools[0].id}`}
+                                  className="font-medium text-[var(--color-action-primary)] hover:underline"
+                                >
+                                  {mockPools[0].name}
+                                </Link>
+                              ) : (
+                                '-'
+                              )
+                            }
+                          />
                           <SectionCard.DataRow
                             label="Status"
                             value={
@@ -911,6 +847,10 @@ export default function ListenerDetailPage() {
                           />
                           <SectionCard.DataRow label="Description" value="-" />
                           <SectionCard.DataRow
+                            label="Admin state"
+                            value={mockPools[0]?.adminState || '-'}
+                          />
+                          <SectionCard.DataRow
                             label="Algorithm"
                             value={mockPools[0]?.algorithm || '-'}
                           />
@@ -919,10 +859,6 @@ export default function ListenerDetailPage() {
                             value={mockPools[0]?.protocol || '-'}
                           />
                           <SectionCard.DataRow label="Session persistence" value="-" />
-                          <SectionCard.DataRow
-                            label="Admin state"
-                            value={mockPools[0]?.adminState || '-'}
-                          />
                         </SectionCard.Content>
                       </SectionCard>
                     </VStack>
@@ -936,26 +872,24 @@ export default function ListenerDetailPage() {
                         <h3 className="text-[16px] font-semibold text-[var(--color-text-default)]">
                           L7 Policies
                         </h3>
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          leftIcon={<IconCirclePlus size={12} />}
-                        >
-                          Add L7 Policy
-                        </Button>
                       </div>
 
                       {/* Action Bar */}
                       <div className="flex items-center gap-2">
-                        <div className="w-[var(--search-input-width)]">
-                          <SearchInput
-                            value={l7PolicySearchTerm}
-                            onChange={(e) => {
-                              setL7PolicySearchTerm(e.target.value);
-                              setL7PolicyCurrentPage(1);
-                            }}
-                            placeholder="Search policies by attributes"
-                          />
+                        <div className="flex items-center gap-1">
+                          <div className="w-[var(--search-input-width)]">
+                            <SearchInput
+                              value={l7PolicySearchTerm}
+                              onChange={(e) => {
+                                setL7PolicySearchTerm(e.target.value);
+                                setL7PolicyCurrentPage(1);
+                              }}
+                              placeholder="Search policies by attributes"
+                            />
+                          </div>
+                          <button className="w-7 h-7 flex items-center justify-center rounded-md border border-[var(--color-border-strong)] hover:bg-[var(--button-secondary-hover-bg)] transition-colors">
+                            <IconDownload size={14} stroke={1.5} />
+                          </button>
                         </div>
                         <div className="h-4 w-px bg-[var(--color-border-default)]" />
                         <Button
@@ -990,65 +924,6 @@ export default function ListenerDetailPage() {
                   </TabPanel>
 
                   {/* Certificates Tab */}
-                  <TabPanel value="certificates" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Header */}
-                      <div className="flex items-center justify-between">
-                        <h3 className="text-[16px] font-semibold text-[var(--color-text-default)]">
-                          Certificates
-                        </h3>
-                        <div className="flex items-center gap-2">
-                          <Button variant="secondary" size="sm">
-                            Change server Certificate
-                          </Button>
-                          <Button variant="secondary" size="sm">
-                            Change CA Certificate
-                          </Button>
-                          <Button variant="secondary" size="sm">
-                            Manage SNI Certificates
-                          </Button>
-                        </div>
-                      </div>
-
-                      {/* Action Bar */}
-                      <div className="flex items-center gap-2">
-                        <div className="w-[var(--search-input-width)]">
-                          <SearchInput
-                            value={certificateSearchTerm}
-                            onChange={(e) => {
-                              setCertificateSearchTerm(e.target.value);
-                              setCertificateCurrentPage(1);
-                            }}
-                            placeholder="Search certificates by attributes"
-                          />
-                        </div>
-                        <div className="h-4 w-px bg-[var(--color-border-default)]" />
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          leftIcon={<IconTrash size={12} />}
-                          disabled
-                        >
-                          Delete
-                        </Button>
-                      </div>
-
-                      {/* Pagination */}
-                      <Pagination
-                        currentPage={certificateCurrentPage}
-                        totalPages={totalCertificatePages}
-                        onPageChange={setCertificateCurrentPage}
-                        totalItems={filteredCertificates.length}
-                      />
-
-                      {/* Table */}
-                      <Table
-                        columns={certificateColumns}
-                        data={paginatedCertificates}
-                        rowKey="id"
-                      />
-                    </VStack>
-                  </TabPanel>
                 </Tabs>
               </div>
             </VStack>
