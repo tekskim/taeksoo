@@ -13,7 +13,8 @@ import {
   ContextMenu,
   ConfirmModal,
   StatusIndicator,
-  columnWidths,
+  fixedColumns,
+  columnMinWidths,
   type TableColumn,
   type ContextMenuItem,
   type FilterField,
@@ -338,12 +339,12 @@ export function LoadBalancersPage() {
     return filteredLBs.slice(start, start + rowsPerPage);
   }, [filteredLBs, currentPage, rowsPerPage]);
 
-  // Table columns
+  // Table columns (using fixedColumns / columnMinWidths preset)
   const columns: TableColumn<LoadBalancer>[] = [
     {
       key: 'status',
       label: 'Status',
-      width: columnWidths.status,
+      width: fixedColumns.status,
       align: 'center',
       render: (_, row) => <StatusIndicator status={lbStatusMap[row.status]} layout="icon-only" />,
     },
@@ -351,6 +352,7 @@ export function LoadBalancersPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -371,11 +373,13 @@ export function LoadBalancersPage() {
       key: 'vipAddress',
       label: 'VIP Address',
       flex: 1,
+      minWidth: columnMinWidths.vipAddress,
     },
     {
       key: 'ownedNetwork',
       label: 'Owned network',
       flex: 1,
+      minWidth: columnMinWidths.ownedNetwork,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -396,6 +400,7 @@ export function LoadBalancersPage() {
       key: 'floatingIp',
       label: 'Floating IP',
       flex: 1,
+      minWidth: columnMinWidths.floatingIp,
       render: (_, row) =>
         row.floatingIpId ? (
           <div className="flex flex-col gap-0.5">
@@ -418,6 +423,7 @@ export function LoadBalancersPage() {
       key: 'listeners',
       label: 'Listeners',
       flex: 1,
+      minWidth: columnMinWidths.listeners,
       render: (_, row) => (
         <div className="flex items-center gap-[5px]">
           <div className="flex flex-col gap-0.5">
@@ -434,13 +440,14 @@ export function LoadBalancersPage() {
     {
       key: 'createdAt',
       label: 'Created at',
-      width: columnWidths.createdAt,
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
     },
     {
       key: 'actions',
       label: 'Action',
-      width: columnWidths.actions,
+      width: fixedColumns.actions,
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>

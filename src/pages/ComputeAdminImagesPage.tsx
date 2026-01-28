@@ -1,24 +1,6 @@
 import { useState, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  Button,
-  FilterSearchInput,
-  Table,
-  Pagination,
-  VStack,
-  TabBar,
-  TopBar,
-  TopBarAction,
-  Breadcrumb,
-  ListToolbar,
-  ContextMenu,
-  ConfirmModal,
-  StatusIndicator,
-  type TableColumn,
-  type ContextMenuItem,
-  type FilterField,
-  type AppliedFilter,
-} from '@/design-system';
+import { Button, FilterSearchInput, Table, Pagination, VStack, TabBar, TopBar, TopBarAction, Breadcrumb, ListToolbar, ContextMenu, ConfirmModal, StatusIndicator, type TableColumn, type ContextMenuItem, type FilterField, type AppliedFilter, fixedColumns, columnMinWidths } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
@@ -64,8 +46,7 @@ const mockImages: Image[] = [
     createdAt: '2025-09-12',
     status: 'active',
     tenant: 'Tenant A',
-    tenantId: 'tenant-001',
-  },
+    tenantId: 'tenant-001' },
   {
     id: 'img-002',
     name: 'CentOS-8-minimal',
@@ -78,8 +59,7 @@ const mockImages: Image[] = [
     createdAt: '2025-09-10',
     status: 'active',
     tenant: 'Tenant B',
-    tenantId: 'tenant-002',
-  },
+    tenantId: 'tenant-002' },
   {
     id: 'img-003',
     name: 'Rocky-Linux-9',
@@ -92,8 +72,7 @@ const mockImages: Image[] = [
     createdAt: '2025-09-08',
     status: 'active',
     tenant: 'Tenant A',
-    tenantId: 'tenant-001',
-  },
+    tenantId: 'tenant-001' },
   {
     id: 'img-004',
     name: 'Debian-12-standard',
@@ -106,8 +85,7 @@ const mockImages: Image[] = [
     createdAt: '2025-09-05',
     status: 'active',
     tenant: 'Tenant C',
-    tenantId: 'tenant-003',
-  },
+    tenantId: 'tenant-003' },
   {
     id: 'img-005',
     name: 'Ubuntu-20.04-LTS',
@@ -120,8 +98,7 @@ const mockImages: Image[] = [
     createdAt: '2025-08-28',
     status: 'active',
     tenant: 'Tenant B',
-    tenantId: 'tenant-002',
-  },
+    tenantId: 'tenant-002' },
   {
     id: 'img-006',
     name: 'Windows-Server-2022',
@@ -134,8 +111,7 @@ const mockImages: Image[] = [
     createdAt: '2025-08-25',
     status: 'pending',
     tenant: 'Tenant A',
-    tenantId: 'tenant-001',
-  },
+    tenantId: 'tenant-001' },
   {
     id: 'img-007',
     name: 'Alpine-3.18-minimal',
@@ -148,8 +124,7 @@ const mockImages: Image[] = [
     createdAt: '2025-08-20',
     status: 'active',
     tenant: 'Tenant D',
-    tenantId: 'tenant-004',
-  },
+    tenantId: 'tenant-004' },
   {
     id: 'img-008',
     name: 'Fedora-39-workstation',
@@ -162,8 +137,7 @@ const mockImages: Image[] = [
     createdAt: '2025-08-15',
     status: 'active',
     tenant: 'Tenant C',
-    tenantId: 'tenant-003',
-  },
+    tenantId: 'tenant-003' },
   {
     id: 'img-009',
     name: 'Oracle-Linux-8',
@@ -176,8 +150,7 @@ const mockImages: Image[] = [
     createdAt: '2025-08-10',
     status: 'deactivated',
     tenant: 'Tenant B',
-    tenantId: 'tenant-002',
-  },
+    tenantId: 'tenant-002' },
   {
     id: 'img-010',
     name: 'Ubuntu-22.04-GPU',
@@ -190,8 +163,7 @@ const mockImages: Image[] = [
     createdAt: '2025-08-05',
     status: 'active',
     tenant: 'Tenant A',
-    tenantId: 'tenant-001',
-  },
+    tenantId: 'tenant-001' },
 ];
 
 /* ----------------------------------------
@@ -209,8 +181,7 @@ const filterFields: FilterField[] = [
     options: [
       { value: 'RAW', label: 'RAW' },
       { value: 'QCOW2', label: 'QCOW2' },
-    ],
-  },
+    ] },
   {
     key: 'access',
     label: 'Access',
@@ -219,8 +190,7 @@ const filterFields: FilterField[] = [
       { value: 'Private', label: 'Private' },
       { value: 'Shared', label: 'Shared' },
       { value: 'Public', label: 'Public' },
-    ],
-  },
+    ] },
   {
     key: 'status',
     label: 'Status',
@@ -230,8 +200,7 @@ const filterFields: FilterField[] = [
       { value: 'pending', label: 'Pending' },
       { value: 'error', label: 'Error' },
       { value: 'deactivated', label: 'Deactivated' },
-    ],
-  },
+    ] },
 ];
 
 export function ComputeAdminImagesPage() {
@@ -276,8 +245,7 @@ export function ComputeAdminImagesPage() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    closable: tab.closable,
-  }));
+    closable: tab.closable }));
 
   // Handle delete image
   const handleDeleteClick = (image: Image) => {
@@ -334,10 +302,9 @@ export function ComputeAdminImagesPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: fixedColumns.status,
       align: 'center',
-      render: (_, row) => <StatusIndicator status={row.status} layout="icon-only" />,
-    },
+      render: (_, row) => <StatusIndicator status={row.status} layout="icon-only" /> },
     {
       key: 'name',
       label: 'Name',
@@ -356,8 +323,7 @@ export function ComputeAdminImagesPage() {
             ID : {row.id}
           </span>
         </div>
-      ),
-    },
+      ) },
     {
       key: 'tenant',
       label: 'Tenant',
@@ -376,66 +342,56 @@ export function ComputeAdminImagesPage() {
             ID : {row.tenantId}
           </span>
         </div>
-      ),
-    },
+      ) },
     {
       key: 'os',
       label: 'OS',
       flex: 1,
-      sortable: true,
-    },
+      sortable: true },
     {
       key: 'size',
       label: 'Size',
       flex: 1,
-      sortable: true,
-    },
+      sortable: true },
     {
       key: 'diskFormat',
       label: 'Disk format',
       flex: 1,
-      sortable: true,
-    },
+      sortable: true },
     {
       key: 'protected',
       label: 'Visibility',
       flex: 1,
-      render: (_, row) => (row.protected ? 'Private' : 'Public'),
-    },
+      render: (_, row) => (row.protected ? 'Private' : 'Public') },
     {
       key: 'createdAt',
       label: 'Created at',
       flex: 1,
-      sortable: true,
-    },
+      sortable: true },
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: fixedColumns.actions,
       align: 'center',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
           {
             id: 'edit',
             label: 'Edit',
-            onClick: () => console.log('Edit image:', row.id),
-          },
+            onClick: () => console.log('Edit image:', row.id) },
           {
             id: 'manage-metadata',
             label: 'Manage metadata',
-            onClick: () => console.log('Manage metadata:', row.id),
-          },
+            onClick: () => console.log('Manage metadata:', row.id) },
           {
             id: 'manage-access',
             label: 'Manage access',
-            onClick: () => console.log('Manage access:', row.id),
-          },
+            onClick: () => console.log('Manage access:', row.id) },
           {
             id: 'delete',
             label: 'Delete',
             variant: 'danger',
-            onClick: () => handleDeleteClick(row),
-          },
+            onClick: () => handleDeleteClick(row) },
         ];
 
         return (
@@ -451,8 +407,7 @@ export function ComputeAdminImagesPage() {
             </ContextMenu>
           </div>
         );
-      },
-    },
+      } },
   ];
 
   // Filter and order columns based on preferences

@@ -3,24 +3,14 @@ import * as d3 from 'd3';
 
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  VStack,
-  Select,
-  SearchInput,
-  Button,
-  TabBar,
-  TopBar,
-  TopBarAction,
-  Breadcrumb,
-} from '@/design-system';
+import { VStack, Select, SearchInput, Button, TabBar, TopBar, TopBarAction, Breadcrumb, fixedColumns, columnMinWidths } from '@/design-system';
 import {
   IconX,
   IconCopy,
   IconExternalLink,
   IconRefresh,
   IconSearch,
-  IconBell,
-} from '@tabler/icons-react';
+  IconBell } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
@@ -50,8 +40,7 @@ const NODE_SIZES: Record<NodeType, { node: number; icon: number }> = {
   externalNetwork: { node: 64, icon: 32 },
   router: { node: 56, icon: 28 },
   subnet: { node: 48, icon: 24 },
-  loadBalancer: { node: 40, icon: 20 },
-};
+  loadBalancer: { node: 40, icon: 20 } };
 
 const INDICATOR_SIZE = 12;
 
@@ -69,8 +58,7 @@ const ICONS = {
     'M8 8H8.00667M10.666 8H10.6727M11.334 4.66675L14.6673 8.00008L11.334 11.3334M4.66732 4.66675L1.33398 8.00008L4.66732 11.3334M5.33398 8H5.34065',
   // loadBalancer.svg - 로드밸런서
   loadBalancer:
-    'M8.00033 10.6667C7.46989 10.6667 6.96118 10.456 6.58611 10.0809C6.21104 9.70581 6.00033 9.1971 6.00033 8.66667C6.00033 8.13623 6.21104 7.62753 6.58611 7.25245C6.96118 6.87738 7.46989 6.66667 8.00033 6.66667M8.00033 10.6667C8.53076 10.6667 9.03947 10.456 9.41454 10.0809C9.78961 9.70581 10.0003 9.1971 10.0003 8.66667C10.0003 8.13623 9.78961 7.62753 9.41454 7.25245C9.03947 6.87738 8.53076 6.66667 8.00033 6.66667M8.00033 10.6667V12.6667M8.00033 6.66667V2M8.00033 12.6667C8.17714 12.6667 8.34671 12.7369 8.47173 12.8619C8.59675 12.987 8.66699 13.1565 8.66699 13.3333C8.66699 13.5101 8.59675 13.6797 8.47173 13.8047C8.34671 13.9298 8.17714 14 8.00033 14C7.82351 14 7.65395 13.9298 7.52892 13.8047C7.4039 13.6797 7.33366 13.5101 7.33366 13.3333C7.33366 13.1565 7.4039 12.987 7.52892 12.8619C7.65395 12.7369 7.82351 12.6667 8.00033 12.6667ZM8.00033 2L6.00033 4M8.00033 2L10.0003 4M9.92969 8.15129L14.003 6.66862M14.003 6.66862L11.4396 5.47331M14.003 6.66862L12.8076 9.23197M6.06758 8.14262L2.01758 6.66862M2.01758 6.66862L4.58091 5.47331M2.01758 6.66862L3.21291 9.23197',
-};
+    'M8.00033 10.6667C7.46989 10.6667 6.96118 10.456 6.58611 10.0809C6.21104 9.70581 6.00033 9.1971 6.00033 8.66667C6.00033 8.13623 6.21104 7.62753 6.58611 7.25245C6.96118 6.87738 7.46989 6.66667 8.00033 6.66667M8.00033 10.6667C8.53076 10.6667 9.03947 10.456 9.41454 10.0809C9.78961 9.70581 10.0003 9.1971 10.0003 8.66667C10.0003 8.13623 9.78961 7.62753 9.41454 7.25245C9.03947 6.87738 8.53076 6.66667 8.00033 6.66667M8.00033 10.6667V12.6667M8.00033 6.66667V2M8.00033 12.6667C8.17714 12.6667 8.34671 12.7369 8.47173 12.8619C8.59675 12.987 8.66699 13.1565 8.66699 13.3333C8.66699 13.5101 8.59675 13.6797 8.47173 13.8047C8.34671 13.9298 8.17714 14 8.00033 14C7.82351 14 7.65395 13.9298 7.52892 13.8047C7.4039 13.6797 7.33366 13.5101 7.33366 13.3333C7.33366 13.1565 7.4039 12.987 7.52892 12.8619C7.65395 12.7369 7.82351 12.6667 8.00033 12.6667ZM8.00033 2L6.00033 4M8.00033 2L10.0003 4M9.92969 8.15129L14.003 6.66862M14.003 6.66862L11.4396 5.47331M14.003 6.66862L12.8076 9.23197M6.06758 8.14262L2.01758 6.66862M2.01758 6.66862L4.58091 5.47331M2.01758 6.66862L3.21291 9.23197' };
 
 /* ----------------------------------------
    Data Types
@@ -133,20 +121,17 @@ const externalNetworks: ExternalNetwork[] = [
     id: 'extnet-apne2-pub-001',
     name: 'extnet-apne2-public',
     status: 'active',
-    description: 'Seoul Region Public Internet',
-  },
+    description: 'Seoul Region Public Internet' },
   {
     id: 'extnet-usw2-pub-001',
     name: 'extnet-usw2-public',
     status: 'active',
-    description: 'Oregon Region Public Internet',
-  },
+    description: 'Oregon Region Public Internet' },
   {
     id: 'extnet-dc-priv-001',
     name: 'extnet-dc-private',
     status: 'active',
-    description: 'Datacenter Direct Connect',
-  },
+    description: 'Datacenter Direct Connect' },
 ];
 
 // Routers - 라우터 (환경별, 용도별)
@@ -156,56 +141,47 @@ const routers: Router[] = [
     id: 'rtr-prod-apne2-edge-001',
     name: 'prod-apne2-edge',
     status: 'active',
-    externalNetworkId: 'extnet-apne2-pub-001',
-  },
+    externalNetworkId: 'extnet-apne2-pub-001' },
   {
     id: 'rtr-nprd-apne2-edge-001',
     name: 'nprd-apne2-edge',
     status: 'active',
-    externalNetworkId: 'extnet-apne2-pub-001',
-  },
+    externalNetworkId: 'extnet-apne2-pub-001' },
   {
     id: 'rtr-mgmt-apne2-int-001',
     name: 'mgmt-apne2-int',
     status: 'active',
-    externalNetworkId: 'extnet-dc-priv-001',
-  },
+    externalNetworkId: 'extnet-dc-priv-001' },
   // US Region (usw2)
   {
     id: 'rtr-prod-usw2-edge-001',
     name: 'prod-usw2-edge',
     status: 'active',
-    externalNetworkId: 'extnet-usw2-pub-001',
-  },
+    externalNetworkId: 'extnet-usw2-pub-001' },
   {
     id: 'rtr-dr-usw2-edge-001',
     name: 'dr-usw2-edge',
     status: 'inactive',
-    externalNetworkId: 'extnet-usw2-pub-001',
-  },
+    externalNetworkId: 'extnet-usw2-pub-001' },
   // Shared Infrastructure
   {
     id: 'rtr-shrd-dc-int-001',
     name: 'shrd-dc-int',
     status: 'active',
-    externalNetworkId: 'extnet-dc-priv-001',
-  },
+    externalNetworkId: 'extnet-dc-priv-001' },
 ];
 
 // Network Groups - 외부 네트워크와 라우터 그룹핑
 const networkGroups: NetworkGroup[] = [
   {
     extNet: externalNetworks[0], // Seoul Public
-    routers: routers.filter((r) => r.externalNetworkId === 'extnet-apne2-pub-001'),
-  },
+    routers: routers.filter((r) => r.externalNetworkId === 'extnet-apne2-pub-001') },
   {
     extNet: externalNetworks[1], // Oregon Public
-    routers: routers.filter((r) => r.externalNetworkId === 'extnet-usw2-pub-001'),
-  },
+    routers: routers.filter((r) => r.externalNetworkId === 'extnet-usw2-pub-001') },
   {
     extNet: externalNetworks[2], // DC Private
-    routers: routers.filter((r) => r.externalNetworkId === 'extnet-dc-priv-001'),
-  },
+    routers: routers.filter((r) => r.externalNetworkId === 'extnet-dc-priv-001') },
 ];
 
 const standaloneExternalNetworks: ExternalNetwork[] = [];
@@ -242,40 +218,35 @@ const subnets: Subnet[] = [
     cidr: '10.10.1.0/24',
     status: 'active',
     networkId: 'vpc-prod-apne2-web-001',
-    routerId: 'rtr-prod-apne2-edge-001',
-  },
+    routerId: 'rtr-prod-apne2-edge-001' },
   {
     id: 'snet-prod-apne2-web-pub-2b',
     name: 'web-pub-2b',
     cidr: '10.10.2.0/24',
     status: 'active',
     networkId: 'vpc-prod-apne2-web-001',
-    routerId: 'rtr-prod-apne2-edge-001',
-  },
+    routerId: 'rtr-prod-apne2-edge-001' },
   {
     id: 'snet-prod-apne2-web-pub-2c',
     name: 'web-pub-2c',
     cidr: '10.10.3.0/24',
     status: 'active',
     networkId: 'vpc-prod-apne2-web-001',
-    routerId: 'rtr-prod-apne2-edge-001',
-  },
+    routerId: 'rtr-prod-apne2-edge-001' },
   {
     id: 'snet-prod-apne2-web-priv-2a',
     name: 'web-priv-2a',
     cidr: '10.10.11.0/24',
     status: 'active',
     networkId: 'vpc-prod-apne2-web-001',
-    routerId: 'rtr-prod-apne2-edge-001',
-  },
+    routerId: 'rtr-prod-apne2-edge-001' },
   {
     id: 'snet-prod-apne2-web-priv-2b',
     name: 'web-priv-2b',
     cidr: '10.10.12.0/24',
     status: 'active',
     networkId: 'vpc-prod-apne2-web-001',
-    routerId: 'rtr-prod-apne2-edge-001',
-  },
+    routerId: 'rtr-prod-apne2-edge-001' },
 
   // ============================================
   // Production Korea - App Tier (prod-apne2-vpc-app-001)
@@ -286,56 +257,49 @@ const subnets: Subnet[] = [
     cidr: '10.20.1.0/24',
     status: 'active',
     networkId: 'vpc-prod-apne2-app-001',
-    routerId: 'rtr-prod-apne2-edge-001',
-  },
+    routerId: 'rtr-prod-apne2-edge-001' },
   {
     id: 'snet-prod-apne2-apigw-2b',
     name: 'apigw-2b',
     cidr: '10.20.2.0/24',
     status: 'active',
     networkId: 'vpc-prod-apne2-app-001',
-    routerId: 'rtr-prod-apne2-edge-001',
-  },
+    routerId: 'rtr-prod-apne2-edge-001' },
   {
     id: 'snet-prod-apne2-user-001',
     name: 'user-svc',
     cidr: '10.20.10.0/24',
     status: 'active',
     networkId: 'vpc-prod-apne2-app-001',
-    routerId: 'rtr-prod-apne2-edge-001',
-  },
+    routerId: 'rtr-prod-apne2-edge-001' },
   {
     id: 'snet-prod-apne2-order-001',
     name: 'order-svc',
     cidr: '10.20.11.0/24',
     status: 'active',
     networkId: 'vpc-prod-apne2-app-001',
-    routerId: 'rtr-prod-apne2-edge-001',
-  },
+    routerId: 'rtr-prod-apne2-edge-001' },
   {
     id: 'snet-prod-apne2-product-001',
     name: 'product-svc',
     cidr: '10.20.12.0/24',
     status: 'active',
     networkId: 'vpc-prod-apne2-app-001',
-    routerId: 'rtr-prod-apne2-edge-001',
-  },
+    routerId: 'rtr-prod-apne2-edge-001' },
   {
     id: 'snet-prod-apne2-payment-001',
     name: 'payment-svc',
     cidr: '10.20.13.0/24',
     status: 'active',
     networkId: 'vpc-prod-apne2-app-001',
-    routerId: 'rtr-prod-apne2-edge-001',
-  },
+    routerId: 'rtr-prod-apne2-edge-001' },
   {
     id: 'snet-prod-apne2-notify-001',
     name: 'notify-svc',
     cidr: '10.20.14.0/24',
     status: 'error',
     networkId: 'vpc-prod-apne2-app-001',
-    routerId: 'rtr-prod-apne2-edge-001',
-  },
+    routerId: 'rtr-prod-apne2-edge-001' },
 
   // ============================================
   // Production Korea - Data Tier (prod-apne2-vpc-data-001)
@@ -346,32 +310,28 @@ const subnets: Subnet[] = [
     cidr: '10.30.1.0/24',
     status: 'active',
     networkId: 'vpc-prod-apne2-data-001',
-    routerId: 'rtr-prod-apne2-edge-001',
-  },
+    routerId: 'rtr-prod-apne2-edge-001' },
   {
     id: 'snet-prod-apne2-db-rep-2a',
     name: 'db-replica-2a',
     cidr: '10.30.2.0/24',
     status: 'active',
     networkId: 'vpc-prod-apne2-data-001',
-    routerId: 'rtr-prod-apne2-edge-001',
-  },
+    routerId: 'rtr-prod-apne2-edge-001' },
   {
     id: 'snet-prod-apne2-redis-2a',
     name: 'redis-2a',
     cidr: '10.30.10.0/24',
     status: 'active',
     networkId: 'vpc-prod-apne2-data-001',
-    routerId: 'rtr-prod-apne2-edge-001',
-  },
+    routerId: 'rtr-prod-apne2-edge-001' },
   {
     id: 'snet-prod-apne2-kafka-001',
     name: 'kafka',
     cidr: '10.30.20.0/24',
     status: 'active',
     networkId: 'vpc-prod-apne2-data-001',
-    routerId: 'rtr-prod-apne2-edge-001',
-  },
+    routerId: 'rtr-prod-apne2-edge-001' },
 
   // ============================================
   // Production US - Web & App (prod-usw2-vpc-*)
@@ -382,48 +342,42 @@ const subnets: Subnet[] = [
     cidr: '10.110.1.0/24',
     status: 'active',
     networkId: 'vpc-prod-usw2-web-001',
-    routerId: 'rtr-prod-usw2-edge-001',
-  },
+    routerId: 'rtr-prod-usw2-edge-001' },
   {
     id: 'snet-prod-usw2-web-pub-2b',
     name: 'web-pub-2b',
     cidr: '10.110.2.0/24',
     status: 'active',
     networkId: 'vpc-prod-usw2-web-001',
-    routerId: 'rtr-prod-usw2-edge-001',
-  },
+    routerId: 'rtr-prod-usw2-edge-001' },
   {
     id: 'snet-prod-usw2-web-priv-001',
     name: 'web-priv',
     cidr: '10.110.10.0/24',
     status: 'active',
     networkId: 'vpc-prod-usw2-web-001',
-    routerId: 'rtr-prod-usw2-edge-001',
-  },
+    routerId: 'rtr-prod-usw2-edge-001' },
   {
     id: 'snet-prod-usw2-apigw-001',
     name: 'apigw',
     cidr: '10.120.1.0/24',
     status: 'active',
     networkId: 'vpc-prod-usw2-app-001',
-    routerId: 'rtr-prod-usw2-edge-001',
-  },
+    routerId: 'rtr-prod-usw2-edge-001' },
   {
     id: 'snet-prod-usw2-app-001',
     name: 'app',
     cidr: '10.120.10.0/24',
     status: 'active',
     networkId: 'vpc-prod-usw2-app-001',
-    routerId: 'rtr-prod-usw2-edge-001',
-  },
+    routerId: 'rtr-prod-usw2-edge-001' },
   {
     id: 'snet-dr-usw2-app-001',
     name: 'dr-app',
     cidr: '10.120.100.0/24',
     status: 'inactive',
     networkId: 'vpc-prod-usw2-app-001',
-    routerId: 'rtr-dr-usw2-edge-001',
-  },
+    routerId: 'rtr-dr-usw2-edge-001' },
 
   // ============================================
   // Staging (stg-apne2-vpc-001)
@@ -434,24 +388,21 @@ const subnets: Subnet[] = [
     cidr: '10.200.1.0/24',
     status: 'active',
     networkId: 'vpc-stg-apne2-001',
-    routerId: 'rtr-nprd-apne2-edge-001',
-  },
+    routerId: 'rtr-nprd-apne2-edge-001' },
   {
     id: 'snet-stg-apne2-app-001',
     name: 'stg-app',
     cidr: '10.200.10.0/24',
     status: 'active',
     networkId: 'vpc-stg-apne2-001',
-    routerId: 'rtr-nprd-apne2-edge-001',
-  },
+    routerId: 'rtr-nprd-apne2-edge-001' },
   {
     id: 'snet-stg-apne2-data-001',
     name: 'stg-data',
     cidr: '10.200.20.0/24',
     status: 'active',
     networkId: 'vpc-stg-apne2-001',
-    routerId: 'rtr-nprd-apne2-edge-001',
-  },
+    routerId: 'rtr-nprd-apne2-edge-001' },
 
   // ============================================
   // Development (dev-apne2-vpc-001)
@@ -462,23 +413,20 @@ const subnets: Subnet[] = [
     cidr: '10.201.1.0/24',
     status: 'active',
     networkId: 'vpc-dev-apne2-001',
-    routerId: 'rtr-nprd-apne2-edge-001',
-  },
+    routerId: 'rtr-nprd-apne2-edge-001' },
   {
     id: 'snet-dev-apne2-app-001',
     name: 'dev-app',
     cidr: '10.201.10.0/24',
     status: 'active',
     networkId: 'vpc-dev-apne2-001',
-    routerId: 'rtr-nprd-apne2-edge-001',
-  },
+    routerId: 'rtr-nprd-apne2-edge-001' },
   {
     id: 'snet-dev-apne2-sandbox-001',
     name: 'dev-sandbox',
     cidr: '10.201.100.0/24',
     status: 'active',
-    networkId: 'vpc-dev-apne2-001',
-  },
+    networkId: 'vpc-dev-apne2-001' },
 
   // ============================================
   // QA (qa-apne2-vpc-001)
@@ -489,24 +437,21 @@ const subnets: Subnet[] = [
     cidr: '10.202.1.0/24',
     status: 'active',
     networkId: 'vpc-qa-apne2-001',
-    routerId: 'rtr-nprd-apne2-edge-001',
-  },
+    routerId: 'rtr-nprd-apne2-edge-001' },
   {
     id: 'snet-qa-apne2-perf-001',
     name: 'qa-perf',
     cidr: '10.202.10.0/24',
     status: 'active',
     networkId: 'vpc-qa-apne2-001',
-    routerId: 'rtr-nprd-apne2-edge-001',
-  },
+    routerId: 'rtr-nprd-apne2-edge-001' },
   {
     id: 'snet-qa-apne2-sec-001',
     name: 'qa-sec',
     cidr: '10.202.20.0/24',
     status: 'error',
     networkId: 'vpc-qa-apne2-001',
-    routerId: 'rtr-nprd-apne2-edge-001',
-  },
+    routerId: 'rtr-nprd-apne2-edge-001' },
 
   // ============================================
   // Shared Services (shrd-dc-vpc-001)
@@ -517,24 +462,21 @@ const subnets: Subnet[] = [
     cidr: '10.250.1.0/24',
     status: 'active',
     networkId: 'vpc-shrd-dc-001',
-    routerId: 'rtr-shrd-dc-int-001',
-  },
+    routerId: 'rtr-shrd-dc-int-001' },
   {
     id: 'snet-shrd-dc-ldap-001',
     name: 'ldap',
     cidr: '10.250.2.0/24',
     status: 'active',
     networkId: 'vpc-shrd-dc-001',
-    routerId: 'rtr-shrd-dc-int-001',
-  },
+    routerId: 'rtr-shrd-dc-int-001' },
   {
     id: 'snet-shrd-dc-harbor-001',
     name: 'harbor',
     cidr: '10.250.10.0/24',
     status: 'active',
     networkId: 'vpc-shrd-dc-001',
-    routerId: 'rtr-shrd-dc-int-001',
-  },
+    routerId: 'rtr-shrd-dc-int-001' },
 
   // ============================================
   // Management (mgmt-apne2-vpc-001)
@@ -545,24 +487,21 @@ const subnets: Subnet[] = [
     cidr: '10.251.1.0/24',
     status: 'active',
     networkId: 'vpc-mgmt-apne2-001',
-    routerId: 'rtr-mgmt-apne2-int-001',
-  },
+    routerId: 'rtr-mgmt-apne2-int-001' },
   {
     id: 'snet-mgmt-apne2-mon-001',
     name: 'monitoring',
     cidr: '10.251.10.0/24',
     status: 'active',
     networkId: 'vpc-mgmt-apne2-001',
-    routerId: 'rtr-mgmt-apne2-int-001',
-  },
+    routerId: 'rtr-mgmt-apne2-int-001' },
   {
     id: 'snet-mgmt-apne2-cicd-001',
     name: 'cicd',
     cidr: '10.251.20.0/24',
     status: 'active',
     networkId: 'vpc-mgmt-apne2-001',
-    routerId: 'rtr-mgmt-apne2-int-001',
-  },
+    routerId: 'rtr-mgmt-apne2-int-001' },
 
   // ============================================
   // DMZ (dmz-apne2-vpc-001)
@@ -573,16 +512,14 @@ const subnets: Subnet[] = [
     cidr: '10.252.1.0/24',
     status: 'active',
     networkId: 'vpc-dmz-apne2-001',
-    routerId: 'rtr-prod-apne2-edge-001',
-  },
+    routerId: 'rtr-prod-apne2-edge-001' },
   {
     id: 'snet-dmz-apne2-b2b-001',
     name: 'b2b-api',
     cidr: '10.252.2.0/24',
     status: 'active',
     networkId: 'vpc-dmz-apne2-001',
-    routerId: 'rtr-prod-apne2-edge-001',
-  },
+    routerId: 'rtr-prod-apne2-edge-001' },
 ];
 
 // Load balancers - 네이밍: [env]-[region]-[type]-[purpose]-[seq]
@@ -595,29 +532,25 @@ const loadBalancers: LoadBalancer[] = [
     name: 'alb-web-ext-001',
     status: 'active',
     subnetId: 'snet-prod-apne2-web-pub-2a',
-    vip: '10.10.1.100',
-  },
+    vip: '10.10.1.100' },
   {
     id: 'alb-prod-apne2-web-ext-002',
     name: 'alb-web-ext-002',
     status: 'active',
     subnetId: 'snet-prod-apne2-web-pub-2b',
-    vip: '10.10.2.100',
-  },
+    vip: '10.10.2.100' },
   {
     id: 'alb-prod-apne2-waf-001',
     name: 'alb-waf-001',
     status: 'active',
     subnetId: 'snet-prod-apne2-web-pub-2c',
-    vip: '10.10.3.100',
-  },
+    vip: '10.10.3.100' },
   {
     id: 'ilb-prod-apne2-web-int-001',
     name: 'ilb-web-int',
     status: 'active',
     subnetId: 'snet-prod-apne2-web-priv-2a',
-    vip: '10.10.11.100',
-  },
+    vip: '10.10.11.100' },
 
   // ============================================
   // Production Korea - App Tier
@@ -627,50 +560,43 @@ const loadBalancers: LoadBalancer[] = [
     name: 'alb-apigw-001',
     status: 'active',
     subnetId: 'snet-prod-apne2-apigw-2a',
-    vip: '10.20.1.100',
-  },
+    vip: '10.20.1.100' },
   {
     id: 'alb-prod-apne2-apigw-002',
     name: 'alb-apigw-002',
     status: 'active',
     subnetId: 'snet-prod-apne2-apigw-2b',
-    vip: '10.20.2.100',
-  },
+    vip: '10.20.2.100' },
   {
     id: 'nlb-prod-apne2-user-001',
     name: 'nlb-user',
     status: 'active',
     subnetId: 'snet-prod-apne2-user-001',
-    vip: '10.20.10.100',
-  },
+    vip: '10.20.10.100' },
   {
     id: 'nlb-prod-apne2-order-001',
     name: 'nlb-order',
     status: 'active',
     subnetId: 'snet-prod-apne2-order-001',
-    vip: '10.20.11.100',
-  },
+    vip: '10.20.11.100' },
   {
     id: 'nlb-prod-apne2-product-001',
     name: 'nlb-product',
     status: 'active',
     subnetId: 'snet-prod-apne2-product-001',
-    vip: '10.20.12.100',
-  },
+    vip: '10.20.12.100' },
   {
     id: 'nlb-prod-apne2-payment-001',
     name: 'nlb-payment',
     status: 'active',
     subnetId: 'snet-prod-apne2-payment-001',
-    vip: '10.20.13.100',
-  },
+    vip: '10.20.13.100' },
   {
     id: 'nlb-prod-apne2-notify-001',
     name: 'nlb-notify',
     status: 'error',
     subnetId: 'snet-prod-apne2-notify-001',
-    vip: '10.20.14.100',
-  },
+    vip: '10.20.14.100' },
 
   // ============================================
   // Production Korea - Data Tier
@@ -680,22 +606,19 @@ const loadBalancers: LoadBalancer[] = [
     name: 'nlb-db-pri',
     status: 'active',
     subnetId: 'snet-prod-apne2-db-pri-001',
-    vip: '10.30.1.100',
-  },
+    vip: '10.30.1.100' },
   {
     id: 'nlb-prod-apne2-redis-001',
     name: 'nlb-redis',
     status: 'active',
     subnetId: 'snet-prod-apne2-redis-2a',
-    vip: '10.30.10.100',
-  },
+    vip: '10.30.10.100' },
   {
     id: 'nlb-prod-apne2-kafka-001',
     name: 'nlb-kafka',
     status: 'active',
     subnetId: 'snet-prod-apne2-kafka-001',
-    vip: '10.30.20.100',
-  },
+    vip: '10.30.20.100' },
 
   // ============================================
   // Production US
@@ -705,29 +628,25 @@ const loadBalancers: LoadBalancer[] = [
     name: 'alb-web-ext-001',
     status: 'active',
     subnetId: 'snet-prod-usw2-web-pub-2a',
-    vip: '10.110.1.100',
-  },
+    vip: '10.110.1.100' },
   {
     id: 'alb-prod-usw2-web-ext-002',
     name: 'alb-web-ext-002',
     status: 'active',
     subnetId: 'snet-prod-usw2-web-pub-2b',
-    vip: '10.110.2.100',
-  },
+    vip: '10.110.2.100' },
   {
     id: 'alb-prod-usw2-apigw-001',
     name: 'alb-apigw',
     status: 'active',
     subnetId: 'snet-prod-usw2-apigw-001',
-    vip: '10.120.1.100',
-  },
+    vip: '10.120.1.100' },
   {
     id: 'nlb-prod-usw2-app-001',
     name: 'nlb-app',
     status: 'active',
     subnetId: 'snet-prod-usw2-app-001',
-    vip: '10.120.10.100',
-  },
+    vip: '10.120.10.100' },
 
   // ============================================
   // Staging
@@ -737,15 +656,13 @@ const loadBalancers: LoadBalancer[] = [
     name: 'alb-stg-web',
     status: 'active',
     subnetId: 'snet-stg-apne2-web-001',
-    vip: '10.200.1.100',
-  },
+    vip: '10.200.1.100' },
   {
     id: 'nlb-stg-apne2-app-001',
     name: 'nlb-stg-app',
     status: 'active',
     subnetId: 'snet-stg-apne2-app-001',
-    vip: '10.200.10.100',
-  },
+    vip: '10.200.10.100' },
 
   // ============================================
   // Development
@@ -755,8 +672,7 @@ const loadBalancers: LoadBalancer[] = [
     name: 'alb-dev-all',
     status: 'active',
     subnetId: 'snet-dev-apne2-web-001',
-    vip: '10.201.1.100',
-  },
+    vip: '10.201.1.100' },
 
   // ============================================
   // QA
@@ -766,15 +682,13 @@ const loadBalancers: LoadBalancer[] = [
     name: 'alb-qa-test',
     status: 'active',
     subnetId: 'snet-qa-apne2-auto-001',
-    vip: '10.202.1.100',
-  },
+    vip: '10.202.1.100' },
   {
     id: 'nlb-qa-apne2-perf-001',
     name: 'nlb-qa-perf',
     status: 'active',
     subnetId: 'snet-qa-apne2-perf-001',
-    vip: '10.202.10.100',
-  },
+    vip: '10.202.10.100' },
 
   // ============================================
   // Shared Services
@@ -784,22 +698,19 @@ const loadBalancers: LoadBalancer[] = [
     name: 'nlb-dns',
     status: 'active',
     subnetId: 'snet-shrd-dc-dns-001',
-    vip: '10.250.1.100',
-  },
+    vip: '10.250.1.100' },
   {
     id: 'nlb-shrd-dc-ldap-001',
     name: 'nlb-ldap',
     status: 'active',
     subnetId: 'snet-shrd-dc-ldap-001',
-    vip: '10.250.2.100',
-  },
+    vip: '10.250.2.100' },
   {
     id: 'alb-shrd-dc-harbor-001',
     name: 'alb-harbor',
     status: 'active',
     subnetId: 'snet-shrd-dc-harbor-001',
-    vip: '10.250.10.100',
-  },
+    vip: '10.250.10.100' },
 
   // ============================================
   // Management
@@ -809,22 +720,19 @@ const loadBalancers: LoadBalancer[] = [
     name: 'alb-prometheus',
     status: 'active',
     subnetId: 'snet-mgmt-apne2-mon-001',
-    vip: '10.251.10.100',
-  },
+    vip: '10.251.10.100' },
   {
     id: 'alb-mgmt-apne2-grafana-001',
     name: 'alb-grafana',
     status: 'active',
     subnetId: 'snet-mgmt-apne2-mon-001',
-    vip: '10.251.10.101',
-  },
+    vip: '10.251.10.101' },
   {
     id: 'alb-mgmt-apne2-jenkins-001',
     name: 'alb-jenkins',
     status: 'active',
     subnetId: 'snet-mgmt-apne2-cicd-001',
-    vip: '10.251.20.100',
-  },
+    vip: '10.251.20.100' },
 
   // ============================================
   // DMZ
@@ -834,15 +742,13 @@ const loadBalancers: LoadBalancer[] = [
     name: 'alb-partner',
     status: 'active',
     subnetId: 'snet-dmz-apne2-partner-001',
-    vip: '10.252.1.100',
-  },
+    vip: '10.252.1.100' },
   {
     id: 'alb-dmz-apne2-b2b-001',
     name: 'alb-b2b',
     status: 'active',
     subnetId: 'snet-dmz-apne2-b2b-001',
-    vip: '10.252.2.100',
-  },
+    vip: '10.252.2.100' },
 ];
 
 /* ----------------------------------------
@@ -967,8 +873,7 @@ function ViewDetailLink({ count }: { count: number }) {
 
 // Health Monitor Section Component
 function HealthMonitorSection({
-  healthMonitor,
-}: {
+  healthMonitor }: {
   healthMonitor: {
     healthy: number;
     degraded: number;
@@ -1047,8 +952,7 @@ function HealthMonitorSection({
 
 // Listeners Section Component
 function ListenersSection({
-  listeners,
-}: {
+  listeners }: {
   listeners: {
     name: string;
     protocol: string;
@@ -1252,8 +1156,7 @@ function Popover({ data, position, onClose }: PopoverProps) {
     setIsDragging(true);
     setDragOffset({
       x: e.clientX - pos.x,
-      y: e.clientY - pos.y,
-    });
+      y: e.clientY - pos.y });
   };
 
   const handleMouseMove = useCallback(
@@ -1261,8 +1164,7 @@ function Popover({ data, position, onClose }: PopoverProps) {
       if (!isDragging) return;
       setPos({
         x: e.clientX - dragOffset.x,
-        y: e.clientY - dragOffset.y,
-      });
+        y: e.clientY - dragOffset.y });
     },
     [isDragging, dragOffset]
   );
@@ -1630,8 +1532,7 @@ export function ComputeAdminTopologyD3Page() {
     visible: false,
     x: 0,
     y: 0,
-    content: { name: '', type: '', status: '' },
-  });
+    content: { name: '', type: '', status: '' } });
   const [zoomLevel, setZoomLevel] = useState(1);
 
   // Filter states
@@ -1696,8 +1597,7 @@ export function ComputeAdminTopologyD3Page() {
     const filteredNetworkGroups = filteredExtNets
       .map((extNet) => ({
         extNet,
-        routers: filteredRouters.filter((r) => r.externalNetworkId === extNet.id),
-      }))
+        routers: filteredRouters.filter((r) => r.externalNetworkId === extNet.id) }))
       .filter((g) => g.routers.length > 0);
 
     return {
@@ -1705,8 +1605,7 @@ export function ComputeAdminTopologyD3Page() {
       subnets: filteredSubnets,
       loadBalancers: filteredLbs,
       networks: filteredVpcs,
-      routers: filteredRouters,
-    };
+      routers: filteredRouters };
   }, [searchTerm, filterRouter, filterVpc, filterStatus]);
 
   // Stats
@@ -1717,8 +1616,7 @@ export function ComputeAdminTopologyD3Page() {
       activeSubnets: filteredData.subnets.filter((s) => s.status === 'active').length,
       errorSubnets: filteredData.subnets.filter((s) => s.status === 'error').length,
       totalLbs: loadBalancers.length,
-      filteredLbs: filteredData.loadBalancers.length,
-    }),
+      filteredLbs: filteredData.loadBalancers.length }),
     [filteredData]
   );
 
@@ -1980,8 +1878,7 @@ export function ComputeAdminTopologyD3Page() {
         x: extNetX,
         y: extNetY,
         type: 'externalNetwork',
-        data: { ...group.extNet, status: extNetStatus },
-      });
+        data: { ...group.extNet, status: extNetStatus } });
 
       // Routers
       let routerX = groupStartX;
@@ -1995,8 +1892,7 @@ export function ComputeAdminTopologyD3Page() {
           x: rx,
           y: ry,
           type: 'router',
-          data: router,
-        });
+          data: router });
 
         // Edge: External network -> Router (use router status for edge color)
         edges.push({
@@ -2004,8 +1900,7 @@ export function ComputeAdminTopologyD3Page() {
           target: { x: rx, y: ry - NODE_SIZES.router.node / 2 },
           sourceType: 'externalNetwork',
           status: router.status, // Use router status to reflect error state
-          animated: router.status === 'active',
-        });
+          animated: router.status === 'active' });
 
         // Subnets for this router
         const routerSubnets = subnetsByRouter[router.id] || [];
@@ -2074,8 +1969,7 @@ export function ComputeAdminTopologyD3Page() {
               x: sx,
               y: sy,
               type: 'subnet',
-              data: subnet,
-            });
+              data: subnet });
 
             subnetPositions[subnet.id] = { x: sx, y: sy };
 
@@ -2092,16 +1986,14 @@ export function ComputeAdminTopologyD3Page() {
                 x: lx,
                 y: ly,
                 type: 'loadBalancer',
-                data: lb,
-              });
+                data: lb });
 
               // Edge: Subnet -> LB (use subnet color)
               edges.push({
                 source: { x: sx, y: sy + NODE_SIZES.subnet.node / 2 },
                 target: { x: lx, y: ly - NODE_SIZES.loadBalancer.node / 2 },
                 sourceType: 'subnet',
-                status: subnet.status,
-              });
+                status: subnet.status });
             });
 
             subnetX += subnetWidth;
@@ -2116,8 +2008,7 @@ export function ComputeAdminTopologyD3Page() {
                 deferredRouterEdges.push({
                   subnetId: subnet.id,
                   routerId: subnet.routerId,
-                  subnetPos,
-                });
+                  subnetPos });
               }
             }
           });
@@ -2166,8 +2057,7 @@ export function ComputeAdminTopologyD3Page() {
           x: rx,
           y: ry,
           type: 'router',
-          data: router,
-        });
+          data: router });
 
         // Subnets for standalone router
         const routerSubnets = subnetsByRouter[router.id] || [];
@@ -2207,15 +2097,13 @@ export function ComputeAdminTopologyD3Page() {
               x: sx,
               y: sy,
               type: 'subnet',
-              data: subnet,
-            });
+              data: subnet });
 
             edges.push({
               source: { x: rx, y: ry + NODE_SIZES.router.node / 2 },
               target: { x: sx, y: sy - NODE_SIZES.subnet.node / 2 },
               sourceType: 'router',
-              status: router.status,
-            });
+              status: router.status });
 
             // LBs
             const subnetLbs = lbsBySubnet[subnet.id] || [];
@@ -2228,15 +2116,13 @@ export function ComputeAdminTopologyD3Page() {
                 x: lx,
                 y: ly,
                 type: 'loadBalancer',
-                data: lb,
-              });
+                data: lb });
 
               edges.push({
                 source: { x: sx, y: sy + NODE_SIZES.subnet.node / 2 },
                 target: { x: lx, y: ly - NODE_SIZES.loadBalancer.node / 2 },
                 sourceType: 'subnet',
-                status: subnet.status,
-              });
+                status: subnet.status });
             });
 
             subnetX += subnetWidth;
@@ -2258,8 +2144,7 @@ export function ComputeAdminTopologyD3Page() {
               status: vpc.status,
               isSplit: false,
               splitIndex: undefined,
-              splitTotal: isMultiRouter ? connectedRouterCount : undefined,
-            });
+              splitTotal: isMultiRouter ? connectedRouterCount : undefined });
           }
 
           // Add gap between VPCs
@@ -2292,8 +2177,7 @@ export function ComputeAdminTopologyD3Page() {
           x: currentX + idx * nodeGap,
           y: startY,
           type: 'externalNetwork',
-          data: extNet,
-        });
+          data: extNet });
       });
     }
 
@@ -2308,8 +2192,7 @@ export function ComputeAdminTopologyD3Page() {
           source: { x: routerNode.x, y: routerNode.y + NODE_SIZES.router.node / 2 },
           target: { x: subnetPos.x, y: subnetPos.y - NODE_SIZES.subnet.node / 2 },
           sourceType: 'router',
-          status: routerData?.status || 'active',
-        });
+          status: routerData?.status || 'active' });
       }
     });
 
@@ -2344,9 +2227,7 @@ export function ComputeAdminTopologyD3Page() {
               extra:
                 vpc.splitTotal && vpc.splitTotal > 1
                   ? `Connected to ${vpc.splitTotal} routers`
-                  : undefined,
-            },
-          });
+                  : undefined } });
         })
         .on('mousemove', function (event) {
           setTooltip((prev) => ({ ...prev, x: event.clientX + 12, y: event.clientY + 12 }));
@@ -2389,8 +2270,7 @@ export function ComputeAdminTopologyD3Page() {
             const router = allRouters.find((r) => r.id === routerId);
             vpcSubnetGroups.push({
               routerName: router?.name || routerId,
-              subnets: routerSubnets.map((s) => ({ name: s.name, cidr: s.cidr, status: s.status })),
-            });
+              subnets: routerSubnets.map((s) => ({ name: s.name, cidr: s.cidr, status: s.status })) });
           });
 
           // Add unrouted subnets
@@ -2400,9 +2280,7 @@ export function ComputeAdminTopologyD3Page() {
               subnets: unroutedSubnets.map((s) => ({
                 name: s.name,
                 cidr: s.cidr,
-                status: s.status,
-              })),
-            });
+                status: s.status })) });
           }
 
           setPopover({
@@ -2415,10 +2293,8 @@ export function ComputeAdminTopologyD3Page() {
               adminState: 'Up',
               shared: false,
               mtu: 1500,
-              vpcSubnetGroups,
-            },
-            position: { x: event.clientX + 10, y: event.clientY + 10 },
-          });
+              vpcSubnetGroups },
+            position: { x: event.clientX + 10, y: event.clientY + 10 } });
         });
 
       vpcGroup
@@ -2557,8 +2433,7 @@ export function ComputeAdminTopologyD3Page() {
             externalNetwork: 'External network',
             router: 'Router',
             subnet: 'Subnet',
-            loadBalancer: 'Load balancer',
-          };
+            loadBalancer: 'Load balancer' };
 
           setTooltip({
             visible: true,
@@ -2568,9 +2443,7 @@ export function ComputeAdminTopologyD3Page() {
               name: data.name,
               type: typeLabels[type] || type,
               status: data.status,
-              extra: data.cidr || data.vip || undefined,
-            },
-          });
+              extra: data.cidr || data.vip || undefined } });
         })
         .on('mousemove', function (event) {
           setTooltip((prev) => ({ ...prev, x: event.clientX + 12, y: event.clientY + 12 }));
@@ -2595,8 +2468,7 @@ export function ComputeAdminTopologyD3Page() {
             status: data.status,
             details: {},
             id: generateId(),
-            adminState: 'Up',
-          };
+            adminState: 'Up' };
 
           if (type === 'externalNetwork') {
             // Find routers connected to this external network
@@ -2607,9 +2479,7 @@ export function ComputeAdminTopologyD3Page() {
               routerList: connectedRouters.map((r) => ({
                 name: r.name,
                 status: r.status,
-                externalGateway: 'public',
-              })),
-            };
+                externalGateway: 'public' })) };
           } else if (type === 'router') {
             const connectedSubnets = subnets.filter((s) => s.routerId === data.id);
 
@@ -2620,9 +2490,7 @@ export function ComputeAdminTopologyD3Page() {
               subnetList: connectedSubnets.map((s) => ({
                 name: s.name,
                 status: s.status,
-                cidr: s.cidr,
-              })),
-            };
+                cidr: s.cidr })) };
           } else if (type === 'subnet') {
             const connectedLbs = loadBalancers.filter((lb) => lb.subnetId === data.id);
 
@@ -2638,28 +2506,23 @@ export function ComputeAdminTopologyD3Page() {
               {
                 name: `${data.name}-web-01`,
                 status: 'active',
-                ip: data.cidr?.replace('.0/24', '.10'),
-              },
+                ip: data.cidr?.replace('.0/24', '.10') },
               {
                 name: `${data.name}-web-02`,
                 status: 'active',
-                ip: data.cidr?.replace('.0/24', '.11'),
-              },
+                ip: data.cidr?.replace('.0/24', '.11') },
               {
                 name: `${data.name}-api-01`,
                 status: 'active',
-                ip: data.cidr?.replace('.0/24', '.20'),
-              },
+                ip: data.cidr?.replace('.0/24', '.20') },
               {
                 name: `${data.name}-worker-01`,
                 status: 'inactive',
-                ip: data.cidr?.replace('.0/24', '.30'),
-              },
+                ip: data.cidr?.replace('.0/24', '.30') },
               {
                 name: `${data.name}-db-01`,
                 status: 'error',
-                ip: data.cidr?.replace('.0/24', '.50'),
-              },
+                ip: data.cidr?.replace('.0/24', '.50') },
             ];
 
             popoverData = {
@@ -2672,8 +2535,7 @@ export function ComputeAdminTopologyD3Page() {
                     {
                       name: connectedRouter.name,
                       status: connectedRouter.status,
-                      externalGateway: 'public-network',
-                    },
+                      externalGateway: 'public-network' },
                   ]
                 : [],
               // Instance list
@@ -2682,9 +2544,7 @@ export function ComputeAdminTopologyD3Page() {
               loadBalancerList: connectedLbs.map((lb) => ({
                 name: lb.name,
                 status: lb.status,
-                vip: lb.vip,
-              })),
-            };
+                vip: lb.vip })) };
           } else if (type === 'loadBalancer') {
             popoverData = {
               ...popoverData,
@@ -2709,15 +2569,12 @@ export function ComputeAdminTopologyD3Page() {
                   { name: 'pool5', status: 'healthy' },
                   { name: 'pool6', status: 'healthy' },
                   { name: 'pool7', status: 'healthy' },
-                ],
-              },
-            };
+                ] } };
           }
 
           setPopover({
             data: popoverData,
-            position: { x: event.clientX + 10, y: event.clientY + 10 },
-          });
+            position: { x: event.clientX + 10, y: event.clientY + 10 } });
         });
 
       // Node circle
@@ -2865,8 +2722,7 @@ export function ComputeAdminTopologyD3Page() {
         externalNetwork: 28,
         router: 24,
         subnet: 20,
-        loadBalancer: 16,
-      };
+        loadBalancer: 16 };
 
       nodes.forEach((node) => {
         const colorSet = COLORS[node.type as keyof typeof COLORS];
@@ -2929,8 +2785,7 @@ export function ComputeAdminTopologyD3Page() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    closable: tab.closable,
-  }));
+    closable: tab.closable }));
 
   const [sidebarOpen, setSidebarOpen] = useState(true);
 

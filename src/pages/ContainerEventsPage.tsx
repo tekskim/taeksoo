@@ -14,7 +14,8 @@ import {
   ContextMenu,
   type TableColumn,
   type ContextMenuItem,
-  columnWidths,
+  fixedColumns,
+  columnMinWidths,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -236,7 +237,7 @@ export function ContainerEventsPage() {
     {
       key: 'status',
       label: 'Status',
-      width: columnWidths.status,
+      width: fixedColumns.status,
       sortable: false,
       align: 'center',
       render: (value: string) => (
@@ -259,29 +260,29 @@ export function ContainerEventsPage() {
     {
       key: 'namespace',
       label: 'Namespace',
-      width: columnWidths.namespace,
+      flex: 1, minWidth: columnMinWidths.namespace,
       sortable: true,
     },
     {
       key: 'lastSeen',
       label: 'Last Seen',
-      width: columnWidths.lastSeen,
+      flex: 1, minWidth: columnMinWidths.lastSeen,
       sortable: true,
     },
     {
       key: 'type',
       label: 'Type',
-      width: columnWidths.type,
+      flex: 1, minWidth: columnMinWidths.type,
     },
     {
       key: 'reason',
       label: 'Reason',
-      width: columnWidths.reason,
+      flex: 1, minWidth: columnMinWidths.reason,
     },
     {
       key: 'object',
       label: 'Object',
-      width: columnWidths.object,
+      flex: 1, minWidth: columnMinWidths.object,
       sortable: true,
       render: (value: string) => (
         <span
@@ -295,13 +296,13 @@ export function ContainerEventsPage() {
     {
       key: 'subobject',
       label: 'Subobject',
-      width: columnWidths.subobject,
+      flex: 1, minWidth: columnMinWidths.subobject,
       sortable: true,
     },
     {
       key: 'source',
       label: 'Source',
-      width: columnWidths.source,
+      flex: 1, minWidth: columnMinWidths.source,
       sortable: true,
     },
     {
@@ -318,20 +319,20 @@ export function ContainerEventsPage() {
     {
       key: 'firstSeen',
       label: 'First Seen',
-      width: columnWidths.firstSeen,
+      flex: 1, minWidth: columnMinWidths.firstSeen,
       sortable: true,
     },
     {
       key: 'count',
       label: 'Count',
-      width: columnWidths.count,
+      flex: 1, minWidth: columnMinWidths.count,
       align: 'center',
       sortable: true,
     },
     {
       key: 'actions',
       label: 'Action',
-      width: columnWidths.actions,
+      width: fixedColumns.actions,
       align: 'center',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [

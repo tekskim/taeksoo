@@ -14,7 +14,8 @@ import {
   ContextMenu,
   type TableColumn,
   type ContextMenuItem,
-  columnWidths,
+  fixedColumns,
+  columnMinWidths,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -200,7 +201,7 @@ export function PersistentVolumeClaimsPage() {
     {
       key: 'status',
       label: 'Status',
-      width: columnWidths.status,
+      width: fixedColumns.status,
       sortable: true,
       align: 'center',
       render: (value: string) => (
@@ -260,12 +261,12 @@ export function PersistentVolumeClaimsPage() {
     {
       key: 'capacity',
       label: 'Capacity',
-      width: columnWidths.capacity,
+      flex: 1, minWidth: columnMinWidths.capacity,
     },
     {
       key: 'accessModes',
       label: 'Access Modes',
-      width: columnWidths.accessModes,
+      flex: 1, minWidth: columnMinWidths.accessModes,
     },
     {
       key: 'storageClass',
@@ -285,13 +286,13 @@ export function PersistentVolumeClaimsPage() {
     {
       key: 'createdAt',
       label: 'Created At',
-      width: columnWidths.createdAt,
+      flex: 1, minWidth: columnMinWidths.createdAt,
       sortable: true,
     },
     {
       key: 'actions',
       label: 'Action',
-      width: columnWidths.actions,
+      width: fixedColumns.actions,
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>

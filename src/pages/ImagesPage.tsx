@@ -10,7 +10,8 @@ import {
   TopBarAction,
   Breadcrumb,
   ProgressBar,
-  columnWidths,
+  fixedColumns,
+  columnMinWidths,
   type TableColumn,
 } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
@@ -256,7 +257,8 @@ export function ImagesPage() {
     {
       key: 'name',
       label: 'Name',
-      width: columnWidths.nameXxl,
+      flex: 1,
+      minWidth: columnMinWidths.nameXxl,
       sortable: true,
       render: (_, row) => <NameCell id={row.id} name={row.name} />,
     },

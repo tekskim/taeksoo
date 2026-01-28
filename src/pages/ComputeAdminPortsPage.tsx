@@ -1,28 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  Button,
-  FilterSearchInput,
-  Table,
-  Pagination,
-  VStack,
-  TabBar,
-  TopBar,
-  TopBarAction,
-  Breadcrumb,
-  ListToolbar,
-  ContextMenu,
-  ConfirmModal,
-  StatusIndicator,
-  Tabs,
-  TabList,
-  Tab,
-  Tooltip,
-  type TableColumn,
-  type ContextMenuItem,
-  type FilterField,
-  type AppliedFilter,
-} from '@/design-system';
+import { Button, FilterSearchInput, Table, Pagination, VStack, TabBar, TopBar, TopBarAction, Breadcrumb, ListToolbar, ContextMenu, ConfirmModal, StatusIndicator, Tabs, TabList, Tab, Tooltip, type TableColumn, type ContextMenuItem, type FilterField, type AppliedFilter, fixedColumns, columnMinWidths } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
@@ -36,8 +14,7 @@ import {
   IconDownload,
   IconBell,
   IconCube,
-  IconRouter,
-} from '@tabler/icons-react';
+  IconRouter } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
@@ -78,8 +55,7 @@ const mockPorts: Port[] = [
     fixedIp: '10.7.60.91',
     floatingIp: '10.7.65.39',
     macAddress: 'fa:16:3e:34:85:32',
-    status: 'active',
-  },
+    status: 'active' },
   {
     id: 'port-002',
     name: 'port-02',
@@ -92,8 +68,7 @@ const mockPorts: Port[] = [
     fixedIp: '10.7.60.92',
     floatingIp: '10.7.65.40',
     macAddress: 'fa:16:3e:34:85:33',
-    status: 'active',
-  },
+    status: 'active' },
   {
     id: 'port-003',
     name: 'port-03',
@@ -106,8 +81,7 @@ const mockPorts: Port[] = [
     fixedIp: '10.7.60.93',
     floatingIp: '-',
     macAddress: 'fa:16:3e:34:85:34',
-    status: 'down',
-  },
+    status: 'down' },
   {
     id: 'port-004',
     name: 'db-port',
@@ -120,8 +94,7 @@ const mockPorts: Port[] = [
     fixedIp: '10.7.60.94',
     floatingIp: '-',
     macAddress: 'fa:16:3e:34:85:35',
-    status: 'active',
-  },
+    status: 'active' },
   {
     id: 'port-005',
     name: 'router-port-1',
@@ -134,8 +107,7 @@ const mockPorts: Port[] = [
     fixedIp: '10.7.60.1',
     floatingIp: '-',
     macAddress: 'fa:16:3e:34:85:36',
-    status: 'active',
-  },
+    status: 'active' },
   {
     id: 'port-006',
     name: 'lb-port',
@@ -148,8 +120,7 @@ const mockPorts: Port[] = [
     fixedIp: '10.7.60.95',
     floatingIp: '10.7.65.41',
     macAddress: 'fa:16:3e:34:85:37',
-    status: 'active',
-  },
+    status: 'active' },
   {
     id: 'port-007',
     name: 'cache-port',
@@ -162,8 +133,7 @@ const mockPorts: Port[] = [
     fixedIp: '10.7.60.96',
     floatingIp: '-',
     macAddress: 'fa:16:3e:34:85:38',
-    status: 'active',
-  },
+    status: 'active' },
   {
     id: 'port-008',
     name: 'monitor-port',
@@ -176,8 +146,7 @@ const mockPorts: Port[] = [
     fixedIp: '10.7.60.97',
     floatingIp: '10.7.65.42',
     macAddress: 'fa:16:3e:34:85:39',
-    status: 'building',
-  },
+    status: 'building' },
   {
     id: 'port-009',
     name: 'test-port',
@@ -190,8 +159,7 @@ const mockPorts: Port[] = [
     fixedIp: '10.7.60.98',
     floatingIp: '-',
     macAddress: 'fa:16:3e:34:85:40',
-    status: 'error',
-  },
+    status: 'error' },
   {
     id: 'port-010',
     name: 'vpn-port',
@@ -204,8 +172,7 @@ const mockPorts: Port[] = [
     fixedIp: '10.7.60.99',
     floatingIp: '10.7.65.43',
     macAddress: 'fa:16:3e:34:85:41',
-    status: 'active',
-  },
+    status: 'active' },
 ];
 
 /* ----------------------------------------
@@ -216,8 +183,7 @@ const portStatusMap: Record<PortStatus, 'active' | 'error' | 'building' | 'down'
   active: 'active',
   error: 'error',
   building: 'building',
-  down: 'down',
-};
+  down: 'down' };
 
 /* ----------------------------------------
    Component
@@ -240,8 +206,7 @@ const filterFields: FilterField[] = [
       { value: 'error', label: 'Error' },
       { value: 'building', label: 'Building' },
       { value: 'down', label: 'Down' },
-    ],
-  },
+    ] },
 ];
 
 export function ComputeAdminPortsPage() {
@@ -310,8 +275,7 @@ export function ComputeAdminPortsPage() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    closable: tab.closable,
-  }));
+    closable: tab.closable }));
 
   // Context menu items
   const getContextMenuItems = (port: Port): ContextMenuItem[] => [
@@ -319,36 +283,30 @@ export function ComputeAdminPortsPage() {
       id: 'attach-instance',
       label: 'Attach instance',
       onClick: () => handleAttachInstance(port),
-      disabled: !!port.attachedTo,
-    },
+      disabled: !!port.attachedTo },
     {
       id: 'detach-instance',
       label: 'Detach instance',
       onClick: () => console.log('Detach instance:', port.id),
-      disabled: !port.attachedTo,
-    },
+      disabled: !port.attachedTo },
     {
       id: 'associate-floating-ip',
       label: 'Associate floating IP',
       onClick: () => handleAssociateFloatingIP(port),
-      disabled: !!port.floatingIp,
-    },
+      disabled: !!port.floatingIp },
     {
       id: 'disassociate-floating-ip',
       label: 'Disassociate floating IP',
       onClick: () => console.log('Disassociate floating IP:', port.id),
-      disabled: !port.floatingIp,
-    },
+      disabled: !port.floatingIp },
     {
       id: 'allocate-ip',
       label: 'Allocate IP',
-      onClick: () => console.log('Allocate IP:', port.id),
-    },
+      onClick: () => console.log('Allocate IP:', port.id) },
     {
       id: 'manage-security-groups',
       label: 'Manage security groups',
-      onClick: () => handleManageSecurityGroups(port),
-    },
+      onClick: () => handleManageSecurityGroups(port) },
     { id: 'edit', label: 'Edit', onClick: () => handleEditPort(port) },
     {
       id: 'delete',
@@ -357,8 +315,7 @@ export function ComputeAdminPortsPage() {
       onClick: () => {
         setPortToDelete(port);
         setDeleteModalOpen(true);
-      },
-    },
+      } },
   ];
 
   // Filter ports based on search and tab
@@ -396,10 +353,9 @@ export function ComputeAdminPortsPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: fixedColumns.status,
       align: 'center',
-      render: (_, row) => <StatusIndicator status={portStatusMap[row.status]} layout="icon-only" />,
-    },
+      render: (_, row) => <StatusIndicator status={portStatusMap[row.status]} layout="icon-only" /> },
     {
       key: 'name',
       label: 'Name',
@@ -418,12 +374,11 @@ export function ComputeAdminPortsPage() {
             ID : {row.id}
           </span>
         </div>
-      ),
-    },
+      ) },
     {
       key: 'attachedTo',
       label: 'Attached to',
-      width: '160px',
+      flex: 1, minWidth: columnMinWidths.attachedTo,
       align: 'right',
       render: (_, row) =>
         row.attachedTo ? (
@@ -458,12 +413,11 @@ export function ComputeAdminPortsPage() {
           </div>
         ) : (
           <span className="block text-left w-full">-</span>
-        ),
-    },
+        ) },
     {
       key: 'ownedNetwork',
       label: 'Owned network',
-      width: '140px',
+      flex: 1, minWidth: columnMinWidths.ownedNetwork,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5 min-w-0">
@@ -480,32 +434,27 @@ export function ComputeAdminPortsPage() {
             ID : {row.ownedNetworkId.substring(0, 8)}
           </span>
         </div>
-      ),
-    },
+      ) },
     {
       key: 'securityGroups',
       label: 'SG',
-      flex: 1,
-    },
+      flex: 1 },
     {
       key: 'fixedIp',
       label: 'Fixed IP',
-      flex: 1,
-    },
+      flex: 1 },
     {
       key: 'floatingIp',
       label: 'Floating IP',
-      flex: 1,
-    },
+      flex: 1 },
     {
       key: 'macAddress',
       label: 'MAC Address',
-      flex: 1,
-    },
+      flex: 1 },
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: fixedColumns.actions,
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
@@ -519,8 +468,7 @@ export function ComputeAdminPortsPage() {
             </button>
           </ContextMenu>
         </div>
-      ),
-    },
+      ) },
   ];
 
   // Filter and order columns based on preferences
@@ -718,8 +666,7 @@ export function ComputeAdminPortsPage() {
         onClose={() => setManageSecurityGroupsOpen(false)}
         port={{
           id: selectedPortForDrawer?.id || '',
-          name: selectedPortForDrawer?.name || '',
-        }}
+          name: selectedPortForDrawer?.name || '' }}
       />
 
       <EditPortDrawer
@@ -727,8 +674,7 @@ export function ComputeAdminPortsPage() {
         onClose={() => setEditPortOpen(false)}
         port={{
           id: selectedPortForDrawer?.id || '',
-          name: selectedPortForDrawer?.name || '',
-        }}
+          name: selectedPortForDrawer?.name || '' }}
       />
     </div>
   );

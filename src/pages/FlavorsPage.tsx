@@ -14,7 +14,8 @@ import {
   ListToolbar,
   Button,
   ContextMenu,
-  columnWidths,
+  fixedColumns,
+  columnMinWidths,
   type TableColumn,
   type ContextMenuItem,
   type FilterField,
@@ -332,7 +333,7 @@ export function FlavorsPage() {
 
   const totalPages = Math.ceil(filteredFlavors.length / rowsPerPage);
 
-  // Table columns (using columnWidths preset)
+  // Table columns (using fixedColumns / columnMinWidths preset)
   const columns: TableColumn<Flavor>[] = useMemo(
     () => [
       {
@@ -360,19 +361,22 @@ export function FlavorsPage() {
       {
         key: 'vcpu',
         label: 'vCPU',
-        width: columnWidths.vcpu,
+        flex: 1,
+        minWidth: columnMinWidths.vcpu,
         sortable: true,
       },
       {
         key: 'ram',
         label: 'RAM',
-        width: columnWidths.ram,
+        flex: 1,
+        minWidth: columnMinWidths.ram,
         sortable: true,
       },
       {
         key: 'ephemeralDisk',
         label: 'Ephemeral disk',
-        width: columnWidths.ephemeralDisk,
+        flex: 1,
+        minWidth: columnMinWidths.ephemeralDisk,
         sortable: true,
       },
       {
@@ -388,25 +392,29 @@ export function FlavorsPage() {
             {
               key: 'gpuType',
               label: 'GPU Type',
-              width: columnWidths.gpuType,
+              flex: 1,
+              minWidth: columnMinWidths.gpuType,
               sortable: true,
             },
             {
               key: 'numaNodes',
               label: 'NUMA Nodes',
-              width: columnWidths.numaNodes,
+              flex: 1,
+              minWidth: columnMinWidths.numaNodes,
               sortable: true,
             },
             {
               key: 'cpuPolicy',
               label: 'CPU Policy',
-              width: columnWidths.cpuPolicy,
+              flex: 1,
+              minWidth: columnMinWidths.cpuPolicy,
               sortable: true,
             },
             {
               key: 'cpuThreadPolicy',
               label: 'CPU Thread Policy',
-              width: columnWidths.cpuThreadPolicy,
+              flex: 1,
+              minWidth: columnMinWidths.cpuThreadPolicy,
               sortable: true,
             },
           ] as TableColumn<Flavor>[])
@@ -414,13 +422,14 @@ export function FlavorsPage() {
       {
         key: 'access',
         label: 'Public',
-        width: columnWidths.access,
+        flex: 1,
+        minWidth: columnMinWidths.access,
         render: (_, row) => <span>{row.access === 'Public' ? 'On' : 'Off'}</span>,
       },
       {
         key: 'actions',
         label: 'Action',
-        width: columnWidths.actions,
+        width: fixedColumns.actions,
         align: 'center',
         render: (_, row) => {
           const menuItems: ContextMenuItem[] = [

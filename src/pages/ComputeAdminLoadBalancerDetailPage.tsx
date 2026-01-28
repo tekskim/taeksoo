@@ -1,24 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import {
-  Button,
-  VStack,
-  TabBar,
-  TopBar,
-  TopBarAction,
-  Breadcrumb,
-  Tabs,
-  TabList,
-  Tab,
-  TabPanel,
-  DetailHeader,
-  SectionCard,
-  Table,
-  SearchInput,
-  Pagination,
-  StatusIndicator,
-  ContextMenu,
-} from '@/design-system';
+import { Button, VStack, TabBar, TopBar, TopBarAction, Breadcrumb, Tabs, TabList, Tab, TabPanel, DetailHeader, SectionCard, Table, SearchInput, Pagination, StatusIndicator, ContextMenu, fixedColumns } from '@/design-system';
 import type { TableColumn, ContextMenuItem } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -29,8 +11,7 @@ import {
   IconChevronDown,
   IconEdit,
   IconCirclePlus,
-  IconDotsCircleHorizontal,
-} from '@tabler/icons-react';
+  IconDotsCircleHorizontal } from '@tabler/icons-react';
 
 // Types
 type LoadBalancerStatus = 'active' | 'pending' | 'error';
@@ -78,8 +59,7 @@ interface Pool {
 const statusMap: Record<LoadBalancerStatus, 'active' | 'building' | 'error'> = {
   active: 'active',
   pending: 'building',
-  error: 'error',
-};
+  error: 'error' };
 
 // Mock data - synchronized with LoadBalancersPage
 const mockLoadBalancersMap: Record<string, LoadBalancerDetail> = {
@@ -94,8 +74,7 @@ const mockLoadBalancersMap: Record<string, LoadBalancerDetail> = {
     provider: 'ovn',
     ownedNetwork: { name: 'net-02', id: 'net-002' },
     subnet: { name: 'subnet-02', id: 'subnet-002' },
-    floatingIp: { name: '192.168.10.13', id: 'fip-001' },
-  },
+    floatingIp: { name: '192.168.10.13', id: 'fip-001' } },
   'lb-002': {
     id: 'lb-002',
     name: 'api-lb',
@@ -107,8 +86,7 @@ const mockLoadBalancersMap: Record<string, LoadBalancerDetail> = {
     provider: 'ovn',
     ownedNetwork: { name: 'net-01', id: 'net-001' },
     subnet: { name: 'subnet-01', id: 'subnet-001' },
-    floatingIp: { name: '192.168.10.14', id: 'fip-002' },
-  },
+    floatingIp: { name: '192.168.10.14', id: 'fip-002' } },
   'lb-003': {
     id: 'lb-003',
     name: 'app-lb',
@@ -120,9 +98,7 @@ const mockLoadBalancersMap: Record<string, LoadBalancerDetail> = {
     provider: 'ovn',
     ownedNetwork: { name: 'net-03', id: 'net-003' },
     subnet: { name: 'subnet-03', id: 'subnet-003' },
-    floatingIp: { name: '192.168.10.15', id: 'fip-003' },
-  },
-};
+    floatingIp: { name: '192.168.10.15', id: 'fip-003' } } };
 
 const defaultLoadBalancer: LoadBalancerDetail = {
   id: 'lb-default',
@@ -135,8 +111,7 @@ const defaultLoadBalancer: LoadBalancerDetail = {
   provider: 'ovn',
   ownedNetwork: { name: '-', id: '' },
   subnet: { name: '-', id: '' },
-  floatingIp: { name: '-', id: '' },
-};
+  floatingIp: { name: '-', id: '' } };
 
 // Mock listeners data
 const mockListeners: Listener[] = Array.from({ length: 115 }, (_, i) => ({
@@ -146,15 +121,13 @@ const mockListeners: Listener[] = Array.from({ length: 115 }, (_, i) => ({
   protocol: 'HTTP',
   port: 80,
   connectionLimit: 2,
-  adminState: i % 10 === 0 ? 'Down' : 'Up',
-}));
+  adminState: i % 10 === 0 ? 'Down' : 'Up' }));
 
 // Listener status mapping
 const listenerStatusMap: Record<ListenerStatus, 'active' | 'down' | 'error'> = {
   active: 'active',
   down: 'down',
-  error: 'error',
-};
+  error: 'error' };
 
 // Mock pools data
 const mockPools: Pool[] = Array.from({ length: 13 }, (_, i) => ({
@@ -165,15 +138,13 @@ const mockPools: Pool[] = Array.from({ length: 13 }, (_, i) => ({
   algorithm: ['Round Robin', 'Least Connections', 'Source IP'][i % 3],
   listener: { name: 'listener', id: `29tgj234${String(i).padStart(2, '0')}` },
   members: (i % 5) + 1,
-  adminState: i % 7 === 0 ? 'Down' : 'Up',
-}));
+  adminState: i % 7 === 0 ? 'Down' : 'Up' }));
 
 // Pool status mapping
 const poolStatusMap: Record<PoolStatus, 'active' | 'down' | 'error'> = {
   online: 'active',
   offline: 'down',
-  error: 'error',
-};
+  error: 'error' };
 
 export function ComputeAdminLoadBalancerDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -218,8 +189,7 @@ export function ComputeAdminLoadBalancerDetailPage() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    closable: tab.closable,
-  }));
+    closable: tab.closable }));
 
   // Filtered listeners based on search
   const filteredListeners = useMemo(() => {
@@ -263,12 +233,11 @@ export function ComputeAdminLoadBalancerDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: fixedColumns.status,
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={listenerStatusMap[row.status]} layout="icon-only" />
-      ),
-    },
+      ) },
     {
       key: 'name',
       label: 'Name',
@@ -287,35 +256,30 @@ export function ComputeAdminLoadBalancerDetailPage() {
             ID : {row.id}
           </span>
         </div>
-      ),
-    },
+      ) },
     {
       key: 'protocol',
       label: 'Protocol',
       flex: 1,
-      sortable: true,
-    },
+      sortable: true },
     {
       key: 'port',
       label: 'Port',
       flex: 1,
-      sortable: true,
-    },
+      sortable: true },
     {
       key: 'connectionLimit',
       label: 'Connection limit',
       flex: 1,
-      sortable: true,
-    },
+      sortable: true },
     {
       key: 'adminState',
       label: 'Admin state',
-      flex: 1,
-    },
+      flex: 1 },
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: fixedColumns.actions,
       align: 'center',
       render: (_: unknown, row: Listener) => {
         const listenerMenuItems: ContextMenuItem[] = [
@@ -323,14 +287,12 @@ export function ComputeAdminLoadBalancerDetailPage() {
             id: 'edit',
             label: 'Edit',
             icon: <IconEdit size={14} stroke={1.5} />,
-            onClick: () => console.log('Edit listener', row.id),
-          },
+            onClick: () => console.log('Edit listener', row.id) },
           {
             id: 'delete',
             label: 'Delete',
             status: 'danger',
-            onClick: () => console.log('Delete listener', row.id),
-          },
+            onClick: () => console.log('Delete listener', row.id) },
         ];
         return (
           <div onClick={(e) => e.stopPropagation()}>
@@ -345,8 +307,7 @@ export function ComputeAdminLoadBalancerDetailPage() {
             </ContextMenu>
           </div>
         );
-      },
-    },
+      } },
   ];
 
   // Pool columns
@@ -354,10 +315,9 @@ export function ComputeAdminLoadBalancerDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: fixedColumns.status,
       align: 'center',
-      render: (_, row) => <StatusIndicator status={poolStatusMap[row.status]} layout="icon-only" />,
-    },
+      render: (_, row) => <StatusIndicator status={poolStatusMap[row.status]} layout="icon-only" /> },
     {
       key: 'name',
       label: 'Name',
@@ -376,24 +336,21 @@ export function ComputeAdminLoadBalancerDetailPage() {
             ID : {row.id}
           </span>
         </div>
-      ),
-    },
+      ) },
     {
       key: 'protocol',
       label: 'Protocol',
-      width: '100px',
-      sortable: true,
-    },
+      flex: 1, minWidth: columnMinWidths.protocol,
+      sortable: true },
     {
       key: 'algorithm',
       label: 'Algorithm',
-      width: '123px',
-      sortable: true,
-    },
+      flex: 1, minWidth: columnMinWidths.algorithm,
+      sortable: true },
     {
       key: 'listener',
       label: 'Listener',
-      width: '123px',
+      flex: 1, minWidth: columnMinWidths.listener,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -408,23 +365,20 @@ export function ComputeAdminLoadBalancerDetailPage() {
             ID : {row.listener.id}
           </span>
         </div>
-      ),
-    },
+      ) },
     {
       key: 'members',
       label: 'Members',
-      width: columnWidths.members,
-      sortable: true,
-    },
+      flex: 1, minWidth: columnMinWidths.members,
+      sortable: true },
     {
       key: 'adminState',
       label: 'Admin state',
-      width: columnWidths.adminState,
-    },
+      flex: 1, minWidth: columnMinWidths.adminState },
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: fixedColumns.actions,
       align: 'center',
       render: (_: unknown, row: Pool) => {
         const poolMenuItems: ContextMenuItem[] = [
@@ -432,14 +386,12 @@ export function ComputeAdminLoadBalancerDetailPage() {
             id: 'edit',
             label: 'Edit',
             icon: <IconEdit size={14} stroke={1.5} />,
-            onClick: () => console.log('Edit pool', row.id),
-          },
+            onClick: () => console.log('Edit pool', row.id) },
           {
             id: 'delete',
             label: 'Delete',
             status: 'danger',
-            onClick: () => console.log('Delete pool', row.id),
-          },
+            onClick: () => console.log('Delete pool', row.id) },
         ];
         return (
           <div onClick={(e) => e.stopPropagation()}>
@@ -454,8 +406,7 @@ export function ComputeAdminLoadBalancerDetailPage() {
             </ContextMenu>
           </div>
         );
-      },
-    },
+      } },
   ];
 
   return (
@@ -526,14 +477,12 @@ export function ComputeAdminLoadBalancerDetailPage() {
                         id: 'edit',
                         label: 'Edit',
                         icon: <IconEdit size={14} stroke={1.5} />,
-                        onClick: () => console.log('Edit clicked'),
-                      },
+                        onClick: () => console.log('Edit clicked') },
                       {
                         id: 'create-listener',
                         label: 'Create listener',
                         icon: <IconCirclePlus size={14} stroke={1.5} />,
-                        onClick: () => console.log('Create listener clicked'),
-                      },
+                        onClick: () => console.log('Create listener clicked') },
                     ]}
                   >
                     <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>

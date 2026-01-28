@@ -20,7 +20,8 @@ import {
   ContextMenu,
   type TableColumn,
   type ContextMenuItem,
-  columnWidths,
+  fixedColumns,
+  columnMinWidths,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -315,7 +316,7 @@ export function ServerGroupDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: columnWidths.status,
+      width: fixedColumns.status,
       align: 'center',
       render: (_, row) => <StatusIndicator status={row.status} layout="icon-only" />,
     },
@@ -347,7 +348,7 @@ export function ServerGroupDetailPage() {
     {
       key: 'locked',
       label: 'Locked',
-      width: columnWidths.locked,
+      width: fixedColumns.locked,
       align: 'center',
       render: (_, row) =>
         row.locked ? (
@@ -378,14 +379,14 @@ export function ServerGroupDetailPage() {
     {
       key: 'createdAt',
       label: 'Created at',
-      width: columnWidths.createdAt,
+      flex: 1, minWidth: columnMinWidths.createdAt,
       sortable: true,
       render: (value) => <span>{value}</span>,
     },
     {
       key: 'actions',
       label: 'Action',
-      width: columnWidths.actions,
+      width: fixedColumns.actions,
       align: 'center',
       render: (_, row) => (
         <HStack gap={1} className="justify-center">

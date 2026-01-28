@@ -1,26 +1,6 @@
 import { useState, useCallback, useMemo } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import {
-  Button,
-  Breadcrumb,
-  HStack,
-  VStack,
-  TabBar,
-  TopBar,
-  TopBarAction,
-  Input,
-  NumberInput,
-  SectionCard,
-  FormField,
-  WizardSummary,
-  RadioGroup,
-  Radio,
-  Toggle,
-  SearchInput,
-  Pagination,
-  StatusIndicator,
-  Checkbox,
-} from '@/design-system';
+import { Button, Breadcrumb, HStack, VStack, TabBar, TopBar, TopBarAction, Input, NumberInput, SectionCard, FormField, WizardSummary, RadioGroup, Radio, Toggle, SearchInput, Pagination, StatusIndicator, Checkbox, fixedColumns, columnMinWidths } from '@/design-system';
 import type { WizardSummaryItem, WizardSectionState } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -31,8 +11,7 @@ import {
   IconPlus,
   IconMinus,
   IconChevronRight,
-  IconChevronDown,
-} from '@tabler/icons-react';
+  IconChevronDown } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -44,8 +23,7 @@ type SectionStep = 'basic-info' | 'resources' | 'metadata';
 const SECTION_LABELS: Record<SectionStep, string> = {
   'basic-info': 'Basic information',
   resources: 'Resources',
-  metadata: 'Metadata',
-};
+  metadata: 'Metadata' };
 
 // Section order for navigation
 const SECTION_ORDER: SectionStep[] = ['basic-info', 'resources', 'metadata'];
@@ -85,13 +63,11 @@ function SummarySidebar({
   sectionStatus,
   onCancel,
   onCreate,
-  isCreateDisabled,
-}: SummarySidebarProps) {
+  isCreateDisabled }: SummarySidebarProps) {
   const summaryItems: WizardSummaryItem[] = SECTION_ORDER.map((key) => ({
     key,
     label: SECTION_LABELS[key],
-    status: sectionStatus[key],
-  }));
+    status: sectionStatus[key] }));
 
   return (
     <div className="w-[312px] shrink-0 sticky top-4 self-start">
@@ -159,16 +135,14 @@ export function ComputeAdminCreateFlavorPage() {
     {
       key: 'cpu_allocation_ratio',
       label: 'CPU Allocation Ratio',
-      children: ['1.0', '2.0', '4.0', '8.0', '16.0'],
-    },
+      children: ['1.0', '2.0', '4.0', '8.0', '16.0'] },
     { key: 'ram_allocation_ratio', label: 'RAM Allocation Ratio', children: ['1.0', '1.5', '2.0'] },
     { key: 'disk_allocation_ratio', label: 'Disk Allocation Ratio', children: ['1.0', '2.0'] },
     { key: 'hw:cpu_policy', label: 'CPU Policy', children: ['shared', 'dedicated'] },
     {
       key: 'hw:cpu_thread_policy',
       label: 'CPU Thread Policy',
-      children: ['prefer', 'isolate', 'require'],
-    },
+      children: ['prefer', 'isolate', 'require'] },
     { key: 'hw:numa_nodes', label: 'NUMA Nodes', children: ['1', '2', '4'] },
     { key: 'hw:mem_page_size', label: 'Memory Page Size', children: ['small', 'large', 'any'] },
     { key: 'quota:disk_read_bytes_sec', label: 'Disk Read Bytes/sec' },
@@ -180,8 +154,7 @@ export function ComputeAdminCreateFlavorPage() {
   const [sectionStatus, setSectionStatus] = useState<Record<SectionStep, WizardSectionState>>({
     'basic-info': 'active',
     resources: 'pre',
-    metadata: 'pre',
-  });
+    metadata: 'pre' });
 
   // Validation error state
   const [showFlavorNameError, setShowFlavorNameError] = useState(false);
@@ -197,8 +170,7 @@ export function ComputeAdminCreateFlavorPage() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    closable: tab.closable,
-  }));
+    closable: tab.closable }));
 
   const breadcrumbItems = [
     { label: 'Flavors', href: '/compute-admin/flavors' },
@@ -221,8 +193,7 @@ export function ComputeAdminCreateFlavorPage() {
       rootDisk,
       ephemeralDisk,
       swapDisk,
-      metadata: selectedMetadata,
-    });
+      metadata: selectedMetadata });
     navigate('/compute-admin/flavors');
   };
 
@@ -284,8 +255,7 @@ export function ComputeAdminCreateFlavorPage() {
         setSectionStatus((prev) => ({
           ...prev,
           [currentSection]: 'done',
-          [nextSection]: 'active',
-        }));
+          [nextSection]: 'active' }));
       }
     },
     [flavorName]

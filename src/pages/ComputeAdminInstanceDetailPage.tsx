@@ -1,25 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import {
-  Button,
-  VStack,
-  TabBar,
-  TopBar,
-  TopBarAction,
-  Breadcrumb,
-  Tabs,
-  TabList,
-  Tab,
-  TabPanel,
-  DetailHeader,
-  SectionCard,
-  Table,
-  SearchInput,
-  Pagination,
-  StatusIndicator,
-  ContextMenu,
-  type ContextMenuItem,
-} from '@/design-system';
+import { Button, VStack, TabBar, TopBar, TopBarAction, Breadcrumb, Tabs, TabList, Tab, TabPanel, DetailHeader, SectionCard, Table, SearchInput, Pagination, StatusIndicator, ContextMenu, type ContextMenuItem, fixedColumns, columnMinWidths } from '@/design-system';
 import { Link } from 'react-router-dom';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -39,8 +20,7 @@ import {
   IconSearch,
   IconCopy,
   IconSelector,
-  IconLock,
-} from '@tabler/icons-react';
+  IconLock } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -154,8 +134,7 @@ const mockInstancesMap: Record<string, InstanceDetail> = {
     interfaces: 5,
     keyPair: 'default-key',
     serverGroup: 'worker-group',
-    userData: '-',
-  },
+    userData: '-' },
   'vm-002': {
     id: 'vm-002',
     name: 'worker-node-02',
@@ -171,8 +150,7 @@ const mockInstancesMap: Record<string, InstanceDetail> = {
     interfaces: 3,
     keyPair: 'default-key',
     serverGroup: 'worker-group',
-    userData: '-',
-  },
+    userData: '-' },
   'vm-003': {
     id: 'vm-003',
     name: 'master-node-01',
@@ -188,8 +166,7 @@ const mockInstancesMap: Record<string, InstanceDetail> = {
     interfaces: 4,
     keyPair: 'master-key',
     serverGroup: 'master-group',
-    userData: '-',
-  },
+    userData: '-' },
   'vm-004': {
     id: 'vm-004',
     name: 'db-server-01',
@@ -205,8 +182,7 @@ const mockInstancesMap: Record<string, InstanceDetail> = {
     interfaces: 2,
     keyPair: 'db-key',
     serverGroup: 'db-group',
-    userData: '-',
-  },
+    userData: '-' },
   'vm-005': {
     id: 'vm-005',
     name: 'gpu-node-01',
@@ -222,9 +198,7 @@ const mockInstancesMap: Record<string, InstanceDetail> = {
     interfaces: 2,
     keyPair: 'gpu-key',
     serverGroup: 'gpu-group',
-    userData: '-',
-  },
-};
+    userData: '-' } };
 
 // Default instance detail for unknown IDs
 const defaultInstanceDetail: InstanceDetail = {
@@ -242,8 +216,7 @@ const defaultInstanceDetail: InstanceDetail = {
   interfaces: 0,
   keyPair: '-',
   serverGroup: '-',
-  userData: '-',
-};
+  userData: '-' };
 
 const mockAttachedVolumes: AttachedVolume[] = [
   {
@@ -254,8 +227,7 @@ const mockAttachedVolumes: AttachedVolume[] = [
     type: '_DEFAULT_',
     diskTag: 'OS Disk',
     bootable: false,
-    access: '2025-11-11',
-  },
+    access: '2025-11-11' },
   {
     id: 'vol-002',
     name: 'data-volume-01',
@@ -264,8 +236,7 @@ const mockAttachedVolumes: AttachedVolume[] = [
     type: 'SSD',
     diskTag: 'Data disk',
     bootable: false,
-    access: '2025-11-10',
-  },
+    access: '2025-11-10' },
   {
     id: 'vol-003',
     name: 'backup-vol',
@@ -274,8 +245,7 @@ const mockAttachedVolumes: AttachedVolume[] = [
     type: '_DEFAULT_',
     diskTag: 'Backup',
     bootable: false,
-    access: '2025-11-09',
-  },
+    access: '2025-11-09' },
   {
     id: 'vol-004',
     name: 'app-storage',
@@ -284,8 +254,7 @@ const mockAttachedVolumes: AttachedVolume[] = [
     type: 'SSD',
     diskTag: 'App Data',
     bootable: false,
-    access: '2025-11-08',
-  },
+    access: '2025-11-08' },
   {
     id: 'vol-005',
     name: 'database-vol',
@@ -294,8 +263,7 @@ const mockAttachedVolumes: AttachedVolume[] = [
     type: 'SSD',
     diskTag: 'Database',
     bootable: false,
-    access: '2025-11-07',
-  },
+    access: '2025-11-07' },
   {
     id: 'vol-006',
     name: 'logs-archive',
@@ -304,8 +272,7 @@ const mockAttachedVolumes: AttachedVolume[] = [
     type: '_DEFAULT_',
     diskTag: 'Logs',
     bootable: false,
-    access: '2025-11-06',
-  },
+    access: '2025-11-06' },
   {
     id: 'vol-007',
     name: 'media-storage',
@@ -314,8 +281,7 @@ const mockAttachedVolumes: AttachedVolume[] = [
     type: '_DEFAULT_',
     diskTag: 'Media',
     bootable: false,
-    access: '2025-11-05',
-  },
+    access: '2025-11-05' },
   {
     id: 'vol-008',
     name: 'cache-vol',
@@ -324,8 +290,7 @@ const mockAttachedVolumes: AttachedVolume[] = [
     type: 'SSD',
     diskTag: 'Cache',
     bootable: false,
-    access: '2025-11-04',
-  },
+    access: '2025-11-04' },
   {
     id: 'vol-009',
     name: 'temp-storage',
@@ -334,8 +299,7 @@ const mockAttachedVolumes: AttachedVolume[] = [
     type: 'SSD',
     diskTag: 'Temp',
     bootable: false,
-    access: '2025-11-03',
-  },
+    access: '2025-11-03' },
   {
     id: 'vol-010',
     name: 'shared-data',
@@ -344,8 +308,7 @@ const mockAttachedVolumes: AttachedVolume[] = [
     type: '_DEFAULT_',
     diskTag: 'Shared',
     bootable: false,
-    access: '2025-11-02',
-  },
+    access: '2025-11-02' },
 ];
 
 const mockAttachedInterfaces: AttachedInterface[] = [
@@ -357,8 +320,7 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     portStatus: 'Inactive',
     fixedIp: '10.0.0.6',
     macAddress: '10.0.0.2',
-    createdAt: '2025-11-11',
-  },
+    createdAt: '2025-11-11' },
   {
     id: '38hdk456',
     name: 'port-02',
@@ -367,8 +329,7 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     portStatus: 'Active',
     fixedIp: '10.0.0.5',
     macAddress: 'fa:16:3e:12:34:56',
-    createdAt: '2025-11-10',
-  },
+    createdAt: '2025-11-10' },
   {
     id: '47jfl789',
     name: 'port-03',
@@ -377,8 +338,7 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     portStatus: 'Active',
     fixedIp: '192.168.1.10',
     macAddress: 'fa:16:3e:ab:cd:ef',
-    createdAt: '2025-11-09',
-  },
+    createdAt: '2025-11-09' },
   {
     id: '56kgm012',
     name: 'port-04',
@@ -387,8 +347,7 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     portStatus: 'Active',
     fixedIp: '172.16.0.10',
     macAddress: 'fa:16:3e:11:22:33',
-    createdAt: '2025-11-08',
-  },
+    createdAt: '2025-11-08' },
   {
     id: '65lhn345',
     name: 'port-05',
@@ -397,8 +356,7 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     portStatus: 'Active',
     fixedIp: '10.10.0.5',
     macAddress: 'fa:16:3e:44:55:66',
-    createdAt: '2025-11-07',
-  },
+    createdAt: '2025-11-07' },
   {
     id: '74mip678',
     name: 'port-06',
@@ -407,8 +365,7 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     portStatus: 'Down',
     fixedIp: '10.20.0.15',
     macAddress: 'fa:16:3e:77:88:99',
-    createdAt: '2025-11-06',
-  },
+    createdAt: '2025-11-06' },
   {
     id: '83njq901',
     name: 'port-07',
@@ -417,8 +374,7 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     portStatus: 'Active',
     fixedIp: '10.30.0.20',
     macAddress: 'fa:16:3e:aa:bb:cc',
-    createdAt: '2025-11-05',
-  },
+    createdAt: '2025-11-05' },
   {
     id: '92okr234',
     name: 'port-08',
@@ -427,8 +383,7 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     portStatus: 'Active',
     fixedIp: '10.40.0.25',
     macAddress: 'fa:16:3e:dd:ee:ff',
-    createdAt: '2025-11-04',
-  },
+    createdAt: '2025-11-04' },
   {
     id: '01pls567',
     name: 'port-09',
@@ -437,8 +392,7 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     portStatus: 'Build',
     fixedIp: '10.50.0.30',
     macAddress: 'fa:16:3e:12:34:ab',
-    createdAt: '2025-11-03',
-  },
+    createdAt: '2025-11-03' },
   {
     id: '10qmt890',
     name: 'port-10',
@@ -447,8 +401,7 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     portStatus: 'Active',
     fixedIp: '10.60.0.35',
     macAddress: 'fa:16:3e:cd:ef:12',
-    createdAt: '2025-11-02',
-  },
+    createdAt: '2025-11-02' },
   {
     id: '29rnu123',
     name: 'port-11',
@@ -457,8 +410,7 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     portStatus: 'Active',
     fixedIp: '10.70.0.40',
     macAddress: 'fa:16:3e:34:56:78',
-    createdAt: '2025-11-01',
-  },
+    createdAt: '2025-11-01' },
   {
     id: '38sov456',
     name: 'port-12',
@@ -467,8 +419,7 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     portStatus: 'Inactive',
     fixedIp: '10.80.0.45',
     macAddress: 'fa:16:3e:9a:bc:de',
-    createdAt: '2025-10-31',
-  },
+    createdAt: '2025-10-31' },
 ];
 
 const mockFloatingIPs: FloatingIP[] = [
@@ -478,96 +429,84 @@ const mockFloatingIPs: FloatingIP[] = [
     status: 'active',
     floatingIp: '10.0.0.11',
     fixedIp: '10.0.0.11',
-    createdAt: '2025-09-01',
-  },
+    createdAt: '2025-09-01' },
   {
     id: '38hdk456',
     name: 'public-ip-01',
     status: 'active',
     floatingIp: '192.168.1.100',
     fixedIp: '10.0.0.5',
-    createdAt: '2025-08-15',
-  },
+    createdAt: '2025-08-15' },
   {
     id: '47jfl789',
     name: 'lb-frontend',
     status: 'shutoff',
     floatingIp: '172.16.0.50',
     fixedIp: '10.0.0.20',
-    createdAt: '2025-07-20',
-  },
+    createdAt: '2025-07-20' },
   {
     id: '56kgm012',
     name: 'web-server-01',
     status: 'active',
     floatingIp: '203.0.113.10',
     fixedIp: '10.0.1.10',
-    createdAt: '2025-09-10',
-  },
+    createdAt: '2025-09-10' },
   {
     id: '65lhn345',
     name: 'api-gateway',
     status: 'active',
     floatingIp: '203.0.113.20',
     fixedIp: '10.0.1.20',
-    createdAt: '2025-09-12',
-  },
+    createdAt: '2025-09-12' },
   {
     id: '74mip678',
     name: 'db-primary',
     status: 'error',
     floatingIp: '203.0.113.30',
     fixedIp: '10.0.1.30',
-    createdAt: '2025-09-15',
-  },
+    createdAt: '2025-09-15' },
   {
     id: '83njq901',
     name: 'cache-server',
     status: 'active',
     floatingIp: '203.0.113.40',
     fixedIp: '10.0.1.40',
-    createdAt: '2025-09-18',
-  },
+    createdAt: '2025-09-18' },
   {
     id: '92okr234',
     name: 'monitoring',
     status: 'active',
     floatingIp: '203.0.113.50',
     fixedIp: '10.0.1.50',
-    createdAt: '2025-09-20',
-  },
+    createdAt: '2025-09-20' },
   {
     id: '01pls567',
     name: 'backup-server',
     status: 'shutoff',
     floatingIp: '203.0.113.60',
     fixedIp: '10.0.1.60',
-    createdAt: '2025-09-22',
-  },
+    createdAt: '2025-09-22' },
   {
     id: '10qmt890',
     name: 'staging-env',
     status: 'active',
     floatingIp: '203.0.113.70',
     fixedIp: '10.0.1.70',
-    createdAt: '2025-09-25',
-  },
+    createdAt: '2025-09-25' },
   {
     id: '29rnu123',
     name: 'dev-server',
     status: 'active',
     floatingIp: '203.0.113.80',
     fixedIp: '10.0.1.80',
-    createdAt: '2025-09-28',
-  },
+    createdAt: '2025-09-28' },
   {
     id: '38sov456',
     name: 'test-instance',
     status: 'shutoff',
     floatingIp: '203.0.113.90',
     fixedIp: '10.0.1.90',
-    createdAt: '2025-09-30',
-  },
+    createdAt: '2025-09-30' },
 ];
 
 const mockNetworkInterfaces: NetworkInterface[] = [
@@ -583,62 +522,52 @@ const mockSecurityGroups: SecurityGroup[] = [
     id: 'sg-003',
     name: 'web-servers',
     description: 'Web server security group',
-    createdAt: '2025-11-09',
-  },
+    createdAt: '2025-11-09' },
   {
     id: 'sg-004',
     name: 'ssh-access',
     description: 'SSH access security group',
-    createdAt: '2025-11-08',
-  },
+    createdAt: '2025-11-08' },
   {
     id: 'sg-005',
     name: 'db-servers',
     description: 'Database server security group',
-    createdAt: '2025-11-07',
-  },
+    createdAt: '2025-11-07' },
   {
     id: 'sg-006',
     name: 'internal-only',
     description: 'Internal network only',
-    createdAt: '2025-11-06',
-  },
+    createdAt: '2025-11-06' },
   {
     id: 'sg-007',
     name: 'load-balancer',
     description: 'Load balancer security group',
-    createdAt: '2025-11-05',
-  },
+    createdAt: '2025-11-05' },
   {
     id: 'sg-008',
     name: 'monitoring',
     description: 'Monitoring services access',
-    createdAt: '2025-11-04',
-  },
+    createdAt: '2025-11-04' },
   {
     id: 'sg-009',
     name: 'kubernetes',
     description: 'Kubernetes cluster security group',
-    createdAt: '2025-11-03',
-  },
+    createdAt: '2025-11-03' },
   {
     id: 'sg-010',
     name: 'api-gateway',
     description: 'API gateway security group',
-    createdAt: '2025-11-02',
-  },
+    createdAt: '2025-11-02' },
   {
     id: 'sg-011',
     name: 'cache-servers',
     description: 'Cache server security group',
-    createdAt: '2025-11-01',
-  },
+    createdAt: '2025-11-01' },
   {
     id: 'sg-012',
     name: 'message-queue',
     description: 'Message queue security group',
-    createdAt: '2025-10-31',
-  },
+    createdAt: '2025-10-31' },
 ];
 
 const mockInstanceSnapshots: InstanceSnapshot[] = [
@@ -648,96 +577,84 @@ const mockInstanceSnapshots: InstanceSnapshot[] = [
     status: 'active',
     size: '30GiB',
     diskFormat: 'RAW',
-    createdAt: '2025-09-01',
-  },
+    createdAt: '2025-09-01' },
   {
     id: 'snap-002',
     name: 'db-backup-weekly',
     status: 'active',
     size: '50GiB',
     diskFormat: 'QCOW2',
-    createdAt: '2025-08-28',
-  },
+    createdAt: '2025-08-28' },
   {
     id: 'snap-003',
     name: 'web-server-snapshot',
     status: 'active',
     size: '20GiB',
     diskFormat: 'RAW',
-    createdAt: '2025-08-25',
-  },
+    createdAt: '2025-08-25' },
   {
     id: 'snap-004',
     name: 'pre-upgrade-backup',
     status: 'active',
     size: '45GiB',
     diskFormat: 'QCOW2',
-    createdAt: '2025-08-20',
-  },
+    createdAt: '2025-08-20' },
   {
     id: 'snap-005',
     name: 'dev-environment',
     status: 'active',
     size: '15GiB',
     diskFormat: 'RAW',
-    createdAt: '2025-08-15',
-  },
+    createdAt: '2025-08-15' },
   {
     id: 'snap-006',
     name: 'staging-snapshot',
     status: 'active',
     size: '35GiB',
     diskFormat: 'QCOW2',
-    createdAt: '2025-08-10',
-  },
+    createdAt: '2025-08-10' },
   {
     id: 'snap-007',
     name: 'production-backup',
     status: 'active',
     size: '60GiB',
     diskFormat: 'RAW',
-    createdAt: '2025-08-05',
-  },
+    createdAt: '2025-08-05' },
   {
     id: 'snap-008',
     name: 'test-environment',
     status: 'queued',
     size: '25GiB',
     diskFormat: 'QCOW2',
-    createdAt: '2025-08-01',
-  },
+    createdAt: '2025-08-01' },
   {
     id: 'snap-009',
     name: 'app-server-v2',
     status: 'active',
     size: '40GiB',
     diskFormat: 'RAW',
-    createdAt: '2025-07-28',
-  },
+    createdAt: '2025-07-28' },
   {
     id: 'snap-010',
     name: 'database-snapshot',
     status: 'active',
     size: '55GiB',
     diskFormat: 'QCOW2',
-    createdAt: '2025-07-25',
-  },
+    createdAt: '2025-07-25' },
   {
     id: 'snap-011',
     name: 'cache-server-snap',
     status: 'active',
     size: '10GiB',
     diskFormat: 'RAW',
-    createdAt: '2025-07-20',
-  },
+    createdAt: '2025-07-20' },
   {
     id: 'snap-012',
     name: 'monitoring-backup',
     status: 'active',
     size: '18GiB',
     diskFormat: 'QCOW2',
-    createdAt: '2025-07-15',
-  },
+    createdAt: '2025-07-15' },
 ];
 
 const mockActionLogs: ActionLog[] = [
@@ -748,8 +665,7 @@ const mockActionLogs: ActionLog[] = [
     requestedTime: '2025-09-11 13:34:57',
     result: 'Success',
     startTime: '14:23:15',
-    endTime: '14:23:15',
-  },
+    endTime: '14:23:15' },
   {
     id: 'log-002',
     operationName: 'Create',
@@ -757,8 +673,7 @@ const mockActionLogs: ActionLog[] = [
     requestedTime: '2025-09-11 13:34:57',
     result: 'Success',
     startTime: '14:23:15',
-    endTime: '14:23:15',
-  },
+    endTime: '14:23:15' },
   {
     id: 'log-003',
     operationName: 'Create',
@@ -766,8 +681,7 @@ const mockActionLogs: ActionLog[] = [
     requestedTime: '2025-09-11 13:34:57',
     result: 'Success',
     startTime: '14:23:15',
-    endTime: '14:23:15',
-  },
+    endTime: '14:23:15' },
   {
     id: 'log-004',
     operationName: 'Create',
@@ -775,8 +689,7 @@ const mockActionLogs: ActionLog[] = [
     requestedTime: '2025-09-11 13:34:57',
     result: 'Success',
     startTime: '14:23:15',
-    endTime: '14:23:15',
-  },
+    endTime: '14:23:15' },
   {
     id: 'log-005',
     operationName: 'Create',
@@ -784,8 +697,7 @@ const mockActionLogs: ActionLog[] = [
     requestedTime: '2025-09-11 13:34:57',
     result: 'Success',
     startTime: '14:23:15',
-    endTime: '14:23:15',
-  },
+    endTime: '14:23:15' },
   {
     id: 'log-006',
     operationName: 'Create',
@@ -793,8 +705,7 @@ const mockActionLogs: ActionLog[] = [
     requestedTime: '2025-09-11 13:34:57',
     result: 'Success',
     startTime: '14:23:15',
-    endTime: '14:23:15',
-  },
+    endTime: '14:23:15' },
   {
     id: 'log-007',
     operationName: 'Create',
@@ -802,8 +713,7 @@ const mockActionLogs: ActionLog[] = [
     requestedTime: '2025-09-11 13:34:57',
     result: 'Success',
     startTime: '14:23:15',
-    endTime: '14:23:15',
-  },
+    endTime: '14:23:15' },
   {
     id: 'log-008',
     operationName: 'Create',
@@ -811,8 +721,7 @@ const mockActionLogs: ActionLog[] = [
     requestedTime: '2025-09-11 13:34:57',
     result: 'Success',
     startTime: '14:23:15',
-    endTime: '14:23:15',
-  },
+    endTime: '14:23:15' },
   {
     id: 'log-009',
     operationName: 'Create',
@@ -820,8 +729,7 @@ const mockActionLogs: ActionLog[] = [
     requestedTime: '2025-09-11 13:34:57',
     result: 'Success',
     startTime: '14:23:15',
-    endTime: '14:23:15',
-  },
+    endTime: '14:23:15' },
   {
     id: 'log-010',
     operationName: 'Create',
@@ -829,8 +737,7 @@ const mockActionLogs: ActionLog[] = [
     requestedTime: '2025-09-11 13:34:57',
     result: 'Success',
     startTime: '14:23:15',
-    endTime: '14:23:15',
-  },
+    endTime: '14:23:15' },
 ];
 
 /* ----------------------------------------
@@ -939,8 +846,7 @@ export function ComputeAdminInstanceDetailPage() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    closable: tab.closable,
-  }));
+    closable: tab.closable }));
 
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
@@ -1031,50 +937,40 @@ export function ComputeAdminInstanceDetailPage() {
                           {
                             id: 'soft-reboot',
                             label: 'Soft reboot',
-                            onClick: () => console.log('Soft reboot instance'),
-                          },
+                            onClick: () => console.log('Soft reboot instance') },
                           {
                             id: 'pause',
                             label: 'Pause',
-                            onClick: () => console.log('Pause instance'),
-                          },
+                            onClick: () => console.log('Pause instance') },
                           {
                             id: 'suspend',
                             label: 'Suspend',
-                            onClick: () => console.log('Suspend instance'),
-                          },
+                            onClick: () => console.log('Suspend instance') },
                           {
                             id: 'shelve',
                             label: 'Shelve',
-                            onClick: () => console.log('Shelve instance'),
-                          },
+                            onClick: () => console.log('Shelve instance') },
                           {
                             id: 'unpause',
                             label: 'Unpause',
-                            onClick: () => console.log('Unpause instance'),
-                          },
+                            onClick: () => console.log('Unpause instance') },
                           {
                             id: 'resume',
                             label: 'Resume',
-                            onClick: () => console.log('Resume instance'),
-                          },
+                            onClick: () => console.log('Resume instance') },
                           {
                             id: 'unshelve',
                             label: 'Unshelve',
-                            onClick: () => console.log('Unshelve instance'),
-                          },
+                            onClick: () => console.log('Unshelve instance') },
                           {
                             id: 'rescue',
                             label: 'Rescue',
-                            onClick: () => console.log('Rescue instance'),
-                          },
+                            onClick: () => console.log('Rescue instance') },
                           {
                             id: 'unrescue',
                             label: 'Unrescue',
-                            onClick: () => console.log('Unrescue instance'),
-                          },
-                        ],
-                      },
+                            onClick: () => console.log('Unrescue instance') },
+                        ] },
                       {
                         id: 'configuration',
                         label: 'Configuration',
@@ -1082,35 +978,28 @@ export function ComputeAdminInstanceDetailPage() {
                           {
                             id: 'lock-setting',
                             label: 'Lock setting',
-                            onClick: () => console.log('Lock setting'),
-                          },
+                            onClick: () => console.log('Lock setting') },
                           {
                             id: 'edit',
                             label: 'Edit',
-                            onClick: () => console.log('Edit instance'),
-                          },
-                        ],
-                      },
+                            onClick: () => console.log('Edit instance') },
+                        ] },
                       {
                         id: 'migrate',
                         label: 'Migrate',
-                        onClick: () => console.log('Migrate instance'),
-                      },
+                        onClick: () => console.log('Migrate instance') },
                       {
                         id: 'live-migrate',
                         label: 'Live migrate',
-                        onClick: () => console.log('Live migrate instance'),
-                      },
+                        onClick: () => console.log('Live migrate instance') },
                       {
                         id: 'confirm-resize',
                         label: 'Confirm resize',
-                        onClick: () => console.log('Confirm resize'),
-                      },
+                        onClick: () => console.log('Confirm resize') },
                       {
                         id: 'revert-resize',
                         label: 'Revert resize',
-                        onClick: () => console.log('Revert resize'),
-                      },
+                        onClick: () => console.log('Revert resize') },
                     ]}
                     trigger="click"
                   >
@@ -1275,12 +1164,11 @@ export function ComputeAdminInstanceDetailPage() {
                           {
                             key: 'status',
                             label: 'Status',
-                            width: '64px',
+                            width: fixedColumns.status,
                             align: 'center',
                             render: (_, row: AttachedVolume) => (
                               <StatusIndicator status={row.status as any} layout="icon-only" />
-                            ),
-                          },
+                            ) },
                           {
                             key: 'name',
                             label: 'Name',
@@ -1297,33 +1185,27 @@ export function ComputeAdminInstanceDetailPage() {
                                   ID : {row.id}
                                 </span>
                               </div>
-                            ),
-                          },
+                            ) },
                           {
                             key: 'size',
                             label: 'Size',
-                            sortable: true,
-                          },
+                            sortable: true },
                           {
                             key: 'type',
                             label: 'Type',
-                            sortable: true,
-                          },
+                            sortable: true },
                           {
                             key: 'diskTag',
                             label: 'Disk tag',
-                            sortable: true,
-                          },
+                            sortable: true },
                           {
                             key: 'bootable',
                             label: 'Bootable',
-                            render: (value: boolean) => (value ? 'Yes' : 'No'),
-                          },
+                            render: (value: boolean) => (value ? 'Yes' : 'No') },
                           {
                             key: 'access',
                             label: 'Created at',
-                            sortable: true,
-                          },
+                            sortable: true },
                         ]}
                         data={mockAttachedVolumes}
                         rowKey="id"
@@ -1362,7 +1244,7 @@ export function ComputeAdminInstanceDetailPage() {
                           {
                             key: 'status',
                             label: 'Status',
-                            width: '64px',
+                            width: fixedColumns.status,
                             align: 'center',
                             render: (_value: string, iface: AttachedInterface) => {
                               const statusMap: Record<
@@ -1372,16 +1254,14 @@ export function ComputeAdminInstanceDetailPage() {
                                 Active: 'active',
                                 Inactive: 'shutoff',
                                 Down: 'down',
-                                Build: 'building',
-                              };
+                                Build: 'building' };
                               return (
                                 <StatusIndicator
                                   status={statusMap[iface.portStatus] || 'down'}
                                   layout="icon-only"
                                 />
                               );
-                            },
-                          },
+                            } },
                           {
                             key: 'name',
                             label: 'Name',
@@ -1398,8 +1278,7 @@ export function ComputeAdminInstanceDetailPage() {
                                   ID : {iface.id}
                                 </span>
                               </div>
-                            ),
-                          },
+                            ) },
                           {
                             key: 'network',
                             label: 'Network',
@@ -1416,8 +1295,7 @@ export function ComputeAdminInstanceDetailPage() {
                                   ID : {iface.id}
                                 </span>
                               </div>
-                            ),
-                          },
+                            ) },
                           {
                             key: 'fixedIp',
                             label: 'Fixed IP',
@@ -1425,8 +1303,7 @@ export function ComputeAdminInstanceDetailPage() {
                               <span className="text-[var(--color-text-default)]">
                                 {iface.fixedIp}
                               </span>
-                            ),
-                          },
+                            ) },
                           {
                             key: 'macAddress',
                             label: 'Mac address',
@@ -1434,8 +1311,7 @@ export function ComputeAdminInstanceDetailPage() {
                               <span className="text-[var(--color-text-default)]">
                                 {iface.macAddress}
                               </span>
-                            ),
-                          },
+                            ) },
                           {
                             key: 'createdAt',
                             label: 'Created at',
@@ -1444,8 +1320,7 @@ export function ComputeAdminInstanceDetailPage() {
                               <span className="text-[var(--color-text-default)]">
                                 {iface.createdAt}
                               </span>
-                            ),
-                          },
+                            ) },
                         ]}
                         data={mockAttachedInterfaces.slice(
                           (interfaceCurrentPage - 1) * interfaceRowsPerPage,
@@ -1487,12 +1362,11 @@ export function ComputeAdminInstanceDetailPage() {
                           {
                             key: 'status',
                             label: 'Status',
-                            width: '64px',
+                            width: fixedColumns.status,
                             align: 'center',
                             render: (_value: string, row: FloatingIP) => (
                               <StatusIndicator status={row.status} layout="icon-only" size="md" />
-                            ),
-                          },
+                            ) },
                           {
                             key: 'floatingIp',
                             label: 'Floating IP',
@@ -1508,17 +1382,14 @@ export function ComputeAdminInstanceDetailPage() {
                                   ID : {row.id}
                                 </span>
                               </div>
-                            ),
-                          },
+                            ) },
                           {
                             key: 'fixedIp',
-                            label: 'Fixed IP',
-                          },
+                            label: 'Fixed IP' },
                           {
                             key: 'createdAt',
                             label: 'Created at',
-                            sortable: true,
-                          },
+                            sortable: true },
                         ]}
                         data={mockFloatingIPs.slice(
                           (floatingIpCurrentPage - 1) * floatingIpRowsPerPage,
@@ -1589,13 +1460,11 @@ export function ComputeAdminInstanceDetailPage() {
                                   ID : {row.id}
                                 </span>
                               </div>
-                            ),
-                          },
+                            ) },
                           {
                             key: 'description',
                             label: 'Description',
-                            sortable: true,
-                          },
+                            sortable: true },
                           {
                             key: 'createdAt',
                             label: 'Created at',
@@ -1604,8 +1473,7 @@ export function ComputeAdminInstanceDetailPage() {
                               <span className="text-[var(--color-text-default)]">
                                 {row.createdAt}
                               </span>
-                            ),
-                          },
+                            ) },
                         ]}
                         data={mockSecurityGroups.slice(
                           (securityCurrentPage - 1) * securityRowsPerPage,
@@ -1652,7 +1520,7 @@ export function ComputeAdminInstanceDetailPage() {
                           {
                             key: 'status',
                             label: 'Status',
-                            width: '64px',
+                            width: fixedColumns.status,
                             align: 'center',
                             render: (_value: string, row: InstanceSnapshot) => (
                               <StatusIndicator
@@ -1667,8 +1535,7 @@ export function ComputeAdminInstanceDetailPage() {
                                 }
                                 layout="icon-only"
                               />
-                            ),
-                          },
+                            ) },
                           {
                             key: 'name',
                             label: 'Name',
@@ -1685,51 +1552,43 @@ export function ComputeAdminInstanceDetailPage() {
                                   ID : {row.id}
                                 </span>
                               </div>
-                            ),
-                          },
+                            ) },
                           {
                             key: 'size',
                             label: 'Size',
-                            sortable: true,
-                          },
+                            sortable: true },
                           {
                             key: 'diskFormat',
                             label: 'Disk format',
-                            sortable: true,
-                          },
+                            sortable: true },
                           {
                             key: 'createdAt',
                             label: 'Created at',
-                            sortable: true,
-                          },
+                            sortable: true },
                           {
                             key: 'action',
                             label: 'Action',
-                            width: '64px',
+                            width: fixedColumns.actions,
                             align: 'center',
                             render: (_: unknown, row: InstanceSnapshot) => {
                               const snapshotMenuItems: ContextMenuItem[] = [
                                 {
                                   id: 'edit',
                                   label: 'Edit',
-                                  onClick: () => console.log('Edit snapshot', row.id),
-                                },
+                                  onClick: () => console.log('Edit snapshot', row.id) },
                                 {
                                   id: 'create-instance',
                                   label: 'Create instance',
-                                  onClick: () => console.log('Create instance from', row.id),
-                                },
+                                  onClick: () => console.log('Create instance from', row.id) },
                                 {
                                   id: 'create-volume',
                                   label: 'Create volume',
-                                  onClick: () => console.log('Create volume from', row.id),
-                                },
+                                  onClick: () => console.log('Create volume from', row.id) },
                                 {
                                   id: 'delete',
                                   label: 'Delete',
                                   status: 'danger',
-                                  onClick: () => console.log('Delete snapshot', row.id),
-                                },
+                                  onClick: () => console.log('Delete snapshot', row.id) },
                               ];
                               return (
                                 <div onClick={(e) => e.stopPropagation()}>
@@ -1744,8 +1603,7 @@ export function ComputeAdminInstanceDetailPage() {
                                   </ContextMenu>
                                 </div>
                               );
-                            },
-                          },
+                            } },
                         ]}
                         data={filteredSnapshots.slice(
                           (snapshotCurrentPage - 1) * snapshotRowsPerPage,

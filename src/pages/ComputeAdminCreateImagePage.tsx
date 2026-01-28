@@ -1,35 +1,6 @@
 import { useState, useCallback, useMemo } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import {
-  Button,
-  Breadcrumb,
-  HStack,
-  VStack,
-  TabBar,
-  TopBar,
-  TopBarAction,
-  Input,
-  NumberInput,
-  Select,
-  SectionCard,
-  FormField,
-  Toggle,
-  WizardSummary,
-  Tabs,
-  TabList,
-  Tab,
-  Disclosure,
-  DisclosureTrigger,
-  DisclosurePanel,
-  SearchInput,
-  Pagination,
-  Table,
-  StatusIndicator,
-  SelectionIndicator,
-  Radio,
-  RadioGroup,
-  type TableColumn,
-} from '@/design-system';
+import { Button, Breadcrumb, HStack, VStack, TabBar, TopBar, TopBarAction, Input, NumberInput, Select, SectionCard, FormField, Toggle, WizardSummary, Tabs, TabList, Tab, Disclosure, DisclosureTrigger, DisclosurePanel, SearchInput, Pagination, Table, StatusIndicator, SelectionIndicator, Radio, RadioGroup, type TableColumn, fixedColumns, columnMinWidths } from '@/design-system';
 import type { WizardSummaryItem, WizardSectionState } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -46,8 +17,7 @@ const SECTION_LABELS: Record<SectionStep, string> = {
   'basic-info': 'Basic information',
   source: 'Source',
   specification: 'Specification',
-  advanced: 'Advanced',
-};
+  advanced: 'Advanced' };
 
 // Section order for navigation
 const SECTION_ORDER: SectionStep[] = ['basic-info', 'source', 'specification', 'advanced'];
@@ -84,13 +54,11 @@ function SummarySidebar({
   sectionStatus,
   onCancel,
   onCreate,
-  isCreateDisabled,
-}: SummarySidebarProps) {
+  isCreateDisabled }: SummarySidebarProps) {
   const summaryItems: WizardSummaryItem[] = SECTION_ORDER.map((key) => ({
     key,
     label: SECTION_LABELS[key],
-    status: sectionStatus[key],
-  }));
+    status: sectionStatus[key] }));
 
   return (
     <div className="w-[312px] shrink-0 sticky top-4 self-start">
@@ -166,8 +134,7 @@ export function ComputeAdminCreateImagePage() {
     'basic-info': 'active',
     source: 'pre',
     specification: 'pre',
-    advanced: 'done',
-  });
+    advanced: 'done' });
 
   // Validation error state
   const [showTenantError, setShowTenantError] = useState(false);
@@ -184,8 +151,7 @@ export function ComputeAdminCreateImagePage() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    closable: tab.closable,
-  }));
+    closable: tab.closable }));
 
   const breadcrumbItems = [
     { label: 'Images', href: '/compute-admin/images' },
@@ -233,10 +199,9 @@ export function ComputeAdminCreateImagePage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: fixedColumns.status,
       align: 'center',
-      render: (_, row) => <StatusIndicator status={row.status} layout="icon-only" />,
-    },
+      render: (_, row) => <StatusIndicator status={row.status} layout="icon-only" /> },
     {
       key: 'name',
       label: 'Name',
@@ -258,14 +223,12 @@ export function ComputeAdminCreateImagePage() {
             ID: {row.id}
           </span>
         </div>
-      ),
-    },
+      ) },
     {
       key: 'description',
       label: 'Description',
       flex: 1,
-      sortable: true,
-    },
+      sortable: true },
   ];
 
   // Navigation handlers
@@ -291,8 +254,7 @@ export function ComputeAdminCreateImagePage() {
       minRam,
       qemuGuestAgent,
       cpuPolicy,
-      cpuThreadPolicy,
-    });
+      cpuThreadPolicy });
     navigate('/compute-admin/images');
   };
 
@@ -327,8 +289,7 @@ export function ComputeAdminCreateImagePage() {
         setSectionStatus((prev) => ({
           ...prev,
           [currentSection]: 'done',
-          [nextSection]: 'active',
-        }));
+          [nextSection]: 'active' }));
       }
     },
     [selectedTenantIds, imageName]
@@ -517,8 +478,7 @@ export function ComputeAdminCreateImagePage() {
                             <SelectionIndicator
                               selectedItems={selectedTenants.map((t) => ({
                                 id: t.id,
-                                label: `${t.name} (ID: ${t.id})`,
-                              }))}
+                                label: `${t.name} (ID: ${t.id})` }))}
                               onRemove={(id) =>
                                 setSelectedTenantIds((prev) => prev.filter((tid) => tid !== id))
                               }
@@ -596,8 +556,7 @@ export function ComputeAdminCreateImagePage() {
                                 <SelectionIndicator
                                   selectedItems={selectedSharedTenants.map((t) => ({
                                     id: t.id,
-                                    label: `${t.name} (ID: ${t.id})`,
-                                  }))}
+                                    label: `${t.name} (ID: ${t.id})` }))}
                                   onRemove={(id) =>
                                     setSharedTenantIds((prev) => prev.filter((tid) => tid !== id))
                                   }
@@ -1099,8 +1058,7 @@ export function ComputeAdminCreateImagePage() {
                               onClick={() => {
                                 setSectionStatus((prev) => ({
                                   ...prev,
-                                  advanced: 'done',
-                                }));
+                                  advanced: 'done' }));
                               }}
                             >
                               Done

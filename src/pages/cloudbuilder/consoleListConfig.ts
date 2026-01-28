@@ -1,4 +1,4 @@
-import { columnWidths } from '@/design-system';
+import { fixedColumns, columnMinWidths } from '@/design-system';
 
 export type BadgeTone = 'success' | 'neutral' | 'blue' | 'warning' | 'danger';
 export type ColumnKind = 'text' | 'badge' | 'mono';
@@ -231,10 +231,10 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
           label: 'MAC (Primary)',
           sortable: true,
           kind: 'mono',
-          width: columnWidths.macAddress,
+          width: columnMinWidths.macAddress,
         },
         { key: 'location', label: 'Location', sortable: true },
-        { key: 'updatedAt', label: 'Updated At', sortable: true, width: columnWidths.updatedAt },
+        { key: 'updatedAt', label: 'Updated At', sortable: true, width: columnMinWidths.updatedAt },
         { key: 'nicPrimaryName', label: 'NIC (Primary Name)', sortable: true },
         {
           key: 'frontierNet',
@@ -243,7 +243,7 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
           kind: 'badge',
           badgeTones: frontierTones,
         },
-        { key: 'mgmtIp', label: 'Mgmt IP', sortable: true, kind: 'mono', width: columnWidths.ip },
+        { key: 'mgmtIp', label: 'Mgmt IP', sortable: true, kind: 'mono', width: columnMinWidths.ip },
         {
           key: 'observedHealth',
           label: 'Observed Health',
@@ -357,10 +357,10 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
           label: 'MAC (Primary)',
           sortable: true,
           kind: 'mono',
-          width: columnWidths.macAddress,
+          width: columnMinWidths.macAddress,
         },
         { key: 'location', label: 'Location', sortable: true },
-        { key: 'updatedAt', label: 'Updated At', sortable: true, width: columnWidths.updatedAt },
+        { key: 'updatedAt', label: 'Updated At', sortable: true, width: columnMinWidths.updatedAt },
         { key: 'nicPrimaryName', label: 'NIC (Primary Name)', sortable: true },
         {
           key: 'frontierNet',
@@ -369,7 +369,7 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
           kind: 'badge',
           badgeTones: frontierTones,
         },
-        { key: 'mgmtIp', label: 'Mgmt IP', sortable: true, kind: 'mono', width: columnWidths.ip },
+        { key: 'mgmtIp', label: 'Mgmt IP', sortable: true, kind: 'mono', width: columnMinWidths.ip },
         {
           key: 'observedHealth',
           label: 'Observed Health',
@@ -736,8 +736,8 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
       },
       columns: [
         { key: 'id', label: 'ID', sortable: true, kind: 'mono' },
-        { key: 'name', label: 'Name', sortable: true, width: columnWidths.name },
-        { key: 'type', label: 'Type', sortable: true, width: columnWidths.typeXl },
+        { key: 'name', label: 'Name', sortable: true, width: columnMinWidths.name },
+        { key: 'type', label: 'Type', sortable: true, width: columnMinWidths.typeXl },
         { key: 'host', label: 'Host', sortable: true },
         { key: 'availabilityZone', label: 'Availability Zone', sortable: true },
         {
@@ -853,7 +853,7 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
           label: 'Storage Capacity(GiB)',
           sortable: true,
           align: 'center',
-          width: columnWidths.storageCapacity,
+          width: columnMinWidths.storageCapacity,
         },
       ],
       rows: [
@@ -904,7 +904,7 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
         { key: 'name', label: 'Name', sortable: true },
         { key: 'engineId', label: 'Engine ID', sortable: true, kind: 'mono' },
         { key: 'host', label: 'Host', sortable: true },
-        { key: 'status', label: 'Status', sortable: true, width: columnWidths.statusLg },
+        { key: 'status', label: 'Status', sortable: true, width: columnMinWidths.statusLg },
         { key: 'lastUpdated', label: 'Last Updated', sortable: true },
       ],
       rows: makeRows(5, (i) => ({

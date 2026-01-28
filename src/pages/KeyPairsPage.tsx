@@ -12,7 +12,8 @@ import {
   ListToolbar,
   ContextMenu,
   ConfirmModal,
-  columnWidths,
+  fixedColumns,
+  columnMinWidths,
   type TableColumn,
   type ContextMenuItem,
   type FilterField,
@@ -227,7 +228,7 @@ export function KeyPairsPage() {
     setSelectedKeyPairs([]);
   };
 
-  // Table columns (using columnWidths preset)
+  // Table columns (using fixedColumns / columnMinWidths preset)
   const columns: TableColumn<KeyPair>[] = [
     {
       key: 'name',
@@ -275,13 +276,14 @@ export function KeyPairsPage() {
     {
       key: 'createdAt',
       label: 'Created at',
-      width: columnWidths.createdAt,
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
     },
     {
       key: 'actions',
       label: 'Action',
-      width: columnWidths.actions,
+      width: fixedColumns.actions,
       align: 'center',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [

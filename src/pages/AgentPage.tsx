@@ -12,7 +12,8 @@ import {
   Icons,
   type TableColumn,
   type ContextMenuItem,
-  columnWidths,
+  fixedColumns,
+  columnMinWidths,
 } from '@/design-system';
 import { AgentPageLayout } from '@/layouts';
 import {
@@ -283,7 +284,7 @@ export function AgentPage() {
     {
       key: 'favorite',
       label: '',
-      width: columnWidths.favorite,
+      width: fixedColumns.favorite,
       align: 'center',
       sortable: false,
       render: (_, row) =>
@@ -296,7 +297,7 @@ export function AgentPage() {
     {
       key: 'status',
       label: 'Status',
-      width: columnWidths.status,
+      width: fixedColumns.status,
       align: 'center',
       sortable: false,
       render: (_, row) => <StatusIndicator status={statusMap[row.status]} layout="icon-only" />,
@@ -340,7 +341,7 @@ export function AgentPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: columnWidths.actions,
+      width: fixedColumns.actions,
       align: 'center',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [

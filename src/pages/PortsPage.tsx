@@ -18,7 +18,8 @@ import {
   TabList,
   Tab,
   Tooltip,
-  columnWidths,
+  fixedColumns,
+  columnMinWidths,
   type TableColumn,
   type ContextMenuItem,
   type FilterField,
@@ -392,12 +393,12 @@ export function PortsPage() {
     return filteredPorts.slice(start, start + rowsPerPage);
   }, [filteredPorts, currentPage, rowsPerPage]);
 
-  // Table columns
+  // Table columns (using fixedColumns / columnMinWidths preset)
   const columns: TableColumn<Port>[] = [
     {
       key: 'status',
       label: 'Status',
-      width: columnWidths.status,
+      width: fixedColumns.status,
       align: 'center',
       render: (_, row) => <StatusIndicator status={portStatusMap[row.status]} layout="icon-only" />,
     },
@@ -405,6 +406,7 @@ export function PortsPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -424,7 +426,8 @@ export function PortsPage() {
     {
       key: 'attachedTo',
       label: 'Attached to',
-      width: columnWidths.attachedTo,
+      flex: 1,
+      minWidth: columnMinWidths.attachedTo,
       align: 'right',
       render: (_, row) =>
         row.attachedTo ? (
@@ -464,7 +467,8 @@ export function PortsPage() {
     {
       key: 'ownedNetwork',
       label: 'Owned network',
-      width: columnWidths.ownedNetwork,
+      flex: 1,
+      minWidth: columnMinWidths.ownedNetwork,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5 min-w-0">
@@ -487,26 +491,30 @@ export function PortsPage() {
       key: 'securityGroups',
       label: 'SG',
       flex: 1,
+      minWidth: columnMinWidths.securityGroups,
     },
     {
       key: 'fixedIp',
       label: 'Fixed IP',
       flex: 1,
+      minWidth: columnMinWidths.fixedIp,
     },
     {
       key: 'floatingIp',
       label: 'Floating IP',
       flex: 1,
+      minWidth: columnMinWidths.floatingIp,
     },
     {
       key: 'macAddress',
       label: 'MAC Address',
       flex: 1,
+      minWidth: columnMinWidths.macAddress,
     },
     {
       key: 'actions',
       label: 'Action',
-      width: columnWidths.actions,
+      width: fixedColumns.actions,
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>

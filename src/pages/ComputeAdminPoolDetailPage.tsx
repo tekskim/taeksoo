@@ -1,24 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import {
-  Button,
-  VStack,
-  TabBar,
-  TopBar,
-  TopBarAction,
-  Breadcrumb,
-  Tabs,
-  TabList,
-  Tab,
-  TabPanel,
-  DetailHeader,
-  SectionCard,
-  Table,
-  SearchInput,
-  Pagination,
-  StatusIndicator,
-  ContextMenu,
-} from '@/design-system';
+import { Button, VStack, TabBar, TopBar, TopBarAction, Breadcrumb, Tabs, TabList, Tab, TabPanel, DetailHeader, SectionCard, Table, SearchInput, Pagination, StatusIndicator, ContextMenu, fixedColumns, columnMinWidths } from '@/design-system';
 import type { TableColumn, ContextMenuItem } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -28,8 +10,7 @@ import {
   IconBell,
   IconChevronDown,
   IconDotsCircleHorizontal,
-  IconUsers,
-} from '@tabler/icons-react';
+  IconUsers } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -94,8 +75,7 @@ const mockPoolsMap: Record<string, PoolDetail> = {
     algorithm: 'Round Robin',
     protocol: 'HTTP',
     sessionPersistence: 'None',
-    listener: { name: 'listener-http-80', id: '29tgj234' },
-  },
+    listener: { name: 'listener-http-80', id: '29tgj234' } },
   '29fg23401': {
     id: '29fg23401',
     name: 'pool-http',
@@ -106,8 +86,7 @@ const mockPoolsMap: Record<string, PoolDetail> = {
     algorithm: 'Round Robin',
     protocol: 'HTTP',
     sessionPersistence: 'None',
-    listener: { name: 'listener-http-80', id: '29tgj234' },
-  },
+    listener: { name: 'listener-http-80', id: '29tgj234' } },
   '29fg23402': {
     id: '29fg23402',
     name: 'pool-http',
@@ -118,9 +97,7 @@ const mockPoolsMap: Record<string, PoolDetail> = {
     algorithm: 'Round Robin',
     protocol: 'HTTP',
     sessionPersistence: 'None',
-    listener: { name: 'listener-http-80', id: '29tgj234' },
-  },
-};
+    listener: { name: 'listener-http-80', id: '29tgj234' } } };
 
 const defaultPoolDetail: PoolDetail = {
   id: 'pool-default',
@@ -132,8 +109,7 @@ const defaultPoolDetail: PoolDetail = {
   algorithm: '-',
   protocol: '-',
   sessionPersistence: '-',
-  listener: { name: '-', id: '' },
-};
+  listener: { name: '-', id: '' } };
 
 /* ----------------------------------------
    Mock Members Data
@@ -144,14 +120,12 @@ const mockMembers: Member[] = Array.from({ length: 115 }, (_, i) => ({
   status: ['active', 'active', 'active', 'down', 'error'][i % 5] as MemberStatus,
   source: {
     name: 'instance-usw-lo',
-    id: `29fg234`,
-  },
+    id: `29fg234` },
   ipAddress: '10.63.0.46',
   port: 80,
   weight: 1,
   backup: false,
-  adminState: 'Up' as const,
-}));
+  adminState: 'Up' as const }));
 
 /* ----------------------------------------
    Mock Health Monitor Data
@@ -165,8 +139,7 @@ const mockHealthMonitor: HealthMonitor = {
   interval: 5,
   timeout: 3,
   maxRetries: 3,
-  adminState: 'Up',
-};
+  adminState: 'Up' };
 
 /* ----------------------------------------
    Status Mapping
@@ -175,14 +148,12 @@ const mockHealthMonitor: HealthMonitor = {
 const poolStatusMap: Record<PoolStatus, 'active' | 'down' | 'error'> = {
   active: 'active',
   down: 'down',
-  error: 'error',
-};
+  error: 'error' };
 
 const memberStatusMap: Record<MemberStatus, 'active' | 'down' | 'error'> = {
   active: 'active',
   down: 'down',
-  error: 'error',
-};
+  error: 'error' };
 
 /* ----------------------------------------
    PoolDetailPage Component
@@ -228,8 +199,7 @@ export default function PoolDetailPage() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    closable: tab.closable,
-  }));
+    closable: tab.closable }));
 
   const handleCopyId = () => {
     navigator.clipboard.writeText(pool.id);
@@ -261,12 +231,11 @@ export default function PoolDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: fixedColumns.status,
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={memberStatusMap[row.status]} layout="icon-only" />
-      ),
-    },
+      ) },
     {
       key: 'id',
       label: 'ID',
@@ -285,8 +254,7 @@ export default function PoolDetailPage() {
             <IconCopy size={12} stroke={1.5} className="text-[var(--color-action-primary)]" />
           </button>
         </div>
-      ),
-    },
+      ) },
     {
       key: 'source',
       label: 'Source',
@@ -305,40 +273,34 @@ export default function PoolDetailPage() {
             ID : {row.source.id}
           </span>
         </div>
-      ),
-    },
+      ) },
     {
       key: 'ipAddress',
       label: 'IP Address',
-      flex: 1,
-    },
+      flex: 1 },
     {
       key: 'port',
       label: 'Port',
       flex: 1,
-      sortable: true,
-    },
+      sortable: true },
     {
       key: 'weight',
       label: 'Weight',
       flex: 1,
-      sortable: true,
-    },
+      sortable: true },
     {
       key: 'backup',
       label: 'Backup',
       flex: 1,
-      render: (_, row) => (row.backup ? 'Yes' : 'No'),
-    },
+      render: (_, row) => (row.backup ? 'Yes' : 'No') },
     {
       key: 'adminState',
       label: 'Admin state',
-      flex: 1,
-    },
+      flex: 1 },
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: fixedColumns.actions,
       align: 'center',
       render: (_: unknown, row: Member) => {
         const memberMenuItems: ContextMenuItem[] = [
@@ -347,8 +309,7 @@ export default function PoolDetailPage() {
             id: 'delete',
             label: 'Delete',
             status: 'danger',
-            onClick: () => console.log('Delete member', row.id),
-          },
+            onClick: () => console.log('Delete member', row.id) },
         ];
         return (
           <div onClick={(e) => e.stopPropagation()}>
@@ -363,8 +324,7 @@ export default function PoolDetailPage() {
             </ContextMenu>
           </div>
         );
-      },
-    },
+      } },
   ];
 
   // Health Monitor columns
@@ -434,19 +394,16 @@ export default function PoolDetailPage() {
                       {
                         id: 'create-health-monitor',
                         label: 'Create health monitor',
-                        onClick: () => console.log('Create health monitor'),
-                      },
+                        onClick: () => console.log('Create health monitor') },
                       {
                         id: 'edit-health-monitor',
                         label: 'Edit health monitor',
-                        onClick: () => console.log('Edit health monitor'),
-                      },
+                        onClick: () => console.log('Edit health monitor') },
                       {
                         id: 'delete-health-monitor',
                         label: 'Delete health monitor',
                         status: 'danger',
-                        onClick: () => console.log('Delete health monitor'),
-                      },
+                        onClick: () => console.log('Delete health monitor') },
                     ]}
                     trigger="click"
                   >

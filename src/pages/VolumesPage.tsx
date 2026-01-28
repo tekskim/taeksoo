@@ -13,7 +13,8 @@ import {
   ContextMenu,
   ConfirmModal,
   StatusIndicator,
-  columnWidths,
+  fixedColumns,
+  columnMinWidths,
   type TableColumn,
   type ContextMenuItem,
   type FilterField,
@@ -376,12 +377,12 @@ export function VolumesPage() {
 
   const totalPages = Math.ceil(filteredVolumes.length / rowsPerPage);
 
-  // Table columns
+  // Table columns (using fixedColumns / columnMinWidths preset)
   const columns: TableColumn<Volume>[] = [
     {
       key: 'status',
       label: 'Status',
-      width: columnWidths.status,
+      width: fixedColumns.status,
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={volumeStatusMap[row.status]} layout="icon-only" />
@@ -391,7 +392,7 @@ export function VolumesPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
-      minWidth: columnWidths.name,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (_, row) => (
         <Link
@@ -406,25 +407,28 @@ export function VolumesPage() {
     {
       key: 'size',
       label: 'Size',
-      width: columnWidths.size,
+      flex: 1,
+      minWidth: columnMinWidths.size,
       sortable: true,
     },
     {
       key: 'type',
       label: 'Type',
-      width: columnWidths.type,
+      flex: 1,
+      minWidth: columnMinWidths.type,
       sortable: true,
     },
     {
       key: 'diskTag',
       label: 'Disk tag',
-      width: columnWidths.diskTag,
+      flex: 1,
+      minWidth: columnMinWidths.diskTag,
     },
     {
       key: 'attachedTo',
       label: 'Attached to',
       flex: 1,
-      minWidth: columnWidths.attachedTo,
+      minWidth: columnMinWidths.attachedTo,
       sortable: true,
       render: (_, row) =>
         row.attachedTo && row.attachedToId ? (
@@ -450,13 +454,14 @@ export function VolumesPage() {
     {
       key: 'createdAt',
       label: 'Created at',
-      width: columnWidths.createdAt,
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
     },
     {
       key: 'actions',
       label: 'Action',
-      width: columnWidths.actions,
+      width: fixedColumns.actions,
       align: 'center',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [

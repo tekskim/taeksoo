@@ -1,25 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import {
-  Button,
-  VStack,
-  TabBar,
-  TopBar,
-  TopBarAction,
-  Breadcrumb,
-  Tabs,
-  TabList,
-  Tab,
-  TabPanel,
-  Table,
-  SearchInput,
-  Pagination,
-  ContextMenu,
-  ConfirmModal,
-  StatusIndicator,
-  type TableColumn,
-  type ContextMenuItem,
-} from '@/design-system';
+import { Button, VStack, TabBar, TopBar, TopBarAction, Breadcrumb, Tabs, TabList, Tab, TabPanel, Table, SearchInput, Pagination, ContextMenu, ConfirmModal, StatusIndicator, type TableColumn, type ContextMenuItem, fixedColumns, columnMinWidths } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
@@ -28,8 +9,7 @@ import {
   IconBell,
   IconCopy,
   IconCirclePlus,
-  IconDotsCircleHorizontal,
-} from '@tabler/icons-react';
+  IconDotsCircleHorizontal } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -82,70 +62,58 @@ const mockSecurityGroupsMap: Record<string, SecurityGroupDetail> = {
     id: 'sg-001',
     name: 'sg-01',
     description: 'Web server access group',
-    createdAt: '2024-01-15',
-  },
+    createdAt: '2024-01-15' },
   'sg-002': {
     id: 'sg-002',
     name: 'default',
     description: 'Default security group',
-    createdAt: '2024-01-10',
-  },
+    createdAt: '2024-01-10' },
   'sg-003': {
     id: 'sg-003',
     name: 'db-sg',
     description: 'Database access group',
-    createdAt: '2024-02-01',
-  },
+    createdAt: '2024-02-01' },
   'sg-004': {
     id: 'sg-004',
     name: 'app-sg',
     description: 'Application server security group',
-    createdAt: '2024-02-15',
-  },
+    createdAt: '2024-02-15' },
   'sg-005': {
     id: 'sg-005',
     name: 'lb-sg',
     description: 'Load balancer security group',
-    createdAt: '2024-03-01',
-  },
+    createdAt: '2024-03-01' },
   'sg-006': {
     id: 'sg-006',
     name: 'cache-sg',
     description: 'Cache server access group',
-    createdAt: '2024-03-10',
-  },
+    createdAt: '2024-03-10' },
   'sg-007': {
     id: 'sg-007',
     name: 'monitor-sg',
     description: 'Monitoring access group',
-    createdAt: '2024-04-01',
-  },
+    createdAt: '2024-04-01' },
   'sg-008': {
     id: 'sg-008',
     name: 'vpn-sg',
     description: 'VPN access group',
-    createdAt: '2024-04-15',
-  },
+    createdAt: '2024-04-15' },
   'sg-009': {
     id: 'sg-009',
     name: 'admin-sg',
     description: 'Admin access group',
-    createdAt: '2024-05-01',
-  },
+    createdAt: '2024-05-01' },
   'sg-010': {
     id: 'sg-010',
     name: 'test-sg',
     description: 'Test environment security group',
-    createdAt: '2024-05-10',
-  },
-};
+    createdAt: '2024-05-10' } };
 
 const defaultSecurityGroupDetail: SecurityGroupDetail = {
   id: 'unknown',
   name: 'Unknown Security group',
   description: '-',
-  createdAt: '-',
-};
+  createdAt: '-' };
 
 const mockRules: SecurityGroupRule[] = Array.from({ length: 115 }, (_, i) => ({
   id: `rule-${String(i + 1).padStart(3, '0')}`,
@@ -153,8 +121,7 @@ const mockRules: SecurityGroupRule[] = Array.from({ length: 115 }, (_, i) => ({
   protocol: ['Custom ICMP', 'TCP', 'UDP', 'ICMP', 'SSH', 'HTTP', 'HTTPS'][i % 7] as RuleProtocol,
   portRange: i % 3 === 0 ? '1-65535' : 'Any',
   remote: `IP : 0.0.0.0/0`,
-  icmpTypeCode: '8/8',
-}));
+  icmpTypeCode: '8/8' }));
 
 const mockPorts: Port[] = Array.from({ length: 115 }, (_, i) => ({
   id: `port-${String(i + 1).padStart(3, '0')}`,
@@ -162,8 +129,7 @@ const mockPorts: Port[] = Array.from({ length: 115 }, (_, i) => ({
   status: ['active', 'active', 'active', 'down', 'build'][i % 5] as 'active' | 'down' | 'build',
   subnet: `10.${62 + (i % 4)}.0.0/24`,
   dhcp: i % 3 !== 2,
-  access: i % 5 === 0 ? 'Admin' : 'Project',
-}));
+  access: i % 5 === 0 ? 'Admin' : 'Project' }));
 
 /* ----------------------------------------
    Component
@@ -215,8 +181,7 @@ export default function SecurityGroupDetailPage() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    closable: tab.closable,
-  }));
+    closable: tab.closable }));
 
   // Copy to clipboard function
   const copyToClipboard = (text: string) => {
@@ -232,8 +197,7 @@ export default function SecurityGroupDetailPage() {
       onClick: () => {
         setRuleToDelete(rule);
         setDeleteModalOpen(true);
-      },
-    },
+      } },
   ];
 
   // Context menu items for ports
@@ -243,16 +207,14 @@ export default function SecurityGroupDetailPage() {
       id: 'detach',
       label: 'Detach',
       status: 'danger',
-      onClick: () => console.log('Detach port:', port.id),
-    },
+      onClick: () => console.log('Detach port:', port.id) },
   ];
 
   // Status mapping for ports
   const portStatusMap: Record<string, 'active' | 'down' | 'error' | 'building'> = {
     active: 'active',
     down: 'down',
-    build: 'building',
-  };
+    build: 'building' };
 
   // Filter rules based on search
   const filteredRules = useMemo(() => {
@@ -295,10 +257,9 @@ export default function SecurityGroupDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: fixedColumns.status,
       align: 'center',
-      render: (_, row) => <StatusIndicator status={portStatusMap[row.status]} layout="icon-only" />,
-    },
+      render: (_, row) => <StatusIndicator status={portStatusMap[row.status]} layout="icon-only" /> },
     {
       key: 'name',
       label: 'Name',
@@ -311,28 +272,24 @@ export default function SecurityGroupDetailPage() {
         >
           {row.name}
         </Link>
-      ),
-    },
+      ) },
     {
       key: 'subnet',
       label: 'Subnet',
-      flex: 1,
-    },
+      flex: 1 },
     {
       key: 'dhcp',
       label: 'DHCP',
       flex: 1,
-      render: (value: boolean) => (value ? 'Yes' : 'No'),
-    },
+      render: (value: boolean) => (value ? 'Yes' : 'No') },
     {
       key: 'access',
       label: 'Access',
-      flex: 1,
-    },
+      flex: 1 },
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: fixedColumns.actions,
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
@@ -346,8 +303,7 @@ export default function SecurityGroupDetailPage() {
             </button>
           </ContextMenu>
         </div>
-      ),
-    },
+      ) },
   ];
 
   // Rule columns
@@ -355,33 +311,28 @@ export default function SecurityGroupDetailPage() {
     {
       key: 'direction',
       label: 'Direction',
-      flex: 1,
-    },
+      flex: 1 },
     {
       key: 'protocol',
       label: 'Protocol',
       flex: 1,
-      sortable: true,
-    },
+      sortable: true },
     {
       key: 'portRange',
       label: 'Port range',
-      flex: 1,
-    },
+      flex: 1 },
     {
       key: 'remote',
       label: 'Remote',
-      flex: 1,
-    },
+      flex: 1 },
     {
       key: 'icmpTypeCode',
       label: 'ICMP Type/Code',
-      flex: 1,
-    },
+      flex: 1 },
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: fixedColumns.actions,
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
@@ -395,8 +346,7 @@ export default function SecurityGroupDetailPage() {
             </button>
           </ContextMenu>
         </div>
-      ),
-    },
+      ) },
   ];
 
   return (

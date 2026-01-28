@@ -1,25 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import {
-  Button,
-  VStack,
-  TabBar,
-  TopBar,
-  TopBarAction,
-  Breadcrumb,
-  Tabs,
-  TabList,
-  Tab,
-  TabPanel,
-  DetailHeader,
-  SectionCard,
-  Table,
-  StatusIndicator,
-  SearchInput,
-  Pagination,
-  Badge,
-  type TableColumn,
-} from '@/design-system';
+import { Button, VStack, TabBar, TopBar, TopBarAction, Breadcrumb, Tabs, TabList, Tab, TabPanel, DetailHeader, SectionCard, Table, StatusIndicator, SearchInput, Pagination, Badge, type TableColumn, fixedColumns, columnMinWidths } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { IconTrash, IconBell, IconEdit, IconDownload } from '@tabler/icons-react';
@@ -89,8 +70,7 @@ const mockRoutersMap: Record<string, RouterDetail> = {
     network: { name: 'net-01', id: '29tgj234' },
     snat: true,
     subnet: { name: 'subnet-01', id: 'subnet-001' },
-    gatewayIp: '10.7.60.91',
-  },
+    gatewayIp: '10.7.60.91' },
   'router-002': {
     id: 'router-002',
     name: 'main-router',
@@ -106,8 +86,7 @@ const mockRoutersMap: Record<string, RouterDetail> = {
     network: { name: 'external-net', id: 'net-002' },
     snat: true,
     subnet: { name: 'subnet-02', id: 'subnet-002' },
-    gatewayIp: '10.7.60.92',
-  },
+    gatewayIp: '10.7.60.92' },
   'router-003': {
     id: 'router-003',
     name: 'dev-router',
@@ -123,8 +102,7 @@ const mockRoutersMap: Record<string, RouterDetail> = {
     network: { name: '-', id: '' },
     snat: false,
     subnet: { name: '-', id: '' },
-    gatewayIp: '-',
-  },
+    gatewayIp: '-' },
   'router-004': {
     id: 'router-004',
     name: 'prod-router',
@@ -140,8 +118,7 @@ const mockRoutersMap: Record<string, RouterDetail> = {
     network: { name: 'prod-net', id: 'net-003' },
     snat: true,
     subnet: { name: 'subnet-03', id: 'subnet-003' },
-    gatewayIp: '10.7.60.93',
-  },
+    gatewayIp: '10.7.60.93' },
   'router-005': {
     id: 'router-005',
     name: 'test-router',
@@ -157,8 +134,7 @@ const mockRoutersMap: Record<string, RouterDetail> = {
     network: { name: '-', id: '' },
     snat: false,
     subnet: { name: '-', id: '' },
-    gatewayIp: '-',
-  },
+    gatewayIp: '-' },
   'router-006': {
     id: 'router-006',
     name: 'backup-router',
@@ -174,8 +150,7 @@ const mockRoutersMap: Record<string, RouterDetail> = {
     network: { name: 'backup-net', id: 'net-004' },
     snat: true,
     subnet: { name: 'subnet-04', id: 'subnet-004' },
-    gatewayIp: '10.7.60.94',
-  },
+    gatewayIp: '10.7.60.94' },
   'router-007': {
     id: 'router-007',
     name: 'dmz-router',
@@ -191,8 +166,7 @@ const mockRoutersMap: Record<string, RouterDetail> = {
     network: { name: 'dmz-net', id: 'net-005' },
     snat: true,
     subnet: { name: 'subnet-05', id: 'subnet-005' },
-    gatewayIp: '10.7.60.95',
-  },
+    gatewayIp: '10.7.60.95' },
   'router-008': {
     id: 'router-008',
     name: 'internal-router',
@@ -208,8 +182,7 @@ const mockRoutersMap: Record<string, RouterDetail> = {
     network: { name: '-', id: '' },
     snat: false,
     subnet: { name: '-', id: '' },
-    gatewayIp: '-',
-  },
+    gatewayIp: '-' },
   'router-009': {
     id: 'router-009',
     name: 'edge-router',
@@ -225,8 +198,7 @@ const mockRoutersMap: Record<string, RouterDetail> = {
     network: { name: 'edge-net', id: 'net-006' },
     snat: true,
     subnet: { name: 'subnet-06', id: 'subnet-006' },
-    gatewayIp: '10.7.60.96',
-  },
+    gatewayIp: '10.7.60.96' },
   'router-010': {
     id: 'router-010',
     name: 'vpn-router',
@@ -242,9 +214,7 @@ const mockRoutersMap: Record<string, RouterDetail> = {
     network: { name: 'vpn-net', id: 'net-007' },
     snat: true,
     subnet: { name: 'subnet-07', id: 'subnet-007' },
-    gatewayIp: '10.7.60.97',
-  },
-};
+    gatewayIp: '10.7.60.97' } };
 
 const defaultRouterDetail: RouterDetail = {
   id: 'unknown',
@@ -261,8 +231,7 @@ const defaultRouterDetail: RouterDetail = {
   network: { name: '-', id: '' },
   snat: false,
   subnet: { name: '-', id: '' },
-  gatewayIp: '-',
-};
+  gatewayIp: '-' };
 
 const mockPorts: Port[] = Array.from({ length: 115 }, (_, i) => ({
   id: `port-${String(i + 1).padStart(3, '0')}`,
@@ -272,14 +241,12 @@ const mockPorts: Port[] = Array.from({ length: 115 }, (_, i) => ({
   macAddress: `fa:16:3e:${String(i + 1).padStart(2, '0')}:ab:cd`,
   type: i % 2 === 0 ? 'Internal Interface' : 'External Interface',
   adminState: i % 5 === 0 ? ('Down' as const) : ('Up' as const),
-  createdAt: `Dec ${15 - (i % 15)}, 2025`,
-}));
+  createdAt: `Dec ${15 - (i % 15)}, 2025` }));
 
 const mockStaticRoutes: StaticRoute[] = Array.from({ length: 115 }, (_, i) => ({
   id: `route-${String(i + 1).padStart(3, '0')}`,
   destination: '10.7.61.0/24',
-  nextHop: '192.168.10.50',
-}));
+  nextHop: '192.168.10.50' }));
 
 /* ----------------------------------------
    Status Mapping
@@ -288,14 +255,12 @@ const mockStaticRoutes: StaticRoute[] = Array.from({ length: 115 }, (_, i) => ({
 const routerStatusMap: Record<RouterStatus, 'active' | 'building' | 'error'> = {
   active: 'active',
   building: 'building',
-  error: 'error',
-};
+  error: 'error' };
 
 const portStatusMap: Record<PortStatus, 'active' | 'building' | 'shutoff'> = {
   active: 'active',
   build: 'building',
-  down: 'shutoff',
-};
+  down: 'shutoff' };
 
 /* ----------------------------------------
    RouterDetailPage Component
@@ -348,8 +313,7 @@ export default function RouterDetailPage() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    closable: tab.closable,
-  }));
+    closable: tab.closable }));
 
   // Filter and paginate ports
   const filteredPorts = useMemo(() => {
@@ -414,10 +378,9 @@ export default function RouterDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: fixedColumns.status,
       align: 'center',
-      render: (_, row) => <StatusIndicator status={portStatusMap[row.status]} layout="icon-only" />,
-    },
+      render: (_, row) => <StatusIndicator status={portStatusMap[row.status]} layout="icon-only" /> },
     {
       key: 'name',
       label: 'Name',
@@ -436,23 +399,19 @@ export default function RouterDetailPage() {
             ID: {row.id}
           </span>
         </div>
-      ),
-    },
+      ) },
     {
       key: 'fixedIp',
       label: 'Fixed IP',
-      flex: 1,
-    },
+      flex: 1 },
     {
       key: 'macAddress',
       label: 'MAC Address',
-      flex: 1,
-    },
+      flex: 1 },
     {
       key: 'type',
       label: 'Type',
-      flex: 1,
-    },
+      flex: 1 },
     {
       key: 'adminState',
       label: 'Admin State',
@@ -461,18 +420,16 @@ export default function RouterDetailPage() {
         <Badge variant={value === 'Up' ? 'success' : 'error'} size="sm">
           {value}
         </Badge>
-      ),
-    },
+      ) },
     {
       key: 'createdAt',
       label: 'Created At',
       flex: 1,
-      sortable: true,
-    },
+      sortable: true },
     {
       key: 'actions',
       label: 'Action',
-      width: '72px',
+      width: fixedColumns.actionWide,
       align: 'center',
       render: (_: unknown, row: Port) => (
         <div onClick={(e) => e.stopPropagation()}>
@@ -483,8 +440,7 @@ export default function RouterDetailPage() {
             <IconTrash size={16} stroke={1.5} className="text-[var(--color-state-danger)]" />
           </button>
         </div>
-      ),
-    },
+      ) },
   ];
 
   // Static route columns
@@ -492,18 +448,16 @@ export default function RouterDetailPage() {
     {
       key: 'destination',
       label: 'Destination CIDR',
-      flex: 1,
-    },
+      flex: 1 },
     {
       key: 'nextHop',
       label: 'Next hop',
       flex: 1,
-      sortable: true,
-    },
+      sortable: true },
     {
       key: 'actions',
       label: 'Action',
-      width: '72px',
+      width: fixedColumns.actionWide,
       align: 'center',
       render: (_: unknown, row: StaticRoute) => (
         <div onClick={(e) => e.stopPropagation()}>
@@ -514,8 +468,7 @@ export default function RouterDetailPage() {
             <IconTrash size={16} stroke={1.5} className="text-[var(--color-state-danger)]" />
           </button>
         </div>
-      ),
-    },
+      ) },
   ];
 
   return (

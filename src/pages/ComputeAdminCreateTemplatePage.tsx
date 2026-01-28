@@ -1,35 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  Button,
-  Breadcrumb,
-  NumberInput,
-  HStack,
-  VStack,
-  TabBar,
-  TopBar,
-  TopBarAction,
-  Pagination,
-  Table,
-  Tabs,
-  TabList,
-  Tab,
-  SearchInput,
-  Radio,
-  RadioGroup,
-  Input,
-  Select,
-  Textarea,
-  SectionCard,
-  Checkbox,
-  StatusIndicator,
-  Toggle,
-  IconUbuntu,
-  IconGrid,
-  IconRocky,
-  InlineMessage,
-  SelectionIndicator,
-} from '@/design-system';
+import { Button, Breadcrumb, NumberInput, HStack, VStack, TabBar, TopBar, TopBarAction, Pagination, Table, Tabs, TabList, Tab, SearchInput, Radio, RadioGroup, Input, Select, Textarea, SectionCard, Checkbox, StatusIndicator, Toggle, IconUbuntu, IconGrid, IconRocky, InlineMessage, SelectionIndicator, fixedColumns, columnMinWidths } from '@/design-system';
 import type { TableColumn } from '@/design-system/components/Table/Table';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -47,8 +18,7 @@ import {
   IconCirclePlus,
   IconProgress,
   IconUpload,
-  IconX,
-} from '@tabler/icons-react';
+  IconX } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -73,8 +43,7 @@ const SECTION_LABELS: Record<SectionStep, string> = {
   image: 'Source',
   flavor: 'Flavor',
   network: 'Network',
-  advanced: 'Advanced',
-};
+  advanced: 'Advanced' };
 
 // Section order for navigation
 const SECTION_ORDER: SectionStep[] = [
@@ -172,8 +141,7 @@ const mockImages: ImageRow[] = [
     minRam: '0 MiB',
     access: 'Public',
     os: 'ubuntu',
-    createdAt: '2025-01-15',
-  },
+    createdAt: '2025-01-15' },
   {
     id: 'e920j31d',
     status: 'active',
@@ -184,8 +152,7 @@ const mockImages: ImageRow[] = [
     minRam: '0 MiB',
     access: 'Public',
     os: 'ubuntu',
-    createdAt: '2025-01-14',
-  },
+    createdAt: '2025-01-14' },
   {
     id: 'e920j32d',
     status: 'active',
@@ -196,8 +163,7 @@ const mockImages: ImageRow[] = [
     minRam: '0 MiB',
     access: 'Public',
     os: 'ubuntu',
-    createdAt: '2025-01-13',
-  },
+    createdAt: '2025-01-13' },
   {
     id: 'e920j35d',
     status: 'active',
@@ -208,8 +174,7 @@ const mockImages: ImageRow[] = [
     minRam: '0 MiB',
     access: 'Public',
     os: 'ubuntu',
-    createdAt: '2025-01-10',
-  },
+    createdAt: '2025-01-10' },
   {
     id: 'e920j37d',
     status: 'active',
@@ -220,8 +185,7 @@ const mockImages: ImageRow[] = [
     minRam: '2 GiB',
     access: 'Public',
     os: 'windows',
-    createdAt: '2025-01-08',
-  },
+    createdAt: '2025-01-08' },
   {
     id: 'e920j39d',
     status: 'active',
@@ -232,8 +196,7 @@ const mockImages: ImageRow[] = [
     minRam: '0 MiB',
     access: 'Public',
     os: 'rocky',
-    createdAt: '2025-01-05',
-  },
+    createdAt: '2025-01-05' },
 ];
 
 const mockFlavors: FlavorRow[] = [
@@ -253,8 +216,7 @@ const mockFlavors: FlavorRow[] = [
     ram: '8GiB',
     disk: '30GiB',
     isPublic: true,
-    hasWarning: true,
-  },
+    hasWarning: true },
   { id: '56yza345', name: 'c5.xlarge', vCPU: 4, ram: '8GiB', disk: '50GiB', isPublic: true },
   { id: '78bcd678', name: 'p3.2xlarge', vCPU: 8, ram: '61GiB', disk: '500GiB', isPublic: false },
 ];
@@ -267,8 +229,7 @@ const mockNetworks: NetworkRow[] = [
     isExternal: true,
     shared: 'Public',
     status: 'active',
-    category: 'current',
-  },
+    category: 'current' },
   {
     id: 'd32059d2',
     name: 'network',
@@ -276,8 +237,7 @@ const mockNetworks: NetworkRow[] = [
     isExternal: true,
     shared: 'Public',
     status: 'active',
-    category: 'current',
-  },
+    category: 'current' },
   {
     id: 'd32059d3',
     name: 'network',
@@ -285,8 +245,7 @@ const mockNetworks: NetworkRow[] = [
     isExternal: true,
     shared: 'Public',
     status: 'active',
-    category: 'current',
-  },
+    category: 'current' },
   {
     id: 'd32059d4',
     name: 'network',
@@ -294,8 +253,7 @@ const mockNetworks: NetworkRow[] = [
     isExternal: true,
     shared: 'Public',
     status: 'active',
-    category: 'current',
-  },
+    category: 'current' },
   {
     id: 'd32059d5',
     name: 'network',
@@ -303,8 +261,7 @@ const mockNetworks: NetworkRow[] = [
     isExternal: true,
     shared: 'Public',
     status: 'building',
-    category: 'current',
-  },
+    category: 'current' },
   {
     id: 'd32059d6',
     name: 'shared-net-1',
@@ -312,8 +269,7 @@ const mockNetworks: NetworkRow[] = [
     isExternal: false,
     shared: 'Public',
     status: 'active',
-    category: 'shared',
-  },
+    category: 'shared' },
   {
     id: 'd32059d7',
     name: 'shared-net-2',
@@ -321,8 +277,7 @@ const mockNetworks: NetworkRow[] = [
     isExternal: false,
     shared: 'Public',
     status: 'active',
-    category: 'shared',
-  },
+    category: 'shared' },
   {
     id: 'd32059d8',
     name: 'external-net-1',
@@ -330,8 +285,7 @@ const mockNetworks: NetworkRow[] = [
     isExternal: true,
     shared: 'Public',
     status: 'active',
-    category: 'external',
-  },
+    category: 'external' },
   {
     id: 'd32059d9',
     name: 'external-net-2',
@@ -339,8 +293,7 @@ const mockNetworks: NetworkRow[] = [
     isExternal: true,
     shared: 'Private',
     status: 'active',
-    category: 'external',
-  },
+    category: 'external' },
 ];
 
 const mockSecurityGroups: SecurityGroupRow[] = [
@@ -359,8 +312,7 @@ const mockPorts: PortRow[] = [
     ownedNetworkId: 'd32059d1',
     fixedIP: '10.76.0.135',
     macAddress: '10.76.0.135',
-    status: 'active',
-  },
+    status: 'active' },
   {
     id: 'port2',
     name: 'port',
@@ -368,8 +320,7 @@ const mockPorts: PortRow[] = [
     ownedNetworkId: 'd32059d2',
     fixedIP: '10.76.0.135',
     macAddress: '10.76.0.135',
-    status: 'active',
-  },
+    status: 'active' },
   {
     id: 'port3',
     name: 'port',
@@ -377,8 +328,7 @@ const mockPorts: PortRow[] = [
     ownedNetworkId: 'd32059d3',
     fixedIP: '10.76.0.135',
     macAddress: '10.76.0.135',
-    status: 'active',
-  },
+    status: 'active' },
   {
     id: 'port4',
     name: 'port',
@@ -386,8 +336,7 @@ const mockPorts: PortRow[] = [
     ownedNetworkId: 'd32059d4',
     fixedIP: '10.76.0.135',
     macAddress: '10.76.0.135',
-    status: 'active',
-  },
+    status: 'active' },
   {
     id: 'port5',
     name: 'port',
@@ -395,8 +344,7 @@ const mockPorts: PortRow[] = [
     ownedNetworkId: 'd32059d5',
     fixedIP: '10.76.0.135',
     macAddress: '10.76.0.155',
-    status: 'error',
-  },
+    status: 'error' },
 ];
 
 const mockKeyPairs: KeyPairRow[] = [
@@ -670,8 +618,7 @@ function TemplateInformationSection({
   isActive = false,
   isEditing = false,
   onEditCancel,
-  onEditDone,
-}: TemplateInformationSectionProps) {
+  onEditDone }: TemplateInformationSectionProps) {
   const [templateNameError, setTemplateNameError] = useState<string | null>(null);
   const [tenantError, setTenantError] = useState<string | null>(null);
   const [tenantSearchQuery, setTenantSearchQuery] = useState('');
@@ -858,7 +805,7 @@ function TemplateInformationSection({
                 {
                   key: 'id',
                   label: '',
-                  width: '48px',
+                  width: fixedColumns.select,
                   align: 'center',
                   render: (_, row) => (
                     <Radio
@@ -866,20 +813,18 @@ function TemplateInformationSection({
                       checked={selectedTenant === row.id}
                       onChange={() => handleTenantSelect(row.id)}
                     />
-                  ),
-                },
+                  ) },
                 {
                   key: 'status',
                   label: 'Status',
-                  width: '64px',
+                  width: fixedColumns.status,
                   align: 'center',
                   render: (_, row) => (
                     <StatusIndicator
                       status={row.status === 'active' ? 'active' : 'deactivated'}
                       layout="icon-only"
                     />
-                  ),
-                },
+                  ) },
                 {
                   key: 'name',
                   label: 'Name',
@@ -893,13 +838,11 @@ function TemplateInformationSection({
                         ID: {row.id}
                       </span>
                     </div>
-                  ),
-                },
+                  ) },
                 {
                   key: 'description',
                   label: 'Description',
-                  sortable: true,
-                },
+                  sortable: true },
               ]}
               data={paginatedTenants}
               rowKey="id"
@@ -914,8 +857,7 @@ function TemplateInformationSection({
                       {
                         id: selectedTenant,
                         label:
-                          mockTenants.find((t) => t.id === selectedTenant)?.name || selectedTenant,
-                      },
+                          mockTenants.find((t) => t.id === selectedTenant)?.name || selectedTenant },
                     ]
                   : []
               }
@@ -966,8 +908,7 @@ function BasicInformationSection({
   isActive = false,
   isEditing = false,
   onEditCancel,
-  onEditDone,
-}: BasicInformationSectionProps) {
+  onEditDone }: BasicInformationSectionProps) {
   return (
     <SectionCard isActive={isActive}>
       <SectionCard.Header
@@ -1049,8 +990,7 @@ function ImageSection({
   isActive = false,
   isEditing = false,
   onEditCancel,
-  onEditDone,
-}: ImageSectionProps) {
+  onEditDone }: ImageSectionProps) {
   const [sourceTab, setSourceTab] = useState('image');
   const [osFilter, setOsFilter] = useState<'ubuntu' | 'windows' | 'rocky' | 'other'>('other');
   const [searchQuery, setSearchQuery] = useState('');
@@ -1097,7 +1037,7 @@ function ImageSection({
     {
       key: 'select',
       label: '',
-      width: '40px',
+      width: fixedColumns.select,
       render: (_, row) => (
         <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Radio
@@ -1106,21 +1046,18 @@ function ImageSection({
             onChange={() => handleSelectImage(row.id)}
           />
         </div>
-      ),
-    },
+      ) },
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: fixedColumns.status,
       render: (_, row) => (
         <StatusIndicator status={row.status as 'active' | 'error' | 'building'} />
-      ),
-    },
+      ) },
     {
       key: 'name',
       label: 'Name',
-      sortable: true,
-      width: '200px',
+      sortable: true, flex: 1, minWidth: columnMinWidths.name,
       render: (value, row) => (
         <VStack gap={0}>
           <HStack gap={1} align="center">
@@ -1134,8 +1071,7 @@ function ImageSection({
           </HStack>
           <span className="text-[11px] text-[var(--color-text-subtle)]">ID: {row.id}</span>
         </VStack>
-      ),
-    },
+      ) },
     { key: 'version', label: 'Version', sortable: true, flex: 1 },
     { key: 'size', label: 'Size', sortable: true, flex: 1 },
     { key: 'minDisk', label: 'Min disk', sortable: true, flex: 1 },
@@ -1148,7 +1084,7 @@ function ImageSection({
     {
       key: 'select',
       label: '',
-      width: '40px',
+      width: fixedColumns.select,
       render: (_, row) => (
         <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Radio
@@ -1157,21 +1093,18 @@ function ImageSection({
             onChange={() => handleSelectImage(row.id)}
           />
         </div>
-      ),
-    },
+      ) },
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: fixedColumns.status,
       render: (_, row) => (
         <StatusIndicator status={row.status as 'active' | 'error' | 'building'} />
-      ),
-    },
+      ) },
     {
       key: 'name',
       label: 'Name',
-      sortable: true,
-      width: '200px',
+      sortable: true, flex: 1, minWidth: columnMinWidths.name,
       render: (value, row) => (
         <VStack gap={0}>
           <HStack gap={1} align="center">
@@ -1185,8 +1118,7 @@ function ImageSection({
           </HStack>
           <span className="text-[11px] text-[var(--color-text-subtle)]">ID: {row.id}</span>
         </VStack>
-      ),
-    },
+      ) },
     { key: 'version', label: 'Version', sortable: true, flex: 1 },
     { key: 'size', label: 'Size', sortable: true, flex: 1 },
     {
@@ -1207,8 +1139,7 @@ function ImageSection({
           </HStack>
           <span className="text-[11px] text-[var(--color-text-subtle)]">ID: {row.id}</span>
         </VStack>
-      ),
-    },
+      ) },
     { key: 'createdAt', label: 'Created at', sortable: true, flex: 1 },
   ];
 
@@ -1217,7 +1148,7 @@ function ImageSection({
     {
       key: 'select',
       label: '',
-      width: '40px',
+      width: fixedColumns.select,
       render: (_, row) => (
         <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Radio
@@ -1226,21 +1157,18 @@ function ImageSection({
             onChange={() => handleSelectImage(row.id)}
           />
         </div>
-      ),
-    },
+      ) },
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: fixedColumns.status,
       render: (_, row) => (
         <StatusIndicator status={row.status as 'active' | 'error' | 'building'} />
-      ),
-    },
+      ) },
     {
       key: 'name',
       label: 'Name',
-      sortable: true,
-      width: '200px',
+      sortable: true, flex: 1, minWidth: columnMinWidths.name,
       render: (value, row) => (
         <VStack gap={0}>
           <HStack gap={1} align="center">
@@ -1254,8 +1182,7 @@ function ImageSection({
           </HStack>
           <span className="text-[11px] text-[var(--color-text-subtle)]">ID: {row.id}</span>
         </VStack>
-      ),
-    },
+      ) },
     { key: 'version', label: 'Version', sortable: true, flex: 1 },
     { key: 'size', label: 'Size', sortable: true, flex: 1 },
     {
@@ -1263,8 +1190,7 @@ function ImageSection({
       label: 'Bootable',
       sortable: true,
       flex: 1,
-      render: (value) => (value === 'Public' ? 'On' : 'Off'),
-    },
+      render: (value) => (value === 'Public' ? 'On' : 'Off') },
     { key: 'createdAt', label: 'Created at', sortable: true, flex: 1 },
   ];
 
@@ -1522,8 +1448,7 @@ function FlavorSection({
   isActive = false,
   isEditing = false,
   onEditCancel,
-  onEditDone,
-}: FlavorSectionProps) {
+  onEditDone }: FlavorSectionProps) {
   const [flavorTab, setFlavorTab] = useState('cpu');
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -1579,7 +1504,7 @@ function FlavorSection({
     {
       key: 'select',
       label: '',
-      width: '40px',
+      width: fixedColumns.select,
       render: (_, row) => (
         <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Radio
@@ -1589,8 +1514,7 @@ function FlavorSection({
             disabled={row.hasWarning}
           />
         </div>
-      ),
-    },
+      ) },
     {
       key: 'name',
       label: 'Name',
@@ -1614,16 +1538,14 @@ function FlavorSection({
             ID: {row.id}
           </span>
         </VStack>
-      ),
-    },
+      ) },
     { key: 'vCPU', label: 'vCPU', sortable: true },
     { key: 'ram', label: 'RAM', sortable: true },
     { key: 'disk', label: 'Root disk', sortable: true },
     {
       key: 'isPublic',
       label: 'Public',
-      render: (value) => (value ? 'On' : 'Off'),
-    },
+      render: (value) => (value ? 'On' : 'Off') },
   ];
 
   return (
@@ -1716,8 +1638,7 @@ function FlavorSection({
                     ? [
                         {
                           id: selectedFlavor.id,
-                          label: `${selectedFlavor.name} (${selectedFlavor.vCPU} vCPU, ${selectedFlavor.ram}, ${selectedFlavor.disk})`,
-                        },
+                          label: `${selectedFlavor.name} (${selectedFlavor.vCPU} vCPU, ${selectedFlavor.ram}, ${selectedFlavor.disk})` },
                       ]
                     : []
                 }
@@ -1765,8 +1686,7 @@ function NetworkSection({
   isActive = false,
   isEditing = false,
   onEditCancel,
-  onEditDone,
-}: NetworkSectionProps) {
+  onEditDone }: NetworkSectionProps) {
   // Validation errors
   const [networkError, setNetworkError] = useState<string | null>(null);
   const [sgError, setSgError] = useState<string | null>(null);
@@ -1893,8 +1813,7 @@ function NetworkSection({
         id: `vlan${Date.now()}`,
         network: 'network',
         subnet: 'subnet',
-        autoAssign: 'Auto-assign',
-      },
+        autoAssign: 'Auto-assign' },
     ]);
   };
 
@@ -1918,7 +1837,7 @@ function NetworkSection({
     {
       key: 'select',
       label: '',
-      width: '40px',
+      width: fixedColumns.select,
       render: (_, row) => (
         <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Checkbox
@@ -1926,14 +1845,12 @@ function NetworkSection({
             onChange={() => handleNetworkToggle(row.id)}
           />
         </div>
-      ),
-    },
+      ) },
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
-      render: (_, row) => <StatusIndicator status={row.status} />,
-    },
+      width: fixedColumns.status,
+      render: (_, row) => <StatusIndicator status={row.status} /> },
     {
       key: 'name',
       label: 'Name',
@@ -1954,14 +1871,12 @@ function NetworkSection({
             ID: {row.id}
           </span>
         </VStack>
-      ),
-    },
+      ) },
     { key: 'subnetCidr', label: 'Subnet CIDR', sortable: true },
     {
       key: 'isExternal',
       label: 'External',
-      render: (value) => (value ? 'Yes' : 'No'),
-    },
+      render: (value) => (value ? 'Yes' : 'No') },
     { key: 'shared', label: 'Shared' },
   ];
 
@@ -1970,7 +1885,7 @@ function NetworkSection({
     {
       key: 'select',
       label: '',
-      width: '40px',
+      width: fixedColumns.select,
       render: (_, row) => (
         <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Checkbox
@@ -1978,8 +1893,7 @@ function NetworkSection({
             onChange={() => handleSecurityGroupToggle(row.id)}
           />
         </div>
-      ),
-    },
+      ) },
     {
       key: 'name',
       label: 'Name',
@@ -2000,8 +1914,7 @@ function NetworkSection({
             ID: {row.id}
           </span>
         </VStack>
-      ),
-    },
+      ) },
     { key: 'description', label: 'Description', sortable: true },
     { key: 'createdAt', label: 'Created at', sortable: true },
   ];
@@ -2011,7 +1924,7 @@ function NetworkSection({
     {
       key: 'select',
       label: '',
-      width: '40px',
+      width: fixedColumns.select,
       render: (_, row) => (
         <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Checkbox
@@ -2019,14 +1932,12 @@ function NetworkSection({
             onChange={() => handlePortToggle(row.id)}
           />
         </div>
-      ),
-    },
+      ) },
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
-      render: (_, row) => <StatusIndicator status={row.status} />,
-    },
+      width: fixedColumns.status,
+      render: (_, row) => <StatusIndicator status={row.status} /> },
     {
       key: 'name',
       label: 'Name',
@@ -2050,8 +1961,7 @@ function NetworkSection({
             ID: {row.id}
           </span>
         </VStack>
-      ),
-    },
+      ) },
     {
       key: 'ownedNetwork',
       label: 'Owned network',
@@ -2072,8 +1982,7 @@ function NetworkSection({
             ID: {row.ownedNetworkId}
           </span>
         </VStack>
-      ),
-    },
+      ) },
     { key: 'fixedIP', label: 'Fixed IP' },
     { key: 'macAddress', label: 'MAC Address' },
   ];
@@ -2404,8 +2313,7 @@ function AuthenticationSection({
   isActive = false,
   isEditing = false,
   onEditCancel,
-  onEditDone,
-}: AuthenticationSectionProps) {
+  onEditDone }: AuthenticationSectionProps) {
   // Validation error
   const [authError, setAuthError] = useState<string | null>(null);
 
@@ -2436,7 +2344,7 @@ function AuthenticationSection({
     {
       key: 'select',
       label: '',
-      width: '40px',
+      width: fixedColumns.select,
       render: (_, row) => (
         <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Radio
@@ -2445,11 +2353,10 @@ function AuthenticationSection({
             onChange={() => handleSelectKeyPair(row.id)}
           />
         </div>
-      ),
-    },
+      ) },
     { key: 'name', label: 'Name', sortable: true },
     { key: 'fingerprint', label: 'Fingerprint' },
-    { key: 'createdAt', label: 'Created at', sortable: true, width: '120px' },
+    { key: 'createdAt', label: 'Created at', sortable: true, flex: 1, minWidth: columnMinWidths.createdAt },
   ];
 
   return (
@@ -2523,8 +2430,7 @@ function AuthenticationSection({
                               id: selectedKeyPairId,
                               label:
                                 mockKeyPairs.find((k) => k.id === selectedKeyPairId)?.name ||
-                                selectedKeyPairId,
-                            },
+                                selectedKeyPairId },
                           ]
                         : []
                     }
@@ -2581,8 +2487,7 @@ function AdvancedSection({
   isActive = false,
   isEditing = false,
   onEditCancel,
-  onEditDone,
-}: AdvancedSectionProps) {
+  onEditDone }: AdvancedSectionProps) {
   const MAX_TAGS = 50;
   const MAX_USER_DATA_KB = 16;
 
@@ -2765,8 +2670,7 @@ export function ComputeAdminCreateTemplatePage() {
     image: 'pre',
     flavor: 'pre',
     network: 'pre',
-    advanced: 'pre',
-  });
+    advanced: 'pre' });
 
   // Track which section is being edited
   const [editingSection, setEditingSection] = useState<SectionStep | null>(null);
@@ -2808,8 +2712,7 @@ export function ComputeAdminCreateTemplatePage() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    closable: tab.closable,
-  }));
+    closable: tab.closable }));
 
   // Handle cancel
   const handleCancel = () => {
@@ -2827,13 +2730,11 @@ export function ComputeAdminCreateTemplatePage() {
       setSectionStatus((prev) => ({
         ...prev,
         [section]: 'done',
-        [nextSection]: 'active',
-      }));
+        [nextSection]: 'active' }));
     } else {
       setSectionStatus((prev) => ({
         ...prev,
-        [section]: 'done',
-      }));
+        [section]: 'done' }));
     }
   };
 

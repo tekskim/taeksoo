@@ -1,1 +1,8 @@
-export { columnWidths, type ColumnWidthKey } from './columnWidths';
+export {
+  columnWidths,
+  fixedColumns,
+  columnMinWidths,
+  type ColumnWidthKey,
+  type FixedColumnKey,
+  type ColumnMinWidthKey,
+} from './columnWidths';

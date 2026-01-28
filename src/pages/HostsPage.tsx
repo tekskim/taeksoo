@@ -11,7 +11,8 @@ import {
   Breadcrumb,
   StatusIndicator,
   Chip,
-  columnWidths,
+  fixedColumns,
+  columnMinWidths,
   type TableColumn,
 } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
@@ -253,13 +254,13 @@ export function HostsPage() {
     return filteredHosts.slice(start, start + rowsPerPage);
   }, [filteredHosts, currentPage, rowsPerPage]);
 
-  // Table columns definition (using columnWidths preset)
+  // Table columns definition (using fixedColumns / columnMinWidths preset)
   // Using minWidth for headers that need space, flex for expandable columns
   const columns: TableColumn<Host>[] = [
     {
       key: 'status',
       label: 'Status',
-      width: columnWidths.status,
+      width: fixedColumns.status,
       sortable: false,
       align: 'center',
       render: (_, row) => <StatusCell status={row.status} />,
@@ -268,7 +269,7 @@ export function HostsPage() {
       key: 'hostname',
       label: 'Hostname',
       flex: 2,
-      minWidth: '150px',
+      minWidth: columnMinWidths.hostname,
       sortable: true,
       render: (_, row) => (
         <Link
@@ -284,8 +285,7 @@ export function HostsPage() {
       key: 'labels',
       label: 'Labels',
       flex: 1,
-      minWidth: '100px',
-      maxWidth: '200px',
+      minWidth: columnMinWidths.labels,
       sortable: false,
       render: (_, row) => <LabelsCell labels={row.labels} />,
     },
@@ -293,50 +293,57 @@ export function HostsPage() {
       key: 'model',
       label: 'Model',
       flex: 1.5,
-      minWidth: '180px',
+      minWidth: columnMinWidths.model,
       sortable: true,
       render: (_, row) => <ModelCell model={row.model} modelDetail={row.modelDetail} />,
     },
     {
       key: 'cpus',
       label: 'CPUs',
-      width: columnWidths.cpus,
+      flex: 1,
+      minWidth: columnMinWidths.cpus,
       sortable: true,
     },
     {
       key: 'cores',
       label: 'Cores',
-      width: columnWidths.cores,
+      flex: 1,
+      minWidth: columnMinWidths.cores,
       sortable: true,
     },
     {
       key: 'totalMemory',
       label: 'Total memory',
-      width: columnWidths.totalMemory,
+      flex: 1,
+      minWidth: columnMinWidths.totalMemory,
       sortable: true,
     },
     {
       key: 'rawCapacity',
       label: 'Raw capacity',
-      width: columnWidths.rawCapacity,
+      flex: 1,
+      minWidth: columnMinWidths.rawCapacity,
       sortable: true,
     },
     {
       key: 'hdds',
       label: 'HDDs',
-      width: columnWidths.hdds,
+      flex: 1,
+      minWidth: columnMinWidths.hdds,
       sortable: true,
     },
     {
       key: 'flash',
       label: 'Flash',
-      width: columnWidths.flash,
+      flex: 1,
+      minWidth: columnMinWidths.flash,
       sortable: true,
     },
     {
       key: 'nics',
       label: 'NICs',
-      width: columnWidths.nics,
+      flex: 1,
+      minWidth: columnMinWidths.nics,
       sortable: true,
     },
   ];

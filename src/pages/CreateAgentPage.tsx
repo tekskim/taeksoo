@@ -25,7 +25,8 @@ import {
   StatusIndicator,
   SelectionIndicator,
   type TableColumn,
-  columnWidths,
+  fixedColumns,
+  columnMinWidths,
 } from '@/design-system';
 import { IconBell, IconPalette } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
@@ -208,7 +209,7 @@ export function CreateAgentPage() {
     {
       key: 'status',
       label: 'Status',
-      width: columnWidths.status,
+      width: fixedColumns.status,
       align: 'center',
       sortable: false,
       render: (_, row) => (
@@ -246,7 +247,7 @@ export function CreateAgentPage() {
     {
       key: 'status',
       label: 'Status',
-      width: columnWidths.status,
+      width: fixedColumns.status,
       align: 'center',
       sortable: false,
       render: (_, row) => (

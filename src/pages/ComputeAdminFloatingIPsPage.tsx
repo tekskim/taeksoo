@@ -1,24 +1,5 @@
 import { useState, useMemo } from 'react';
-import {
-  Button,
-  FilterSearchInput,
-  Table,
-  Pagination,
-  VStack,
-  TabBar,
-  TopBar,
-  TopBarAction,
-  Breadcrumb,
-  ListToolbar,
-  ContextMenu,
-  ConfirmModal,
-  StatusIndicator,
-  Tooltip,
-  type TableColumn,
-  type ContextMenuItem,
-  type FilterField,
-  type AppliedFilter,
-} from '@/design-system';
+import { Button, FilterSearchInput, Table, Pagination, VStack, TabBar, TopBar, TopBarAction, Breadcrumb, ListToolbar, ContextMenu, ConfirmModal, StatusIndicator, Tooltip, type TableColumn, type ContextMenuItem, type FilterField, type AppliedFilter, fixedColumns, columnMinWidths } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
@@ -31,8 +12,7 @@ import {
   IconDownload,
   IconBell,
   IconExternalLink,
-  IconCube,
-} from '@tabler/icons-react';
+  IconCube } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
@@ -67,8 +47,7 @@ const mockFloatingIPs: FloatingIP[] = [
     network: 'net-01',
     networkId: 'net-001',
     createdAt: '2025-10-01',
-    status: 'active',
-  },
+    status: 'active' },
   {
     id: 'fip-002',
     floatingIp: '172.24.4.229',
@@ -78,8 +57,7 @@ const mockFloatingIPs: FloatingIP[] = [
     network: 'net-02',
     networkId: 'net-002',
     createdAt: '2025-10-02',
-    status: 'active',
-  },
+    status: 'active' },
   {
     id: 'fip-003',
     floatingIp: '172.24.4.230',
@@ -89,8 +67,7 @@ const mockFloatingIPs: FloatingIP[] = [
     network: 'net-01',
     networkId: 'net-001',
     createdAt: '2025-10-03',
-    status: 'down',
-  },
+    status: 'down' },
   {
     id: 'fip-004',
     floatingIp: '172.24.4.231',
@@ -100,8 +77,7 @@ const mockFloatingIPs: FloatingIP[] = [
     network: 'net-03',
     networkId: 'net-003',
     createdAt: '2025-09-28',
-    status: 'active',
-  },
+    status: 'active' },
   {
     id: 'fip-005',
     floatingIp: '172.24.4.232',
@@ -111,8 +87,7 @@ const mockFloatingIPs: FloatingIP[] = [
     network: 'net-01',
     networkId: 'net-001',
     createdAt: '2025-09-25',
-    status: 'active',
-  },
+    status: 'active' },
   {
     id: 'fip-006',
     floatingIp: '172.24.4.233',
@@ -122,8 +97,7 @@ const mockFloatingIPs: FloatingIP[] = [
     network: 'net-02',
     networkId: 'net-002',
     createdAt: '2025-09-20',
-    status: 'error',
-  },
+    status: 'error' },
   {
     id: 'fip-007',
     floatingIp: '172.24.4.234',
@@ -133,8 +107,7 @@ const mockFloatingIPs: FloatingIP[] = [
     network: 'net-01',
     networkId: 'net-001',
     createdAt: '2025-09-15',
-    status: 'active',
-  },
+    status: 'active' },
   {
     id: 'fip-008',
     floatingIp: '172.24.4.235',
@@ -144,8 +117,7 @@ const mockFloatingIPs: FloatingIP[] = [
     network: 'net-04',
     networkId: 'net-004',
     createdAt: '2025-09-10',
-    status: 'active',
-  },
+    status: 'active' },
   {
     id: 'fip-009',
     floatingIp: '172.24.4.236',
@@ -155,8 +127,7 @@ const mockFloatingIPs: FloatingIP[] = [
     network: 'net-03',
     networkId: 'net-003',
     createdAt: '2025-09-05',
-    status: 'down',
-  },
+    status: 'down' },
   {
     id: 'fip-010',
     floatingIp: '172.24.4.237',
@@ -166,8 +137,7 @@ const mockFloatingIPs: FloatingIP[] = [
     network: 'net-01',
     networkId: 'net-001',
     createdAt: '2025-09-01',
-    status: 'active',
-  },
+    status: 'active' },
 ];
 
 /* ----------------------------------------
@@ -177,8 +147,7 @@ const mockFloatingIPs: FloatingIP[] = [
 const floatingIPStatusMap: Record<FloatingIPStatus, 'active' | 'error' | 'down'> = {
   active: 'active',
   error: 'error',
-  down: 'down',
-};
+  down: 'down' };
 
 /* ----------------------------------------
    Component
@@ -198,8 +167,7 @@ const filterFields: FilterField[] = [
       { value: 'active', label: 'Active' },
       { value: 'error', label: 'Error' },
       { value: 'down', label: 'Down' },
-    ],
-  },
+    ] },
 ];
 
 export function ComputeAdminFloatingIPsPage() {
@@ -258,8 +226,7 @@ export function ComputeAdminFloatingIPsPage() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    closable: tab.closable,
-  }));
+    closable: tab.closable }));
 
   // Context menu items
   const getContextMenuItems = (fip: FloatingIP): ContextMenuItem[] => [
@@ -267,14 +234,12 @@ export function ComputeAdminFloatingIPsPage() {
       id: 'associate',
       label: 'Associate',
       onClick: () => handleAssociate(fip),
-      disabled: !!fip.associatedTo,
-    },
+      disabled: !!fip.associatedTo },
     {
       id: 'disassociate',
       label: 'Disassociate',
       onClick: () => handleDisassociate(fip),
-      disabled: !fip.associatedTo,
-    },
+      disabled: !fip.associatedTo },
     { id: 'edit', label: 'Edit', onClick: () => handleEdit(fip) },
     {
       id: 'release',
@@ -283,8 +248,7 @@ export function ComputeAdminFloatingIPsPage() {
       onClick: () => {
         setFloatingIPToDelete(fip);
         setDeleteModalOpen(true);
-      },
-    },
+      } },
   ];
 
   // Filter floating IPs based on search
@@ -312,12 +276,11 @@ export function ComputeAdminFloatingIPsPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: fixedColumns.status,
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={floatingIPStatusMap[row.status]} layout="icon-only" />
-      ),
-    },
+      ) },
     {
       key: 'floatingIp',
       label: 'Floating IP',
@@ -336,12 +299,11 @@ export function ComputeAdminFloatingIPsPage() {
             ID : {row.id}
           </span>
         </div>
-      ),
-    },
+      ) },
     {
       key: 'associatedTo',
       label: 'Associated to',
-      width: '160px',
+      flex: 1, minWidth: columnMinWidths.associatedTo,
       align: 'right',
       render: (_, row) =>
         row.associatedTo ? (
@@ -372,18 +334,16 @@ export function ComputeAdminFloatingIPsPage() {
           </div>
         ) : (
           <span className="block text-left w-full">-</span>
-        ),
-    },
+        ) },
     {
       key: 'fixedIp',
       label: 'Fixed IP',
       flex: 1,
-      sortable: true,
-    },
+      sortable: true },
     {
       key: 'network',
       label: 'Network',
-      width: '140px',
+      flex: 1, minWidth: columnMinWidths.network,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5 min-w-0">
@@ -404,18 +364,16 @@ export function ComputeAdminFloatingIPsPage() {
             ID : {row.networkId.substring(0, 8)}
           </span>
         </div>
-      ),
-    },
+      ) },
     {
       key: 'createdAt',
       label: 'Created at',
       flex: 1,
-      sortable: true,
-    },
+      sortable: true },
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: fixedColumns.actions,
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
@@ -429,8 +387,7 @@ export function ComputeAdminFloatingIPsPage() {
             </button>
           </ContextMenu>
         </div>
-      ),
-    },
+      ) },
   ];
 
   // Filter and order columns based on preferences
@@ -614,8 +571,7 @@ export function ComputeAdminFloatingIPsPage() {
           selectedFIPForDrawer?.associatedTo && selectedFIPForDrawer?.associatedToId
             ? {
                 id: selectedFIPForDrawer.associatedToId,
-                name: selectedFIPForDrawer.associatedTo,
-              }
+                name: selectedFIPForDrawer.associatedTo }
             : { id: '', name: '' }
         }
       />
@@ -625,8 +581,7 @@ export function ComputeAdminFloatingIPsPage() {
         onClose={() => setEditOpen(false)}
         floatingIP={{
           id: selectedFIPForDrawer?.id || '',
-          ipAddress: selectedFIPForDrawer?.floatingIp || '',
-        }}
+          ipAddress: selectedFIPForDrawer?.floatingIp || '' }}
       />
     </div>
   );

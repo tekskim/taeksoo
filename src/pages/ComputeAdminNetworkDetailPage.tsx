@@ -1,28 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import {
-  Button,
-  VStack,
-  TabBar,
-  TopBar,
-  TopBarAction,
-  Breadcrumb,
-  Tabs,
-  TabList,
-  Tab,
-  TabPanel,
-  DetailHeader,
-  SectionCard,
-  Table,
-  StatusIndicator,
-  SearchInput,
-  Pagination,
-  ContextMenu,
-  Tooltip,
-  Badge,
-  type TableColumn,
-  type ContextMenuItem,
-} from '@/design-system';
+import { Button, VStack, TabBar, TopBar, TopBarAction, Breadcrumb, Tabs, TabList, Tab, TabPanel, DetailHeader, SectionCard, Table, StatusIndicator, SearchInput, Pagination, ContextMenu, Tooltip, Badge, type TableColumn, type ContextMenuItem, fixedColumns, columnMinWidths } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
@@ -33,8 +11,7 @@ import {
   IconEdit,
   IconDownload,
   IconCube,
-  IconRouter,
-} from '@tabler/icons-react';
+  IconRouter } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -125,8 +102,7 @@ const mockNetworksMap: Record<string, NetworkDetail> = {
     mtu: 1500,
     providerNetworkType: 'VLAN',
     providerPhysicalNetwork: 'network',
-    segmentationId: '100',
-  },
+    segmentationId: '100' },
   'net-002': {
     id: 'a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6',
     name: 'internal-net',
@@ -143,8 +119,7 @@ const mockNetworksMap: Record<string, NetworkDetail> = {
     mtu: 1450,
     providerNetworkType: 'VXLAN',
     providerPhysicalNetwork: '-',
-    segmentationId: '200',
-  },
+    segmentationId: '200' },
   'net-003': {
     id: 'b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7',
     name: 'dev-network',
@@ -161,8 +136,7 @@ const mockNetworksMap: Record<string, NetworkDetail> = {
     mtu: 1500,
     providerNetworkType: 'VLAN',
     providerPhysicalNetwork: 'mgmt',
-    segmentationId: '300',
-  },
+    segmentationId: '300' },
   'net-004': {
     id: 'c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8',
     name: 'prod-net',
@@ -179,8 +153,7 @@ const mockNetworksMap: Record<string, NetworkDetail> = {
     mtu: 9000,
     providerNetworkType: 'VLAN',
     providerPhysicalNetwork: 'storage',
-    segmentationId: '400',
-  },
+    segmentationId: '400' },
   'net-005': {
     id: 'd4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9',
     name: 'test-network',
@@ -197,9 +170,7 @@ const mockNetworksMap: Record<string, NetworkDetail> = {
     mtu: 1500,
     providerNetworkType: 'VXLAN',
     providerPhysicalNetwork: '-',
-    segmentationId: '500',
-  },
-};
+    segmentationId: '500' } };
 
 const defaultNetworkDetail: NetworkDetail = {
   id: 'unknown',
@@ -217,8 +188,7 @@ const defaultNetworkDetail: NetworkDetail = {
   mtu: 1500,
   providerNetworkType: '-',
   providerPhysicalNetwork: '-',
-  segmentationId: '-',
-};
+  segmentationId: '-' };
 
 const mockSubnets: Subnet[] = Array.from({ length: 115 }, (_, i) => ({
   id: `${String(i + 1).padStart(8, '0')}`,
@@ -230,8 +200,7 @@ const mockSubnets: Subnet[] = Array.from({ length: 115 }, (_, i) => ({
   portCount: 100,
   usedIps: 13,
   freeIps: 240,
-  createdAt: 'Dec 25, 2025',
-}));
+  createdAt: 'Dec 25, 2025' }));
 
 const mockPorts: Port[] = Array.from({ length: 115 }, (_, i) => ({
   id: `${String(i + 1).padStart(8, '0')}`,
@@ -240,23 +209,20 @@ const mockPorts: Port[] = Array.from({ length: 115 }, (_, i) => ({
   attachedTo: {
     name: 'my-server',
     id: '12345678',
-    type: i % 3 === 0 ? ('router' as const) : ('instance' as const),
-  },
+    type: i % 3 === 0 ? ('router' as const) : ('instance' as const) },
   securityGroups: ['default', 'web-sg', 'db-sg', 'app-sg'],
   fixedIp: '10.70.0.48',
   floatingIp: '10.70.0.1',
   macAddress: 'fa:16:3e:77:62:19',
   adminState: 'Up' as const,
-  createdAt: 'Dec 25, 2025',
-}));
+  createdAt: 'Dec 25, 2025' }));
 
 const mockDhcpAgents: DhcpAgent[] = Array.from({ length: 115 }, (_, i) => ({
   id: `dhcp-agent-${String(i + 1).padStart(3, '0')}`,
   host: `compute-node-${String(i + 1).padStart(2, '0')}`,
   status: i % 5 === 0 ? ('down' as const) : ('active' as const),
   adminState: i % 7 === 0 ? ('Down' as const) : ('Up' as const),
-  createdAt: 'Dec 15, 2025',
-}));
+  createdAt: 'Dec 15, 2025' }));
 
 /* ----------------------------------------
    Status Mapping
@@ -265,19 +231,16 @@ const mockDhcpAgents: DhcpAgent[] = Array.from({ length: 115 }, (_, i) => ({
 const subnetStatusMap: Record<SubnetStatus, 'active' | 'building' | 'error'> = {
   active: 'active',
   building: 'building',
-  error: 'error',
-};
+  error: 'error' };
 
 const portStatusMap: Record<Port['status'], 'active' | 'building' | 'shutoff'> = {
   active: 'active',
   build: 'building',
-  down: 'shutoff',
-};
+  down: 'shutoff' };
 
 const dhcpAgentStatusMap: Record<DhcpAgent['status'], 'active' | 'error'> = {
   active: 'active',
-  down: 'error',
-};
+  down: 'error' };
 
 /* ----------------------------------------
    NetworkDetailPage Component
@@ -294,8 +257,7 @@ export default function NetworkDetailPage() {
     selectTab,
     addNewTab,
     updateActiveTabLabel,
-    moveTab,
-  } = useTabs();
+    moveTab } = useTabs();
 
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeDetailTab, setActiveDetailTab] = useState('details');
@@ -496,49 +458,42 @@ export default function NetworkDetailPage() {
             ID:{row.id}
           </span>
         </div>
-      ),
-    },
+      ) },
     {
       key: 'cidr',
       label: 'CIDR',
-      flex: 1,
-    },
+      flex: 1 },
     {
       key: 'gatewayIp',
       label: 'Gateway IP',
-      flex: 1,
-    },
+      flex: 1 },
     {
       key: 'portCount',
       label: 'Port Count',
       flex: 1,
       sortable: true,
-      align: 'left',
-    },
+      align: 'left' },
     {
       key: 'usedIps',
       label: 'Used IPs',
       flex: 1,
       sortable: true,
-      align: 'left',
-    },
+      align: 'left' },
     {
       key: 'freeIps',
       label: 'Free IPs',
       flex: 1,
       sortable: true,
-      align: 'left',
-    },
+      align: 'left' },
     {
       key: 'createdAt',
       label: 'Created At',
       flex: 1,
-      sortable: true,
-    },
+      sortable: true },
     {
       key: 'actions',
       label: 'Action',
-      width: '72px',
+      width: fixedColumns.actionWide,
       align: 'center',
       render: (_: unknown, row: Subnet) => {
         const subnetMenuItems: ContextMenuItem[] = [
@@ -547,8 +502,7 @@ export default function NetworkDetailPage() {
             id: 'delete',
             label: 'Delete',
             status: 'danger',
-            onClick: () => console.log('Delete subnet', row.id),
-          },
+            onClick: () => console.log('Delete subnet', row.id) },
         ];
         return (
           <div onClick={(e) => e.stopPropagation()}>
@@ -563,8 +517,7 @@ export default function NetworkDetailPage() {
             </ContextMenu>
           </div>
         );
-      },
-    },
+      } },
   ];
 
   // Port columns
@@ -572,10 +525,9 @@ export default function NetworkDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: fixedColumns.status,
       align: 'center',
-      render: (_, row) => <StatusIndicator status={portStatusMap[row.status]} layout="icon-only" />,
-    },
+      render: (_, row) => <StatusIndicator status={portStatusMap[row.status]} layout="icon-only" /> },
     {
       key: 'name',
       label: 'Name',
@@ -594,8 +546,7 @@ export default function NetworkDetailPage() {
             ID: {row.id}
           </span>
         </div>
-      ),
-    },
+      ) },
     {
       key: 'attachedTo',
       label: 'Attached To',
@@ -635,8 +586,7 @@ export default function NetworkDetailPage() {
           </div>
         ) : (
           <span className="text-[var(--color-text-muted)]">-</span>
-        ),
-    },
+        ) },
     {
       key: 'securityGroups',
       label: 'SG',
@@ -651,13 +601,11 @@ export default function NetworkDetailPage() {
             {additionalCount > 0 && ` (+${additionalCount})`}
           </span>
         );
-      },
-    },
+      } },
     {
       key: 'fixedIp',
       label: 'Fixed IP',
-      flex: 1,
-    },
+      flex: 1 },
     {
       key: 'floatingIp',
       label: 'Floating IP',
@@ -670,28 +618,24 @@ export default function NetworkDetailPage() {
         >
           {row.floatingIp}
         </Link>
-      ),
-    },
+      ) },
     {
       key: 'macAddress',
       label: 'MAC Address',
-      flex: 1,
-    },
+      flex: 1 },
     {
       key: 'adminState',
       label: 'Admin State',
-      flex: 1,
-    },
+      flex: 1 },
     {
       key: 'createdAt',
       label: 'Created At',
       flex: 1,
-      sortable: true,
-    },
+      sortable: true },
     {
       key: 'actions',
       label: 'Action',
-      width: '72px',
+      width: fixedColumns.actionWide,
       align: 'center',
       render: (_: unknown, row: Port) => {
         const portMenuItems: ContextMenuItem[] = [
@@ -700,8 +644,7 @@ export default function NetworkDetailPage() {
             id: 'delete',
             label: 'Delete',
             status: 'danger',
-            onClick: () => console.log('Delete port', row.id),
-          },
+            onClick: () => console.log('Delete port', row.id) },
         ];
         return (
           <div onClick={(e) => e.stopPropagation()}>
@@ -716,8 +659,7 @@ export default function NetworkDetailPage() {
             </ContextMenu>
           </div>
         );
-      },
-    },
+      } },
   ];
 
   // DHCP Agent columns
@@ -725,18 +667,16 @@ export default function NetworkDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: fixedColumns.status,
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={dhcpAgentStatusMap[row.status]} layout="icon-only" />
-      ),
-    },
+      ) },
     {
       key: 'host',
       label: 'Host',
       flex: 1,
-      sortable: true,
-    },
+      sortable: true },
     {
       key: 'adminState',
       label: 'Admin State',
@@ -745,18 +685,16 @@ export default function NetworkDetailPage() {
         <Badge variant={row.adminState === 'Up' ? 'success' : 'error'} size="sm">
           {row.adminState}
         </Badge>
-      ),
-    },
+      ) },
     {
       key: 'createdAt',
       label: 'Created At',
       flex: 1,
-      sortable: true,
-    },
+      sortable: true },
     {
       key: 'actions',
       label: 'Action',
-      width: '72px',
+      width: fixedColumns.actionWide,
       align: 'center',
       render: (_: unknown, row: DhcpAgent) => (
         <div onClick={(e) => e.stopPropagation()}>
@@ -767,8 +705,7 @@ export default function NetworkDetailPage() {
             <IconTrash size={16} stroke={1.5} className="text-[var(--color-state-danger)]" />
           </button>
         </div>
-      ),
-    },
+      ) },
   ];
 
   return (

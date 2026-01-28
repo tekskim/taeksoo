@@ -12,7 +12,8 @@ import {
   ListToolbar,
   ContextMenu,
   ConfirmModal,
-  columnWidths,
+  fixedColumns,
+  columnMinWidths,
   type TableColumn,
   type ContextMenuItem,
   type FilterField,
@@ -245,12 +246,13 @@ export function SecurityGroupsPage() {
     return filteredGroups.slice(start, start + rowsPerPage);
   }, [filteredGroups, currentPage, rowsPerPage]);
 
-  // Table columns
+  // Table columns (using fixedColumns / columnMinWidths preset)
   const columns: TableColumn<SecurityGroup>[] = [
     {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -271,30 +273,34 @@ export function SecurityGroupsPage() {
       key: 'description',
       label: 'Description',
       flex: 1,
+      minWidth: columnMinWidths.description,
       sortable: true,
     },
     {
       key: 'ingressRules',
       label: 'Ingress rules',
-      width: columnWidths.ingressRules,
+      flex: 1,
+      minWidth: columnMinWidths.ingressRules,
       sortable: true,
     },
     {
       key: 'egressRules',
       label: 'Egress rules',
-      width: columnWidths.egressRules,
+      flex: 1,
+      minWidth: columnMinWidths.egressRules,
       sortable: true,
     },
     {
       key: 'createdAt',
       label: 'Created at',
-      width: columnWidths.createdAt,
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
     },
     {
       key: 'actions',
       label: 'Action',
-      width: columnWidths.actions,
+      width: fixedColumns.actions,
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>

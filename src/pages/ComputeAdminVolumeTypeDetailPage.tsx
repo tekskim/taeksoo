@@ -1,28 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import {
-  Button,
-  FilterSearchInput,
-  Table,
-  Pagination,
-  VStack,
-  TabBar,
-  TopBar,
-  TopBarAction,
-  Breadcrumb,
-  Tabs,
-  TabList,
-  Tab,
-  DetailHeader,
-  ListToolbar,
-  ContextMenu,
-  ConfirmModal,
-  SectionCard,
-  type TableColumn,
-  type ContextMenuItem,
-  type FilterField,
-  type AppliedFilter,
-} from '@/design-system';
+import { Button, FilterSearchInput, Table, Pagination, VStack, TabBar, TopBar, TopBarAction, Breadcrumb, Tabs, TabList, Tab, DetailHeader, ListToolbar, ContextMenu, ConfirmModal, SectionCard, type TableColumn, type ContextMenuItem, type FilterField, type AppliedFilter, fixedColumns, columnMinWidths } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
@@ -32,8 +10,7 @@ import {
   IconBell,
   IconChevronDown,
   IconDownload,
-  IconDotsCircleHorizontal,
-} from '@tabler/icons-react';
+  IconDotsCircleHorizontal } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -73,41 +50,35 @@ const mockVolumeTypeDetails: Record<string, VolumeTypeDetail> = {
     description: '-',
     qosSpec: 'spec',
     qosSpecId: 'qos-001',
-    isPublic: true,
-  },
+    isPublic: true },
   'vt-002': {
     id: 'vt-002',
     name: 'ssd-performance',
     description: 'High performance SSD storage',
     qosSpec: 'high-iops',
     qosSpecId: 'qos-001',
-    isPublic: true,
-  },
+    isPublic: true },
   'vt-003': {
     id: 'vt-003',
     name: 'hdd-standard',
     description: 'Standard HDD storage',
     qosSpec: '',
     qosSpecId: '',
-    isPublic: true,
-  },
+    isPublic: true },
   'vt-004': {
     id: 'vt-004',
     name: 'nvme-ultra',
     description: 'Ultra-fast NVMe storage',
     qosSpec: 'ultra-perf',
     qosSpecId: 'qos-002',
-    isPublic: false,
-  },
+    isPublic: false },
   'vt-005': {
     id: 'vt-005',
     name: 'encrypted-secure',
     description: 'Encrypted secure storage',
     qosSpec: 'standard',
     qosSpecId: 'qos-003',
-    isPublic: true,
-  },
-};
+    isPublic: true } };
 
 const defaultVolumeType: VolumeTypeDetail = {
   id: 'unknown',
@@ -115,8 +86,7 @@ const defaultVolumeType: VolumeTypeDetail = {
   description: '-',
   qosSpec: '-',
   qosSpecId: '',
-  isPublic: false,
-};
+  isPublic: false };
 
 // Generate mock extra specs
 const generateExtraSpecs = (): ExtraSpec[] => {
@@ -135,8 +105,7 @@ const generateExtraSpecs = (): ExtraSpec[] => {
 
   return specs.map((spec, index) => ({
     id: `spec-${index + 1}`,
-    ...spec,
-  }));
+    ...spec }));
 };
 
 const mockExtraSpecs = generateExtraSpecs();
@@ -146,8 +115,7 @@ const mockEncryption: EncryptionSpec = {
   provider: 'luks',
   controlLocation: 'front-end',
   cipher: 'aes-xts-plain64',
-  keySize: '256',
-};
+  keySize: '256' };
 
 /* ----------------------------------------
    Volume Type Detail Page
@@ -193,8 +161,7 @@ export default function ComputeAdminVolumeTypeDetailPage() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    closable: tab.closable,
-  }));
+    closable: tab.closable }));
 
   // Breadcrumb items
   const breadcrumbItems = [
@@ -249,32 +216,28 @@ export default function ComputeAdminVolumeTypeDetailPage() {
       key: 'parameter',
       label: 'Parameter',
       flex: 1,
-      sortable: true,
-    },
+      sortable: true },
     {
       key: 'value',
       label: 'Value',
       flex: 1,
-      sortable: true,
-    },
+      sortable: true },
     {
       key: 'actions',
       label: 'Action',
-      width: '72px',
+      width: fixedColumns.actionWide,
       align: 'center',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
           {
             id: 'edit',
             label: 'Edit',
-            onClick: () => console.log('Edit', row.parameter),
-          },
+            onClick: () => console.log('Edit', row.parameter) },
           {
             id: 'delete',
             label: 'Delete',
             status: 'danger',
-            onClick: () => handleDeleteSpecClick(row),
-          },
+            onClick: () => handleDeleteSpecClick(row) },
         ];
 
         return (
@@ -290,8 +253,7 @@ export default function ComputeAdminVolumeTypeDetailPage() {
             </ContextMenu>
           </div>
         );
-      },
-    },
+      } },
   ];
 
   // Handlers
@@ -323,18 +285,15 @@ export default function ComputeAdminVolumeTypeDetailPage() {
     {
       id: 'manage-access',
       label: 'Manage access',
-      onClick: () => console.log('Manage access'),
-    },
+      onClick: () => console.log('Manage access') },
     {
       id: 'create-encryption',
       label: 'Create encryption',
-      onClick: () => console.log('Create encryption'),
-    },
+      onClick: () => console.log('Create encryption') },
     {
       id: 'delete-encryption',
       label: 'Delete encryption',
-      onClick: () => console.log('Delete encryption'),
-    },
+      onClick: () => console.log('Delete encryption') },
   ];
 
   return (

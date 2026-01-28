@@ -12,7 +12,8 @@ import {
   HStack,
   ContextMenu,
   TabBar,
-  columnWidths,
+  fixedColumns,
+  columnMinWidths,
   type TableColumn,
   type ContextMenuItem,
 } from '@/design-system';
@@ -204,13 +205,13 @@ export default function IAMRolesPage() {
     ];
   };
 
-  // Table columns
+  // Table columns (using fixedColumns / columnMinWidths preset)
   const columns: TableColumn<Role>[] = [
     {
       key: 'name',
       label: 'Name',
       flex: 1,
-      minWidth: columnWidths.name,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (value) => (
         <Link
@@ -224,32 +225,37 @@ export default function IAMRolesPage() {
     {
       key: 'type',
       label: 'Type',
-      width: columnWidths.typeLg,
+      flex: 1,
+      minWidth: columnMinWidths.typeLg,
     },
     {
       key: 'policies',
       label: 'Policies',
-      width: columnWidths.policies,
+      flex: 1,
+      minWidth: columnMinWidths.policies,
     },
     {
       key: 'description',
       label: 'Description',
       flex: 1,
+      minWidth: columnMinWidths.description,
     },
     {
       key: 'scope',
       label: 'Scope',
-      width: columnWidths.scope,
+      flex: 1,
+      minWidth: columnMinWidths.scope,
     },
     {
       key: 'createdAt',
       label: 'Created at',
-      width: columnWidths.createdAt,
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
     },
     {
       key: 'id',
       label: 'Action',
-      width: columnWidths.actionWide,
+      width: fixedColumns.actionWide,
       align: 'center',
       render: (_value, row) => (
         <ContextMenu items={getContextMenuItems(row.id, row.type === 'Built-in')} trigger="click">
