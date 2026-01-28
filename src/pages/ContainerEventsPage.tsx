@@ -335,7 +335,6 @@ export function ContainerEventsPage() {
       label: 'Count',
       flex: 1,
       minWidth: columnMinWidths.count,
-      align: 'center',
       sortable: true,
     },
     {

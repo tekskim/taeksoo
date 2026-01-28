@@ -302,12 +302,14 @@ export default function IAMSystemAdminDetailPage() {
       key: 'method',
       label: 'MFA method',
       flex: 1,
+      minWidth: columnMinWidths.mfa,
       sortable: true,
     },
     {
       key: 'lastUsed',
       label: 'Last used',
       flex: 1,
+      minWidth: columnMinWidths.lastUsed,
       sortable: true,
     },
     {
@@ -341,24 +343,28 @@ export default function IAMSystemAdminDetailPage() {
       key: 'started',
       label: 'Started',
       flex: 1,
+      minWidth: columnMinWidths.started,
       sortable: true,
     },
     {
       key: 'lastAccess',
       label: 'Last access',
       flex: 1,
+      minWidth: columnMinWidths.lastAccess,
       sortable: true,
     },
     {
       key: 'ipAddress',
       label: 'IP address',
       flex: 1,
+      minWidth: columnMinWidths.ipAddress,
       sortable: true,
     },
     {
       key: 'device',
       label: 'Device',
       flex: 1,
+      minWidth: columnMinWidths.device,
     },
     {
       key: 'id',

@@ -379,7 +379,7 @@ export function ComputeAdminBareMetalNodesPage() {
       {
         key: 'actions',
         label: 'Action',
-        width: fixedColumns.actionXl,
+        width: fixedColumns.actionWide,
         align: 'center',
         render: (_, row) => (
           <div onClick={(e) => e.stopPropagation()}>

@@ -280,6 +280,7 @@ import { DesktopPage } from '@/pages/DesktopPage';
 
 // Pages - Developer Resources
 import { SidebarIconsPage } from '@/pages/SidebarIconsPage';
+import { TableStyleGuidePage } from '@/pages/TableStyleGuidePage';
 
 // Pages - AI Platform
 import { WorkloadDetailPage } from '@/pages/WorkloadDetailPage';
@@ -725,6 +726,7 @@ function AppRoutes() {
 
       {/* Developer Resources */}
       <Route path="/sidebar-icons" element={<SidebarIconsPage />} />
+      <Route path="/table-style-guide" element={<TableStyleGuidePage />} />
 
       {/* AI Platform Routes */}
       <Route path="/ai-platform" element={<AIPlatformPage />} />

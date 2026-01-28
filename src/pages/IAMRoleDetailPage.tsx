@@ -436,6 +436,7 @@ export default function IAMRoleDetailPage() {
       key: 'name',
       label: 'Status',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (value, row) => (
         <div className="flex items-center gap-2">
@@ -465,23 +466,27 @@ export default function IAMRoleDetailPage() {
       key: 'type',
       label: 'Type',
       flex: 1,
+      minWidth: columnMinWidths.typeLg,
     },
     {
       key: 'apps',
       label: 'Apps',
       flex: 1,
+      minWidth: columnMinWidths.apps,
       sortable: true,
     },
     {
       key: 'description',
       label: 'Description',
       flex: 1,
+      minWidth: columnMinWidths.description,
       sortable: true,
     },
     {
       key: 'editedAt',
       label: 'Edited at',
       flex: 1,
+      minWidth: columnMinWidths.editedAt,
       sortable: true,
     },
     {
@@ -511,6 +516,7 @@ export default function IAMRoleDetailPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (value) => (
         <Link
@@ -525,11 +531,13 @@ export default function IAMRoleDetailPage() {
       key: 'type',
       label: 'Type',
       flex: 1,
+      minWidth: columnMinWidths.typeLg,
     },
     {
       key: 'userCount',
       label: 'User count',
       flex: 1,
+      minWidth: columnMinWidths.userCount,
       sortable: true,
     },
     {
@@ -547,6 +555,7 @@ export default function IAMRoleDetailPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (value) => (
         <Link
@@ -561,11 +570,13 @@ export default function IAMRoleDetailPage() {
       key: 'type',
       label: 'User groups',
       flex: 1,
+      minWidth: columnMinWidths.userGroups,
     },
     {
       key: 'lastSignIn',
       label: 'Last sign-in',
       flex: 1,
+      minWidth: columnMinWidths.lastSignIn,
       sortable: true,
     },
     {
