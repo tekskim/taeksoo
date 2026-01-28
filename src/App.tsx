@@ -123,6 +123,8 @@ import ComputeAdminTenantsPage from '@/pages/ComputeAdminTenantsPage';
 import ComputeAdminTenantDetailPage from '@/pages/ComputeAdminTenantDetailPage';
 import ComputeAdminMetadataDefinitionsPage from '@/pages/ComputeAdminMetadataDefinitionsPage';
 import ComputeAdminMetadataDefinitionDetailPage from '@/pages/ComputeAdminMetadataDefinitionDetailPage';
+import ComputeAdminMonitorOverviewPage from '@/pages/ComputeAdminMonitorOverviewPage';
+import ComputeAdminPhysicalNodesPage from '@/pages/ComputeAdminPhysicalNodesPage';
 import { ComputeAdminTopologyD3Page } from '@/pages/ComputeAdminTopologyD3Page';
 import ComputeAdminConsolePage from '@/pages/ComputeAdminConsolePage';
 import ComputeAdminVolumeTypesPage from '@/pages/ComputeAdminVolumeTypesPage';
@@ -519,6 +521,8 @@ function AppRoutes() {
         path="/compute-admin/metadata-definition/:id"
         element={<ComputeAdminMetadataDefinitionDetailPage />}
       />
+      <Route path="/compute-admin/monitor-overview" element={<ComputeAdminMonitorOverviewPage />} />
+      <Route path="/compute-admin/physical-nodes" element={<ComputeAdminPhysicalNodesPage />} />
       <Route path="/compute-admin/topology" element={<ComputeAdminTopologyD3Page />} />
       <Route path="/compute-admin/console/:instanceId" element={<ComputeAdminConsolePage />} />
 

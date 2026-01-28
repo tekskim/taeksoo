@@ -36,8 +36,8 @@ export interface SelectProps {
   fullWidth?: boolean;
   /** Size variant (height) */
   size?: 'sm' | 'md';
-  /** Width variant: sm (160px), md (240px), lg (320px) */
-  width?: 'sm' | 'md' | 'lg';
+  /** Width variant: sm (160px), md (240px), lg (320px), or number for custom pixel width */
+  width?: 'sm' | 'md' | 'lg' | number;
   /** Additional CSS classes */
   className?: string;
   /** Required field indicator */
@@ -251,11 +251,15 @@ export function Select({
     lg: 'w-[320px]',
   };
 
+  // Get width class or style
+  const getWidthClass = () => {
+    if (fullWidth) return 'w-full';
+    if (typeof width === 'number') return `w-[${width}px]`;
+    return widthStyles[width];
+  };
+
   // Styles
-  const wrapperClasses = twMerge(
-    'flex flex-col gap-[var(--input-label-gap)]',
-    fullWidth ? 'w-full' : widthStyles[width]
-  );
+  const wrapperClasses = twMerge('flex flex-col gap-[var(--input-label-gap)]', getWidthClass());
 
   // Size-based styles (height) - aligned with Input component
   const sizeStyles = {

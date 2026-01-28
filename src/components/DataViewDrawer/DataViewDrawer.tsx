@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import styles from './DataViewDrawer.module.css';
+import './DataViewDrawer.css';
 
 interface DataViewDrawerProps {
   isOpen: boolean;
@@ -82,15 +82,15 @@ export const DataViewDrawer: React.FC<DataViewDrawerProps> = ({
   // Use portal to render at document body level for proper fullscreen positioning
   return createPortal(
     <>
-      <div className={styles.overlay} onClick={onClose} />
-      <div className={styles.drawer}>
-        <div className={styles.drawerContent}>
-          <div className={styles.header}>
-            <h2 className={styles.title}>{title}</h2>
+      <div className="dataViewDrawer-overlay" onClick={onClose} />
+      <div className="dataViewDrawer-drawer">
+        <div className="dataViewDrawer-content">
+          <div className="dataViewDrawer-header">
+            <h2 className="dataViewDrawer-title">{title}</h2>
           </div>
 
-          <div className={styles.tableContainer}>
-            <table className={styles.table}>
+          <div className="dataViewDrawer-tableContainer">
+            <table className="dataViewDrawer-table">
               <thead>
                 <tr>
                   <th>Time</th>
@@ -113,8 +113,8 @@ export const DataViewDrawer: React.FC<DataViewDrawerProps> = ({
           </div>
         </div>
 
-        <div className={styles.footer}>
-          <button className={styles.closeButton} onClick={onClose}>
+        <div className="dataViewDrawer-footer">
+          <button className="dataViewDrawer-closeButton" onClick={onClose}>
             Close
           </button>
         </div>
