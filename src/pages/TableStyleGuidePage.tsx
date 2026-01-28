@@ -131,8 +131,7 @@ export function TableStyleGuidePage() {
     { id: 'text-handling', label: '5. 텍스트 처리 정책' },
     { id: 'comparison', label: '6. thaki-ui 비교' },
     { id: 'migration', label: '7. 마이그레이션 가이드' },
-    { id: 'examples', label: '8. 통합 코드 예시' },
-    { id: 'faq', label: '9. FAQ' },
+    { id: 'faq', label: '8. FAQ' },
     { id: 'appendix', label: '부록' },
   ];
 
@@ -723,74 +722,9 @@ import { fixedColumns, columnMinWidths } from '@/design-system';`}
             </SectionCard.Content>
           </SectionCard>
 
-          {/* Section 8: Examples */}
-          <SectionCard id="examples">
-            <SectionCard.Header title="8. 통합 코드 예시" />
-            <SectionCard.Content className="space-y-6">
-              <div>
-                <h4 className="text-[13px] font-medium mb-2">6.1 기본 리스트 페이지</h4>
-                <CodeBlock
-                  code={`const columns: TableColumn<Instance>[] = [
-  // 완전 고정: 상태 아이콘
-  {
-    key: 'status',
-    label: 'Status',
-    width: fixedColumns.status,
-    align: 'center',
-    render: (_, row) => <StatusIndicator status={row.status} layout="icon-only" />,
-  },
-  // 유연: 이름 (truncate + 툴팁)
-  {
-    key: 'name',
-    label: 'Name',
-    flex: 1,
-    minWidth: columnMinWidths.name,
-    sortable: true,
-    render: (_, row) => (
-      <Link 
-        to={\`/instances/\${row.id}\`}
-        className="text-[var(--color-action-primary)] hover:underline truncate block"
-        title={row.name}
-      >
-        {row.name}
-      </Link>
-    ),
-  },
-  // 유연: 생성일 (줄바꿈 방지)
-  {
-    key: 'createdAt',
-    label: 'Created at',
-    flex: 1,
-    minWidth: columnMinWidths.createdAt,
-    sortable: true,
-    render: (_, row) => (
-      <span className="whitespace-nowrap">{row.createdAt}</span>
-    ),
-  },
-  // 완전 고정: 액션 메뉴
-  {
-    key: 'actions',
-    label: 'Action',
-    width: fixedColumns.actions,
-    align: 'center',
-    render: (_, row) => (
-      <ContextMenu items={getMenuItems(row)} trigger="click">
-        <IconButton icon={<IconDotsCircleHorizontal size={16} />} />
-      </ContextMenu>
-    ),
-  },
-];
-
-// 기본 높이 (48px) 사용
-<Table columns={columns} data={instances} rowKey="id" selectable />`}
-                />
-              </div>
-            </SectionCard.Content>
-          </SectionCard>
-
-          {/* Section 9: FAQ */}
+          {/* Section 8: FAQ */}
           <SectionCard id="faq">
-            <SectionCard.Header title="9. FAQ" />
+            <SectionCard.Header title="8. FAQ" />
             <SectionCard.Content className="space-y-4">
               {[
                 {
