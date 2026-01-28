@@ -980,7 +980,7 @@ function ListenersSection({
   return (
     <div className="mt-3 pt-3 border-t border-[var(--color-border-subtle)]">
       <div className="flex items-center justify-between">
-        <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] font-semibold">Listeners ({listeners.length})</span>
+        <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] font-medium">Listeners ({listeners.length})</span>
         <Link to="#" className="text-[var(--color-action-primary)] hover:underline text-[length:var(--font-size-11)] font-medium">
           View detail
         </Link>
@@ -994,7 +994,7 @@ function RoutersSection({ routers }: { routers: RouterItem[] }) {
   return (
     <div className="mt-3 pt-3 border-t border-[var(--color-border-subtle)]">
       <div className="flex items-center justify-between">
-        <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] font-semibold">Routers ({routers.length})</span>
+        <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] font-medium">Routers ({routers.length})</span>
         <Link to="#" className="text-[var(--color-action-primary)] hover:underline text-[length:var(--font-size-11)] font-medium">
           View detail
         </Link>
@@ -1008,7 +1008,7 @@ function SubnetsSection({ subnets }: { subnets: SubnetItem[] }) {
   return (
     <div className="mt-3 pt-3 border-t border-[var(--color-border-subtle)]">
       <div className="flex items-center justify-between">
-        <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] font-semibold">Subnets ({subnets.length})</span>
+        <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] font-medium">Subnets ({subnets.length})</span>
         <Link to="#" className="text-[var(--color-action-primary)] hover:underline text-[length:var(--font-size-11)] font-medium">
           View detail
         </Link>
@@ -1134,7 +1134,7 @@ function Popover({ data, position, onClose }: PopoverProps) {
             {/* VPC Subnets grouped by router */}
             {data.vpcSubnetGroups && data.vpcSubnetGroups.length > 0 && (
               <div className="mt-3 pt-3 border-t border-[var(--color-border-subtle)]">
-                <div className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] mb-2 font-semibold">
+                <div className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] mb-2 font-medium">
                   Subnets ({data.vpcSubnetGroups.reduce((acc, g) => acc + g.subnets.length, 0)}{' '}
                   total)
                 </div>
@@ -1211,7 +1211,7 @@ function Popover({ data, position, onClose }: PopoverProps) {
             {data.routerList && data.routerList.length > 0 && (
               <div className="mt-3 pt-3 border-t border-[var(--color-border-subtle)]">
                 <div className="flex items-center justify-between">
-                  <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] font-semibold">
+                  <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] font-medium">
                     Routers ({data.routerList.length})
                   </span>
                   <Link to="#" className="text-[var(--color-action-primary)] hover:underline text-[length:var(--font-size-11)] font-medium">
@@ -1225,7 +1225,7 @@ function Popover({ data, position, onClose }: PopoverProps) {
             {data.instanceList && data.instanceList.length > 0 && (
               <div className="mt-3 pt-3 border-t border-[var(--color-border-subtle)]">
                 <div className="flex items-center justify-between">
-                  <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] font-semibold">
+                  <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] font-medium">
                     Instances ({data.instanceList.length})
                   </span>
                   <Link to="#" className="text-[var(--color-action-primary)] hover:underline text-[length:var(--font-size-11)] font-medium">
@@ -1239,7 +1239,7 @@ function Popover({ data, position, onClose }: PopoverProps) {
             {data.loadBalancerList && data.loadBalancerList.length > 0 && (
               <div className="mt-3 pt-3 border-t border-[var(--color-border-subtle)]">
                 <div className="flex items-center justify-between">
-                  <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] font-semibold">
+                  <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] font-medium">
                     Load balancers ({data.loadBalancerList.length})
                   </span>
                   <Link to="#" className="text-[var(--color-action-primary)] hover:underline text-[length:var(--font-size-11)] font-medium">
