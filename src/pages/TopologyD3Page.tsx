@@ -945,7 +945,7 @@ function LinkText({ value, href }: { value: string; href?: string }) {
   return (
     <Link
       to={href || '#'}
-      className="text-blue-500 hover:underline inline-flex items-center gap-0.5"
+      className="text-[var(--color-action-primary)] hover:underline inline-flex items-center gap-0.5 font-medium"
     >
       {value}
       <IconExternalLink size={12} />
@@ -958,7 +958,7 @@ function ViewDetailLink({ count }: { count: number }) {
   return (
     <span>
       <span className="font-medium">{count}</span>
-      <Link to="#" className="text-blue-500 hover:underline ml-2 text-xs">
+      <Link to="#" className="text-[var(--color-action-primary)] hover:underline ml-2 text-[length:var(--font-size-11)] font-medium">
         View detail
       </Link>
     </span>
@@ -981,7 +981,7 @@ function ListenersSection({
     <div className="mt-3 pt-3 border-t border-[var(--color-border-subtle)]">
       <div className="flex items-center justify-between">
         <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] font-semibold">Listeners ({listeners.length})</span>
-        <Link to="#" className="text-[var(--color-action-primary)] hover:underline text-[length:var(--font-size-11)]">
+        <Link to="#" className="text-[var(--color-action-primary)] hover:underline text-[length:var(--font-size-11)] font-medium">
           View detail
         </Link>
       </div>
@@ -995,7 +995,7 @@ function RoutersSection({ routers }: { routers: RouterItem[] }) {
     <div className="mt-3 pt-3 border-t border-[var(--color-border-subtle)]">
       <div className="flex items-center justify-between">
         <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] font-semibold">Routers ({routers.length})</span>
-        <Link to="#" className="text-[var(--color-action-primary)] hover:underline text-[length:var(--font-size-11)]">
+        <Link to="#" className="text-[var(--color-action-primary)] hover:underline text-[length:var(--font-size-11)] font-medium">
           View detail
         </Link>
       </div>
@@ -1009,7 +1009,7 @@ function SubnetsSection({ subnets }: { subnets: SubnetItem[] }) {
     <div className="mt-3 pt-3 border-t border-[var(--color-border-subtle)]">
       <div className="flex items-center justify-between">
         <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] font-semibold">Subnets ({subnets.length})</span>
-        <Link to="#" className="text-[var(--color-action-primary)] hover:underline text-[length:var(--font-size-11)]">
+        <Link to="#" className="text-[var(--color-action-primary)] hover:underline text-[length:var(--font-size-11)] font-medium">
           View detail
         </Link>
       </div>
@@ -1071,7 +1071,7 @@ function Popover({ data, position, onClose }: PopoverProps) {
   return (
     <div
       ref={popoverRef}
-      className={`fixed z-50 bg-white border border-slate-200 rounded-xl shadow-xl min-w-[240px] max-w-[var(--search-input-width)] ${isDragging ? 'cursor-grabbing' : ''}`}
+      className={`fixed z-50 bg-white border border-slate-200 rounded-xl shadow-xl min-w-[240px] max-w-[var(--search-input-width)] font-['Mona_Sans'] ${isDragging ? 'cursor-grabbing' : ''}`}
       style={{ left: pos.x, top: pos.y }}
     >
       {/* Header - Draggable */}
@@ -1214,7 +1214,7 @@ function Popover({ data, position, onClose }: PopoverProps) {
                   <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] font-semibold">
                     Routers ({data.routerList.length})
                   </span>
-                  <Link to="#" className="text-[var(--color-action-primary)] hover:underline text-[length:var(--font-size-11)]">
+                  <Link to="#" className="text-[var(--color-action-primary)] hover:underline text-[length:var(--font-size-11)] font-medium">
                     View detail
                   </Link>
                 </div>
@@ -1228,7 +1228,7 @@ function Popover({ data, position, onClose }: PopoverProps) {
                   <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] font-semibold">
                     Instances ({data.instanceList.length})
                   </span>
-                  <Link to="#" className="text-[var(--color-action-primary)] hover:underline text-[length:var(--font-size-11)]">
+                  <Link to="#" className="text-[var(--color-action-primary)] hover:underline text-[length:var(--font-size-11)] font-medium">
                     View detail
                   </Link>
                 </div>
@@ -1242,7 +1242,7 @@ function Popover({ data, position, onClose }: PopoverProps) {
                   <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] font-semibold">
                     Load balancers ({data.loadBalancerList.length})
                   </span>
-                  <Link to="#" className="text-[var(--color-action-primary)] hover:underline text-[length:var(--font-size-11)]">
+                  <Link to="#" className="text-[var(--color-action-primary)] hover:underline text-[length:var(--font-size-11)] font-medium">
                     View detail
                   </Link>
                 </div>
