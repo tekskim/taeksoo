@@ -978,20 +978,15 @@ function HealthMonitorSection({
 }) {
   return (
     <div className="mt-3 pt-3 border-t border-slate-100">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-slate-500 font-medium">Health Monitor :</span>
-          <span className="text-green-500 font-medium text-sm">
-            {healthMonitor.healthy} Healthy
-          </span>
-          <span className="text-amber-500 font-medium text-sm">
-            {healthMonitor.degraded} Degraded
-          </span>
-          <span className="text-red-500 font-medium text-sm">{healthMonitor.error} Error</span>
-        </div>
-        <Link to="#" className="text-blue-500 hover:underline text-xs">
-          View detail
-        </Link>
+      <div className="flex items-center gap-2 flex-wrap">
+        <span className="text-slate-500 font-medium">Health Monitor :</span>
+        <span className="text-green-500 font-medium text-sm">
+          {healthMonitor.healthy} Healthy
+        </span>
+        <span className="text-amber-500 font-medium text-sm">
+          {healthMonitor.degraded} Degraded
+        </span>
+        <span className="text-red-500 font-medium text-sm">{healthMonitor.error} Error</span>
       </div>
     </div>
   );
