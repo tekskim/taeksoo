@@ -1,6 +1,19 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { Button, VStack, TabBar, TopBar, TopBarAction, Breadcrumb, Tabs, TabList, Tab, TabPanel, DetailHeader, SectionCard, fixedColumns, columnMinWidths } from '@/design-system';
+import {
+  Button,
+  VStack,
+  TabBar,
+  TopBar,
+  TopBarAction,
+  Breadcrumb,
+  Tabs,
+  TabList,
+  Tab,
+  TabPanel,
+  DetailHeader,
+  SectionCard,
+} from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
@@ -9,7 +22,8 @@ import {
   IconBell,
   IconCopy,
   IconCheck,
-  IconExternalLink } from '@tabler/icons-react';
+  IconExternalLink,
+} from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -77,9 +91,11 @@ const mockSnapshotsMap: Record<string, SnapshotDetail> = {
       owner_user_name: 'admin',
       owner_project_name: 'test',
       boot_roles: 'reader,member,load-balancer_member,manager',
-      hw_machine_type: 'pc' },
+      hw_machine_type: 'pc',
+    },
     tenant: 'Tenant A',
-    tenantId: 'tenant-001' },
+    tenantId: 'tenant-001',
+  },
   'snap-002': {
     id: 'snap-002',
     name: 'CentOS-8-web',
@@ -101,9 +117,11 @@ const mockSnapshotsMap: Record<string, SnapshotDetail> = {
     metadata: {
       os_distro: 'centos',
       os_version: '8',
-      image_type: 'snapshot' },
+      image_type: 'snapshot',
+    },
     tenant: 'Tenant B',
-    tenantId: 'tenant-002' },
+    tenantId: 'tenant-002',
+  },
   'snap-003': {
     id: 'snap-003',
     name: 'Debian-12-db',
@@ -125,9 +143,12 @@ const mockSnapshotsMap: Record<string, SnapshotDetail> = {
     metadata: {
       os_distro: 'debian',
       os_version: '12',
-      image_type: 'snapshot' },
+      image_type: 'snapshot',
+    },
     tenant: 'Tenant A',
-    tenantId: 'tenant-001' } };
+    tenantId: 'tenant-001',
+  },
+};
 
 const defaultSnapshotDetail: SnapshotDetail = {
   id: 'snap-default',
@@ -149,7 +170,8 @@ const defaultSnapshotDetail: SnapshotDetail = {
   checksum: '-',
   metadata: {},
   tenant: '-',
-  tenantId: '-' };
+  tenantId: '-',
+};
 
 /* ----------------------------------------
    Copyable Value Component
@@ -214,7 +236,8 @@ export function ComputeAdminInstanceSnapshotDetailPage() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    closable: tab.closable }));
+    closable: tab.closable,
+  }));
 
   // Breadcrumb items
   const breadcrumbItems = [

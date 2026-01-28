@@ -285,7 +285,8 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
     {
       key: 'name',
       label: 'Name',
-      flex: 1, minWidth: columnMinWidths.name,
+      flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row: PodRow) => (
         <span
@@ -300,7 +301,8 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
     {
       key: 'image',
       label: 'Image',
-      flex: 1, minWidth: columnMinWidths.image,
+      flex: 1,
+      minWidth: columnMinWidths.image,
       sortable: true,
     },
     {
@@ -341,7 +343,8 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
     {
       key: 'action',
       label: 'Action',
-      flex: 1, minWidth: columnMinWidths.action,
+      flex: 1,
+      minWidth: columnMinWidths.action,
       align: 'center',
       render: (_: unknown, row: PodRow) => (
         <ContextMenu items={createPodMenuItems(row)} trigger="click" align="left">
@@ -396,13 +399,15 @@ function PortsTab({ ports }: PortsTabProps) {
     {
       key: 'name',
       label: 'Name',
-      flex: 1, minWidth: columnMinWidths.name,
+      flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
     },
     {
       key: 'port',
       label: 'Port',
-      flex: 1, minWidth: columnMinWidths.port,
+      flex: 1,
+      minWidth: columnMinWidths.port,
       sortable: true,
     },
     {
@@ -471,13 +476,15 @@ function SelectorsTab({ selectors }: SelectorsTabProps) {
     {
       key: 'key',
       label: 'Key',
-      flex: 1, minWidth: columnMinWidths.key,
+      flex: 1,
+      minWidth: columnMinWidths.key,
       sortable: true,
     },
     {
       key: 'value',
       label: 'Value',
-      flex: 1, minWidth: columnMinWidths.value,
+      flex: 1,
+      minWidth: columnMinWidths.value,
       sortable: true,
     },
   ];

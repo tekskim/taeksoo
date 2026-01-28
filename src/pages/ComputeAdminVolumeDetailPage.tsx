@@ -1,6 +1,27 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { Button, VStack, TabBar, TopBar, TopBarAction, Breadcrumb, Tabs, TabList, Tab, TabPanel, DetailHeader, SectionCard, SearchInput, Table, Pagination, StatusIndicator, ContextMenu, type TableColumn, type ContextMenuItem, fixedColumns, columnMinWidths } from '@/design-system';
+import {
+  Button,
+  VStack,
+  TabBar,
+  TopBar,
+  TopBarAction,
+  Breadcrumb,
+  Tabs,
+  TabList,
+  Tab,
+  TabPanel,
+  DetailHeader,
+  SectionCard,
+  SearchInput,
+  Table,
+  Pagination,
+  StatusIndicator,
+  ContextMenu,
+  type TableColumn,
+  type ContextMenuItem,
+  fixedColumns,
+} from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
@@ -9,7 +30,8 @@ import {
   IconTrash,
   IconChevronDown,
   IconDownload,
-  IconEdit } from '@tabler/icons-react';
+  IconEdit,
+} from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -77,7 +99,8 @@ const mockVolumesMap: Record<string, VolumeDetail> = {
     dataSourceType: 'Blank Volume',
     volumeType: '_DEFAULT_',
     bootable: false,
-    encryption: false },
+    encryption: false,
+  },
   'vol-002': {
     id: 'vol-002',
     name: 'app-storage',
@@ -92,7 +115,8 @@ const mockVolumesMap: Record<string, VolumeDetail> = {
     dataSourceType: 'Blank Volume',
     volumeType: '_DEFAULT_',
     bootable: false,
-    encryption: false },
+    encryption: false,
+  },
   'vol-003': {
     id: 'vol-003',
     name: 'backup-vol',
@@ -107,7 +131,8 @@ const mockVolumesMap: Record<string, VolumeDetail> = {
     dataSourceType: 'Blank Volume',
     volumeType: 'SSD',
     bootable: false,
-    encryption: true },
+    encryption: true,
+  },
   'vol-004': {
     id: 'vol-004',
     name: 'log-storage',
@@ -122,7 +147,8 @@ const mockVolumesMap: Record<string, VolumeDetail> = {
     dataSourceType: 'Blank Volume',
     volumeType: '_DEFAULT_',
     bootable: false,
-    encryption: false },
+    encryption: false,
+  },
   'vol-005': {
     id: 'vol-005',
     name: 'cache-vol',
@@ -137,7 +163,8 @@ const mockVolumesMap: Record<string, VolumeDetail> = {
     dataSourceType: 'Blank Volume',
     volumeType: 'NVMe',
     bootable: false,
-    encryption: false },
+    encryption: false,
+  },
   'vol-006': {
     id: 'vol-006',
     name: 'media-storage',
@@ -152,7 +179,8 @@ const mockVolumesMap: Record<string, VolumeDetail> = {
     dataSourceType: 'Blank Volume',
     volumeType: 'HDD',
     bootable: false,
-    encryption: false },
+    encryption: false,
+  },
   'vol-007': {
     id: 'vol-007',
     name: 'temp-vol',
@@ -167,7 +195,8 @@ const mockVolumesMap: Record<string, VolumeDetail> = {
     dataSourceType: 'Blank Volume',
     volumeType: '_DEFAULT_',
     bootable: false,
-    encryption: false },
+    encryption: false,
+  },
   'vol-008': {
     id: 'vol-008',
     name: 'ml-data',
@@ -182,7 +211,8 @@ const mockVolumesMap: Record<string, VolumeDetail> = {
     dataSourceType: 'Blank Volume',
     volumeType: 'NVMe',
     bootable: false,
-    encryption: true },
+    encryption: true,
+  },
   'vol-009': {
     id: 'vol-009',
     name: 'archive-vol',
@@ -197,7 +227,8 @@ const mockVolumesMap: Record<string, VolumeDetail> = {
     dataSourceType: 'Blank Volume',
     volumeType: 'HDD',
     bootable: false,
-    encryption: false },
+    encryption: false,
+  },
   'vol-010': {
     id: 'vol-010',
     name: 'boot-vol-01',
@@ -212,7 +243,9 @@ const mockVolumesMap: Record<string, VolumeDetail> = {
     dataSourceType: 'Image',
     volumeType: 'SSD',
     bootable: true,
-    encryption: false } };
+    encryption: false,
+  },
+};
 
 const defaultVolumeDetail: VolumeDetail = {
   id: '12345678',
@@ -228,7 +261,8 @@ const defaultVolumeDetail: VolumeDetail = {
   dataSourceType: '-',
   volumeType: '-',
   bootable: false,
-  encryption: false };
+  encryption: false,
+};
 
 // Mock volume snapshots
 const mockVolumeSnapshots: VolumeSnapshot[] = Array.from({ length: 115 }, (_, i) => ({
@@ -236,7 +270,8 @@ const mockVolumeSnapshots: VolumeSnapshot[] = Array.from({ length: 115 }, (_, i)
   name: `vol-snap-${String(34 + i).padStart(2, '0')}`,
   status: 'available' as SnapshotStatus,
   size: '1500GiB',
-  createdAt: '2025-09-12' }));
+  createdAt: '2025-09-12',
+}));
 
 // Mock volume backups
 const mockVolumeBackups: VolumeBackup[] = Array.from({ length: 115 }, (_, i) => ({
@@ -245,7 +280,8 @@ const mockVolumeBackups: VolumeBackup[] = Array.from({ length: 115 }, (_, i) => 
   status: 'available' as BackupStatus,
   backupMode: 'Full Backup',
   size: '1500GiB',
-  createdAt: '2025-09-12' }));
+  createdAt: '2025-09-12',
+}));
 
 /* ----------------------------------------
    Status Mapping
@@ -256,19 +292,22 @@ const volumeStatusDisplayMap: Record<VolumeStatus, string> = {
   'in-use': 'In Use',
   error: 'Error',
   creating: 'Creating',
-  deleting: 'Deleting' };
+  deleting: 'Deleting',
+};
 
 const snapshotStatusMap: Record<SnapshotStatus, 'active' | 'building' | 'error' | 'pending'> = {
   available: 'active',
   creating: 'building',
   deleting: 'pending',
-  error: 'error' };
+  error: 'error',
+};
 
 const backupStatusMap: Record<BackupStatus, 'active' | 'building' | 'error' | 'pending'> = {
   available: 'active',
   creating: 'building',
   restoring: 'pending',
-  error: 'error' };
+  error: 'error',
+};
 
 /* ----------------------------------------
    Volume Detail Page
@@ -310,7 +349,8 @@ export function ComputeAdminVolumeDetailPage() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    closable: tab.closable }));
+    closable: tab.closable,
+  }));
 
   const breadcrumbItems = [
     { label: 'Compute Admin', href: '/compute-admin' },
@@ -358,7 +398,8 @@ export function ComputeAdminVolumeDetailPage() {
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={snapshotStatusMap[row.status]} layout="icon-only" />
-      ) },
+      ),
+    },
     {
       key: 'name',
       label: 'Name',
@@ -377,19 +418,22 @@ export function ComputeAdminVolumeDetailPage() {
             ID : {row.id}
           </span>
         </div>
-      ) },
+      ),
+    },
     {
       key: 'size',
       label: 'Size',
       flex: 1,
       sortable: true,
-      render: (value) => <span>{value}</span> },
+      render: (value) => <span>{value}</span>,
+    },
     {
       key: 'createdAt',
       label: 'Created at',
       flex: 1,
       sortable: true,
-      render: (value) => <span>{value}</span> },
+      render: (value) => <span>{value}</span>,
+    },
     {
       key: 'action',
       label: 'Action',
@@ -407,7 +451,8 @@ export function ComputeAdminVolumeDetailPage() {
             <IconTrash size={16} stroke={1.5} className="text-[var(--color-state-danger)]" />
           </button>
         </div>
-      ) },
+      ),
+    },
   ];
 
   // Backup table columns
@@ -419,7 +464,8 @@ export function ComputeAdminVolumeDetailPage() {
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={backupStatusMap[row.status]} layout="icon-only" />
-      ) },
+      ),
+    },
     {
       key: 'name',
       label: 'Name',
@@ -438,24 +484,28 @@ export function ComputeAdminVolumeDetailPage() {
             ID : {row.id}
           </span>
         </div>
-      ) },
+      ),
+    },
     {
       key: 'backupMode',
       label: 'Backup mode',
       flex: 1,
-      render: (value) => <span>{value}</span> },
+      render: (value) => <span>{value}</span>,
+    },
     {
       key: 'size',
       label: 'Size',
       flex: 1,
       sortable: true,
-      render: (value) => <span>{value}</span> },
+      render: (value) => <span>{value}</span>,
+    },
     {
       key: 'createdAt',
       label: 'Created at',
       flex: 1,
       sortable: true,
-      render: (value) => <span>{value}</span> },
+      render: (value) => <span>{value}</span>,
+    },
     {
       key: 'action',
       label: 'Action',
@@ -473,7 +523,8 @@ export function ComputeAdminVolumeDetailPage() {
             <IconTrash size={16} stroke={1.5} className="text-[var(--color-state-danger)]" />
           </button>
         </div>
-      ) },
+      ),
+    },
   ];
 
   return (
@@ -535,11 +586,13 @@ export function ComputeAdminVolumeDetailPage() {
                         {
                           id: 'migrate-volume',
                           label: 'Migrate volume',
-                          onClick: () => console.log('Migrate volume') },
+                          onClick: () => console.log('Migrate volume'),
+                        },
                         {
                           id: 'manage-metadata',
                           label: 'Manage metadata',
-                          onClick: () => console.log('Manage metadata') },
+                          onClick: () => console.log('Manage metadata'),
+                        },
                       ] as ContextMenuItem[]
                     }
                     trigger="click"

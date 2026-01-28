@@ -215,7 +215,8 @@ export function ContainerNamespacesPage() {
     {
       key: 'createdAt',
       label: 'Created at',
-      flex: 1, minWidth: columnMinWidths.createdAt,
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
     },
     {

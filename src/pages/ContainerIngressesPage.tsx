@@ -277,7 +277,8 @@ export function ContainerIngressesPage() {
     {
       key: 'createdAt',
       label: 'Created At',
-      flex: 1, minWidth: columnMinWidths.createdAt,
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
     },
     {

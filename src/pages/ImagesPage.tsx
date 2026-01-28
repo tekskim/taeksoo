@@ -10,7 +10,6 @@ import {
   TopBarAction,
   Breadcrumb,
   ProgressBar,
-  fixedColumns,
   columnMinWidths,
   type TableColumn,
 } from '@/design-system';

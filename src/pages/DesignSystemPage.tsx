@@ -2604,8 +2604,8 @@ function TableDemo() {
         <div className="p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)] font-mono text-[length:var(--font-size-11)]">
           <span className="text-[var(--color-text-subtle)]">// Import</span>
           <br />
-          <span className="text-[var(--color-state-info)]">import</span> {'{'} fixedColumns, columnMinWidths {'}'}{' '}
-          <span className="text-[var(--color-state-info)]">from</span>{' '}
+          <span className="text-[var(--color-state-info)]">import</span> {'{'} fixedColumns,
+          columnMinWidths {'}'} <span className="text-[var(--color-state-info)]">from</span>{' '}
           <span className="text-[var(--color-state-success)]">'@/design-system'</span>;<br />
           <br />
           <span className="text-[var(--color-text-subtle)]">
@@ -2614,19 +2614,22 @@ function TableDemo() {
           <br />
           <span className="text-[var(--color-state-info)]">const</span> columns = [<br />
           &nbsp;&nbsp;{'{'} key: <span className="text-[var(--color-state-success)]">'select'</span>
-          , width: columnMinWidths.<span className="text-[var(--color-action-primary)]">select</span>{' '}
-          {'}'}, <span className="text-[var(--color-text-subtle)]">// 고정 40px</span>
+          , width: columnMinWidths.
+          <span className="text-[var(--color-action-primary)]">select</span> {'}'},{' '}
+          <span className="text-[var(--color-text-subtle)]">// 고정 40px</span>
           <br />
           &nbsp;&nbsp;{'{'} key: <span className="text-[var(--color-state-success)]">'status'</span>
-          , width: columnMinWidths.<span className="text-[var(--color-action-primary)]">status</span>{' '}
-          {'}'}, <span className="text-[var(--color-text-subtle)]">// 고정 64px</span>
+          , width: columnMinWidths.
+          <span className="text-[var(--color-action-primary)]">status</span> {'}'},{' '}
+          <span className="text-[var(--color-text-subtle)]">// 고정 64px</span>
           <br />
           &nbsp;&nbsp;{'{'} key: <span className="text-[var(--color-state-success)]">'name'</span>,
           flex: <span className="text-[var(--color-action-primary)]">1</span> {'}'},{' '}
           <span className="text-[var(--color-text-subtle)]">// 남은 공간 채움</span>
           <br />
           &nbsp;&nbsp;{'{'} key:{' '}
-          <span className="text-[var(--color-state-success)]">'actions'</span>, width: columnMinWidths.
+          <span className="text-[var(--color-state-success)]">'actions'</span>, width:
+          columnMinWidths.
           <span className="text-[var(--color-action-primary)]">actions</span> {'}'},{' '}
           <span className="text-[var(--color-text-subtle)]">// 고정 64px</span>
           <br />

@@ -1,5 +1,24 @@
 import { useState, useMemo } from 'react';
-import { Button, FilterSearchInput, Table, Pagination, VStack, TabBar, TopBar, TopBarAction, Breadcrumb, StatusIndicator, ListToolbar, ContextMenu, ConfirmModal, type TableColumn, type ContextMenuItem, type FilterField, type AppliedFilter, fixedColumns, columnMinWidths } from '@/design-system';
+import {
+  Button,
+  FilterSearchInput,
+  Table,
+  Pagination,
+  VStack,
+  TabBar,
+  TopBar,
+  TopBarAction,
+  Breadcrumb,
+  StatusIndicator,
+  ListToolbar,
+  ContextMenu,
+  ConfirmModal,
+  type TableColumn,
+  type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
+  fixedColumns,
+} from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
@@ -43,7 +62,8 @@ const mockSnapshots: InstanceSnapshot[] = [
     description: 'Base web server snapshot',
     createdAt: '2025-09-12',
     tenant: 'Tenant A',
-    tenantId: 'tenant-001' },
+    tenantId: 'tenant-001',
+  },
   {
     id: 'snap-002',
     name: 'CentOS-8-web',
@@ -55,7 +75,8 @@ const mockSnapshots: InstanceSnapshot[] = [
     description: 'Database server backup',
     createdAt: '2025-09-10',
     tenant: 'Tenant B',
-    tenantId: 'tenant-002' },
+    tenantId: 'tenant-002',
+  },
   {
     id: 'snap-003',
     name: 'Debian-12-db',
@@ -67,7 +88,8 @@ const mockSnapshots: InstanceSnapshot[] = [
     description: 'Application server snapshot',
     createdAt: '2025-09-08',
     tenant: 'Tenant A',
-    tenantId: 'tenant-001' },
+    tenantId: 'tenant-001',
+  },
   {
     id: 'snap-004',
     name: 'Rocky-9-ml',
@@ -79,7 +101,8 @@ const mockSnapshots: InstanceSnapshot[] = [
     description: 'ML worker with GPU config',
     createdAt: '2025-09-07',
     tenant: 'Tenant C',
-    tenantId: 'tenant-003' },
+    tenantId: 'tenant-003',
+  },
   {
     id: 'snap-005',
     name: 'Ubuntu-22.04-k8s',
@@ -91,7 +114,8 @@ const mockSnapshots: InstanceSnapshot[] = [
     description: 'Kubernetes node snapshot',
     createdAt: '2025-09-05',
     tenant: 'Tenant B',
-    tenantId: 'tenant-002' },
+    tenantId: 'tenant-002',
+  },
   {
     id: 'snap-006',
     name: 'Alpine-3.18-minimal',
@@ -103,7 +127,8 @@ const mockSnapshots: InstanceSnapshot[] = [
     description: 'Gateway server backup',
     createdAt: '2025-09-03',
     tenant: 'Tenant A',
-    tenantId: 'tenant-001' },
+    tenantId: 'tenant-001',
+  },
   {
     id: 'snap-007',
     name: 'Windows-Server-2022',
@@ -115,7 +140,8 @@ const mockSnapshots: InstanceSnapshot[] = [
     description: 'Windows server snapshot',
     createdAt: '2025-09-01',
     tenant: 'Tenant D',
-    tenantId: 'tenant-004' },
+    tenantId: 'tenant-004',
+  },
   {
     id: 'snap-008',
     name: 'RHEL-8-enterprise',
@@ -127,7 +153,8 @@ const mockSnapshots: InstanceSnapshot[] = [
     description: 'Enterprise app backup',
     createdAt: '2025-08-28',
     tenant: 'Tenant C',
-    tenantId: 'tenant-003' },
+    tenantId: 'tenant-003',
+  },
   {
     id: 'snap-009',
     name: 'Fedora-39-dev',
@@ -139,7 +166,8 @@ const mockSnapshots: InstanceSnapshot[] = [
     description: 'Development environment',
     createdAt: '2025-08-25',
     tenant: 'Tenant B',
-    tenantId: 'tenant-002' },
+    tenantId: 'tenant-002',
+  },
   {
     id: 'snap-010',
     name: 'Ubuntu-20.04-legacy',
@@ -151,7 +179,8 @@ const mockSnapshots: InstanceSnapshot[] = [
     description: 'Legacy application backup',
     createdAt: '2025-08-20',
     tenant: 'Tenant A',
-    tenantId: 'tenant-001' },
+    tenantId: 'tenant-001',
+  },
   {
     id: 'snap-011',
     name: 'Arch-Linux-custom',
@@ -163,7 +192,8 @@ const mockSnapshots: InstanceSnapshot[] = [
     description: 'Custom build environment',
     createdAt: '2025-08-18',
     tenant: 'Tenant D',
-    tenantId: 'tenant-004' },
+    tenantId: 'tenant-004',
+  },
   {
     id: 'snap-012',
     name: 'openSUSE-15-prod',
@@ -175,7 +205,8 @@ const mockSnapshots: InstanceSnapshot[] = [
     description: 'Production server snapshot',
     createdAt: '2025-08-15',
     tenant: 'Tenant C',
-    tenantId: 'tenant-003' },
+    tenantId: 'tenant-003',
+  },
 ];
 
 /* ----------------------------------------
@@ -193,7 +224,8 @@ const filterFields: FilterField[] = [
     options: [
       { value: 'RAW', label: 'RAW' },
       { value: 'QCOW2', label: 'QCOW2' },
-    ] },
+    ],
+  },
   {
     key: 'status',
     label: 'Status',
@@ -203,7 +235,8 @@ const filterFields: FilterField[] = [
       { value: 'creating', label: 'Creating' },
       { value: 'error', label: 'Error' },
       { value: 'deleting', label: 'Deleting' },
-    ] },
+    ],
+  },
 ];
 
 export function ComputeAdminInstanceSnapshotsPage() {
@@ -241,7 +274,8 @@ export function ComputeAdminInstanceSnapshotsPage() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    closable: tab.closable }));
+    closable: tab.closable,
+  }));
 
   // Filter snapshots by search
   const filteredSnapshots = useMemo(() => {
@@ -316,7 +350,8 @@ export function ComputeAdminInstanceSnapshotsPage() {
     active: 'active',
     creating: 'building',
     error: 'error',
-    deleting: 'shutoff' };
+    deleting: 'shutoff',
+  };
 
   // Table columns
   const columns: TableColumn<InstanceSnapshot>[] = [
@@ -326,7 +361,8 @@ export function ComputeAdminInstanceSnapshotsPage() {
       width: fixedColumns.status,
       align: 'center',
       sortable: false,
-      render: (_, row) => <StatusIndicator status={statusMap[row.status]} layout="icon-only" /> },
+      render: (_, row) => <StatusIndicator status={statusMap[row.status]} layout="icon-only" />,
+    },
     {
       key: 'name',
       label: 'Name',
@@ -345,7 +381,8 @@ export function ComputeAdminInstanceSnapshotsPage() {
             ID : {row.id}
           </span>
         </div>
-      ) },
+      ),
+    },
     {
       key: 'tenant',
       label: 'Tenant',
@@ -364,17 +401,20 @@ export function ComputeAdminInstanceSnapshotsPage() {
             ID : {row.tenantId}
           </span>
         </div>
-      ) },
+      ),
+    },
     {
       key: 'size',
       label: 'Size',
       flex: 1,
-      sortable: true },
+      sortable: true,
+    },
     {
       key: 'diskFormat',
       label: 'Disk format',
       flex: 1,
-      sortable: true },
+      sortable: true,
+    },
     {
       key: 'sourceInstance',
       label: 'Source instance',
@@ -393,12 +433,14 @@ export function ComputeAdminInstanceSnapshotsPage() {
             ID : {row.sourceInstanceId}
           </span>
         </div>
-      ) },
+      ),
+    },
     {
       key: 'createdAt',
       label: 'Created at',
       flex: 1,
-      sortable: true },
+      sortable: true,
+    },
     {
       key: 'actions',
       label: 'Action',
@@ -409,12 +451,14 @@ export function ComputeAdminInstanceSnapshotsPage() {
           {
             id: 'edit',
             label: 'Edit',
-            onClick: () => console.log('Edit snapshot:', row.id) },
+            onClick: () => console.log('Edit snapshot:', row.id),
+          },
           {
             id: 'delete',
             label: 'Delete',
             status: 'danger',
-            onClick: () => handleDeleteClick(row) },
+            onClick: () => handleDeleteClick(row),
+          },
         ];
 
         return (
@@ -430,7 +474,8 @@ export function ComputeAdminInstanceSnapshotsPage() {
             </ContextMenu>
           </div>
         );
-      } },
+      },
+    },
   ];
 
   // Filter and order columns based on preferences

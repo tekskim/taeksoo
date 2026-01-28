@@ -30,7 +30,6 @@ import {
   InlineMessage,
   SelectionIndicator,
   fixedColumns,
-  columnMinWidths,
 } from '@/design-system';
 import type { WizardSummaryItem, WizardSectionState, TableColumn } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';

@@ -1,6 +1,31 @@
 import { useState, useMemo } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Button, Breadcrumb, VStack, HStack, TabBar, TopBar, TopBarAction, Input, Textarea, SectionCard, FormField, WizardSummary, Toggle, NumberInput, Disclosure, Table, SearchInput, StatusIndicator, SelectionIndicator, Radio, RadioGroup, Select, type TableColumn, fixedColumns, columnMinWidths } from '@/design-system';
+import {
+  Button,
+  Breadcrumb,
+  VStack,
+  HStack,
+  TabBar,
+  TopBar,
+  TopBarAction,
+  Input,
+  Textarea,
+  SectionCard,
+  FormField,
+  WizardSummary,
+  Toggle,
+  NumberInput,
+  Disclosure,
+  Table,
+  SearchInput,
+  StatusIndicator,
+  SelectionIndicator,
+  Radio,
+  RadioGroup,
+  Select,
+  type TableColumn,
+  fixedColumns,
+} from '@/design-system';
 import type { WizardSummaryItem, WizardSectionState } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -16,7 +41,8 @@ type SectionStep = 'basic-info' | 'subnet';
 // Section labels for display
 const SECTION_LABELS: Record<SectionStep, string> = {
   'basic-info': 'Basic Information',
-  subnet: 'Subnet' };
+  subnet: 'Subnet',
+};
 
 // Section order for navigation
 const SECTION_ORDER: SectionStep[] = ['basic-info', 'subnet'];
@@ -36,7 +62,8 @@ const mockTenants: Tenant[] = Array.from({ length: 115 }, (_, i) => ({
   id: `tenant-${String(i + 1).padStart(3, '0')}`,
   name: `tenant ${String.fromCharCode(65 + (i % 26))}`,
   description: i % 3 === 0 ? 'Production tenant' : '-',
-  status: 'active' as const }));
+  status: 'active' as const,
+}));
 
 /* ----------------------------------------
    Summary Sidebar Component
@@ -53,11 +80,13 @@ function SummarySidebar({
   sectionStatus,
   onCancel,
   onCreate,
-  isCreateDisabled }: SummarySidebarProps) {
+  isCreateDisabled,
+}: SummarySidebarProps) {
   const summaryItems: WizardSummaryItem[] = SECTION_ORDER.map((key) => ({
     key,
     label: SECTION_LABELS[key],
-    status: sectionStatus[key] }));
+    status: sectionStatus[key],
+  }));
 
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
@@ -144,7 +173,8 @@ export default function CreateNetworkPage() {
   // Section status state
   const [sectionStatus, setSectionStatus] = useState<Record<SectionStep, WizardSectionState>>({
     'basic-info': 'active',
-    subnet: 'pending' });
+    subnet: 'pending',
+  });
 
   // Form state - Basic Info
   const [networkName, setNetworkName] = useState('');
@@ -193,7 +223,8 @@ export default function CreateNetworkPage() {
       width: fixedColumns.status,
       align: 'center',
       sortable: false,
-      render: (_, row) => <StatusIndicator status={row.status} layout="icon-only" /> },
+      render: (_, row) => <StatusIndicator status={row.status} layout="icon-only" />,
+    },
     {
       key: 'name',
       label: 'Name',
@@ -211,12 +242,14 @@ export default function CreateNetworkPage() {
           </Link>
           <span className="text-[11px] leading-4 text-[var(--color-text-muted)]">ID: {row.id}</span>
         </div>
-      ) },
+      ),
+    },
     {
       key: 'description',
       label: 'Description',
       flex: 1,
-      sortable: true },
+      sortable: true,
+    },
   ];
 
   // Get selected tenant items for SelectionIndicator
@@ -251,13 +284,15 @@ export default function CreateNetworkPage() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    icon: tab.icon }));
+    icon: tab.icon,
+  }));
 
   // Edit section handler
   const editSection = (section: SectionStep) => {
     setSectionStatus((prev) => ({
       ...prev,
-      [section]: 'active' }));
+      [section]: 'active',
+    }));
   };
 
   // Handle cancel
@@ -275,7 +310,8 @@ export default function CreateNetworkPage() {
       externalNetwork: externalNetwork ? 'Yes' : 'No',
       ...(externalNetwork && {
         providerNetworkType: providerNetworkType.toUpperCase(),
-        segmentationId }),
+        segmentationId,
+      }),
       mtu,
       adminState: adminState ? 'Up' : 'Down',
       portSecurity: portSecurity ? 'On' : 'Off',
@@ -287,8 +323,10 @@ export default function CreateNetworkPage() {
             gateway: gateway ? gatewayIp : null,
             dhcp,
             allocationPools,
-            hostRoutes }
-        : null });
+            hostRoutes,
+          }
+        : null,
+    });
     navigate('/compute-admin/networks');
   };
 
@@ -673,7 +711,8 @@ export default function CreateNetworkPage() {
                               setSectionStatus((prev) => ({
                                 ...prev,
                                 'basic-info': 'done',
-                                subnet: 'active' }));
+                                subnet: 'active',
+                              }));
                             }}
                           >
                             Done
@@ -904,7 +943,8 @@ export default function CreateNetworkPage() {
                               // Always proceed to done state
                               setSectionStatus((prev) => ({
                                 ...prev,
-                                subnet: 'done' }));
+                                subnet: 'done',
+                              }));
                             }}
                           >
                             Done

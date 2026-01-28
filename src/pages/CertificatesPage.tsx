@@ -359,7 +359,13 @@ export function CertificatesPage() {
         return <span className={isExpired ? 'text-[var(--color-text-danger)]' : ''}>{value}</span>;
       },
     },
-    { key: 'createdAt', label: 'Created at', flex: 1, minWidth: columnMinWidths.createdAt, sortable: true },
+    {
+      key: 'createdAt',
+      label: 'Created at',
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
+      sortable: true,
+    },
     {
       key: 'actions',
       label: 'Action',

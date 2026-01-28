@@ -226,7 +226,8 @@ export function StorageClassesPage() {
     {
       key: 'isDefault',
       label: 'Default',
-      flex: 1, minWidth: columnMinWidths.default,
+      flex: 1,
+      minWidth: columnMinWidths.default,
       render: (value: boolean) =>
         value ? (
           <IconCheck size={16} className="text-[var(--color-text-default)]" stroke={2} />
@@ -237,7 +238,8 @@ export function StorageClassesPage() {
     {
       key: 'createdAt',
       label: 'Created At',
-      flex: 1, minWidth: columnMinWidths.createdAt,
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
     },
     {

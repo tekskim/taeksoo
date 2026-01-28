@@ -1,5 +1,22 @@
 import { useState, useMemo } from 'react';
-import { Button, FilterSearchInput, Pagination, VStack, TabBar, TopBar, TopBarAction, Breadcrumb, Tabs, TabList, Tab, ContextMenu, ConfirmModal, type ContextMenuItem, type FilterField, type AppliedFilter, fixedColumns, columnMinWidths } from '@/design-system';
+import {
+  Button,
+  FilterSearchInput,
+  Pagination,
+  VStack,
+  TabBar,
+  TopBar,
+  TopBarAction,
+  Breadcrumb,
+  Tabs,
+  TabList,
+  Tab,
+  ContextMenu,
+  ConfirmModal,
+  type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
+} from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
@@ -8,7 +25,8 @@ import {
   IconDownload,
   IconBell,
   IconChevronRight,
-  IconChevronDown } from '@tabler/icons-react';
+  IconChevronDown,
+} from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -45,7 +63,8 @@ const mockHostAggregates: HostAggregate[] = [
       { key: 'cpu_allocation_ratio', value: '16.0' },
       { key: 'ram_allocation_ratio', value: '1.5' },
     ],
-    createdAt: 'Dec 25, 2025' },
+    createdAt: 'Dec 25, 2025',
+  },
   {
     id: 'ha-002',
     name: 'compute-gpu',
@@ -55,7 +74,8 @@ const mockHostAggregates: HostAggregate[] = [
       { key: 'gpu', value: 'nvidia-a100' },
       { key: 'gpu_count', value: '8' },
     ],
-    createdAt: 'Dec 25, 2025' },
+    createdAt: 'Dec 25, 2025',
+  },
   {
     id: 'ha-003',
     name: 'compute-memory',
@@ -65,7 +85,8 @@ const mockHostAggregates: HostAggregate[] = [
       { key: 'memory', value: 'high' },
       { key: 'ram_allocation_ratio', value: '1.0' },
     ],
-    createdAt: 'Dec 25, 2025' },
+    createdAt: 'Dec 25, 2025',
+  },
   {
     id: 'ha-004',
     name: 'compute-storage',
@@ -75,14 +96,16 @@ const mockHostAggregates: HostAggregate[] = [
       { key: 'storage', value: 'nvme' },
       { key: 'disk_allocation_ratio', value: '1.0' },
     ],
-    createdAt: 'Dec 25, 2025' },
+    createdAt: 'Dec 25, 2025',
+  },
   {
     id: 'ha-005',
     name: 'compute-bare-metal',
     availabilityZone: 'zone-c',
     hosts: ['bm-host-1'],
     metadata: [{ key: 'bare-metal', value: 'true' }],
-    createdAt: 'Dec 25, 2025' },
+    createdAt: 'Dec 25, 2025',
+  },
 ];
 
 const mockAvailabilityZones: AvailabilityZone[] = [
@@ -90,7 +113,8 @@ const mockAvailabilityZones: AvailabilityZone[] = [
     id: 'az-001',
     name: 'zone-a',
     hosts: ['host-a', 'host-b', 'host-c', 'host-d'],
-    available: true },
+    available: true,
+  },
   { id: 'az-002', name: 'zone-b', hosts: ['host-e', 'host-f', 'host-g'], available: true },
   { id: 'az-003', name: 'zone-c', hosts: ['host-h', 'host-i'], available: true },
   { id: 'az-004', name: 'zone-d', hosts: ['host-j'], available: false },
@@ -98,7 +122,8 @@ const mockAvailabilityZones: AvailabilityZone[] = [
     id: 'az-005',
     name: 'zone-e',
     hosts: ['host-k', 'host-l', 'host-m', 'host-n'],
-    available: true },
+    available: true,
+  },
 ];
 
 /* ----------------------------------------
@@ -145,7 +170,8 @@ export function ComputeAdminHostAggregatesPage() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    closable: tab.closable }));
+    closable: tab.closable,
+  }));
 
   const handleDeleteClick = (item: HostAggregate) => {
     setItemToDelete(item);
@@ -205,7 +231,8 @@ export function ComputeAdminHostAggregatesPage() {
     {
       id: 'manage-metadata',
       label: 'Manage metadata',
-      onClick: () => console.log('Manage metadata:', row.id) },
+      onClick: () => console.log('Manage metadata:', row.id),
+    },
     { id: 'delete', label: 'Delete', status: 'danger', onClick: () => handleDeleteClick(row) },
   ];
 

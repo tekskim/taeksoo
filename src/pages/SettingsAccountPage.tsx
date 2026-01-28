@@ -8,7 +8,6 @@ import {
   Input,
   Modal,
   Table,
-  fixedColumns,
   columnMinWidths,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system/components/Table/Table';

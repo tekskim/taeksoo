@@ -1,6 +1,19 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Button, VStack, TabBar, TopBar, TopBarAction, Breadcrumb, Tabs, TabList, Tab, TabPanel, DetailHeader, SectionCard, fixedColumns, columnMinWidths } from '@/design-system';
+import {
+  Button,
+  VStack,
+  TabBar,
+  TopBar,
+  TopBarAction,
+  Breadcrumb,
+  Tabs,
+  TabList,
+  Tab,
+  TabPanel,
+  DetailHeader,
+  SectionCard,
+} from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
@@ -9,7 +22,8 @@ import {
   IconBell,
   IconCopy,
   IconCheck,
-  IconCirclePlus } from '@tabler/icons-react';
+  IconCirclePlus,
+} from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -94,7 +108,9 @@ const mockImagesMap: Record<string, ImageDetail> = {
       os_distro: 'ubuntu',
       image_type: 'image',
       hw_scsi_model: 'virtio-scsi',
-      base_image_ref: '1e568eb7-a277-48f0-97d4-e481f2dd1ef4' } },
+      base_image_ref: '1e568eb7-a277-48f0-97d4-e481f2dd1ef4',
+    },
+  },
   'img-002': {
     id: 'img-002',
     name: 'CentOS-8-minimal',
@@ -120,7 +136,8 @@ const mockImagesMap: Record<string, ImageDetail> = {
     qemuGuestAgent: true,
     cpuPolicy: 'Not select',
     cpuThreadPolicy: 'Not select',
-    metadata: {} },
+    metadata: {},
+  },
   'img-003': {
     id: 'img-003',
     name: 'Rocky-Linux-9',
@@ -146,7 +163,8 @@ const mockImagesMap: Record<string, ImageDetail> = {
     qemuGuestAgent: true,
     cpuPolicy: 'Not select',
     cpuThreadPolicy: 'Not select',
-    metadata: {} },
+    metadata: {},
+  },
   'img-004': {
     id: 'img-004',
     name: 'Debian-12-standard',
@@ -172,7 +190,8 @@ const mockImagesMap: Record<string, ImageDetail> = {
     qemuGuestAgent: true,
     cpuPolicy: 'Not select',
     cpuThreadPolicy: 'Not select',
-    metadata: {} },
+    metadata: {},
+  },
   'img-005': {
     id: 'img-005',
     name: 'Ubuntu-20.04-LTS',
@@ -204,7 +223,9 @@ const mockImagesMap: Record<string, ImageDetail> = {
       os_version: '20.04',
       os_distro: 'ubuntu',
       image_type: 'image',
-      hw_scsi_model: 'virtio-scsi' } },
+      hw_scsi_model: 'virtio-scsi',
+    },
+  },
   'img-006': {
     id: 'img-006',
     name: 'Windows-Server-2022',
@@ -230,7 +251,8 @@ const mockImagesMap: Record<string, ImageDetail> = {
     qemuGuestAgent: false,
     cpuPolicy: 'Not select',
     cpuThreadPolicy: 'Not select',
-    metadata: {} },
+    metadata: {},
+  },
   'img-007': {
     id: 'img-007',
     name: 'Alpine-3.18-minimal',
@@ -256,7 +278,8 @@ const mockImagesMap: Record<string, ImageDetail> = {
     qemuGuestAgent: true,
     cpuPolicy: 'Not select',
     cpuThreadPolicy: 'Not select',
-    metadata: {} },
+    metadata: {},
+  },
   'img-008': {
     id: 'img-008',
     name: 'Fedora-39-workstation',
@@ -282,7 +305,8 @@ const mockImagesMap: Record<string, ImageDetail> = {
     qemuGuestAgent: true,
     cpuPolicy: 'Not select',
     cpuThreadPolicy: 'Not select',
-    metadata: {} },
+    metadata: {},
+  },
   'img-009': {
     id: 'img-009',
     name: 'Oracle-Linux-8',
@@ -308,7 +332,8 @@ const mockImagesMap: Record<string, ImageDetail> = {
     qemuGuestAgent: true,
     cpuPolicy: 'Not select',
     cpuThreadPolicy: 'Not select',
-    metadata: {} },
+    metadata: {},
+  },
   'img-010': {
     id: 'img-010',
     name: 'Ubuntu-22.04-GPU',
@@ -334,7 +359,9 @@ const mockImagesMap: Record<string, ImageDetail> = {
     qemuGuestAgent: true,
     cpuPolicy: 'Not select',
     cpuThreadPolicy: 'Not select',
-    metadata: {} } };
+    metadata: {},
+  },
+};
 
 const defaultImageDetail: ImageDetail = {
   id: 'unknown',
@@ -361,7 +388,8 @@ const defaultImageDetail: ImageDetail = {
   qemuGuestAgent: false,
   cpuPolicy: '-',
   cpuThreadPolicy: '-',
-  metadata: {} };
+  metadata: {},
+};
 
 /* ----------------------------------------
    Copyable Value Component
@@ -424,7 +452,8 @@ export function ComputeAdminImageDetailPage() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    closable: tab.closable }));
+    closable: tab.closable,
+  }));
 
   // Breadcrumb items
   const breadcrumbItems = [

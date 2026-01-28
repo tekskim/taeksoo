@@ -26,7 +26,6 @@ import {
   SelectionIndicator,
   type TableColumn,
   fixedColumns,
-  columnMinWidths,
 } from '@/design-system';
 import { IconBell, IconPalette } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';

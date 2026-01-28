@@ -1,6 +1,26 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Button, VStack, TabBar, TopBar, TopBarAction, Breadcrumb, Tabs, TabList, Tab, TabPanel, DetailHeader, SectionCard, Table, SearchInput, Pagination, StatusIndicator, Badge, Tooltip, fixedColumns, columnMinWidths } from '@/design-system';
+import {
+  Button,
+  VStack,
+  TabBar,
+  TopBar,
+  TopBarAction,
+  Breadcrumb,
+  Tabs,
+  TabList,
+  Tab,
+  TabPanel,
+  DetailHeader,
+  SectionCard,
+  Table,
+  SearchInput,
+  Pagination,
+  StatusIndicator,
+  Badge,
+  Tooltip,
+  fixedColumns,
+} from '@/design-system';
 import type { TableColumn } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -65,7 +85,9 @@ const mockSubnetDetail: SubnetDetail = {
   // Network
   network: {
     name: 'web-server-10',
-    id: 'net-001' } };
+    id: 'net-001',
+  },
+};
 
 // Mock subnet database for different subnet IDs
 const mockSubnets: Record<string, SubnetDetail> = {
@@ -76,13 +98,16 @@ const mockSubnets: Record<string, SubnetDetail> = {
     id: 'subnet-002',
     name: 'subnet-2',
     cidr: '192.168.3.0/24',
-    gatewayIp: '192.168.3.1' },
+    gatewayIp: '192.168.3.1',
+  },
   'subnet-003': {
     ...mockSubnetDetail,
     id: 'subnet-003',
     name: 'subnet-3',
     cidr: '192.168.4.0/24',
-    gatewayIp: '192.168.4.1' } };
+    gatewayIp: '192.168.4.1',
+  },
+};
 
 const mockPorts: Port[] = Array.from({ length: 115 }, (_, i) => ({
   id: `port-${String(i + 1).padStart(3, '0')}`,
@@ -91,13 +116,15 @@ const mockPorts: Port[] = Array.from({ length: 115 }, (_, i) => ({
   attachedTo: {
     name: 'my-server',
     id: '12345678',
-    type: i % 5 === 0 ? 'router' : 'instance' },
+    type: i % 5 === 0 ? 'router' : 'instance',
+  },
   securityGroups: ['default', 'web-sg', 'db-sg', 'app-sg'].slice(0, (i % 4) + 1),
   fixedIp: '10.70.0.48',
   floatingIp: i % 3 === 0 ? '' : '-',
   macAddress: 'fa:16:3e:77:62:19',
   adminState: i % 7 === 0 ? 'Down' : 'Up',
-  createdAt: 'Dec 15, 2025' }));
+  createdAt: 'Dec 15, 2025',
+}));
 
 /* ----------------------------------------
    Status Mapping
@@ -106,7 +133,8 @@ const mockPorts: Port[] = Array.from({ length: 115 }, (_, i) => ({
 const portStatusMap: Record<PortStatus, 'active' | 'error' | 'shutoff' | 'building'> = {
   active: 'active',
   down: 'shutoff',
-  build: 'building' };
+  build: 'building',
+};
 
 /* ----------------------------------------
    SubnetDetailPage Component
@@ -151,7 +179,8 @@ export default function SubnetDetailPage() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    closable: tab.closable }));
+    closable: tab.closable,
+  }));
 
   const handleCopyId = () => {
     navigator.clipboard.writeText(subnet.id);
@@ -181,7 +210,8 @@ export default function SubnetDetailPage() {
       label: 'Status',
       width: fixedColumns.status,
       align: 'center',
-      render: (_, row) => <StatusIndicator status={portStatusMap[row.status]} layout="icon-only" /> },
+      render: (_, row) => <StatusIndicator status={portStatusMap[row.status]} layout="icon-only" />,
+    },
     {
       key: 'name',
       label: 'Name',
@@ -200,7 +230,8 @@ export default function SubnetDetailPage() {
             ID: {row.id}
           </span>
         </div>
-      ) },
+      ),
+    },
     {
       key: 'attachedTo',
       label: 'Attached To',
@@ -240,7 +271,8 @@ export default function SubnetDetailPage() {
           </div>
         ) : (
           <span className="text-[var(--color-text-muted)]">-</span>
-        ) },
+        ),
+    },
     {
       key: 'securityGroups',
       label: 'SG',
@@ -250,22 +282,26 @@ export default function SubnetDetailPage() {
           {row.securityGroups[0]}
           {row.securityGroups.length > 1 && ` (+${row.securityGroups.length - 1})`}
         </span>
-      ) },
+      ),
+    },
     {
       key: 'fixedIp',
       label: 'Fixed IP',
-      flex: 1 },
+      flex: 1,
+    },
     {
       key: 'floatingIp',
       label: 'Floating IP',
       flex: 1,
       render: (_, row) => (
         <span className="text-[var(--color-text-default)]">{row.floatingIp || '-'}</span>
-      ) },
+      ),
+    },
     {
       key: 'macAddress',
       label: 'MAC Address',
-      flex: 1 },
+      flex: 1,
+    },
     {
       key: 'adminState',
       label: 'Admin State',
@@ -274,12 +310,14 @@ export default function SubnetDetailPage() {
         <Badge variant={row.adminState === 'Up' ? 'success' : 'error'} size="sm">
           {row.adminState}
         </Badge>
-      ) },
+      ),
+    },
     {
       key: 'createdAt',
       label: 'Created At',
       flex: 1,
-      sortable: true },
+      sortable: true,
+    },
     {
       key: 'actions',
       label: 'Action',
@@ -294,7 +332,8 @@ export default function SubnetDetailPage() {
             <IconTrash size={16} stroke={1.5} className="text-[var(--color-state-danger)]" />
           </button>
         </div>
-      ) },
+      ),
+    },
   ];
 
   return (

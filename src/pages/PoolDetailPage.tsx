@@ -19,7 +19,6 @@ import {
   StatusIndicator,
   ContextMenu,
   fixedColumns,
-  columnMinWidths,
 } from '@/design-system';
 import type { TableColumn, ContextMenuItem } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';

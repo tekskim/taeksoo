@@ -1,6 +1,24 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Button, VStack, TabBar, TopBar, TopBarAction, Breadcrumb, Tabs, TabList, Tab, TabPanel, DetailHeader, SectionCard, StatusIndicator, Table, SearchInput, Pagination, fixedColumns, columnMinWidths } from '@/design-system';
+import {
+  Button,
+  VStack,
+  TabBar,
+  TopBar,
+  TopBarAction,
+  Breadcrumb,
+  Tabs,
+  TabList,
+  Tab,
+  TabPanel,
+  DetailHeader,
+  SectionCard,
+  StatusIndicator,
+  Table,
+  SearchInput,
+  Pagination,
+  fixedColumns,
+} from '@/design-system';
 import type { TableColumn } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -86,7 +104,8 @@ const mockServerCertificate: ServerCertificateDetail = {
   san: 'www.domain.com, api.domain.com',
   signatureType: 'SHA256withRSA',
   validFrom: '2025-02-10',
-  validTo: '2026-02-10' };
+  validTo: '2026-02-10',
+};
 
 const mockCACertificate: CACertificateDetail = {
   id: '8395e0285f92542f04171b0cde3deef0',
@@ -102,7 +121,8 @@ const mockCACertificate: CACertificateDetail = {
   issuer: 'Sectigo Root CA',
   signatureType: 'SHA256withRSA',
   validFrom: '2025-02-10',
-  validTo: '2026-02-10' };
+  validTo: '2026-02-10',
+};
 
 // Mock certificate database
 const mockCertificates: Record<string, CertificateDetail> = {
@@ -111,7 +131,8 @@ const mockCertificates: Record<string, CertificateDetail> = {
   'cert-003': { ...mockServerCertificate, id: 'cert-003', name: 'web-cert' },
   'cert-004': { ...mockCACertificate, id: 'cert-004', name: 'intermediate-ca' },
   'cert-005': { ...mockCACertificate, id: 'cert-005', name: 'private-ca' },
-  'cert-006': { ...mockCACertificate, id: 'cert-006', name: 'root-ca' } };
+  'cert-006': { ...mockCACertificate, id: 'cert-006', name: 'root-ca' },
+};
 
 // Mock listeners data
 const mockListeners: Listener[] = Array.from({ length: 115 }, (_, i) => ({
@@ -122,14 +143,17 @@ const mockListeners: Listener[] = Array.from({ length: 115 }, (_, i) => ({
   port: [80, 443, 8080, 3000][i % 4],
   loadBalancer: {
     name: 'web-lb-01',
-    id: `29fg234${String(i).padStart(2, '0')}` },
-  adminState: i % 10 === 0 ? 'Down' : 'Up' }));
+    id: `29fg234${String(i).padStart(2, '0')}`,
+  },
+  adminState: i % 10 === 0 ? 'Down' : 'Up',
+}));
 
 // Listener status mapping
 const listenerStatusMap: Record<ListenerStatus, 'active' | 'down' | 'error'> = {
   active: 'active',
   down: 'down',
-  error: 'error' };
+  error: 'error',
+};
 
 /* ----------------------------------------
    Status Mapping
@@ -140,7 +164,8 @@ const certificateStatusMap: Record<CertificateStatus, 'active' | 'error' | 'shut
     valid: 'active',
     expired: 'error',
     revoked: 'shutoff',
-    pending: 'building' };
+    pending: 'building',
+  };
 
 /* ----------------------------------------
    Type Guards
@@ -195,7 +220,8 @@ export default function CertificateDetailPage() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    closable: tab.closable }));
+    closable: tab.closable,
+  }));
 
   const handleCopyId = () => {
     navigator.clipboard.writeText(certificate.id);
@@ -231,7 +257,8 @@ export default function CertificateDetailPage() {
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={listenerStatusMap[row.status]} layout="icon-only" />
-      ) },
+      ),
+    },
     {
       key: 'name',
       label: 'Name',
@@ -251,17 +278,20 @@ export default function CertificateDetailPage() {
             ID : {row.id}
           </span>
         </div>
-      ) },
+      ),
+    },
     {
       key: 'protocol',
       label: 'Protocol',
       flex: 1,
-      sortable: true },
+      sortable: true,
+    },
     {
       key: 'port',
       label: 'Port',
       flex: 1,
-      sortable: true },
+      sortable: true,
+    },
     {
       key: 'loadBalancer',
       label: 'Load balancer',
@@ -281,11 +311,13 @@ export default function CertificateDetailPage() {
             ID : {row.loadBalancer.id}
           </span>
         </div>
-      ) },
+      ),
+    },
     {
       key: 'adminState',
       label: 'Admin state',
-      flex: 1 },
+      flex: 1,
+    },
   ];
 
   return (

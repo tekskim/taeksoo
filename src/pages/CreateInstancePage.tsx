@@ -1099,7 +1099,8 @@ function ImageSection({
       key: 'name',
       label: 'Name',
       sortable: true,
-      flex: 1, minWidth: columnMinWidths.name,
+      flex: 1,
+      minWidth: columnMinWidths.name,
       render: (value, row) => (
         <VStack gap={0}>
           <HStack gap={1} align="center">
@@ -1115,11 +1116,29 @@ function ImageSection({
         </VStack>
       ),
     },
-    { key: 'version', label: 'Version', sortable: true, flex: 1, minWidth: columnMinWidths.version },
+    {
+      key: 'version',
+      label: 'Version',
+      sortable: true,
+      flex: 1,
+      minWidth: columnMinWidths.version,
+    },
     { key: 'size', label: 'Size', sortable: true, flex: 1, minWidth: columnMinWidths.size },
-    { key: 'minDisk', label: 'Min disk', sortable: true, flex: 1, minWidth: columnMinWidths.minDisk },
+    {
+      key: 'minDisk',
+      label: 'Min disk',
+      sortable: true,
+      flex: 1,
+      minWidth: columnMinWidths.minDisk,
+    },
     { key: 'minRam', label: 'Min RAM', sortable: true, flex: 1, minWidth: columnMinWidths.minRam },
-    { key: 'access', label: 'Visibility', sortable: true, flex: 1, minWidth: columnMinWidths.access },
+    {
+      key: 'access',
+      label: 'Visibility',
+      sortable: true,
+      flex: 1,
+      minWidth: columnMinWidths.access,
+    },
   ];
 
   // Snapshot Table columns
@@ -1151,9 +1170,16 @@ function ImageSection({
       key: 'sourceInstance',
       label: 'Source instance',
       sortable: true,
-      flex: 1, minWidth: columnMinWidths.sourceInstance,
+      flex: 1,
+      minWidth: columnMinWidths.sourceInstance,
     },
-    { key: 'createdAt', label: 'Created at', sortable: true, flex: 1, minWidth: columnMinWidths.createdAt },
+    {
+      key: 'createdAt',
+      label: 'Created at',
+      sortable: true,
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
+    },
   ];
 
   // Bootable Volume Table columns
@@ -1190,7 +1216,13 @@ function ImageSection({
     { key: 'name', label: 'Name', sortable: true },
     { key: 'size', label: 'Size', sortable: true, flex: 1, minWidth: columnMinWidths.size },
     { key: 'type', label: 'Type', sortable: true, flex: 1, minWidth: columnMinWidths.type },
-    { key: 'createdAt', label: 'Created at', sortable: true, flex: 1, minWidth: columnMinWidths.createdAt },
+    {
+      key: 'createdAt',
+      label: 'Created at',
+      sortable: true,
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
+    },
   ];
 
   const osChipStyle = (active: boolean) => `
@@ -1658,13 +1690,15 @@ function FlavorSection({
       key: 'ephemeralDisk',
       label: 'Ephemeral disk',
       sortable: true,
-      flex: 1, minWidth: columnMinWidths.ephemeralDisk,
+      flex: 1,
+      minWidth: columnMinWidths.ephemeralDisk,
     },
     {
       key: 'networkBandwidth',
       label: 'Internal network Bandwidth',
       sortable: true,
-      flex: 1, minWidth: columnMinWidths.networkBandwidth,
+      flex: 1,
+      minWidth: columnMinWidths.networkBandwidth,
     },
   ];
 
@@ -3049,7 +3083,13 @@ function AdvancedSection({
       ),
     },
     { key: 'name', label: 'Name', sortable: true },
-    { key: 'memberCount', label: 'Member count', sortable: true, flex: 1, minWidth: columnMinWidths.memberCount },
+    {
+      key: 'memberCount',
+      label: 'Member count',
+      sortable: true,
+      flex: 1,
+      minWidth: columnMinWidths.memberCount,
+    },
     { key: 'policy', label: 'Policy', sortable: true },
   ];
 
@@ -3324,13 +3364,15 @@ function TemplatesSection({
     {
       key: 'visibility',
       label: 'Visibility',
-      flex: 1, minWidth: columnMinWidths.visibility,
+      flex: 1,
+      minWidth: columnMinWidths.visibility,
       sortable: true,
     },
     {
       key: 'createdAt',
       label: 'Created at',
-      flex: 1, minWidth: columnMinWidths.createdAt,
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
     },
   ];

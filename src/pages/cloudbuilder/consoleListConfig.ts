@@ -1,4 +1,4 @@
-import { fixedColumns, columnMinWidths } from '@/design-system';
+import { columnMinWidths } from '@/design-system';
 
 export type BadgeTone = 'success' | 'neutral' | 'blue' | 'warning' | 'danger';
 export type ColumnKind = 'text' | 'badge' | 'mono';
@@ -243,7 +243,13 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
           kind: 'badge',
           badgeTones: frontierTones,
         },
-        { key: 'mgmtIp', label: 'Mgmt IP', sortable: true, kind: 'mono', width: columnMinWidths.ip },
+        {
+          key: 'mgmtIp',
+          label: 'Mgmt IP',
+          sortable: true,
+          kind: 'mono',
+          width: columnMinWidths.ip,
+        },
         {
           key: 'observedHealth',
           label: 'Observed Health',
@@ -369,7 +375,13 @@ export function getCloudBuilderListConfig(slug: CloudBuilderSlug): CloudBuilderL
           kind: 'badge',
           badgeTones: frontierTones,
         },
-        { key: 'mgmtIp', label: 'Mgmt IP', sortable: true, kind: 'mono', width: columnMinWidths.ip },
+        {
+          key: 'mgmtIp',
+          label: 'Mgmt IP',
+          sortable: true,
+          kind: 'mono',
+          width: columnMinWidths.ip,
+        },
         {
           key: 'observedHealth',
           label: 'Observed Health',

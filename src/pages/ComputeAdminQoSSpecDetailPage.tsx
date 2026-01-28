@@ -1,6 +1,28 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Button, FilterSearchInput, Table, Pagination, VStack, TabBar, TopBar, TopBarAction, Breadcrumb, Tabs, TabList, Tab, DetailHeader, ListToolbar, ContextMenu, ConfirmModal, type TableColumn, type ContextMenuItem, type FilterField, type AppliedFilter, fixedColumns, columnMinWidths } from '@/design-system';
+import {
+  Button,
+  FilterSearchInput,
+  Table,
+  Pagination,
+  VStack,
+  TabBar,
+  TopBar,
+  TopBarAction,
+  Breadcrumb,
+  Tabs,
+  TabList,
+  Tab,
+  DetailHeader,
+  ListToolbar,
+  ContextMenu,
+  ConfirmModal,
+  type TableColumn,
+  type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
+  fixedColumns,
+} from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
@@ -9,7 +31,8 @@ import {
   IconEdit,
   IconBell,
   IconDownload,
-  IconDotsCircleHorizontal } from '@tabler/icons-react';
+  IconDotsCircleHorizontal,
+} from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -35,20 +58,25 @@ const mockQoSSpecDetails: Record<string, QoSSpecDetail> = {
   'qos-001': {
     id: '7284d9174e81431e93060a9bbcf2cdfd',
     name: 'Spec',
-    consumer: 'Frontend' },
+    consumer: 'Frontend',
+  },
   'qos-002': {
     id: 'qos-002',
     name: 'ultra-perf',
-    consumer: 'back-end' },
+    consumer: 'back-end',
+  },
   'qos-003': {
     id: 'qos-003',
     name: 'standard',
-    consumer: 'front-end' } };
+    consumer: 'front-end',
+  },
+};
 
 const defaultQoSSpec: QoSSpecDetail = {
   id: 'unknown',
   name: 'Unknown Spec',
-  consumer: '-' };
+  consumer: '-',
+};
 
 // Generate mock extra specs
 const generateExtraSpecs = (): ExtraSpec[] => {
@@ -67,7 +95,8 @@ const generateExtraSpecs = (): ExtraSpec[] => {
 
   return specs.map((spec, index) => ({
     id: `spec-${index + 1}`,
-    ...spec }));
+    ...spec,
+  }));
 };
 
 const mockExtraSpecs = generateExtraSpecs();
@@ -112,7 +141,8 @@ export default function ComputeAdminQoSSpecDetailPage() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    closable: tab.closable }));
+    closable: tab.closable,
+  }));
 
   // Breadcrumb items
   const breadcrumbItems = [
@@ -167,12 +197,14 @@ export default function ComputeAdminQoSSpecDetailPage() {
       key: 'parameter',
       label: 'Parameter',
       flex: 1,
-      sortable: true },
+      sortable: true,
+    },
     {
       key: 'value',
       label: 'Value',
       flex: 1,
-      sortable: true },
+      sortable: true,
+    },
     {
       key: 'actions',
       label: 'Action',
@@ -183,12 +215,14 @@ export default function ComputeAdminQoSSpecDetailPage() {
           {
             id: 'edit',
             label: 'Edit',
-            onClick: () => console.log('Edit', row.parameter) },
+            onClick: () => console.log('Edit', row.parameter),
+          },
           {
             id: 'delete',
             label: 'Delete',
             status: 'danger',
-            onClick: () => handleDeleteSpecClick(row) },
+            onClick: () => handleDeleteSpecClick(row),
+          },
         ];
 
         return (
@@ -204,7 +238,8 @@ export default function ComputeAdminQoSSpecDetailPage() {
             </ContextMenu>
           </div>
         );
-      } },
+      },
+    },
   ];
 
   // Handlers

@@ -1,6 +1,39 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Breadcrumb, NumberInput, ProgressBar, HStack, VStack, TabBar, TopBar, TopBarAction, Pagination, Table, Tabs, TabList, Tab, TabPanel, SearchInput, Radio, Input, Select, Textarea, Disclosure, SectionCard, Checkbox, StatusIndicator, Toggle, InlineMessage, SelectionIndicator, IconUbuntu, IconGrid, IconRocky, fixedColumns, columnMinWidths } from '@/design-system';
+import {
+  Button,
+  Breadcrumb,
+  NumberInput,
+  ProgressBar,
+  HStack,
+  VStack,
+  TabBar,
+  TopBar,
+  TopBarAction,
+  Pagination,
+  Table,
+  Tabs,
+  TabList,
+  Tab,
+  TabPanel,
+  SearchInput,
+  Radio,
+  Input,
+  Select,
+  Textarea,
+  Disclosure,
+  SectionCard,
+  Checkbox,
+  StatusIndicator,
+  Toggle,
+  InlineMessage,
+  SelectionIndicator,
+  IconUbuntu,
+  IconGrid,
+  IconRocky,
+  fixedColumns,
+  columnMinWidths,
+} from '@/design-system';
 import type { TableColumn } from '@/design-system/components/Table/Table';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -14,7 +47,8 @@ import {
   IconPlus,
   IconProgress,
   IconStar,
-  IconStarFilled } from '@tabler/icons-react';
+  IconStarFilled,
+} from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -90,7 +124,8 @@ const SECTION_LABELS: Record<SectionStep, string> = {
   flavor: 'Flavor',
   network: 'Network',
   authentication: 'Authentication',
-  advanced: 'Advanced' };
+  advanced: 'Advanced',
+};
 
 // Section order for navigation
 const SECTION_ORDER: SectionStep[] = [
@@ -138,7 +173,8 @@ const mockTemplates: TemplateRow[] = [
       floatingIpOption: 'none',
       loginType: 'keypair',
       keyPairId: 'kp1', // dev-keypair
-    } },
+    },
+  },
   {
     id: '230km40t',
     name: 'th.small',
@@ -161,7 +197,8 @@ const mockTemplates: TemplateRow[] = [
       floatingIpOption: 'none',
       loginType: 'keypair',
       keyPairId: 'kp2', // prod-keypair
-    } },
+    },
+  },
   {
     id: '331ln51u',
     name: 'th.medium',
@@ -184,7 +221,8 @@ const mockTemplates: TemplateRow[] = [
       floatingIpOption: 'auto',
       loginType: 'keypair',
       keyPairId: 'kp2', // prod-keypair
-    } },
+    },
+  },
   {
     id: '432mo62v',
     name: 'th.large',
@@ -205,7 +243,9 @@ const mockTemplates: TemplateRow[] = [
       networkIds: ['d32059d1', 'd32059d4'], // internal-01, external-net
       securityGroupIds: ['sg1', 'sg3'], // default, web-sg
       floatingIpOption: 'auto',
-      loginType: 'password' } },
+      loginType: 'password',
+    },
+  },
   {
     id: '533np73w',
     name: 'th.xlarge',
@@ -228,7 +268,8 @@ const mockTemplates: TemplateRow[] = [
       floatingIpOption: 'auto',
       loginType: 'keypair',
       keyPairId: 'kp3', // staging-keypair
-    } },
+    },
+  },
   {
     id: '634oq84x',
     name: 'th.2xlarge',
@@ -251,7 +292,9 @@ const mockTemplates: TemplateRow[] = [
       floatingIpOption: 'auto',
       loginType: 'keypair',
       keyPairId: 'kp2', // prod-keypair
-      userData: '#!/bin/bash\necho "Hello from template"' } },
+      userData: '#!/bin/bash\necho "Hello from template"',
+    },
+  },
 ];
 
 /* ----------------------------------------
@@ -318,7 +361,8 @@ function QuotaSidebar({
   quota,
   onCancel,
   sectionStatus,
-  editingSection }: QuotaSidebarProps) {
+  editingSection,
+}: QuotaSidebarProps) {
   // Check if all sections are completed (done or skipped)
   const isAllCompleted = SECTION_ORDER.every(
     (section) => sectionStatus[section] === 'done' || sectionStatus[section] === 'skipped'
@@ -541,7 +585,8 @@ function BasicInformationSection({
   isActive = false,
   isEditing = false,
   onEditCancel,
-  onEditDone }: BasicInformationSectionProps) {
+  onEditDone,
+}: BasicInformationSectionProps) {
   // Validation error
   const [instanceNameError, setInstanceNameError] = useState<string | null>(null);
 
@@ -720,7 +765,8 @@ const mockImages: ImageRow[] = [
     minDisk: '10.00 MiB',
     minRam: '0 MiB',
     access: 'Public',
-    os: 'ubuntu' },
+    os: 'ubuntu',
+  },
   {
     id: 'e920j31d',
     status: 'active',
@@ -730,7 +776,8 @@ const mockImages: ImageRow[] = [
     minDisk: '10.00 MiB',
     minRam: '0 MiB',
     access: 'Public',
-    os: 'ubuntu' },
+    os: 'ubuntu',
+  },
   {
     id: 'e920j32d',
     status: 'active',
@@ -740,7 +787,8 @@ const mockImages: ImageRow[] = [
     minDisk: '10.00 MiB',
     minRam: '0 MiB',
     access: 'Public',
-    os: 'ubuntu' },
+    os: 'ubuntu',
+  },
   {
     id: 'e920j33d',
     status: 'active',
@@ -750,7 +798,8 @@ const mockImages: ImageRow[] = [
     minDisk: '10.00 MiB',
     minRam: '0 MiB',
     access: 'Public',
-    os: 'ubuntu' },
+    os: 'ubuntu',
+  },
   {
     id: 'e920j34d',
     status: 'error',
@@ -760,7 +809,8 @@ const mockImages: ImageRow[] = [
     minDisk: '10.00 MiB',
     minRam: '0 MiB',
     access: 'Public',
-    os: 'ubuntu' },
+    os: 'ubuntu',
+  },
   {
     id: 'e920j35d',
     status: 'active',
@@ -770,7 +820,8 @@ const mockImages: ImageRow[] = [
     minDisk: '10.00 MiB',
     minRam: '0 MiB',
     access: 'Public',
-    os: 'ubuntu' },
+    os: 'ubuntu',
+  },
   {
     id: 'e920j36d',
     status: 'active',
@@ -780,7 +831,8 @@ const mockImages: ImageRow[] = [
     minDisk: '10.00 MiB',
     minRam: '0 MiB',
     access: 'Public',
-    os: 'ubuntu' },
+    os: 'ubuntu',
+  },
   {
     id: 'e920j37d',
     status: 'active',
@@ -790,7 +842,8 @@ const mockImages: ImageRow[] = [
     minDisk: '40.00 GiB',
     minRam: '2 GiB',
     access: 'Public',
-    os: 'windows' },
+    os: 'windows',
+  },
   {
     id: 'e920j38d',
     status: 'active',
@@ -800,7 +853,8 @@ const mockImages: ImageRow[] = [
     minDisk: '40.00 GiB',
     minRam: '2 GiB',
     access: 'Public',
-    os: 'windows' },
+    os: 'windows',
+  },
   {
     id: 'e920j39d',
     status: 'active',
@@ -810,7 +864,8 @@ const mockImages: ImageRow[] = [
     minDisk: '10.00 MiB',
     minRam: '0 MiB',
     access: 'Public',
-    os: 'rocky' },
+    os: 'rocky',
+  },
   {
     id: 'e920j40d',
     status: 'active',
@@ -820,7 +875,8 @@ const mockImages: ImageRow[] = [
     minDisk: '10.00 MiB',
     minRam: '0 MiB',
     access: 'Public',
-    os: 'rocky' },
+    os: 'rocky',
+  },
   {
     id: 'e920j41d',
     status: 'active',
@@ -830,7 +886,8 @@ const mockImages: ImageRow[] = [
     minDisk: '10.00 MiB',
     minRam: '0 MiB',
     access: 'Public',
-    os: 'other' },
+    os: 'other',
+  },
 ];
 
 const mockSnapshots: SnapshotRow[] = [
@@ -840,35 +897,40 @@ const mockSnapshots: SnapshotRow[] = [
     name: 'newsnapshot',
     size: '709.98 MiB',
     sourceInstance: 'th-server',
-    createdAt: '2025-09-01' },
+    createdAt: '2025-09-01',
+  },
   {
     id: 's2',
     status: 'active',
     name: 'web-backup',
     size: '1.2 GiB',
     sourceInstance: 'web-server-01',
-    createdAt: '2025-08-28' },
+    createdAt: '2025-08-28',
+  },
   {
     id: 's3',
     status: 'active',
     name: 'db-snapshot',
     size: '2.5 GiB',
     sourceInstance: 'db-master',
-    createdAt: '2025-08-25' },
+    createdAt: '2025-08-25',
+  },
   {
     id: 's4',
     status: 'building',
     name: 'app-snapshot',
     size: '890.00 MiB',
     sourceInstance: 'app-server',
-    createdAt: '2025-08-20' },
+    createdAt: '2025-08-20',
+  },
   {
     id: 's5',
     status: 'active',
     name: 'test-snapshot',
     size: '512.00 MiB',
     sourceInstance: 'test-vm',
-    createdAt: '2025-08-15' },
+    createdAt: '2025-08-15',
+  },
 ];
 
 const mockBootableVolumes: BootableVolumeRow[] = [
@@ -878,21 +940,24 @@ const mockBootableVolumes: BootableVolumeRow[] = [
     name: 'boot-volume-01',
     size: '50 GiB',
     type: 'SSD',
-    createdAt: '2025-09-01' },
+    createdAt: '2025-09-01',
+  },
   {
     id: 'v2',
     status: 'available',
     name: 'boot-volume-02',
     size: '100 GiB',
     type: 'SSD',
-    createdAt: '2025-08-28' },
+    createdAt: '2025-08-28',
+  },
   {
     id: 'v3',
     status: 'in-use',
     name: 'system-disk',
     size: '80 GiB',
     type: 'HDD',
-    createdAt: '2025-08-20' },
+    createdAt: '2025-08-20',
+  },
 ];
 
 const storageTypeOptions = [
@@ -918,7 +983,8 @@ function ImageSection({
   isActive = false,
   isEditing = false,
   onEditCancel,
-  onEditDone }: ImageSectionProps) {
+  onEditDone,
+}: ImageSectionProps) {
   const [sourceTab, setSourceTab] = useState('image');
   const [osFilter, setOsFilter] = useState<'ubuntu' | 'windows' | 'rocky' | 'other'>('other');
   const [searchQuery, setSearchQuery] = useState('');
@@ -1018,7 +1084,8 @@ function ImageSection({
             onChange={() => handleImageSelect(row.id)}
           />
         </div>
-      ) },
+      ),
+    },
     {
       key: 'status',
       label: 'Status',
@@ -1026,11 +1093,14 @@ function ImageSection({
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={row.status as 'active' | 'error' | 'building'} />
-      ) },
+      ),
+    },
     {
       key: 'name',
       label: 'Name',
-      sortable: true, flex: 1, minWidth: columnMinWidths.name,
+      sortable: true,
+      flex: 1,
+      minWidth: columnMinWidths.name,
       render: (value, row) => (
         <VStack gap={0}>
           <HStack gap={1} align="center">
@@ -1044,12 +1114,31 @@ function ImageSection({
           </HStack>
           <span className="text-[11px] text-[var(--color-text-subtle)]">ID: {row.id}</span>
         </VStack>
-      ) },
-    { key: 'version', label: 'Version', sortable: true, flex: 1, minWidth: columnMinWidths.version },
+      ),
+    },
+    {
+      key: 'version',
+      label: 'Version',
+      sortable: true,
+      flex: 1,
+      minWidth: columnMinWidths.version,
+    },
     { key: 'size', label: 'Size', sortable: true, flex: 1, minWidth: columnMinWidths.size },
-    { key: 'minDisk', label: 'Min disk', sortable: true, flex: 1, minWidth: columnMinWidths.minDisk },
+    {
+      key: 'minDisk',
+      label: 'Min disk',
+      sortable: true,
+      flex: 1,
+      minWidth: columnMinWidths.minDisk,
+    },
     { key: 'minRam', label: 'Min RAM', sortable: true, flex: 1, minWidth: columnMinWidths.minRAM },
-    { key: 'access', label: 'Visibility', sortable: true, flex: 1, minWidth: columnMinWidths.access },
+    {
+      key: 'access',
+      label: 'Visibility',
+      sortable: true,
+      flex: 1,
+      minWidth: columnMinWidths.access,
+    },
   ];
 
   // Snapshot Table columns
@@ -1066,17 +1155,31 @@ function ImageSection({
             onChange={() => handleImageSelect(row.id)}
           />
         </div>
-      ) },
+      ),
+    },
     {
       key: 'status',
       label: 'Status',
       width: fixedColumns.status,
       align: 'center',
-      render: (value) => <StatusIndicator status={value as 'active' | 'error' | 'building'} /> },
+      render: (value) => <StatusIndicator status={value as 'active' | 'error' | 'building'} />,
+    },
     { key: 'name', label: 'Name', sortable: true },
     { key: 'size', label: 'Size', sortable: true, flex: 1, minWidth: columnMinWidths.size },
-    { key: 'sourceInstance', label: 'Source instance', sortable: true, flex: 1, minWidth: columnMinWidths.sourceInstance },
-    { key: 'createdAt', label: 'Created at', sortable: true, flex: 1, minWidth: columnMinWidths.createdAt },
+    {
+      key: 'sourceInstance',
+      label: 'Source instance',
+      sortable: true,
+      flex: 1,
+      minWidth: columnMinWidths.sourceInstance,
+    },
+    {
+      key: 'createdAt',
+      label: 'Created at',
+      sortable: true,
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
+    },
   ];
 
   // Bootable Volume Table columns
@@ -1093,7 +1196,8 @@ function ImageSection({
             onChange={() => handleImageSelect(row.id)}
           />
         </div>
-      ) },
+      ),
+    },
     {
       key: 'status',
       label: 'Status',
@@ -1104,13 +1208,21 @@ function ImageSection({
         const statusMap: Record<string, 'active' | 'in-use' | 'error'> = {
           available: 'active',
           'in-use': 'in-use',
-          error: 'error' };
+          error: 'error',
+        };
         return <StatusIndicator status={statusMap[value] || 'error'} />;
-      } },
+      },
+    },
     { key: 'name', label: 'Name', sortable: true },
     { key: 'size', label: 'Size', sortable: true, flex: 1, minWidth: columnMinWidths.size },
     { key: 'type', label: 'Type', sortable: true, flex: 1, minWidth: columnMinWidths.type },
-    { key: 'createdAt', label: 'Created at', sortable: true, flex: 1, minWidth: columnMinWidths.createdAt },
+    {
+      key: 'createdAt',
+      label: 'Created at',
+      sortable: true,
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
+    },
   ];
 
   const osChipStyle = (active: boolean) => `
@@ -1398,7 +1510,8 @@ const mockFlavors: FlavorRow[] = [
     ram: '2GiB',
     disk: '50GiB',
     ephemeralDisk: '0GiB',
-    networkBandwidth: '-' },
+    networkBandwidth: '-',
+  },
   {
     id: '45hgf456',
     name: 't2.micro',
@@ -1406,7 +1519,8 @@ const mockFlavors: FlavorRow[] = [
     ram: '2GiB',
     disk: '50GiB',
     ephemeralDisk: '0GiB',
-    networkBandwidth: '-' },
+    networkBandwidth: '-',
+  },
   {
     id: '23hgf234',
     name: 'r5.2xlarge',
@@ -1414,7 +1528,8 @@ const mockFlavors: FlavorRow[] = [
     ram: '2GiB',
     disk: '50GiB',
     ephemeralDisk: '0GiB',
-    networkBandwidth: '-' },
+    networkBandwidth: '-',
+  },
   {
     id: '90jkl567',
     name: 'p3.8xlarge',
@@ -1422,7 +1537,8 @@ const mockFlavors: FlavorRow[] = [
     ram: '2GiB',
     disk: '50GiB',
     ephemeralDisk: '0GiB',
-    networkBandwidth: '-' },
+    networkBandwidth: '-',
+  },
   {
     id: '78kls890',
     name: 'c5.xlarge',
@@ -1431,7 +1547,8 @@ const mockFlavors: FlavorRow[] = [
     disk: '5GiB',
     ephemeralDisk: '0GiB',
     networkBandwidth: '-',
-    hasWarning: true },
+    hasWarning: true,
+  },
   {
     id: '12abc345',
     name: 'g4dn.xlarge',
@@ -1439,7 +1556,8 @@ const mockFlavors: FlavorRow[] = [
     ram: '16GiB',
     disk: '125GiB',
     ephemeralDisk: '0GiB',
-    networkBandwidth: '10 Gbps' },
+    networkBandwidth: '10 Gbps',
+  },
   {
     id: '67def890',
     name: 'i3.large',
@@ -1447,7 +1565,8 @@ const mockFlavors: FlavorRow[] = [
     ram: '15.25GiB',
     disk: '475GiB',
     ephemeralDisk: '0GiB',
-    networkBandwidth: '-' },
+    networkBandwidth: '-',
+  },
   {
     id: '34ghi567',
     name: 'x1e.xlarge',
@@ -1455,7 +1574,8 @@ const mockFlavors: FlavorRow[] = [
     ram: '122GiB',
     disk: '120GiB',
     ephemeralDisk: '0GiB',
-    networkBandwidth: '-' },
+    networkBandwidth: '-',
+  },
 ];
 
 interface FlavorSectionProps {
@@ -1475,7 +1595,8 @@ function FlavorSection({
   isActive = false,
   isEditing = false,
   onEditCancel,
-  onEditDone }: FlavorSectionProps) {
+  onEditDone,
+}: FlavorSectionProps) {
   const [flavorTab, setFlavorTab] = useState('vcpu');
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -1540,7 +1661,8 @@ function FlavorSection({
             onChange={() => handleSelectFlavor(row.id)}
           />
         </div>
-      ) },
+      ),
+    },
     {
       key: 'name',
       label: 'Name',
@@ -1559,16 +1681,25 @@ function FlavorSection({
           </HStack>
           <span className="text-[11px] text-[var(--color-text-subtle)]">ID : {row.id}</span>
         </VStack>
-      ) },
+      ),
+    },
     { key: 'vCPU', label: 'vCPU', sortable: true, flex: 1, minWidth: columnMinWidths.vcpu },
     { key: 'ram', label: 'RAM', sortable: true, flex: 1, minWidth: columnMinWidths.ram },
     { key: 'disk', label: 'Disk', sortable: true, flex: 1, minWidth: columnMinWidths.disk },
-    { key: 'ephemeralDisk', label: 'Ephemeral disk', sortable: true, flex: 1, minWidth: columnMinWidths.ephemeralDisk },
+    {
+      key: 'ephemeralDisk',
+      label: 'Ephemeral disk',
+      sortable: true,
+      flex: 1,
+      minWidth: columnMinWidths.ephemeralDisk,
+    },
     {
       key: 'networkBandwidth',
       label: 'Internal network Bandwidth',
       sortable: true,
-      flex: 1, minWidth: columnMinWidths.internalNetworkBandwidth },
+      flex: 1,
+      minWidth: columnMinWidths.internalNetworkBandwidth,
+    },
   ];
 
   return (
@@ -1658,7 +1789,8 @@ function FlavorSection({
                         id: selectedFlavorId,
                         label:
                           mockFlavors.find((f) => f.id === selectedFlavorId)?.name ||
-                          selectedFlavorId },
+                          selectedFlavorId,
+                      },
                     ]
                   : []
               }
@@ -1734,35 +1866,40 @@ const mockNetworks: NetworkRow[] = [
     status: 'Active',
     external: false,
     access: 'Private',
-    subnetCidr: '192.168.1.0/24' },
+    subnetCidr: '192.168.1.0/24',
+  },
   {
     id: 'd32059d2',
     name: 'internal-02',
     status: 'In-active',
     external: true,
     access: 'Public',
-    subnetCidr: '192.168.10.0/24' },
+    subnetCidr: '192.168.10.0/24',
+  },
   {
     id: 'd32059d3',
     name: 'internal-03',
     status: 'Active',
     external: false,
     access: 'Private',
-    subnetCidr: '10.0.0.0/16' },
+    subnetCidr: '10.0.0.0/16',
+  },
   {
     id: 'd32059d4',
     name: 'external-net',
     status: 'Active',
     external: true,
     access: 'Public',
-    subnetCidr: '10.7.60.0/24' },
+    subnetCidr: '10.7.60.0/24',
+  },
   {
     id: 'd32059d5',
     name: 'provider-net',
     status: 'Active',
     external: true,
     access: 'Public',
-    subnetCidr: '10.7.61.0/24' },
+    subnetCidr: '10.7.61.0/24',
+  },
 ];
 
 const mockFloatingIPPools: FloatingIPPoolRow[] = [
@@ -1770,17 +1907,20 @@ const mockFloatingIPPools: FloatingIPPoolRow[] = [
     id: 'pool1',
     status: 'Active',
     name: 'provider2041',
-    allocationPools: '10.7.61.11 - 10.7.61.230' },
+    allocationPools: '10.7.61.11 - 10.7.61.230',
+  },
   {
     id: 'pool2',
     status: 'Active',
     name: 'provider2042',
-    allocationPools: '10.7.62.11 - 10.7.62.230' },
+    allocationPools: '10.7.62.11 - 10.7.62.230',
+  },
   {
     id: 'pool3',
     status: 'Active',
     name: 'provider2043',
-    allocationPools: '10.7.63.11 - 10.7.63.230' },
+    allocationPools: '10.7.63.11 - 10.7.63.230',
+  },
 ];
 
 const mockExistingFloatingIPs: ExistingFloatingIPRow[] = [
@@ -1789,19 +1929,22 @@ const mockExistingFloatingIPs: ExistingFloatingIPRow[] = [
     status: 'Active',
     description: 'internal-02',
     ipAddress: '10.7.60.134',
-    networkName: 'external-64' },
+    networkName: 'external-64',
+  },
   {
     id: 'fip2',
     status: 'Active',
     description: 'internal-03',
     ipAddress: '10.7.60.135',
-    networkName: 'external-65' },
+    networkName: 'external-65',
+  },
   {
     id: 'fip3',
     status: 'Active',
     description: 'web-server',
     ipAddress: '10.7.60.136',
-    networkName: 'external-64' },
+    networkName: 'external-64',
+  },
 ];
 
 const mockSecurityGroups: SecurityGroupRow[] = [
@@ -1818,21 +1961,24 @@ const mockPorts: PortRow[] = [
     name: 'internal-02',
     ownedNetwork: 'external-65',
     fixedIp: '10.7.60.135',
-    macAddress: 'fa:16:3e:aa:bb:cc' },
+    macAddress: 'fa:16:3e:aa:bb:cc',
+  },
   {
     id: 'port2',
     status: 'Active',
     name: 'internal-03',
     ownedNetwork: 'external-64',
     fixedIp: '10.7.60.136',
-    macAddress: 'fa:16:3e:dd:ee:ff' },
+    macAddress: 'fa:16:3e:dd:ee:ff',
+  },
   {
     id: 'port3',
     status: 'Active',
     name: 'web-port',
     ownedNetwork: 'internal-01',
     fixedIp: '192.168.1.10',
-    macAddress: 'fa:16:3e:11:22:33' },
+    macAddress: 'fa:16:3e:11:22:33',
+  },
 ];
 
 interface NetworkSectionProps {
@@ -1848,7 +1994,8 @@ function NetworkSection({
   isActive = false,
   isEditing = false,
   onEditCancel,
-  onEditDone }: NetworkSectionProps) {
+  onEditDone,
+}: NetworkSectionProps) {
   // Network selection
   const [selectedNetworkIds, setSelectedNetworkIds] = useState<Set<string>>(new Set());
   const [networkSearch, setNetworkSearch] = useState('');
@@ -1922,7 +2069,8 @@ function NetworkSection({
             }}
           />
         </div>
-      ) },
+      ),
+    },
     {
       key: 'idName',
       label: 'ID/Name',
@@ -1932,12 +2080,14 @@ function NetworkSection({
           <span className="text-[11px] text-[var(--color-text-subtle)]">{row.id}</span>
           <span>{row.name}</span>
         </VStack>
-      ) },
+      ),
+    },
     { key: 'status', label: 'Status' },
     {
       key: 'external',
       label: 'External',
-      render: (_, row) => <span>{row.external ? 'Yes' : 'No'}</span> },
+      render: (_, row) => <span>{row.external ? 'Yes' : 'No'}</span>,
+    },
     { key: 'access', label: 'Access' },
     { key: 'subnetCidr', label: 'Subnet CIDR' },
   ];
@@ -1956,7 +2106,8 @@ function NetworkSection({
             onChange={() => setSelectedFloatingPool(row.id)}
           />
         </div>
-      ) },
+      ),
+    },
     {
       key: 'status',
       label: 'Status',
@@ -1964,7 +2115,8 @@ function NetworkSection({
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={row.status === 'Active' ? 'active' : 'shutoff'} />
-      ) },
+      ),
+    },
     { key: 'name', label: 'Name', sortable: true },
     { key: 'allocationPools', label: 'Allocation pools' },
   ];
@@ -1990,7 +2142,8 @@ function NetworkSection({
             }}
           />
         </div>
-      ) },
+      ),
+    },
     {
       key: 'status',
       label: 'Status',
@@ -1998,7 +2151,8 @@ function NetworkSection({
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={row.status === 'Active' ? 'active' : 'shutoff'} />
-      ) },
+      ),
+    },
     {
       key: 'idDesc',
       label: 'ID/Description',
@@ -2008,7 +2162,8 @@ function NetworkSection({
           <span className="text-[11px] text-[var(--color-text-subtle)]">{row.id}</span>
           <span>{row.description}</span>
         </VStack>
-      ) },
+      ),
+    },
     { key: 'ipAddress', label: 'IP Address', sortable: true },
     { key: 'networkName', label: 'Network name', sortable: true },
   ];
@@ -2034,7 +2189,8 @@ function NetworkSection({
             }}
           />
         </div>
-      ) },
+      ),
+    },
     {
       key: 'name',
       label: 'Name',
@@ -2058,7 +2214,8 @@ function NetworkSection({
             <line x1="10" y1="14" x2="21" y2="3" />
           </svg>
         </a>
-      ) },
+      ),
+    },
     { key: 'description', label: 'Description', sortable: true },
     { key: 'createdAt', label: 'Created at', sortable: true },
   ];
@@ -2077,7 +2234,8 @@ function NetworkSection({
             onChange={() => setSelectedPortId(row.id)}
           />
         </div>
-      ) },
+      ),
+    },
     {
       key: 'status',
       label: 'Status',
@@ -2085,7 +2243,8 @@ function NetworkSection({
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={row.status === 'Active' ? 'active' : 'shutoff'} />
-      ) },
+      ),
+    },
     {
       key: 'idName',
       label: 'ID/Name',
@@ -2095,7 +2254,8 @@ function NetworkSection({
           <span className="text-[11px] text-[var(--color-text-subtle)]">{row.id}</span>
           <span>{row.name}</span>
         </VStack>
-      ) },
+      ),
+    },
     { key: 'ownedNetwork', label: 'Owned network', sortable: true },
     { key: 'fixedIp', label: 'Fixed IP' },
     { key: 'macAddress', label: 'MAC Address' },
@@ -2455,7 +2615,8 @@ function NetworkSection({
                             id: selectedPortId,
                             label:
                               mockPorts.find((p) => p.id === selectedPortId)?.name ||
-                              selectedPortId },
+                              selectedPortId,
+                          },
                         ]
                       : []
                   }
@@ -2493,23 +2654,28 @@ const mockKeyPairs: KeyPairRow[] = [
   {
     id: 'kp1',
     name: 'dev-keypair',
-    fingerprint: 'c7:a0:ab:68:73:4d:eb:e2:13:35:d0:fd:c7:a6:88:cf' },
+    fingerprint: 'c7:a0:ab:68:73:4d:eb:e2:13:35:d0:fd:c7:a6:88:cf',
+  },
   {
     id: 'kp2',
     name: 'prod-keypair',
-    fingerprint: 'a1:b2:c3:d4:e5:f6:g7:h8:i9:j0:k1:l2:m3:n4:o5:p6' },
+    fingerprint: 'a1:b2:c3:d4:e5:f6:g7:h8:i9:j0:k1:l2:m3:n4:o5:p6',
+  },
   {
     id: 'kp3',
     name: 'staging-keypair',
-    fingerprint: 'f1:e2:d3:c4:b5:a6:97:88:79:6a:5b:4c:3d:2e:1f:0g' },
+    fingerprint: 'f1:e2:d3:c4:b5:a6:97:88:79:6a:5b:4c:3d:2e:1f:0g',
+  },
   {
     id: 'kp4',
     name: 'test-keypair',
-    fingerprint: '11:22:33:44:55:66:77:88:99:aa:bb:cc:dd:ee:ff:00' },
+    fingerprint: '11:22:33:44:55:66:77:88:99:aa:bb:cc:dd:ee:ff:00',
+  },
   {
     id: 'kp5',
     name: 'backup-keypair',
-    fingerprint: 'aa:bb:cc:dd:ee:ff:00:11:22:33:44:55:66:77:88:99' },
+    fingerprint: 'aa:bb:cc:dd:ee:ff:00:11:22:33:44:55:66:77:88:99',
+  },
 ];
 
 interface AuthenticationSectionProps {
@@ -2525,7 +2691,8 @@ function AuthenticationSection({
   isActive = false,
   isEditing = false,
   onEditCancel,
-  onEditDone }: AuthenticationSectionProps) {
+  onEditDone,
+}: AuthenticationSectionProps) {
   const [loginType, setLoginType] = useState<'keypair' | 'password'>('keypair');
   const [selectedKeyPairId, setSelectedKeyPairId] = useState<string | null>(null);
   const [keyPairSearch, setKeyPairSearch] = useState('');
@@ -2618,7 +2785,8 @@ function AuthenticationSection({
             onChange={() => handleSelectKeyPair(row.id)}
           />
         </div>
-      ) },
+      ),
+    },
     { key: 'name', label: 'Name', sortable: true },
     { key: 'fingerprint', label: 'Fingerprint', sortable: true },
   ];
@@ -2708,7 +2876,8 @@ function AuthenticationSection({
                             id: selectedKeyPairId,
                             label:
                               mockKeyPairs.find((k) => k.id === selectedKeyPairId)?.name ||
-                              selectedKeyPairId },
+                              selectedKeyPairId,
+                          },
                         ]
                       : []
                   }
@@ -2879,7 +3048,8 @@ function AdvancedSection({
   isActive = false,
   isEditing = false,
   onEditCancel,
-  onEditDone }: AdvancedSectionProps) {
+  onEditDone,
+}: AdvancedSectionProps) {
   // Server group
   const [serverGroupOpen, setServerGroupOpen] = useState(false);
   const [selectedServerGroupId, setSelectedServerGroupId] = useState<string | null>(null);
@@ -2910,9 +3080,16 @@ function AdvancedSection({
             onChange={() => setSelectedServerGroupId(row.id)}
           />
         </div>
-      ) },
+      ),
+    },
     { key: 'name', label: 'Name', sortable: true },
-    { key: 'memberCount', label: 'Member count', sortable: true, flex: 1, minWidth: columnMinWidths.memberCount },
+    {
+      key: 'memberCount',
+      label: 'Member count',
+      sortable: true,
+      flex: 1,
+      minWidth: columnMinWidths.memberCount,
+    },
     { key: 'policy', label: 'Policy', sortable: true },
   ];
 
@@ -2995,7 +3172,8 @@ function AdvancedSection({
                             id: selectedServerGroupId,
                             label:
                               mockServerGroups.find((sg) => sg.id === selectedServerGroupId)
-                                ?.name || selectedServerGroupId },
+                                ?.name || selectedServerGroupId,
+                          },
                         ]
                       : []
                   }
@@ -3099,7 +3277,8 @@ function TemplatesSection({
   isActive = false,
   isEditing = false,
   onEditCancel,
-  onEditDone }: TemplatesSectionProps) {
+  onEditDone,
+}: TemplatesSectionProps) {
   const [activeTab, setActiveTab] = useState('favorites');
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -3141,7 +3320,8 @@ function TemplatesSection({
         <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Radio value={row.id} checked={selectedId === row.id} onChange={() => onSelect(row.id)} />
         </div>
-      ) },
+      ),
+    },
     {
       key: 'favorite',
       label: '',
@@ -3154,7 +3334,8 @@ function TemplatesSection({
             <IconStar size={14} stroke={1.5} className="text-[var(--color-text-subtle)]" />
           )}
         </div>
-      ) },
+      ),
+    },
     {
       key: 'name',
       label: 'Name',
@@ -3173,21 +3354,27 @@ function TemplatesSection({
           </HStack>
           <span className="text-[11px] text-[var(--color-text-subtle)]">ID: {row.id}</span>
         </VStack>
-      ) },
+      ),
+    },
     {
       key: 'description',
       label: 'Description',
-      sortable: true },
+      sortable: true,
+    },
     {
       key: 'visibility',
       label: 'Visibility',
-      flex: 1, minWidth: columnMinWidths.visibility,
-      sortable: true },
+      flex: 1,
+      minWidth: columnMinWidths.visibility,
+      sortable: true,
+    },
     {
       key: 'createdAt',
       label: 'Created at',
-      flex: 1, minWidth: columnMinWidths.createdAt,
-      sortable: true },
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
+      sortable: true,
+    },
   ];
 
   return (
@@ -3396,7 +3583,8 @@ function TemplatesSection({
                 ? [
                     {
                       id: selectedId,
-                      label: templates.find((t) => t.id === selectedId)?.name || selectedId },
+                      label: templates.find((t) => t.id === selectedId)?.name || selectedId,
+                    },
                   ]
                 : []
             }
@@ -3437,7 +3625,8 @@ export function ComputeAdminCreateInstancePage() {
     flavor: 'pre',
     network: 'pre',
     authentication: 'pre',
-    advanced: 'pre' });
+    advanced: 'pre',
+  });
 
   // Editing mode - tracks which section is being edited (null = not editing, creating new)
   const [editingSection, setEditingSection] = useState<SectionStep | null>(null);
@@ -3484,7 +3673,8 @@ export function ComputeAdminCreateInstancePage() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    closable: tab.closable }));
+    closable: tab.closable,
+  }));
 
   // Handle cancel
   const handleCancel = () => {
@@ -3511,7 +3701,8 @@ export function ComputeAdminCreateInstancePage() {
     setSectionStatus((prev) => ({
       ...prev,
       [section]: 'skipped',
-      [nextSection]: 'active' }));
+      [nextSection]: 'active',
+    }));
   };
 
   // Handle Next (complete current section, activate next)
@@ -3558,7 +3749,8 @@ export function ComputeAdminCreateInstancePage() {
       flavor: 'done',
       network: 'done',
       authentication: 'done',
-      advanced: 'done' });
+      advanced: 'done',
+    });
   };
 
   const handleNext = (section: SectionStep) => {
@@ -3576,7 +3768,8 @@ export function ComputeAdminCreateInstancePage() {
     if (section === 'basic-info' && selectedTemplateId) {
       setSectionStatus((prev) => ({
         ...prev,
-        [section]: 'done' }));
+        [section]: 'done',
+      }));
       return;
     }
 
@@ -3586,12 +3779,14 @@ export function ComputeAdminCreateInstancePage() {
       setSectionStatus((prev) => ({
         ...prev,
         [section]: 'done',
-        [nextSection]: 'active' }));
+        [nextSection]: 'active',
+      }));
     } else {
       // Last section - mark as done
       setSectionStatus((prev) => ({
         ...prev,
-        [section]: 'done' }));
+        [section]: 'done',
+      }));
     }
   };
 

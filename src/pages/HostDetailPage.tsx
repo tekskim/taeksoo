@@ -1157,12 +1157,25 @@ export default function HostDetailPage() {
 
   // Table column definitions
   const deviceColumns: TableColumn<Device>[] = [
-    { key: 'deviceId', label: 'Device ID', flex: 1, minWidth: columnMinWidths.deviceId, sortable: true },
-    { key: 'deviceName', label: 'Device name', flex: 1, minWidth: columnMinWidths.deviceName, sortable: true },
+    {
+      key: 'deviceId',
+      label: 'Device ID',
+      flex: 1,
+      minWidth: columnMinWidths.deviceId,
+      sortable: true,
+    },
+    {
+      key: 'deviceName',
+      label: 'Device name',
+      flex: 1,
+      minWidth: columnMinWidths.deviceName,
+      sortable: true,
+    },
     {
       key: 'daemons',
       label: 'Daemons',
-      flex: 1, minWidth: columnMinWidths.daemons,
+      flex: 1,
+      minWidth: columnMinWidths.daemons,
       render: (_, row) => (
         <div className="flex flex-wrap gap-0.5">
           {row.daemons.map((daemon, index) => (
@@ -1174,12 +1187,19 @@ export default function HostDetailPage() {
   ];
 
   const physicalDiskColumns: TableColumn<PhysicalDisk>[] = [
-    { key: 'devicePath', label: 'Device path', flex: 1, minWidth: columnMinWidths.devicePath, sortable: true },
+    {
+      key: 'devicePath',
+      label: 'Device path',
+      flex: 1,
+      minWidth: columnMinWidths.devicePath,
+      sortable: true,
+    },
     { key: 'type', label: 'Type', flex: 1, minWidth: columnMinWidths.type, sortable: true },
     {
       key: 'available',
       label: 'Available',
-      flex: 1, minWidth: columnMinWidths.available,
+      flex: 1,
+      minWidth: columnMinWidths.available,
       sortable: true,
       render: (_, row) => (row.available ? 'Yes' : ''),
     },
@@ -1189,7 +1209,8 @@ export default function HostDetailPage() {
     {
       key: 'osd',
       label: 'OSDs',
-      flex: 1, minWidth: columnMinWidths.osd,
+      flex: 1,
+      minWidth: columnMinWidths.osd,
       sortable: true,
       render: (_, row) => (row.osd ? <Chip value={row.osd} /> : null),
     },
@@ -1243,9 +1264,26 @@ export default function HostDetailPage() {
         return <StatusIndicator status={statusMap[row.status]} layout="icon-only" size="sm" />;
       },
     },
-    { key: 'daemonName', label: 'Daemon name', flex: 1, minWidth: columnMinWidths.daemonName, sortable: true },
-    { key: 'version', label: 'Version', flex: 1, minWidth: columnMinWidths.version, sortable: true },
-    { key: 'lastRefreshed', label: 'Last refreshed', flex: 1, minWidth: columnMinWidths.lastRefreshed },
+    {
+      key: 'daemonName',
+      label: 'Daemon name',
+      flex: 1,
+      minWidth: columnMinWidths.daemonName,
+      sortable: true,
+    },
+    {
+      key: 'version',
+      label: 'Version',
+      flex: 1,
+      minWidth: columnMinWidths.version,
+      sortable: true,
+    },
+    {
+      key: 'lastRefreshed',
+      label: 'Last refreshed',
+      flex: 1,
+      minWidth: columnMinWidths.lastRefreshed,
+    },
     {
       key: 'cpuUsage',
       label: 'CPU Usage',
@@ -1272,11 +1310,18 @@ export default function HostDetailPage() {
         </div>
       ),
     },
-    { key: 'memoryUsage', label: 'Memory usage', flex: 1, minWidth: columnMinWidths.memoryUsage, sortable: true },
+    {
+      key: 'memoryUsage',
+      label: 'Memory usage',
+      flex: 1,
+      minWidth: columnMinWidths.memoryUsage,
+      sortable: true,
+    },
     {
       key: 'daemonEvents',
       label: 'Daemon events',
-      flex: 1, minWidth: columnMinWidths.daemonEvents,
+      flex: 1,
+      minWidth: columnMinWidths.daemonEvents,
       render: (_, row) => (
         <div
           className="line-clamp-2 text-[length:var(--table-font-size)] leading-[var(--table-line-height)]"

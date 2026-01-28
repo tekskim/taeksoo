@@ -1,6 +1,24 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { Button, VStack, TabBar, TopBar, TopBarAction, Breadcrumb, Tabs, TabList, Tab, TabPanel, DetailHeader, SearchInput, Table, Pagination, StatusIndicator, type TableColumn, fixedColumns, columnMinWidths } from '@/design-system';
+import {
+  Button,
+  VStack,
+  TabBar,
+  TopBar,
+  TopBarAction,
+  Breadcrumb,
+  Tabs,
+  TabList,
+  Tab,
+  TabPanel,
+  DetailHeader,
+  SearchInput,
+  Table,
+  Pagination,
+  StatusIndicator,
+  type TableColumn,
+  fixedColumns,
+} from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { IconTrash, IconBell, IconLock, IconLockOpen } from '@tabler/icons-react';
@@ -40,12 +58,14 @@ const mockServerGroupsMap: Record<string, ServerGroupDetail> = {
   'sg-002': { id: 'sg-002', name: 'web-servers', policy: 'Anti-affinity' },
   'sg-003': { id: 'sg-003', name: 'db-cluster', policy: 'Affinity' },
   'sg-004': { id: 'sg-004', name: 'cache-group', policy: 'Soft-anti-affinity' },
-  'sg-005': { id: 'sg-005', name: 'app-servers', policy: 'Anti-affinity' } };
+  'sg-005': { id: 'sg-005', name: 'app-servers', policy: 'Anti-affinity' },
+};
 
 const defaultServerGroupDetail: ServerGroupDetail = {
   id: 'unknown',
   name: 'Unknown Server group',
-  policy: 'Anti-affinity' };
+  policy: 'Anti-affinity',
+};
 
 const mockServerGroupInstances: ServerGroupInstance[] = [
   {
@@ -58,7 +78,8 @@ const mockServerGroupInstances: ServerGroupInstance[] = [
     floatingIP: '20.20.20.30',
     az: 'zone-a',
     os: 'ubuntu 24.04',
-    createdAt: 'Dec 25, 2025' },
+    createdAt: 'Dec 25, 2025',
+  },
   {
     id: '29tgj235',
     name: 'web-server-02',
@@ -69,7 +90,8 @@ const mockServerGroupInstances: ServerGroupInstance[] = [
     floatingIP: '20.20.20.31',
     az: 'zone-a',
     os: 'ubuntu 24.04',
-    createdAt: 'Dec 25, 2025' },
+    createdAt: 'Dec 25, 2025',
+  },
   {
     id: '29tgj236',
     name: 'web-server-03',
@@ -80,7 +102,8 @@ const mockServerGroupInstances: ServerGroupInstance[] = [
     floatingIP: '20.20.20.32',
     az: 'zone-b',
     os: 'ubuntu 24.04',
-    createdAt: 'Dec 25, 2025' },
+    createdAt: 'Dec 25, 2025',
+  },
   {
     id: '29tgj237',
     name: 'web-server-04',
@@ -91,7 +114,8 @@ const mockServerGroupInstances: ServerGroupInstance[] = [
     floatingIP: '-',
     az: 'zone-b',
     os: 'ubuntu 24.04',
-    createdAt: 'Dec 25, 2025' },
+    createdAt: 'Dec 25, 2025',
+  },
   {
     id: '29tgj238',
     name: 'web-server-05',
@@ -102,7 +126,8 @@ const mockServerGroupInstances: ServerGroupInstance[] = [
     floatingIP: '20.20.20.34',
     az: 'zone-a',
     os: 'ubuntu 24.04',
-    createdAt: 'Dec 25, 2025' },
+    createdAt: 'Dec 25, 2025',
+  },
 ];
 
 /* ----------------------------------------
@@ -138,7 +163,8 @@ export function ComputeAdminServerGroupDetailPage() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    closable: tab.closable }));
+    closable: tab.closable,
+  }));
 
   const breadcrumbItems = [
     { label: 'Compute Admin', href: '/compute-admin' },
@@ -167,7 +193,8 @@ export function ComputeAdminServerGroupDetailPage() {
       label: 'Status',
       width: fixedColumns.status,
       align: 'center',
-      render: (_, row) => <StatusIndicator status={row.status} layout="icon-only" /> },
+      render: (_, row) => <StatusIndicator status={row.status} layout="icon-only" />,
+    },
     {
       key: 'name',
       label: 'Name',
@@ -185,7 +212,8 @@ export function ComputeAdminServerGroupDetailPage() {
             ID: {row.id}
           </span>
         </div>
-      ) },
+      ),
+    },
     {
       key: 'locked',
       label: 'Locked',
@@ -196,15 +224,18 @@ export function ComputeAdminServerGroupDetailPage() {
           <IconLock size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
         ) : (
           <IconLockOpen size={16} stroke={1.5} className="text-[var(--color-text-subtle)]" />
-        ) },
+        ),
+    },
     {
       key: 'host',
       label: 'Host',
-      flex: 1 },
+      flex: 1,
+    },
     {
       key: 'fixedIP',
       label: 'Fixed IP',
-      flex: 1 },
+      flex: 1,
+    },
     {
       key: 'floatingIP',
       label: 'Floating IP',
@@ -220,21 +251,25 @@ export function ComputeAdminServerGroupDetailPage() {
           </Link>
         ) : (
           <span className="text-[var(--color-text-default)]">-</span>
-        ) },
+        ),
+    },
     {
       key: 'az',
       label: 'AZ',
-      flex: 1 },
+      flex: 1,
+    },
     {
       key: 'os',
       label: 'OS',
       flex: 1,
-      sortable: true },
+      sortable: true,
+    },
     {
       key: 'createdAt',
       label: 'Created At',
       flex: 1,
-      sortable: true },
+      sortable: true,
+    },
   ];
 
   return (

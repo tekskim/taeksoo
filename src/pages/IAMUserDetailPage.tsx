@@ -676,7 +676,8 @@ export function IAMUserDetailPage() {
     {
       key: 'createdAt',
       label: 'Created at',
-      flex: 1, minWidth: columnMinWidths.createdAt,
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
     },
     {
@@ -731,7 +732,8 @@ export function IAMUserDetailPage() {
     {
       key: 'createdAt',
       label: 'Created at',
-      flex: 1, minWidth: columnMinWidths.createdAt,
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
     },
     {

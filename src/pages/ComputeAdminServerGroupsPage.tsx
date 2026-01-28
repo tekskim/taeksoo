@@ -1,5 +1,21 @@
 import { useState, useMemo } from 'react';
-import { Button, FilterSearchInput, Table, Pagination, VStack, TabBar, TopBar, TopBarAction, Breadcrumb, ListToolbar, ConfirmModal, type TableColumn, type FilterField, type AppliedFilter, fixedColumns, columnMinWidths } from '@/design-system';
+import {
+  Button,
+  FilterSearchInput,
+  Table,
+  Pagination,
+  VStack,
+  TabBar,
+  TopBar,
+  TopBarAction,
+  Breadcrumb,
+  ListToolbar,
+  ConfirmModal,
+  type TableColumn,
+  type FilterField,
+  type AppliedFilter,
+  fixedColumns,
+} from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
@@ -32,7 +48,8 @@ const mockServerGroups: ServerGroup[] = [
     tenantId: 'tenant-001',
     tenantName: 'project-alpha',
     policy: 'Anti-affinity',
-    instances: [{ id: 'inst-001', name: 'tk-instance' }] },
+    instances: [{ id: 'inst-001', name: 'tk-instance' }],
+  },
   {
     id: 'sg-002',
     name: 'web-servers',
@@ -43,7 +60,8 @@ const mockServerGroups: ServerGroup[] = [
       { id: 'inst-002', name: 'web-01' },
       { id: 'inst-003', name: 'web-02' },
       { id: 'inst-004', name: 'web-03' },
-    ] },
+    ],
+  },
   {
     id: 'sg-003',
     name: 'db-cluster',
@@ -53,7 +71,8 @@ const mockServerGroups: ServerGroup[] = [
     instances: [
       { id: 'inst-005', name: 'db-primary' },
       { id: 'inst-006', name: 'db-replica' },
-    ] },
+    ],
+  },
   {
     id: 'sg-004',
     name: 'cache-group',
@@ -63,7 +82,8 @@ const mockServerGroups: ServerGroup[] = [
     instances: [
       { id: 'inst-007', name: 'redis-01' },
       { id: 'inst-008', name: 'redis-02' },
-    ] },
+    ],
+  },
   {
     id: 'sg-005',
     name: 'app-servers',
@@ -75,7 +95,8 @@ const mockServerGroups: ServerGroup[] = [
       { id: 'inst-010', name: 'app-02' },
       { id: 'inst-011', name: 'app-03' },
       { id: 'inst-012', name: 'app-04' },
-    ] },
+    ],
+  },
   {
     id: 'sg-006',
     name: 'monitoring',
@@ -85,7 +106,8 @@ const mockServerGroups: ServerGroup[] = [
     instances: [
       { id: 'inst-013', name: 'prometheus' },
       { id: 'inst-014', name: 'grafana' },
-    ] },
+    ],
+  },
   {
     id: 'sg-007',
     name: 'k8s-workers',
@@ -96,7 +118,8 @@ const mockServerGroups: ServerGroup[] = [
       { id: 'inst-015', name: 'worker-01' },
       { id: 'inst-016', name: 'worker-02' },
       { id: 'inst-017', name: 'worker-03' },
-    ] },
+    ],
+  },
   {
     id: 'sg-008',
     name: 'k8s-masters',
@@ -107,7 +130,8 @@ const mockServerGroups: ServerGroup[] = [
       { id: 'inst-018', name: 'master-01' },
       { id: 'inst-019', name: 'master-02' },
       { id: 'inst-020', name: 'master-03' },
-    ] },
+    ],
+  },
   {
     id: 'sg-009',
     name: 'storage-nodes',
@@ -117,7 +141,8 @@ const mockServerGroups: ServerGroup[] = [
     instances: [
       { id: 'inst-021', name: 'storage-01' },
       { id: 'inst-022', name: 'storage-02' },
-    ] },
+    ],
+  },
   {
     id: 'sg-010',
     name: 'load-balancers',
@@ -127,7 +152,8 @@ const mockServerGroups: ServerGroup[] = [
     instances: [
       { id: 'inst-023', name: 'lb-01' },
       { id: 'inst-024', name: 'lb-02' },
-    ] },
+    ],
+  },
 ];
 
 /* ----------------------------------------
@@ -147,7 +173,8 @@ const filterFields: FilterField[] = [
       { value: 'Affinity', label: 'Affinity' },
       { value: 'Soft-anti-affinity', label: 'Soft-anti-affinity' },
       { value: 'Soft-affinity', label: 'Soft-affinity' },
-    ] },
+    ],
+  },
 ];
 
 export function ComputeAdminServerGroupsPage() {
@@ -182,7 +209,8 @@ export function ComputeAdminServerGroupsPage() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    closable: tab.closable }));
+    closable: tab.closable,
+  }));
 
   // Handle delete server group
   const handleDeleteClick = (serverGroup: ServerGroup) => {
@@ -260,7 +288,8 @@ export function ComputeAdminServerGroupsPage() {
           </Link>
           <span className="text-[11px] text-[var(--color-text-muted)]">ID: {row.id}</span>
         </div>
-      ) },
+      ),
+    },
     {
       key: 'tenantName',
       label: 'Tenant',
@@ -277,7 +306,8 @@ export function ComputeAdminServerGroupsPage() {
           </Link>
           <span className="text-[11px] text-[var(--color-text-muted)]">ID: {row.tenantId}</span>
         </div>
-      ) },
+      ),
+    },
     {
       key: 'instances',
       label: 'Instances',
@@ -301,12 +331,14 @@ export function ComputeAdminServerGroupsPage() {
             )}
           </div>
         );
-      } },
+      },
+    },
     {
       key: 'policy',
       label: 'Policy',
       flex: 1,
-      sortable: true },
+      sortable: true,
+    },
     {
       key: 'actions',
       label: 'Action',
@@ -321,7 +353,8 @@ export function ComputeAdminServerGroupsPage() {
             <IconTrash size={16} stroke={1.5} className="text-[var(--color-state-danger)]" />
           </button>
         </div>
-      ) },
+      ),
+    },
   ];
 
   // Filter and order columns based on preferences

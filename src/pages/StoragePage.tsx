@@ -11,7 +11,6 @@ import {
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
-  columnMinWidths,
 } from '@/design-system';
 import { AgentPageLayout } from '@/layouts';
 import {

@@ -1,18 +1,37 @@
 import { useState, useMemo } from 'react';
-import { Button, FilterSearchInput, Table, Pagination, VStack, TabBar, TopBar, TopBarAction, Breadcrumb, ListToolbar, ContextMenu, ConfirmModal, StatusIndicator, Tooltip, type TableColumn, type ContextMenuItem, type FilterField, type AppliedFilter, fixedColumns, columnMinWidths } from '@/design-system';
+import {
+  Button,
+  FilterSearchInput,
+  Table,
+  Pagination,
+  VStack,
+  TabBar,
+  TopBar,
+  TopBarAction,
+  Breadcrumb,
+  ListToolbar,
+  ContextMenu,
+  ConfirmModal,
+  StatusIndicator,
+  Tooltip,
+  type TableColumn,
+  type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
+  fixedColumns,
+  columnMinWidths,
+} from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
-import { AssociateFloatingIPDrawer } from '@/components/AssociateFloatingIPDrawer';
 import { DisassociateFloatingIPDrawer } from '@/components/DisassociateFloatingIPDrawer';
-import { EditFloatingIPDrawer } from '@/components/EditFloatingIPDrawer';
 import {
   IconDotsCircleHorizontal,
   IconTrash,
   IconDownload,
   IconBell,
-  IconExternalLink,
-  IconCube } from '@tabler/icons-react';
+  IconCube,
+} from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
@@ -24,6 +43,9 @@ type FloatingIPStatus = 'active' | 'error' | 'down';
 interface FloatingIP {
   id: string;
   floatingIp: string;
+  tenant: string;
+  tenantId: string;
+  description: string;
   associatedTo: string | null;
   associatedToId: string | null;
   fixedIp: string;
@@ -41,103 +63,143 @@ const mockFloatingIPs: FloatingIP[] = [
   {
     id: 'fip-001',
     floatingIp: '172.24.4.228',
+    tenant: 'tenantA',
+    tenantId: 'tenant-001',
+    description: 'Web server external IP',
     associatedTo: 'web-01',
     associatedToId: 'inst-001',
     fixedIp: '10.7.65.39',
     network: 'net-01',
     networkId: 'net-001',
     createdAt: '2025-10-01',
-    status: 'active' },
+    status: 'active',
+  },
   {
     id: 'fip-002',
     floatingIp: '172.24.4.229',
+    tenant: 'tenantA',
+    tenantId: 'tenant-001',
+    description: 'Application server IP',
     associatedTo: 'app-server',
     associatedToId: 'inst-002',
     fixedIp: '10.7.65.40',
     network: 'net-02',
     networkId: 'net-002',
     createdAt: '2025-10-02',
-    status: 'active' },
+    status: 'active',
+  },
   {
     id: 'fip-003',
     floatingIp: '172.24.4.230',
+    tenant: 'tenantB',
+    tenantId: 'tenant-002',
+    description: 'Reserved for testing',
     associatedTo: null,
     associatedToId: null,
     fixedIp: '-',
     network: 'net-01',
     networkId: 'net-001',
     createdAt: '2025-10-03',
-    status: 'down' },
+    status: 'down',
+  },
   {
     id: 'fip-004',
     floatingIp: '172.24.4.231',
+    tenant: 'tenantA',
+    tenantId: 'tenant-001',
+    description: 'Database server IP',
     associatedTo: 'db-server',
     associatedToId: 'inst-003',
     fixedIp: '10.7.65.41',
     network: 'net-03',
     networkId: 'net-003',
     createdAt: '2025-09-28',
-    status: 'active' },
+    status: 'active',
+  },
   {
     id: 'fip-005',
     floatingIp: '172.24.4.232',
+    tenant: 'tenantC',
+    tenantId: 'tenant-003',
+    description: 'Load balancer public IP',
     associatedTo: 'load-balancer',
     associatedToId: 'lb-001',
     fixedIp: '10.7.65.42',
     network: 'net-01',
     networkId: 'net-001',
     createdAt: '2025-09-25',
-    status: 'active' },
+    status: 'active',
+  },
   {
     id: 'fip-006',
     floatingIp: '172.24.4.233',
+    tenant: 'tenantB',
+    tenantId: 'tenant-002',
+    description: 'Unused IP - pending removal',
     associatedTo: null,
     associatedToId: null,
     fixedIp: '-',
     network: 'net-02',
     networkId: 'net-002',
     createdAt: '2025-09-20',
-    status: 'error' },
+    status: 'error',
+  },
   {
     id: 'fip-007',
     floatingIp: '172.24.4.234',
+    tenant: 'tenantA',
+    tenantId: 'tenant-001',
+    description: 'Monitoring system IP',
     associatedTo: 'monitoring',
     associatedToId: 'inst-004',
     fixedIp: '10.7.65.43',
     network: 'net-01',
     networkId: 'net-001',
     createdAt: '2025-09-15',
-    status: 'active' },
+    status: 'active',
+  },
   {
     id: 'fip-008',
     floatingIp: '172.24.4.235',
+    tenant: 'tenantC',
+    tenantId: 'tenant-003',
+    description: 'VPN gateway external IP',
     associatedTo: 'vpn-gateway',
     associatedToId: 'vpn-001',
     fixedIp: '10.7.65.44',
     network: 'net-04',
     networkId: 'net-004',
     createdAt: '2025-09-10',
-    status: 'active' },
+    status: 'active',
+  },
   {
     id: 'fip-009',
     floatingIp: '172.24.4.236',
+    tenant: 'tenantB',
+    tenantId: 'tenant-002',
+    description: 'Reserved for staging',
     associatedTo: null,
     associatedToId: null,
     fixedIp: '-',
     network: 'net-03',
     networkId: 'net-003',
     createdAt: '2025-09-05',
-    status: 'down' },
+    status: 'down',
+  },
   {
     id: 'fip-010',
     floatingIp: '172.24.4.237',
+    tenant: 'tenantA',
+    tenantId: 'tenant-001',
+    description: 'Backup server IP',
     associatedTo: 'backup-server',
     associatedToId: 'inst-005',
     fixedIp: '10.7.65.45',
     network: 'net-01',
     networkId: 'net-001',
     createdAt: '2025-09-01',
-    status: 'active' },
+    status: 'active',
+  },
 ];
 
 /* ----------------------------------------
@@ -147,7 +209,8 @@ const mockFloatingIPs: FloatingIP[] = [
 const floatingIPStatusMap: Record<FloatingIPStatus, 'active' | 'error' | 'down'> = {
   active: 'active',
   error: 'error',
-  down: 'down' };
+  down: 'down',
+};
 
 /* ----------------------------------------
    Component
@@ -156,6 +219,8 @@ const floatingIPStatusMap: Record<FloatingIPStatus, 'active' | 'error' | 'down'>
 // Filter fields configuration
 const filterFields: FilterField[] = [
   { key: 'floatingIp', label: 'Floating IP', type: 'text' },
+  { key: 'tenant', label: 'Tenant', type: 'text' },
+  { key: 'description', label: 'Description', type: 'text' },
   { key: 'associatedTo', label: 'Associated To', type: 'text' },
   { key: 'fixedIp', label: 'Fixed IP', type: 'text' },
   { key: 'network', label: 'Network', type: 'text' },
@@ -167,7 +232,8 @@ const filterFields: FilterField[] = [
       { value: 'active', label: 'Active' },
       { value: 'error', label: 'Error' },
       { value: 'down', label: 'Down' },
-    ] },
+    ],
+  },
 ];
 
 export function ComputeAdminFloatingIPsPage() {
@@ -186,30 +252,20 @@ export function ComputeAdminFloatingIPsPage() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
   // Drawer states
-  const [associateOpen, setAssociateOpen] = useState(false);
   const [disassociateOpen, setDisassociateOpen] = useState(false);
-  const [editOpen, setEditOpen] = useState(false);
   const [selectedFIPForDrawer, setSelectedFIPForDrawer] = useState<FloatingIP | null>(null);
 
   // Drawer handlers
-  const handleAssociate = (fip: FloatingIP) => {
-    setSelectedFIPForDrawer(fip);
-    setAssociateOpen(true);
-  };
-
   const handleDisassociate = (fip: FloatingIP) => {
     setSelectedFIPForDrawer(fip);
     setDisassociateOpen(true);
   };
 
-  const handleEdit = (fip: FloatingIP) => {
-    setSelectedFIPForDrawer(fip);
-    setEditOpen(true);
-  };
-
   const defaultColumnConfig: ColumnConfig[] = [
     { id: 'status', label: 'Status', visible: true, locked: true },
     { id: 'floatingIp', label: 'Floating IP', visible: true, locked: true },
+    { id: 'tenant', label: 'Tenant', visible: true },
+    { id: 'description', label: 'Description', visible: true },
     { id: 'associatedTo', label: 'Associated to', visible: true },
     { id: 'fixedIp', label: 'Fixed IP', visible: true },
     { id: 'network', label: 'Network', visible: true },
@@ -226,21 +282,17 @@ export function ComputeAdminFloatingIPsPage() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    closable: tab.closable }));
+    closable: tab.closable,
+  }));
 
   // Context menu items
   const getContextMenuItems = (fip: FloatingIP): ContextMenuItem[] => [
     {
-      id: 'associate',
-      label: 'Associate',
-      onClick: () => handleAssociate(fip),
-      disabled: !!fip.associatedTo },
-    {
       id: 'disassociate',
       label: 'Disassociate',
       onClick: () => handleDisassociate(fip),
-      disabled: !fip.associatedTo },
-    { id: 'edit', label: 'Edit', onClick: () => handleEdit(fip) },
+      disabled: !fip.associatedTo,
+    },
     {
       id: 'release',
       label: 'Release',
@@ -248,7 +300,8 @@ export function ComputeAdminFloatingIPsPage() {
       onClick: () => {
         setFloatingIPToDelete(fip);
         setDeleteModalOpen(true);
-      } },
+      },
+    },
   ];
 
   // Filter floating IPs based on search
@@ -280,30 +333,54 @@ export function ComputeAdminFloatingIPsPage() {
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={floatingIPStatusMap[row.status]} layout="icon-only" />
-      ) },
+      ),
+    },
     {
       key: 'floatingIp',
       label: 'Floating IP',
       flex: 1,
       sortable: true,
       render: (_, row) => (
+        <Link
+          to={`/compute-admin/floating-ips/${row.id}`}
+          className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {row.floatingIp}
+        </Link>
+      ),
+    },
+    {
+      key: 'tenant',
+      label: 'Tenant',
+      flex: 1,
+      sortable: true,
+      render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link
-            to={`/compute-admin/floating-ips/${row.id}`}
+            to={`/compute-admin/tenants/${row.tenantId}`}
             className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             onClick={(e) => e.stopPropagation()}
           >
-            {row.floatingIp}
+            {row.tenant}
           </Link>
           <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-            ID : {row.id}
+            ID: {row.tenantId}
           </span>
         </div>
-      ) },
+      ),
+    },
+    {
+      key: 'description',
+      label: 'Description',
+      flex: 1,
+      sortable: true,
+    },
     {
       key: 'associatedTo',
       label: 'Associated to',
-      flex: 1, minWidth: columnMinWidths.associatedTo,
+      flex: 1,
+      minWidth: columnMinWidths.associatedTo,
       align: 'right',
       render: (_, row) =>
         row.associatedTo ? (
@@ -312,14 +389,10 @@ export function ComputeAdminFloatingIPsPage() {
               <Tooltip content={row.associatedTo} position="top">
                 <Link
                   to={`/compute-admin/instances/${row.associatedToId}`}
-                  className="inline-flex items-center gap-1 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                  className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  <span className="truncate">{row.associatedTo}</span>
-                  <IconExternalLink
-                    size={12}
-                    className="flex-shrink-0 text-[var(--color-action-primary)]"
-                  />
+                  {row.associatedTo}
                 </Link>
               </Tooltip>
               <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] truncate">
@@ -334,42 +407,43 @@ export function ComputeAdminFloatingIPsPage() {
           </div>
         ) : (
           <span className="block text-left w-full">-</span>
-        ) },
+        ),
+    },
     {
       key: 'fixedIp',
       label: 'Fixed IP',
       flex: 1,
-      sortable: true },
+      sortable: true,
+    },
     {
       key: 'network',
       label: 'Network',
-      flex: 1, minWidth: columnMinWidths.network,
+      flex: 1,
+      minWidth: columnMinWidths.network,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5 min-w-0">
           <Tooltip content={row.network} position="top">
             <Link
               to={`/compute-admin/networks/${row.networkId}`}
-              className="inline-flex items-center gap-1 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+              className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
               onClick={(e) => e.stopPropagation()}
             >
-              <span className="truncate">{row.network}</span>
-              <IconExternalLink
-                size={12}
-                className="flex-shrink-0 text-[var(--color-action-primary)]"
-              />
+              {row.network}
             </Link>
           </Tooltip>
           <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] truncate">
             ID : {row.networkId.substring(0, 8)}
           </span>
         </div>
-      ) },
+      ),
+    },
     {
       key: 'createdAt',
       label: 'Created at',
       flex: 1,
-      sortable: true },
+      sortable: true,
+    },
     {
       key: 'actions',
       label: 'Action',
@@ -387,7 +461,8 @@ export function ComputeAdminFloatingIPsPage() {
             </button>
           </ContextMenu>
         </div>
-      ) },
+      ),
+    },
   ];
 
   // Filter and order columns based on preferences
@@ -558,12 +633,6 @@ export function ComputeAdminFloatingIPsPage() {
       />
 
       {/* Floating IP Drawers */}
-      <AssociateFloatingIPDrawer
-        isOpen={associateOpen}
-        onClose={() => setAssociateOpen(false)}
-        floatingIP={{ address: selectedFIPForDrawer?.floatingIp || '' }}
-      />
-
       <DisassociateFloatingIPDrawer
         isOpen={disassociateOpen}
         onClose={() => setDisassociateOpen(false)}
@@ -571,17 +640,10 @@ export function ComputeAdminFloatingIPsPage() {
           selectedFIPForDrawer?.associatedTo && selectedFIPForDrawer?.associatedToId
             ? {
                 id: selectedFIPForDrawer.associatedToId,
-                name: selectedFIPForDrawer.associatedTo }
+                name: selectedFIPForDrawer.associatedTo,
+              }
             : { id: '', name: '' }
         }
-      />
-
-      <EditFloatingIPDrawer
-        isOpen={editOpen}
-        onClose={() => setEditOpen(false)}
-        floatingIP={{
-          id: selectedFIPForDrawer?.id || '',
-          ipAddress: selectedFIPForDrawer?.floatingIp || '' }}
       />
     </div>
   );

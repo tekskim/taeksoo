@@ -442,21 +442,24 @@ export function VolumeDetailPage() {
     {
       key: 'size',
       label: 'Size',
-      flex: 1, minWidth: columnMinWidths.size,
+      flex: 1,
+      minWidth: columnMinWidths.size,
       sortable: true,
       render: (value) => <span>{value}</span>,
     },
     {
       key: 'createdAt',
       label: 'Created at',
-      flex: 1, minWidth: columnMinWidths.createdAt,
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
       render: (value) => <span>{value}</span>,
     },
     {
       key: 'action',
       label: 'Action',
-      flex: 1, minWidth: columnMinWidths.action,
+      flex: 1,
+      minWidth: columnMinWidths.action,
       align: 'center',
       render: (_, row) => (
         <div className="flex items-center justify-center">
@@ -513,27 +516,31 @@ export function VolumeDetailPage() {
     {
       key: 'backupMode',
       label: 'Backup mode',
-      flex: 1, minWidth: columnMinWidths.backupMode,
+      flex: 1,
+      minWidth: columnMinWidths.backupMode,
       render: (value) => <span>{value}</span>,
     },
     {
       key: 'size',
       label: 'Size',
-      flex: 1, minWidth: columnMinWidths.size,
+      flex: 1,
+      minWidth: columnMinWidths.size,
       sortable: true,
       render: (value) => <span>{value}</span>,
     },
     {
       key: 'createdAt',
       label: 'Created at',
-      flex: 1, minWidth: columnMinWidths.createdAt,
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
       render: (value) => <span>{value}</span>,
     },
     {
       key: 'action',
       label: 'Action',
-      flex: 1, minWidth: columnMinWidths.action,
+      flex: 1,
+      minWidth: columnMinWidths.action,
       align: 'center',
       render: (_, row) => (
         <div className="flex items-center justify-center">

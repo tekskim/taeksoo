@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import { IconDownload, IconTerminal2 } from '@tabler/icons-react';
-import { Select, Button, TabBar, TopBar, Breadcrumb, fixedColumns, columnMinWidths } from '@/design-system';
+import { Select, Button, TabBar, TopBar, Breadcrumb } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
@@ -20,13 +20,17 @@ function ConnectionStatusIndicator({ status }: { status: ConnectionStatus }) {
   const statusConfig = {
     connected: {
       color: 'bg-emerald-500',
-      label: 'Connected' },
+      label: 'Connected',
+    },
     connecting: {
       color: 'bg-amber-500',
-      label: 'Connecting' },
+      label: 'Connecting',
+    },
     disconnected: {
       color: 'bg-red-500',
-      label: 'Disconnected' } };
+      label: 'Disconnected',
+    },
+  };
 
   const config = statusConfig[status];
 
@@ -62,7 +66,8 @@ export function ComputeAdminConsolePage() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    closable: tab.closable }));
+    closable: tab.closable,
+  }));
 
   // Handle tab change
   const handleTabChange = (tabId: string) => {
@@ -85,7 +90,8 @@ export function ComputeAdminConsolePage() {
       id: newTabId,
       label: 'New tab',
       path: '/',
-      closable: true });
+      closable: true,
+    });
     navigate('/');
   };
 
@@ -262,14 +268,16 @@ function generateSampleLogs(_instanceName: string): string {
       weekday: 'short',
       month: 'short',
       day: '2-digit',
-      year: 'numeric' });
+      year: 'numeric',
+    });
   };
   const formatTime = (d: Date) => {
     return d.toLocaleTimeString('en-US', {
       hour12: true,
       hour: '2-digit',
       minute: '2-digit',
-      second: '2-digit' });
+      second: '2-digit',
+    });
   };
 
   const logs = [

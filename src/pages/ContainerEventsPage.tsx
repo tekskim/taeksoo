@@ -260,29 +260,34 @@ export function ContainerEventsPage() {
     {
       key: 'namespace',
       label: 'Namespace',
-      flex: 1, minWidth: columnMinWidths.namespace,
+      flex: 1,
+      minWidth: columnMinWidths.namespace,
       sortable: true,
     },
     {
       key: 'lastSeen',
       label: 'Last Seen',
-      flex: 1, minWidth: columnMinWidths.lastSeen,
+      flex: 1,
+      minWidth: columnMinWidths.lastSeen,
       sortable: true,
     },
     {
       key: 'type',
       label: 'Type',
-      flex: 1, minWidth: columnMinWidths.type,
+      flex: 1,
+      minWidth: columnMinWidths.type,
     },
     {
       key: 'reason',
       label: 'Reason',
-      flex: 1, minWidth: columnMinWidths.reason,
+      flex: 1,
+      minWidth: columnMinWidths.reason,
     },
     {
       key: 'object',
       label: 'Object',
-      flex: 1, minWidth: columnMinWidths.object,
+      flex: 1,
+      minWidth: columnMinWidths.object,
       sortable: true,
       render: (value: string) => (
         <span
@@ -296,13 +301,15 @@ export function ContainerEventsPage() {
     {
       key: 'subobject',
       label: 'Subobject',
-      flex: 1, minWidth: columnMinWidths.subobject,
+      flex: 1,
+      minWidth: columnMinWidths.subobject,
       sortable: true,
     },
     {
       key: 'source',
       label: 'Source',
-      flex: 1, minWidth: columnMinWidths.source,
+      flex: 1,
+      minWidth: columnMinWidths.source,
       sortable: true,
     },
     {
@@ -319,13 +326,15 @@ export function ContainerEventsPage() {
     {
       key: 'firstSeen',
       label: 'First Seen',
-      flex: 1, minWidth: columnMinWidths.firstSeen,
+      flex: 1,
+      minWidth: columnMinWidths.firstSeen,
       sortable: true,
     },
     {
       key: 'count',
       label: 'Count',
-      flex: 1, minWidth: columnMinWidths.count,
+      flex: 1,
+      minWidth: columnMinWidths.count,
       align: 'center',
       sortable: true,
     },

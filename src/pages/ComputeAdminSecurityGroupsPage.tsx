@@ -1,11 +1,29 @@
 import { useState, useMemo } from 'react';
-import { Button, FilterSearchInput, Table, Pagination, VStack, TabBar, TopBar, TopBarAction, Breadcrumb, ListToolbar, ContextMenu, ConfirmModal, type TableColumn, type ContextMenuItem, type FilterField, type AppliedFilter, fixedColumns, columnMinWidths } from '@/design-system';
+import {
+  Button,
+  FilterSearchInput,
+  Table,
+  Pagination,
+  VStack,
+  TabBar,
+  TopBar,
+  TopBarAction,
+  Breadcrumb,
+  ListToolbar,
+  ContextMenu,
+  ConfirmModal,
+  type TableColumn,
+  type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
+  fixedColumns,
+} from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import { CreateSecurityGroupRuleDrawer } from '@/components/CreateSecurityGroupRuleDrawer';
 import { EditSecurityGroupDrawer } from '@/components/EditSecurityGroupDrawer';
-import { IconDotsCircleHorizontal, IconTrash, IconDownload, IconBell } from '@tabler/icons-react';
+import { IconTrash, IconDownload, IconBell } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
@@ -17,6 +35,8 @@ type SecurityGroupStatus = 'active' | 'error';
 interface SecurityGroup {
   id: string;
   name: string;
+  tenant: string;
+  tenantId: string;
   description: string;
   ingressRules: number;
   egressRules: number;
@@ -32,83 +52,113 @@ const mockSecurityGroups: SecurityGroup[] = [
   {
     id: 'sg-001',
     name: 'sg-01',
+    tenant: 'tenantA',
+    tenantId: 'tenant-001',
     description: 'Web server access group',
     ingressRules: 3,
     egressRules: 3,
     createdAt: '2024-01-15',
-    status: 'active' },
+    status: 'active',
+  },
   {
     id: 'sg-002',
     name: 'default',
+    tenant: 'tenantA',
+    tenantId: 'tenant-001',
     description: 'Default security group',
     ingressRules: 2,
     egressRules: 2,
     createdAt: '2024-01-10',
-    status: 'active' },
+    status: 'active',
+  },
   {
     id: 'sg-003',
     name: 'db-sg',
+    tenant: 'tenantB',
+    tenantId: 'tenant-002',
     description: 'Database access group',
     ingressRules: 5,
     egressRules: 1,
     createdAt: '2024-02-01',
-    status: 'active' },
+    status: 'active',
+  },
   {
     id: 'sg-004',
     name: 'app-sg',
+    tenant: 'tenantA',
+    tenantId: 'tenant-001',
     description: 'Application server security group',
     ingressRules: 8,
     egressRules: 4,
     createdAt: '2024-02-15',
-    status: 'active' },
+    status: 'active',
+  },
   {
     id: 'sg-005',
     name: 'lb-sg',
+    tenant: 'tenantC',
+    tenantId: 'tenant-003',
     description: 'Load balancer security group',
     ingressRules: 4,
     egressRules: 2,
     createdAt: '2024-03-01',
-    status: 'active' },
+    status: 'active',
+  },
   {
     id: 'sg-006',
     name: 'cache-sg',
+    tenant: 'tenantB',
+    tenantId: 'tenant-002',
     description: 'Cache server access group',
     ingressRules: 2,
     egressRules: 1,
     createdAt: '2024-03-10',
-    status: 'active' },
+    status: 'active',
+  },
   {
     id: 'sg-007',
     name: 'monitor-sg',
+    tenant: 'tenantA',
+    tenantId: 'tenant-001',
     description: 'Monitoring access group',
     ingressRules: 6,
     egressRules: 3,
     createdAt: '2024-04-01',
-    status: 'error' },
+    status: 'error',
+  },
   {
     id: 'sg-008',
     name: 'vpn-sg',
+    tenant: 'tenantC',
+    tenantId: 'tenant-003',
     description: 'VPN access group',
     ingressRules: 10,
     egressRules: 5,
     createdAt: '2024-04-15',
-    status: 'active' },
+    status: 'active',
+  },
   {
     id: 'sg-009',
     name: 'admin-sg',
+    tenant: 'tenantB',
+    tenantId: 'tenant-002',
     description: 'Admin access group',
     ingressRules: 15,
     egressRules: 8,
     createdAt: '2024-05-01',
-    status: 'active' },
+    status: 'active',
+  },
   {
     id: 'sg-010',
     name: 'test-sg',
+    tenant: 'tenantA',
+    tenantId: 'tenant-001',
     description: 'Test environment security group',
     ingressRules: 1,
     egressRules: 1,
     createdAt: '2024-05-10',
-    status: 'active' },
+    status: 'active',
+  },
 ];
 
 /* ----------------------------------------
@@ -117,7 +167,8 @@ const mockSecurityGroups: SecurityGroup[] = [
 
 const sgStatusMap: Record<SecurityGroupStatus, 'active' | 'error'> = {
   active: 'active',
-  error: 'error' };
+  error: 'error',
+};
 
 /* ----------------------------------------
    Component
@@ -126,6 +177,7 @@ const sgStatusMap: Record<SecurityGroupStatus, 'active' | 'error'> = {
 // Filter fields configuration
 const filterFields: FilterField[] = [
   { key: 'name', label: 'Name', type: 'text' },
+  { key: 'tenant', label: 'Tenant', type: 'text' },
   { key: 'description', label: 'Description', type: 'text' },
 ];
 
@@ -162,6 +214,7 @@ export function ComputeAdminSecurityGroupsPage() {
 
   const defaultColumnConfig: ColumnConfig[] = [
     { id: 'name', label: 'Name', visible: true, locked: true },
+    { id: 'tenant', label: 'Tenant', visible: true },
     { id: 'description', label: 'Description', visible: true },
     { id: 'ingressRules', label: 'Ingress rules', visible: true },
     { id: 'egressRules', label: 'Egress rules', visible: true },
@@ -178,7 +231,8 @@ export function ComputeAdminSecurityGroupsPage() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    closable: tab.closable }));
+    closable: tab.closable,
+  }));
 
   // Context menu items
   const getContextMenuItems = (sg: SecurityGroup): ContextMenuItem[] => [
@@ -191,7 +245,8 @@ export function ComputeAdminSecurityGroupsPage() {
       onClick: () => {
         setGroupToDelete(sg);
         setDeleteModalOpen(true);
-      } },
+      },
+    },
   ];
 
   // Filter security groups based on search
@@ -234,27 +289,52 @@ export function ComputeAdminSecurityGroupsPage() {
             ID : {row.id}
           </span>
         </div>
-      ) },
+      ),
+    },
+    {
+      key: 'tenant',
+      label: 'Tenant',
+      flex: 1,
+      sortable: true,
+      render: (_, row) => (
+        <div className="flex flex-col gap-0.5">
+          <Link
+            to={`/compute-admin/tenants/${row.tenantId}`}
+            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.tenant}
+          </Link>
+          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+            ID: {row.tenantId}
+          </span>
+        </div>
+      ),
+    },
     {
       key: 'description',
       label: 'Description',
       flex: 1,
-      sortable: true },
+      sortable: true,
+    },
     {
       key: 'ingressRules',
       label: 'Ingress rules',
       flex: 1,
-      sortable: true },
+      sortable: true,
+    },
     {
       key: 'egressRules',
       label: 'Egress rules',
       flex: 1,
-      sortable: true },
+      sortable: true,
+    },
     {
       key: 'createdAt',
       label: 'Created at',
       flex: 1,
-      sortable: true },
+      sortable: true,
+    },
     {
       key: 'actions',
       label: 'Action',
@@ -264,15 +344,12 @@ export function ComputeAdminSecurityGroupsPage() {
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getContextMenuItems(row)} trigger="click">
             <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-              <IconDotsCircleHorizontal
-                size={16}
-                stroke={1.5}
-                className="text-[var(--action-icon-color)]"
-              />
+              <IconTrash size={16} stroke={1.5} className="text-[var(--color-state-danger)]" />
             </button>
           </ContextMenu>
         </div>
-      ) },
+      ),
+    },
   ];
 
   // Filter and order columns based on preferences
@@ -352,9 +429,6 @@ export function ComputeAdminSecurityGroupsPage() {
                 <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
                   Security groups
                 </h1>
-                <Button variant="primary" size="md">
-                  Create Security group
-                </Button>
               </div>
 
               {/* Toolbar */}
@@ -455,7 +529,8 @@ export function ComputeAdminSecurityGroupsPage() {
         securityGroup={{
           id: selectedGroupForDrawer?.id || '',
           name: selectedGroupForDrawer?.name || '',
-          description: selectedGroupForDrawer?.description }}
+          description: selectedGroupForDrawer?.description,
+        }}
       />
     </div>
   );

@@ -1,6 +1,21 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Button, VStack, HStack, TabBar, TopBar, TopBarAction, Breadcrumb, SectionCard, WizardSummary, Input, Textarea, Select, Toggle, FormField, fixedColumns, columnMinWidths } from '@/design-system';
+import {
+  Button,
+  VStack,
+  HStack,
+  TabBar,
+  TopBar,
+  TopBarAction,
+  Breadcrumb,
+  SectionCard,
+  WizardSummary,
+  Input,
+  Textarea,
+  Select,
+  Toggle,
+  FormField,
+} from '@/design-system';
 import type { WizardSummaryItem, WizardSectionState } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -56,7 +71,8 @@ const SECTION_LABELS: Record<SectionStep, string> = {
   source: 'Source',
   flavor: 'Flavor',
   network: 'Network',
-  advanced: 'Advanced' };
+  advanced: 'Advanced',
+};
 
 const SECTION_ORDER: SectionStep[] = [
   'template-info',
@@ -100,7 +116,8 @@ const mockTemplatesMap: Record<string, InstanceTemplateDetail> = {
     availabilityZone: 'nova',
     serverGroup: '-',
     userData: '-',
-    tags: [] },
+    tags: [],
+  },
   'tpl-002': {
     id: 'tpl-002',
     name: 'My-web-template',
@@ -129,7 +146,8 @@ const mockTemplatesMap: Record<string, InstanceTemplateDetail> = {
     availabilityZone: 'nova',
     serverGroup: '-',
     userData: '-',
-    tags: [] },
+    tags: [],
+  },
   'tpl-003': {
     id: 'tpl-003',
     name: 'db-template',
@@ -158,7 +176,9 @@ const mockTemplatesMap: Record<string, InstanceTemplateDetail> = {
     availabilityZone: 'nova',
     serverGroup: 'db-group',
     userData: '',
-    tags: [] } };
+    tags: [],
+  },
+};
 
 const defaultTemplateDetail: InstanceTemplateDetail = {
   id: 'tpl-default',
@@ -188,7 +208,8 @@ const defaultTemplateDetail: InstanceTemplateDetail = {
   availabilityZone: '-',
   serverGroup: '-',
   userData: '',
-  tags: [] };
+  tags: [],
+};
 
 /* ----------------------------------------
    Mock Options for Selects
@@ -289,7 +310,8 @@ function SummarySidebar({ sectionStatus, onCancel, onSave, onDelete }: SummarySi
   const summaryItems: WizardSummaryItem[] = SECTION_ORDER.map((key) => ({
     key,
     label: SECTION_LABELS[key],
-    status: sectionStatus[key] }));
+    status: sectionStatus[key],
+  }));
 
   const isAllDone = SECTION_ORDER.every((key) => sectionStatus[key] === 'done');
 
@@ -370,7 +392,8 @@ export function ComputeAdminInstanceTemplateDetailPage() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    closable: tab.closable }));
+    closable: tab.closable,
+  }));
 
   const breadcrumbItems = [
     { label: 'Compute Admin', href: '/compute-admin' },
@@ -398,14 +421,16 @@ export function ComputeAdminInstanceTemplateDetailPage() {
     setEditingSection(section);
     setSectionStatus((prev) => ({
       ...prev,
-      [section]: 'active' }));
+      [section]: 'active',
+    }));
   };
 
   const handleSectionSave = (section: SectionStep) => {
     setEditingSection(null);
     setSectionStatus((prev) => ({
       ...prev,
-      [section]: 'done' }));
+      [section]: 'done',
+    }));
   };
 
   const handleSectionCancel = (section: SectionStep) => {
@@ -439,7 +464,8 @@ export function ComputeAdminInstanceTemplateDetailPage() {
     setEditingSection(null);
     setSectionStatus((prev) => ({
       ...prev,
-      [section]: 'done' }));
+      [section]: 'done',
+    }));
   };
 
   const updateFormData = <K extends keyof InstanceTemplateDetail>(
@@ -448,7 +474,8 @@ export function ComputeAdminInstanceTemplateDetailPage() {
   ) => {
     setFormData((prev) => ({
       ...prev,
-      [key]: value }));
+      [key]: value,
+    }));
   };
 
   return (

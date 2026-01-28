@@ -1,6 +1,26 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Badge, Button, FilterSearchInput, Table, Pagination, VStack, TabBar, TopBar, TopBarAction, Breadcrumb, ListToolbar, ContextMenu, ConfirmModal, StatusIndicator, type TableColumn, type ContextMenuItem, type FilterField, type AppliedFilter, fixedColumns, columnMinWidths } from '@/design-system';
+import {
+  Badge,
+  Button,
+  FilterSearchInput,
+  Table,
+  Pagination,
+  VStack,
+  TabBar,
+  TopBar,
+  TopBarAction,
+  Breadcrumb,
+  ListToolbar,
+  ContextMenu,
+  ConfirmModal,
+  StatusIndicator,
+  type TableColumn,
+  type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
+  fixedColumns,
+} from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
@@ -45,7 +65,8 @@ const mockNetworks: Network[] = [
     adminState: 'Up',
     diskTag: 'Project',
     status: 'active',
-    createdAt: 'Dec 25, 2025' },
+    createdAt: 'Dec 25, 2025',
+  },
   {
     id: 'net-002',
     name: 'internal-net',
@@ -57,7 +78,8 @@ const mockNetworks: Network[] = [
     adminState: 'Up',
     diskTag: 'Project',
     status: 'active',
-    createdAt: 'Dec 24, 2025' },
+    createdAt: 'Dec 24, 2025',
+  },
   {
     id: 'net-003',
     name: 'dev-network',
@@ -69,7 +91,8 @@ const mockNetworks: Network[] = [
     adminState: 'Up',
     diskTag: 'Project',
     status: 'active',
-    createdAt: 'Dec 23, 2025' },
+    createdAt: 'Dec 23, 2025',
+  },
   {
     id: 'net-004',
     name: 'prod-net',
@@ -81,7 +104,8 @@ const mockNetworks: Network[] = [
     adminState: 'Up',
     diskTag: 'Project',
     status: 'building',
-    createdAt: 'Dec 22, 2025' },
+    createdAt: 'Dec 22, 2025',
+  },
   {
     id: 'net-005',
     name: 'test-network',
@@ -93,7 +117,8 @@ const mockNetworks: Network[] = [
     adminState: 'Down',
     diskTag: 'Project',
     status: 'active',
-    createdAt: 'Dec 21, 2025' },
+    createdAt: 'Dec 21, 2025',
+  },
   {
     id: 'net-006',
     name: 'dmz-net',
@@ -105,7 +130,8 @@ const mockNetworks: Network[] = [
     adminState: 'Up',
     diskTag: 'Project',
     status: 'active',
-    createdAt: 'Dec 20, 2025' },
+    createdAt: 'Dec 20, 2025',
+  },
   {
     id: 'net-007',
     name: 'management-net',
@@ -117,7 +143,8 @@ const mockNetworks: Network[] = [
     adminState: 'Down',
     diskTag: 'Project',
     status: 'error',
-    createdAt: 'Dec 19, 2025' },
+    createdAt: 'Dec 19, 2025',
+  },
   {
     id: 'net-008',
     name: 'backup-network',
@@ -129,7 +156,8 @@ const mockNetworks: Network[] = [
     adminState: 'Up',
     diskTag: 'Project',
     status: 'active',
-    createdAt: 'Dec 18, 2025' },
+    createdAt: 'Dec 18, 2025',
+  },
   {
     id: 'net-009',
     name: 'external-gateway',
@@ -141,7 +169,8 @@ const mockNetworks: Network[] = [
     adminState: 'Up',
     diskTag: 'Shared',
     status: 'active',
-    createdAt: 'Dec 17, 2025' },
+    createdAt: 'Dec 17, 2025',
+  },
   {
     id: 'net-010',
     name: 'provider-net',
@@ -153,7 +182,8 @@ const mockNetworks: Network[] = [
     adminState: 'Up',
     diskTag: 'External',
     status: 'active',
-    createdAt: 'Dec 16, 2025' },
+    createdAt: 'Dec 16, 2025',
+  },
 ];
 
 /* ----------------------------------------
@@ -163,7 +193,8 @@ const mockNetworks: Network[] = [
 const networkStatusMap: Record<NetworkStatus, 'active' | 'error' | 'building'> = {
   active: 'active',
   error: 'error',
-  building: 'building' };
+  building: 'building',
+};
 
 /* ----------------------------------------
    Component
@@ -180,7 +211,8 @@ const filterFields: FilterField[] = [
     options: [
       { value: 'true', label: 'Yes' },
       { value: 'false', label: 'No' },
-    ] },
+    ],
+  },
   {
     key: 'shared',
     label: 'Shared',
@@ -188,7 +220,8 @@ const filterFields: FilterField[] = [
     options: [
       { value: 'true', label: 'Yes' },
       { value: 'false', label: 'No' },
-    ] },
+    ],
+  },
   {
     key: 'adminState',
     label: 'Admin State',
@@ -196,7 +229,8 @@ const filterFields: FilterField[] = [
     options: [
       { value: 'Up', label: 'Up' },
       { value: 'Down', label: 'Down' },
-    ] },
+    ],
+  },
   {
     key: 'status',
     label: 'Status',
@@ -205,7 +239,8 @@ const filterFields: FilterField[] = [
       { value: 'active', label: 'Active' },
       { value: 'error', label: 'Error' },
       { value: 'building', label: 'Building' },
-    ] },
+    ],
+  },
 ];
 
 export function ComputeAdminNetworksPage() {
@@ -261,7 +296,8 @@ export function ComputeAdminNetworksPage() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    closable: tab.closable }));
+    closable: tab.closable,
+  }));
 
   // Context menu items
   const getContextMenuItems = (network: Network): ContextMenuItem[] => [
@@ -274,7 +310,8 @@ export function ComputeAdminNetworksPage() {
       onClick: () => {
         setNetworkToDelete(network);
         setDeleteModalOpen(true);
-      } },
+      },
+    },
   ];
 
   // Filter networks based on search
@@ -312,7 +349,8 @@ export function ComputeAdminNetworksPage() {
       sortable: false,
       render: (_, row) => (
         <StatusIndicator status={networkStatusMap[row.status]} layout="icon-only" />
-      ) },
+      ),
+    },
     {
       key: 'name',
       label: 'Name',
@@ -329,7 +367,8 @@ export function ComputeAdminNetworksPage() {
           </Link>
           <span className="text-[11px] leading-4 text-[var(--color-text-muted)]">ID: {row.id}</span>
         </div>
-      ) },
+      ),
+    },
     {
       key: 'tenant',
       label: 'Tenant',
@@ -348,24 +387,28 @@ export function ComputeAdminNetworksPage() {
             ID: {row.tenantId}
           </span>
         </div>
-      ) },
+      ),
+    },
     {
       key: 'subnetCidr',
       label: 'Subnet CIDR',
       flex: 1,
-      sortable: true },
+      sortable: true,
+    },
     {
       key: 'external',
       label: 'External',
       flex: 1,
       sortable: true,
-      render: (value: boolean) => (value ? 'Yes' : 'No') },
+      render: (value: boolean) => (value ? 'Yes' : 'No'),
+    },
     {
       key: 'shared',
       label: 'Shared',
       flex: 1,
       sortable: true,
-      render: (_, row) => (row.shared ? 'Yes' : 'No') },
+      render: (_, row) => (row.shared ? 'Yes' : 'No'),
+    },
     {
       key: 'adminState',
       label: 'Admin State',
@@ -375,12 +418,14 @@ export function ComputeAdminNetworksPage() {
         <Badge variant={row.adminState === 'Up' ? 'success' : 'default'} size="sm">
           {row.adminState}
         </Badge>
-      ) },
+      ),
+    },
     {
       key: 'createdAt',
       label: 'Created At',
       flex: 1,
-      sortable: true },
+      sortable: true,
+    },
     {
       key: 'actions',
       label: 'Action',
@@ -398,7 +443,8 @@ export function ComputeAdminNetworksPage() {
             </button>
           </ContextMenu>
         </div>
-      ) },
+      ),
+    },
   ];
 
   // Filter and order columns based on preferences
@@ -585,7 +631,8 @@ export function ComputeAdminNetworksPage() {
             ? {
                 id: selectedNetworkForDrawer.id,
                 name: selectedNetworkForDrawer.name,
-                adminStateUp: selectedNetworkForDrawer.adminState === 'Up' }
+                adminStateUp: selectedNetworkForDrawer.adminState === 'Up',
+              }
             : { id: '', name: '' }
         }
       />

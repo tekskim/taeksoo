@@ -13,7 +13,6 @@ import {
   Chip,
   ProgressBar,
   type TableColumn,
-  fixedColumns,
   columnMinWidths,
 } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
@@ -243,14 +242,16 @@ export function OSDsPage() {
     {
       key: 'id',
       label: 'ID',
-      flex: 1, minWidth: columnMinWidths.id,
+      flex: 1,
+      minWidth: columnMinWidths.id,
       sortable: true,
       render: (_, row) => <IDCell id={row.id} />,
     },
     {
       key: 'host',
       label: 'Host',
-      flex: 1, minWidth: columnMinWidths.host,
+      flex: 1,
+      minWidth: columnMinWidths.host,
       sortable: true,
     },
     {

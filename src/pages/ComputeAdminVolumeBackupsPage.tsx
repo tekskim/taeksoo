@@ -1,5 +1,24 @@
 import { useState, useMemo } from 'react';
-import { Button, FilterSearchInput, Table, Pagination, VStack, TabBar, TopBar, TopBarAction, Breadcrumb, ListToolbar, ContextMenu, ConfirmModal, StatusIndicator, type TableColumn, type ContextMenuItem, type FilterField, type AppliedFilter, fixedColumns, columnMinWidths } from '@/design-system';
+import {
+  Button,
+  FilterSearchInput,
+  Table,
+  Pagination,
+  VStack,
+  TabBar,
+  TopBar,
+  TopBarAction,
+  Breadcrumb,
+  ListToolbar,
+  ContextMenu,
+  ConfirmModal,
+  StatusIndicator,
+  type TableColumn,
+  type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
+  fixedColumns,
+} from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
@@ -43,7 +62,8 @@ const mockVolumeBackups: VolumeBackup[] = [
     sourceVolumeId: 'vol-001',
     backupMode: 'Full Backup',
     createdAt: '2025-09-12',
-    status: 'active' },
+    status: 'active',
+  },
   {
     id: 'vbak-002',
     name: 'app-storage-backup',
@@ -54,7 +74,8 @@ const mockVolumeBackups: VolumeBackup[] = [
     sourceVolumeId: 'vol-002',
     backupMode: 'Incremental',
     createdAt: '2025-09-10',
-    status: 'active' },
+    status: 'active',
+  },
   {
     id: 'vbak-003',
     name: 'backup-vol-backup',
@@ -65,7 +86,8 @@ const mockVolumeBackups: VolumeBackup[] = [
     sourceVolumeId: 'vol-003',
     backupMode: 'Full Backup',
     createdAt: '2025-09-08',
-    status: 'active' },
+    status: 'active',
+  },
   {
     id: 'vbak-004',
     name: 'log-storage-backup',
@@ -76,7 +98,8 @@ const mockVolumeBackups: VolumeBackup[] = [
     sourceVolumeId: 'vol-004',
     backupMode: 'Incremental',
     createdAt: '2025-09-05',
-    status: 'creating' },
+    status: 'creating',
+  },
   {
     id: 'vbak-005',
     name: 'cache-vol-backup',
@@ -87,7 +110,8 @@ const mockVolumeBackups: VolumeBackup[] = [
     sourceVolumeId: 'vol-005',
     backupMode: 'Full Backup',
     createdAt: '2025-08-30',
-    status: 'active' },
+    status: 'active',
+  },
   {
     id: 'vbak-006',
     name: 'media-storage-backup',
@@ -98,7 +122,8 @@ const mockVolumeBackups: VolumeBackup[] = [
     sourceVolumeId: 'vol-006',
     backupMode: 'Full Backup',
     createdAt: '2025-08-25',
-    status: 'restoring' },
+    status: 'restoring',
+  },
   {
     id: 'vbak-007',
     name: 'temp-vol-backup',
@@ -109,7 +134,8 @@ const mockVolumeBackups: VolumeBackup[] = [
     sourceVolumeId: 'vol-007',
     backupMode: 'Incremental',
     createdAt: '2025-08-20',
-    status: 'error' },
+    status: 'error',
+  },
   {
     id: 'vbak-008',
     name: 'ml-data-backup',
@@ -120,7 +146,8 @@ const mockVolumeBackups: VolumeBackup[] = [
     sourceVolumeId: 'vol-008',
     backupMode: 'Full Backup',
     createdAt: '2025-08-15',
-    status: 'active' },
+    status: 'active',
+  },
   {
     id: 'vbak-009',
     name: 'archive-vol-backup',
@@ -131,7 +158,8 @@ const mockVolumeBackups: VolumeBackup[] = [
     sourceVolumeId: 'vol-009',
     backupMode: 'Full Backup',
     createdAt: '2025-08-10',
-    status: 'active' },
+    status: 'active',
+  },
   {
     id: 'vbak-010',
     name: 'boot-vol-backup',
@@ -142,7 +170,8 @@ const mockVolumeBackups: VolumeBackup[] = [
     sourceVolumeId: 'vol-010',
     backupMode: 'Incremental',
     createdAt: '2025-08-05',
-    status: 'deleting' },
+    status: 'deleting',
+  },
 ];
 
 /* ----------------------------------------
@@ -154,7 +183,8 @@ const volumeBackupStatusMap: Record<BackupStatus, 'active' | 'building' | 'error
   creating: 'building',
   restoring: 'building',
   error: 'error',
-  deleting: 'pending' };
+  deleting: 'pending',
+};
 
 /* ----------------------------------------
    Component
@@ -171,7 +201,8 @@ const filterFields: FilterField[] = [
     options: [
       { value: 'Full Backup', label: 'Full Backup' },
       { value: 'Incremental', label: 'Incremental' },
-    ] },
+    ],
+  },
   {
     id: 'status',
     label: 'Status',
@@ -182,7 +213,8 @@ const filterFields: FilterField[] = [
       { value: 'error', label: 'Error' },
       { value: 'restoring', label: 'Restoring' },
       { value: 'deleting', label: 'Deleting' },
-    ] },
+    ],
+  },
 ];
 
 export function ComputeAdminVolumeBackupsPage() {
@@ -243,7 +275,8 @@ export function ComputeAdminVolumeBackupsPage() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    closable: tab.closable }));
+    closable: tab.closable,
+  }));
 
   // Handle delete backup
   const handleDeleteClick = (backup: VolumeBackup) => {
@@ -297,7 +330,8 @@ export function ComputeAdminVolumeBackupsPage() {
       sortable: false,
       render: (_, row) => (
         <StatusIndicator status={volumeBackupStatusMap[row.status]} layout="icon-only" />
-      ) },
+      ),
+    },
     {
       key: 'name',
       label: 'Name',
@@ -314,7 +348,8 @@ export function ComputeAdminVolumeBackupsPage() {
           </Link>
           <span className="text-[11px] text-[var(--color-text-muted)]">ID: {row.id}</span>
         </div>
-      ) },
+      ),
+    },
     {
       key: 'tenant',
       label: 'Tenant',
@@ -331,17 +366,20 @@ export function ComputeAdminVolumeBackupsPage() {
           </Link>
           <span className="text-[11px] text-[var(--color-text-muted)]">ID: {row.tenantId}</span>
         </div>
-      ) },
+      ),
+    },
     {
       key: 'backupMode',
       label: 'Backup Mode',
       flex: 1,
-      sortable: false },
+      sortable: false,
+    },
     {
       key: 'size',
       label: 'Size',
       flex: 1,
-      sortable: true },
+      sortable: true,
+    },
     {
       key: 'sourceVolume',
       label: 'Source Volume',
@@ -360,12 +398,14 @@ export function ComputeAdminVolumeBackupsPage() {
             ID: {row.sourceVolumeId}
           </span>
         </div>
-      ) },
+      ),
+    },
     {
       key: 'createdAt',
       label: 'Created At',
       flex: 1,
-      sortable: true },
+      sortable: true,
+    },
     {
       key: 'actions',
       label: 'Action',
@@ -376,12 +416,14 @@ export function ComputeAdminVolumeBackupsPage() {
           {
             id: 'update-status',
             label: 'Update status',
-            onClick: () => handleEditBackup(row) },
+            onClick: () => handleEditBackup(row),
+          },
           {
             id: 'delete',
             label: 'Delete',
             status: 'danger',
-            onClick: () => handleDeleteClick(row) },
+            onClick: () => handleDeleteClick(row),
+          },
         ];
 
         return (
@@ -397,7 +439,8 @@ export function ComputeAdminVolumeBackupsPage() {
             </ContextMenu>
           </div>
         );
-      } },
+      },
+    },
   ];
 
   // Filter and order columns based on preferences
@@ -564,7 +607,8 @@ export function ComputeAdminVolumeBackupsPage() {
             ? {
                 id: selectedBackupForDrawer.id,
                 name: selectedBackupForDrawer.name,
-                size: parseSizeToNumber(selectedBackupForDrawer.size) }
+                size: parseSizeToNumber(selectedBackupForDrawer.size),
+              }
             : null
         }
       />
@@ -576,7 +620,8 @@ export function ComputeAdminVolumeBackupsPage() {
           selectedBackupForDrawer
             ? {
                 id: selectedBackupForDrawer.id,
-                name: selectedBackupForDrawer.name }
+                name: selectedBackupForDrawer.name,
+              }
             : null
         }
       />

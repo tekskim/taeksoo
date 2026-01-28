@@ -1,5 +1,23 @@
 import { useState, useMemo } from 'react';
-import { Button, FilterSearchInput, Table, Pagination, VStack, TabBar, TopBar, TopBarAction, Breadcrumb, ListToolbar, ContextMenu, ConfirmModal, type TableColumn, type ContextMenuItem, type FilterField, type AppliedFilter, fixedColumns, columnMinWidths } from '@/design-system';
+import {
+  Button,
+  FilterSearchInput,
+  Table,
+  Pagination,
+  VStack,
+  TabBar,
+  TopBar,
+  TopBarAction,
+  Breadcrumb,
+  ListToolbar,
+  ContextMenu,
+  ConfirmModal,
+  type TableColumn,
+  type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
+  fixedColumns,
+} from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
@@ -42,7 +60,8 @@ const mockTemplates: InstanceTemplate[] = [
     network: 'in-net',
     floatingIp: 'None',
     access: 'Personal',
-    favorite: true },
+    favorite: true,
+  },
   {
     id: 'tpl-002',
     name: 'web-server-template',
@@ -54,7 +73,8 @@ const mockTemplates: InstanceTemplate[] = [
     network: 'public-net',
     floatingIp: 'Auto',
     access: 'Project',
-    favorite: true },
+    favorite: true,
+  },
   {
     id: 'tpl-003',
     name: 'db-template',
@@ -66,7 +86,8 @@ const mockTemplates: InstanceTemplate[] = [
     network: 'db-net',
     floatingIp: 'None',
     access: 'Personal',
-    favorite: false },
+    favorite: false,
+  },
   {
     id: 'tpl-004',
     name: 'gpu-ml-template',
@@ -78,7 +99,8 @@ const mockTemplates: InstanceTemplate[] = [
     network: 'ml-net',
     floatingIp: 'Auto',
     access: 'Public',
-    favorite: true },
+    favorite: true,
+  },
   {
     id: 'tpl-005',
     name: 'minimal-template',
@@ -90,7 +112,8 @@ const mockTemplates: InstanceTemplate[] = [
     network: 'in-net',
     floatingIp: 'None',
     access: 'Personal',
-    favorite: false },
+    favorite: false,
+  },
   {
     id: 'tpl-006',
     name: 'k8s-worker',
@@ -102,7 +125,8 @@ const mockTemplates: InstanceTemplate[] = [
     network: 'k8s-net',
     floatingIp: 'None',
     access: 'Project',
-    favorite: true },
+    favorite: true,
+  },
   {
     id: 'tpl-007',
     name: 'k8s-master',
@@ -114,7 +138,8 @@ const mockTemplates: InstanceTemplate[] = [
     network: 'k8s-net',
     floatingIp: 'Auto',
     access: 'Project',
-    favorite: true },
+    favorite: true,
+  },
   {
     id: 'tpl-008',
     name: 'dev-environment',
@@ -126,7 +151,8 @@ const mockTemplates: InstanceTemplate[] = [
     network: 'dev-net',
     floatingIp: 'Auto',
     access: 'Personal',
-    favorite: false },
+    favorite: false,
+  },
   {
     id: 'tpl-009',
     name: 'monitoring-stack',
@@ -138,7 +164,8 @@ const mockTemplates: InstanceTemplate[] = [
     network: 'monitor-net',
     floatingIp: 'Auto',
     access: 'Public',
-    favorite: true },
+    favorite: true,
+  },
   {
     id: 'tpl-010',
     name: 'cache-server',
@@ -150,7 +177,8 @@ const mockTemplates: InstanceTemplate[] = [
     network: 'cache-net',
     floatingIp: 'None',
     access: 'Project',
-    favorite: false },
+    favorite: false,
+  },
 ];
 
 /* ----------------------------------------
@@ -169,7 +197,8 @@ const filterFields: FilterField[] = [
       { value: 'Personal', label: 'Personal' },
       { value: 'Project', label: 'Project' },
       { value: 'Public', label: 'Public' },
-    ] },
+    ],
+  },
 ];
 
 export function ComputeAdminInstanceTemplatesPage() {
@@ -206,7 +235,8 @@ export function ComputeAdminInstanceTemplatesPage() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    closable: tab.closable }));
+    closable: tab.closable,
+  }));
 
   // Handle delete template
   const handleDeleteClick = (template: InstanceTemplate) => {
@@ -296,17 +326,20 @@ export function ComputeAdminInstanceTemplatesPage() {
         >
           {row.name}
         </Link>
-      ) },
+      ),
+    },
     {
       key: 'image',
       label: 'Description',
       flex: 1,
-      sortable: true },
+      sortable: true,
+    },
     {
       key: 'flavor',
       label: 'Created at',
       flex: 1,
-      sortable: true },
+      sortable: true,
+    },
     {
       key: 'actions',
       label: 'Action',
@@ -317,12 +350,14 @@ export function ComputeAdminInstanceTemplatesPage() {
           {
             id: 'duplicate',
             label: 'Duplicate',
-            onClick: () => console.log('Duplicate template:', row.id) },
+            onClick: () => console.log('Duplicate template:', row.id),
+          },
           {
             id: 'delete',
             label: 'Delete',
             status: 'danger',
-            onClick: () => handleDeleteClick(row) },
+            onClick: () => handleDeleteClick(row),
+          },
         ];
 
         return (
@@ -338,7 +373,8 @@ export function ComputeAdminInstanceTemplatesPage() {
             </ContextMenu>
           </div>
         );
-      } },
+      },
+    },
   ];
 
   // Filter and order columns based on preferences

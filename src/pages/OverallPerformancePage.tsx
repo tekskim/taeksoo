@@ -989,7 +989,8 @@ export function OverallPerformancePage() {
     {
       key: 'id',
       label: 'Detail performance',
-      flex: 1, minWidth: columnMinWidths.id,
+      flex: 1,
+      minWidth: columnMinWidths.id,
       align: 'center' as const,
       render: () => (
         <button className="p-1.5 hover:bg-[var(--color-surface-subtle)] rounded transition-colors">
@@ -1007,7 +1008,8 @@ export function OverallPerformancePage() {
     {
       key: 'id',
       label: 'Detail performance',
-      flex: 1, minWidth: columnMinWidths.id,
+      flex: 1,
+      minWidth: columnMinWidths.id,
       align: 'center' as const,
       render: () => (
         <button className="p-1.5 hover:bg-[var(--color-surface-subtle)] rounded transition-colors">
@@ -1040,7 +1042,8 @@ export function OverallPerformancePage() {
     {
       key: 'id',
       label: 'Action',
-      flex: 1, minWidth: columnMinWidths.id,
+      flex: 1,
+      minWidth: columnMinWidths.id,
       align: 'center' as const,
       render: () => (
         <button className="p-1.5 hover:bg-[var(--color-surface-subtle)] rounded transition-colors">

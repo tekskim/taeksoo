@@ -270,13 +270,15 @@ export function ContainerHPAPage() {
     {
       key: 'createdAt',
       label: 'Created At',
-      flex: 1, minWidth: columnMinWidths.createdAt,
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
     },
     {
       key: 'action',
       label: 'Action',
-      flex: 1, minWidth: columnMinWidths.action,
+      flex: 1,
+      minWidth: columnMinWidths.action,
       align: 'center',
       sticky: 'right',
       render: (_, row) => {

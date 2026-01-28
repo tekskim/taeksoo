@@ -1,6 +1,27 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { Button, VStack, TabBar, TopBar, TopBarAction, Breadcrumb, Tabs, TabList, Tab, TabPanel, DetailHeader, SectionCard, SearchInput, Table, Pagination, StatusIndicator, ContextMenu, type TableColumn, type ContextMenuItem, fixedColumns, columnMinWidths } from '@/design-system';
+import {
+  Button,
+  VStack,
+  TabBar,
+  TopBar,
+  TopBarAction,
+  Breadcrumb,
+  Tabs,
+  TabList,
+  Tab,
+  TabPanel,
+  DetailHeader,
+  SectionCard,
+  SearchInput,
+  Table,
+  Pagination,
+  StatusIndicator,
+  ContextMenu,
+  type TableColumn,
+  type ContextMenuItem,
+  fixedColumns,
+} from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
@@ -9,7 +30,8 @@ import {
   IconDotsCircleHorizontal,
   IconLock,
   IconLockOpen,
-  IconTerminal2 } from '@tabler/icons-react';
+  IconTerminal2,
+} from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -71,7 +93,8 @@ const mockFlavorsMap: Record<string, FlavorDetail> = {
     cpuThreadPolicy: 'Prefer',
     memoryPage: 'Any',
     internalNetworkBandwidth: '-',
-    storageIOPS: '-' },
+    storageIOPS: '-',
+  },
   'flv-002': {
     id: 'flv-002',
     name: 'c5.xlarge',
@@ -87,7 +110,8 @@ const mockFlavorsMap: Record<string, FlavorDetail> = {
     cpuThreadPolicy: 'Prefer',
     memoryPage: 'Any',
     internalNetworkBandwidth: '10Gbps',
-    storageIOPS: '-' },
+    storageIOPS: '-',
+  },
   'flv-003': {
     id: 'flv-003',
     name: 'm5.large',
@@ -103,7 +127,8 @@ const mockFlavorsMap: Record<string, FlavorDetail> = {
     cpuThreadPolicy: 'Prefer',
     memoryPage: 'Any',
     internalNetworkBandwidth: '-',
-    storageIOPS: '-' },
+    storageIOPS: '-',
+  },
   'flv-004': {
     id: 'flv-004',
     name: 'm5.xlarge',
@@ -119,7 +144,8 @@ const mockFlavorsMap: Record<string, FlavorDetail> = {
     cpuThreadPolicy: 'Prefer',
     memoryPage: 'Any',
     internalNetworkBandwidth: '10Gbps',
-    storageIOPS: '-' },
+    storageIOPS: '-',
+  },
   'flv-005': {
     id: 'flv-005',
     name: 'r5.large',
@@ -135,7 +161,8 @@ const mockFlavorsMap: Record<string, FlavorDetail> = {
     cpuThreadPolicy: 'Prefer',
     memoryPage: 'Any',
     internalNetworkBandwidth: '-',
-    storageIOPS: '-' },
+    storageIOPS: '-',
+  },
   'flv-006': {
     id: 'flv-006',
     name: 'r5.xlarge',
@@ -151,7 +178,8 @@ const mockFlavorsMap: Record<string, FlavorDetail> = {
     cpuThreadPolicy: 'Prefer',
     memoryPage: 'Any',
     internalNetworkBandwidth: '10Gbps',
-    storageIOPS: '-' },
+    storageIOPS: '-',
+  },
   'flv-007': {
     id: 'flv-007',
     name: 't3.micro',
@@ -167,7 +195,8 @@ const mockFlavorsMap: Record<string, FlavorDetail> = {
     cpuThreadPolicy: 'Prefer',
     memoryPage: 'Any',
     internalNetworkBandwidth: '-',
-    storageIOPS: '-' },
+    storageIOPS: '-',
+  },
   'flv-008': {
     id: 'flv-008',
     name: 't3.small',
@@ -183,7 +212,8 @@ const mockFlavorsMap: Record<string, FlavorDetail> = {
     cpuThreadPolicy: 'Prefer',
     memoryPage: 'Any',
     internalNetworkBandwidth: '-',
-    storageIOPS: '-' },
+    storageIOPS: '-',
+  },
   'flv-009': {
     id: 'flv-009',
     name: 'g4dn.xlarge',
@@ -199,7 +229,8 @@ const mockFlavorsMap: Record<string, FlavorDetail> = {
     cpuThreadPolicy: 'Isolate',
     memoryPage: 'Large',
     internalNetworkBandwidth: '25Gbps',
-    storageIOPS: '3000' },
+    storageIOPS: '3000',
+  },
   'flv-010': {
     id: 'flv-010',
     name: 'g4dn.2xlarge',
@@ -215,7 +246,8 @@ const mockFlavorsMap: Record<string, FlavorDetail> = {
     cpuThreadPolicy: 'Isolate',
     memoryPage: 'Large',
     internalNetworkBandwidth: '25Gbps',
-    storageIOPS: '5000' },
+    storageIOPS: '5000',
+  },
   'flv-011': {
     id: 'flv-011',
     name: 'p3.2xlarge',
@@ -231,7 +263,8 @@ const mockFlavorsMap: Record<string, FlavorDetail> = {
     cpuThreadPolicy: 'Isolate',
     memoryPage: 'Large',
     internalNetworkBandwidth: '10Gbps',
-    storageIOPS: '3000' },
+    storageIOPS: '3000',
+  },
   'flv-012': {
     id: 'flv-012',
     name: 'inf1.xlarge',
@@ -247,7 +280,8 @@ const mockFlavorsMap: Record<string, FlavorDetail> = {
     cpuThreadPolicy: 'Prefer',
     memoryPage: 'Any',
     internalNetworkBandwidth: '25Gbps',
-    storageIOPS: '-' },
+    storageIOPS: '-',
+  },
   'flv-013': {
     id: 'flv-013',
     name: 'inf1.2xlarge',
@@ -263,7 +297,8 @@ const mockFlavorsMap: Record<string, FlavorDetail> = {
     cpuThreadPolicy: 'Prefer',
     memoryPage: 'Any',
     internalNetworkBandwidth: '25Gbps',
-    storageIOPS: '-' },
+    storageIOPS: '-',
+  },
   'flv-014': {
     id: 'flv-014',
     name: 'custom.small',
@@ -279,7 +314,8 @@ const mockFlavorsMap: Record<string, FlavorDetail> = {
     cpuThreadPolicy: 'Prefer',
     memoryPage: 'Any',
     internalNetworkBandwidth: '-',
-    storageIOPS: '-' },
+    storageIOPS: '-',
+  },
   'flv-015': {
     id: 'flv-015',
     name: 'custom.medium',
@@ -295,7 +331,9 @@ const mockFlavorsMap: Record<string, FlavorDetail> = {
     cpuThreadPolicy: 'Prefer',
     memoryPage: 'Any',
     internalNetworkBandwidth: '10Gbps',
-    storageIOPS: '-' } };
+    storageIOPS: '-',
+  },
+};
 
 const defaultFlavorDetail: FlavorDetail = {
   id: 'unknown',
@@ -312,7 +350,8 @@ const defaultFlavorDetail: FlavorDetail = {
   cpuThreadPolicy: '-',
   memoryPage: '-',
   internalNetworkBandwidth: '-',
-  storageIOPS: '-' };
+  storageIOPS: '-',
+};
 
 // Mock flavor parameters (raw API response)
 const mockFlavorParameters = {
@@ -329,17 +368,21 @@ const mockFlavorParameters = {
   links: [
     {
       rel: 'self',
-      href: 'http://10.7.12.10/v2.1/flavors/b95aaf8a-80c5-4be0-ae67-5c983f5c9536' },
+      href: 'http://10.7.12.10/v2.1/flavors/b95aaf8a-80c5-4be0-ae67-5c983f5c9536',
+    },
     {
       rel: 'bookmark',
-      href: 'http://10.7.12.10/flavors/b95aaf8a-80c5-4be0-ae67-5c983f5c9536' },
+      href: 'http://10.7.12.10/flavors/b95aaf8a-80c5-4be0-ae67-5c983f5c9536',
+    },
   ],
   description: null,
   extra_specs: {
     ':architecture': 'x86_architecture',
     ':category': 'compute_optimized',
     'hw:mem_page_size': 'any',
-    'hw:numa_nodes': '1' } };
+    'hw:numa_nodes': '1',
+  },
+};
 
 // Mock instances data using this flavor
 const mockFlavorInstances: FlavorInstance[] = Array.from({ length: 115 }, (_, i) => ({
@@ -350,7 +393,8 @@ const mockFlavorInstances: FlavorInstance[] = Array.from({ length: 115 }, (_, i)
   image: ['Ubuntu24.04', 'CentOS8', 'Debian12', 'Rocky9'][i % 4],
   fixedIP: `10.62.0.${30 + i}`,
   az: ['zone-a', 'zone-b', 'zone-o'][i % 3],
-  createdAt: `2025-09-${String(30 - (i % 28)).padStart(2, '0')}` }));
+  createdAt: `2025-09-${String(30 - (i % 28)).padStart(2, '0')}`,
+}));
 
 /* ----------------------------------------
    Flavor Detail Page
@@ -386,7 +430,8 @@ export function ComputeAdminFlavorDetailPage() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    closable: tab.closable }));
+    closable: tab.closable,
+  }));
 
   const breadcrumbItems = [
     { label: 'Compute Admin', href: '/compute-admin' },
@@ -430,7 +475,8 @@ export function ComputeAdminFlavorDetailPage() {
       label: 'Status',
       width: fixedColumns.status,
       align: 'center',
-      render: (_, row) => <StatusIndicator status={row.status} layout="icon-only" /> },
+      render: (_, row) => <StatusIndicator status={row.status} layout="icon-only" />,
+    },
     {
       key: 'name',
       label: 'Name',
@@ -448,7 +494,8 @@ export function ComputeAdminFlavorDetailPage() {
             ID : {row.id}
           </span>
         </div>
-      ) },
+      ),
+    },
     {
       key: 'locked',
       label: 'Locked',
@@ -459,29 +506,34 @@ export function ComputeAdminFlavorDetailPage() {
           <IconLock size={16} stroke={1.5} className="text-[var(--color-text-subtle)]" />
         ) : (
           <IconLockOpen size={16} stroke={1.5} className="text-[var(--color-text-subtle)]" />
-        ) },
+        ),
+    },
     {
       key: 'image',
       label: 'OS',
       flex: 1,
       sortable: true,
-      render: (value) => <span>{value}</span> },
+      render: (value) => <span>{value}</span>,
+    },
     {
       key: 'fixedIP',
       label: 'Fixed IP',
       flex: 1,
-      render: (value) => <span>{value}</span> },
+      render: (value) => <span>{value}</span>,
+    },
     {
       key: 'az',
       label: 'AZ',
       flex: 1,
-      render: (value) => <span>{value}</span> },
+      render: (value) => <span>{value}</span>,
+    },
     {
       key: 'createdAt',
       label: 'Created at',
       flex: 1,
       sortable: true,
-      render: (value) => <span>{value}</span> },
+      render: (value) => <span>{value}</span>,
+    },
     {
       key: 'action',
       label: 'Action',
@@ -512,7 +564,8 @@ export function ComputeAdminFlavorDetailPage() {
             }
           />
         </div>
-      ) },
+      ),
+    },
   ];
 
   return (

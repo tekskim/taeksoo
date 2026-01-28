@@ -1,9 +1,22 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Button, VStack, TabBar, TopBar, TopBarAction, Breadcrumb, Tabs, TabList, Tab, TabPanel, DetailHeader, SectionCard, fixedColumns, columnMinWidths } from '@/design-system';
+import {
+  Button,
+  VStack,
+  TabBar,
+  TopBar,
+  TopBarAction,
+  Breadcrumb,
+  Tabs,
+  TabList,
+  Tab,
+  TabPanel,
+  DetailHeader,
+  SectionCard,
+} from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconTrash, IconBell, IconEdit, IconLinkOff } from '@tabler/icons-react';
+import { IconTrash, IconBell, IconLinkOff } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -39,110 +52,131 @@ const mockFloatingIPsMap: Record<string, FloatingIPDetail> = {
     status: 'active',
     createdAt: '2025-10-01',
     description: '-',
+    network: { name: 'external-net', id: 'net-001' },
     resourceType: 'Instance',
     resource: { name: 'web-01', id: 'inst-001' },
     fixedIp: '10.7.65.39',
     router: { name: 'main-router', id: 'router-001' },
-    fqdn: 'web-01.thakicloud.com' },
+    fqdn: 'web-01.thakicloud.com',
+  },
   'fip-002': {
     id: 'fip-002',
     floatingIp: '172.24.4.229',
     status: 'active',
     createdAt: '2025-10-02',
     description: '-',
+    network: { name: 'external-net', id: 'net-001' },
     resourceType: 'Instance',
     resource: { name: 'app-server', id: 'inst-002' },
     fixedIp: '10.7.65.40',
     router: { name: 'main-router', id: 'router-001' },
-    fqdn: 'app-server.thakicloud.com' },
+    fqdn: 'app-server.thakicloud.com',
+  },
   'fip-003': {
     id: 'fip-003',
     floatingIp: '172.24.4.230',
     status: 'down',
     createdAt: '2025-10-03',
     description: 'Unassociated',
+    network: { name: 'external-net', id: 'net-001' },
     resourceType: null,
     resource: null,
     fixedIp: '-',
     router: { name: 'main-router', id: 'router-001' },
-    fqdn: '-' },
+    fqdn: '-',
+  },
   'fip-004': {
     id: 'fip-004',
     floatingIp: '172.24.4.231',
     status: 'active',
     createdAt: '2025-09-28',
     description: '-',
+    network: { name: 'external-net-2', id: 'net-002' },
     resourceType: 'Instance',
     resource: { name: 'db-server', id: 'inst-003' },
     fixedIp: '10.7.65.41',
     router: { name: 'main-router', id: 'router-001' },
-    fqdn: 'db-server.thakicloud.com' },
+    fqdn: 'db-server.thakicloud.com',
+  },
   'fip-005': {
     id: 'fip-005',
     floatingIp: '172.24.4.232',
     status: 'active',
     createdAt: '2025-09-25',
     description: '-',
+    network: { name: 'external-net', id: 'net-001' },
     resourceType: 'Load balancer',
     resource: { name: 'load-balancer', id: 'lb-001' },
     fixedIp: '10.7.65.42',
     router: { name: 'main-router', id: 'router-001' },
-    fqdn: 'lb.thakicloud.com' },
+    fqdn: 'lb.thakicloud.com',
+  },
   'fip-006': {
     id: 'fip-006',
     floatingIp: '172.24.4.233',
     status: 'error',
     createdAt: '2025-09-20',
     description: 'Error state',
+    network: { name: 'external-net-2', id: 'net-002' },
     resourceType: null,
     resource: null,
     fixedIp: '-',
     router: { name: 'main-router', id: 'router-001' },
-    fqdn: '-' },
+    fqdn: '-',
+  },
   'fip-007': {
     id: 'fip-007',
     floatingIp: '172.24.4.234',
     status: 'active',
     createdAt: '2025-09-15',
     description: '-',
+    network: { name: 'external-net', id: 'net-001' },
     resourceType: 'Instance',
     resource: { name: 'monitoring', id: 'inst-004' },
     fixedIp: '10.7.65.43',
     router: { name: 'main-router', id: 'router-001' },
-    fqdn: 'monitoring.thakicloud.com' },
+    fqdn: 'monitoring.thakicloud.com',
+  },
   'fip-008': {
     id: 'fip-008',
     floatingIp: '172.24.4.235',
     status: 'active',
     createdAt: '2025-09-10',
     description: '-',
+    network: { name: 'external-net-3', id: 'net-003' },
     resourceType: 'VPN Gateway',
     resource: { name: 'vpn-gateway', id: 'vpn-001' },
     fixedIp: '10.7.65.44',
     router: { name: 'vpn-router', id: 'router-002' },
-    fqdn: 'vpn.thakicloud.com' },
+    fqdn: 'vpn.thakicloud.com',
+  },
   'fip-009': {
     id: 'fip-009',
     floatingIp: '172.24.4.236',
     status: 'down',
     createdAt: '2025-09-05',
     description: 'Unassociated',
+    network: { name: 'external-net-2', id: 'net-002' },
     resourceType: null,
     resource: null,
     fixedIp: '-',
     router: { name: 'main-router', id: 'router-001' },
-    fqdn: '-' },
+    fqdn: '-',
+  },
   'fip-010': {
     id: 'fip-010',
     floatingIp: '172.24.4.237',
     status: 'active',
     createdAt: '2025-09-01',
     description: '-',
+    network: { name: 'external-net', id: 'net-001' },
     resourceType: 'Instance',
     resource: { name: 'backup-server', id: 'inst-005' },
     fixedIp: '10.7.65.45',
     router: { name: 'backup-router', id: 'router-003' },
-    fqdn: 'backup.thakicloud.com' } };
+    fqdn: 'backup.thakicloud.com',
+  },
+};
 
 const defaultFloatingIPDetail: FloatingIPDetail = {
   id: 'unknown',
@@ -150,11 +184,13 @@ const defaultFloatingIPDetail: FloatingIPDetail = {
   status: 'active',
   createdAt: '-',
   description: '-',
+  network: null,
   resourceType: null,
   resource: null,
   fixedIp: '-',
   router: { name: '-', id: '' },
-  fqdn: '-' };
+  fqdn: '-',
+};
 
 /* ----------------------------------------
    Status Mapping
@@ -163,7 +199,8 @@ const defaultFloatingIPDetail: FloatingIPDetail = {
 const floatingIPStatusMap: Record<FloatingIPStatus, 'active' | 'shutoff' | 'error'> = {
   active: 'active',
   down: 'shutoff',
-  error: 'error' };
+  error: 'error',
+};
 
 /* ----------------------------------------
    FloatingIPDetailPage Component
@@ -200,7 +237,8 @@ export default function FloatingIPDetailPage() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    closable: tab.closable }));
+    closable: tab.closable,
+  }));
 
   const handleCopyFqdn = () => {
     if (floatingIP.fqdn) {
@@ -263,9 +301,6 @@ export default function FloatingIPDetailPage() {
                   <Button variant="secondary" size="sm" leftIcon={<IconLinkOff size={12} />}>
                     Disassociate
                   </Button>
-                  <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                    Edit
-                  </Button>
                   <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
                     Release
                   </Button>
@@ -277,6 +312,7 @@ export default function FloatingIPDetailPage() {
                     status={floatingIPStatusMap[floatingIP.status]}
                   />
                   <DetailHeader.InfoCard label="ID" value={floatingIP.id} copyable />
+                  <DetailHeader.InfoCard label="Tenant" value="tenantA" />
                   <DetailHeader.InfoCard label="Created at" value={floatingIP.createdAt} />
                 </DetailHeader.InfoGrid>
               </DetailHeader>
@@ -298,14 +334,7 @@ export default function FloatingIPDetailPage() {
                     <VStack gap={4} className="pt-4">
                       {/* Basic information */}
                       <SectionCard>
-                        <SectionCard.Header
-                          title="Basic information"
-                          actions={
-                            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                              Edit
-                            </Button>
-                          }
-                        />
+                        <SectionCard.Header title="Basic information" />
                         <SectionCard.Content>
                           <SectionCard.DataRow label="Floating IP" value={floatingIP.floatingIp} />
                           <SectionCard.DataRow label="Description" value={floatingIP.description} />

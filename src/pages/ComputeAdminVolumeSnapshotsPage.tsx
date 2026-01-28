@@ -1,5 +1,24 @@
 import { useState, useMemo } from 'react';
-import { Button, FilterSearchInput, Table, Pagination, VStack, TabBar, TopBar, TopBarAction, Breadcrumb, ListToolbar, ContextMenu, ConfirmModal, StatusIndicator, type TableColumn, type ContextMenuItem, type FilterField, type AppliedFilter, fixedColumns, columnMinWidths } from '@/design-system';
+import {
+  Button,
+  FilterSearchInput,
+  Table,
+  Pagination,
+  VStack,
+  TabBar,
+  TopBar,
+  TopBarAction,
+  Breadcrumb,
+  ListToolbar,
+  ContextMenu,
+  ConfirmModal,
+  StatusIndicator,
+  type TableColumn,
+  type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
+  fixedColumns,
+} from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
@@ -42,7 +61,8 @@ const mockVolumeSnapshots: VolumeSnapshot[] = [
     sourceVolume: 'vol-1',
     sourceVolumeId: 'vol-001',
     createdAt: '2025-09-12',
-    status: 'active' },
+    status: 'active',
+  },
   {
     id: 'vsnap-002',
     name: 'app-storage-snap',
@@ -53,7 +73,8 @@ const mockVolumeSnapshots: VolumeSnapshot[] = [
     sourceVolume: 'vol-2',
     sourceVolumeId: 'vol-002',
     createdAt: '2025-09-10',
-    status: 'active' },
+    status: 'active',
+  },
   {
     id: 'vsnap-003',
     name: 'backup-vol-snap',
@@ -64,7 +85,8 @@ const mockVolumeSnapshots: VolumeSnapshot[] = [
     sourceVolume: 'vol-3',
     sourceVolumeId: 'vol-003',
     createdAt: '2025-09-08',
-    status: 'active' },
+    status: 'active',
+  },
   {
     id: 'vsnap-004',
     name: 'log-storage-snap',
@@ -75,7 +97,8 @@ const mockVolumeSnapshots: VolumeSnapshot[] = [
     sourceVolume: 'vol-4',
     sourceVolumeId: 'vol-004',
     createdAt: '2025-09-05',
-    status: 'creating' },
+    status: 'creating',
+  },
   {
     id: 'vsnap-005',
     name: 'cache-vol-snap',
@@ -86,7 +109,8 @@ const mockVolumeSnapshots: VolumeSnapshot[] = [
     sourceVolume: 'vol-5',
     sourceVolumeId: 'vol-005',
     createdAt: '2025-08-30',
-    status: 'active' },
+    status: 'active',
+  },
   {
     id: 'vsnap-006',
     name: 'media-storage-snap',
@@ -97,7 +121,8 @@ const mockVolumeSnapshots: VolumeSnapshot[] = [
     sourceVolume: 'vol-6',
     sourceVolumeId: 'vol-006',
     createdAt: '2025-08-25',
-    status: 'active' },
+    status: 'active',
+  },
   {
     id: 'vsnap-007',
     name: 'temp-vol-snap',
@@ -108,7 +133,8 @@ const mockVolumeSnapshots: VolumeSnapshot[] = [
     sourceVolume: 'vol-7',
     sourceVolumeId: 'vol-007',
     createdAt: '2025-08-20',
-    status: 'error' },
+    status: 'error',
+  },
   {
     id: 'vsnap-008',
     name: 'ml-data-snap',
@@ -119,7 +145,8 @@ const mockVolumeSnapshots: VolumeSnapshot[] = [
     sourceVolume: 'vol-8',
     sourceVolumeId: 'vol-008',
     createdAt: '2025-08-15',
-    status: 'active' },
+    status: 'active',
+  },
   {
     id: 'vsnap-009',
     name: 'archive-vol-snap',
@@ -130,7 +157,8 @@ const mockVolumeSnapshots: VolumeSnapshot[] = [
     sourceVolume: 'vol-9',
     sourceVolumeId: 'vol-009',
     createdAt: '2025-08-10',
-    status: 'active' },
+    status: 'active',
+  },
   {
     id: 'vsnap-010',
     name: 'boot-vol-snap',
@@ -141,7 +169,8 @@ const mockVolumeSnapshots: VolumeSnapshot[] = [
     sourceVolume: 'vol-10',
     sourceVolumeId: 'vol-010',
     createdAt: '2025-08-05',
-    status: 'deleting' },
+    status: 'deleting',
+  },
 ];
 
 /* ----------------------------------------
@@ -153,7 +182,8 @@ const volumeSnapshotStatusMap: Record<SnapshotStatus, 'active' | 'building' | 'e
     active: 'active',
     creating: 'building',
     error: 'error',
-    deleting: 'pending' };
+    deleting: 'pending',
+  };
 
 /* ----------------------------------------
    Component
@@ -172,7 +202,8 @@ const filterFields: FilterField[] = [
       { value: 'creating', label: 'Creating' },
       { value: 'error', label: 'Error' },
       { value: 'deleting', label: 'Deleting' },
-    ] },
+    ],
+  },
 ];
 
 export function ComputeAdminVolumeSnapshotsPage() {
@@ -235,7 +266,8 @@ export function ComputeAdminVolumeSnapshotsPage() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    closable: tab.closable }));
+    closable: tab.closable,
+  }));
 
   // Handle delete snapshot
   const handleDeleteClick = (snapshot: VolumeSnapshot) => {
@@ -289,7 +321,8 @@ export function ComputeAdminVolumeSnapshotsPage() {
       sortable: false,
       render: (_, row) => (
         <StatusIndicator status={volumeSnapshotStatusMap[row.status]} layout="icon-only" />
-      ) },
+      ),
+    },
     {
       key: 'name',
       label: 'Name',
@@ -306,7 +339,8 @@ export function ComputeAdminVolumeSnapshotsPage() {
           </Link>
           <span className="text-[11px] text-[var(--color-text-muted)]">ID: {row.id}</span>
         </div>
-      ) },
+      ),
+    },
     {
       key: 'tenant',
       label: 'Tenant',
@@ -323,17 +357,20 @@ export function ComputeAdminVolumeSnapshotsPage() {
           </Link>
           <span className="text-[11px] text-[var(--color-text-muted)]">ID: {row.tenantId}</span>
         </div>
-      ) },
+      ),
+    },
     {
       key: 'host',
       label: 'Host',
       flex: 1,
-      sortable: true },
+      sortable: true,
+    },
     {
       key: 'size',
       label: 'Size',
       flex: 1,
-      sortable: true },
+      sortable: true,
+    },
     {
       key: 'sourceVolume',
       label: 'Source Volume',
@@ -352,12 +389,14 @@ export function ComputeAdminVolumeSnapshotsPage() {
             ID: {row.sourceVolumeId}
           </span>
         </div>
-      ) },
+      ),
+    },
     {
       key: 'createdAt',
       label: 'Created At',
       flex: 1,
-      sortable: true },
+      sortable: true,
+    },
     {
       key: 'actions',
       label: 'Action',
@@ -368,16 +407,19 @@ export function ComputeAdminVolumeSnapshotsPage() {
           {
             id: 'update-status',
             label: 'Update status',
-            onClick: () => handleEditSnapshot(row) },
+            onClick: () => handleEditSnapshot(row),
+          },
           {
             id: 'manage-metadata',
             label: 'Manage metadata',
-            onClick: () => handleCreateVolume(row) },
+            onClick: () => handleCreateVolume(row),
+          },
           {
             id: 'delete',
             label: 'Delete',
             status: 'danger',
-            onClick: () => handleDeleteClick(row) },
+            onClick: () => handleDeleteClick(row),
+          },
         ];
 
         return (
@@ -393,7 +435,8 @@ export function ComputeAdminVolumeSnapshotsPage() {
             </ContextMenu>
           </div>
         );
-      } },
+      },
+    },
   ];
 
   // Filter and order columns based on preferences
@@ -559,7 +602,8 @@ export function ComputeAdminVolumeSnapshotsPage() {
             ? {
                 id: selectedSnapshotForDrawer.id,
                 name: selectedSnapshotForDrawer.name,
-                size: parseSizeToNumber(selectedSnapshotForDrawer.size) }
+                size: parseSizeToNumber(selectedSnapshotForDrawer.size),
+              }
             : null
         }
       />
@@ -571,7 +615,8 @@ export function ComputeAdminVolumeSnapshotsPage() {
           selectedSnapshotForDrawer
             ? {
                 id: selectedSnapshotForDrawer.id,
-                name: selectedSnapshotForDrawer.name }
+                name: selectedSnapshotForDrawer.name,
+              }
             : null
         }
       />

@@ -346,7 +346,8 @@ function ResourcesTab({ resources }: ResourcesTabProps) {
     {
       key: 'type',
       label: 'Type',
-      flex: 1, minWidth: columnMinWidths.type,
+      flex: 1,
+      minWidth: columnMinWidths.type,
       sortable: true,
       render: (value: string) => (
         <span className="font-medium text-[var(--color-action-primary)] cursor-pointer hover:underline">
@@ -546,7 +547,8 @@ function WorkloadsTab({ workloads }: WorkloadsTabProps) {
     {
       key: 'type',
       label: 'Type',
-      flex: 1, minWidth: columnMinWidths.type,
+      flex: 1,
+      minWidth: columnMinWidths.type,
       sortable: true,
     },
     {
@@ -575,7 +577,8 @@ function WorkloadsTab({ workloads }: WorkloadsTabProps) {
     {
       key: 'action',
       label: 'Action',
-      flex: 1, minWidth: columnMinWidths.action,
+      flex: 1,
+      minWidth: columnMinWidths.action,
       align: 'center',
       render: (_: unknown, row: WorkloadRow) => (
         <ContextMenu items={getWorkloadMenuItems(row.type, row, handleMenuAction)} trigger="click">
