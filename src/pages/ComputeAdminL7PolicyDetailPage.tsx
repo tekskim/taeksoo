@@ -22,13 +22,7 @@ import {
 import type { TableColumn, ContextMenuItem } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconEdit,
-  IconTrash,
-  IconBell,
-  IconCirclePlus,
-  IconDotsCircleHorizontal,
-} from '@tabler/icons-react';
+import { IconTrash, IconBell, IconDownload } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -242,6 +236,7 @@ export default function L7PolicyDetailPage() {
       key: 'invert',
       label: 'Invert',
       flex: 1,
+      sortable: true,
       render: (_, row) => (row.invert ? 'On' : 'Off'),
     },
     {
@@ -268,11 +263,7 @@ export default function L7PolicyDetailPage() {
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={ruleMenuItems} trigger="click">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                <IconDotsCircleHorizontal
-                  size={16}
-                  stroke={1.5}
-                  className="text-[var(--action-icon-color)]"
-                />
+                <IconTrash size={16} stroke={1.5} className="text-[var(--color-state-danger)]" />
               </button>
             </ContextMenu>
           </div>
@@ -336,12 +327,6 @@ export default function L7PolicyDetailPage() {
                     {l7Policy.name}
                   </h1>
                   <DetailHeader.Actions>
-                    <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                      Edit
-                    </Button>
-                    <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                      Create L7 Rule
-                    </Button>
                     <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
                       Delete
                     </Button>
@@ -376,17 +361,11 @@ export default function L7PolicyDetailPage() {
                   <TabPanel value="details" className="pt-0">
                     <VStack gap={4} className="pt-4">
                       <SectionCard>
-                        <SectionCard.Header
-                          title="Basic information"
-                          actions={
-                            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                              Edit
-                            </Button>
-                          }
-                        />
+                        <SectionCard.Header title="Basic information" />
                         <SectionCard.Content>
                           <SectionCard.DataRow label="Name" value={l7Policy.name} />
                           <SectionCard.DataRow label="Description" value={l7Policy.description} />
+                          <SectionCard.DataRow label="Admin state" value={l7Policy.adminState} />
                           <SectionCard.DataRow label="Behavior" value={l7Policy.behavior} />
                           <SectionCard.DataRow
                             label="Behavior detail"
@@ -404,7 +383,6 @@ export default function L7PolicyDetailPage() {
                             }
                           />
                           <SectionCard.DataRow label="Position" value={String(l7Policy.position)} />
-                          <SectionCard.DataRow label="Admin state" value={l7Policy.adminState} />
                         </SectionCard.Content>
                       </SectionCard>
                     </VStack>
@@ -418,26 +396,28 @@ export default function L7PolicyDetailPage() {
                         <h3 className="text-[16px] font-semibold text-[var(--color-text-default)]">
                           L7 Rules
                         </h3>
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          leftIcon={<IconCirclePlus size={12} />}
-                        >
-                          Create L7 Rule
-                        </Button>
                       </div>
 
                       {/* Action Bar */}
                       <div className="flex items-center gap-2">
-                        <div className="w-[var(--search-input-width)]">
-                          <SearchInput
-                            value={l7RuleSearchTerm}
-                            onChange={(e) => {
-                              setL7RuleSearchTerm(e.target.value);
-                              setL7RuleCurrentPage(1);
-                            }}
-                            placeholder="Search L7 rules by attributes"
-                          />
+                        <div className="flex items-center gap-1">
+                          <div className="w-[var(--search-input-width)]">
+                            <SearchInput
+                              value={l7RuleSearchTerm}
+                              onChange={(e) => {
+                                setL7RuleSearchTerm(e.target.value);
+                                setL7RuleCurrentPage(1);
+                              }}
+                              placeholder="Search L7 rules by attributes"
+                            />
+                          </div>
+                          <button
+                            type="button"
+                            className="flex items-center justify-center w-7 h-7 rounded-[var(--button-radius)] border border-[var(--color-border-strong)] bg-[var(--color-surface-default)] text-[var(--color-text-default)] hover:bg-[var(--button-secondary-hover-bg)]"
+                            aria-label="Download"
+                          >
+                            <IconDownload size={14} stroke={1.5} />
+                          </button>
                         </div>
                         <div className="h-4 w-px bg-[var(--color-border-default)]" />
                         <Button
