@@ -209,7 +209,7 @@ export default function IAMSystemAdministratorsPage() {
     {
       key: 'locked',
       label: 'Locked',
-      width: fixedColumns.lockedWide,
+      width: fixedColumns.locked,
       align: 'center',
       render: (value) => (
         <div className="flex items-center justify-center w-full">
@@ -229,7 +229,8 @@ export default function IAMSystemAdministratorsPage() {
     {
       key: 'mfa',
       label: 'MFA',
-      width: fixedColumns.mfa,
+      flex: 1,
+      minWidth: columnMinWidths.mfa,
     },
     {
       key: 'createdAt',

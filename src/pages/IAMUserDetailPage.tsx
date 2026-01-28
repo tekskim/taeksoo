@@ -609,24 +609,28 @@ export function IAMUserDetailPage() {
       key: 'started',
       label: 'Started',
       flex: 1,
+      minWidth: columnMinWidths.started,
       sortable: true,
     },
     {
       key: 'lastAccess',
       label: 'Last access',
       flex: 1,
+      minWidth: columnMinWidths.lastAccess,
       sortable: true,
     },
     {
       key: 'ipAddress',
       label: 'IP Address',
       flex: 1,
+      minWidth: columnMinWidths.ipAddress,
       sortable: true,
     },
     {
       key: 'device',
       label: 'Device',
       flex: 1,
+      minWidth: columnMinWidths.device,
     },
     {
       key: 'id',
@@ -659,18 +663,21 @@ export function IAMUserDetailPage() {
       key: 'keyId',
       label: 'Key ID',
       flex: 1,
+      minWidth: columnMinWidths.keyId,
       sortable: true,
     },
     {
       key: 'description',
       label: 'Description',
       flex: 1,
+      minWidth: columnMinWidths.description,
       sortable: true,
     },
     {
       key: 'lastUsed',
       label: 'Last used',
       flex: 1,
+      minWidth: columnMinWidths.lastUsed,
       sortable: true,
     },
     {
@@ -704,6 +711,7 @@ export function IAMUserDetailPage() {
       key: 'name',
       label: 'Role name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (value) => (
         <Link
@@ -718,16 +726,19 @@ export function IAMUserDetailPage() {
       key: 'source',
       label: 'Source',
       flex: 1,
+      minWidth: columnMinWidths.source,
     },
     {
       key: 'type',
       label: 'Type',
       flex: 1,
+      minWidth: columnMinWidths.typeLg,
     },
     {
       key: 'policies',
       label: 'Policies',
       flex: 1,
+      minWidth: columnMinWidths.policies,
     },
     {
       key: 'createdAt',
@@ -760,6 +771,7 @@ export function IAMUserDetailPage() {
       key: 'name',
       label: 'User group name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (value) => (
         <Link
@@ -774,18 +786,21 @@ export function IAMUserDetailPage() {
       key: 'users',
       label: 'User',
       flex: 1,
+      minWidth: columnMinWidths.user,
       sortable: true,
     },
     {
       key: 'attachedRoles',
       label: 'Attached roles',
       flex: 1,
+      minWidth: columnMinWidths.roles,
       sortable: true,
     },
     {
       key: 'description',
       label: 'Description',
       flex: 1,
+      minWidth: columnMinWidths.description,
       sortable: true,
     },
     {

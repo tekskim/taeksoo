@@ -321,20 +321,21 @@ export function IAMHomePage() {
 
   // Events table columns
   const eventsColumns: TableColumn<EventRow>[] = [
-    { key: 'time', label: 'Time', flex: 1, sortable: true },
-    { key: 'event', label: 'Event', flex: 1, sortable: true },
-    { key: 'user', label: 'User', flex: 1, sortable: true },
-    { key: 'target', label: 'Target', flex: 1, sortable: true },
+    { key: 'time', label: 'Time', flex: 1, minWidth: columnMinWidths.createdAt, sortable: true },
+    { key: 'event', label: 'Event', flex: 1, minWidth: columnMinWidths.name, sortable: true },
+    { key: 'user', label: 'User', flex: 1, minWidth: columnMinWidths.user, sortable: true },
+    { key: 'target', label: 'Target', flex: 1, minWidth: columnMinWidths.name, sortable: true },
     {
       key: 'result',
       label: 'Result',
       flex: 1,
+      minWidth: columnMinWidths.typeLg,
       sortable: true,
       render: (value: string) => (
         <span className="text-[var(--color-action-primary)]">{value}</span>
       ),
     },
-    { key: 'ipAddress', label: 'IP address', flex: 1, sortable: true },
+    { key: 'ipAddress', label: 'IP address', flex: 1, minWidth: columnMinWidths.ipAddress, sortable: true },
   ];
 
   return (

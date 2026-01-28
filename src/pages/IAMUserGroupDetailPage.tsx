@@ -443,6 +443,7 @@ export default function IAMUserGroupDetailPage() {
       key: 'username',
       label: 'Username',
       flex: 1,
+      minWidth: columnMinWidths.username,
       sortable: true,
       render: (value) => (
         <Link
@@ -457,11 +458,13 @@ export default function IAMUserGroupDetailPage() {
       key: 'userGroups',
       label: 'User groups',
       flex: 1,
+      minWidth: columnMinWidths.userGroups,
     },
     {
       key: 'lastSignIn',
       label: 'Last sign-in',
       flex: 1,
+      minWidth: columnMinWidths.lastSignIn,
       sortable: true,
     },
     {
@@ -498,6 +501,7 @@ export default function IAMUserGroupDetailPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (value) => (
         <Link
@@ -512,22 +516,26 @@ export default function IAMUserGroupDetailPage() {
       key: 'type',
       label: 'Type',
       flex: 1,
+      minWidth: columnMinWidths.typeLg,
     },
     {
       key: 'policies',
       label: 'Policies',
       flex: 1,
+      minWidth: columnMinWidths.policies,
     },
     {
       key: 'userGroupCount',
       label: 'User group count',
       flex: 1,
+      minWidth: columnMinWidths.userCount,
       sortable: true,
     },
     {
       key: 'policies',
       label: 'Policies',
       flex: 1,
+      minWidth: columnMinWidths.policies,
       render: (row) => row.policies,
     },
     {

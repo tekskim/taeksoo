@@ -10,6 +10,7 @@ import { designRoutes } from './design.routes';
 const EntryPage = lazy(() => import('@/pages/EntryPage'));
 const DesktopPage = lazy(() => import('@/pages/DesktopPage'));
 const SidebarIconsPage = lazy(() => import('@/pages/SidebarIconsPage'));
+const TableStyleGuidePage = lazy(() => import('@/pages/TableStyleGuidePage'));
 
 // Loading fallback component
 const LoadingFallback = () => (
@@ -30,6 +31,9 @@ export const AppRoutes = () => {
 
         {/* Sidebar Icons Reference */}
         <Route path="/sidebar-icons" element={<SidebarIconsPage />} />
+
+        {/* Table Style Guide */}
+        <Route path="/table-style-guide" element={<TableStyleGuidePage />} />
 
         {/* Domain-specific routes */}
         {agentRoutes}

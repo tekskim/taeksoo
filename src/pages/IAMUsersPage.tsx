@@ -268,7 +268,8 @@ export function IAMUsersPage() {
     {
       key: 'mfa',
       label: 'MFA',
-      width: fixedColumns.mfa,
+      flex: 1,
+      minWidth: columnMinWidths.mfa,
     },
     {
       key: 'createdAt',

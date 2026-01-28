@@ -471,6 +471,7 @@ export default function IAMPolicyDetailPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (value) => (
         <Link
@@ -485,16 +486,19 @@ export default function IAMPolicyDetailPage() {
       key: 'type',
       label: 'Type',
       flex: 1,
+      minWidth: columnMinWidths.typeLg,
     },
     {
       key: 'policies',
       label: 'Policies',
       flex: 1,
+      minWidth: columnMinWidths.policies,
     },
     {
       key: 'userGroupCount',
       label: 'User group count',
       flex: 1,
+      minWidth: columnMinWidths.userCount,
       sortable: true,
     },
     {
@@ -507,7 +511,7 @@ export default function IAMPolicyDetailPage() {
     {
       key: 'action',
       label: 'Action',
-      width: fixedColumns.actionXl,
+      width: fixedColumns.actionWide,
       align: 'center',
       render: (_, row) => {
         const isBuiltIn = row.type === 'Built-in';
