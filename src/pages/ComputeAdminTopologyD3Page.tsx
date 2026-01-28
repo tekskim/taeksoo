@@ -933,7 +933,7 @@ function CopyableText({ value }: { value: string }) {
   const handleCopy = () => navigator.clipboard.writeText(value);
   return (
     <Tooltip content={value}>
-      <span className="inline-flex items-center gap-1 max-w-[180px]">
+      <span className="inline-flex items-center gap-1 max-w-[160px]">
         <span className="text-[length:var(--font-size-11)] truncate">{value}</span>
         <button onClick={handleCopy} className="text-[var(--color-text-subtle)] hover:text-[var(--color-text-muted)] flex-shrink-0">
           <IconCopy size={12} />
@@ -949,7 +949,7 @@ function LinkText({ value, href }: { value: string; href?: string }) {
     <Tooltip content={value}>
       <Link
         to={href || '#'}
-        className="text-[var(--color-action-primary)] hover:underline inline-flex items-center gap-0.5 font-medium max-w-[180px]"
+        className="text-[var(--color-action-primary)] hover:underline inline-flex items-center gap-0.5 font-medium max-w-[160px]"
       >
         <span className="truncate">{value}</span>
         <IconExternalLink size={12} className="flex-shrink-0" />
