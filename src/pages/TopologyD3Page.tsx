@@ -1080,8 +1080,11 @@ function Popover({ data, position, onClose }: PopoverProps) {
         onMouseDown={handleMouseDown}
       >
         <span className="text-[length:var(--font-size-12)] font-semibold text-[var(--color-text-default)]">{data.name}</span>
-        <button onClick={onClose} className="text-[var(--color-text-subtle)] hover:text-[var(--color-text-muted)]">
-          <IconX size={16} />
+        <button 
+          onClick={onClose} 
+          className="flex items-center justify-center w-[var(--window-control-size)] h-[var(--window-control-size)] rounded-[var(--window-control-radius)] text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] transition-colors"
+        >
+          <IconX size={12} stroke={1} />
         </button>
       </div>
 
