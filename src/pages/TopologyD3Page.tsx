@@ -148,6 +148,20 @@ const externalNetworks: ExternalNetwork[] = [
     status: 'active',
     description: 'Datacenter Direct Connect',
   },
+  // Case 1: 아무것도 연결되지 않은 External Network
+  {
+    id: 'extnet-isolated-001',
+    name: 'extnet-isolated',
+    status: 'active',
+    description: 'Isolated External Network (no connections)',
+  },
+  // Case 2: External Network + Router만 연결 (VPC 없음)
+  {
+    id: 'extnet-router-only-001',
+    name: 'extnet-router-only',
+    status: 'active',
+    description: 'External Network with Router only',
+  },
 ];
 
 // Routers - 라우터 (환경별, 용도별)
@@ -191,6 +205,27 @@ const routers: Router[] = [
     status: 'active',
     externalNetworkId: 'extnet-dc-priv-001',
   },
+  // Case 2: External Network + Router만 연결
+  {
+    id: 'rtr-router-only-001',
+    name: 'router-only',
+    status: 'active',
+    externalNetworkId: 'extnet-router-only-001',
+  },
+  // Case 3: 아무것도 연결되지 않은 Router (standalone)
+  {
+    id: 'rtr-isolated-001',
+    name: 'isolated-router',
+    status: 'active',
+    // externalNetworkId 없음
+  },
+  // Case 4: Router + VPC + LB만 (External Network 없음)
+  {
+    id: 'rtr-internal-only-001',
+    name: 'internal-only-router',
+    status: 'active',
+    // externalNetworkId 없음
+  },
 ];
 
 // Network Groups - 외부 네트워크와 라우터 그룹핑
@@ -207,11 +242,19 @@ const networkGroups: NetworkGroup[] = [
     extNet: externalNetworks[2], // DC Private
     routers: routers.filter((r) => r.externalNetworkId === 'extnet-dc-priv-001'),
   },
+  {
+    extNet: externalNetworks[4], // Router only
+    routers: routers.filter((r) => r.externalNetworkId === 'extnet-router-only-001'),
+  },
 ];
 
-const standaloneExternalNetworks: ExternalNetwork[] = [];
+// Case 1: 연결 없는 External Network
+const standaloneExternalNetworks: ExternalNetwork[] = [
+  externalNetworks[3], // extnet-isolated
+];
 
-const standaloneRouters: Router[] = [];
+// Case 3 & 4: External Network 없는 Router들
+const standaloneRouters: Router[] = routers.filter((r) => !r.externalNetworkId);
 
 // VPCs/Networks - 네트워크 (환경별, 목적별)
 const networks: Network[] = [
@@ -230,6 +273,10 @@ const networks: Network[] = [
   { id: 'vpc-shrd-dc-001', name: 'shrd-dc', status: 'active' },
   { id: 'vpc-mgmt-apne2-001', name: 'mgmt-apne2', status: 'active' },
   { id: 'vpc-dmz-apne2-001', name: 'dmz-apne2', status: 'active' },
+  // Case 4: Router + VPC + LB만 (ExtNet 없음)
+  { id: 'vpc-internal-only-001', name: 'internal-only-vpc', status: 'active' },
+  // Case 5: VPC + LB만 (Router 없음)
+  { id: 'vpc-standalone-001', name: 'standalone-vpc', status: 'active' },
 ];
 
 // Subnets - 서브넷 (AZ별, 티어별)
@@ -584,6 +631,46 @@ const subnets: Subnet[] = [
     networkId: 'vpc-dmz-apne2-001',
     routerId: 'rtr-prod-apne2-edge-001',
   },
+
+  // ============================================
+  // Case 4: Router + VPC + LB만 (ExtNet 없음)
+  // ============================================
+  {
+    id: 'snet-internal-only-001',
+    name: 'internal-app',
+    cidr: '192.168.1.0/24',
+    status: 'active',
+    networkId: 'vpc-internal-only-001',
+    routerId: 'rtr-internal-only-001',
+  },
+  {
+    id: 'snet-internal-only-002',
+    name: 'internal-db',
+    cidr: '192.168.2.0/24',
+    status: 'active',
+    networkId: 'vpc-internal-only-001',
+    routerId: 'rtr-internal-only-001',
+  },
+
+  // ============================================
+  // Case 5: VPC + LB만 (Router 없음)
+  // ============================================
+  {
+    id: 'snet-standalone-001',
+    name: 'standalone-app',
+    cidr: '172.16.1.0/24',
+    status: 'active',
+    networkId: 'vpc-standalone-001',
+    // routerId 없음
+  },
+  {
+    id: 'snet-standalone-002',
+    name: 'standalone-db',
+    cidr: '172.16.2.0/24',
+    status: 'active',
+    networkId: 'vpc-standalone-001',
+    // routerId 없음
+  },
 ];
 
 // Load balancers - 네이밍: [env]-[region]-[type]-[purpose]-[seq]
@@ -843,6 +930,28 @@ const loadBalancers: LoadBalancer[] = [
     status: 'active',
     subnetId: 'snet-dmz-apne2-b2b-001',
     vip: '10.252.2.100',
+  },
+
+  // ============================================
+  // Case 4: Router + VPC + LB만 (ExtNet 없음)
+  // ============================================
+  {
+    id: 'nlb-internal-only-001',
+    name: 'nlb-internal',
+    status: 'active',
+    subnetId: 'snet-internal-only-001',
+    vip: '192.168.1.100',
+  },
+
+  // ============================================
+  // Case 5: VPC + LB만 (Router 없음)
+  // ============================================
+  {
+    id: 'nlb-standalone-001',
+    name: 'nlb-standalone',
+    status: 'active',
+    subnetId: 'snet-standalone-001',
+    vip: '172.16.1.100',
   },
 ];
 
