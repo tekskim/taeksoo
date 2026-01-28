@@ -43,6 +43,9 @@ type FloatingIPStatus = 'active' | 'error' | 'down';
 interface FloatingIP {
   id: string;
   floatingIp: string;
+  tenant: string;
+  tenantId: string;
+  description: string;
   associatedTo: string | null;
   associatedToId: string | null;
   fixedIp: string;
@@ -60,6 +63,9 @@ const mockFloatingIPs: FloatingIP[] = [
   {
     id: 'fip-001',
     floatingIp: '172.24.4.228',
+    tenant: 'tenantA',
+    tenantId: 'tenant-001',
+    description: 'Web server external IP',
     associatedTo: 'web-01',
     associatedToId: 'inst-001',
     fixedIp: '10.7.65.39',
@@ -71,6 +77,9 @@ const mockFloatingIPs: FloatingIP[] = [
   {
     id: 'fip-002',
     floatingIp: '172.24.4.229',
+    tenant: 'tenantA',
+    tenantId: 'tenant-001',
+    description: 'Application server IP',
     associatedTo: 'app-server',
     associatedToId: 'inst-002',
     fixedIp: '10.7.65.40',
@@ -82,6 +91,9 @@ const mockFloatingIPs: FloatingIP[] = [
   {
     id: 'fip-003',
     floatingIp: '172.24.4.230',
+    tenant: 'tenantB',
+    tenantId: 'tenant-002',
+    description: 'Reserved for testing',
     associatedTo: null,
     associatedToId: null,
     fixedIp: '-',
@@ -93,6 +105,9 @@ const mockFloatingIPs: FloatingIP[] = [
   {
     id: 'fip-004',
     floatingIp: '172.24.4.231',
+    tenant: 'tenantA',
+    tenantId: 'tenant-001',
+    description: 'Database server IP',
     associatedTo: 'db-server',
     associatedToId: 'inst-003',
     fixedIp: '10.7.65.41',
@@ -104,6 +119,9 @@ const mockFloatingIPs: FloatingIP[] = [
   {
     id: 'fip-005',
     floatingIp: '172.24.4.232',
+    tenant: 'tenantC',
+    tenantId: 'tenant-003',
+    description: 'Load balancer public IP',
     associatedTo: 'load-balancer',
     associatedToId: 'lb-001',
     fixedIp: '10.7.65.42',
@@ -115,6 +133,9 @@ const mockFloatingIPs: FloatingIP[] = [
   {
     id: 'fip-006',
     floatingIp: '172.24.4.233',
+    tenant: 'tenantB',
+    tenantId: 'tenant-002',
+    description: 'Unused IP - pending removal',
     associatedTo: null,
     associatedToId: null,
     fixedIp: '-',
@@ -126,6 +147,9 @@ const mockFloatingIPs: FloatingIP[] = [
   {
     id: 'fip-007',
     floatingIp: '172.24.4.234',
+    tenant: 'tenantA',
+    tenantId: 'tenant-001',
+    description: 'Monitoring system IP',
     associatedTo: 'monitoring',
     associatedToId: 'inst-004',
     fixedIp: '10.7.65.43',
@@ -137,6 +161,9 @@ const mockFloatingIPs: FloatingIP[] = [
   {
     id: 'fip-008',
     floatingIp: '172.24.4.235',
+    tenant: 'tenantC',
+    tenantId: 'tenant-003',
+    description: 'VPN gateway external IP',
     associatedTo: 'vpn-gateway',
     associatedToId: 'vpn-001',
     fixedIp: '10.7.65.44',
@@ -148,6 +175,9 @@ const mockFloatingIPs: FloatingIP[] = [
   {
     id: 'fip-009',
     floatingIp: '172.24.4.236',
+    tenant: 'tenantB',
+    tenantId: 'tenant-002',
+    description: 'Reserved for staging',
     associatedTo: null,
     associatedToId: null,
     fixedIp: '-',
@@ -159,6 +189,9 @@ const mockFloatingIPs: FloatingIP[] = [
   {
     id: 'fip-010',
     floatingIp: '172.24.4.237',
+    tenant: 'tenantA',
+    tenantId: 'tenant-001',
+    description: 'Backup server IP',
     associatedTo: 'backup-server',
     associatedToId: 'inst-005',
     fixedIp: '10.7.65.45',
@@ -186,6 +219,8 @@ const floatingIPStatusMap: Record<FloatingIPStatus, 'active' | 'error' | 'down'>
 // Filter fields configuration
 const filterFields: FilterField[] = [
   { key: 'floatingIp', label: 'Floating IP', type: 'text' },
+  { key: 'tenant', label: 'Tenant', type: 'text' },
+  { key: 'description', label: 'Description', type: 'text' },
   { key: 'associatedTo', label: 'Associated To', type: 'text' },
   { key: 'fixedIp', label: 'Fixed IP', type: 'text' },
   { key: 'network', label: 'Network', type: 'text' },
@@ -229,6 +264,8 @@ export function ComputeAdminFloatingIPsPage() {
   const defaultColumnConfig: ColumnConfig[] = [
     { id: 'status', label: 'Status', visible: true, locked: true },
     { id: 'floatingIp', label: 'Floating IP', visible: true, locked: true },
+    { id: 'tenant', label: 'Tenant', visible: true },
+    { id: 'description', label: 'Description', visible: true },
     { id: 'associatedTo', label: 'Associated to', visible: true },
     { id: 'fixedIp', label: 'Fixed IP', visible: true },
     { id: 'network', label: 'Network', visible: true },
@@ -312,6 +349,32 @@ export function ComputeAdminFloatingIPsPage() {
           {row.floatingIp}
         </Link>
       ),
+    },
+    {
+      key: 'tenant',
+      label: 'Tenant',
+      flex: 1,
+      sortable: true,
+      render: (_, row) => (
+        <div className="flex flex-col gap-0.5">
+          <Link
+            to={`/compute-admin/tenants/${row.tenantId}`}
+            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.tenant}
+          </Link>
+          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+            ID: {row.tenantId}
+          </span>
+        </div>
+      ),
+    },
+    {
+      key: 'description',
+      label: 'Description',
+      flex: 1,
+      sortable: true,
     },
     {
       key: 'associatedTo',
