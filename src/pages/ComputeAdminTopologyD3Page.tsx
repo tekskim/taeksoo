@@ -976,71 +976,23 @@ function HealthMonitorSection({
     pools?: { name: string; status: 'healthy' | 'degraded' | 'error' }[];
   };
 }) {
-  const [isExpanded, setIsExpanded] = useState(true);
-
-  // Sort pools by status: error first, then degraded, then healthy
-  const sortedPools = healthMonitor.pools
-    ? [...healthMonitor.pools].sort((a, b) => {
-        const order = { error: 0, degraded: 1, healthy: 2 };
-        return order[a.status] - order[b.status];
-      })
-    : [];
-
   return (
     <div className="mt-3 pt-3 border-t border-slate-100">
-      {/* Header */}
-      <button
-        className="flex items-start gap-2 w-full text-left"
-        onClick={() => setIsExpanded(!isExpanded)}
-      >
-        <span className="text-slate-400 mt-0.5">{isExpanded ? '▼' : '▶'}</span>
-        <div className="flex-1">
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-slate-500 font-medium">Health Monitor :</span>
-            <span className="text-green-500 font-medium text-sm">
-              {healthMonitor.healthy} Healthy
-            </span>
-            <span className="text-amber-500 font-medium text-sm">
-              {healthMonitor.degraded} Degraded
-            </span>
-            <span className="text-red-500 font-medium text-sm">{healthMonitor.error} Error</span>
-          </div>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="text-slate-500 font-medium">Health Monitor :</span>
+          <span className="text-green-500 font-medium text-sm">
+            {healthMonitor.healthy} Healthy
+          </span>
+          <span className="text-amber-500 font-medium text-sm">
+            {healthMonitor.degraded} Degraded
+          </span>
+          <span className="text-red-500 font-medium text-sm">{healthMonitor.error} Error</span>
         </div>
-      </button>
-
-      {/* Pool List */}
-      {isExpanded && sortedPools.length > 0 && (
-        <div className="mt-2 pt-2 border-t border-dashed border-slate-200">
-          <div className="space-y-2 text-sm max-h-40 overflow-y-auto">
-            {sortedPools.map((pool, idx) => (
-              <div key={idx} className="flex items-center justify-between">
-                <span
-                  className={`font-medium ${
-                    pool.status === 'error'
-                      ? 'text-red-500'
-                      : pool.status === 'degraded'
-                        ? 'text-amber-500'
-                        : 'text-green-500'
-                  }`}
-                >
-                  {pool.status === 'error'
-                    ? 'Error'
-                    : pool.status === 'degraded'
-                      ? 'Degraded'
-                      : 'Healthy'}
-                </span>
-                <Link
-                  to="#"
-                  className="text-blue-500 hover:underline inline-flex items-center gap-1 font-medium"
-                >
-                  {pool.name}
-                  <IconExternalLink size={14} />
-                </Link>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+        <Link to="#" className="text-blue-500 hover:underline text-xs">
+          View detail
+        </Link>
+      </div>
     </div>
   );
 }
@@ -1056,182 +1008,42 @@ function ListenersSection({
     status: 'active' | 'inactive' | 'error';
   }[];
 }) {
-  const [isExpanded, setIsExpanded] = useState(true);
-
   return (
     <div className="mt-3 pt-3 border-t border-slate-100">
-      {/* Header */}
-      <button
-        className="flex items-start gap-2 w-full text-left"
-        onClick={() => setIsExpanded(!isExpanded)}
-      >
-        <span className="text-slate-400 mt-0.5">{isExpanded ? '▼' : '▶'}</span>
-        <div className="flex-1">
-          <div className="flex items-center justify-between">
-            <span className="text-slate-500 font-medium">Listeners ({listeners.length})</span>
-            <Link
-              to="#"
-              className="text-blue-500 hover:underline text-xs"
-              onClick={(e) => e.stopPropagation()}
-            >
-              View detail
-            </Link>
-          </div>
-        </div>
-      </button>
-
-      {/* Listener List */}
-      {isExpanded && (
-        <div className="mt-2 pt-2 border-t border-dashed border-slate-200">
-          <div className="space-y-2 text-sm max-h-40 overflow-y-auto">
-            {listeners.map((listener, idx) => (
-              <div key={idx} className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span
-                    className={`w-2 h-2 rounded-full ${
-                      listener.status === 'active'
-                        ? 'bg-green-500'
-                        : listener.status === 'error'
-                          ? 'bg-red-500'
-                          : 'bg-slate-400'
-                    }`}
-                  />
-                  <span className="text-slate-600">
-                    {listener.protocol}:{listener.port}
-                  </span>
-                </div>
-                <Link
-                  to="#"
-                  className="text-blue-500 hover:underline inline-flex items-center gap-1 font-medium"
-                >
-                  {listener.name}
-                  <IconExternalLink size={14} />
-                </Link>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+      <div className="flex items-center justify-between">
+        <span className="text-slate-500 font-medium">Listeners ({listeners.length})</span>
+        <Link to="#" className="text-blue-500 hover:underline text-xs">
+          View detail
+        </Link>
+      </div>
     </div>
   );
 }
 
 // Routers Section Component (for External network)
 function RoutersSection({ routers }: { routers: RouterItem[] }) {
-  const [isExpanded, setIsExpanded] = useState(true);
-
   return (
     <div className="mt-3 pt-3 border-t border-slate-100">
-      {/* Header */}
-      <button
-        className="flex items-start gap-2 w-full text-left"
-        onClick={() => setIsExpanded(!isExpanded)}
-      >
-        <span className="text-slate-400 mt-0.5">{isExpanded ? '▼' : '▶'}</span>
-        <div className="flex-1">
-          <div className="flex items-center justify-between">
-            <span className="text-slate-500 font-medium">Routers ({routers.length})</span>
-            <Link
-              to="#"
-              className="text-blue-500 hover:underline text-xs"
-              onClick={(e) => e.stopPropagation()}
-            >
-              View detail
-            </Link>
-          </div>
-        </div>
-      </button>
-
-      {/* Router List */}
-      {isExpanded && (
-        <div className="mt-2 pt-2 border-t border-dashed border-slate-200">
-          <div className="space-y-2 text-sm max-h-40 overflow-y-auto">
-            {routers.map((router, idx) => (
-              <div key={idx} className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span
-                    className={`w-2 h-2 rounded-full ${
-                      router.status === 'active'
-                        ? 'bg-green-500'
-                        : router.status === 'error'
-                          ? 'bg-red-500'
-                          : 'bg-slate-400'
-                    }`}
-                  />
-                  <span className="text-slate-600">{router.externalGateway || 'internal'}</span>
-                </div>
-                <Link
-                  to="#"
-                  className="text-blue-500 hover:underline inline-flex items-center gap-1 font-medium"
-                >
-                  {router.name}
-                  <IconExternalLink size={14} />
-                </Link>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+      <div className="flex items-center justify-between">
+        <span className="text-slate-500 font-medium">Routers ({routers.length})</span>
+        <Link to="#" className="text-blue-500 hover:underline text-xs">
+          View detail
+        </Link>
+      </div>
     </div>
   );
 }
 
 // Subnets Section Component (for Router)
 function SubnetsSection({ subnets }: { subnets: SubnetItem[] }) {
-  const [isExpanded, setIsExpanded] = useState(true);
-
   return (
     <div className="mt-3 pt-3 border-t border-slate-100">
-      {/* Header */}
-      <button
-        className="flex items-start gap-2 w-full text-left"
-        onClick={() => setIsExpanded(!isExpanded)}
-      >
-        <span className="text-slate-400 mt-0.5">{isExpanded ? '▼' : '▶'}</span>
-        <div className="flex-1">
-          <div className="flex items-center justify-between">
-            <span className="text-slate-500 font-medium">Subnets ({subnets.length})</span>
-            <Link
-              to="#"
-              className="text-blue-500 hover:underline text-xs"
-              onClick={(e) => e.stopPropagation()}
-            >
-              View detail
-            </Link>
-          </div>
-        </div>
-      </button>
-
-      {/* Subnet List */}
-      {isExpanded && (
-        <div className="mt-2 pt-2 border-t border-dashed border-slate-200">
-          <div className="space-y-2 text-sm max-h-40 overflow-y-auto">
-            {subnets.map((subnet, idx) => (
-              <div key={idx} className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span
-                    className={`w-2 h-2 rounded-full ${
-                      subnet.status === 'active'
-                        ? 'bg-green-500'
-                        : subnet.status === 'error'
-                          ? 'bg-red-500'
-                          : 'bg-slate-400'
-                    }`}
-                  />
-                  <span className="font-mono text-slate-400 text-xs">{subnet.cidr || '-'}</span>
-                </div>
-                <Link
-                  to="#"
-                  className="text-blue-500 hover:underline inline-flex items-center gap-1 font-medium"
-                >
-                  {subnet.name}
-                  <IconExternalLink size={14} />
-                </Link>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+      <div className="flex items-center justify-between">
+        <span className="text-slate-500 font-medium">Subnets ({subnets.length})</span>
+        <Link to="#" className="text-blue-500 hover:underline text-xs">
+          View detail
+        </Link>
+      </div>
     </div>
   );
 }
