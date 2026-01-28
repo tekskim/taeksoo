@@ -160,7 +160,7 @@ const routers: Router[] = [
   },
   {
     id: 'rtr-nprd-apne2-edge-001',
-    name: 'nprd-apne2-edge',
+    name: 'k8s-clusterapi-cluster-tkdev-oks-tkdev-oks-003',
     status: 'active',
     externalNetworkId: 'extnet-apne2-pub-001',
   },
