@@ -12,6 +12,7 @@ import {
   TopBar,
   TopBarAction,
   Breadcrumb,
+  Tooltip,
 } from '@/design-system';
 import {
   IconX,
@@ -147,6 +148,20 @@ const externalNetworks: ExternalNetwork[] = [
     status: 'active',
     description: 'Datacenter Direct Connect',
   },
+  // Case 1: 아무것도 연결되지 않은 External Network
+  {
+    id: 'extnet-isolated-001',
+    name: 'extnet-isolated',
+    status: 'active',
+    description: 'Isolated External Network (no connections)',
+  },
+  // Case 2: External Network + Router만 연결 (VPC 없음)
+  {
+    id: 'extnet-router-only-001',
+    name: 'extnet-router-only',
+    status: 'active',
+    description: 'External Network with Router only',
+  },
 ];
 
 // Routers - 라우터 (환경별, 용도별)
@@ -160,7 +175,7 @@ const routers: Router[] = [
   },
   {
     id: 'rtr-nprd-apne2-edge-001',
-    name: 'nprd-apne2-edge',
+    name: 'k8s-clusterapi-cluster-tkdev-oks-tkdev-oks-003',
     status: 'active',
     externalNetworkId: 'extnet-apne2-pub-001',
   },
@@ -190,6 +205,27 @@ const routers: Router[] = [
     status: 'active',
     externalNetworkId: 'extnet-dc-priv-001',
   },
+  // Case 2: External Network + Router만 연결
+  {
+    id: 'rtr-router-only-001',
+    name: 'router-only',
+    status: 'active',
+    externalNetworkId: 'extnet-router-only-001',
+  },
+  // Case 3: 아무것도 연결되지 않은 Router (standalone)
+  {
+    id: 'rtr-isolated-001',
+    name: 'isolated-router',
+    status: 'active',
+    // externalNetworkId 없음
+  },
+  // Case 4: Router + VPC + LB만 (External Network 없음)
+  {
+    id: 'rtr-internal-only-001',
+    name: 'internal-only-router',
+    status: 'active',
+    // externalNetworkId 없음
+  },
 ];
 
 // Network Groups - 외부 네트워크와 라우터 그룹핑
@@ -206,11 +242,19 @@ const networkGroups: NetworkGroup[] = [
     extNet: externalNetworks[2], // DC Private
     routers: routers.filter((r) => r.externalNetworkId === 'extnet-dc-priv-001'),
   },
+  {
+    extNet: externalNetworks[4], // Router only
+    routers: routers.filter((r) => r.externalNetworkId === 'extnet-router-only-001'),
+  },
 ];
 
-const standaloneExternalNetworks: ExternalNetwork[] = [];
+// Case 1: 연결 없는 External Network
+const standaloneExternalNetworks: ExternalNetwork[] = [
+  externalNetworks[3], // extnet-isolated
+];
 
-const standaloneRouters: Router[] = [];
+// Case 3 & 4: External Network 없는 Router들
+const standaloneRouters: Router[] = routers.filter((r) => !r.externalNetworkId);
 
 // VPCs/Networks - 네트워크 (환경별, 목적별)
 const networks: Network[] = [
@@ -229,6 +273,10 @@ const networks: Network[] = [
   { id: 'vpc-shrd-dc-001', name: 'shrd-dc', status: 'active' },
   { id: 'vpc-mgmt-apne2-001', name: 'mgmt-apne2', status: 'active' },
   { id: 'vpc-dmz-apne2-001', name: 'dmz-apne2', status: 'active' },
+  // Case 4: Router + VPC + LB만 (ExtNet 없음)
+  { id: 'vpc-internal-only-001', name: 'internal-only-vpc', status: 'active' },
+  // Case 5: VPC + LB만 (Router 없음)
+  { id: 'vpc-standalone-001', name: 'standalone-vpc', status: 'active' },
 ];
 
 // Subnets - 서브넷 (AZ별, 티어별)
@@ -583,6 +631,46 @@ const subnets: Subnet[] = [
     networkId: 'vpc-dmz-apne2-001',
     routerId: 'rtr-prod-apne2-edge-001',
   },
+
+  // ============================================
+  // Case 4: Router + VPC + LB만 (ExtNet 없음)
+  // ============================================
+  {
+    id: 'snet-internal-only-001',
+    name: 'internal-app',
+    cidr: '192.168.1.0/24',
+    status: 'active',
+    networkId: 'vpc-internal-only-001',
+    routerId: 'rtr-internal-only-001',
+  },
+  {
+    id: 'snet-internal-only-002',
+    name: 'internal-db',
+    cidr: '192.168.2.0/24',
+    status: 'active',
+    networkId: 'vpc-internal-only-001',
+    routerId: 'rtr-internal-only-001',
+  },
+
+  // ============================================
+  // Case 5: VPC + LB만 (Router 없음)
+  // ============================================
+  {
+    id: 'snet-standalone-001',
+    name: 'standalone-app',
+    cidr: '172.16.1.0/24',
+    status: 'active',
+    networkId: 'vpc-standalone-001',
+    // routerId 없음
+  },
+  {
+    id: 'snet-standalone-002',
+    name: 'standalone-db',
+    cidr: '172.16.2.0/24',
+    status: 'active',
+    networkId: 'vpc-standalone-001',
+    // routerId 없음
+  },
 ];
 
 // Load balancers - 네이밍: [env]-[region]-[type]-[purpose]-[seq]
@@ -843,6 +931,28 @@ const loadBalancers: LoadBalancer[] = [
     subnetId: 'snet-dmz-apne2-b2b-001',
     vip: '10.252.2.100',
   },
+
+  // ============================================
+  // Case 4: Router + VPC + LB만 (ExtNet 없음)
+  // ============================================
+  {
+    id: 'nlb-internal-only-001',
+    name: 'nlb-internal',
+    status: 'active',
+    subnetId: 'snet-internal-only-001',
+    vip: '192.168.1.100',
+  },
+
+  // ============================================
+  // Case 5: VPC + LB만 (Router 없음)
+  // ============================================
+  {
+    id: 'nlb-standalone-001',
+    name: 'nlb-standalone',
+    status: 'active',
+    subnetId: 'snet-standalone-001',
+    vip: '172.16.1.100',
+  },
 ];
 
 /* ----------------------------------------
@@ -931,28 +1041,32 @@ interface PopoverProps {
 function CopyableText({ value }: { value: string }) {
   const handleCopy = () => navigator.clipboard.writeText(value);
   return (
-    <span className="inline-flex items-center gap-1">
-      <span className="text-[length:var(--font-size-11)]">{value}</span>
-      <button
-        onClick={handleCopy}
-        className="text-[var(--color-text-subtle)] hover:text-[var(--color-text-muted)]"
-      >
-        <IconCopy size={12} />
-      </button>
-    </span>
+    <Tooltip content={value}>
+      <span className="inline-flex items-center gap-1 max-w-[160px]">
+        <span className="text-[length:var(--font-size-11)] truncate">{value}</span>
+        <button
+          onClick={handleCopy}
+          className="text-[var(--color-text-subtle)] hover:text-[var(--color-text-muted)] flex-shrink-0"
+        >
+          <IconCopy size={12} />
+        </button>
+      </span>
+    </Tooltip>
   );
 }
 
 // Helper component for link text
 function LinkText({ value, href }: { value: string; href?: string }) {
   return (
-    <Link
-      to={href || '#'}
-      className="text-[var(--color-action-primary)] hover:underline inline-flex items-center gap-0.5 font-medium"
-    >
-      {value}
-      <IconExternalLink size={12} />
-    </Link>
+    <Tooltip content={value}>
+      <Link
+        to={href || '#'}
+        className="text-[var(--color-action-primary)] hover:underline inline-flex items-center gap-0.5 font-medium max-w-[160px]"
+      >
+        <span className="truncate">{value}</span>
+        <IconExternalLink size={12} className="flex-shrink-0" />
+      </Link>
+    </Tooltip>
   );
 }
 
@@ -1094,6 +1208,23 @@ function Popover({ data, position, onClose }: PopoverProps) {
   const statusText =
     data.status === 'active' ? 'Available' : data.status === 'inactive' ? 'Inactive' : 'Error';
 
+  const getHeaderTitle = () => {
+    switch (data.type) {
+      case 'externalNetwork':
+        return 'External network';
+      case 'router':
+        return 'Router';
+      case 'subnet':
+        return 'Subnet';
+      case 'vpc':
+        return 'VPC';
+      case 'loadBalancer':
+        return 'Load balancer';
+      default:
+        return data.name;
+    }
+  };
+
   return (
     <div
       ref={popoverRef}
@@ -1106,7 +1237,7 @@ function Popover({ data, position, onClose }: PopoverProps) {
         onMouseDown={handleMouseDown}
       >
         <span className="text-[length:var(--font-size-12)] font-semibold text-[var(--color-text-default)]">
-          {data.name}
+          {getHeaderTitle()}
         </span>
         <button
           onClick={onClose}
