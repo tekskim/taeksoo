@@ -237,7 +237,7 @@ export function TableStyleGuidePage() {
                   rows={[
                     ['너비', '고정 컬럼(아이콘/버튼)과 유연 컬럼(텍스트) 이원화'],
                     ['높이', '기본 48px, 밀집 레이아웃 40px'],
-                    ['텍스트', '단일행 + truncate + 툴팁 패턴'],
+                    ['텍스트', '단일행 + truncate + 툴팁 패턴 (브라우저 기본 title 속성 사용)'],
                   ]}
                 />
               </div>
