@@ -150,7 +150,7 @@ function DetailHeaderInfoCard({
         <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)] whitespace-nowrap">
           {label}
         </span>
-        <div className="flex items-center gap-1.5 min-w-0 min-h-[26px]">
+        <div className="flex items-center gap-1 min-w-0 min-h-[26px]">
           {isStringValue ? (
             <span
               className="text-[12px] leading-4 font-normal truncate text-[var(--color-text-default)]"

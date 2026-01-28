@@ -114,6 +114,17 @@ import ComputeAdminPoolDetailPage from '@/pages/ComputeAdminPoolDetailPage';
 import ComputeAdminL7PolicyDetailPage from '@/pages/ComputeAdminL7PolicyDetailPage';
 import { ComputeAdminCertificatesPage } from '@/pages/ComputeAdminCertificatesPage';
 import ComputeAdminCertificateDetailPage from '@/pages/ComputeAdminCertificateDetailPage';
+import ComputeAdminFirewallsPage from '@/pages/ComputeAdminFirewallsPage';
+import ComputeAdminFirewallDetailPage from '@/pages/ComputeAdminFirewallDetailPage';
+import ComputeAdminFirewallPolicyDetailPage from '@/pages/ComputeAdminFirewallPolicyDetailPage';
+import ComputeAdminFirewallRuleDetailPage from '@/pages/ComputeAdminFirewallRuleDetailPage';
+import ComputeAdminCreateFirewallRulePage from '@/pages/ComputeAdminCreateFirewallRulePage';
+import ComputeAdminTenantsPage from '@/pages/ComputeAdminTenantsPage';
+import ComputeAdminTenantDetailPage from '@/pages/ComputeAdminTenantDetailPage';
+import ComputeAdminMetadataDefinitionsPage from '@/pages/ComputeAdminMetadataDefinitionsPage';
+import ComputeAdminMetadataDefinitionDetailPage from '@/pages/ComputeAdminMetadataDefinitionDetailPage';
+import ComputeAdminMonitorOverviewPage from '@/pages/ComputeAdminMonitorOverviewPage';
+import ComputeAdminPhysicalNodesPage from '@/pages/ComputeAdminPhysicalNodesPage';
 import { ComputeAdminTopologyD3Page } from '@/pages/ComputeAdminTopologyD3Page';
 import ComputeAdminConsolePage from '@/pages/ComputeAdminConsolePage';
 import ComputeAdminVolumeTypesPage from '@/pages/ComputeAdminVolumeTypesPage';
@@ -486,6 +497,32 @@ function AppRoutes() {
         path="/compute-admin/certificates/:id"
         element={<ComputeAdminCertificateDetailPage />}
       />
+      <Route path="/compute-admin/firewall" element={<ComputeAdminFirewallsPage />} />
+      <Route path="/compute-admin/firewalls/:id" element={<ComputeAdminFirewallDetailPage />} />
+      <Route
+        path="/compute-admin/firewall-policies/:id"
+        element={<ComputeAdminFirewallPolicyDetailPage />}
+      />
+      <Route
+        path="/compute-admin/firewall-rules/:id"
+        element={<ComputeAdminFirewallRuleDetailPage />}
+      />
+      <Route
+        path="/compute-admin/firewall/create-rule"
+        element={<ComputeAdminCreateFirewallRulePage />}
+      />
+      <Route path="/compute-admin/tenants" element={<ComputeAdminTenantsPage />} />
+      <Route path="/compute-admin/tenants/:id" element={<ComputeAdminTenantDetailPage />} />
+      <Route
+        path="/compute-admin/metadata-definition"
+        element={<ComputeAdminMetadataDefinitionsPage />}
+      />
+      <Route
+        path="/compute-admin/metadata-definition/:id"
+        element={<ComputeAdminMetadataDefinitionDetailPage />}
+      />
+      <Route path="/compute-admin/monitor-overview" element={<ComputeAdminMonitorOverviewPage />} />
+      <Route path="/compute-admin/physical-nodes" element={<ComputeAdminPhysicalNodesPage />} />
       <Route path="/compute-admin/topology" element={<ComputeAdminTopologyD3Page />} />
       <Route path="/compute-admin/console/:instanceId" element={<ComputeAdminConsolePage />} />
 

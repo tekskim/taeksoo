@@ -1,12 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, SectionCard } from '@/design-system';
-import {
-  IconDownload,
-  IconArrowLeft,
-  IconCopy,
-  IconCheck,
-} from '@tabler/icons-react';
+import { IconDownload, IconArrowLeft, IconCopy, IconCheck } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Code Block Component
@@ -76,10 +71,7 @@ function GuideTable({ headers, rows }: GuideTableProps) {
           {rows.map((row, i) => (
             <tr key={i} className="border-b border-[var(--color-border-subtle)]">
               {row.map((cell, j) => (
-                <td
-                  key={j}
-                  className="py-2 px-3 text-[var(--color-text-default)]"
-                >
+                <td key={j} className="py-2 px-3 text-[var(--color-text-default)]">
                   {cell.startsWith('`') && cell.endsWith('`') ? (
                     <code className="px-1.5 py-0.5 rounded bg-[var(--color-surface-subtle)] text-[11px] font-mono">
                       {cell.slice(1, -1)}
@@ -217,7 +209,8 @@ export function TableStyleGuidePage() {
             <SectionCard.Header title="1. 개요" />
             <SectionCard.Content className="space-y-4">
               <p className="text-[13px] text-[var(--color-text-default)]">
-                이 문서는 TDS(THAKI Design System)의 테이블 컴포넌트 스타일링에 대한 통합 가이드입니다.
+                이 문서는 TDS(THAKI Design System)의 테이블 컴포넌트 스타일링에 대한 통합
+                가이드입니다.
               </p>
 
               <div>
@@ -253,8 +246,16 @@ export function TableStyleGuidePage() {
                 <GuideTable
                   headers={['분류', '설명', '사용법']}
                   rows={[
-                    ['완전 고정 컬럼', '아이콘/버튼만 표시, 크기 불변', '`width: fixedColumns.xxx`'],
-                    ['유연 컬럼', '텍스트/데이터 표시, 공간에 따라 확장', '`flex: 1, minWidth: columnMinWidths.xxx`'],
+                    [
+                      '완전 고정 컬럼',
+                      '아이콘/버튼만 표시, 크기 불변',
+                      '`width: fixedColumns.xxx`',
+                    ],
+                    [
+                      '유연 컬럼',
+                      '텍스트/데이터 표시, 공간에 따라 확장',
+                      '`flex: 1, minWidth: columnMinWidths.xxx`',
+                    ],
                   ]}
                 />
               </div>
@@ -326,9 +327,16 @@ export function TableStyleGuidePage() {
               <div>
                 <h4 className="text-[13px] font-medium mb-2">2.5 장점</h4>
                 <ul className="list-decimal list-inside text-[12px] text-[var(--color-text-muted)] space-y-1">
-                  <li><strong>여백 문제 해결</strong>: 어떤 컬럼을 숨겨도 남은 flex 컬럼들이 공간을 채움</li>
-                  <li><strong>최소 가독성 보장</strong>: minWidth로 컬럼이 너무 좁아지는 것 방지</li>
-                  <li><strong>일관성</strong>: 고정 컬럼(status, actions)은 항상 동일한 크기 유지</li>
+                  <li>
+                    <strong>여백 문제 해결</strong>: 어떤 컬럼을 숨겨도 남은 flex 컬럼들이 공간을
+                    채움
+                  </li>
+                  <li>
+                    <strong>최소 가독성 보장</strong>: minWidth로 컬럼이 너무 좁아지는 것 방지
+                  </li>
+                  <li>
+                    <strong>일관성</strong>: 고정 컬럼(status, actions)은 항상 동일한 크기 유지
+                  </li>
                 </ul>
               </div>
 
@@ -342,9 +350,10 @@ export function TableStyleGuidePage() {
                     (고정 컬럼들의 width 합) + (유연 컬럼들의 minWidth 합) &gt; 컨테이너 너비
                   </code>
                 </div>
-                
+
                 <p className="text-[12px] text-[var(--color-text-muted)] mb-2">
-                  <strong>예시:</strong> status(64) + name(180) + ip(130) + createdAt(140) + actions(64) = 578px
+                  <strong>예시:</strong> status(64) + name(180) + ip(130) + createdAt(140) +
+                  actions(64) = 578px
                   <br />→ 컨테이너가 578px보다 좁으면 가로 스크롤 발생
                 </p>
 
@@ -362,14 +371,18 @@ export function TableStyleGuidePage() {
 
                 <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
-                    <p className="text-[11px] font-medium text-red-700 dark:text-red-400 mb-1">minWidth가 없으면</p>
+                    <p className="text-[11px] font-medium text-red-700 dark:text-red-400 mb-1">
+                      minWidth가 없으면
+                    </p>
                     <code className="text-[10px] font-mono text-red-600 dark:text-red-300">
                       | status | ins... | 192... | 20... | ⋮ |
                     </code>
                     <p className="text-[10px] text-red-500 mt-1">← 내용 알아볼 수 없음</p>
                   </div>
                   <div className="p-3 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800">
-                    <p className="text-[11px] font-medium text-green-700 dark:text-green-400 mb-1">minWidth가 있으면</p>
+                    <p className="text-[11px] font-medium text-green-700 dark:text-green-400 mb-1">
+                      minWidth가 있으면
+                    </p>
                     <code className="text-[10px] font-mono text-green-600 dark:text-green-300">
                       | status | instance-na... | 192.168.1.10 | ⋮ |
                     </code>
@@ -379,7 +392,11 @@ export function TableStyleGuidePage() {
 
                 <div className="mt-4">
                   <p className="text-[12px] text-[var(--color-text-muted)]">
-                    <strong>테이블 컨테이너:</strong> Table 컴포넌트는 자동으로 <code className="px-1 py-0.5 rounded bg-[var(--color-surface-subtle)] text-[11px]">overflow-x-auto</code>가 적용되어 가로 스크롤을 지원합니다.
+                    <strong>테이블 컨테이너:</strong> Table 컴포넌트는 자동으로{' '}
+                    <code className="px-1 py-0.5 rounded bg-[var(--color-surface-subtle)] text-[11px]">
+                      overflow-x-auto
+                    </code>
+                    가 적용되어 가로 스크롤을 지원합니다.
                   </p>
                 </div>
               </div>
@@ -448,8 +465,16 @@ export function TableStyleGuidePage() {
                 <GuideTable
                   headers={['정렬', '적용 대상', '예시 컬럼']}
                   rows={[
-                    ['중앙', '고정 너비 컬럼 (아이콘/버튼)', 'status, locked, actions, select, checkbox'],
-                    ['왼쪽', '유연 컬럼 (텍스트/데이터) - 기본값', 'name, description, type, count'],
+                    [
+                      '중앙',
+                      '고정 너비 컬럼 (아이콘/버튼)',
+                      'status, locked, actions, select, checkbox',
+                    ],
+                    [
+                      '왼쪽',
+                      '유연 컬럼 (텍스트/데이터) - 기본값',
+                      'name, description, type, count',
+                    ],
                     ['오른쪽', '연관 리소스 표시', 'attachedTo, associatedTo'],
                   ]}
                 />
@@ -458,9 +483,17 @@ export function TableStyleGuidePage() {
               <div>
                 <h4 className="text-[13px] font-medium mb-2">4.2 적용 규칙</h4>
                 <ul className="list-decimal list-inside text-[12px] text-[var(--color-text-muted)] space-y-2">
-                  <li><strong>고정 컬럼은 중앙 정렬</strong>: fixedColumns에 정의된 모든 컬럼은 align: 'center' 적용</li>
-                  <li><strong>유연 컬럼은 왼쪽 정렬</strong>: 텍스트, 숫자 등 데이터 컬럼은 명시적 설정 불필요 (기본값)</li>
-                  <li><strong>오른쪽 정렬은 특수 케이스만</strong>: 연관 리소스 참조 컬럼에만 사용</li>
+                  <li>
+                    <strong>고정 컬럼은 중앙 정렬</strong>: fixedColumns에 정의된 모든 컬럼은 align:
+                    'center' 적용
+                  </li>
+                  <li>
+                    <strong>유연 컬럼은 왼쪽 정렬</strong>: 텍스트, 숫자 등 데이터 컬럼은 명시적
+                    설정 불필요 (기본값)
+                  </li>
+                  <li>
+                    <strong>오른쪽 정렬은 특수 케이스만</strong>: 연관 리소스 참조 컬럼에만 사용
+                  </li>
                 </ul>
               </div>
 
@@ -595,7 +628,11 @@ export function TableStyleGuidePage() {
                   rows={[
                     ['사이징 방식', 'flex + minWidth 조합', 'width 고정값만 사용'],
                     ['고정 컬럼', 'width: fixedColumns.xxx', 'width: 60 등 하드코딩'],
-                    ['유연 컬럼', 'flex: 1, minWidth: columnMinWidths.xxx', 'width 없으면 자동 분배'],
+                    [
+                      '유연 컬럼',
+                      'flex: 1, minWidth: columnMinWidths.xxx',
+                      'width 없으면 자동 분배',
+                    ],
                     ['테이블 레이아웃', 'flexbox 기반', 'table-fixed (CSS table)'],
                     ['minWidth 지원', '✅ 지원', '❌ 미지원'],
                     ['maxWidth 지원', '✅ 지원', '❌ 미지원'],
@@ -607,7 +644,9 @@ export function TableStyleGuidePage() {
                 <h4 className="text-[13px] font-medium mb-2">6.2 컬럼 정의 비교</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <p className="text-[11px] font-medium text-[var(--color-text-muted)] mb-2">TDS (SSOT)</p>
+                    <p className="text-[11px] font-medium text-[var(--color-text-muted)] mb-2">
+                      TDS (SSOT)
+                    </p>
                     <CodeBlock
                       code={`const columns = [
   { key: 'status', width: fixedColumns.status, align: 'center' },
@@ -618,7 +657,9 @@ export function TableStyleGuidePage() {
                     />
                   </div>
                   <div>
-                    <p className="text-[11px] font-medium text-[var(--color-text-muted)] mb-2">thaki-ui</p>
+                    <p className="text-[11px] font-medium text-[var(--color-text-muted)] mb-2">
+                      thaki-ui
+                    </p>
                     <CodeBlock
                       code={`const columns = [
   { key: 'status', width: 60, align: 'center' },
@@ -636,7 +677,11 @@ export function TableStyleGuidePage() {
                 <GuideTable
                   headers={['문제', 'thaki-ui', 'TDS 해결책']}
                   rows={[
-                    ['minWidth 미지원', '컬럼이 과도하게 좁아질 수 있음', 'minWidth로 최소 너비 보장'],
+                    [
+                      'minWidth 미지원',
+                      '컬럼이 과도하게 좁아질 수 있음',
+                      'minWidth로 최소 너비 보장',
+                    ],
                     ['비율 제어 불가', '자동 균등 분배만 가능', 'flex 값으로 비율 조정 가능'],
                     ['값 일관성', '하드코딩된 값 분산', '중앙 프리셋으로 일관성 보장'],
                     ['가로 스크롤 정책', '고정 min-w-[600px]', '컬럼 합계 기반 동적 스크롤'],
@@ -646,7 +691,9 @@ export function TableStyleGuidePage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="p-4 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
-                  <p className="text-[12px] font-medium text-red-700 dark:text-red-400 mb-2">thaki-ui: 비율 제어 불가</p>
+                  <p className="text-[12px] font-medium text-red-700 dark:text-red-400 mb-2">
+                    thaki-ui: 비율 제어 불가
+                  </p>
                   <CodeBlock
                     code={`{ key: 'name' }   // 1/3
 { key: 'email' }  // 1/3
@@ -655,7 +702,9 @@ export function TableStyleGuidePage() {
                   />
                 </div>
                 <div className="p-4 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800">
-                  <p className="text-[12px] font-medium text-green-700 dark:text-green-400 mb-2">TDS: flex로 비율 제어</p>
+                  <p className="text-[12px] font-medium text-green-700 dark:text-green-400 mb-2">
+                    TDS: flex로 비율 제어
+                  </p>
                   <CodeBlock
                     code={`{ key: 'name', flex: 2 }   // 2/4 (더 넓게)
 { key: 'email', flex: 1 }  // 1/4
@@ -730,7 +779,7 @@ import { fixedColumns, columnMinWidths } from '@/design-system';`}
               {[
                 {
                   q: 'minWidth 값이 프리셋에 없는 경우는?',
-                  a: '가장 유사한 프리셋을 사용하거나, 직접 값을 지정할 수 있습니다: minWidth: \'120px\'',
+                  a: "가장 유사한 프리셋을 사용하거나, 직접 값을 지정할 수 있습니다: minWidth: '120px'",
                 },
                 {
                   q: 'flex 값을 1이 아닌 다른 값으로 설정해도 되나요?',
@@ -850,7 +899,10 @@ import { fixedColumns, columnMinWidths } from '@/design-system';`}
                   '복합 셀에 min-w-0 클래스 적용',
                   '긴 텍스트에 title 속성 또는 Tooltip 적용',
                 ].map((item, i) => (
-                  <li key={i} className="flex items-center gap-2 text-[12px] text-[var(--color-text-muted)]">
+                  <li
+                    key={i}
+                    className="flex items-center gap-2 text-[12px] text-[var(--color-text-muted)]"
+                  >
                     <input type="checkbox" className="rounded" />
                     <span>{item}</span>
                   </li>

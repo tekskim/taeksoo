@@ -997,7 +997,7 @@ export function OSDDetailPage() {
         <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
           {/* Page Content */}
           <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
-            <div className="flex flex-col items-stretch justify-start gap-6 min-w-[1176px]">
+            <div className="flex flex-col items-stretch justify-start gap-2 min-w-[1176px]">
               {/* OSD Header Card */}
               <DetailHeader>
                 <DetailHeaderTitle>{osd.host}</DetailHeaderTitle>

@@ -319,11 +319,7 @@ export function EntryPage() {
                 >
                   404 page
                 </Button>
-                <Button
-                  variant="muted"
-                  size="md"
-                  onClick={() => navigate('/table-style-guide')}
-                >
+                <Button variant="muted" size="md" onClick={() => navigate('/table-style-guide')}>
                   Table Style Guide
                 </Button>
               </div>
