@@ -102,6 +102,7 @@ import { fixedColumns, columnMinWidths } from '@/design-system';
 | **기타** | `description` | 200px | 설명 |
 | | `role` | 100px | 역할 |
 | | `mfa` | 80px | MFA 상태 |
+| | `fingerprint` | 360px | SSH 키 fingerprint |
 
 ### 2.5 장점
 
@@ -718,6 +719,7 @@ export const columnMinWidths = {
   description: '200px',
   role: '100px',
   mfa: '80px',
+  fingerprint: '360px',
   // ... (전체 목록은 columnWidths.ts 참조)
 } as const;
 ```
