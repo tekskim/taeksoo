@@ -932,7 +932,7 @@ function CopyableText({ value }: { value: string }) {
   const handleCopy = () => navigator.clipboard.writeText(value);
   return (
     <span className="inline-flex items-center gap-1">
-      <span className="font-mono text-[length:var(--font-size-11)]">{value}</span>
+      <span className="text-[length:var(--font-size-11)]">{value}</span>
       <button onClick={handleCopy} className="text-[var(--color-text-subtle)] hover:text-[var(--color-text-muted)]">
         <IconCopy size={12} />
       </button>
