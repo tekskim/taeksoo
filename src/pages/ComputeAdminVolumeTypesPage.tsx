@@ -529,6 +529,9 @@ export function ComputeAdminVolumeTypesPage() {
                 <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
                   Volume Types
                 </h1>
+                <Button size="md">
+                  {activeTab === 'volume-types' ? 'Create Volume Type' : 'Create QoS Spec'}
+                </Button>
               </div>
 
               {/* Tabs */}
@@ -543,44 +546,41 @@ export function ComputeAdminVolumeTypesPage() {
               {activeTab === 'volume-types' && (
                 <VStack gap={3} align="stretch">
                   {/* Toolbar */}
-                  <div className="flex items-center justify-between">
-                    <ListToolbar
-                      primaryActions={
-                        <ListToolbar.Actions>
-                          <FilterSearchInput
-                            filters={volumeTypeFilterFields}
-                            appliedFilters={appliedFilters}
-                            onFiltersChange={setAppliedFilters}
-                            placeholder="Search volume types by attributes"
-                            size="sm"
-                            className="w-[var(--search-input-width)]"
-                            hideAppliedFilters
-                          />
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            iconOnly
-                            icon={<IconDownload size={12} />}
-                            aria-label="Download"
-                          />
-                        </ListToolbar.Actions>
-                      }
-                      bulkActions={
-                        <ListToolbar.Actions>
-                          <Button
-                            variant="muted"
-                            size="sm"
-                            leftIcon={<IconTrash size={12} />}
-                            disabled={selectedVolumeTypes.length === 0}
-                            onClick={handleBulkDelete}
-                          >
-                            Delete
-                          </Button>
-                        </ListToolbar.Actions>
-                      }
-                    />
-                    <Button>Create Volume Type</Button>
-                  </div>
+                  <ListToolbar
+                    primaryActions={
+                      <ListToolbar.Actions>
+                        <FilterSearchInput
+                          filters={volumeTypeFilterFields}
+                          appliedFilters={appliedFilters}
+                          onFiltersChange={setAppliedFilters}
+                          placeholder="Search volume types by attributes"
+                          size="sm"
+                          className="w-[var(--search-input-width)]"
+                          hideAppliedFilters
+                        />
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          iconOnly
+                          icon={<IconDownload size={12} />}
+                          aria-label="Download"
+                        />
+                      </ListToolbar.Actions>
+                    }
+                    bulkActions={
+                      <ListToolbar.Actions>
+                        <Button
+                          variant="muted"
+                          size="sm"
+                          leftIcon={<IconTrash size={12} />}
+                          disabled={selectedVolumeTypes.length === 0}
+                          onClick={handleBulkDelete}
+                        >
+                          Delete
+                        </Button>
+                      </ListToolbar.Actions>
+                    }
+                  />
 
                   {/* Pagination */}
                   <Pagination
@@ -608,44 +608,41 @@ export function ComputeAdminVolumeTypesPage() {
               {activeTab === 'qos-specs' && (
                 <VStack gap={3} align="stretch">
                   {/* Toolbar */}
-                  <div className="flex items-center justify-between">
-                    <ListToolbar
-                      primaryActions={
-                        <ListToolbar.Actions>
-                          <FilterSearchInput
-                            filters={qosSpecFilterFields}
-                            appliedFilters={appliedFilters}
-                            onFiltersChange={setAppliedFilters}
-                            placeholder="Search QoS specs by attributes"
-                            size="sm"
-                            className="w-[var(--search-input-width)]"
-                            hideAppliedFilters
-                          />
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            iconOnly
-                            icon={<IconDownload size={12} />}
-                            aria-label="Download"
-                          />
-                        </ListToolbar.Actions>
-                      }
-                      bulkActions={
-                        <ListToolbar.Actions>
-                          <Button
-                            variant="muted"
-                            size="sm"
-                            leftIcon={<IconTrash size={12} />}
-                            disabled={selectedQoSSpecs.length === 0}
-                            onClick={handleBulkDelete}
-                          >
-                            Delete
-                          </Button>
-                        </ListToolbar.Actions>
-                      }
-                    />
-                    <Button>Create QoS Spec</Button>
-                  </div>
+                  <ListToolbar
+                    primaryActions={
+                      <ListToolbar.Actions>
+                        <FilterSearchInput
+                          filters={qosSpecFilterFields}
+                          appliedFilters={appliedFilters}
+                          onFiltersChange={setAppliedFilters}
+                          placeholder="Search QoS specs by attributes"
+                          size="sm"
+                          className="w-[var(--search-input-width)]"
+                          hideAppliedFilters
+                        />
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          iconOnly
+                          icon={<IconDownload size={12} />}
+                          aria-label="Download"
+                        />
+                      </ListToolbar.Actions>
+                    }
+                    bulkActions={
+                      <ListToolbar.Actions>
+                        <Button
+                          variant="muted"
+                          size="sm"
+                          leftIcon={<IconTrash size={12} />}
+                          disabled={selectedQoSSpecs.length === 0}
+                          onClick={handleBulkDelete}
+                        >
+                          Delete
+                        </Button>
+                      </ListToolbar.Actions>
+                    }
+                  />
 
                   {/* Pagination */}
                   <Pagination

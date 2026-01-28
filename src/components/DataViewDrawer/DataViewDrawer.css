@@ -1,0 +1,252 @@
+/* Overlay */
+.dataViewDrawer-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.4);
+  z-index: 1000;
+  animation: dataViewDrawer-overlayFadeIn 0.2s ease;
+}
+
+.dark .dataViewDrawer-overlay {
+  background: rgba(0, 0, 0, 0.6);
+}
+
+@keyframes dataViewDrawer-overlayFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Drawer */
+.dataViewDrawer-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 700px;
+  max-width: 90vw;
+  background: var(--color-surface-default);
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.12);
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  animation: dataViewDrawer-slideIn 0.25s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.dark .dataViewDrawer-drawer {
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.4);
+}
+
+@keyframes dataViewDrawer-slideIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* Drawer Content */
+.dataViewDrawer-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 24px;
+  gap: 24px;
+}
+
+/* Header */
+.dataViewDrawer-header {
+  flex-shrink: 0;
+}
+
+.dataViewDrawer-title {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
+  color: var(--color-text-default);
+  margin: 0;
+}
+
+/* Table Container - enables scrolling */
+.dataViewDrawer-tableContainer {
+  flex: 1;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Table */
+.dataViewDrawer-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 4px;
+  min-width: max-content;
+}
+
+/* Table Header - sticky on vertical scroll */
+.dataViewDrawer-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.dataViewDrawer-table thead tr {
+  background: var(--color-surface-subtle);
+  border: 1px solid var(--color-border-default);
+  border-radius: 6px;
+}
+
+.dataViewDrawer-table th {
+  height: 40px;
+  padding: 0 12px;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 16px;
+  color: var(--color-text-default);
+  text-align: left;
+  white-space: nowrap;
+  background: var(--color-surface-subtle);
+  border-top: 1px solid var(--color-border-default);
+  border-bottom: 1px solid var(--color-border-default);
+  min-width: 120px;
+}
+
+/* First column header - sticky on horizontal scroll */
+.dataViewDrawer-table th:first-child {
+  border-left: 1px solid var(--color-border-default);
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  min-width: 180px;
+}
+
+.dataViewDrawer-table th:last-child {
+  border-right: 1px solid var(--color-border-default);
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
+.dataViewDrawer-table th:not(:first-child) {
+  border-left: 1px solid var(--color-border-default);
+}
+
+/* Table Body */
+.dataViewDrawer-table tbody {
+  position: relative;
+}
+
+.dataViewDrawer-table tbody tr {
+  background: var(--color-surface-default);
+  border: 1px solid var(--color-border-default);
+  border-radius: 6px;
+}
+
+.dataViewDrawer-table tbody tr:hover {
+  background: var(--table-row-hover-bg);
+}
+
+.dataViewDrawer-table tbody tr:hover td {
+  background: var(--table-row-hover-bg);
+}
+
+.dataViewDrawer-table td {
+  height: 40px;
+  padding: 8px 12px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  color: var(--color-text-default);
+  white-space: nowrap;
+  background: var(--color-surface-default);
+  border-top: 1px solid var(--color-border-default);
+  border-bottom: 1px solid var(--color-border-default);
+  min-width: 120px;
+}
+
+/* First column cells - sticky on horizontal scroll */
+.dataViewDrawer-table td:first-child {
+  border-left: 1px solid var(--color-border-default);
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  min-width: 180px;
+}
+
+.dataViewDrawer-table td:last-child {
+  border-right: 1px solid var(--color-border-default);
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
+/* Footer */
+.dataViewDrawer-footer {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  padding: 16px 24px;
+  border-top: 1px solid var(--color-border-default);
+}
+
+/* Close Button */
+.dataViewDrawer-closeButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 152px;
+  height: 36px;
+  padding: 8px 12px;
+  background: var(--color-surface-default);
+  border: 1px solid var(--color-border-strong);
+  border-radius: 6px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  color: var(--color-text-default);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.dataViewDrawer-closeButton:hover {
+  background: var(--button-secondary-hover-bg);
+  border-color: var(--color-border-strong);
+}
+
+/* Custom Scrollbar styling */
+.dataViewDrawer-tableContainer::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.dataViewDrawer-tableContainer::-webkit-scrollbar-track {
+  background: var(--color-surface-subtle);
+}
+
+.dataViewDrawer-tableContainer::-webkit-scrollbar-thumb {
+  background: var(--color-border-strong);
+  border-radius: 4px;
+}
+
+.dataViewDrawer-tableContainer::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-subtle);
+}
+
+.dataViewDrawer-tableContainer::-webkit-scrollbar-corner {
+  background: var(--color-surface-subtle);
+}
