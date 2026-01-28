@@ -15,7 +15,7 @@ import {
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconTrash, IconBell } from '@tabler/icons-react';
+import { IconCirclePlus, IconEdit, IconTrash, IconUsers, IconBell } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -276,8 +276,17 @@ export default function ComputeAdminTenantDetailPage() {
               <DetailHeader>
                 <DetailHeader.Title>{tenant.name}</DetailHeader.Title>
                 <DetailHeader.Actions>
+                  <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+                    Modify Quotas
+                  </Button>
+                  <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+                    Edit
+                  </Button>
                   <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
                     Delete
+                  </Button>
+                  <Button variant="secondary" size="sm" leftIcon={<IconUsers size={12} />}>
+                    Manage member
                   </Button>
                 </DetailHeader.Actions>
                 <DetailHeader.InfoGrid>
