@@ -242,17 +242,20 @@ export function JobsPage() {
     {
       key: 'completions',
       label: 'Completions',
-      flex: 1, minWidth: columnMinWidths.completions,
+      flex: 1,
+      minWidth: columnMinWidths.completions,
     },
     {
       key: 'duration',
       label: 'Duration',
-      flex: 1, minWidth: columnMinWidths.duration,
+      flex: 1,
+      minWidth: columnMinWidths.duration,
     },
     {
       key: 'createdAt',
       label: 'Created At',
-      flex: 1, minWidth: columnMinWidths.createdAt,
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
     },
     {

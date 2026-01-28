@@ -493,7 +493,8 @@ export function PhysicalDisksPage() {
     {
       key: 'type',
       label: 'Type',
-      flex: 1, minWidth: columnMinWidths.type,
+      flex: 1,
+      minWidth: columnMinWidths.type,
       sortable: true,
       render: (_, row) => <TypeCell type={row.type} />,
     },

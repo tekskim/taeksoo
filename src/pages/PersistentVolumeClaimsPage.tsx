@@ -261,12 +261,14 @@ export function PersistentVolumeClaimsPage() {
     {
       key: 'capacity',
       label: 'Capacity',
-      flex: 1, minWidth: columnMinWidths.capacity,
+      flex: 1,
+      minWidth: columnMinWidths.capacity,
     },
     {
       key: 'accessModes',
       label: 'Access Modes',
-      flex: 1, minWidth: columnMinWidths.accessModes,
+      flex: 1,
+      minWidth: columnMinWidths.accessModes,
     },
     {
       key: 'storageClass',
@@ -286,7 +288,8 @@ export function PersistentVolumeClaimsPage() {
     {
       key: 'createdAt',
       label: 'Created At',
-      flex: 1, minWidth: columnMinWidths.createdAt,
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
     },
     {

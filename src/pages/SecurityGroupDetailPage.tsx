@@ -20,7 +20,6 @@ import {
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
-  columnMinWidths,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';

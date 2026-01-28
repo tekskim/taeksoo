@@ -383,19 +383,22 @@ export function LoadBalancerDetailPage() {
     {
       key: 'protocol',
       label: 'Protocol',
-      flex: 1, minWidth: columnMinWidths.protocol,
+      flex: 1,
+      minWidth: columnMinWidths.protocol,
       sortable: true,
     },
     {
       key: 'algorithm',
       label: 'Algorithm',
-      flex: 1, minWidth: columnMinWidths.algorithm,
+      flex: 1,
+      minWidth: columnMinWidths.algorithm,
       sortable: true,
     },
     {
       key: 'listener',
       label: 'Listener',
-      flex: 1, minWidth: columnMinWidths.listener,
+      flex: 1,
+      minWidth: columnMinWidths.listener,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -415,13 +418,15 @@ export function LoadBalancerDetailPage() {
     {
       key: 'members',
       label: 'Members',
-      flex: 1, minWidth: columnMinWidths.members,
+      flex: 1,
+      minWidth: columnMinWidths.members,
       sortable: true,
     },
     {
       key: 'adminState',
       label: 'Admin state',
-      flex: 1, minWidth: columnMinWidths.adminState,
+      flex: 1,
+      minWidth: columnMinWidths.adminState,
     },
     {
       key: 'actions',

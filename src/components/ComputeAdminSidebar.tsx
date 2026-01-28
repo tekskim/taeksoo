@@ -8,20 +8,21 @@ import {
   IconCpu,
   IconDatabase,
   IconDatabaseExport,
+  IconDatabaseCog,
   IconNetwork,
   IconWorldWww,
   IconShieldLock,
   IconLoadBalancer,
   IconArrowLeft,
   IconServer,
-  IconServerBolt,
+  IconArrowsJoin2,
   IconLayoutGrid,
   IconUsersGroup,
   IconFileCode,
   IconActivity,
   IconServer2,
 } from '@tabler/icons-react';
-import { ChevronsLeftRightEllipsis } from 'lucide-react';
+import { ChevronsLeftRightEllipsis, BrickWallFire } from 'lucide-react';
 import { useLocation, Link } from 'react-router-dom';
 import RouterIcon from '@/assets/Router.svg';
 import { AppSwitcher } from './AppSwitcher';
@@ -140,13 +141,13 @@ export function ComputeAdminSidebar({ isOpen = true, onToggle }: ComputeAdminSid
               active={isActive('/compute-admin/server-groups')}
             />
             <MenuItem
-              icon={<IconServer size={16} stroke={1.5} />}
+              icon={<IconArrowsJoin2 size={16} stroke={1.5} />}
               label="Host aggregates"
               href="/compute-admin/host-aggregates"
               active={isActive('/compute-admin/host-aggregates')}
             />
             <MenuItem
-              icon={<IconServerBolt size={16} stroke={1.5} />}
+              icon={<IconServer size={16} stroke={1.5} />}
               label="Bare metal nodes"
               href="/compute-admin/bare-metal-nodes"
               active={isActive('/compute-admin/bare-metal-nodes')}
@@ -174,7 +175,7 @@ export function ComputeAdminSidebar({ isOpen = true, onToggle }: ComputeAdminSid
               active={isActive('/compute-admin/volume-backups')}
             />
             <MenuItem
-              icon={<IconLayoutGrid size={16} stroke={1.5} />}
+              icon={<IconDatabaseCog size={16} stroke={1.5} />}
               label="Volume types"
               href="/compute-admin/volume-types"
               active={isActive('/compute-admin/volume-types')}
@@ -218,6 +219,12 @@ export function ComputeAdminSidebar({ isOpen = true, onToggle }: ComputeAdminSid
               label="Load balancers"
               href="/compute-admin/load-balancers"
               active={isActive('/compute-admin/load-balancers')}
+            />
+            <MenuItem
+              icon={<BrickWallFire size={16} strokeWidth={1.5} />}
+              label="Firewall"
+              href="/compute-admin/firewall"
+              active={isActive('/compute-admin/firewall')}
             />
           </MenuSection>
 

@@ -1,15 +1,28 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Button, VStack, TabBar, TopBar, TopBarAction, Breadcrumb, Tabs, TabList, Tab, TabPanel, DetailHeader, SectionCard, Table, SearchInput, Pagination, ContextMenu, fixedColumns, columnMinWidths } from '@/design-system';
+import {
+  Button,
+  VStack,
+  TabBar,
+  TopBar,
+  TopBarAction,
+  Breadcrumb,
+  Tabs,
+  TabList,
+  Tab,
+  TabPanel,
+  DetailHeader,
+  SectionCard,
+  Table,
+  SearchInput,
+  Pagination,
+  ContextMenu,
+  fixedColumns,
+} from '@/design-system';
 import type { TableColumn, ContextMenuItem } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconEdit,
-  IconTrash,
-  IconBell,
-  IconCirclePlus,
-  IconDotsCircleHorizontal } from '@tabler/icons-react';
+import { IconTrash, IconBell, IconDownload } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -71,7 +84,8 @@ const mockL7PolicyDetail: L7PolicyDetail = {
   behavior: 'Forward to Pool',
   behaviorDetail: {
     name: 'web-server-10',
-    id: 'pool-001' },
+    id: 'pool-001',
+  },
   position: 50,
   // Association
   listener: {
@@ -79,7 +93,10 @@ const mockL7PolicyDetail: L7PolicyDetail = {
     id: 'listener-001',
     loadBalancer: {
       name: 'web-lb-01',
-      id: 'lb-001' } } };
+      id: 'lb-001',
+    },
+  },
+};
 
 /* ----------------------------------------
    Mock L7 Rules Data
@@ -96,7 +113,8 @@ const mockL7Rules: L7Rule[] = Array.from({ length: 25 }, (_, i) => ({
   value: i % 2 === 0 ? '/api/*' : 'www.example.com',
   key: i % 3 === 0 ? 'X-Custom-Header' : null,
   invert: i % 4 === 0,
-  adminState: i % 5 === 0 ? 'Down' : 'Up' }));
+  adminState: i % 5 === 0 ? 'Down' : 'Up',
+}));
 
 /* ----------------------------------------
    Status Mapping
@@ -105,12 +123,14 @@ const mockL7Rules: L7Rule[] = Array.from({ length: 25 }, (_, i) => ({
 const l7PolicyStatusMap: Record<L7PolicyStatus, 'active' | 'building' | 'error'> = {
   active: 'active',
   down: 'building',
-  error: 'error' };
+  error: 'error',
+};
 
 const l7RuleStatusMap: Record<L7RuleStatus, 'active' | 'building' | 'error'> = {
   active: 'active',
   down: 'building',
-  error: 'error' };
+  error: 'error',
+};
 
 /* ----------------------------------------
    L7PolicyDetailPage Component
@@ -149,7 +169,8 @@ export default function L7PolicyDetailPage() {
     { label: 'Load balancers', href: '/compute-admin/load-balancers' },
     {
       label: l7Policy.listener?.loadBalancer?.name || 'Unknown',
-      href: `/load-balancers/${l7Policy.listener?.loadBalancer?.id}` },
+      href: `/load-balancers/${l7Policy.listener?.loadBalancer?.id}`,
+    },
     { label: l7Policy.listener?.name || 'Unknown', href: `/listeners/${l7Policy.listener?.id}` },
     { label: l7Policy.name },
   ];
@@ -158,7 +179,8 @@ export default function L7PolicyDetailPage() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    closable: tab.closable }));
+    closable: tab.closable,
+  }));
 
   const handleCopyId = () => {
     navigator.clipboard.writeText(l7Policy.id);
@@ -189,32 +211,39 @@ export default function L7PolicyDetailPage() {
       key: 'type',
       label: 'Rule type',
       flex: 1,
-      sortable: true },
+      sortable: true,
+    },
     {
       key: 'compareType',
       label: 'Compare type',
       flex: 1,
-      sortable: true },
+      sortable: true,
+    },
     {
       key: 'key',
       label: 'Key',
       flex: 1,
       sortable: true,
-      render: (_, row) => row.key || '-' },
+      render: (_, row) => row.key || '-',
+    },
     {
       key: 'value',
       label: 'Value',
       flex: 1,
-      sortable: true },
+      sortable: true,
+    },
     {
       key: 'invert',
       label: 'Invert',
       flex: 1,
-      render: (_, row) => (row.invert ? 'On' : 'Off') },
+      sortable: true,
+      render: (_, row) => (row.invert ? 'On' : 'Off'),
+    },
     {
       key: 'adminState',
       label: 'Admin state',
-      flex: 1 },
+      flex: 1,
+    },
     {
       key: 'actions',
       label: 'Action',
@@ -227,22 +256,20 @@ export default function L7PolicyDetailPage() {
             id: 'delete',
             label: 'Delete',
             status: 'danger',
-            onClick: () => console.log('Delete rule', row.id) },
+            onClick: () => console.log('Delete rule', row.id),
+          },
         ];
         return (
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={ruleMenuItems} trigger="click">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                <IconDotsCircleHorizontal
-                  size={16}
-                  stroke={1.5}
-                  className="text-[var(--action-icon-color)]"
-                />
+                <IconTrash size={16} stroke={1.5} className="text-[var(--color-state-danger)]" />
               </button>
             </ContextMenu>
           </div>
         );
-      } },
+      },
+    },
   ];
 
   return (
@@ -300,12 +327,6 @@ export default function L7PolicyDetailPage() {
                     {l7Policy.name}
                   </h1>
                   <DetailHeader.Actions>
-                    <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                      Edit
-                    </Button>
-                    <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                      Create L7 Rule
-                    </Button>
                     <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
                       Delete
                     </Button>
@@ -340,17 +361,11 @@ export default function L7PolicyDetailPage() {
                   <TabPanel value="details" className="pt-0">
                     <VStack gap={4} className="pt-4">
                       <SectionCard>
-                        <SectionCard.Header
-                          title="Basic information"
-                          actions={
-                            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                              Edit
-                            </Button>
-                          }
-                        />
+                        <SectionCard.Header title="Basic information" />
                         <SectionCard.Content>
                           <SectionCard.DataRow label="Name" value={l7Policy.name} />
                           <SectionCard.DataRow label="Description" value={l7Policy.description} />
+                          <SectionCard.DataRow label="Admin state" value={l7Policy.adminState} />
                           <SectionCard.DataRow label="Behavior" value={l7Policy.behavior} />
                           <SectionCard.DataRow
                             label="Behavior detail"
@@ -368,7 +383,6 @@ export default function L7PolicyDetailPage() {
                             }
                           />
                           <SectionCard.DataRow label="Position" value={String(l7Policy.position)} />
-                          <SectionCard.DataRow label="Admin state" value={l7Policy.adminState} />
                         </SectionCard.Content>
                       </SectionCard>
                     </VStack>
@@ -382,26 +396,28 @@ export default function L7PolicyDetailPage() {
                         <h3 className="text-[16px] font-semibold text-[var(--color-text-default)]">
                           L7 Rules
                         </h3>
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          leftIcon={<IconCirclePlus size={12} />}
-                        >
-                          Create L7 Rule
-                        </Button>
                       </div>
 
                       {/* Action Bar */}
                       <div className="flex items-center gap-2">
-                        <div className="w-[var(--search-input-width)]">
-                          <SearchInput
-                            value={l7RuleSearchTerm}
-                            onChange={(e) => {
-                              setL7RuleSearchTerm(e.target.value);
-                              setL7RuleCurrentPage(1);
-                            }}
-                            placeholder="Search L7 rules by attributes"
-                          />
+                        <div className="flex items-center gap-1">
+                          <div className="w-[var(--search-input-width)]">
+                            <SearchInput
+                              value={l7RuleSearchTerm}
+                              onChange={(e) => {
+                                setL7RuleSearchTerm(e.target.value);
+                                setL7RuleCurrentPage(1);
+                              }}
+                              placeholder="Search L7 rules by attributes"
+                            />
+                          </div>
+                          <button
+                            type="button"
+                            className="flex items-center justify-center w-7 h-7 rounded-[var(--button-radius)] border border-[var(--color-border-strong)] bg-[var(--color-surface-default)] text-[var(--color-text-default)] hover:bg-[var(--button-secondary-hover-bg)]"
+                            aria-label="Download"
+                          >
+                            <IconDownload size={14} stroke={1.5} />
+                          </button>
                         </div>
                         <div className="h-4 w-px bg-[var(--color-border-default)]" />
                         <Button

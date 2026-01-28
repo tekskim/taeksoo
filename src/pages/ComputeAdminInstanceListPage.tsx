@@ -1,5 +1,29 @@
 import { useState, useMemo, useEffect, useRef, useLayoutEffect } from 'react';
-import { Button, FilterSearchInput, Table, StatusIndicator, Pagination, HStack, VStack, TabBar, TopBar, TopBarAction, Breadcrumb, Tabs, TabList, Tab, ListToolbar, ContextMenu, type TableColumn, type StatusType, type FilterField, type AppliedFilter, type FilterItem, type ContextMenuItem, fixedColumns } from '@/design-system';
+import {
+  Button,
+  FilterSearchInput,
+  Table,
+  StatusIndicator,
+  Pagination,
+  HStack,
+  VStack,
+  TabBar,
+  TopBar,
+  TopBarAction,
+  Breadcrumb,
+  Tabs,
+  TabList,
+  Tab,
+  ListToolbar,
+  ContextMenu,
+  type TableColumn,
+  type StatusType,
+  type FilterField,
+  type AppliedFilter,
+  type FilterItem,
+  type ContextMenuItem,
+  fixedColumns,
+} from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
@@ -13,17 +37,21 @@ import {
   IconBell,
   IconDownload,
   IconLock,
-  IconTerminal2 } from '@tabler/icons-react';
+  IconTerminal2,
+} from '@tabler/icons-react';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import {
   CreateInstanceSnapshotDrawer,
-  type InstanceInfo } from '@/components/CreateInstanceSnapshotDrawer';
+  type InstanceInfo,
+} from '@/components/CreateInstanceSnapshotDrawer';
 import {
   LockSettingDrawer,
-  type InstanceInfo as LockInstanceInfo } from '@/components/LockSettingDrawer';
+  type InstanceInfo as LockInstanceInfo,
+} from '@/components/LockSettingDrawer';
 import {
   EditInstanceDrawer,
-  type InstanceInfo as EditInstanceInfo } from '@/components/EditInstanceDrawer';
+  type InstanceInfo as EditInstanceInfo,
+} from '@/components/EditInstanceDrawer';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -88,7 +116,8 @@ const mockInstances: Instance[] = [
     ram: '8GB',
     disk: '100GB',
     gpu: '1',
-    az: 'keystone' },
+    az: 'keystone',
+  },
   {
     id: 'vm-002',
     name: 'worker-node-02',
@@ -105,7 +134,8 @@ const mockInstances: Instance[] = [
     ram: '8GB',
     disk: '100GB',
     gpu: '1',
-    az: 'keystone' },
+    az: 'keystone',
+  },
   {
     id: 'vm-003',
     name: 'master-node-01',
@@ -122,7 +152,8 @@ const mockInstances: Instance[] = [
     ram: '16GB',
     disk: '200GB',
     gpu: '-',
-    az: 'nova' },
+    az: 'nova',
+  },
   {
     id: 'vm-004',
     name: 'db-server-01',
@@ -139,7 +170,8 @@ const mockInstances: Instance[] = [
     ram: '64GB',
     disk: '500GB',
     gpu: '-',
-    az: 'keystone' },
+    az: 'keystone',
+  },
   {
     id: 'vm-005',
     name: 'gpu-node-01',
@@ -156,7 +188,8 @@ const mockInstances: Instance[] = [
     ram: '128GB',
     disk: '1TB',
     gpu: '4',
-    az: 'nova' },
+    az: 'nova',
+  },
   {
     id: 'vm-006',
     name: 'gpu-node-02',
@@ -173,7 +206,8 @@ const mockInstances: Instance[] = [
     ram: '128GB',
     disk: '1TB',
     gpu: '4',
-    az: 'nova' },
+    az: 'nova',
+  },
   {
     id: 'vm-007',
     name: 'web-server-01',
@@ -190,7 +224,8 @@ const mockInstances: Instance[] = [
     ram: '4GB',
     disk: '50GB',
     gpu: '-',
-    az: 'keystone' },
+    az: 'keystone',
+  },
   {
     id: 'vm-008',
     name: 'web-server-02',
@@ -207,7 +242,8 @@ const mockInstances: Instance[] = [
     ram: '4GB',
     disk: '50GB',
     gpu: '-',
-    az: 'keystone' },
+    az: 'keystone',
+  },
   {
     id: 'vm-009',
     name: 'analytics-01',
@@ -224,7 +260,8 @@ const mockInstances: Instance[] = [
     ram: '32GB',
     disk: '500GB',
     gpu: '2',
-    az: 'nova' },
+    az: 'nova',
+  },
   {
     id: 'vm-010',
     name: 'cache-server-01',
@@ -241,7 +278,8 @@ const mockInstances: Instance[] = [
     ram: '16GB',
     disk: '100GB',
     gpu: '-',
-    az: 'keystone' },
+    az: 'keystone',
+  },
   {
     id: 'vm-011',
     name: 'api-gateway-01',
@@ -258,7 +296,8 @@ const mockInstances: Instance[] = [
     ram: '8GB',
     disk: '100GB',
     gpu: '-',
-    az: 'nova' },
+    az: 'nova',
+  },
   {
     id: 'vm-012',
     name: 'api-gateway-02',
@@ -275,7 +314,8 @@ const mockInstances: Instance[] = [
     ram: '8GB',
     disk: '100GB',
     gpu: '-',
-    az: 'nova' },
+    az: 'nova',
+  },
   {
     id: 'vm-013',
     name: 'monitoring-01',
@@ -292,7 +332,8 @@ const mockInstances: Instance[] = [
     ram: '32GB',
     disk: '500GB',
     gpu: '-',
-    az: 'keystone' },
+    az: 'keystone',
+  },
   {
     id: 'vm-014',
     name: 'logging-server-01',
@@ -309,7 +350,8 @@ const mockInstances: Instance[] = [
     ram: '64GB',
     disk: '2TB',
     gpu: '-',
-    az: 'keystone' },
+    az: 'keystone',
+  },
   {
     id: 'vm-015',
     name: 'jenkins-master',
@@ -326,7 +368,8 @@ const mockInstances: Instance[] = [
     ram: '16GB',
     disk: '200GB',
     gpu: '-',
-    az: 'nova' },
+    az: 'nova',
+  },
   {
     id: 'vm-016',
     name: 'jenkins-agent-01',
@@ -343,7 +386,8 @@ const mockInstances: Instance[] = [
     ram: '8GB',
     disk: '100GB',
     gpu: '-',
-    az: 'nova' },
+    az: 'nova',
+  },
   {
     id: 'vm-017',
     name: 'jenkins-agent-02',
@@ -360,7 +404,8 @@ const mockInstances: Instance[] = [
     ram: '8GB',
     disk: '100GB',
     gpu: '-',
-    az: 'nova' },
+    az: 'nova',
+  },
   {
     id: 'vm-018',
     name: 'gitlab-server',
@@ -377,7 +422,8 @@ const mockInstances: Instance[] = [
     ram: '32GB',
     disk: '1TB',
     gpu: '-',
-    az: 'keystone' },
+    az: 'keystone',
+  },
   {
     id: 'vm-019',
     name: 'nexus-repo',
@@ -394,7 +440,8 @@ const mockInstances: Instance[] = [
     ram: '16GB',
     disk: '500GB',
     gpu: '-',
-    az: 'keystone' },
+    az: 'keystone',
+  },
   {
     id: 'vm-020',
     name: 'redis-cluster-01',
@@ -411,7 +458,8 @@ const mockInstances: Instance[] = [
     ram: '16GB',
     disk: '50GB',
     gpu: '-',
-    az: 'nova' },
+    az: 'nova',
+  },
   {
     id: 'vm-021',
     name: 'redis-cluster-02',
@@ -428,7 +476,8 @@ const mockInstances: Instance[] = [
     ram: '16GB',
     disk: '50GB',
     gpu: '-',
-    az: 'nova' },
+    az: 'nova',
+  },
   {
     id: 'vm-022',
     name: 'redis-cluster-03',
@@ -445,7 +494,8 @@ const mockInstances: Instance[] = [
     ram: '16GB',
     disk: '50GB',
     gpu: '-',
-    az: 'keystone' },
+    az: 'keystone',
+  },
   {
     id: 'vm-023',
     name: 'kafka-broker-01',
@@ -462,7 +512,8 @@ const mockInstances: Instance[] = [
     ram: '32GB',
     disk: '500GB',
     gpu: '-',
-    az: 'nova' },
+    az: 'nova',
+  },
   {
     id: 'vm-024',
     name: 'kafka-broker-02',
@@ -479,7 +530,8 @@ const mockInstances: Instance[] = [
     ram: '32GB',
     disk: '500GB',
     gpu: '-',
-    az: 'nova' },
+    az: 'nova',
+  },
   {
     id: 'vm-025',
     name: 'kafka-broker-03',
@@ -496,7 +548,8 @@ const mockInstances: Instance[] = [
     ram: '32GB',
     disk: '500GB',
     gpu: '-',
-    az: 'keystone' },
+    az: 'keystone',
+  },
   {
     id: 'vm-026',
     name: 'ml-training-01',
@@ -513,7 +566,8 @@ const mockInstances: Instance[] = [
     ram: '256GB',
     disk: '2TB',
     gpu: '8',
-    az: 'nova' },
+    az: 'nova',
+  },
   {
     id: 'vm-027',
     name: 'ml-inference-01',
@@ -530,7 +584,8 @@ const mockInstances: Instance[] = [
     ram: '128GB',
     disk: '1TB',
     gpu: '4',
-    az: 'nova' },
+    az: 'nova',
+  },
   {
     id: 'vm-028',
     name: 'bastion-host',
@@ -547,7 +602,8 @@ const mockInstances: Instance[] = [
     ram: '4GB',
     disk: '50GB',
     gpu: '-',
-    az: 'keystone' },
+    az: 'keystone',
+  },
   {
     id: 'vm-029',
     name: 'vpn-server',
@@ -564,7 +620,8 @@ const mockInstances: Instance[] = [
     ram: '4GB',
     disk: '50GB',
     gpu: '-',
-    az: 'keystone' },
+    az: 'keystone',
+  },
   {
     id: 'vm-030',
     name: 'test-instance-01',
@@ -581,7 +638,8 @@ const mockInstances: Instance[] = [
     ram: '4GB',
     disk: '50GB',
     gpu: '-',
-    az: 'nova' },
+    az: 'nova',
+  },
 ];
 
 const mockBareMetalInstances: BareMetalInstance[] = [
@@ -596,7 +654,8 @@ const mockBareMetalInstances: BareMetalInstance[] = [
     ram: '16GiB',
     disk: '10GiB',
     gpu: '-',
-    az: 'zone-a' },
+    az: 'zone-a',
+  },
   {
     id: 'bm-002',
     name: 'web-server-2',
@@ -608,7 +667,8 @@ const mockBareMetalInstances: BareMetalInstance[] = [
     ram: '16GiB',
     disk: '10GiB',
     gpu: '-',
-    az: 'zone-a' },
+    az: 'zone-a',
+  },
   {
     id: 'bm-003',
     name: 'db-server-1',
@@ -620,7 +680,8 @@ const mockBareMetalInstances: BareMetalInstance[] = [
     ram: '64GiB',
     disk: '500GiB',
     gpu: '-',
-    az: 'zone-b' },
+    az: 'zone-b',
+  },
   {
     id: 'bm-004',
     name: 'db-server-2',
@@ -632,7 +693,8 @@ const mockBareMetalInstances: BareMetalInstance[] = [
     ram: '64GiB',
     disk: '500GiB',
     gpu: '-',
-    az: 'zone-b' },
+    az: 'zone-b',
+  },
   {
     id: 'bm-005',
     name: 'gpu-node-1',
@@ -644,7 +706,8 @@ const mockBareMetalInstances: BareMetalInstance[] = [
     ram: '128GiB',
     disk: '1TiB',
     gpu: 'A100 x4',
-    az: 'zone-c' },
+    az: 'zone-c',
+  },
   {
     id: 'bm-006',
     name: 'gpu-node-2',
@@ -656,7 +719,8 @@ const mockBareMetalInstances: BareMetalInstance[] = [
     ram: '128GiB',
     disk: '1TiB',
     gpu: 'A100 x4',
-    az: 'zone-c' },
+    az: 'zone-c',
+  },
   {
     id: 'bm-007',
     name: 'compute-1',
@@ -668,7 +732,8 @@ const mockBareMetalInstances: BareMetalInstance[] = [
     ram: '256GiB',
     disk: '2TiB',
     gpu: '-',
-    az: 'zone-a' },
+    az: 'zone-a',
+  },
   {
     id: 'bm-008',
     name: 'compute-2',
@@ -680,7 +745,8 @@ const mockBareMetalInstances: BareMetalInstance[] = [
     ram: '256GiB',
     disk: '2TiB',
     gpu: '-',
-    az: 'zone-a' },
+    az: 'zone-a',
+  },
   {
     id: 'bm-009',
     name: 'storage-node-1',
@@ -692,7 +758,8 @@ const mockBareMetalInstances: BareMetalInstance[] = [
     ram: '32GiB',
     disk: '10TiB',
     gpu: '-',
-    az: 'zone-b' },
+    az: 'zone-b',
+  },
   {
     id: 'bm-010',
     name: 'storage-node-2',
@@ -704,7 +771,8 @@ const mockBareMetalInstances: BareMetalInstance[] = [
     ram: '32GiB',
     disk: '10TiB',
     gpu: '-',
-    az: 'zone-b' },
+    az: 'zone-b',
+  },
 ];
 
 /* ----------------------------------------
@@ -716,7 +784,8 @@ const statusMap: Record<InstanceStatus, StatusType> = {
   stopped: 'shutoff',
   pending: 'paused',
   error: 'error',
-  building: 'building' };
+  building: 'building',
+};
 
 /* ----------------------------------------
    Instances list Page
@@ -728,7 +797,8 @@ const filterFields: FilterField[] = [
     id: 'name',
     label: 'Name',
     type: 'text',
-    placeholder: 'Enter instance name...' },
+    placeholder: 'Enter instance name...',
+  },
   {
     id: 'status',
     label: 'Status',
@@ -738,7 +808,8 @@ const filterFields: FilterField[] = [
       { value: 'stopped', label: 'Stopped' },
       { value: 'error', label: 'Error' },
       { value: 'building', label: 'Building' },
-    ] },
+    ],
+  },
   {
     id: 'tenant',
     label: 'Tenant',
@@ -747,12 +818,14 @@ const filterFields: FilterField[] = [
       { value: 'Tenant A', label: 'Tenant A' },
       { value: 'Tenant B', label: 'Tenant B' },
       { value: 'Tenant C', label: 'Tenant C' },
-    ] },
+    ],
+  },
   {
     id: 'host',
     label: 'Host',
     type: 'text',
-    placeholder: 'Enter host...' },
+    placeholder: 'Enter host...',
+  },
   {
     id: 'os',
     label: 'OS',
@@ -762,12 +835,14 @@ const filterFields: FilterField[] = [
       { value: 'centos', label: 'CentOS' },
       { value: 'windows', label: 'Windows' },
       { value: 'rocky', label: 'Rocky Linux' },
-    ] },
+    ],
+  },
   {
     id: 'flavor',
     label: 'Flavor',
     type: 'text',
-    placeholder: 'Enter flavor...' },
+    placeholder: 'Enter flavor...',
+  },
 ];
 
 export function ComputeAdminInstanceListPage() {
@@ -795,7 +870,8 @@ export function ComputeAdminInstanceListPage() {
   const toolbarFilters: FilterItem[] = appliedFilters.map((f) => ({
     id: f.id,
     field: f.fieldLabel,
-    value: f.valueLabel || f.value }));
+    value: f.valueLabel || f.value,
+  }));
 
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
@@ -853,7 +929,8 @@ export function ComputeAdminInstanceListPage() {
       id: tabId,
       label: tab.title,
       path: `/compute-admin/console/${tab.instanceId}?name=${encodeURIComponent(tab.title)}`,
-      closable: true });
+      closable: true,
+    });
     // Navigate to the console page (new tab becomes active)
     navigate(`/compute-admin/console/${tab.instanceId}?name=${encodeURIComponent(tab.title)}`);
   };
@@ -886,7 +963,8 @@ export function ComputeAdminInstanceListPage() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    closable: tab.closable }));
+    closable: tab.closable,
+  }));
 
   // Scroll to top handler
   useEffect(() => {
@@ -966,7 +1044,8 @@ export function ComputeAdminInstanceListPage() {
       id: instance.id,
       name: instance.name,
       image: instance.image,
-      flavor: instance.flavor });
+      flavor: instance.flavor,
+    });
     setIsSnapshotDrawerOpen(true);
   };
 
@@ -975,7 +1054,8 @@ export function ComputeAdminInstanceListPage() {
     setSelectedInstanceForLock({
       id: instance.id,
       name: instance.name,
-      isLocked: instance.locked });
+      isLocked: instance.locked,
+    });
     setIsLockDrawerOpen(true);
   };
 
@@ -984,7 +1064,8 @@ export function ComputeAdminInstanceListPage() {
     setSelectedInstanceForEdit({
       id: instance.id,
       name: instance.name,
-      description: instance.description });
+      description: instance.description,
+    });
     setIsEditDrawerOpen(true);
   };
 
@@ -1006,7 +1087,8 @@ export function ComputeAdminInstanceListPage() {
         { id: 'unshelve', label: 'Unshelve' },
         { id: 'rescue', label: 'Rescue' },
         { id: 'unrescue', label: 'Unrescue' },
-      ] },
+      ],
+    },
     {
       id: 'configuration',
       label: 'Configuration',
@@ -1014,12 +1096,15 @@ export function ComputeAdminInstanceListPage() {
         {
           id: 'lock-setting',
           label: 'Lock setting',
-          onClick: () => handleLockSetting(instance) },
+          onClick: () => handleLockSetting(instance),
+        },
         {
           id: 'edit',
           label: 'Edit',
-          onClick: () => handleEditInstance(instance) },
-      ] },
+          onClick: () => handleEditInstance(instance),
+        },
+      ],
+    },
     { id: 'migrate', label: 'Migrate' },
     { id: 'live-migrate', label: 'Live migrate' },
     { id: 'confirm-resize', label: 'Confirm resize' },
@@ -1035,7 +1120,8 @@ export function ComputeAdminInstanceListPage() {
       width: fixedColumns.status,
       align: 'center',
       sortable: false,
-      render: (_, row) => <StatusIndicator status={statusMap[row.status]} layout="icon-only" /> },
+      render: (_, row) => <StatusIndicator status={statusMap[row.status]} layout="icon-only" />,
+    },
     {
       key: 'name',
       label: 'Name',
@@ -1055,7 +1141,8 @@ export function ComputeAdminInstanceListPage() {
             ID : {row.id}
           </span>
         </div>
-      ) },
+      ),
+    },
     {
       key: 'locked',
       label: 'Locked',
@@ -1065,7 +1152,8 @@ export function ComputeAdminInstanceListPage() {
       render: (_, row) =>
         row.locked ? (
           <IconLock size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
-        ) : null },
+        ) : null,
+    },
     {
       key: 'tenant',
       label: 'Tenant',
@@ -1085,32 +1173,37 @@ export function ComputeAdminInstanceListPage() {
             ID: {row.tenantId}
           </span>
         </div>
-      ) },
+      ),
+    },
     {
       key: 'host',
       label: 'Host',
       flex: 1,
       minWidth: '100px',
-      sortable: true },
+      sortable: true,
+    },
     {
       key: 'fixedIp',
       label: 'Fixed IP',
       flex: 1,
       minWidth: '100px',
-      sortable: false },
+      sortable: false,
+    },
     {
       key: 'floatingIp',
       label: 'Floating IP',
       flex: 1,
       minWidth: '100px',
-      sortable: false },
+      sortable: false,
+    },
     {
       key: 'image',
       label: 'OS',
       flex: 1,
       minWidth: '120px',
       sortable: true,
-      render: (_, row) => <span className="font-medium">{row.image}</span> },
+      render: (_, row) => <span className="font-medium">{row.image}</span>,
+    },
     {
       key: 'flavor',
       label: 'Flavor',
@@ -1130,32 +1223,43 @@ export function ComputeAdminInstanceListPage() {
             ID : {row.id.substring(0, 8)}
           </span>
         </div>
-      ) },
+      ),
+    },
     {
       key: 'vcpu',
       label: 'vCPU',
-      flex: 1, minWidth: columnMinWidths.vcpu,
-      sortable: true },
+      flex: 1,
+      minWidth: columnMinWidths.vcpu,
+      sortable: true,
+    },
     {
       key: 'ram',
       label: 'RAM',
-      flex: 1, minWidth: columnMinWidths.ram,
-      sortable: true },
+      flex: 1,
+      minWidth: columnMinWidths.ram,
+      sortable: true,
+    },
     {
       key: 'disk',
       label: 'Disk',
-      flex: 1, minWidth: columnMinWidths.disk,
-      sortable: true },
+      flex: 1,
+      minWidth: columnMinWidths.disk,
+      sortable: true,
+    },
     {
       key: 'gpu',
       label: 'GPU',
-      flex: 1, minWidth: columnMinWidths.gpu,
-      sortable: true },
+      flex: 1,
+      minWidth: columnMinWidths.gpu,
+      sortable: true,
+    },
     {
       key: 'az',
       label: 'AZ',
-      flex: 1, minWidth: columnMinWidths.az,
-      sortable: true },
+      flex: 1,
+      minWidth: columnMinWidths.az,
+      sortable: true,
+    },
     {
       key: 'actions',
       label: 'Action',
@@ -1185,7 +1289,8 @@ export function ComputeAdminInstanceListPage() {
             </ContextMenu>
           </div>
         </HStack>
-      ) },
+      ),
+    },
   ];
 
   // Filter and order columns based on preferences
@@ -1207,7 +1312,8 @@ export function ComputeAdminInstanceListPage() {
       width: fixedColumns.status,
       align: 'center',
       sortable: false,
-      render: (_, row) => <StatusIndicator status={statusMap[row.status]} layout="icon-only" /> },
+      render: (_, row) => <StatusIndicator status={statusMap[row.status]} layout="icon-only" />,
+    },
     {
       key: 'name',
       label: 'Name',
@@ -1227,13 +1333,15 @@ export function ComputeAdminInstanceListPage() {
             ID : {row.id}
           </span>
         </div>
-      ) },
+      ),
+    },
     {
       key: 'ip',
       label: 'Fixed IP',
       flex: 1,
       minWidth: '100px',
-      sortable: false },
+      sortable: false,
+    },
     {
       key: 'image',
       label: 'Image',
@@ -1253,7 +1361,8 @@ export function ComputeAdminInstanceListPage() {
             ID : {row.id.substring(0, 8)}
           </span>
         </div>
-      ) },
+      ),
+    },
     {
       key: 'flavor',
       label: 'Flavor',
@@ -1273,32 +1382,43 @@ export function ComputeAdminInstanceListPage() {
             ID : {row.id.substring(0, 8)}
           </span>
         </div>
-      ) },
+      ),
+    },
     {
       key: 'cpu',
       label: 'CPU',
-      flex: 1, minWidth: columnMinWidths.cpu,
-      sortable: true },
+      flex: 1,
+      minWidth: columnMinWidths.cpu,
+      sortable: true,
+    },
     {
       key: 'ram',
       label: 'RAM',
-      flex: 1, minWidth: columnMinWidths.ram,
-      sortable: true },
+      flex: 1,
+      minWidth: columnMinWidths.ram,
+      sortable: true,
+    },
     {
       key: 'disk',
       label: 'Disk',
-      flex: 1, minWidth: columnMinWidths.disk,
-      sortable: true },
+      flex: 1,
+      minWidth: columnMinWidths.disk,
+      sortable: true,
+    },
     {
       key: 'gpu',
       label: 'GPU',
-      flex: 1, minWidth: columnMinWidths.gpu,
-      sortable: true },
+      flex: 1,
+      minWidth: columnMinWidths.gpu,
+      sortable: true,
+    },
     {
       key: 'az',
       label: 'AZ',
-      flex: 1, minWidth: columnMinWidths.az,
-      sortable: true },
+      flex: 1,
+      minWidth: columnMinWidths.az,
+      sortable: true,
+    },
     {
       key: 'actions',
       label: 'Action',
@@ -1324,7 +1444,8 @@ export function ComputeAdminInstanceListPage() {
             />
           </button>
         </HStack>
-      ) },
+      ),
+    },
   ];
 
   return (

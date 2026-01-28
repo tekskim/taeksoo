@@ -1,6 +1,19 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { Button, VStack, TabBar, TopBar, TopBarAction, Breadcrumb, Tabs, TabList, Tab, TabPanel, DetailHeader, SectionCard, fixedColumns, columnMinWidths } from '@/design-system';
+import {
+  Button,
+  VStack,
+  TabBar,
+  TopBar,
+  TopBarAction,
+  Breadcrumb,
+  Tabs,
+  TabList,
+  Tab,
+  TabPanel,
+  DetailHeader,
+  SectionCard,
+} from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
@@ -8,7 +21,8 @@ import {
   IconTrash,
   IconEdit,
   IconBell,
-  IconExternalLink } from '@tabler/icons-react';
+  IconExternalLink,
+} from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -40,7 +54,8 @@ const mockSnapshotDetails: Record<string, VolumeSnapshotDetail> = {
     createdAt: '2025-07-25 09:12:20',
     description: '-',
     sourceVolume: 'web-server-10',
-    sourceVolumeId: 'vol-001' },
+    sourceVolumeId: 'vol-001',
+  },
   'vsnap-002': {
     id: '8395d0285f92542f04171b0ccd3deafe',
     name: 'app-storage-snap',
@@ -49,7 +64,8 @@ const mockSnapshotDetails: Record<string, VolumeSnapshotDetail> = {
     createdAt: '2025-09-10 14:30:00',
     description: 'Application storage snapshot',
     sourceVolume: 'app-volume-1',
-    sourceVolumeId: 'vol-002' },
+    sourceVolumeId: 'vol-002',
+  },
   'vsnap-003': {
     id: '9406e1396g03653g15282c1dde4efbfg',
     name: 'backup-vol-snap',
@@ -58,7 +74,9 @@ const mockSnapshotDetails: Record<string, VolumeSnapshotDetail> = {
     createdAt: '2025-09-08 10:15:00',
     description: 'Backup volume snapshot',
     sourceVolume: 'backup-storage',
-    sourceVolumeId: 'vol-003' } };
+    sourceVolumeId: 'vol-003',
+  },
+};
 
 // Default snapshot for unknown IDs
 const defaultSnapshot: VolumeSnapshotDetail = {
@@ -69,7 +87,8 @@ const defaultSnapshot: VolumeSnapshotDetail = {
   createdAt: '2025-07-25 09:12:20',
   description: '-',
   sourceVolume: 'web-server-10',
-  sourceVolumeId: 'vol-001' };
+  sourceVolumeId: 'vol-001',
+};
 
 /* ----------------------------------------
    Status Mapping
@@ -79,13 +98,15 @@ const statusDisplayMap: Record<SnapshotStatus, string> = {
   available: 'Available',
   creating: 'Creating',
   error: 'Error',
-  deleting: 'Deleting' };
+  deleting: 'Deleting',
+};
 
 const statusIndicatorMap: Record<SnapshotStatus, 'active' | 'building' | 'error' | 'pending'> = {
   available: 'active',
   creating: 'building',
   error: 'error',
-  deleting: 'pending' };
+  deleting: 'pending',
+};
 
 /* ----------------------------------------
    Volume snapshot Detail Page
@@ -115,7 +136,8 @@ export function ComputeAdminVolumeSnapshotDetailPage() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    closable: tab.closable }));
+    closable: tab.closable,
+  }));
 
   // Breadcrumb items
   const breadcrumbItems = [

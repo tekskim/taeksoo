@@ -13,7 +13,6 @@ import {
   ContextMenu,
   ConfirmModal,
   fixedColumns,
-  columnMinWidths,
   type TableColumn,
   type ContextMenuItem,
   type FilterField,

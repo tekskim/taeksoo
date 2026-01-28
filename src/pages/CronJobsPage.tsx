@@ -270,28 +270,33 @@ export function CronJobsPage() {
     {
       key: 'namespace',
       label: 'Namespace',
-      flex: 1, minWidth: columnMinWidths.namespace,
+      flex: 1,
+      minWidth: columnMinWidths.namespace,
       sortable: true,
     },
     {
       key: 'image',
       label: 'Image',
-      flex: 1, minWidth: columnMinWidths.image,
+      flex: 1,
+      minWidth: columnMinWidths.image,
     },
     {
       key: 'schedule',
       label: 'Schedule',
-      flex: 1, minWidth: columnMinWidths.schedule,
+      flex: 1,
+      minWidth: columnMinWidths.schedule,
     },
     {
       key: 'lastSchedule',
       label: 'Last Schedule',
-      flex: 1, minWidth: columnMinWidths.lastSchedule,
+      flex: 1,
+      minWidth: columnMinWidths.lastSchedule,
     },
     {
       key: 'createdAt',
       label: 'Created At',
-      flex: 1, minWidth: columnMinWidths.createdAt,
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
     },
     {

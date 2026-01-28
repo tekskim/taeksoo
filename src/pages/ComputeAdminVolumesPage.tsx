@@ -1,5 +1,24 @@
 import { useState, useMemo } from 'react';
-import { Button, FilterSearchInput, Table, Pagination, VStack, TabBar, TopBar, TopBarAction, Breadcrumb, ListToolbar, ContextMenu, ConfirmModal, StatusIndicator, type TableColumn, type ContextMenuItem, type FilterField, type AppliedFilter, fixedColumns, columnMinWidths } from '@/design-system';
+import {
+  Button,
+  FilterSearchInput,
+  Table,
+  Pagination,
+  VStack,
+  TabBar,
+  TopBar,
+  TopBarAction,
+  Breadcrumb,
+  ListToolbar,
+  ContextMenu,
+  ConfirmModal,
+  StatusIndicator,
+  type TableColumn,
+  type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
+  fixedColumns,
+} from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
@@ -45,7 +64,8 @@ const mockVolumes: Volume[] = [
     attachedTo: 'instance',
     attachedToId: '12345678',
     createdAt: 'Dec 25, 2025',
-    status: 'active' },
+    status: 'active',
+  },
   {
     id: '12345679',
     name: 'volume',
@@ -58,7 +78,8 @@ const mockVolumes: Volume[] = [
     attachedTo: 'instance',
     attachedToId: '12345679',
     createdAt: 'Dec 25, 2025',
-    status: 'active' },
+    status: 'active',
+  },
   {
     id: '12345680',
     name: 'volume',
@@ -71,7 +92,8 @@ const mockVolumes: Volume[] = [
     attachedTo: 'instance',
     attachedToId: '12345680',
     createdAt: 'Dec 25, 2025',
-    status: 'active' },
+    status: 'active',
+  },
   {
     id: '12345681',
     name: 'volume',
@@ -84,7 +106,8 @@ const mockVolumes: Volume[] = [
     attachedTo: null,
     attachedToId: null,
     createdAt: 'Dec 25, 2025',
-    status: 'active' },
+    status: 'active',
+  },
   {
     id: '12345682',
     name: 'volume',
@@ -97,7 +120,8 @@ const mockVolumes: Volume[] = [
     attachedTo: null,
     attachedToId: null,
     createdAt: 'Dec 25, 2025',
-    status: 'pending' },
+    status: 'pending',
+  },
   {
     id: '12345683',
     name: 'volume',
@@ -110,7 +134,8 @@ const mockVolumes: Volume[] = [
     attachedTo: null,
     attachedToId: null,
     createdAt: 'Dec 25, 2025',
-    status: 'active' },
+    status: 'active',
+  },
   {
     id: '12345684',
     name: 'volume',
@@ -123,7 +148,8 @@ const mockVolumes: Volume[] = [
     attachedTo: 'instance',
     attachedToId: '12345684',
     createdAt: 'Dec 25, 2025',
-    status: 'in-use' },
+    status: 'in-use',
+  },
   {
     id: '12345685',
     name: 'volume',
@@ -136,7 +162,8 @@ const mockVolumes: Volume[] = [
     attachedTo: null,
     attachedToId: null,
     createdAt: 'Dec 25, 2025',
-    status: 'active' },
+    status: 'active',
+  },
   {
     id: '12345686',
     name: 'volume',
@@ -149,7 +176,8 @@ const mockVolumes: Volume[] = [
     attachedTo: null,
     attachedToId: null,
     createdAt: 'Dec 25, 2025',
-    status: 'error' },
+    status: 'error',
+  },
   {
     id: '12345687',
     name: 'volume',
@@ -162,7 +190,8 @@ const mockVolumes: Volume[] = [
     attachedTo: 'instance',
     attachedToId: '12345687',
     createdAt: 'Dec 25, 2025',
-    status: 'in-use' },
+    status: 'in-use',
+  },
 ];
 
 /* ----------------------------------------
@@ -173,7 +202,8 @@ const volumeStatusMap: Record<VolumeStatus, 'active' | 'in-use' | 'error' | 'pen
   active: 'active',
   'in-use': 'in-use',
   error: 'error',
-  pending: 'pending' };
+  pending: 'pending',
+};
 
 /* ----------------------------------------
    Component
@@ -191,7 +221,8 @@ const filterFields: FilterField[] = [
       { value: 'SSD', label: 'SSD' },
       { value: 'NVMe', label: 'NVMe' },
       { value: 'HDD', label: 'HDD' },
-    ] },
+    ],
+  },
   { key: 'diskTag', label: 'Disk Tag', type: 'text' },
   { key: 'attachedTo', label: 'Attached To', type: 'text' },
   {
@@ -203,7 +234,8 @@ const filterFields: FilterField[] = [
       { value: 'in-use', label: 'In Use' },
       { value: 'error', label: 'Error' },
       { value: 'pending', label: 'Pending' },
-    ] },
+    ],
+  },
 ];
 
 export function ComputeAdminVolumesPage() {
@@ -255,7 +287,8 @@ export function ComputeAdminVolumesPage() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    closable: tab.closable }));
+    closable: tab.closable,
+  }));
 
   // Handle delete volume
   const handleDeleteClick = (volume: Volume) => {
@@ -299,7 +332,8 @@ export function ComputeAdminVolumesPage() {
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={volumeStatusMap[row.status]} layout="icon-only" />
-      ) },
+      ),
+    },
     {
       key: 'name',
       label: 'Name',
@@ -316,7 +350,8 @@ export function ComputeAdminVolumesPage() {
           </Link>
           <span className="text-[11px] text-[var(--color-text-muted)]">ID: {row.id}</span>
         </div>
-      ) },
+      ),
+    },
     {
       key: 'tenant',
       label: 'Tenant',
@@ -336,26 +371,31 @@ export function ComputeAdminVolumesPage() {
           </div>
         ) : (
           <span className="text-[var(--color-text-muted)]">-</span>
-        ) },
+        ),
+    },
     {
       key: 'host',
       label: 'Host',
       flex: 1,
       sortable: true,
-      render: (value) => value || <span className="text-[var(--color-text-muted)]">-</span> },
+      render: (value) => value || <span className="text-[var(--color-text-muted)]">-</span>,
+    },
     {
       key: 'size',
       label: 'Size',
       flex: 1,
-      sortable: true },
+      sortable: true,
+    },
     {
       key: 'type',
       label: 'Type',
-      flex: 1 },
+      flex: 1,
+    },
     {
       key: 'diskTag',
       label: 'Disk Tag',
-      flex: 1 },
+      flex: 1,
+    },
     {
       key: 'attachedTo',
       label: 'Attached To',
@@ -376,12 +416,14 @@ export function ComputeAdminVolumesPage() {
           </div>
         ) : (
           <span className="text-[var(--color-text-muted)]">-</span>
-        ) },
+        ),
+    },
     {
       key: 'createdAt',
       label: 'Created At',
       flex: 1,
-      sortable: true },
+      sortable: true,
+    },
     {
       key: 'actions',
       label: 'Action',
@@ -393,20 +435,24 @@ export function ComputeAdminVolumesPage() {
           {
             id: 'update-status',
             label: 'Update status',
-            onClick: () => console.log('Update status:', row.id) },
+            onClick: () => console.log('Update status:', row.id),
+          },
           {
             id: 'migrate-volume',
             label: 'Migrate volume',
-            onClick: () => console.log('Migrate volume:', row.id) },
+            onClick: () => console.log('Migrate volume:', row.id),
+          },
           {
             id: 'manage-metadata',
             label: 'Manage metadata',
-            onClick: () => console.log('Manage metadata:', row.id) },
+            onClick: () => console.log('Manage metadata:', row.id),
+          },
           {
             id: 'delete',
             label: 'Delete',
             status: 'danger',
-            onClick: () => handleDeleteClick(row) },
+            onClick: () => handleDeleteClick(row),
+          },
         ];
 
         return (
@@ -422,7 +468,8 @@ export function ComputeAdminVolumesPage() {
             </ContextMenu>
           </div>
         );
-      } },
+      },
+    },
   ];
 
   // Filter and order columns based on preferences
@@ -591,7 +638,8 @@ export function ComputeAdminVolumesPage() {
           selectedVolumeForDrawer
             ? {
                 id: selectedVolumeForDrawer.id,
-                name: selectedVolumeForDrawer.name }
+                name: selectedVolumeForDrawer.name,
+              }
             : null
         }
       />

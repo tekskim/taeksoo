@@ -18,7 +18,6 @@ import {
   ConfirmModal,
   StatusIndicator,
   fixedColumns,
-  columnMinWidths,
   type TableColumn,
   type ContextMenuItem,
   type FilterField,

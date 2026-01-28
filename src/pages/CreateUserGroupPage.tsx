@@ -16,7 +16,6 @@ import {
   StatusIndicator,
   type TableColumn,
   fixedColumns,
-  columnMinWidths,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { useTabs } from '@/contexts/TabContext';

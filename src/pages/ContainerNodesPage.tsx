@@ -248,17 +248,20 @@ export function ContainerNodesPage() {
     {
       key: 'roles',
       label: 'Roles',
-      flex: 1, minWidth: columnMinWidths.roles,
+      flex: 1,
+      minWidth: columnMinWidths.roles,
     },
     {
       key: 'version',
       label: 'Version',
-      flex: 1, minWidth: columnMinWidths.version,
+      flex: 1,
+      minWidth: columnMinWidths.version,
     },
     {
       key: 'ip',
       label: 'External/Internal IP',
-      flex: 1, minWidth: columnMinWidths.ipAddress,
+      flex: 1,
+      minWidth: columnMinWidths.ipAddress,
       sortable: true,
       render: (_, row) => (
         <HStack gap={1.5} align="center">
@@ -280,31 +283,36 @@ export function ContainerNodesPage() {
     {
       key: 'os',
       label: 'OS',
-      flex: 1, minWidth: columnMinWidths.os,
+      flex: 1,
+      minWidth: columnMinWidths.os,
       sortable: true,
     },
     {
       key: 'cpuUsage',
       label: 'CPU',
-      flex: 1, minWidth: columnMinWidths.cpuUsage,
+      flex: 1,
+      minWidth: columnMinWidths.cpuUsage,
       render: (value: number) => <ProgressCell value={value} />,
     },
     {
       key: 'ramUsage',
       label: 'RAM',
-      flex: 1, minWidth: columnMinWidths.ramUsage,
+      flex: 1,
+      minWidth: columnMinWidths.ramUsage,
       render: (value: number) => <ProgressCell value={value} />,
     },
     {
       key: 'podsUsage',
       label: 'Pods',
-      flex: 1, minWidth: columnMinWidths.podsUsage,
+      flex: 1,
+      minWidth: columnMinWidths.podsUsage,
       render: (value: number) => <ProgressCell value={value} />,
     },
     {
       key: 'createdAt',
       label: 'Created At',
-      flex: 1, minWidth: columnMinWidths.createdAt,
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
     },
     {

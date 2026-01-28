@@ -225,23 +225,27 @@ export function StatefulSetsPage() {
     {
       key: 'namespace',
       label: 'Namespace',
-      flex: 1, minWidth: columnMinWidths.namespace,
+      flex: 1,
+      minWidth: columnMinWidths.namespace,
       sortable: true,
     },
     {
       key: 'image',
       label: 'Image',
-      flex: 1, minWidth: columnMinWidths.image,
+      flex: 1,
+      minWidth: columnMinWidths.image,
     },
     {
       key: 'ready',
       label: 'Ready',
-      flex: 1, minWidth: columnMinWidths.ready,
+      flex: 1,
+      minWidth: columnMinWidths.ready,
     },
     {
       key: 'createdAt',
       label: 'Created At',
-      flex: 1, minWidth: columnMinWidths.createdAt,
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
     },
     {

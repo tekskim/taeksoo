@@ -1,5 +1,24 @@
 import { useState, useMemo } from 'react';
-import { Button, FilterSearchInput, Table, Pagination, VStack, TabBar, TopBar, TopBarAction, Breadcrumb, ListToolbar, ConfirmModal, StatusIndicator, ContextMenu, Badge, type TableColumn, type FilterField, type AppliedFilter, fixedColumns, columnMinWidths } from '@/design-system';
+import {
+  Button,
+  FilterSearchInput,
+  Table,
+  Pagination,
+  VStack,
+  TabBar,
+  TopBar,
+  TopBarAction,
+  Breadcrumb,
+  ListToolbar,
+  ConfirmModal,
+  StatusIndicator,
+  ContextMenu,
+  Badge,
+  type TableColumn,
+  type FilterField,
+  type AppliedFilter,
+  fixedColumns,
+} from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
@@ -44,7 +63,8 @@ const mockRouters: Router[] = [
     externalNetworkId: '29tgj234',
     adminState: 'Up',
     status: 'active',
-    createdAt: '2025-12-25' },
+    createdAt: '2025-12-25',
+  },
   {
     id: 'router-002',
     name: 'main-router',
@@ -57,7 +77,8 @@ const mockRouters: Router[] = [
     externalNetworkId: 'net-002',
     adminState: 'Up',
     status: 'active',
-    createdAt: '2025-12-24' },
+    createdAt: '2025-12-24',
+  },
   {
     id: 'router-003',
     name: 'dev-router',
@@ -70,7 +91,8 @@ const mockRouters: Router[] = [
     externalNetworkId: '',
     adminState: 'Up',
     status: 'active',
-    createdAt: '2025-12-23' },
+    createdAt: '2025-12-23',
+  },
   {
     id: 'router-004',
     name: 'prod-router',
@@ -83,7 +105,8 @@ const mockRouters: Router[] = [
     externalNetworkId: 'net-003',
     adminState: 'Up',
     status: 'building',
-    createdAt: '2025-12-22' },
+    createdAt: '2025-12-22',
+  },
   {
     id: 'router-005',
     name: 'test-router',
@@ -96,7 +119,8 @@ const mockRouters: Router[] = [
     externalNetworkId: '',
     adminState: 'Down',
     status: 'active',
-    createdAt: '2025-12-21' },
+    createdAt: '2025-12-21',
+  },
   {
     id: 'router-006',
     name: 'backup-router',
@@ -109,7 +133,8 @@ const mockRouters: Router[] = [
     externalNetworkId: 'net-004',
     adminState: 'Up',
     status: 'active',
-    createdAt: '2025-12-20' },
+    createdAt: '2025-12-20',
+  },
   {
     id: 'router-007',
     name: 'dmz-router',
@@ -122,7 +147,8 @@ const mockRouters: Router[] = [
     externalNetworkId: 'net-005',
     adminState: 'Down',
     status: 'error',
-    createdAt: '2025-12-19' },
+    createdAt: '2025-12-19',
+  },
   {
     id: 'router-008',
     name: 'internal-router',
@@ -135,7 +161,8 @@ const mockRouters: Router[] = [
     externalNetworkId: '',
     adminState: 'Up',
     status: 'active',
-    createdAt: '2025-12-18' },
+    createdAt: '2025-12-18',
+  },
   {
     id: 'router-009',
     name: 'edge-router',
@@ -148,7 +175,8 @@ const mockRouters: Router[] = [
     externalNetworkId: 'net-006',
     adminState: 'Up',
     status: 'active',
-    createdAt: '2025-12-17' },
+    createdAt: '2025-12-17',
+  },
   {
     id: 'router-010',
     name: 'vpn-router',
@@ -161,7 +189,8 @@ const mockRouters: Router[] = [
     externalNetworkId: 'net-007',
     adminState: 'Up',
     status: 'active',
-    createdAt: '2025-12-16' },
+    createdAt: '2025-12-16',
+  },
 ];
 
 /* ----------------------------------------
@@ -171,7 +200,8 @@ const mockRouters: Router[] = [
 const routerStatusMap: Record<RouterStatus, 'active' | 'error' | 'building'> = {
   active: 'active',
   error: 'error',
-  building: 'building' };
+  building: 'building',
+};
 
 /* ----------------------------------------
    Component
@@ -188,7 +218,8 @@ const filterFields: FilterField[] = [
     options: [
       { value: 'true', label: 'Open' },
       { value: 'false', label: 'Closed' },
-    ] },
+    ],
+  },
   { key: 'externalFixedIp', label: 'External Fixed IP', type: 'text' },
   { key: 'externalNetwork', label: 'External Network', type: 'text' },
   {
@@ -198,7 +229,8 @@ const filterFields: FilterField[] = [
     options: [
       { value: 'Up', label: 'Up' },
       { value: 'Down', label: 'Down' },
-    ] },
+    ],
+  },
   {
     key: 'status',
     label: 'Status',
@@ -207,7 +239,8 @@ const filterFields: FilterField[] = [
       { value: 'active', label: 'Active' },
       { value: 'error', label: 'Error' },
       { value: 'building', label: 'Building' },
-    ] },
+    ],
+  },
 ];
 
 export function ComputeAdminRoutersPage() {
@@ -246,7 +279,8 @@ export function ComputeAdminRoutersPage() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    closable: tab.closable }));
+    closable: tab.closable,
+  }));
 
   // Filter routers based on search
   const filteredRouters = useMemo(() => {
@@ -277,7 +311,8 @@ export function ComputeAdminRoutersPage() {
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={routerStatusMap[row.status]} layout="icon-only" />
-      ) },
+      ),
+    },
     {
       key: 'name',
       label: 'Name',
@@ -296,7 +331,8 @@ export function ComputeAdminRoutersPage() {
             ID: {row.id}
           </span>
         </div>
-      ) },
+      ),
+    },
     {
       key: 'tenant',
       label: 'Tenant',
@@ -315,16 +351,19 @@ export function ComputeAdminRoutersPage() {
             ID: {row.tenantId}
           </span>
         </div>
-      ) },
+      ),
+    },
     {
       key: 'externalGateway',
       label: 'External Gateway',
       flex: 1,
-      render: (value: boolean) => (value ? 'Open' : 'Closed') },
+      render: (value: boolean) => (value ? 'Open' : 'Closed'),
+    },
     {
       key: 'externalFixedIp',
       label: 'External Fixed IP',
-      flex: 1 },
+      flex: 1,
+    },
     {
       key: 'externalNetwork',
       label: 'External Network',
@@ -346,7 +385,8 @@ export function ComputeAdminRoutersPage() {
           </div>
         ) : (
           <span className="text-[var(--color-text-muted)]">-</span>
-        ) },
+        ),
+    },
     {
       key: 'adminState',
       label: 'Admin State',
@@ -355,12 +395,14 @@ export function ComputeAdminRoutersPage() {
         <Badge variant={value === 'Up' ? 'success' : 'error'} size="sm">
           {value}
         </Badge>
-      ) },
+      ),
+    },
     {
       key: 'createdAt',
       label: 'Created At',
       flex: 1,
-      sortable: true },
+      sortable: true,
+    },
     {
       key: 'actions',
       label: 'Action',
@@ -384,7 +426,8 @@ export function ComputeAdminRoutersPage() {
             </button>
           </ContextMenu>
         </div>
-      ) },
+      ),
+    },
   ];
 
   // Filter and order columns based on preferences

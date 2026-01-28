@@ -249,13 +249,15 @@ export function ContainerServicesPage() {
     {
       key: 'namespace',
       label: 'Namespace',
-      flex: 1, minWidth: columnMinWidths.namespace,
+      flex: 1,
+      minWidth: columnMinWidths.namespace,
       sortable: true,
     },
     {
       key: 'target',
       label: 'Target',
-      flex: 1, minWidth: columnMinWidths.target,
+      flex: 1,
+      minWidth: columnMinWidths.target,
       sortable: false,
       render: (value: string[]) => {
         const text = value.join(', ');
@@ -283,7 +285,8 @@ export function ContainerServicesPage() {
     {
       key: 'type',
       label: 'Type',
-      flex: 1, minWidth: columnMinWidths.type,
+      flex: 1,
+      minWidth: columnMinWidths.type,
       sortable: true,
       render: (value: string) => (
         <span className="text-[12px] text-[var(--color-text-default)]">{value}</span>
@@ -292,7 +295,8 @@ export function ContainerServicesPage() {
     {
       key: 'createdAt',
       label: 'Created At',
-      flex: 1, minWidth: columnMinWidths.createdAt,
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
     },
     {

@@ -480,11 +480,29 @@ export function CreateVolumePage() {
         </div>
       ),
     },
-    { key: 'version', label: 'Version', flex: 1, minWidth: columnMinWidths.version, sortable: true },
+    {
+      key: 'version',
+      label: 'Version',
+      flex: 1,
+      minWidth: columnMinWidths.version,
+      sortable: true,
+    },
     { key: 'size', label: 'Size', flex: 1, minWidth: columnMinWidths.size, sortable: true },
-    { key: 'minDisk', label: 'Min disk', flex: 1, minWidth: columnMinWidths.minDisk, sortable: true },
+    {
+      key: 'minDisk',
+      label: 'Min disk',
+      flex: 1,
+      minWidth: columnMinWidths.minDisk,
+      sortable: true,
+    },
     { key: 'minRAM', label: 'Min RAM', flex: 1, minWidth: columnMinWidths.minRAM, sortable: true },
-    { key: 'visibility', label: 'Visibility', flex: 1, minWidth: columnMinWidths.visibility, sortable: true },
+    {
+      key: 'visibility',
+      label: 'Visibility',
+      flex: 1,
+      minWidth: columnMinWidths.visibility,
+      sortable: true,
+    },
   ];
 
   // Snapshot table columns

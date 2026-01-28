@@ -1,5 +1,21 @@
 import { useState, useMemo } from 'react';
-import { Button, FilterSearchInput, Table, Pagination, VStack, TabBar, TopBar, TopBarAction, Breadcrumb, StatusIndicator, Badge, type TableColumn, type FilterField, type AppliedFilter, fixedColumns, columnMinWidths } from '@/design-system';
+import {
+  Button,
+  FilterSearchInput,
+  Table,
+  Pagination,
+  VStack,
+  TabBar,
+  TopBar,
+  TopBarAction,
+  Breadcrumb,
+  StatusIndicator,
+  Badge,
+  type TableColumn,
+  type FilterField,
+  type AppliedFilter,
+  fixedColumns,
+} from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
@@ -43,7 +59,8 @@ const mockBareMetalNodes: BareMetalNode[] = [
     ram: '128GiB',
     disk: '2GiB',
     gpu: null,
-    npu: null },
+    npu: null,
+  },
   {
     id: '12345679',
     name: 'node',
@@ -55,7 +72,8 @@ const mockBareMetalNodes: BareMetalNode[] = [
     ram: '128GiB',
     disk: '2GiB',
     gpu: null,
-    npu: null },
+    npu: null,
+  },
   {
     id: '12345680',
     name: 'node',
@@ -67,7 +85,8 @@ const mockBareMetalNodes: BareMetalNode[] = [
     ram: '128GiB',
     disk: '2GiB',
     gpu: null,
-    npu: null },
+    npu: null,
+  },
   {
     id: '12345681',
     name: 'node',
@@ -79,7 +98,8 @@ const mockBareMetalNodes: BareMetalNode[] = [
     ram: '128GiB',
     disk: '2GiB',
     gpu: null,
-    npu: null },
+    npu: null,
+  },
   {
     id: '12345682',
     name: 'node',
@@ -91,7 +111,8 @@ const mockBareMetalNodes: BareMetalNode[] = [
     ram: '128GiB',
     disk: '2GiB',
     gpu: null,
-    npu: null },
+    npu: null,
+  },
   {
     id: '12345683',
     name: 'node',
@@ -103,7 +124,8 @@ const mockBareMetalNodes: BareMetalNode[] = [
     ram: '128GiB',
     disk: '2GiB',
     gpu: null,
-    npu: null },
+    npu: null,
+  },
   {
     id: '12345684',
     name: 'node',
@@ -115,7 +137,8 @@ const mockBareMetalNodes: BareMetalNode[] = [
     ram: '128GiB',
     disk: '2GiB',
     gpu: null,
-    npu: null },
+    npu: null,
+  },
   {
     id: '12345685',
     name: 'node',
@@ -127,7 +150,8 @@ const mockBareMetalNodes: BareMetalNode[] = [
     ram: '128GiB',
     disk: '2GiB',
     gpu: null,
-    npu: null },
+    npu: null,
+  },
   {
     id: '12345686',
     name: 'node',
@@ -139,7 +163,8 @@ const mockBareMetalNodes: BareMetalNode[] = [
     ram: '128GiB',
     disk: '2GiB',
     gpu: null,
-    npu: null },
+    npu: null,
+  },
   {
     id: '12345687',
     name: 'node',
@@ -151,7 +176,8 @@ const mockBareMetalNodes: BareMetalNode[] = [
     ram: '128 GB',
     disk: '2GiB',
     gpu: null,
-    npu: null },
+    npu: null,
+  },
 ];
 
 /* ----------------------------------------
@@ -170,7 +196,8 @@ const filterFields: FilterField[] = [
       { value: 'deploying', label: 'Deploying' },
       { value: 'error', label: 'Error' },
       { value: 'maintenance', label: 'Maintenance' },
-    ] },
+    ],
+  },
   {
     key: 'powerState',
     label: 'Power State',
@@ -178,7 +205,8 @@ const filterFields: FilterField[] = [
     options: [
       { value: 'Power On', label: 'Power On' },
       { value: 'Power Off', label: 'Power Off' },
-    ] },
+    ],
+  },
 ];
 
 export function ComputeAdminBareMetalNodesPage() {
@@ -210,7 +238,8 @@ export function ComputeAdminBareMetalNodesPage() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    closable: tab.closable }));
+    closable: tab.closable,
+  }));
 
   const filteredItems = useMemo(() => {
     if (appliedFilters.length === 0) return nodes;
@@ -237,7 +266,8 @@ export function ComputeAdminBareMetalNodesPage() {
       available: 'pending',
       deploying: 'building',
       error: 'error',
-      maintenance: 'maintenance' };
+      maintenance: 'maintenance',
+    };
     return statusMap[status] || 'pending';
   };
 
@@ -250,7 +280,8 @@ export function ComputeAdminBareMetalNodesPage() {
         align: 'center',
         render: (_, row) => (
           <StatusIndicator status={getStatusIndicator(row.status)} layout="icon-only" />
-        ) },
+        ),
+      },
       {
         key: 'name',
         label: 'Name',
@@ -267,7 +298,8 @@ export function ComputeAdminBareMetalNodesPage() {
             </Link>
             <span className="text-[11px] text-[var(--color-text-muted)]">ID: {row.id}</span>
           </div>
-        ) },
+        ),
+      },
       {
         key: 'tenant',
         label: 'Tenant',
@@ -289,7 +321,8 @@ export function ComputeAdminBareMetalNodesPage() {
             </div>
           ) : (
             <span className="text-[var(--color-text-muted)]">-</span>
-          ) },
+          ),
+      },
       {
         key: 'powerState',
         label: 'Power State',
@@ -298,44 +331,51 @@ export function ComputeAdminBareMetalNodesPage() {
           <Badge variant={value === 'Power On' ? 'success' : 'default'} size="sm">
             {value}
           </Badge>
-        ) },
+        ),
+      },
       {
         key: 'maintained',
         label: 'Maintained',
         flex: 1,
         render: (value) => (
           <span className="text-[var(--color-text-default)]">{value ? 'Yes' : 'No'}</span>
-        ) },
+        ),
+      },
       {
         key: 'cpu',
         label: 'CPU',
         flex: 1,
         sortable: true,
-        render: (value) => <span className="text-[var(--color-text-default)]">{value}</span> },
+        render: (value) => <span className="text-[var(--color-text-default)]">{value}</span>,
+      },
       {
         key: 'ram',
         label: 'RAM',
         flex: 1,
         sortable: true,
-        render: (value) => <span className="text-[var(--color-text-default)]">{value}</span> },
+        render: (value) => <span className="text-[var(--color-text-default)]">{value}</span>,
+      },
       {
         key: 'disk',
         label: 'Disk',
         flex: 1,
         sortable: true,
-        render: (value) => <span className="text-[var(--color-text-default)]">{value}</span> },
+        render: (value) => <span className="text-[var(--color-text-default)]">{value}</span>,
+      },
       {
         key: 'gpu',
         label: 'GPU',
         flex: 1,
         sortable: true,
-        render: (value) => <span className="text-[var(--color-text-default)]">{value || '-'}</span> },
+        render: (value) => <span className="text-[var(--color-text-default)]">{value || '-'}</span>,
+      },
       {
         key: 'npu',
         label: 'NPU',
         flex: 1,
         sortable: true,
-        render: (value) => <span className="text-[var(--color-text-default)]">{value || '-'}</span> },
+        render: (value) => <span className="text-[var(--color-text-default)]">{value || '-'}</span>,
+      },
       {
         key: 'actions',
         label: 'Action',
@@ -353,7 +393,8 @@ export function ComputeAdminBareMetalNodesPage() {
               </Button>
             )}
           </div>
-        ) },
+        ),
+      },
     ],
     []
   );

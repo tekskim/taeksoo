@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { TabBar, TopBar, TopBarAction, Breadcrumb, fixedColumns, columnMinWidths } from '@/design-system';
+import { TabBar, TopBar, TopBarAction, Breadcrumb } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { IconChevronRight, IconBell, IconCpu, IconServer } from '@tabler/icons-react';
@@ -19,16 +19,19 @@ function PercentageBadge({ percentage }: PercentageBadgeProps) {
       return {
         bg: 'bg-[var(--color-state-danger)]/15',
         dot: 'bg-[var(--color-state-danger)]',
-        text: 'text-[var(--color-state-danger)]' };
+        text: 'text-[var(--color-state-danger)]',
+      };
     if (percentage >= 70)
       return {
         bg: 'bg-[var(--color-state-warning)]/15',
         dot: 'bg-[var(--color-state-warning)]',
-        text: 'text-[var(--color-state-warning)]' };
+        text: 'text-[var(--color-state-warning)]',
+      };
     return {
       bg: 'bg-[var(--color-state-success)]/15',
       dot: 'bg-[var(--color-state-success)]',
-      text: 'text-[var(--color-state-success)]' };
+      text: 'text-[var(--color-state-success)]',
+    };
   };
 
   const colors = getColors();
@@ -212,7 +215,8 @@ function Card({
   title,
   children,
   className = '',
-  bgColor = 'bg-[var(--color-surface-default)]' }: CardProps) {
+  bgColor = 'bg-[var(--color-surface-default)]',
+}: CardProps) {
   return (
     <div
       className={`p-4 rounded-2xl border border-[var(--color-border-default)] ${bgColor} ${className}`}
@@ -236,7 +240,8 @@ export function ComputeAdminHomePage() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    closable: tab.closable }));
+    closable: tab.closable,
+  }));
 
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
@@ -348,7 +353,8 @@ export function ComputeAdminHomePage() {
                     RAM: { used: 22, total: 32 },
                     Disk: { used: 4, total: 6 },
                     GPU: { used: 6, total: 8 },
-                    NPU: { used: 6, total: 8 } }}
+                    NPU: { used: 6, total: 8 },
+                  }}
                 />
                 <TenantRow
                   name="Tenant B"
@@ -358,7 +364,8 @@ export function ComputeAdminHomePage() {
                     RAM: { used: 22, total: 32 },
                     Disk: { used: 4, total: 6 },
                     GPU: { used: 6, total: 8 },
-                    NPU: { used: 6, total: 8 } }}
+                    NPU: { used: 6, total: 8 },
+                  }}
                 />
                 <TenantRow
                   name="Tenant C"
@@ -368,7 +375,8 @@ export function ComputeAdminHomePage() {
                     RAM: { used: 22, total: 32 },
                     Disk: { used: 4, total: 6 },
                     GPU: { used: 6, total: 8 },
-                    NPU: { used: 6, total: 8 } }}
+                    NPU: { used: 6, total: 8 },
+                  }}
                 />
               </div>
             </Card>

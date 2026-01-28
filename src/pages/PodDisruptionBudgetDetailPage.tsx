@@ -243,7 +243,8 @@ export function PodDisruptionBudgetDetailPage() {
     {
       key: 'createdAt',
       label: 'Created At',
-      flex: 1, minWidth: columnMinWidths.createdAt,
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
     },
   ];
@@ -281,13 +282,15 @@ export function PodDisruptionBudgetDetailPage() {
     {
       key: 'lastSeen',
       label: 'Last Seen',
-      flex: 1, minWidth: columnMinWidths.lastSeen,
+      flex: 1,
+      minWidth: columnMinWidths.lastSeen,
       sortable: true,
     },
     {
       key: 'type',
       label: 'Type',
-      flex: 1, minWidth: columnMinWidths.type,
+      flex: 1,
+      minWidth: columnMinWidths.type,
       sortable: true,
     },
     {
@@ -305,7 +308,8 @@ export function PodDisruptionBudgetDetailPage() {
     {
       key: 'source',
       label: 'Source',
-      flex: 1, minWidth: columnMinWidths.source,
+      flex: 1,
+      minWidth: columnMinWidths.source,
       sortable: true,
     },
     {
@@ -317,13 +321,15 @@ export function PodDisruptionBudgetDetailPage() {
     {
       key: 'firstSeen',
       label: 'First Seen',
-      flex: 1, minWidth: columnMinWidths.firstSeen,
+      flex: 1,
+      minWidth: columnMinWidths.firstSeen,
       sortable: true,
     },
     {
       key: 'count',
       label: 'Count',
-      flex: 1, minWidth: columnMinWidths.count,
+      flex: 1,
+      minWidth: columnMinWidths.count,
       sortable: true,
     },
     {

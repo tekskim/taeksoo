@@ -1,6 +1,25 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Button, VStack, TabBar, TopBar, TopBarAction, Breadcrumb, Tabs, TabList, Tab, TabPanel, DetailHeader, SectionCard, Table, SearchInput, Pagination, StatusIndicator, ContextMenu, fixedColumns, columnMinWidths } from '@/design-system';
+import {
+  Button,
+  VStack,
+  TabBar,
+  TopBar,
+  TopBarAction,
+  Breadcrumb,
+  Tabs,
+  TabList,
+  Tab,
+  TabPanel,
+  DetailHeader,
+  SectionCard,
+  Table,
+  SearchInput,
+  Pagination,
+  StatusIndicator,
+  ContextMenu,
+  fixedColumns,
+} from '@/design-system';
 import { Link } from 'react-router-dom';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -17,7 +36,8 @@ import {
   IconDownload,
   IconCopy,
   IconSelector,
-  IconLock } from '@tabler/icons-react';
+  IconLock,
+} from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -100,7 +120,8 @@ const mockBareMetalMap: Record<string, BareMetalDetail> = {
     interfaces: 2,
     keyPair: 'bm-key',
     serverGroup: 'web-group',
-    userData: 'Provided at creation' },
+    userData: 'Provided at creation',
+  },
   'bm-002': {
     id: 'bm-002',
     name: 'web-server-2',
@@ -116,7 +137,8 @@ const mockBareMetalMap: Record<string, BareMetalDetail> = {
     interfaces: 2,
     keyPair: 'bm-key',
     serverGroup: 'web-group',
-    userData: 'Provided at creation' },
+    userData: 'Provided at creation',
+  },
   'bm-003': {
     id: 'bm-003',
     name: 'db-server-1',
@@ -132,7 +154,8 @@ const mockBareMetalMap: Record<string, BareMetalDetail> = {
     interfaces: 2,
     keyPair: 'db-key',
     serverGroup: 'db-group',
-    userData: 'Provided at creation' },
+    userData: 'Provided at creation',
+  },
   'bm-004': {
     id: 'bm-004',
     name: 'db-server-2',
@@ -148,7 +171,8 @@ const mockBareMetalMap: Record<string, BareMetalDetail> = {
     interfaces: 2,
     keyPair: 'db-key',
     serverGroup: 'db-group',
-    userData: 'Provided at creation' },
+    userData: 'Provided at creation',
+  },
   'bm-005': {
     id: 'bm-005',
     name: 'gpu-node-1',
@@ -164,7 +188,9 @@ const mockBareMetalMap: Record<string, BareMetalDetail> = {
     interfaces: 2,
     keyPair: 'gpu-key',
     serverGroup: 'gpu-group',
-    userData: 'Provided at creation' } };
+    userData: 'Provided at creation',
+  },
+};
 
 // Default bare metal detail for unknown IDs
 const defaultBareMetalDetail: BareMetalDetail = {
@@ -182,7 +208,8 @@ const defaultBareMetalDetail: BareMetalDetail = {
   interfaces: 0,
   keyPair: '-',
   serverGroup: '-',
-  userData: '-' };
+  userData: '-',
+};
 
 const mockAttachedVolumes: AttachedVolume[] = [
   {
@@ -193,7 +220,8 @@ const mockAttachedVolumes: AttachedVolume[] = [
     type: 'SSD',
     diskTag: 'OS Disk',
     bootable: true,
-    access: '2025-11-11' },
+    access: '2025-11-11',
+  },
   {
     id: 'vol-002',
     name: 'data-vol-01',
@@ -202,7 +230,8 @@ const mockAttachedVolumes: AttachedVolume[] = [
     type: 'SSD',
     diskTag: 'Data disk',
     bootable: false,
-    access: '2025-11-10' },
+    access: '2025-11-10',
+  },
   {
     id: 'vol-003',
     name: 'backup-vol',
@@ -211,7 +240,8 @@ const mockAttachedVolumes: AttachedVolume[] = [
     type: '_DEFAULT_',
     diskTag: 'Backup',
     bootable: false,
-    access: '2025-11-09' },
+    access: '2025-11-09',
+  },
 ];
 
 const mockAttachedInterfaces: AttachedInterface[] = [
@@ -223,7 +253,8 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     portStatus: 'Active',
     fixedIp: '10.0.0.10',
     macAddress: 'fa:16:3e:12:34:56',
-    createdAt: '2025-11-11' },
+    createdAt: '2025-11-11',
+  },
   {
     id: 'iface-002',
     name: 'eth1',
@@ -232,7 +263,8 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     portStatus: 'Active',
     fixedIp: '192.168.1.10',
     macAddress: 'fa:16:3e:ab:cd:ef',
-    createdAt: '2025-11-10' },
+    createdAt: '2025-11-10',
+  },
 ];
 
 const mockActionLogs: ActionLog[] = [
@@ -243,7 +275,8 @@ const mockActionLogs: ActionLog[] = [
     requestedTime: '2025-09-11 13:34:57',
     result: 'Success',
     startTime: '14:23:15',
-    endTime: '14:25:30' },
+    endTime: '14:25:30',
+  },
   {
     id: 'log-002',
     operationName: 'Power On',
@@ -251,7 +284,8 @@ const mockActionLogs: ActionLog[] = [
     requestedTime: '2025-09-11 14:30:00',
     result: 'Success',
     startTime: '14:30:05',
-    endTime: '14:30:10' },
+    endTime: '14:30:10',
+  },
   {
     id: 'log-003',
     operationName: 'Configure Network',
@@ -259,7 +293,8 @@ const mockActionLogs: ActionLog[] = [
     requestedTime: '2025-09-11 14:35:00',
     result: 'Success',
     startTime: '14:35:05',
-    endTime: '14:36:00' },
+    endTime: '14:36:00',
+  },
 ];
 
 /* ----------------------------------------
@@ -338,7 +373,8 @@ export function ComputeAdminBareMetalDetailPage() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    closable: tab.closable }));
+    closable: tab.closable,
+  }));
 
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
@@ -422,7 +458,8 @@ export function ComputeAdminBareMetalDetailPage() {
                       {
                         id: 'lock-setting',
                         label: 'Lock setting',
-                        onClick: () => console.log('Lock setting') },
+                        onClick: () => console.log('Lock setting'),
+                      },
                       { id: 'edit', label: 'Edit', onClick: () => console.log('Edit') },
                     ]}
                     trigger="click"
@@ -586,14 +623,16 @@ export function ComputeAdminBareMetalDetailPage() {
                                 Active: 'active',
                                 Inactive: 'shutoff',
                                 Down: 'down',
-                                Build: 'building' };
+                                Build: 'building',
+                              };
                               return (
                                 <StatusIndicator
                                   status={statusMap[iface.portStatus] || 'down'}
                                   layout="icon-only"
                                 />
                               );
-                            } },
+                            },
+                          },
                           {
                             key: 'name',
                             label: 'Name',
@@ -610,7 +649,8 @@ export function ComputeAdminBareMetalDetailPage() {
                                   ID : {iface.id}
                                 </span>
                               </div>
-                            ) },
+                            ),
+                          },
                           {
                             key: 'network',
                             label: 'Network',
@@ -627,7 +667,8 @@ export function ComputeAdminBareMetalDetailPage() {
                                   ID : {iface.id}
                                 </span>
                               </div>
-                            ) },
+                            ),
+                          },
                           {
                             key: 'fixedIp',
                             label: 'Fixed IP',
@@ -635,7 +676,8 @@ export function ComputeAdminBareMetalDetailPage() {
                               <span className="text-[var(--color-text-default)]">
                                 {iface.fixedIp}
                               </span>
-                            ) },
+                            ),
+                          },
                           {
                             key: 'macAddress',
                             label: 'Mac address',
@@ -643,7 +685,8 @@ export function ComputeAdminBareMetalDetailPage() {
                               <span className="text-[var(--color-text-default)]">
                                 {iface.macAddress}
                               </span>
-                            ) },
+                            ),
+                          },
                           {
                             key: 'createdAt',
                             label: 'Created at',
@@ -652,7 +695,8 @@ export function ComputeAdminBareMetalDetailPage() {
                               <span className="text-[var(--color-text-default)]">
                                 {iface.createdAt}
                               </span>
-                            ) },
+                            ),
+                          },
                         ]}
                         data={mockAttachedInterfaces}
                         rowKey="id"

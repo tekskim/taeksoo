@@ -1,5 +1,26 @@
 import { useState, useMemo } from 'react';
-import { Button, FilterSearchInput, Table, Pagination, VStack, TabBar, TopBar, TopBarAction, Breadcrumb, ListToolbar, ContextMenu, ConfirmModal, Tabs, TabList, Tab, type TableColumn, type ContextMenuItem, type FilterField, type AppliedFilter, fixedColumns, columnMinWidths } from '@/design-system';
+import {
+  Button,
+  FilterSearchInput,
+  Table,
+  Pagination,
+  VStack,
+  TabBar,
+  TopBar,
+  TopBarAction,
+  Breadcrumb,
+  ListToolbar,
+  ContextMenu,
+  ConfirmModal,
+  Tabs,
+  TabList,
+  Tab,
+  type TableColumn,
+  type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
+  fixedColumns,
+} from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
@@ -39,7 +60,8 @@ const mockVolumeTypes: VolumeType[] = [
     qosSpec: 'spec',
     qosSpecId: '12345678',
     encryption: 'luks',
-    isPublic: true },
+    isPublic: true,
+  },
   {
     id: 'vt-002',
     name: 'ssd-performance',
@@ -47,7 +69,8 @@ const mockVolumeTypes: VolumeType[] = [
     qosSpec: 'high-iops',
     qosSpecId: 'qos-001',
     encryption: 'luks',
-    isPublic: true },
+    isPublic: true,
+  },
   {
     id: 'vt-003',
     name: 'hdd-standard',
@@ -55,7 +78,8 @@ const mockVolumeTypes: VolumeType[] = [
     qosSpec: null,
     qosSpecId: null,
     encryption: 'plain',
-    isPublic: true },
+    isPublic: true,
+  },
   {
     id: 'vt-004',
     name: 'nvme-ultra',
@@ -63,7 +87,8 @@ const mockVolumeTypes: VolumeType[] = [
     qosSpec: 'ultra-perf',
     qosSpecId: 'qos-002',
     encryption: 'luks',
-    isPublic: false },
+    isPublic: false,
+  },
   {
     id: 'vt-005',
     name: 'encrypted-secure',
@@ -71,7 +96,8 @@ const mockVolumeTypes: VolumeType[] = [
     qosSpec: 'standard',
     qosSpecId: 'qos-003',
     encryption: 'luks2',
-    isPublic: true },
+    isPublic: true,
+  },
 ];
 
 const mockQoSSpecs: QoSSpec[] = [
@@ -79,17 +105,20 @@ const mockQoSSpecs: QoSSpec[] = [
     id: 'qos-001',
     name: 'high-iops',
     consumer: 'front-end',
-    specs: 'read_iops_sec: 10000, write_iops_sec: 5000' },
+    specs: 'read_iops_sec: 10000, write_iops_sec: 5000',
+  },
   {
     id: 'qos-002',
     name: 'ultra-perf',
     consumer: 'back-end',
-    specs: 'read_iops_sec: 50000, write_iops_sec: 25000' },
+    specs: 'read_iops_sec: 50000, write_iops_sec: 25000',
+  },
   {
     id: 'qos-003',
     name: 'standard',
     consumer: 'front-end',
-    specs: 'read_iops_sec: 1000, write_iops_sec: 500' },
+    specs: 'read_iops_sec: 1000, write_iops_sec: 500',
+  },
 ];
 
 /* ----------------------------------------
@@ -108,7 +137,8 @@ const volumeTypeFilterFields: FilterField[] = [
     options: [
       { value: 'true', label: 'On' },
       { value: 'false', label: 'Off' },
-    ] },
+    ],
+  },
 ];
 
 // Filter fields configuration for QoS Specs
@@ -154,7 +184,8 @@ export function ComputeAdminVolumeTypesPage() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    closable: tab.closable }));
+    closable: tab.closable,
+  }));
 
   // Handle delete volume type
   const handleDeleteVolumeTypeClick = (volumeType: VolumeType) => {
@@ -259,12 +290,14 @@ export function ComputeAdminVolumeTypesPage() {
           </Link>
           <span className="text-[11px] text-[var(--color-text-muted)]">ID: {row.id}</span>
         </div>
-      ) },
+      ),
+    },
     {
       key: 'description',
       label: 'Description',
       flex: 1,
-      sortable: true },
+      sortable: true,
+    },
     {
       key: 'qosSpec',
       label: 'Associated QoS Spec',
@@ -284,18 +317,21 @@ export function ComputeAdminVolumeTypesPage() {
           </div>
         ) : (
           <span className="text-[var(--color-text-muted)]">-</span>
-        ) },
+        ),
+    },
     {
       key: 'encryption',
       label: 'Encryption',
       flex: 1,
-      sortable: true },
+      sortable: true,
+    },
     {
       key: 'isPublic',
       label: 'Public',
       flex: 1,
       sortable: false,
-      render: (value: boolean) => <span>{value ? 'On' : 'Off'}</span> },
+      render: (value: boolean) => <span>{value ? 'On' : 'Off'}</span>,
+    },
     {
       key: 'actions',
       label: 'Action',
@@ -306,28 +342,34 @@ export function ComputeAdminVolumeTypesPage() {
           {
             id: 'edit',
             label: 'Edit',
-            onClick: () => console.log('Edit', row.name) },
+            onClick: () => console.log('Edit', row.name),
+          },
           {
             id: 'manage-qos-spec',
             label: 'Manage QoS spec',
-            onClick: () => console.log('Manage QoS spec', row.name) },
+            onClick: () => console.log('Manage QoS spec', row.name),
+          },
           {
             id: 'manage-access',
             label: 'Manage access',
-            onClick: () => console.log('Manage access', row.name) },
+            onClick: () => console.log('Manage access', row.name),
+          },
           {
             id: 'create-encryption',
             label: 'Create encryption',
-            onClick: () => console.log('Create encryption', row.name) },
+            onClick: () => console.log('Create encryption', row.name),
+          },
           {
             id: 'delete-encryption',
             label: 'Delete encryption',
-            onClick: () => console.log('Delete encryption', row.name) },
+            onClick: () => console.log('Delete encryption', row.name),
+          },
           {
             id: 'delete',
             label: 'Delete',
             status: 'danger',
-            onClick: () => handleDeleteVolumeTypeClick(row) },
+            onClick: () => handleDeleteVolumeTypeClick(row),
+          },
         ];
 
         return (
@@ -343,7 +385,8 @@ export function ComputeAdminVolumeTypesPage() {
             </ContextMenu>
           </div>
         );
-      } },
+      },
+    },
   ];
 
   // Table columns for QoS Specs
@@ -364,17 +407,20 @@ export function ComputeAdminVolumeTypesPage() {
           </Link>
           <span className="text-[11px] text-[var(--color-text-muted)]">ID: {row.id}</span>
         </div>
-      ) },
+      ),
+    },
     {
       key: 'consumer',
       label: 'Consumer',
       flex: 1,
-      sortable: true },
+      sortable: true,
+    },
     {
       key: 'specs',
       label: 'Specs',
       flex: 2,
-      sortable: false },
+      sortable: false,
+    },
     {
       key: 'actions',
       label: 'Action',
@@ -385,12 +431,14 @@ export function ComputeAdminVolumeTypesPage() {
           {
             id: 'edit',
             label: 'Edit Consumer',
-            onClick: () => console.log('Edit Consumer', row.name) },
+            onClick: () => console.log('Edit Consumer', row.name),
+          },
           {
             id: 'delete',
             label: 'Delete',
             status: 'danger',
-            onClick: () => handleDeleteQoSSpecClick(row) },
+            onClick: () => handleDeleteQoSSpecClick(row),
+          },
         ];
 
         return (
@@ -406,7 +454,8 @@ export function ComputeAdminVolumeTypesPage() {
             </ContextMenu>
           </div>
         );
-      } },
+      },
+    },
   ];
 
   // Bulk delete handler

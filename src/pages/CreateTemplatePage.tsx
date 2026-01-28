@@ -965,11 +965,29 @@ function ImageSection({
         </VStack>
       ),
     },
-    { key: 'version', label: 'Version', sortable: true, flex: 1, minWidth: columnMinWidths.version },
+    {
+      key: 'version',
+      label: 'Version',
+      sortable: true,
+      flex: 1,
+      minWidth: columnMinWidths.version,
+    },
     { key: 'size', label: 'Size', sortable: true, flex: 1, minWidth: columnMinWidths.size },
-    { key: 'minDisk', label: 'Min disk', sortable: true, flex: 1, minWidth: columnMinWidths.minDisk },
+    {
+      key: 'minDisk',
+      label: 'Min disk',
+      sortable: true,
+      flex: 1,
+      minWidth: columnMinWidths.minDisk,
+    },
     { key: 'minRam', label: 'Min RAM', sortable: true, flex: 1, minWidth: columnMinWidths.minRam },
-    { key: 'access', label: 'Visibility', sortable: true, flex: 1, minWidth: columnMinWidths.access },
+    {
+      key: 'access',
+      label: 'Visibility',
+      sortable: true,
+      flex: 1,
+      minWidth: columnMinWidths.access,
+    },
   ];
 
   // OS filter chip style - matches Figma design with container
@@ -2154,7 +2172,13 @@ function AuthenticationSection({
     },
     { key: 'name', label: 'Name', sortable: true },
     { key: 'fingerprint', label: 'Fingerprint' },
-    { key: 'createdAt', label: 'Created at', sortable: true, flex: 1, minWidth: columnMinWidths.createdAt },
+    {
+      key: 'createdAt',
+      label: 'Created at',
+      sortable: true,
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
+    },
   ];
 
   return (

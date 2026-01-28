@@ -20,7 +20,6 @@ import {
   type ContextMenuItem,
   StatusIndicator,
   fixedColumns,
-  columnMinWidths,
 } from '@/design-system';
 import { useTabs } from '@/contexts/TabContext';
 import { useProject } from '@/contexts/ProjectContext';

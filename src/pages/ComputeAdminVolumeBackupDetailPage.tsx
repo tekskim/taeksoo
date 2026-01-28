@@ -1,6 +1,19 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { Button, VStack, TabBar, TopBar, TopBarAction, Breadcrumb, Tabs, TabList, Tab, TabPanel, DetailHeader, SectionCard, fixedColumns, columnMinWidths } from '@/design-system';
+import {
+  Button,
+  VStack,
+  TabBar,
+  TopBar,
+  TopBarAction,
+  Breadcrumb,
+  Tabs,
+  TabList,
+  Tab,
+  TabPanel,
+  DetailHeader,
+  SectionCard,
+} from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { IconCirclePlus, IconTrash, IconEdit, IconBell } from '@tabler/icons-react';
@@ -43,7 +56,8 @@ const mockBackupDetails: Record<string, VolumeBackupDetail> = {
     sourceVolumeId: 'vol-001',
     backupMode: 'Full Backup',
     container: 'cinder-backups',
-    availabilityZone: 'nova' },
+    availabilityZone: 'nova',
+  },
   'vbak-002': {
     id: 'vbak-002',
     name: 'app-storage-backup',
@@ -55,7 +69,8 @@ const mockBackupDetails: Record<string, VolumeBackupDetail> = {
     sourceVolumeId: 'vol-002',
     backupMode: 'Incremental',
     container: 'cinder-backups',
-    availabilityZone: 'nova' },
+    availabilityZone: 'nova',
+  },
   'vbak-003': {
     id: 'vbak-003',
     name: 'backup-vol-backup',
@@ -67,7 +82,8 @@ const mockBackupDetails: Record<string, VolumeBackupDetail> = {
     sourceVolumeId: 'vol-003',
     backupMode: 'Full Backup',
     container: 'cinder-backups',
-    availabilityZone: 'nova' },
+    availabilityZone: 'nova',
+  },
   'vbak-004': {
     id: 'vbak-004',
     name: 'log-storage-backup',
@@ -79,7 +95,8 @@ const mockBackupDetails: Record<string, VolumeBackupDetail> = {
     sourceVolumeId: 'vol-004',
     backupMode: 'Incremental',
     container: 'cinder-backups',
-    availabilityZone: 'nova' },
+    availabilityZone: 'nova',
+  },
   'vbak-005': {
     id: 'vbak-005',
     name: 'cache-vol-backup',
@@ -91,7 +108,8 @@ const mockBackupDetails: Record<string, VolumeBackupDetail> = {
     sourceVolumeId: 'vol-005',
     backupMode: 'Full Backup',
     container: 'cinder-backups',
-    availabilityZone: 'nova' },
+    availabilityZone: 'nova',
+  },
   'vbak-006': {
     id: 'vbak-006',
     name: 'media-storage-backup',
@@ -103,7 +121,8 @@ const mockBackupDetails: Record<string, VolumeBackupDetail> = {
     sourceVolumeId: 'vol-006',
     backupMode: 'Full Backup',
     container: 'cinder-backups',
-    availabilityZone: 'nova' },
+    availabilityZone: 'nova',
+  },
   'vbak-007': {
     id: 'vbak-007',
     name: 'temp-vol-backup',
@@ -115,7 +134,8 @@ const mockBackupDetails: Record<string, VolumeBackupDetail> = {
     sourceVolumeId: 'vol-007',
     backupMode: 'Incremental',
     container: 'cinder-backups',
-    availabilityZone: 'nova' },
+    availabilityZone: 'nova',
+  },
   'vbak-008': {
     id: 'vbak-008',
     name: 'ml-data-backup',
@@ -127,7 +147,8 @@ const mockBackupDetails: Record<string, VolumeBackupDetail> = {
     sourceVolumeId: 'vol-008',
     backupMode: 'Full Backup',
     container: 'cinder-backups',
-    availabilityZone: 'nova' },
+    availabilityZone: 'nova',
+  },
   'vbak-009': {
     id: 'vbak-009',
     name: 'archive-vol-backup',
@@ -139,7 +160,8 @@ const mockBackupDetails: Record<string, VolumeBackupDetail> = {
     sourceVolumeId: 'vol-009',
     backupMode: 'Full Backup',
     container: 'cinder-backups',
-    availabilityZone: 'nova' },
+    availabilityZone: 'nova',
+  },
   'vbak-010': {
     id: 'vbak-010',
     name: 'boot-vol-backup',
@@ -151,7 +173,9 @@ const mockBackupDetails: Record<string, VolumeBackupDetail> = {
     sourceVolumeId: 'vol-010',
     backupMode: 'Incremental',
     container: 'cinder-backups',
-    availabilityZone: 'nova' } };
+    availabilityZone: 'nova',
+  },
+};
 
 // Default backup for unknown IDs
 const defaultBackup: VolumeBackupDetail = {
@@ -165,7 +189,8 @@ const defaultBackup: VolumeBackupDetail = {
   sourceVolumeId: '-',
   backupMode: '-',
   container: '-',
-  availabilityZone: '-' };
+  availabilityZone: '-',
+};
 
 /* ----------------------------------------
    Status Mapping
@@ -176,14 +201,16 @@ const statusDisplayMap: Record<BackupStatus, string> = {
   creating: 'Creating',
   restoring: 'Restoring',
   error: 'Error',
-  deleting: 'Deleting' };
+  deleting: 'Deleting',
+};
 
 const statusIndicatorMap: Record<BackupStatus, 'active' | 'building' | 'error' | 'pending'> = {
   available: 'active',
   creating: 'building',
   restoring: 'building',
   error: 'error',
-  deleting: 'pending' };
+  deleting: 'pending',
+};
 
 /* ----------------------------------------
    Volume backup Detail Page
@@ -213,7 +240,8 @@ export function ComputeAdminVolumeBackupDetailPage() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    closable: tab.closable }));
+    closable: tab.closable,
+  }));
 
   // Breadcrumb items
   const breadcrumbItems = [

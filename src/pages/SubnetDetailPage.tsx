@@ -18,7 +18,6 @@ import {
   Pagination,
   StatusIndicator,
   fixedColumns,
-  columnMinWidths,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system';
 import { Tooltip } from '@/design-system';

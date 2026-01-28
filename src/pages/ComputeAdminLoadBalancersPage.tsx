@@ -1,12 +1,31 @@
 import { useState, useMemo } from 'react';
-import { Button, FilterSearchInput, Table, Pagination, VStack, TabBar, TopBar, TopBarAction, Breadcrumb, ListToolbar, ContextMenu, ConfirmModal, StatusIndicator, type TableColumn, type ContextMenuItem, type FilterField, type AppliedFilter, fixedColumns, columnMinWidths } from '@/design-system';
+import {
+  Button,
+  FilterSearchInput,
+  Table,
+  Pagination,
+  VStack,
+  TabBar,
+  TopBar,
+  TopBarAction,
+  Breadcrumb,
+  ListToolbar,
+  ContextMenu,
+  ConfirmModal,
+  StatusIndicator,
+  type TableColumn,
+  type ContextMenuItem,
+  type FilterField,
+  type AppliedFilter,
+  fixedColumns,
+} from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import { AssociateFloatingIPToLBDrawer } from '@/components/AssociateFloatingIPToLBDrawer';
 import { EditLoadBalancerDrawer } from '@/components/EditLoadBalancerDrawer';
-import { IconDotsCircleHorizontal, IconTrash, IconDownload, IconBell } from '@tabler/icons-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { IconTrash, IconDownload, IconBell } from '@tabler/icons-react';
+import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
    Types
@@ -17,6 +36,8 @@ type LoadBalancerStatus = 'active' | 'error' | 'building' | 'pending';
 interface LoadBalancer {
   id: string;
   name: string;
+  tenant: string;
+  tenantId: string;
   vipAddress: string;
   ownedNetwork: string;
   ownedNetworkId: string;
@@ -37,6 +58,8 @@ const mockLoadBalancers: LoadBalancer[] = [
   {
     id: 'lb-001',
     name: 'web-lb-01',
+    tenant: 'tenantA',
+    tenantId: 'tenant-001',
     vipAddress: '192.168.10.13',
     ownedNetwork: 'net-02',
     ownedNetworkId: 'net-002',
@@ -46,10 +69,13 @@ const mockLoadBalancers: LoadBalancer[] = [
     listenerId: '29tgj234',
     listenerCount: 2,
     createdAt: '2025-10-03',
-    status: 'active' },
+    status: 'active',
+  },
   {
     id: 'lb-002',
     name: 'api-lb',
+    tenant: 'tenantA',
+    tenantId: 'tenant-001',
     vipAddress: '192.168.10.14',
     ownedNetwork: 'net-01',
     ownedNetworkId: 'net-001',
@@ -59,10 +85,13 @@ const mockLoadBalancers: LoadBalancer[] = [
     listenerId: '38fk29dk',
     listenerCount: 0,
     createdAt: '2025-10-02',
-    status: 'active' },
+    status: 'active',
+  },
   {
     id: 'lb-003',
     name: 'app-lb',
+    tenant: 'tenantB',
+    tenantId: 'tenant-002',
     vipAddress: '192.168.10.15',
     ownedNetwork: 'net-03',
     ownedNetworkId: 'net-003',
@@ -72,10 +101,13 @@ const mockLoadBalancers: LoadBalancer[] = [
     listenerId: '9dk38fj2',
     listenerCount: 1,
     createdAt: '2025-10-01',
-    status: 'building' },
+    status: 'building',
+  },
   {
     id: 'lb-004',
     name: 'db-lb',
+    tenant: 'tenantA',
+    tenantId: 'tenant-001',
     vipAddress: '192.168.10.16',
     ownedNetwork: 'net-01',
     ownedNetworkId: 'net-001',
@@ -85,10 +117,13 @@ const mockLoadBalancers: LoadBalancer[] = [
     listenerId: 'k29dk38f',
     listenerCount: 0,
     createdAt: '2025-09-28',
-    status: 'active' },
+    status: 'active',
+  },
   {
     id: 'lb-005',
     name: 'cache-lb',
+    tenant: 'tenantC',
+    tenantId: 'tenant-003',
     vipAddress: '192.168.10.17',
     ownedNetwork: 'net-02',
     ownedNetworkId: 'net-002',
@@ -98,10 +133,13 @@ const mockLoadBalancers: LoadBalancer[] = [
     listenerId: 'fj29dk38',
     listenerCount: 0,
     createdAt: '2025-09-25',
-    status: 'active' },
+    status: 'active',
+  },
   {
     id: 'lb-006',
     name: 'internal-lb',
+    tenant: 'tenantB',
+    tenantId: 'tenant-002',
     vipAddress: '192.168.10.18',
     ownedNetwork: 'net-04',
     ownedNetworkId: 'net-004',
@@ -111,10 +149,13 @@ const mockLoadBalancers: LoadBalancer[] = [
     listenerId: '8fj29dk3',
     listenerCount: 3,
     createdAt: '2025-09-20',
-    status: 'error' },
+    status: 'error',
+  },
   {
     id: 'lb-007',
     name: 'streaming-lb',
+    tenant: 'tenantA',
+    tenantId: 'tenant-001',
     vipAddress: '192.168.10.19',
     ownedNetwork: 'net-01',
     ownedNetworkId: 'net-001',
@@ -124,10 +165,13 @@ const mockLoadBalancers: LoadBalancer[] = [
     listenerId: 'dk38fj29',
     listenerCount: 0,
     createdAt: '2025-09-15',
-    status: 'active' },
+    status: 'active',
+  },
   {
     id: 'lb-008',
     name: 'mail-lb',
+    tenant: 'tenantC',
+    tenantId: 'tenant-003',
     vipAddress: '192.168.10.20',
     ownedNetwork: 'net-02',
     ownedNetworkId: 'net-002',
@@ -137,10 +181,13 @@ const mockLoadBalancers: LoadBalancer[] = [
     listenerId: '29dk38fj',
     listenerCount: 0,
     createdAt: '2025-09-10',
-    status: 'pending' },
+    status: 'pending',
+  },
   {
     id: 'lb-009',
     name: 'vpn-lb',
+    tenant: 'tenantB',
+    tenantId: 'tenant-002',
     vipAddress: '192.168.10.21',
     ownedNetwork: 'net-03',
     ownedNetworkId: 'net-003',
@@ -150,10 +197,13 @@ const mockLoadBalancers: LoadBalancer[] = [
     listenerId: '3fj29dk8',
     listenerCount: 0,
     createdAt: '2025-09-05',
-    status: 'active' },
+    status: 'active',
+  },
   {
     id: 'lb-010',
     name: 'monitoring-lb',
+    tenant: 'tenantA',
+    tenantId: 'tenant-001',
     vipAddress: '192.168.10.22',
     ownedNetwork: 'net-01',
     ownedNetworkId: 'net-001',
@@ -163,7 +213,8 @@ const mockLoadBalancers: LoadBalancer[] = [
     listenerId: 'j29dk38f',
     listenerCount: 4,
     createdAt: '2025-09-01',
-    status: 'active' },
+    status: 'active',
+  },
 ];
 
 /* ----------------------------------------
@@ -174,7 +225,8 @@ const lbStatusMap: Record<LoadBalancerStatus, 'active' | 'error' | 'building' | 
   active: 'active',
   error: 'error',
   building: 'building',
-  pending: 'pending' };
+  pending: 'pending',
+};
 
 /* ----------------------------------------
    Component
@@ -183,6 +235,7 @@ const lbStatusMap: Record<LoadBalancerStatus, 'active' | 'error' | 'building' | 
 // Filter fields configuration
 const filterFields: FilterField[] = [
   { id: 'name', label: 'Name', type: 'text' },
+  { id: 'tenant', label: 'Tenant', type: 'text' },
   { id: 'vipAddress', label: 'VIP Address', type: 'text' },
   { id: 'ownedNetwork', label: 'Network', type: 'text' },
   {
@@ -194,11 +247,11 @@ const filterFields: FilterField[] = [
       { value: 'error', label: 'Error' },
       { value: 'building', label: 'Building' },
       { value: 'pending', label: 'Pending' },
-    ] },
+    ],
+  },
 ];
 
 export function ComputeAdminLoadBalancersPage() {
-  const navigate = useNavigate();
   const [selectedLBs, setSelectedLBs] = useState<string[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
@@ -233,6 +286,7 @@ export function ComputeAdminLoadBalancersPage() {
   const defaultColumnConfig: ColumnConfig[] = [
     { id: 'status', label: 'Status', visible: true, locked: true },
     { id: 'name', label: 'Name', visible: true, locked: true },
+    { id: 'tenant', label: 'Tenant', visible: true },
     { id: 'vipAddress', label: 'VIP Address', visible: true },
     { id: 'ownedNetwork', label: 'Owned network', visible: true },
     { id: 'floatingIp', label: 'Floating IP', visible: true },
@@ -250,7 +304,8 @@ export function ComputeAdminLoadBalancersPage() {
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
-    closable: tab.closable }));
+    closable: tab.closable,
+  }));
 
   // Context menu items
   const getContextMenuItems = (lb: LoadBalancer): ContextMenuItem[] => [
@@ -258,16 +313,19 @@ export function ComputeAdminLoadBalancersPage() {
       id: 'associate-floating-ip',
       label: 'Associate floating IP',
       onClick: () => handleAssociateFloatingIP(lb),
-      disabled: !!lb.floatingIp },
+      disabled: !!lb.floatingIp,
+    },
     {
       id: 'disassociate-floating-ip',
       label: 'Disassociate floating IP',
       onClick: () => console.log('Disassociate floating IP:', lb.id),
-      disabled: !lb.floatingIp },
+      disabled: !lb.floatingIp,
+    },
     {
       id: 'create-listener',
       label: 'Create listener',
-      onClick: () => console.log('Create listener:', lb.id) },
+      onClick: () => console.log('Create listener:', lb.id),
+    },
     { id: 'edit', label: 'Edit', onClick: () => handleEditLB(lb) },
     {
       id: 'delete',
@@ -276,7 +334,8 @@ export function ComputeAdminLoadBalancersPage() {
       onClick: () => {
         setLbToDelete(lb);
         setDeleteModalOpen(true);
-      } },
+      },
+    },
   ];
 
   // Filter load balancers based on search
@@ -309,7 +368,8 @@ export function ComputeAdminLoadBalancersPage() {
       label: 'Status',
       width: fixedColumns.status,
       align: 'center',
-      render: (_, row) => <StatusIndicator status={lbStatusMap[row.status]} layout="icon-only" /> },
+      render: (_, row) => <StatusIndicator status={lbStatusMap[row.status]} layout="icon-only" />,
+    },
     {
       key: 'name',
       label: 'Name',
@@ -328,11 +388,33 @@ export function ComputeAdminLoadBalancersPage() {
             ID : {row.id}
           </span>
         </div>
-      ) },
+      ),
+    },
+    {
+      key: 'tenant',
+      label: 'Tenant',
+      flex: 1,
+      sortable: true,
+      render: (_, row) => (
+        <div className="flex flex-col gap-0.5">
+          <Link
+            to={`/compute-admin/tenants/${row.tenantId}`}
+            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.tenant}
+          </Link>
+          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+            ID: {row.tenantId}
+          </span>
+        </div>
+      ),
+    },
     {
       key: 'vipAddress',
       label: 'VIP Address',
-      flex: 1 },
+      flex: 1,
+    },
     {
       key: 'ownedNetwork',
       label: 'Owned network',
@@ -351,7 +433,8 @@ export function ComputeAdminLoadBalancersPage() {
             ID : {row.ownedNetworkId.substring(0, 8)}
           </span>
         </div>
-      ) },
+      ),
+    },
     {
       key: 'floatingIp',
       label: 'Floating IP',
@@ -372,7 +455,8 @@ export function ComputeAdminLoadBalancersPage() {
           </div>
         ) : (
           '-'
-        ) },
+        ),
+    },
     {
       key: 'listeners',
       label: 'Listeners',
@@ -388,12 +472,14 @@ export function ComputeAdminLoadBalancersPage() {
             </span>
           </div>
         </div>
-      ) },
+      ),
+    },
     {
       key: 'createdAt',
       label: 'Created at',
       flex: 1,
-      sortable: true },
+      sortable: true,
+    },
     {
       key: 'actions',
       label: 'Action',
@@ -403,15 +489,12 @@ export function ComputeAdminLoadBalancersPage() {
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getContextMenuItems(row)} trigger="click">
             <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-              <IconDotsCircleHorizontal
-                size={16}
-                stroke={1.5}
-                className="text-[var(--action-icon-color)]"
-              />
+              <IconTrash size={16} stroke={1.5} className="text-[var(--color-state-danger)]" />
             </button>
           </ContextMenu>
         </div>
-      ) },
+      ),
+    },
   ];
 
   // Filter and order columns based on preferences
@@ -491,13 +574,6 @@ export function ComputeAdminLoadBalancersPage() {
                 <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
                   Load balancers
                 </h1>
-                <Button
-                  variant="primary"
-                  size="md"
-                  onClick={() => navigate('/compute-admin/load-balancers/create')}
-                >
-                  Create Load Balancer
-                </Button>
               </div>
 
               {/* Toolbar */}
@@ -595,7 +671,8 @@ export function ComputeAdminLoadBalancersPage() {
           id: selectedLBForDrawer?.id || '',
           name: selectedLBForDrawer?.name || '',
           networkId: selectedLBForDrawer?.ownedNetworkId || '',
-          networkName: selectedLBForDrawer?.ownedNetwork || '' }}
+          networkName: selectedLBForDrawer?.ownedNetwork || '',
+        }}
       />
 
       <EditLoadBalancerDrawer
@@ -603,7 +680,8 @@ export function ComputeAdminLoadBalancersPage() {
         onClose={() => setEditLBOpen(false)}
         loadBalancer={{
           id: selectedLBForDrawer?.id || '',
-          name: selectedLBForDrawer?.name || '' }}
+          name: selectedLBForDrawer?.name || '',
+        }}
       />
     </div>
   );

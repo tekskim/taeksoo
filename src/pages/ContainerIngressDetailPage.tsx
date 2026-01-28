@@ -18,7 +18,6 @@ import {
   Chip,
   type TableColumn,
   type ContextMenuItem,
-  fixedColumns,
   columnMinWidths,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
@@ -115,13 +114,15 @@ function RulesTab({ rules }: RulesTabProps) {
     {
       key: 'pathType',
       label: 'Path Type',
-      flex: 1, minWidth: columnMinWidths.pathType,
+      flex: 1,
+      minWidth: columnMinWidths.pathType,
       sortable: true,
     },
     {
       key: 'path',
       label: 'Path',
-      flex: 1, minWidth: columnMinWidths.path,
+      flex: 1,
+      minWidth: columnMinWidths.path,
       sortable: true,
       render: (value: string) => (
         <span className="text-[var(--color-action-primary)] cursor-pointer hover:underline">

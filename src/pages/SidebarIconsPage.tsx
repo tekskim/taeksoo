@@ -13,6 +13,7 @@ import {
   IconServer,
   IconDatabase,
   IconDatabaseExport,
+  IconDatabaseCog,
   IconNetwork,
   IconWorldWww,
   IconShieldLock,
@@ -22,6 +23,7 @@ import {
   IconTopologyStar,
   IconTimelineEvent,
   IconArrowsShuffle,
+  IconArrowsJoin2,
   IconReorder,
   IconChartPie3,
   IconRulerMeasure,
@@ -82,6 +84,7 @@ import {
   CircleGauge,
   BrainCircuit,
   LayoutDashboard,
+  BrickWallFire,
 } from 'lucide-react';
 import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
 import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
@@ -254,6 +257,31 @@ const appIconData: AppData[] = [
           },
           { icon: IconActivity, name: 'IconActivity', label: 'Monitor overview', slug: 'activity' },
           { icon: IconServer2, name: 'IconServer2', label: 'Physical nodes', slug: 'server-2' },
+          {
+            icon: IconDatabaseCog,
+            name: 'IconDatabaseCog',
+            label: 'Volume types',
+            slug: 'database-cog',
+          },
+          {
+            icon: IconServer,
+            name: 'IconServer',
+            label: 'Bare metal nodes',
+            slug: 'server',
+          },
+          {
+            icon: BrickWallFire,
+            name: 'BrickWallFire',
+            label: 'Firewall',
+            slug: 'brick-wall-fire',
+            library: 'lucide',
+          },
+          {
+            icon: IconArrowsJoin2,
+            name: 'IconArrowsJoin2',
+            label: 'Host aggregates',
+            slug: 'arrows-join-2',
+          },
         ],
       },
     ],
