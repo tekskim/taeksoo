@@ -22,15 +22,12 @@ import {
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
-import { AssociateFloatingIPDrawer } from '@/components/AssociateFloatingIPDrawer';
 import { DisassociateFloatingIPDrawer } from '@/components/DisassociateFloatingIPDrawer';
-import { EditFloatingIPDrawer } from '@/components/EditFloatingIPDrawer';
 import {
   IconDotsCircleHorizontal,
   IconTrash,
   IconDownload,
   IconBell,
-  IconExternalLink,
   IconCube,
 } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
@@ -218,25 +215,13 @@ export function ComputeAdminFloatingIPsPage() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
   // Drawer states
-  const [associateOpen, setAssociateOpen] = useState(false);
   const [disassociateOpen, setDisassociateOpen] = useState(false);
-  const [editOpen, setEditOpen] = useState(false);
   const [selectedFIPForDrawer, setSelectedFIPForDrawer] = useState<FloatingIP | null>(null);
 
   // Drawer handlers
-  const handleAssociate = (fip: FloatingIP) => {
-    setSelectedFIPForDrawer(fip);
-    setAssociateOpen(true);
-  };
-
   const handleDisassociate = (fip: FloatingIP) => {
     setSelectedFIPForDrawer(fip);
     setDisassociateOpen(true);
-  };
-
-  const handleEdit = (fip: FloatingIP) => {
-    setSelectedFIPForDrawer(fip);
-    setEditOpen(true);
   };
 
   const defaultColumnConfig: ColumnConfig[] = [
@@ -264,18 +249,11 @@ export function ComputeAdminFloatingIPsPage() {
   // Context menu items
   const getContextMenuItems = (fip: FloatingIP): ContextMenuItem[] => [
     {
-      id: 'associate',
-      label: 'Associate',
-      onClick: () => handleAssociate(fip),
-      disabled: !!fip.associatedTo,
-    },
-    {
       id: 'disassociate',
       label: 'Disassociate',
       onClick: () => handleDisassociate(fip),
       disabled: !fip.associatedTo,
     },
-    { id: 'edit', label: 'Edit', onClick: () => handleEdit(fip) },
     {
       id: 'release',
       label: 'Release',
@@ -324,18 +302,13 @@ export function ComputeAdminFloatingIPsPage() {
       flex: 1,
       sortable: true,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5">
-          <Link
-            to={`/compute-admin/floating-ips/${row.id}`}
-            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {row.floatingIp}
-          </Link>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-            ID : {row.id}
-          </span>
-        </div>
+        <Link
+          to={`/compute-admin/floating-ips/${row.id}`}
+          className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {row.floatingIp}
+        </Link>
       ),
     },
     {
@@ -350,14 +323,10 @@ export function ComputeAdminFloatingIPsPage() {
               <Tooltip content={row.associatedTo} position="top">
                 <Link
                   to={`/compute-admin/instances/${row.associatedToId}`}
-                  className="inline-flex items-center gap-1 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                  className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  <span className="truncate">{row.associatedTo}</span>
-                  <IconExternalLink
-                    size={12}
-                    className="flex-shrink-0 text-[var(--color-action-primary)]"
-                  />
+                  {row.associatedTo}
                 </Link>
               </Tooltip>
               <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] truncate">
@@ -390,14 +359,10 @@ export function ComputeAdminFloatingIPsPage() {
           <Tooltip content={row.network} position="top">
             <Link
               to={`/compute-admin/networks/${row.networkId}`}
-              className="inline-flex items-center gap-1 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+              className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
               onClick={(e) => e.stopPropagation()}
             >
-              <span className="truncate">{row.network}</span>
-              <IconExternalLink
-                size={12}
-                className="flex-shrink-0 text-[var(--color-action-primary)]"
-              />
+              {row.network}
             </Link>
           </Tooltip>
           <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] truncate">
@@ -601,12 +566,6 @@ export function ComputeAdminFloatingIPsPage() {
       />
 
       {/* Floating IP Drawers */}
-      <AssociateFloatingIPDrawer
-        isOpen={associateOpen}
-        onClose={() => setAssociateOpen(false)}
-        floatingIP={{ address: selectedFIPForDrawer?.floatingIp || '' }}
-      />
-
       <DisassociateFloatingIPDrawer
         isOpen={disassociateOpen}
         onClose={() => setDisassociateOpen(false)}
@@ -618,15 +577,6 @@ export function ComputeAdminFloatingIPsPage() {
               }
             : { id: '', name: '' }
         }
-      />
-
-      <EditFloatingIPDrawer
-        isOpen={editOpen}
-        onClose={() => setEditOpen(false)}
-        floatingIP={{
-          id: selectedFIPForDrawer?.id || '',
-          ipAddress: selectedFIPForDrawer?.floatingIp || '',
-        }}
       />
     </div>
   );

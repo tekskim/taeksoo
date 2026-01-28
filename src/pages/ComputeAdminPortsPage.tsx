@@ -37,6 +37,7 @@ type PortStatus = 'active' | 'error' | 'building' | 'down';
 interface Port {
   id: string;
   name: string;
+  description: string;
   tenant: string;
   tenantId: string;
   attachedTo: string | null;
@@ -62,6 +63,7 @@ const mockPorts: Port[] = [
   {
     id: 'port-001',
     name: 'port-01',
+    description: 'Web server primary port',
     tenant: 'tenantA',
     tenantId: 'tenant-001',
     attachedTo: 'web-01',
@@ -81,6 +83,7 @@ const mockPorts: Port[] = [
   {
     id: 'port-002',
     name: 'port-02',
+    description: 'Application server port',
     tenant: 'tenantA',
     tenantId: 'tenant-001',
     attachedTo: 'app-server',
@@ -100,6 +103,7 @@ const mockPorts: Port[] = [
   {
     id: 'port-003',
     name: 'port-03',
+    description: '-',
     tenant: 'tenantB',
     tenantId: 'tenant-002',
     attachedTo: null,
@@ -119,6 +123,7 @@ const mockPorts: Port[] = [
   {
     id: 'port-004',
     name: 'db-port',
+    description: 'Database server port',
     tenant: 'tenantA',
     tenantId: 'tenant-001',
     attachedTo: 'db-server',
@@ -138,6 +143,7 @@ const mockPorts: Port[] = [
   {
     id: 'port-005',
     name: 'router-port-1',
+    description: 'Router gateway port',
     tenant: 'tenantA',
     tenantId: 'tenant-001',
     attachedTo: 'main-router',
@@ -157,6 +163,7 @@ const mockPorts: Port[] = [
   {
     id: 'port-006',
     name: 'lb-port',
+    description: 'Load balancer port',
     tenant: 'tenantC',
     tenantId: 'tenant-003',
     attachedTo: 'load-balancer-01',
@@ -176,6 +183,7 @@ const mockPorts: Port[] = [
   {
     id: 'port-007',
     name: 'cache-port',
+    description: 'Redis cache port',
     tenant: 'tenantA',
     tenantId: 'tenant-001',
     attachedTo: 'redis-01',
@@ -195,6 +203,7 @@ const mockPorts: Port[] = [
   {
     id: 'port-008',
     name: 'monitor-port',
+    description: 'Monitoring service port',
     tenant: 'tenantB',
     tenantId: 'tenant-002',
     attachedTo: 'prometheus',
@@ -214,6 +223,7 @@ const mockPorts: Port[] = [
   {
     id: 'port-009',
     name: 'test-port',
+    description: 'Test environment port',
     tenant: 'tenantA',
     tenantId: 'tenant-001',
     attachedTo: null,
@@ -233,6 +243,7 @@ const mockPorts: Port[] = [
   {
     id: 'port-010',
     name: 'vpn-port',
+    description: 'VPN gateway port',
     tenant: 'tenantC',
     tenantId: 'tenant-003',
     attachedTo: 'vpn-gateway',
@@ -269,6 +280,7 @@ const portStatusMap: Record<PortStatus, 'active' | 'error' | 'building' | 'down'
 // Filter fields configuration
 const filterFields: FilterField[] = [
   { key: 'name', label: 'Name', type: 'text' },
+  { key: 'description', label: 'Description', type: 'text' },
   { key: 'tenant', label: 'Tenant', type: 'text' },
   { key: 'attachedTo', label: 'Attached To', type: 'text' },
   { key: 'ownedNetwork', label: 'Network', type: 'text' },
@@ -349,6 +361,7 @@ export function ComputeAdminPortsPage() {
     { id: 'securityGroups', label: 'SG', visible: true },
     { id: 'fixedIp', label: 'Fixed IP', visible: true },
     { id: 'floatingIp', label: 'Floating IP', visible: true },
+    { id: 'description', label: 'Description', visible: true },
     { id: 'macAddress', label: 'Mac address', visible: true },
     { id: 'adminState', label: 'Admin State', visible: true },
     { id: 'createdAt', label: 'Created At', visible: true },
@@ -516,6 +529,11 @@ export function ComputeAdminPortsPage() {
     {
       key: 'floatingIp',
       label: 'Floating IP',
+      flex: 1,
+    },
+    {
+      key: 'description',
+      label: 'Description',
       flex: 1,
     },
     {
