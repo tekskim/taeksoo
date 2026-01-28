@@ -13,9 +13,10 @@
 3. [행 높이 정책](#3-행-높이-정책)
 4. [컬럼 정렬 정책](#4-컬럼-정렬-정책)
 5. [텍스트 처리 정책](#5-텍스트-처리-정책)
-6. [마이그레이션 가이드](#6-마이그레이션-가이드)
-7. [통합 코드 예시](#7-통합-코드-예시)
-8. [FAQ](#8-faq)
+6. [thaki-ui와의 비교](#6-thaki-ui와의-비교)
+7. [마이그레이션 가이드](#7-마이그레이션-가이드)
+8. [통합 코드 예시](#8-통합-코드-예시)
+9. [FAQ](#9-faq)
 
 ---
 
@@ -425,16 +426,110 @@ import { Tooltip } from '@/design-system';
 
 ---
 
-## 6. 마이그레이션 가이드
+## 6. thaki-ui와의 비교
 
-### 6.1 Import 변경
+### 6.1 컬럼 사이징 방식 비교
+
+| 항목 | TDS (SSOT) | thaki-ui |
+|-----|------------|----------|
+| **사이징 방식** | `flex` + `minWidth` 조합 | `width` 고정값만 사용 |
+| **고정 컬럼** | `width: fixedColumns.xxx` | `width: 60` 등 하드코딩 |
+| **유연 컬럼** | `flex: 1, minWidth: columnMinWidths.xxx` | `width` 없으면 자동 분배 |
+| **테이블 레이아웃** | flexbox 기반 | `table-fixed` (CSS table) |
+| **minWidth 지원** | ✅ 지원 | ❌ 미지원 |
+| **maxWidth 지원** | ✅ 지원 | ❌ 미지원 |
+
+### 6.2 컬럼 정의 비교
+
+**TDS (SSOT)**
+```typescript
+const columns: TableColumn[] = [
+  { key: 'status', width: fixedColumns.status, align: 'center' },
+  { key: 'name', flex: 1, minWidth: columnMinWidths.name },
+  { key: 'createdAt', flex: 1, minWidth: columnMinWidths.createdAt },
+  { key: 'actions', width: fixedColumns.actions, align: 'center' },
+];
+```
+
+**thaki-ui**
+```typescript
+const columns: TableColumn[] = [
+  { key: 'status', width: 60, align: 'center' },
+  { key: 'username' },  // width 없음 → 자동 분배
+  { key: 'groups' },
+  { key: 'actions', width: 80, align: 'center' },
+];
+```
+
+### 6.3 thaki-ui의 문제점과 TDS 해결책
+
+| 문제 | thaki-ui | TDS 해결책 |
+|-----|----------|-----------|
+| **minWidth 미지원** | 컬럼이 과도하게 좁아질 수 있음 | `minWidth`로 최소 너비 보장 |
+| **비율 제어 불가** | 자동 균등 분배만 가능 | `flex` 값으로 비율 조정 가능 |
+| **값 일관성** | 하드코딩된 값 분산 | 중앙 프리셋으로 일관성 보장 |
+| **가로 스크롤 정책** | 고정 `min-w-[600px]` | 컬럼 합계 기반 동적 스크롤 |
+
+#### 문제 1: 좁은 화면에서 내용 잘림
+
+**thaki-ui**
+```
+| st... | use... | gro... | act... |
+  ↑       ↑        ↑
+  minWidth가 없어 과도하게 축소됨
+```
+
+**TDS 해결책**
+```
+| status | username(min:150px) | groups(min:100px) | actions |
+                 ↑                     ↑
+           minWidth 보장 → 가로 스크롤 발생
+```
+
+#### 문제 2: 비율 제어 불가
+
+**thaki-ui** - 자동 균등 분배만 가능
+```typescript
+{ key: 'name' }      // 1/3
+{ key: 'email' }     // 1/3  
+{ key: 'role' }      // 1/3
+```
+
+**TDS** - flex로 비율 제어 가능
+```typescript
+{ key: 'name', flex: 2, minWidth: '180px' }   // 2/4 (더 넓게)
+{ key: 'email', flex: 1, minWidth: '150px' }  // 1/4
+{ key: 'role', flex: 1, minWidth: '100px' }   // 1/4
+```
+
+#### 문제 3: 하드코딩된 값
+
+**thaki-ui** - 여러 파일에 분산
+```typescript
+// UsersListPage.tsx
+{ key: 'status', width: 60 }
+// GroupsListPage.tsx
+{ key: 'status', width: 64 }  // 불일치!
+```
+
+**TDS** - 중앙 프리셋
+```typescript
+import { fixedColumns } from '@/design-system';
+{ key: 'status', width: fixedColumns.status }  // 항상 64px
+```
+
+---
+
+## 7. 마이그레이션 가이드
+
+### 7.1 Import 변경
 
 ```diff
 - import { columnWidths } from '@/design-system';
 + import { fixedColumns, columnMinWidths } from '@/design-system';
 ```
 
-### 6.2 고정 컬럼 변환
+### 7.2 고정 컬럼 변환
 
 아이콘/버튼 컬럼은 `columnWidths` → `fixedColumns`로 변경:
 
@@ -449,7 +544,7 @@ import { Tooltip } from '@/design-system';
   },
 ```
 
-### 6.3 유연 컬럼 변환
+### 7.3 유연 컬럼 변환
 
 텍스트/데이터 컬럼은 `width` → `flex + minWidth`로 변경:
 
@@ -464,7 +559,7 @@ import { Tooltip } from '@/design-system';
   },
 ```
 
-### 6.4 기존 flex 컬럼에 minWidth 추가
+### 7.4 기존 flex 컬럼에 minWidth 추가
 
 ```diff
   {
@@ -476,7 +571,7 @@ import { Tooltip } from '@/design-system';
   },
 ```
 
-### 6.5 render 함수에 truncate 추가
+### 7.5 render 함수에 truncate 추가
 
 ```diff
   {
@@ -490,7 +585,7 @@ import { Tooltip } from '@/design-system';
   },
 ```
 
-### 6.6 복합 셀에 min-w-0 추가
+### 7.6 복합 셀에 min-w-0 추가
 
 ```diff
   {
@@ -507,9 +602,9 @@ import { Tooltip } from '@/design-system';
 
 ---
 
-## 7. 통합 코드 예시
+## 8. 통합 코드 예시
 
-### 7.1 기본 리스트 페이지
+### 8.1 기본 리스트 페이지
 
 ```typescript
 import { 
@@ -603,7 +698,7 @@ const columns: TableColumn<Instance>[] = [
 <Table columns={columns} data={instances} rowKey="id" selectable />
 ```
 
-### 7.2 설정/대시보드 테이블
+### 8.2 설정/대시보드 테이블
 
 ```typescript
 // 밀집 높이 (40px) 사용
@@ -641,7 +736,7 @@ const settingsColumns: TableColumn<Setting>[] = [
 />
 ```
 
-### 7.3 컬럼이 많은 테이블
+### 8.3 컬럼이 많은 테이블
 
 ```typescript
 const detailedColumns: TableColumn<Instance>[] = [
@@ -662,7 +757,7 @@ const detailedColumns: TableColumn<Instance>[] = [
 
 ---
 
-## 8. FAQ
+## 9. FAQ
 
 ### Q: 기존 `columnWidths`를 계속 사용해도 되나요?
 
