@@ -106,7 +106,7 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
       )}
 
       {/* Navigation */}
-      <nav className="flex-1 px-3 py-2 overflow-y-auto overflow-x-hidden sidebar-scroll">
+      <nav className="flex-1 px-3 py-2 pb-6 overflow-y-auto overflow-x-hidden sidebar-scroll">
         <VStack gap={4} className="w-full min-w-0">
           {/* Back to Entry */}
           <Link

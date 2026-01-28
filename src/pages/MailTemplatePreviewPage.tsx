@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button, VStack, HStack, Input } from '@/design-system';
 import { IconArrowLeft, IconCopy, IconCheck, IconCode, IconEye } from '@tabler/icons-react';
+import thakiLogoLight from '@/assets/thakiLogo_light.svg';
 
 /* ----------------------------------------
    Template Configurations
@@ -28,13 +29,10 @@ const templateConfig: Record<TemplateType, { title: string; description: string 
    THAKI Logo Component
    ---------------------------------------- */
 
-// 이메일용 로고 URL (배포된 이미지 사용)
-const LOGO_URL = 'https://thakicloud.github.io/tds_ssot/assets/thakiLogo_light-D4_vGfZ3.svg';
-
 function ThakiLogo() {
   return (
     <img
-      src={LOGO_URL}
+      src={thakiLogoLight}
       alt="THAKI Cloud"
       style={{ height: '20px', display: 'block', alignSelf: 'flex-start' }}
     />
