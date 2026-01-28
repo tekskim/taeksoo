@@ -1074,6 +1074,23 @@ function Popover({ data, position, onClose }: PopoverProps) {
   const statusText =
     data.status === 'active' ? 'Available' : data.status === 'inactive' ? 'Inactive' : 'Error';
 
+  const getHeaderTitle = () => {
+    switch (data.type) {
+      case 'externalNetwork':
+        return 'External network';
+      case 'router':
+        return 'Router';
+      case 'subnet':
+        return 'Subnet';
+      case 'vpc':
+        return 'VPC';
+      case 'loadBalancer':
+        return 'Load balancer';
+      default:
+        return data.name;
+    }
+  };
+
   return (
     <div
       ref={popoverRef}
@@ -1085,7 +1102,7 @@ function Popover({ data, position, onClose }: PopoverProps) {
         className={`flex items-center justify-between px-4 pt-3 pb-2 ${!isDragging ? 'cursor-grab' : 'cursor-grabbing'}`}
         onMouseDown={handleMouseDown}
       >
-        <span className="text-[length:var(--font-size-12)] font-semibold text-[var(--color-text-default)]">{data.name}</span>
+        <span className="text-[length:var(--font-size-12)] font-semibold text-[var(--color-text-default)]">{getHeaderTitle()}</span>
         <button 
           onClick={onClose} 
           className="flex items-center justify-center w-[var(--window-control-size)] h-[var(--window-control-size)] rounded-[var(--window-control-radius)] text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] transition-colors"
