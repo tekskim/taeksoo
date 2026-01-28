@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import {
   Button,
   FilterSearchInput,
@@ -11,15 +11,11 @@ import {
   TopBarAction,
   Breadcrumb,
   ListToolbar,
-  ContextMenu,
   ConfirmModal,
   StatusIndicator,
-  Tabs,
-  TabList,
-  Tab,
+  Badge,
   Tooltip,
   type TableColumn,
-  type ContextMenuItem,
   type FilterField,
   type AppliedFilter,
 } from '@/design-system';
@@ -30,15 +26,7 @@ import { AttachPortToInstanceDrawer } from '@/components/AttachPortToInstanceDra
 import { AssociateFloatingIPToPortDrawer } from '@/components/AssociateFloatingIPToPortDrawer';
 import { EditPortSecurityGroupsDrawer } from '@/components/EditPortSecurityGroupsDrawer';
 import { EditPortDrawer } from '@/components/EditPortDrawer';
-import {
-  IconDotsCircleHorizontal,
-  IconTrash,
-  IconDownload,
-  IconBell,
-  IconCube,
-  IconRouter,
-} from '@tabler/icons-react';
-import { Link } from 'react-router-dom';
+import { IconTrash, IconDownload, IconBell, IconCube, IconRouter } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -49,15 +37,20 @@ type PortStatus = 'active' | 'error' | 'building' | 'down';
 interface Port {
   id: string;
   name: string;
+  tenant: string;
+  tenantId: string;
   attachedTo: string | null;
   attachedToId: string | null;
   attachedType: 'instance' | 'router' | null;
   ownedNetwork: string;
   ownedNetworkId: string;
   securityGroups: string;
+  securityGroupId: string;
   fixedIp: string;
   floatingIp: string;
   macAddress: string;
+  adminState: 'Up' | 'Down';
+  createdAt: string;
   status: PortStatus;
 }
 
@@ -69,141 +62,191 @@ const mockPorts: Port[] = [
   {
     id: 'port-001',
     name: 'port-01',
+    tenant: 'tenantA',
+    tenantId: 'tenant-001',
     attachedTo: 'web-01',
     attachedToId: 'inst-001',
     attachedType: 'instance',
     ownedNetwork: 'net-01',
     ownedNetworkId: 'net-001',
     securityGroups: 'default-sg (+4)',
+    securityGroupId: 'sg-001',
     fixedIp: '10.7.60.91',
     floatingIp: '10.7.65.39',
     macAddress: 'fa:16:3e:34:85:32',
+    adminState: 'Up',
+    createdAt: 'Dec 15, 2025',
     status: 'active',
   },
   {
     id: 'port-002',
     name: 'port-02',
+    tenant: 'tenantA',
+    tenantId: 'tenant-001',
     attachedTo: 'app-server',
     attachedToId: 'inst-002',
     attachedType: 'instance',
     ownedNetwork: 'net-02',
     ownedNetworkId: 'net-002',
     securityGroups: 'app-sg (+2)',
+    securityGroupId: 'sg-002',
     fixedIp: '10.7.60.92',
     floatingIp: '10.7.65.40',
     macAddress: 'fa:16:3e:34:85:33',
+    adminState: 'Up',
+    createdAt: 'Dec 14, 2025',
     status: 'active',
   },
   {
     id: 'port-003',
     name: 'port-03',
+    tenant: 'tenantB',
+    tenantId: 'tenant-002',
     attachedTo: null,
     attachedToId: null,
     attachedType: null,
     ownedNetwork: 'net-03',
     ownedNetworkId: 'net-003',
     securityGroups: 'default-sg',
+    securityGroupId: 'sg-003',
     fixedIp: '10.7.60.93',
     floatingIp: '-',
     macAddress: 'fa:16:3e:34:85:34',
+    adminState: 'Down',
+    createdAt: 'Dec 13, 2025',
     status: 'down',
   },
   {
     id: 'port-004',
     name: 'db-port',
+    tenant: 'tenantA',
+    tenantId: 'tenant-001',
     attachedTo: 'db-server',
     attachedToId: 'inst-003',
     attachedType: 'instance',
     ownedNetwork: 'net-01',
     ownedNetworkId: 'net-001',
     securityGroups: 'db-sg',
+    securityGroupId: 'sg-004',
     fixedIp: '10.7.60.94',
     floatingIp: '-',
     macAddress: 'fa:16:3e:34:85:35',
+    adminState: 'Up',
+    createdAt: 'Dec 12, 2025',
     status: 'active',
   },
   {
     id: 'port-005',
     name: 'router-port-1',
+    tenant: 'tenantA',
+    tenantId: 'tenant-001',
     attachedTo: 'main-router',
     attachedToId: 'router-001',
     attachedType: 'router',
     ownedNetwork: 'net-01',
     ownedNetworkId: 'net-001',
     securityGroups: '-',
+    securityGroupId: '',
     fixedIp: '10.7.60.1',
     floatingIp: '-',
     macAddress: 'fa:16:3e:34:85:36',
+    adminState: 'Up',
+    createdAt: 'Dec 11, 2025',
     status: 'active',
   },
   {
     id: 'port-006',
     name: 'lb-port',
+    tenant: 'tenantC',
+    tenantId: 'tenant-003',
     attachedTo: 'load-balancer-01',
     attachedToId: 'lb-001',
     attachedType: 'instance',
     ownedNetwork: 'net-02',
     ownedNetworkId: 'net-002',
     securityGroups: 'lb-sg (+1)',
+    securityGroupId: 'sg-005',
     fixedIp: '10.7.60.95',
     floatingIp: '10.7.65.41',
     macAddress: 'fa:16:3e:34:85:37',
+    adminState: 'Up',
+    createdAt: 'Dec 10, 2025',
     status: 'active',
   },
   {
     id: 'port-007',
     name: 'cache-port',
+    tenant: 'tenantA',
+    tenantId: 'tenant-001',
     attachedTo: 'redis-01',
     attachedToId: 'inst-004',
     attachedType: 'instance',
     ownedNetwork: 'net-01',
     ownedNetworkId: 'net-001',
     securityGroups: 'cache-sg',
+    securityGroupId: 'sg-006',
     fixedIp: '10.7.60.96',
     floatingIp: '-',
     macAddress: 'fa:16:3e:34:85:38',
+    adminState: 'Up',
+    createdAt: 'Dec 9, 2025',
     status: 'active',
   },
   {
     id: 'port-008',
     name: 'monitor-port',
+    tenant: 'tenantB',
+    tenantId: 'tenant-002',
     attachedTo: 'prometheus',
     attachedToId: 'inst-005',
     attachedType: 'instance',
     ownedNetwork: 'net-03',
     ownedNetworkId: 'net-003',
     securityGroups: 'monitor-sg',
+    securityGroupId: 'sg-007',
     fixedIp: '10.7.60.97',
     floatingIp: '10.7.65.42',
     macAddress: 'fa:16:3e:34:85:39',
+    adminState: 'Up',
+    createdAt: 'Dec 8, 2025',
     status: 'building',
   },
   {
     id: 'port-009',
     name: 'test-port',
+    tenant: 'tenantA',
+    tenantId: 'tenant-001',
     attachedTo: null,
     attachedToId: null,
     attachedType: null,
     ownedNetwork: 'net-04',
     ownedNetworkId: 'net-004',
     securityGroups: 'default-sg',
+    securityGroupId: 'sg-008',
     fixedIp: '10.7.60.98',
     floatingIp: '-',
     macAddress: 'fa:16:3e:34:85:40',
+    adminState: 'Down',
+    createdAt: 'Dec 7, 2025',
     status: 'error',
   },
   {
     id: 'port-010',
     name: 'vpn-port',
+    tenant: 'tenantC',
+    tenantId: 'tenant-003',
     attachedTo: 'vpn-gateway',
     attachedToId: 'vpn-001',
     attachedType: 'instance',
     ownedNetwork: 'net-01',
     ownedNetworkId: 'net-001',
     securityGroups: 'vpn-sg',
+    securityGroupId: 'sg-009',
     fixedIp: '10.7.60.99',
     floatingIp: '10.7.65.43',
     macAddress: 'fa:16:3e:34:85:41',
+    adminState: 'Up',
+    createdAt: 'Dec 6, 2025',
     status: 'active',
   },
 ];
@@ -226,11 +269,21 @@ const portStatusMap: Record<PortStatus, 'active' | 'error' | 'building' | 'down'
 // Filter fields configuration
 const filterFields: FilterField[] = [
   { key: 'name', label: 'Name', type: 'text' },
+  { key: 'tenant', label: 'Tenant', type: 'text' },
   { key: 'attachedTo', label: 'Attached To', type: 'text' },
   { key: 'ownedNetwork', label: 'Network', type: 'text' },
   { key: 'fixedIp', label: 'Fixed IP', type: 'text' },
   { key: 'floatingIp', label: 'Floating IP', type: 'text' },
   { key: 'macAddress', label: 'MAC Address', type: 'text' },
+  {
+    key: 'adminState',
+    label: 'Admin State',
+    type: 'select',
+    options: [
+      { value: 'Up', label: 'Up' },
+      { value: 'Down', label: 'Down' },
+    ],
+  },
   {
     key: 'status',
     label: 'Status',
@@ -245,13 +298,11 @@ const filterFields: FilterField[] = [
 ];
 
 export function ComputeAdminPortsPage() {
-  const navigate = useNavigate();
   const [selectedPorts, setSelectedPorts] = useState<string[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [ports] = useState(mockPorts);
-  const [activeTab, setActiveTab] = useState('all');
 
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -292,12 +343,15 @@ export function ComputeAdminPortsPage() {
   const defaultColumnConfig: ColumnConfig[] = [
     { id: 'status', label: 'Status', visible: true, locked: true },
     { id: 'name', label: 'Name', visible: true, locked: true },
+    { id: 'tenant', label: 'Tenant', visible: true },
     { id: 'attachedTo', label: 'Attached to', visible: true },
     { id: 'ownedNetwork', label: 'Owned network', visible: true },
     { id: 'securityGroups', label: 'SG', visible: true },
     { id: 'fixedIp', label: 'Fixed IP', visible: true },
     { id: 'floatingIp', label: 'Floating IP', visible: true },
     { id: 'macAddress', label: 'Mac address', visible: true },
+    { id: 'adminState', label: 'Admin State', visible: true },
+    { id: 'createdAt', label: 'Created At', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
 
@@ -313,75 +367,17 @@ export function ComputeAdminPortsPage() {
     closable: tab.closable,
   }));
 
-  // Context menu items
-  const getContextMenuItems = (port: Port): ContextMenuItem[] => [
-    {
-      id: 'attach-instance',
-      label: 'Attach instance',
-      onClick: () => handleAttachInstance(port),
-      disabled: !!port.attachedTo,
-    },
-    {
-      id: 'detach-instance',
-      label: 'Detach instance',
-      onClick: () => console.log('Detach instance:', port.id),
-      disabled: !port.attachedTo,
-    },
-    {
-      id: 'associate-floating-ip',
-      label: 'Associate floating IP',
-      onClick: () => handleAssociateFloatingIP(port),
-      disabled: !!port.floatingIp,
-    },
-    {
-      id: 'disassociate-floating-ip',
-      label: 'Disassociate floating IP',
-      onClick: () => console.log('Disassociate floating IP:', port.id),
-      disabled: !port.floatingIp,
-    },
-    {
-      id: 'allocate-ip',
-      label: 'Allocate IP',
-      onClick: () => console.log('Allocate IP:', port.id),
-    },
-    {
-      id: 'manage-security-groups',
-      label: 'Manage security groups',
-      onClick: () => handleManageSecurityGroups(port),
-    },
-    { id: 'edit', label: 'Edit', onClick: () => handleEditPort(port) },
-    {
-      id: 'delete',
-      label: 'Delete',
-      status: 'danger',
-      onClick: () => {
-        setPortToDelete(port);
-        setDeleteModalOpen(true);
-      },
-    },
-  ];
-
-  // Filter ports based on search and tab
+  // Filter ports based on search
   const filteredPorts = useMemo(() => {
-    let filtered = ports;
+    if (appliedFilters.length === 0) return ports;
 
-    // Filter by tab
-    if (activeTab === 'instance') {
-      filtered = filtered.filter((p) => p.attachedType === 'instance');
-    }
-
-    // Filter by applied filters
-    if (appliedFilters.length > 0) {
-      filtered = filtered.filter((p) => {
-        return appliedFilters.every((filter) => {
-          const value = String(p[filter.field as keyof Port] || '').toLowerCase();
-          return value.includes(filter.value.toLowerCase());
-        });
+    return ports.filter((p) => {
+      return appliedFilters.every((filter) => {
+        const value = String(p[filter.field as keyof Port] || '').toLowerCase();
+        return value.includes(filter.value.toLowerCase());
       });
-    }
-
-    return filtered;
-  }, [ports, appliedFilters, activeTab]);
+    });
+  }, [ports, appliedFilters]);
 
   const totalPages = Math.ceil(filteredPorts.length / rowsPerPage);
 
@@ -415,35 +411,52 @@ export function ComputeAdminPortsPage() {
             {row.name}
           </Link>
           <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-            ID : {row.id}
+            ID: {row.id}
+          </span>
+        </div>
+      ),
+    },
+    {
+      key: 'tenant',
+      label: 'Tenant',
+      flex: 1,
+      sortable: true,
+      render: (_, row) => (
+        <div className="flex flex-col gap-0.5">
+          <Link
+            to={`/compute-admin/tenants/${row.tenantId}`}
+            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.tenant}
+          </Link>
+          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
+            ID: {row.tenantId}
           </span>
         </div>
       ),
     },
     {
       key: 'attachedTo',
-      label: 'Attached to',
-      width: '160px',
-      align: 'right',
+      label: 'Attached To',
+      flex: 1,
       render: (_, row) =>
         row.attachedTo ? (
-          <div className="flex items-center gap-2 justify-between w-full">
-            <div className="flex flex-col gap-0.5 min-w-0 text-left">
-              <Tooltip content={row.attachedTo} position="top">
-                <Link
-                  to={
-                    row.attachedType === 'router'
-                      ? `/routers/${row.attachedToId}`
-                      : `/instances/${row.attachedToId}`
-                  }
-                  className="inline-flex items-center gap-1 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <span className="truncate">{row.attachedTo}</span>
-                </Link>
-              </Tooltip>
-              <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] truncate">
-                ID : {row.attachedToId?.substring(0, 8)}
+          <div className="flex items-center justify-between w-full gap-2">
+            <div className="flex flex-col gap-0.5 min-w-0">
+              <Link
+                to={
+                  row.attachedType === 'router'
+                    ? `/compute-admin/routers/${row.attachedToId}`
+                    : `/compute-admin/instances/${row.attachedToId}`
+                }
+                className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {row.attachedTo}
+              </Link>
+              <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+                ID: {row.attachedToId}
               </span>
             </div>
             <Tooltip content={row.attachedType === 'router' ? 'Router' : 'Instance'} position="top">
@@ -457,27 +470,25 @@ export function ComputeAdminPortsPage() {
             </Tooltip>
           </div>
         ) : (
-          <span className="block text-left w-full">-</span>
+          <span>-</span>
         ),
     },
     {
       key: 'ownedNetwork',
-      label: 'Owned network',
-      width: '140px',
+      label: 'Owned Network',
+      flex: 1,
       sortable: true,
       render: (_, row) => (
-        <div className="flex flex-col gap-0.5 min-w-0">
-          <Tooltip content={row.ownedNetwork} position="top">
-            <Link
-              to={`/compute-admin/networks/${row.ownedNetworkId}`}
-              className="inline-flex items-center gap-1 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <span className="truncate">{row.ownedNetwork}</span>
-            </Link>
-          </Tooltip>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] truncate">
-            ID : {row.ownedNetworkId.substring(0, 8)}
+        <div className="flex flex-col gap-0.5">
+          <Link
+            to={`/compute-admin/networks/${row.ownedNetworkId}`}
+            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.ownedNetwork}
+          </Link>
+          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
+            ID: {row.ownedNetworkId}
           </span>
         </div>
       ),
@@ -486,6 +497,16 @@ export function ComputeAdminPortsPage() {
       key: 'securityGroups',
       label: 'SG',
       flex: 1,
+      render: (_, row) => (
+        <div className="flex flex-col gap-0.5">
+          <span className="text-[12px] text-[var(--color-text-default)]">{row.securityGroups}</span>
+          {row.securityGroupId && (
+            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+              ID:{row.securityGroupId}
+            </span>
+          )}
+        </div>
+      ),
     },
     {
       key: 'fixedIp',
@@ -503,21 +524,37 @@ export function ComputeAdminPortsPage() {
       flex: 1,
     },
     {
+      key: 'adminState',
+      label: 'Admin State',
+      flex: 1,
+      render: (_, row) => (
+        <Badge variant={row.adminState === 'Up' ? 'success' : 'error'} size="sm">
+          {row.adminState}
+        </Badge>
+      ),
+    },
+    {
+      key: 'createdAt',
+      label: 'Created At',
+      flex: 1,
+      sortable: true,
+    },
+    {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: '72px',
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
-          <ContextMenu items={getContextMenuItems(row)} trigger="click">
-            <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-              <IconDotsCircleHorizontal
-                size={16}
-                stroke={1.5}
-                className="text-[var(--action-icon-color)]"
-              />
-            </button>
-          </ContextMenu>
+          <button
+            className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors"
+            onClick={() => {
+              setPortToDelete(row);
+              setDeleteModalOpen(true);
+            }}
+          >
+            <IconTrash size={16} stroke={1.5} className="text-[var(--color-state-danger)]" />
+          </button>
         </div>
       ),
     },
@@ -597,22 +634,7 @@ export function ComputeAdminPortsPage() {
                 <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
                   Ports
                 </h1>
-                <Button
-                  variant="primary"
-                  size="md"
-                  onClick={() => navigate('/compute-admin/ports/create')}
-                >
-                  Create virtual adapter
-                </Button>
               </div>
-
-              {/* Tabs */}
-              <Tabs value={activeTab} onChange={setActiveTab} size="sm">
-                <TabList>
-                  <Tab value="all">All</Tab>
-                  <Tab value="instance">Instance ports</Tab>
-                </TabList>
-              </Tabs>
 
               {/* Toolbar */}
               <ListToolbar

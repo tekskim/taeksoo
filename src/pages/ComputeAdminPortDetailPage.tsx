@@ -16,22 +16,18 @@ import {
   Table,
   SearchInput,
   Pagination,
-  ContextMenu,
   Modal,
 } from '@/design-system';
-import type { TableColumn, ContextMenuItem } from '@/design-system';
+import type { TableColumn } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
   IconEdit,
   IconTrash,
   IconBell,
-  IconChevronDown,
   IconExternalLink,
-  IconCopy,
-  IconDotsCircleHorizontal,
-  IconCirclePlus,
   IconAlertCircle,
+  IconDownload,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -363,18 +359,13 @@ export default function PortDetailPage() {
       flex: 1,
       render: (_, row) =>
         row.floatingIp ? (
-          <div className="flex flex-col gap-0.5">
-            <Link
-              to={`/compute-admin/floating-ips/${row.floatingIp.id}`}
-              className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {row.floatingIp.address}
-            </Link>
-            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-              ID : {row.floatingIp.id}
-            </span>
-          </div>
+          <Link
+            to={`/compute-admin/floating-ips/${row.floatingIp.id}`}
+            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.floatingIp.address}
+          </Link>
         ) : (
           <span className="text-[var(--color-text-subtle)]">-</span>
         ),
@@ -405,31 +396,14 @@ export default function PortDetailPage() {
       width: '64px',
       align: 'center',
       render: (_: unknown, row: FixedIP) => {
-        const fixedIpMenuItems: ContextMenuItem[] = [
-          {
-            id: 'disassociate-floating-ip',
-            label: 'Disassociate floating IP',
-            status: 'danger',
-            onClick: () => console.log('Disassociate floating IP', row.id),
-          },
-          {
-            id: 'release-fixed-ip',
-            label: 'Release fixed IP',
-            status: 'danger',
-            onClick: () => console.log('Release fixed IP', row.id),
-          },
-        ];
         return (
           <div onClick={(e) => e.stopPropagation()}>
-            <ContextMenu items={fixedIpMenuItems} trigger="click">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                <IconDotsCircleHorizontal
-                  size={16}
-                  stroke={1.5}
-                  className="text-[var(--action-icon-color)]"
-                />
-              </button>
-            </ContextMenu>
+            <button
+              className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors"
+              onClick={() => console.log('Delete fixed IP', row.id)}
+            >
+              <IconTrash size={16} stroke={1.5} className="text-[var(--color-state-danger)]" />
+            </button>
           </div>
         );
       },
@@ -454,25 +428,14 @@ export default function PortDetailPage() {
       width: '64px',
       align: 'center',
       render: (_: unknown, row: AllowedAddressPair) => {
-        const pairMenuItems: ContextMenuItem[] = [
-          {
-            id: 'delete',
-            label: 'Delete',
-            status: 'danger',
-            onClick: () => console.log('Delete address pair', row.id),
-          },
-        ];
         return (
           <div onClick={(e) => e.stopPropagation()}>
-            <ContextMenu items={pairMenuItems} trigger="click">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                <IconDotsCircleHorizontal
-                  size={16}
-                  stroke={1.5}
-                  className="text-[var(--action-icon-color)]"
-                />
-              </button>
-            </ContextMenu>
+            <button
+              className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors"
+              onClick={() => console.log('Delete address pair', row.id)}
+            >
+              <IconTrash size={16} stroke={1.5} className="text-[var(--color-state-danger)]" />
+            </button>
           </div>
         );
       },
@@ -513,38 +476,6 @@ export default function PortDetailPage() {
       label: 'Created at',
       flex: 1,
       sortable: true,
-    },
-    {
-      key: 'actions',
-      label: 'Action',
-      width: '64px',
-      align: 'center',
-      render: (_: unknown, row: SecurityGroup) => {
-        const sgMenuItems: ContextMenuItem[] = [
-          {
-            id: 'detach',
-            label: 'Detach',
-            status: 'danger',
-            onClick: () => {
-              setSecurityGroupToDetach(row);
-              setDetachModalOpen(true);
-            },
-          },
-        ];
-        return (
-          <div onClick={(e) => e.stopPropagation()}>
-            <ContextMenu items={sgMenuItems} trigger="click">
-              <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                <IconDotsCircleHorizontal
-                  size={16}
-                  stroke={1.5}
-                  className="text-[var(--action-icon-color)]"
-                />
-              </button>
-            </ContextMenu>
-          </div>
-        );
-      },
     },
   ];
 
@@ -635,28 +566,9 @@ export default function PortDetailPage() {
 
                 {/* Actions */}
                 <div className="flex items-center gap-1 mb-3">
-                  <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                    Edit
-                  </Button>
                   <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
                     Delete
                   </Button>
-                  <ContextMenu
-                    items={[
-                      { label: 'Attach instance', onClick: () => {} },
-                      { label: 'Detach instance', onClick: () => {} },
-                      { label: 'Associate floating IP', onClick: () => {} },
-                      { label: 'Disassociate floating IP', onClick: () => {} },
-                      { label: 'Allocate IP', onClick: () => {} },
-                      { label: 'Manage security groups', onClick: () => {} },
-                      { label: 'Create allowed address pair', onClick: () => {} },
-                    ]}
-                    trigger="click"
-                  >
-                    <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-                      More Actions
-                    </Button>
-                  </ContextMenu>
                 </div>
 
                 {/* Info Cards */}
@@ -672,6 +584,8 @@ export default function PortDetailPage() {
                     copyable
                     onCopy={handleCopyId}
                   />
+                  <DetailHeader.InfoCard label="Tenant" value="tenantA" />
+                  <DetailHeader.InfoCard label="Admin State" value="Up" />
                   <DetailHeader.InfoCard
                     label="Port security"
                     value={port.portSecurity ? 'On' : 'Off'}
@@ -689,7 +603,7 @@ export default function PortDetailPage() {
                     {port.status === 'active' && (
                       <Tab value="allowed-address-pairs">Allowed Address Pairs</Tab>
                     )}
-                    {port.status === 'active' && <Tab value="security">Security</Tab>}
+                    {port.status === 'active' && <Tab value="security">Security Groups</Tab>}
                   </TabList>
 
                   {/* Details Tab */}
@@ -708,62 +622,26 @@ export default function PortDetailPage() {
                         <SectionCard.Content>
                           <SectionCard.DataRow label="Port name" value={port.name} />
                           <SectionCard.DataRow label="Description" value={port.description} />
+                          <SectionCard.DataRow label="Admin State" value="Up" />
                         </SectionCard.Content>
                       </SectionCard>
 
-                      {/* Network */}
+                      {/* Owned Network */}
                       <SectionCard>
-                        <SectionCard.Header title="Network" />
+                        <SectionCard.Header title="Owned Network" />
                         <SectionCard.Content>
                           <SectionCard.DataRow
-                            label="Owned network"
+                            label="Network"
                             value={
                               <Link
                                 to={`/compute-admin/networks/${port.ownedNetwork.id}`}
-                                className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                                className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                               >
                                 {port.ownedNetwork.name}
-                                <IconExternalLink
-                                  size={12}
-                                  className="text-[var(--color-action-primary)]"
-                                />
                               </Link>
                             }
                           />
-                          <SectionCard.DataRow
-                            label="Subnet"
-                            value={
-                              <Link
-                                to={`/compute-admin/networks/${port.subnet.id}`}
-                                className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-                              >
-                                {port.subnet.name}
-                                <IconExternalLink
-                                  size={12}
-                                  className="text-[var(--color-action-primary)]"
-                                />
-                              </Link>
-                            }
-                          />
-                          <SectionCard.DataRow
-                            label="MAC Address"
-                            value={
-                              <div className="flex items-center gap-2">
-                                <span>{port.macAddress}</span>
-                                <button
-                                  onClick={handleCopyMac}
-                                  className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                  title={copiedMac ? 'Copied!' : 'Copy MAC Address'}
-                                >
-                                  <IconCopy
-                                    size={12}
-                                    stroke={1.5}
-                                    className="text-[var(--color-action-primary)]"
-                                  />
-                                </button>
-                              </div>
-                            }
-                          />
+                          <SectionCard.DataRow label="MAC Address" value={port.macAddress} />
                         </SectionCard.Content>
                       </SectionCard>
 
@@ -772,7 +650,17 @@ export default function PortDetailPage() {
                         <SectionCard.Header title="Attachments" />
                         <SectionCard.Content>
                           <SectionCard.DataRow
-                            label="Attached to"
+                            label="Bind Device Type"
+                            value={
+                              port.attachedTo
+                                ? port.attachedTo.type === 'instance'
+                                  ? 'Instance'
+                                  : 'Router'
+                                : '-'
+                            }
+                          />
+                          <SectionCard.DataRow
+                            label="Bind Device"
                             value={
                               port.attachedTo ? (
                                 <Link
@@ -781,13 +669,9 @@ export default function PortDetailPage() {
                                       ? `/instances/${port.attachedTo.id}`
                                       : `/routers/${port.attachedTo.id}`
                                   }
-                                  className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                                  className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
                                 >
                                   {port.attachedTo.name}
-                                  <IconExternalLink
-                                    size={12}
-                                    className="text-[var(--color-action-primary)]"
-                                  />
                                 </Link>
                               ) : (
                                 '-'
@@ -807,25 +691,26 @@ export default function PortDetailPage() {
                         <h3 className="text-[16px] font-semibold text-[var(--color-text-default)]">
                           Fixed IPs
                         </h3>
-                        <div className="flex items-center gap-1">
-                          <Button variant="secondary" size="sm">
-                            Allocate IP
-                          </Button>
-                          <Button variant="secondary" size="sm">
-                            Associate floating IP
-                          </Button>
-                        </div>
                       </div>
 
                       {/* Search */}
-                      <div className="w-[var(--search-input-width)]">
-                        <SearchInput
-                          value={fixedIpSearchTerm}
-                          onChange={(e) => {
-                            setFixedIpSearchTerm(e.target.value);
-                            setFixedIpCurrentPage(1);
-                          }}
-                          placeholder="Search fixed IP by attributes"
+                      <div className="flex items-center gap-1">
+                        <div className="w-[var(--search-input-width)]">
+                          <SearchInput
+                            value={fixedIpSearchTerm}
+                            onChange={(e) => {
+                              setFixedIpSearchTerm(e.target.value);
+                              setFixedIpCurrentPage(1);
+                            }}
+                            placeholder="Search fixed IP by attributes"
+                          />
+                        </div>
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          iconOnly
+                          icon={<IconDownload size={12} />}
+                          aria-label="Download"
                         />
                       </div>
 
@@ -854,24 +739,26 @@ export default function PortDetailPage() {
                           <h3 className="text-[16px] font-semibold text-[var(--color-text-default)]">
                             Allowed Address Pairs
                           </h3>
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            leftIcon={<IconCirclePlus size={12} />}
-                          >
-                            Create Allowed Address Pair
-                          </Button>
                         </div>
 
                         {/* Search */}
-                        <div className="w-[var(--search-input-width)]">
-                          <SearchInput
-                            value={aapSearchTerm}
-                            onChange={(e) => {
-                              setAapSearchTerm(e.target.value);
-                              setAapCurrentPage(1);
-                            }}
-                            placeholder="Search address pair by attributes"
+                        <div className="flex items-center gap-1">
+                          <div className="w-[var(--search-input-width)]">
+                            <SearchInput
+                              value={aapSearchTerm}
+                              onChange={(e) => {
+                                setAapSearchTerm(e.target.value);
+                                setAapCurrentPage(1);
+                              }}
+                              placeholder="Search address pair by attributes"
+                            />
+                          </div>
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            iconOnly
+                            icon={<IconDownload size={12} />}
+                            aria-label="Download"
                           />
                         </div>
 
@@ -901,20 +788,26 @@ export default function PortDetailPage() {
                           <h3 className="text-[16px] font-semibold text-[var(--color-text-default)]">
                             Security groups
                           </h3>
-                          <Button variant="secondary" size="sm">
-                            Manage security Group
-                          </Button>
                         </div>
 
                         {/* Search */}
-                        <div className="w-[var(--search-input-width)]">
-                          <SearchInput
-                            value={sgSearchTerm}
-                            onChange={(e) => {
-                              setSgSearchTerm(e.target.value);
-                              setSgCurrentPage(1);
-                            }}
-                            placeholder="Search security group by attributes"
+                        <div className="flex items-center gap-1">
+                          <div className="w-[var(--search-input-width)]">
+                            <SearchInput
+                              value={sgSearchTerm}
+                              onChange={(e) => {
+                                setSgSearchTerm(e.target.value);
+                                setSgCurrentPage(1);
+                              }}
+                              placeholder="Search security group by attributes"
+                            />
+                          </div>
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            iconOnly
+                            icon={<IconDownload size={12} />}
+                            aria-label="Download"
                           />
                         </div>
 
