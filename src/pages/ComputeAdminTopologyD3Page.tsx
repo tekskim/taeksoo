@@ -965,32 +965,6 @@ function ViewDetailLink({ count }: { count: number }) {
   );
 }
 
-// Health Monitor Section Component
-function HealthMonitorSection({
-  healthMonitor,
-}: {
-  healthMonitor: {
-    healthy: number;
-    degraded: number;
-    error: number;
-    pools?: { name: string; status: 'healthy' | 'degraded' | 'error' }[];
-  };
-}) {
-  return (
-    <div className="mt-3 pt-3 border-t border-slate-100">
-      <div className="flex items-center gap-2 flex-wrap">
-        <span className="text-slate-500 font-medium">Health Monitor :</span>
-        <span className="text-green-500 font-medium text-sm">
-          {healthMonitor.healthy} Healthy
-        </span>
-        <span className="text-amber-500 font-medium text-sm">
-          {healthMonitor.degraded} Degraded
-        </span>
-        <span className="text-red-500 font-medium text-sm">{healthMonitor.error} Error</span>
-      </div>
-    </div>
-  );
-}
 
 // Listeners Section Component
 function ListenersSection({
@@ -1344,8 +1318,6 @@ function Popover({ data, position, onClose }: PopoverProps) {
           <ListenersSection listeners={data.listenerList} />
         )}
 
-        {/* Health Monitor (Load balancer) */}
-        {data.healthMonitor && <HealthMonitorSection healthMonitor={data.healthMonitor} />}
       </div>
     </div>
   );
