@@ -978,10 +978,10 @@ function ListenersSection({
   }[];
 }) {
   return (
-    <div className="mt-3 pt-3 border-t border-slate-100">
+    <div className="mt-3 pt-3 border-t border-[var(--color-border-subtle)]">
       <div className="flex items-center justify-between">
-        <span className="text-slate-500 font-medium">Listeners ({listeners.length})</span>
-        <Link to="#" className="text-blue-500 hover:underline text-xs">
+        <span className="text-[length:var(--font-size-12)] text-[var(--color-text-muted)] font-semibold">Listeners ({listeners.length})</span>
+        <Link to="#" className="text-[var(--color-action-primary)] hover:underline text-[length:var(--font-size-11)]">
           View detail
         </Link>
       </div>
@@ -992,10 +992,10 @@ function ListenersSection({
 // Routers Section Component (for External network)
 function RoutersSection({ routers }: { routers: RouterItem[] }) {
   return (
-    <div className="mt-3 pt-3 border-t border-slate-100">
+    <div className="mt-3 pt-3 border-t border-[var(--color-border-subtle)]">
       <div className="flex items-center justify-between">
-        <span className="text-slate-500 font-medium">Routers ({routers.length})</span>
-        <Link to="#" className="text-blue-500 hover:underline text-xs">
+        <span className="text-[length:var(--font-size-12)] text-[var(--color-text-muted)] font-semibold">Routers ({routers.length})</span>
+        <Link to="#" className="text-[var(--color-action-primary)] hover:underline text-[length:var(--font-size-11)]">
           View detail
         </Link>
       </div>
@@ -1006,10 +1006,10 @@ function RoutersSection({ routers }: { routers: RouterItem[] }) {
 // Subnets Section Component (for Router)
 function SubnetsSection({ subnets }: { subnets: SubnetItem[] }) {
   return (
-    <div className="mt-3 pt-3 border-t border-slate-100">
+    <div className="mt-3 pt-3 border-t border-[var(--color-border-subtle)]">
       <div className="flex items-center justify-between">
-        <span className="text-slate-500 font-medium">Subnets ({subnets.length})</span>
-        <Link to="#" className="text-blue-500 hover:underline text-xs">
+        <span className="text-[length:var(--font-size-12)] text-[var(--color-text-muted)] font-semibold">Subnets ({subnets.length})</span>
+        <Link to="#" className="text-[var(--color-action-primary)] hover:underline text-[length:var(--font-size-11)]">
           View detail
         </Link>
       </div>
@@ -1079,30 +1079,30 @@ function Popover({ data, position, onClose }: PopoverProps) {
         className={`flex items-center justify-between px-4 pt-3 pb-2 ${!isDragging ? 'cursor-grab' : 'cursor-grabbing'}`}
         onMouseDown={handleMouseDown}
       >
-        <span className="font-semibold text-base text-slate-900">{data.name}</span>
-        <button onClick={onClose} className="text-slate-400 hover:text-slate-600">
+        <span className="text-[length:var(--font-size-14)] font-semibold text-[var(--color-text-default)]">{data.name}</span>
+        <button onClick={onClose} className="text-[var(--color-text-subtle)] hover:text-[var(--color-text-muted)]">
           <IconX size={18} />
         </button>
       </div>
 
       {/* Content */}
-      <div className="px-4 pb-4 text-sm text-slate-700 space-y-1.5">
+      <div className="px-4 pb-4 text-[length:var(--font-size-12)] text-[var(--color-text-default)] space-y-1.5">
         {/* Status */}
         <div className="flex justify-between">
-          <span className="text-slate-500">Status:</span>
+          <span className="text-[var(--color-text-muted)]">Status:</span>
           <span className="font-medium">{statusText}</span>
         </div>
 
         {/* Name */}
         <div className="flex justify-between">
-          <span className="text-slate-500">Name:</span>
+          <span className="text-[var(--color-text-muted)]">Name:</span>
           <LinkText value={data.name} />
         </div>
 
         {/* ID */}
         {data.id && (
           <div className="flex justify-between">
-            <span className="text-slate-500">ID:</span>
+            <span className="text-[var(--color-text-muted)]">ID:</span>
             <CopyableText value={data.id} />
           </div>
         )}
@@ -1110,7 +1110,7 @@ function Popover({ data, position, onClose }: PopoverProps) {
         {/* Admin state */}
         {data.adminState && (
           <div className="flex justify-between">
-            <span className="text-slate-500">Admin state:</span>
+            <span className="text-[var(--color-text-muted)]">Admin state:</span>
             <span className="font-medium">{data.adminState}</span>
           </div>
         )}
@@ -1120,28 +1120,28 @@ function Popover({ data, position, onClose }: PopoverProps) {
           <>
             {data.shared !== undefined && (
               <div className="flex justify-between">
-                <span className="text-slate-500">Shared:</span>
+                <span className="text-[var(--color-text-muted)]">Shared:</span>
                 <span className="font-medium">{data.shared ? 'On' : 'Off'}</span>
               </div>
             )}
             {data.mtu && (
               <div className="flex justify-between">
-                <span className="text-slate-500">MTU:</span>
+                <span className="text-[var(--color-text-muted)]">MTU:</span>
                 <span className="font-medium">{data.mtu}</span>
               </div>
             )}
 
             {/* VPC Subnets grouped by router */}
             {data.vpcSubnetGroups && data.vpcSubnetGroups.length > 0 && (
-              <div className="mt-3 pt-3 border-t border-slate-100">
-                <div className="text-slate-500 mb-2 font-medium">
+              <div className="mt-3 pt-3 border-t border-[var(--color-border-subtle)]">
+                <div className="text-[var(--color-text-muted)] mb-2 font-semibold">
                   Subnets ({data.vpcSubnetGroups.reduce((acc, g) => acc + g.subnets.length, 0)}{' '}
                   total)
                 </div>
                 <div className="space-y-3 max-h-48 overflow-y-auto">
                   {data.vpcSubnetGroups.map((group, idx) => (
-                    <div key={idx} className="text-xs">
-                      <div className="flex items-center gap-1 text-slate-600 mb-1">
+                    <div key={idx} className="text-[length:var(--font-size-11)]">
+                      <div className="flex items-center gap-1 text-[var(--color-text-default)] mb-1">
                         {group.routerName ? (
                           <>
                             <span className="text-indigo-500">📍</span>
@@ -1158,10 +1158,10 @@ function Popover({ data, position, onClose }: PopoverProps) {
                         {group.subnets.map((subnet, sIdx) => (
                           <div
                             key={sIdx}
-                            className="flex items-center justify-between text-slate-600"
+                            className="flex items-center justify-between text-[var(--color-text-default)]"
                           >
                             <span>{subnet.name}</span>
-                            <span className="font-mono text-slate-400">{subnet.cidr}</span>
+                            <span className="font-mono text-[var(--color-text-subtle)]">{subnet.cidr}</span>
                           </div>
                         ))}
                       </div>
@@ -1178,13 +1178,13 @@ function Popover({ data, position, onClose }: PopoverProps) {
           <>
             {data.snat !== undefined && (
               <div className="flex justify-between">
-                <span className="text-slate-500">SNAT:</span>
+                <span className="text-[var(--color-text-muted)]">SNAT:</span>
                 <span className="font-medium">{data.snat ? 'On' : 'Off'}</span>
               </div>
             )}
             {data.externalGateway && (
               <div className="flex justify-between">
-                <span className="text-slate-500">External gateway:</span>
+                <span className="text-[var(--color-text-muted)]">External gateway:</span>
                 <LinkText value={data.externalGateway} />
               </div>
             )}
@@ -1196,25 +1196,25 @@ function Popover({ data, position, onClose }: PopoverProps) {
           <>
             {data.gatewayIp && (
               <div className="flex justify-between">
-                <span className="text-slate-500">Gateway IP:</span>
+                <span className="text-[var(--color-text-muted)]">Gateway IP:</span>
                 <CopyableText value={data.gatewayIp} />
               </div>
             )}
             {data.cidr && (
               <div className="flex justify-between">
-                <span className="text-slate-500">CIDR:</span>
+                <span className="text-[var(--color-text-muted)]">CIDR:</span>
                 <CopyableText value={data.cidr} />
               </div>
             )}
 
             {/* Routers Section */}
             {data.routerList && data.routerList.length > 0 && (
-              <div className="mt-3 pt-3 border-t border-slate-100">
+              <div className="mt-3 pt-3 border-t border-[var(--color-border-subtle)]">
                 <div className="flex items-center justify-between">
-                  <span className="text-slate-500 font-medium">
+                  <span className="text-[var(--color-text-muted)] font-semibold">
                     Routers ({data.routerList.length})
                   </span>
-                  <Link to="#" className="text-blue-500 hover:underline text-xs">
+                  <Link to="#" className="text-[var(--color-action-primary)] hover:underline text-[length:var(--font-size-11)]">
                     View detail
                   </Link>
                 </div>
@@ -1223,12 +1223,12 @@ function Popover({ data, position, onClose }: PopoverProps) {
 
             {/* Instances Section */}
             {data.instanceList && data.instanceList.length > 0 && (
-              <div className="mt-3 pt-3 border-t border-slate-100">
+              <div className="mt-3 pt-3 border-t border-[var(--color-border-subtle)]">
                 <div className="flex items-center justify-between">
-                  <span className="text-slate-500 font-medium">
+                  <span className="text-[var(--color-text-muted)] font-semibold">
                     Instances ({data.instanceList.length})
                   </span>
-                  <Link to="#" className="text-blue-500 hover:underline text-xs">
+                  <Link to="#" className="text-[var(--color-action-primary)] hover:underline text-[length:var(--font-size-11)]">
                     View detail
                   </Link>
                 </div>
@@ -1237,12 +1237,12 @@ function Popover({ data, position, onClose }: PopoverProps) {
 
             {/* Load balancers Section */}
             {data.loadBalancerList && data.loadBalancerList.length > 0 && (
-              <div className="mt-3 pt-3 border-t border-slate-100">
+              <div className="mt-3 pt-3 border-t border-[var(--color-border-subtle)]">
                 <div className="flex items-center justify-between">
-                  <span className="text-slate-500 font-medium">
+                  <span className="text-[var(--color-text-muted)] font-semibold">
                     Load balancers ({data.loadBalancerList.length})
                   </span>
-                  <Link to="#" className="text-blue-500 hover:underline text-xs">
+                  <Link to="#" className="text-[var(--color-action-primary)] hover:underline text-[length:var(--font-size-11)]">
                     View detail
                   </Link>
                 </div>
@@ -1256,13 +1256,13 @@ function Popover({ data, position, onClose }: PopoverProps) {
           <>
             {data.vip && (
               <div className="flex justify-between">
-                <span className="text-slate-500">VIP:</span>
+                <span className="text-[var(--color-text-muted)]">VIP:</span>
                 <CopyableText value={data.vip} />
               </div>
             )}
             {data.floatingIp && (
               <div className="flex justify-between">
-                <span className="text-slate-500">Floating IP:</span>
+                <span className="text-[var(--color-text-muted)]">Floating IP:</span>
                 <CopyableText value={data.floatingIp} />
               </div>
             )}
@@ -1272,13 +1272,13 @@ function Popover({ data, position, onClose }: PopoverProps) {
         {/* Counts with View detail links (for non-subnet types or when no detailed list) */}
         {data.routerCount !== undefined && data.routerCount > 0 && !data.routerList && (
           <div className="flex justify-between">
-            <span className="text-slate-500">Routers:</span>
+            <span className="text-[var(--color-text-muted)]">Routers:</span>
             <ViewDetailLink count={data.routerCount} />
           </div>
         )}
         {data.subnetCount !== undefined && data.subnetCount > 0 && !data.subnetList && (
           <div className="flex justify-between">
-            <span className="text-slate-500">Subnets:</span>
+            <span className="text-[var(--color-text-muted)]">Subnets:</span>
             <ViewDetailLink count={data.subnetCount} />
           </div>
         )}
@@ -1294,7 +1294,7 @@ function Popover({ data, position, onClose }: PopoverProps) {
         )}
         {data.instanceCount !== undefined && data.instanceCount > 0 && !data.instanceList && (
           <div className="flex justify-between">
-            <span className="text-slate-500">Instances:</span>
+            <span className="text-[var(--color-text-muted)]">Instances:</span>
             <ViewDetailLink count={data.instanceCount} />
           </div>
         )}
@@ -1302,13 +1302,13 @@ function Popover({ data, position, onClose }: PopoverProps) {
           data.loadBalancerCount > 0 &&
           !data.loadBalancerList && (
             <div className="flex justify-between">
-              <span className="text-slate-500">Load balancer:</span>
+              <span className="text-[var(--color-text-muted)]">Load balancer:</span>
               <ViewDetailLink count={data.loadBalancerCount} />
             </div>
           )}
         {data.listenerCount !== undefined && data.listenerCount > 0 && !data.listenerList && (
           <div className="flex justify-between">
-            <span className="text-slate-500">Listeners:</span>
+            <span className="text-[var(--color-text-muted)]">Listeners:</span>
             <ViewDetailLink count={data.listenerCount} />
           </div>
         )}
