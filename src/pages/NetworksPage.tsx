@@ -17,7 +17,8 @@ import {
   Tabs,
   TabList,
   Tab,
-  columnWidths,
+  fixedColumns,
+  columnMinWidths,
   type TableColumn,
   type ContextMenuItem,
   type FilterField,
@@ -316,12 +317,12 @@ export function NetworksPage() {
     return filteredNetworks.slice(start, start + rowsPerPage);
   }, [filteredNetworks, currentPage, rowsPerPage]);
 
-  // Table columns
+  // Table columns (using fixedColumns / columnMinWidths preset)
   const columns: TableColumn<Network>[] = [
     {
       key: 'status',
       label: 'Status',
-      width: columnWidths.status,
+      width: fixedColumns.status,
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={networkStatusMap[row.status]} layout="icon-only" />
@@ -331,6 +332,7 @@ export function NetworksPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (_, row) => (
         <Link
@@ -346,29 +348,33 @@ export function NetworksPage() {
       key: 'subnetCidr',
       label: 'Subnet CIDR',
       flex: 1,
+      minWidth: columnMinWidths.subnetCidr,
       sortable: true,
     },
     {
       key: 'external',
       label: 'External',
       flex: 1,
+      minWidth: columnMinWidths.external,
       render: (value: boolean) => (value ? 'Yes' : 'No'),
     },
     {
       key: 'diskTag',
       label: activeTab === 'current' ? 'Shared' : 'Is Current Tenant',
       flex: 1,
+      minWidth: columnMinWidths.diskTag,
       render: (_, row) => (row.shared ? 'On' : 'Off'),
     },
     {
       key: 'adminState',
       label: 'Admin state',
       flex: 1,
+      minWidth: columnMinWidths.adminState,
     },
     {
       key: 'actions',
       label: 'Action',
-      width: columnWidths.actions,
+      width: fixedColumns.actions,
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>

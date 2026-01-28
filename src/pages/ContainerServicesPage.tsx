@@ -16,7 +16,8 @@ import {
   ContextMenu,
   type TableColumn,
   type ContextMenuItem,
-  columnWidths,
+  fixedColumns,
+  columnMinWidths,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -225,7 +226,7 @@ export function ContainerServicesPage() {
     {
       key: 'status',
       label: 'Status',
-      width: columnWidths.status,
+      width: fixedColumns.status,
       sortable: false,
       align: 'center',
       render: (value: string) => (
@@ -248,13 +249,15 @@ export function ContainerServicesPage() {
     {
       key: 'namespace',
       label: 'Namespace',
-      width: columnWidths.namespace,
+      flex: 1,
+      minWidth: columnMinWidths.namespace,
       sortable: true,
     },
     {
       key: 'target',
       label: 'Target',
-      width: columnWidths.target,
+      flex: 1,
+      minWidth: columnMinWidths.target,
       sortable: false,
       render: (value: string[]) => {
         const text = value.join(', ');
@@ -268,7 +271,7 @@ export function ContainerServicesPage() {
     {
       key: 'selector',
       label: 'Selector',
-      width: columnWidths.selector,
+      width: fixedColumns.selector,
       sortable: false,
       render: (value: string[]) => {
         const text = value.join(', ');
@@ -282,7 +285,8 @@ export function ContainerServicesPage() {
     {
       key: 'type',
       label: 'Type',
-      width: columnWidths.type,
+      flex: 1,
+      minWidth: columnMinWidths.type,
       sortable: true,
       render: (value: string) => (
         <span className="text-[12px] text-[var(--color-text-default)]">{value}</span>
@@ -291,14 +295,15 @@ export function ContainerServicesPage() {
     {
       key: 'createdAt',
       label: 'Created At',
-      width: columnWidths.createdAt,
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
     },
     {
       key: 'actions',
       label: 'Action',
-      width: columnWidths.actions,
-      minWidth: columnWidths.actions,
+      width: fixedColumns.actions,
+      minWidth: columnMinWidths.actions,
       align: 'center',
       sticky: 'right',
       render: (_, row) => {

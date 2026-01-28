@@ -13,7 +13,8 @@ import {
   ListToolbar,
   ContextMenu,
   ConfirmModal,
-  columnWidths,
+  fixedColumns,
+  columnMinWidths,
   type TableColumn,
   type ContextMenuItem,
   type FilterField,
@@ -352,12 +353,12 @@ export function InstanceSnapshotsPage() {
     deleting: 'shutoff',
   };
 
-  // Table columns (using columnWidths preset)
+  // Table columns (using fixedColumns / columnMinWidths preset)
   const columns: TableColumn<InstanceSnapshot>[] = [
     {
       key: 'status',
       label: 'Status',
-      width: columnWidths.status,
+      width: fixedColumns.status,
       align: 'center',
       sortable: false,
       render: (_, row) => <StatusIndicator status={statusMap[row.status]} layout="icon-only" />,
@@ -366,7 +367,7 @@ export function InstanceSnapshotsPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
-      minWidth: columnWidths.name,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -386,19 +387,22 @@ export function InstanceSnapshotsPage() {
     {
       key: 'size',
       label: 'Size',
-      width: columnWidths.size,
+      flex: 1,
+      minWidth: columnMinWidths.size,
       sortable: true,
     },
     {
       key: 'diskFormat',
       label: 'Disk format',
-      width: columnWidths.diskFormat,
+      flex: 1,
+      minWidth: columnMinWidths.diskFormat,
       sortable: true,
     },
     {
       key: 'sourceInstance',
       label: 'Source instance',
-      width: columnWidths.sourceInstance,
+      flex: 1,
+      minWidth: columnMinWidths.sourceInstance,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -419,17 +423,19 @@ export function InstanceSnapshotsPage() {
       key: 'description',
       label: 'Description',
       flex: 1,
+      minWidth: columnMinWidths.description,
     },
     {
       key: 'createdAt',
       label: 'Created at',
-      width: columnWidths.createdAt,
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
     },
     {
       key: 'actions',
       label: 'Action',
-      width: columnWidths.actions,
+      width: fixedColumns.actions,
       align: 'center',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [

@@ -17,7 +17,7 @@ import {
   Table,
   SearchInput,
   Pagination,
-  columnWidths,
+  fixedColumns,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
@@ -253,7 +253,7 @@ export default function CertificateDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: columnWidths.status,
+      width: fixedColumns.status,
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={listenerStatusMap[row.status]} layout="icon-only" />

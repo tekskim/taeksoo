@@ -11,7 +11,8 @@ import {
   Breadcrumb,
   ContextMenu,
   TabBar,
-  columnWidths,
+  fixedColumns,
+  columnMinWidths,
   type TableColumn,
   type ContextMenuItem,
 } from '@/design-system';
@@ -174,13 +175,13 @@ export default function IAMActiveSessionsPage() {
   // Breadcrumb items
   const breadcrumbItems = [{ label: 'IAM', href: '/iam' }, { label: 'Active sessions' }];
 
-  // Table columns
+  // Table columns (using fixedColumns / columnMinWidths preset)
   const columns: TableColumn<ActiveSession>[] = [
     {
       key: 'user',
       label: 'User',
       flex: 1,
-      minWidth: columnWidths.user,
+      minWidth: columnMinWidths.user,
       sortable: true,
       render: (value) => (
         <Link
@@ -194,30 +195,34 @@ export default function IAMActiveSessionsPage() {
     {
       key: 'started',
       label: 'Started',
-      width: columnWidths.started,
+      flex: 1,
+      minWidth: columnMinWidths.started,
       sortable: true,
     },
     {
       key: 'lastAccess',
       label: 'Last access',
-      width: columnWidths.lastAccess,
+      flex: 1,
+      minWidth: columnMinWidths.lastAccess,
       sortable: true,
     },
     {
       key: 'ipAddress',
       label: 'IP address',
-      width: columnWidths.ipAddress,
+      flex: 1,
+      minWidth: columnMinWidths.ipAddress,
       sortable: true,
     },
     {
       key: 'device',
       label: 'Device',
       flex: 1,
+      minWidth: columnMinWidths.device,
     },
     {
       key: 'id',
       label: 'Action',
-      width: columnWidths.actionWide,
+      width: fixedColumns.actionWide,
       align: 'center',
       render: (_, row) => (
         <ContextMenu items={getContextMenuItems(row)} trigger="click">

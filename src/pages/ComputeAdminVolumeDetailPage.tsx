@@ -20,6 +20,7 @@ import {
   ContextMenu,
   type TableColumn,
   type ContextMenuItem,
+  fixedColumns,
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -393,7 +394,7 @@ export function ComputeAdminVolumeDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: fixedColumns.status,
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={snapshotStatusMap[row.status]} layout="icon-only" />
@@ -436,7 +437,7 @@ export function ComputeAdminVolumeDetailPage() {
     {
       key: 'action',
       label: 'Action',
-      width: '64px',
+      width: fixedColumns.actions,
       align: 'center',
       render: (_, row) => (
         <div className="flex items-center justify-center">
@@ -459,7 +460,7 @@ export function ComputeAdminVolumeDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: fixedColumns.status,
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={backupStatusMap[row.status]} layout="icon-only" />
@@ -508,7 +509,7 @@ export function ComputeAdminVolumeDetailPage() {
     {
       key: 'action',
       label: 'Action',
-      width: '64px',
+      width: fixedColumns.actions,
       align: 'center',
       render: (_, row) => (
         <div className="flex items-center justify-center">

@@ -18,6 +18,7 @@ import {
   Pagination,
   StatusIndicator,
   ContextMenu,
+  fixedColumns,
 } from '@/design-system';
 import { Link } from 'react-router-dom';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
@@ -612,7 +613,7 @@ export function ComputeAdminBareMetalDetailPage() {
                           {
                             key: 'status',
                             label: 'Status',
-                            width: '64px',
+                            width: fixedColumns.status,
                             align: 'center',
                             render: (_value: string, iface: AttachedInterface) => {
                               const statusMap: Record<

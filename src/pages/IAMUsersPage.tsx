@@ -11,7 +11,8 @@ import {
   TopBar,
   Breadcrumb,
   ContextMenu,
-  columnWidths,
+  fixedColumns,
+  columnMinWidths,
   type TableColumn,
   type StatusType,
   type ContextMenuItem,
@@ -221,12 +222,12 @@ export function IAMUsersPage() {
     setEditUserOpen(true);
   };
 
-  // Table columns
+  // Table columns (using fixedColumns / columnMinWidths preset)
   const columns: TableColumn<User>[] = [
     {
       key: 'status',
       label: 'Status',
-      width: columnWidths.status,
+      width: fixedColumns.status,
       align: 'center',
       render: (_value, row) => <StatusIndicator status={statusMap[row.status]} />,
     },
@@ -234,7 +235,7 @@ export function IAMUsersPage() {
       key: 'username',
       label: 'Username',
       flex: 1,
-      minWidth: columnWidths.username,
+      minWidth: columnMinWidths.username,
       sortable: true,
       render: (value) => (
         <Link
@@ -248,34 +249,38 @@ export function IAMUsersPage() {
     {
       key: 'userGroups',
       label: 'User groups',
-      width: columnWidths.userGroups,
+      flex: 1,
+      minWidth: columnMinWidths.userGroups,
     },
     {
       key: 'roles',
       label: 'Roles',
-      width: columnWidths.roles,
+      flex: 1,
+      minWidth: columnMinWidths.roles,
     },
     {
       key: 'lastSignIn',
       label: 'Last sign-in',
-      width: columnWidths.lastSignIn,
+      flex: 1,
+      minWidth: columnMinWidths.lastSignIn,
       sortable: true,
     },
     {
       key: 'mfa',
       label: 'MFA',
-      width: columnWidths.mfa,
+      width: fixedColumns.mfa,
     },
     {
       key: 'createdAt',
       label: 'Created at',
-      width: columnWidths.createdAt,
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
     },
     {
       key: 'id',
       label: 'Action',
-      width: columnWidths.actionWide,
+      width: fixedColumns.actionWide,
       align: 'center',
       render: (_value, row) => {
         const isDisabled = row.status === 'disabled';

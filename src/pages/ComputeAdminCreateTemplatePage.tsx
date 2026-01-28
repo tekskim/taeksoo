@@ -29,6 +29,8 @@ import {
   IconRocky,
   InlineMessage,
   SelectionIndicator,
+  fixedColumns,
+  columnMinWidths,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system/components/Table/Table';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
@@ -858,7 +860,7 @@ function TemplateInformationSection({
                 {
                   key: 'id',
                   label: '',
-                  width: '48px',
+                  width: fixedColumns.select,
                   align: 'center',
                   render: (_, row) => (
                     <Radio
@@ -871,7 +873,7 @@ function TemplateInformationSection({
                 {
                   key: 'status',
                   label: 'Status',
-                  width: '64px',
+                  width: fixedColumns.status,
                   align: 'center',
                   render: (_, row) => (
                     <StatusIndicator
@@ -1097,7 +1099,7 @@ function ImageSection({
     {
       key: 'select',
       label: '',
-      width: '40px',
+      width: fixedColumns.select,
       render: (_, row) => (
         <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Radio
@@ -1111,7 +1113,7 @@ function ImageSection({
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: fixedColumns.status,
       render: (_, row) => (
         <StatusIndicator status={row.status as 'active' | 'error' | 'building'} />
       ),
@@ -1120,7 +1122,8 @@ function ImageSection({
       key: 'name',
       label: 'Name',
       sortable: true,
-      width: '200px',
+      flex: 1,
+      minWidth: columnMinWidths.name,
       render: (value, row) => (
         <VStack gap={0}>
           <HStack gap={1} align="center">
@@ -1148,7 +1151,7 @@ function ImageSection({
     {
       key: 'select',
       label: '',
-      width: '40px',
+      width: fixedColumns.select,
       render: (_, row) => (
         <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Radio
@@ -1162,7 +1165,7 @@ function ImageSection({
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: fixedColumns.status,
       render: (_, row) => (
         <StatusIndicator status={row.status as 'active' | 'error' | 'building'} />
       ),
@@ -1171,7 +1174,8 @@ function ImageSection({
       key: 'name',
       label: 'Name',
       sortable: true,
-      width: '200px',
+      flex: 1,
+      minWidth: columnMinWidths.name,
       render: (value, row) => (
         <VStack gap={0}>
           <HStack gap={1} align="center">
@@ -1217,7 +1221,7 @@ function ImageSection({
     {
       key: 'select',
       label: '',
-      width: '40px',
+      width: fixedColumns.select,
       render: (_, row) => (
         <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Radio
@@ -1231,7 +1235,7 @@ function ImageSection({
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: fixedColumns.status,
       render: (_, row) => (
         <StatusIndicator status={row.status as 'active' | 'error' | 'building'} />
       ),
@@ -1240,7 +1244,8 @@ function ImageSection({
       key: 'name',
       label: 'Name',
       sortable: true,
-      width: '200px',
+      flex: 1,
+      minWidth: columnMinWidths.name,
       render: (value, row) => (
         <VStack gap={0}>
           <HStack gap={1} align="center">
@@ -1579,7 +1584,7 @@ function FlavorSection({
     {
       key: 'select',
       label: '',
-      width: '40px',
+      width: fixedColumns.select,
       render: (_, row) => (
         <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Radio
@@ -1918,7 +1923,7 @@ function NetworkSection({
     {
       key: 'select',
       label: '',
-      width: '40px',
+      width: fixedColumns.select,
       render: (_, row) => (
         <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Checkbox
@@ -1931,7 +1936,7 @@ function NetworkSection({
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: fixedColumns.status,
       render: (_, row) => <StatusIndicator status={row.status} />,
     },
     {
@@ -1970,7 +1975,7 @@ function NetworkSection({
     {
       key: 'select',
       label: '',
-      width: '40px',
+      width: fixedColumns.select,
       render: (_, row) => (
         <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Checkbox
@@ -2011,7 +2016,7 @@ function NetworkSection({
     {
       key: 'select',
       label: '',
-      width: '40px',
+      width: fixedColumns.select,
       render: (_, row) => (
         <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Checkbox
@@ -2024,7 +2029,7 @@ function NetworkSection({
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: fixedColumns.status,
       render: (_, row) => <StatusIndicator status={row.status} />,
     },
     {
@@ -2436,7 +2441,7 @@ function AuthenticationSection({
     {
       key: 'select',
       label: '',
-      width: '40px',
+      width: fixedColumns.select,
       render: (_, row) => (
         <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Radio
@@ -2449,7 +2454,13 @@ function AuthenticationSection({
     },
     { key: 'name', label: 'Name', sortable: true },
     { key: 'fingerprint', label: 'Fingerprint' },
-    { key: 'createdAt', label: 'Created at', sortable: true, width: '120px' },
+    {
+      key: 'createdAt',
+      label: 'Created at',
+      sortable: true,
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
+    },
   ];
 
   return (

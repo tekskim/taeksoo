@@ -10,7 +10,8 @@ import {
   TopBar,
   Breadcrumb,
   ContextMenu,
-  columnWidths,
+  fixedColumns,
+  columnMinWidths,
   type TableColumn,
   type ContextMenuItem,
 } from '@/design-system';
@@ -247,13 +248,13 @@ export function IAMUserGroupsPage() {
     ];
   };
 
-  // Table columns
+  // Table columns (using fixedColumns / columnMinWidths preset)
   const columns: TableColumn<UserGroup>[] = [
     {
       key: 'name',
       label: 'Name',
       flex: 1,
-      minWidth: columnWidths.name,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (value) => (
         <Link
@@ -267,36 +268,41 @@ export function IAMUserGroupsPage() {
     {
       key: 'type',
       label: 'Type',
-      width: columnWidths.typeLg,
+      flex: 1,
+      minWidth: columnMinWidths.typeLg,
     },
     {
       key: 'roles',
       label: 'Roles',
-      width: columnWidths.roles,
+      flex: 1,
+      minWidth: columnMinWidths.roles,
       sortable: true,
     },
     {
       key: 'userCount',
       label: 'User count',
-      width: columnWidths.userCount,
+      flex: 1,
+      minWidth: columnMinWidths.userCount,
       sortable: true,
     },
     {
       key: 'description',
       label: 'Description',
       flex: 1,
+      minWidth: columnMinWidths.description,
       sortable: true,
     },
     {
       key: 'createdAt',
       label: 'Created at',
-      width: columnWidths.createdAt,
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
     },
     {
       key: 'id',
       label: 'Action',
-      width: columnWidths.actionWide,
+      width: fixedColumns.actionWide,
       align: 'center',
       render: (_value, row) => (
         <ContextMenu items={getContextMenuItems(row)} trigger="click">

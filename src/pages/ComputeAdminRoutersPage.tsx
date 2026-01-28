@@ -17,6 +17,7 @@ import {
   type TableColumn,
   type FilterField,
   type AppliedFilter,
+  fixedColumns,
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -306,7 +307,7 @@ export function ComputeAdminRoutersPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: fixedColumns.status,
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={routerStatusMap[row.status]} layout="icon-only" />
@@ -405,7 +406,7 @@ export function ComputeAdminRoutersPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '72px',
+      width: fixedColumns.actionWide,
       align: 'center',
       render: () => (
         <div onClick={(e) => e.stopPropagation()}>

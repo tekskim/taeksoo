@@ -19,6 +19,7 @@ import {
   StatusIndicator,
   type TableColumn,
   type ContextMenuItem,
+  fixedColumns,
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -295,7 +296,7 @@ export default function SecurityGroupDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: fixedColumns.status,
       align: 'center',
       render: (_, row) => <StatusIndicator status={portStatusMap[row.status]} layout="icon-only" />,
     },
@@ -332,7 +333,7 @@ export default function SecurityGroupDetailPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: fixedColumns.actions,
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
@@ -381,7 +382,7 @@ export default function SecurityGroupDetailPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: fixedColumns.actions,
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>

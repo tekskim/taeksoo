@@ -20,7 +20,8 @@ import {
   ContextMenu,
   type TableColumn,
   type ContextMenuItem,
-  columnWidths,
+  fixedColumns,
+  columnMinWidths,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -410,7 +411,7 @@ export function VolumeDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: columnWidths.status,
+      width: fixedColumns.status,
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={snapshotStatusMap[row.status]} layout="icon-only" />
@@ -420,7 +421,7 @@ export function VolumeDetailPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
-      minWidth: columnWidths.name,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -441,21 +442,24 @@ export function VolumeDetailPage() {
     {
       key: 'size',
       label: 'Size',
-      width: columnWidths.size,
+      flex: 1,
+      minWidth: columnMinWidths.size,
       sortable: true,
       render: (value) => <span>{value}</span>,
     },
     {
       key: 'createdAt',
       label: 'Created at',
-      width: columnWidths.createdAt,
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
       render: (value) => <span>{value}</span>,
     },
     {
       key: 'action',
       label: 'Action',
-      width: columnWidths.action,
+      flex: 1,
+      minWidth: columnMinWidths.action,
       align: 'center',
       render: (_, row) => (
         <div className="flex items-center justify-center">
@@ -481,7 +485,7 @@ export function VolumeDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: columnWidths.status,
+      width: fixedColumns.status,
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={backupStatusMap[row.status]} layout="icon-only" />
@@ -491,7 +495,7 @@ export function VolumeDetailPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
-      minWidth: columnWidths.name,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -512,27 +516,31 @@ export function VolumeDetailPage() {
     {
       key: 'backupMode',
       label: 'Backup mode',
-      width: columnWidths.backupMode,
+      flex: 1,
+      minWidth: columnMinWidths.backupMode,
       render: (value) => <span>{value}</span>,
     },
     {
       key: 'size',
       label: 'Size',
-      width: columnWidths.size,
+      flex: 1,
+      minWidth: columnMinWidths.size,
       sortable: true,
       render: (value) => <span>{value}</span>,
     },
     {
       key: 'createdAt',
       label: 'Created at',
-      width: columnWidths.createdAt,
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
       render: (value) => <span>{value}</span>,
     },
     {
       key: 'action',
       label: 'Action',
-      width: columnWidths.action,
+      flex: 1,
+      minWidth: columnMinWidths.action,
       align: 'center',
       render: (_, row) => (
         <div className="flex items-center justify-center">

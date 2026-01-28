@@ -14,7 +14,8 @@ import {
   ConfirmModal,
   StatusIndicator,
   Tooltip,
-  columnWidths,
+  fixedColumns,
+  columnMinWidths,
   type TableColumn,
   type ContextMenuItem,
   type FilterField,
@@ -308,12 +309,12 @@ export function FloatingIPsPage() {
     return filteredFloatingIPs.slice(start, start + rowsPerPage);
   }, [filteredFloatingIPs, currentPage, rowsPerPage]);
 
-  // Table columns
+  // Table columns (using fixedColumns / columnMinWidths preset)
   const columns: TableColumn<FloatingIP>[] = [
     {
       key: 'status',
       label: 'Status',
-      width: columnWidths.status,
+      width: fixedColumns.status,
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={floatingIPStatusMap[row.status]} layout="icon-only" />
@@ -323,6 +324,7 @@ export function FloatingIPsPage() {
       key: 'floatingIp',
       label: 'Floating IP',
       flex: 1,
+      minWidth: columnMinWidths.floatingIp,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -342,7 +344,8 @@ export function FloatingIPsPage() {
     {
       key: 'associatedTo',
       label: 'Associated to',
-      width: columnWidths.associatedTo,
+      flex: 1,
+      minWidth: columnMinWidths.associatedTo,
       align: 'right',
       render: (_, row) =>
         row.associatedTo ? (
@@ -379,12 +382,14 @@ export function FloatingIPsPage() {
       key: 'fixedIp',
       label: 'Fixed IP',
       flex: 1,
+      minWidth: columnMinWidths.fixedIp,
       sortable: true,
     },
     {
       key: 'network',
       label: 'Network',
-      width: columnWidths.network,
+      flex: 1,
+      minWidth: columnMinWidths.network,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5 min-w-0">
@@ -410,13 +415,14 @@ export function FloatingIPsPage() {
     {
       key: 'createdAt',
       label: 'Created at',
-      width: columnWidths.createdAt,
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
     },
     {
       key: 'actions',
       label: 'Action',
-      width: columnWidths.actions,
+      width: fixedColumns.actions,
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>

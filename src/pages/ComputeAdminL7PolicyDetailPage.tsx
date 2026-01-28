@@ -17,6 +17,7 @@ import {
   SearchInput,
   Pagination,
   ContextMenu,
+  fixedColumns,
 } from '@/design-system';
 import type { TableColumn, ContextMenuItem } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
@@ -251,7 +252,7 @@ export default function L7PolicyDetailPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: fixedColumns.actions,
       align: 'center',
       render: (_: unknown, row: L7Rule) => {
         const ruleMenuItems: ContextMenuItem[] = [

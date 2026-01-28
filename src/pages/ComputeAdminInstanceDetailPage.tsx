@@ -19,6 +19,7 @@ import {
   StatusIndicator,
   ContextMenu,
   type ContextMenuItem,
+  fixedColumns,
 } from '@/design-system';
 import { Link } from 'react-router-dom';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
@@ -1275,7 +1276,7 @@ export function ComputeAdminInstanceDetailPage() {
                           {
                             key: 'status',
                             label: 'Status',
-                            width: '64px',
+                            width: fixedColumns.status,
                             align: 'center',
                             render: (_, row: AttachedVolume) => (
                               <StatusIndicator status={row.status as any} layout="icon-only" />
@@ -1362,7 +1363,7 @@ export function ComputeAdminInstanceDetailPage() {
                           {
                             key: 'status',
                             label: 'Status',
-                            width: '64px',
+                            width: fixedColumns.status,
                             align: 'center',
                             render: (_value: string, iface: AttachedInterface) => {
                               const statusMap: Record<
@@ -1487,7 +1488,7 @@ export function ComputeAdminInstanceDetailPage() {
                           {
                             key: 'status',
                             label: 'Status',
-                            width: '64px',
+                            width: fixedColumns.status,
                             align: 'center',
                             render: (_value: string, row: FloatingIP) => (
                               <StatusIndicator status={row.status} layout="icon-only" size="md" />
@@ -1652,7 +1653,7 @@ export function ComputeAdminInstanceDetailPage() {
                           {
                             key: 'status',
                             label: 'Status',
-                            width: '64px',
+                            width: fixedColumns.status,
                             align: 'center',
                             render: (_value: string, row: InstanceSnapshot) => (
                               <StatusIndicator
@@ -1705,7 +1706,7 @@ export function ComputeAdminInstanceDetailPage() {
                           {
                             key: 'action',
                             label: 'Action',
-                            width: '64px',
+                            width: fixedColumns.actions,
                             align: 'center',
                             render: (_: unknown, row: InstanceSnapshot) => {
                               const snapshotMenuItems: ContextMenuItem[] = [

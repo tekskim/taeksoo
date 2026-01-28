@@ -13,7 +13,8 @@ import {
   ContextMenu,
   TabBar,
   StatusIndicator,
-  columnWidths,
+  fixedColumns,
+  columnMinWidths,
   type TableColumn,
   type ContextMenuItem,
 } from '@/design-system';
@@ -153,12 +154,12 @@ export default function IAMDomainsPage() {
     },
   ];
 
-  // Table columns
+  // Table columns (using fixedColumns / columnMinWidths preset)
   const columns: TableColumn<Domain>[] = [
     {
       key: 'status',
       label: 'Status',
-      width: columnWidths.status,
+      width: fixedColumns.status,
       align: 'center',
       render: (value) => (
         <StatusIndicator
@@ -170,6 +171,7 @@ export default function IAMDomainsPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (value) => (
         <span className="font-medium text-[var(--color-text-default)]">{value}</span>
@@ -179,18 +181,20 @@ export default function IAMDomainsPage() {
       key: 'description',
       label: 'Description',
       flex: 1,
+      minWidth: columnMinWidths.description,
       sortable: true,
     },
     {
       key: 'createdAt',
       label: 'Created at',
-      width: columnWidths.createdAt,
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
     },
     {
       key: 'id',
       label: 'Action',
-      width: columnWidths.actionWide,
+      width: fixedColumns.actionWide,
       align: 'center',
       render: (_value, row) => (
         <HStack gap={1} align="center" justify="center">

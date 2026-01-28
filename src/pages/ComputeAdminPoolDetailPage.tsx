@@ -18,6 +18,7 @@ import {
   Pagination,
   StatusIndicator,
   ContextMenu,
+  fixedColumns,
 } from '@/design-system';
 import type { TableColumn, ContextMenuItem } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
@@ -261,7 +262,7 @@ export default function PoolDetailPage() {
     {
       key: 'status',
       label: 'Status',
-      width: '64px',
+      width: fixedColumns.status,
       align: 'center',
       render: (_, row) => (
         <StatusIndicator status={memberStatusMap[row.status]} layout="icon-only" />
@@ -338,7 +339,7 @@ export default function PoolDetailPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: '64px',
+      width: fixedColumns.actions,
       align: 'center',
       render: (_: unknown, row: Member) => {
         const memberMenuItems: ContextMenuItem[] = [

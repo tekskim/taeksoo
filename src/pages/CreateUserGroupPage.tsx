@@ -15,7 +15,7 @@ import {
   InlineMessage,
   StatusIndicator,
   type TableColumn,
-  columnWidths,
+  fixedColumns,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -645,7 +645,7 @@ function AddUsersSection({
     {
       key: 'status',
       label: 'Status',
-      width: columnWidths.status,
+      width: fixedColumns.status,
       align: 'center',
       render: (_, row) => <StatusIndicator status={row.status} />,
     },

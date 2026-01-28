@@ -28,7 +28,8 @@ import {
   IconRocky,
   InlineMessage,
   SelectionIndicator,
-  columnWidths,
+  fixedColumns,
+  columnMinWidths,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system/components/Table/Table';
 import { Sidebar } from '@/components/Sidebar';
@@ -926,7 +927,7 @@ function ImageSection({
     {
       key: 'select',
       label: '',
-      width: columnWidths.select,
+      width: fixedColumns.select,
       render: (_, row) => (
         <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Radio
@@ -940,7 +941,7 @@ function ImageSection({
     {
       key: 'status',
       label: 'Status',
-      width: columnWidths.status,
+      width: fixedColumns.status,
       render: (_, row) => (
         <StatusIndicator status={row.status as 'active' | 'error' | 'building'} />
       ),
@@ -964,11 +965,29 @@ function ImageSection({
         </VStack>
       ),
     },
-    { key: 'version', label: 'Version', sortable: true, width: columnWidths.version },
-    { key: 'size', label: 'Size', sortable: true, width: columnWidths.size },
-    { key: 'minDisk', label: 'Min disk', sortable: true, width: columnWidths.minDisk },
-    { key: 'minRam', label: 'Min RAM', sortable: true, width: columnWidths.minRam },
-    { key: 'access', label: 'Visibility', sortable: true, width: columnWidths.access },
+    {
+      key: 'version',
+      label: 'Version',
+      sortable: true,
+      flex: 1,
+      minWidth: columnMinWidths.version,
+    },
+    { key: 'size', label: 'Size', sortable: true, flex: 1, minWidth: columnMinWidths.size },
+    {
+      key: 'minDisk',
+      label: 'Min disk',
+      sortable: true,
+      flex: 1,
+      minWidth: columnMinWidths.minDisk,
+    },
+    { key: 'minRam', label: 'Min RAM', sortable: true, flex: 1, minWidth: columnMinWidths.minRam },
+    {
+      key: 'access',
+      label: 'Visibility',
+      sortable: true,
+      flex: 1,
+      minWidth: columnMinWidths.access,
+    },
   ];
 
   // OS filter chip style - matches Figma design with container
@@ -1283,7 +1302,7 @@ function FlavorSection({
     {
       key: 'select',
       label: '',
-      width: columnWidths.select,
+      width: fixedColumns.select,
       render: (_, row) => (
         <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Radio
@@ -1622,7 +1641,7 @@ function NetworkSection({
     {
       key: 'select',
       label: '',
-      width: columnWidths.select,
+      width: fixedColumns.select,
       render: (_, row) => (
         <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Checkbox
@@ -1635,7 +1654,7 @@ function NetworkSection({
     {
       key: 'status',
       label: 'Status',
-      width: columnWidths.status,
+      width: fixedColumns.status,
       render: (_, row) => <StatusIndicator status={row.status} />,
     },
     {
@@ -1674,7 +1693,7 @@ function NetworkSection({
     {
       key: 'select',
       label: '',
-      width: columnWidths.select,
+      width: fixedColumns.select,
       render: (_, row) => (
         <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Checkbox
@@ -1715,7 +1734,7 @@ function NetworkSection({
     {
       key: 'select',
       label: '',
-      width: columnWidths.select,
+      width: fixedColumns.select,
       render: (_, row) => (
         <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Checkbox
@@ -1728,7 +1747,7 @@ function NetworkSection({
     {
       key: 'status',
       label: 'Status',
-      width: columnWidths.status,
+      width: fixedColumns.status,
       render: (_, row) => <StatusIndicator status={row.status} />,
     },
     {
@@ -2140,7 +2159,7 @@ function AuthenticationSection({
     {
       key: 'select',
       label: '',
-      width: columnWidths.select,
+      width: fixedColumns.select,
       render: (_, row) => (
         <div className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
           <Radio
@@ -2153,7 +2172,13 @@ function AuthenticationSection({
     },
     { key: 'name', label: 'Name', sortable: true },
     { key: 'fingerprint', label: 'Fingerprint' },
-    { key: 'createdAt', label: 'Created at', sortable: true, width: columnWidths.createdAt },
+    {
+      key: 'createdAt',
+      label: 'Created at',
+      sortable: true,
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
+    },
   ];
 
   return (

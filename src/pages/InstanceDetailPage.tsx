@@ -19,7 +19,8 @@ import {
   StatusIndicator,
   ContextMenu,
   type ContextMenuItem,
-  columnWidths,
+  fixedColumns,
+  columnMinWidths,
 } from '@/design-system';
 import { Link } from 'react-router-dom';
 import { Sidebar } from '@/components/Sidebar';
@@ -1222,7 +1223,7 @@ export function InstanceDetailPage() {
                           {
                             key: 'status',
                             label: 'Status',
-                            width: columnWidths.status,
+                            width: fixedColumns.status,
                             align: 'center',
                             render: (_, row: AttachedVolume) => (
                               <StatusIndicator status={row.status as any} layout="icon-only" />
@@ -1232,7 +1233,7 @@ export function InstanceDetailPage() {
                             key: 'name',
                             label: 'Name',
                             flex: 1,
-                            minWidth: columnWidths.name,
+                            minWidth: columnMinWidths.name,
                             render: (value: string, row: AttachedVolume) => (
                               <div className="flex flex-col gap-0.5 min-w-0">
                                 <Link
@@ -1250,35 +1251,40 @@ export function InstanceDetailPage() {
                           {
                             key: 'size',
                             label: 'Size',
-                            width: columnWidths.size,
+                            flex: 1,
+                            minWidth: columnMinWidths.size,
                             sortable: true,
                           },
                           {
                             key: 'type',
                             label: 'Type',
-                            width: columnWidths.type,
+                            flex: 1,
+                            minWidth: columnMinWidths.type,
                             sortable: true,
                           },
                           {
                             key: 'diskTag',
                             label: 'Disk tag',
-                            width: columnWidths.diskTag,
+                            flex: 1,
+                            minWidth: columnMinWidths.diskTag,
                           },
                           {
                             key: 'bootable',
                             label: 'Bootable',
-                            width: columnWidths.bootable,
+                            flex: 1,
+                            minWidth: columnMinWidths.bootable,
                             render: (value: boolean) => (value ? 'Yes' : 'No'),
                           },
                           {
                             key: 'access',
                             label: 'Created at',
-                            width: columnWidths.createdAt,
+                            flex: 1,
+                            minWidth: columnMinWidths.createdAt,
                           },
                           {
                             key: 'action',
                             label: 'Action',
-                            width: columnWidths.actions,
+                            width: fixedColumns.actions,
                             align: 'center',
                             render: (_: unknown, row: AttachedVolume) => {
                               const volumeMenuItems: ContextMenuItem[] = [
@@ -1382,7 +1388,7 @@ export function InstanceDetailPage() {
                           {
                             key: 'status',
                             label: 'Status',
-                            width: columnWidths.status,
+                            width: fixedColumns.status,
                             align: 'center',
                             render: (_value: string, iface: AttachedInterface) => {
                               const statusMap: Record<
@@ -1406,7 +1412,7 @@ export function InstanceDetailPage() {
                             key: 'name',
                             label: 'Name',
                             flex: 1,
-                            minWidth: columnWidths.name,
+                            minWidth: columnMinWidths.name,
                             sortable: true,
                             render: (_value: string, iface: AttachedInterface) => (
                               <div className="flex flex-col gap-0.5 min-w-0">
@@ -1425,7 +1431,8 @@ export function InstanceDetailPage() {
                           {
                             key: 'network',
                             label: 'Network',
-                            width: columnWidths.network,
+                            flex: 1,
+                            minWidth: columnMinWidths.network,
                             sortable: true,
                             render: (_value: string, iface: AttachedInterface) => (
                               <div className="flex flex-col gap-0.5 min-w-0">
@@ -1444,7 +1451,8 @@ export function InstanceDetailPage() {
                           {
                             key: 'fixedIp',
                             label: 'Fixed IP',
-                            width: columnWidths.fixedIp,
+                            flex: 1,
+                            minWidth: columnMinWidths.fixedIp,
                             render: (_value: string, iface: AttachedInterface) => (
                               <span className="text-[var(--color-text-default)]">
                                 {iface.fixedIp}
@@ -1454,7 +1462,8 @@ export function InstanceDetailPage() {
                           {
                             key: 'macAddress',
                             label: 'Mac address',
-                            width: columnWidths.macAddress,
+                            flex: 1,
+                            minWidth: columnMinWidths.macAddress,
                             render: (_value: string, iface: AttachedInterface) => (
                               <span className="text-[var(--color-text-default)]">
                                 {iface.macAddress}
@@ -1464,7 +1473,8 @@ export function InstanceDetailPage() {
                           {
                             key: 'createdAt',
                             label: 'Created at',
-                            width: columnWidths.createdAt,
+                            flex: 1,
+                            minWidth: columnMinWidths.createdAt,
                             sortable: true,
                             render: (_value: string, iface: AttachedInterface) => (
                               <span className="text-[var(--color-text-default)]">
@@ -1475,7 +1485,7 @@ export function InstanceDetailPage() {
                           {
                             key: 'action',
                             label: 'Action',
-                            width: columnWidths.actions,
+                            width: fixedColumns.actions,
                             align: 'center' as const,
                             render: (_: unknown, iface: AttachedInterface) => {
                               const interfaceMenuItems: ContextMenuItem[] = [
@@ -1551,7 +1561,7 @@ export function InstanceDetailPage() {
                           {
                             key: 'status',
                             label: 'Status',
-                            width: columnWidths.status,
+                            width: fixedColumns.status,
                             align: 'center',
                             render: (_value: string, row: FloatingIP) => (
                               <StatusIndicator status={row.status} layout="icon-only" size="md" />
@@ -1561,7 +1571,7 @@ export function InstanceDetailPage() {
                             key: 'floatingIp',
                             label: 'Floating IP',
                             flex: 1,
-                            minWidth: columnWidths.floatingIp,
+                            minWidth: columnMinWidths.floatingIp,
                             render: (_value: string, row: FloatingIP) => (
                               <div className="flex flex-col gap-0.5 min-w-0">
                                 <Link
@@ -1579,18 +1589,20 @@ export function InstanceDetailPage() {
                           {
                             key: 'fixedIp',
                             label: 'Fixed IP',
-                            width: columnWidths.fixedIp,
+                            flex: 1,
+                            minWidth: columnMinWidths.fixedIp,
                           },
                           {
                             key: 'createdAt',
                             label: 'Created at',
-                            width: columnWidths.createdAt,
+                            flex: 1,
+                            minWidth: columnMinWidths.createdAt,
                             sortable: true,
                           },
                           {
                             key: 'action',
                             label: 'Action',
-                            width: columnWidths.actions,
+                            width: fixedColumns.actions,
                             align: 'center',
                             render: (_: unknown, row: FloatingIP) => {
                               const floatingIpMenuItems: ContextMenuItem[] = [
@@ -1683,7 +1695,7 @@ export function InstanceDetailPage() {
                             key: 'name',
                             label: 'Name',
                             flex: 1,
-                            minWidth: columnWidths.name,
+                            minWidth: columnMinWidths.name,
                             sortable: true,
                             render: (_value: string, row: SecurityGroup) => (
                               <div className="flex flex-col gap-0.5 min-w-0">
@@ -1703,13 +1715,14 @@ export function InstanceDetailPage() {
                             key: 'description',
                             label: 'Description',
                             flex: 1,
-                            minWidth: columnWidths.description,
+                            minWidth: columnMinWidths.description,
                             sortable: true,
                           },
                           {
                             key: 'createdAt',
                             label: 'Created at',
-                            width: columnWidths.createdAt,
+                            flex: 1,
+                            minWidth: columnMinWidths.createdAt,
                             sortable: true,
                             render: (_value: string, row: SecurityGroup) => (
                               <span className="text-[var(--color-text-default)]">
@@ -1720,7 +1733,7 @@ export function InstanceDetailPage() {
                           {
                             key: 'action',
                             label: 'Action',
-                            width: columnWidths.actions,
+                            width: fixedColumns.actions,
                             align: 'center' as const,
                             render: (_: unknown, row: SecurityGroup) => {
                               const securityGroupMenuItems: ContextMenuItem[] = [
@@ -1798,7 +1811,7 @@ export function InstanceDetailPage() {
                           {
                             key: 'status',
                             label: 'Status',
-                            width: columnWidths.status,
+                            width: fixedColumns.status,
                             align: 'center',
                             render: (_value: string, row: InstanceSnapshot) => (
                               <StatusIndicator
@@ -1819,7 +1832,7 @@ export function InstanceDetailPage() {
                             key: 'name',
                             label: 'Name',
                             flex: 1,
-                            minWidth: columnWidths.name,
+                            minWidth: columnMinWidths.name,
                             sortable: true,
                             render: (_value: string, row: InstanceSnapshot) => (
                               <div className="flex flex-col gap-0.5 min-w-0">
@@ -1838,25 +1851,28 @@ export function InstanceDetailPage() {
                           {
                             key: 'size',
                             label: 'Size',
-                            width: columnWidths.size,
+                            flex: 1,
+                            minWidth: columnMinWidths.size,
                             sortable: true,
                           },
                           {
                             key: 'diskFormat',
                             label: 'Disk format',
-                            width: columnWidths.diskFormat,
+                            flex: 1,
+                            minWidth: columnMinWidths.diskFormat,
                             sortable: true,
                           },
                           {
                             key: 'createdAt',
                             label: 'Created at',
-                            width: columnWidths.createdAt,
+                            flex: 1,
+                            minWidth: columnMinWidths.createdAt,
                             sortable: true,
                           },
                           {
                             key: 'action',
                             label: 'Action',
-                            width: columnWidths.actions,
+                            width: fixedColumns.actions,
                             align: 'center',
                             render: (_: unknown, row: InstanceSnapshot) => {
                               const snapshotMenuItems: ContextMenuItem[] = [
