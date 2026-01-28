@@ -1090,7 +1090,7 @@ function Popover({ data, position, onClose }: PopoverProps) {
         {/* Status */}
         <div className="flex justify-between">
           <span className="text-[var(--color-text-muted)]">Status:</span>
-          <span className="font-medium">{statusText}</span>
+          <span className="text-[length:var(--font-size-11)] font-medium">{statusText}</span>
         </div>
 
         {/* Name */}
@@ -1111,7 +1111,7 @@ function Popover({ data, position, onClose }: PopoverProps) {
         {data.adminState && (
           <div className="flex justify-between">
             <span className="text-[var(--color-text-muted)]">Admin state:</span>
-            <span className="font-medium">{data.adminState}</span>
+            <span className="text-[length:var(--font-size-11)] font-medium">{data.adminState}</span>
           </div>
         )}
 
@@ -1121,13 +1121,13 @@ function Popover({ data, position, onClose }: PopoverProps) {
             {data.shared !== undefined && (
               <div className="flex justify-between">
                 <span className="text-[var(--color-text-muted)]">Shared:</span>
-                <span className="font-medium">{data.shared ? 'On' : 'Off'}</span>
+                <span className="text-[length:var(--font-size-11)] font-medium">{data.shared ? 'On' : 'Off'}</span>
               </div>
             )}
             {data.mtu && (
               <div className="flex justify-between">
                 <span className="text-[var(--color-text-muted)]">MTU:</span>
-                <span className="font-medium">{data.mtu}</span>
+                <span className="text-[length:var(--font-size-11)] font-medium">{data.mtu}</span>
               </div>
             )}
 
@@ -1179,7 +1179,7 @@ function Popover({ data, position, onClose }: PopoverProps) {
             {data.snat !== undefined && (
               <div className="flex justify-between">
                 <span className="text-[var(--color-text-muted)]">SNAT:</span>
-                <span className="font-medium">{data.snat ? 'On' : 'Off'}</span>
+                <span className="text-[length:var(--font-size-11)] font-medium">{data.snat ? 'On' : 'Off'}</span>
               </div>
             )}
             {data.externalGateway && (
