@@ -24,12 +24,11 @@ import {
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
-  IconEdit,
   IconTrash,
   IconBell,
   IconCopy,
-  IconCirclePlus,
   IconDotsCircleHorizontal,
+  IconDownload,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -368,6 +367,7 @@ export default function SecurityGroupDetailPage() {
       key: 'portRange',
       label: 'Port range',
       flex: 1,
+      sortable: true,
     },
     {
       key: 'remote',
@@ -388,11 +388,7 @@ export default function SecurityGroupDetailPage() {
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getRuleContextMenuItems(row)} trigger="click">
             <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-              <IconDotsCircleHorizontal
-                size={16}
-                stroke={1.5}
-                className="text-[var(--action-icon-color)]"
-              />
+              <IconTrash size={16} stroke={1.5} className="text-[var(--color-state-danger)]" />
             </button>
           </ContextMenu>
         </div>
@@ -463,12 +459,6 @@ export default function SecurityGroupDetailPage() {
 
                 {/* Actions */}
                 <div className="flex items-center gap-1 mb-3">
-                  <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                    Edit
-                  </Button>
-                  <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                    Create rule
-                  </Button>
                   <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
                     Delete
                   </Button>
@@ -494,13 +484,13 @@ export default function SecurityGroupDetailPage() {
                     </div>
                   </div>
 
-                  {/* Description */}
+                  {/* Tenant */}
                   <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
                     <span className="text-[length:var(--font-size-11)] font-medium text-[var(--color-text-subtle)]">
-                      Description
+                      Tenant
                     </span>
                     <p className="text-[length:var(--font-size-12)] text-[var(--color-text-default)] mt-1.5">
-                      {securityGroup.description}
+                      tenantA
                     </p>
                   </div>
 
@@ -530,26 +520,28 @@ export default function SecurityGroupDetailPage() {
                         <h3 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
                           Rules
                         </h3>
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          leftIcon={<IconCirclePlus size={12} />}
-                        >
-                          Create rule
-                        </Button>
                       </div>
 
                       {/* Toolbar */}
                       <div className="flex items-center gap-2">
-                        <div className="w-[var(--search-input-width)]">
-                          <SearchInput
-                            placeholder="Search rules by attributes"
-                            value={ruleSearchTerm}
-                            onChange={(e) => setRuleSearchTerm(e.target.value)}
-                            onClear={() => setRuleSearchTerm('')}
-                            size="sm"
-                            fullWidth
-                          />
+                        <div className="flex items-center gap-1">
+                          <div className="w-[var(--search-input-width)]">
+                            <SearchInput
+                              placeholder="Search rules by attributes"
+                              value={ruleSearchTerm}
+                              onChange={(e) => setRuleSearchTerm(e.target.value)}
+                              onClear={() => setRuleSearchTerm('')}
+                              size="sm"
+                              fullWidth
+                            />
+                          </div>
+                          <button className="w-7 h-7 flex items-center justify-center rounded-md border border-[var(--color-border-strong)] hover:bg-[var(--button-secondary-hover-bg)] transition-colors">
+                            <IconDownload
+                              size={14}
+                              stroke={1.5}
+                              className="text-[var(--color-text-default)]"
+                            />
+                          </button>
                         </div>
                         <div className="w-px h-4 bg-[var(--color-border-default)]" />
                         <Button
