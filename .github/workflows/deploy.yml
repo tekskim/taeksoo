@@ -37,6 +37,13 @@ jobs:
       - name: Build main app
         run: pnpm run build
 
+      - name: Ensure 404.html exists for SPA routing
+        run: |
+          if [ ! -f docs/404.html ]; then
+            cp public/404.html docs/404.html
+          fi
+          ls -la docs/404.html
+
       - name: Build Storybook
         run: pnpm run build-storybook
 
