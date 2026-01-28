@@ -1143,39 +1143,14 @@ function Popover({ data, position, onClose }: PopoverProps) {
             {/* VPC Subnets grouped by router */}
             {data.vpcSubnetGroups && data.vpcSubnetGroups.length > 0 && (
               <div className="mt-3 pt-3 border-t border-[var(--color-border-subtle)]">
-                <div className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] mb-2 font-medium">
-                  Subnets ({data.vpcSubnetGroups.reduce((acc, g) => acc + g.subnets.length, 0)}{' '}
-                  total)
-                </div>
-                <div className="space-y-3 max-h-48 overflow-y-auto">
-                  {data.vpcSubnetGroups.map((group, idx) => (
-                    <div key={idx} className="text-[length:var(--font-size-10)]">
-                      <div className="flex items-center gap-1 text-[var(--color-text-default)] mb-1">
-                        {group.routerName ? (
-                          <>
-                            <span className="text-indigo-500">📍</span>
-                            <span className="font-medium">{group.routerName}</span>
-                          </>
-                        ) : (
-                          <>
-                            <span className="text-amber-500">⚠️</span>
-                            <span className="font-medium text-amber-600">Unrouted</span>
-                          </>
-                        )}
-                      </div>
-                      <div className="pl-4 space-y-0.5">
-                        {group.subnets.map((subnet, sIdx) => (
-                          <div
-                            key={sIdx}
-                            className="flex items-center justify-between text-[var(--color-text-default)]"
-                          >
-                            <span>{subnet.name}</span>
-                            <span className="font-mono text-[var(--color-text-subtle)]">{subnet.cidr}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
+                <div className="flex items-center justify-between">
+                  <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] font-medium">
+                    Subnets ({data.vpcSubnetGroups.reduce((acc, g) => acc + g.subnets.length, 0)}{' '}
+                    total)
+                  </span>
+                  <Link to="#" className="text-[var(--color-action-primary)] hover:underline text-[length:var(--font-size-11)] font-medium">
+                    View detail
+                  </Link>
                 </div>
               </div>
             )}
