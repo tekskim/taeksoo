@@ -250,7 +250,7 @@ export function KeyPairsPage() {
       key: 'fingerprint',
       label: 'Fingerprint',
       flex: 1,
-      minWidth: '280px',
+      minWidth: '300px',
       render: (_, row) => (
         <div className="flex items-center gap-2">
           <span className="font-mono text-[length:var(--font-size-11)] text-[var(--color-text-default)]">
