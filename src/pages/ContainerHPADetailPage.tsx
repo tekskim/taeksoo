@@ -259,8 +259,20 @@ function ConditionsTab() {
   const conditions = mockConditionsData;
 
   const columns: TableColumn<ConditionRow>[] = [
-    { key: 'condition', label: 'Condition', flex: 1, minWidth: columnMinWidths.condition, sortable: true },
-    { key: 'status', label: 'Status', flex: 1, minWidth: columnMinWidths.conditionStatus, sortable: true },
+    {
+      key: 'condition',
+      label: 'Condition',
+      flex: 1,
+      minWidth: columnMinWidths.condition,
+      sortable: true,
+    },
+    {
+      key: 'status',
+      label: 'Status',
+      flex: 1,
+      minWidth: columnMinWidths.conditionStatus,
+      sortable: true,
+    },
     {
       key: 'message',
       label: 'Message',
@@ -273,7 +285,13 @@ function ConditionsTab() {
         </span>
       ),
     },
-    { key: 'updated', label: 'Updated', flex: 1, minWidth: columnMinWidths.updatedAt, sortable: true },
+    {
+      key: 'updated',
+      label: 'Updated',
+      flex: 1,
+      minWidth: columnMinWidths.updatedAt,
+      sortable: true,
+    },
   ];
 
   return (

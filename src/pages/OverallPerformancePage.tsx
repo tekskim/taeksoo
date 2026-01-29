@@ -962,10 +962,28 @@ export function OverallPerformancePage() {
 
   // Pool Overview table columns
   const poolOverviewColumns: TableColumn<PoolOverviewRow>[] = [
-    { key: 'poolName', label: 'Pool name', flex: 1, minWidth: columnMinWidths.name, sortable: true },
+    {
+      key: 'poolName',
+      label: 'Pool name',
+      flex: 1,
+      minWidth: columnMinWidths.name,
+      sortable: true,
+    },
     { key: 'type', label: 'Type', flex: 1, minWidth: columnMinWidths.type, sortable: false },
-    { key: 'usableFree', label: 'Usable free', flex: 1, minWidth: columnMinWidths.size, sortable: true },
-    { key: 'percentUsed', label: '% Used', flex: 1, minWidth: columnMinWidths.usagePercent, sortable: true },
+    {
+      key: 'usableFree',
+      label: 'Usable free',
+      flex: 1,
+      minWidth: columnMinWidths.size,
+      sortable: true,
+    },
+    {
+      key: 'percentUsed',
+      label: '% Used',
+      flex: 1,
+      minWidth: columnMinWidths.usagePercent,
+      sortable: true,
+    },
     {
       key: 'growth5d',
       label: 'Growth (5d)',
@@ -985,7 +1003,13 @@ export function OverallPerformancePage() {
       ),
     },
     { key: 'iops', label: 'IOPS', flex: 1, minWidth: columnMinWidths.readOps, sortable: true },
-    { key: 'bandwidth', label: 'Bandwidth', flex: 1, minWidth: columnMinWidths.size, sortable: true },
+    {
+      key: 'bandwidth',
+      label: 'Bandwidth',
+      flex: 1,
+      minWidth: columnMinWidths.size,
+      sortable: true,
+    },
     { key: 'stored', label: 'Stored', flex: 1, minWidth: columnMinWidths.size, sortable: true },
     {
       key: 'id',
@@ -1003,9 +1027,27 @@ export function OverallPerformancePage() {
 
   // Host Overview table columns
   const hostOverviewColumns: TableColumn<HostOverviewRow>[] = [
-    { key: 'hostname', label: 'Hostname', flex: 1, minWidth: columnMinWidths.hostname, sortable: true },
-    { key: 'totalMemory', label: 'Total memory', flex: 1, minWidth: columnMinWidths.totalMemory, sortable: true },
-    { key: 'rawCapacity', label: 'Raw capacity', flex: 1, minWidth: columnMinWidths.rawCapacity, sortable: true },
+    {
+      key: 'hostname',
+      label: 'Hostname',
+      flex: 1,
+      minWidth: columnMinWidths.hostname,
+      sortable: true,
+    },
+    {
+      key: 'totalMemory',
+      label: 'Total memory',
+      flex: 1,
+      minWidth: columnMinWidths.totalMemory,
+      sortable: true,
+    },
+    {
+      key: 'rawCapacity',
+      label: 'Raw capacity',
+      flex: 1,
+      minWidth: columnMinWidths.rawCapacity,
+      sortable: true,
+    },
     {
       key: 'id',
       label: 'Detail performance',
@@ -1040,7 +1082,13 @@ export function OverallPerformancePage() {
         </span>
       ),
     },
-    { key: 'slowOps', label: 'Slow ops', flex: 1, minWidth: columnMinWidths.readOps, sortable: true },
+    {
+      key: 'slowOps',
+      label: 'Slow ops',
+      flex: 1,
+      minWidth: columnMinWidths.readOps,
+      sortable: true,
+    },
     {
       key: 'id',
       label: 'Action',
@@ -1467,7 +1515,13 @@ export function OverallPerformancePage() {
                                     minWidth: columnMinWidths.name,
                                     sortable: true,
                                   },
-                                  { key: 'latency', label: 'Latency', flex: 1, minWidth: '100px', sortable: true },
+                                  {
+                                    key: 'latency',
+                                    label: 'Latency',
+                                    flex: 1,
+                                    minWidth: '100px',
+                                    sortable: true,
+                                  },
                                 ]}
                                 data={[
                                   { id: '1', imageName: 'windows-server-2019', latency: '45 ms' },
@@ -1630,8 +1684,20 @@ export function OverallPerformancePage() {
                                   </Link>
                                 ),
                               },
-                              { key: 'iops', label: 'IOPS', flex: 1, minWidth: columnMinWidths.readOps, sortable: true },
-                              { key: 'throughput', label: 'Throughput', flex: 1, minWidth: '100px', sortable: true },
+                              {
+                                key: 'iops',
+                                label: 'IOPS',
+                                flex: 1,
+                                minWidth: columnMinWidths.readOps,
+                                sortable: true,
+                              },
+                              {
+                                key: 'throughput',
+                                label: 'Throughput',
+                                flex: 1,
+                                minWidth: '100px',
+                                sortable: true,
+                              },
                               {
                                 key: 'actions',
                                 label: 'Action',

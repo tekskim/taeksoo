@@ -300,11 +300,7 @@ export function CloudBuilderDetailPage() {
                   Object.entries(row)
                     .filter(([k]) => k !== 'id')
                     .map(([k, v]) => (
-                      <SectionCard.DataRow
-                        key={k}
-                        label={k}
-                        value={String(v ?? '-') || '-'}
-                      />
+                      <SectionCard.DataRow key={k} label={k} value={String(v ?? '-') || '-'} />
                     ))
                 ) : (
                   <div className="py-10 text-center text-[12px] text-[var(--color-text-subtle)]">
