@@ -10,10 +10,8 @@ import {
   Input,
   Select,
   Checkbox,
-  WizardSummary,
   SectionCard,
 } from '@/design-system';
-import type { WizardSummaryItem, WizardSectionState } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
@@ -23,26 +21,13 @@ import {
   IconCopy,
   IconSearch,
   IconPlus,
+  IconCirclePlus,
   IconX,
-  IconEdit,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
    ---------------------------------------- */
-
-type SectionStep = 'basic-info' | 'storage-config' | 'labels-annotations';
-type SectionState = 'pre' | 'active' | 'done' | 'writing';
-
-// Section labels for display
-const SECTION_LABELS: Record<SectionStep, string> = {
-  'basic-info': 'Basic Information',
-  'storage-config': 'Customize',
-  'labels-annotations': 'Labels & Annotations',
-};
-
-// Section order for navigation
-const SECTION_ORDER: SectionStep[] = ['basic-info', 'storage-config', 'labels-annotations'];
 
 // Access Mode options
 const ACCESS_MODE_OPTIONS = [
@@ -83,123 +68,41 @@ interface Annotation {
 }
 
 /* ----------------------------------------
-   PreSection Component
+   Summary Item Component
    ---------------------------------------- */
 
-interface PreSectionProps {
-  title: string;
+interface SummaryItemProps {
+  label: string;
+  status: 'complete' | 'in-progress';
 }
 
-function PreSection({ title }: PreSectionProps) {
+function SummaryItem({ label, status }: SummaryItemProps) {
   return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
-      <div className="h-8 flex items-center">
-        <h5 className="text-[length:var(--font-size-16)] font-semibold leading-[var(--line-height-24)] text-[var(--color-text-default)]">
-          {title}
-        </h5>
-      </div>
-    </div>
-  );
-}
-
-/* ----------------------------------------
-   WritingSection Component
-   ---------------------------------------- */
-
-interface WritingSectionProps {
-  title: string;
-}
-
-function WritingSection({ title }: WritingSectionProps) {
-  return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
-      <div className="h-8 flex items-center justify-between">
-        <h5 className="text-[length:var(--font-size-16)] font-semibold leading-[var(--line-height-24)] text-[var(--color-text-default)]">
-          {title}
-        </h5>
-        <span className="text-[11px] text-[var(--color-text-subtle)]">Writing...</span>
-      </div>
-    </div>
-  );
-}
-
-/* ----------------------------------------
-   DoneSection Component
-   ---------------------------------------- */
-
-interface DoneSectionProps {
-  title: string;
-  onEdit: () => void;
-  children: React.ReactNode;
-}
-
-function DoneSection({ title, onEdit, children }: DoneSectionProps) {
-  return (
-    <SectionCard>
-      <SectionCard.Header
-        title={title}
-        showDivider
-        actions={
-          <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />} onClick={onEdit}>
-            Edit
-          </Button>
-        }
-      />
-      <SectionCard.Content>{children}</SectionCard.Content>
-    </SectionCard>
-  );
-}
-
-/* ----------------------------------------
-   Summary Sidebar Component
-   ---------------------------------------- */
-
-interface SummarySidebarProps {
-  sectionStatus: Record<SectionStep, SectionState>;
-  onCancel: () => void;
-  onCreate: () => void;
-  isCreateDisabled: boolean;
-}
-
-function SummarySidebar({
-  sectionStatus,
-  onCancel,
-  onCreate,
-  isCreateDisabled,
-}: SummarySidebarProps) {
-  // Map SectionState to WizardSectionState
-  const mapState = (state: SectionState): WizardSectionState => {
-    if (state === 'pre') return 'pending';
-    if (state === 'active') return 'active';
-    if (state === 'writing') return 'writing';
-    return 'done';
-  };
-
-  const summaryItems: WizardSummaryItem[] = SECTION_ORDER.map((key) => ({
-    key,
-    label: SECTION_LABELS[key],
-    status: mapState(sectionStatus[key]),
-  }));
-
-  return (
-    <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
-      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
-        <WizardSummary items={summaryItems} />
-
-        {/* Action Buttons */}
-        <HStack gap={2}>
-          <Button variant="secondary" onClick={onCancel} className="w-[80px]">
-            Cancel
-          </Button>
-          <Button
-            variant="primary"
-            onClick={onCreate}
-            disabled={isCreateDisabled}
-            className="flex-1"
-          >
-            Create Persistent Volume
-          </Button>
-        </HStack>
+    <div className="flex items-center justify-between px-2 py-1 w-full">
+      <span className="text-[12px] leading-5 text-[var(--color-text-default)]">{label}</span>
+      <div className="w-4 h-4 flex items-center justify-center">
+        {status === 'complete' ? (
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <circle cx="8" cy="8" r="7" fill="var(--color-state-success)" />
+            <path
+              d="M5 8L7 10L11 6"
+              stroke="white"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        ) : (
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <circle
+              cx="8"
+              cy="8"
+              r="6.5"
+              stroke="var(--color-border-default)"
+              strokeDasharray="3 3"
+            />
+          </svg>
+        )}
       </div>
     </div>
   );
@@ -216,10 +119,6 @@ interface BasicInfoSectionProps {
   onNamespaceNameErrorChange: (error: string | null) => void;
   description: string;
   onDescriptionChange: (value: string) => void;
-  onNext: () => void;
-  isEditing: boolean;
-  onEditCancel: () => void;
-  onEditDone: () => void;
 }
 
 function BasicInfoSection({
@@ -229,47 +128,10 @@ function BasicInfoSection({
   onNamespaceNameErrorChange,
   description,
   onDescriptionChange,
-  onNext,
-  isEditing,
-  onEditCancel,
-  onEditDone,
 }: BasicInfoSectionProps) {
-  const handleNext = () => {
-    if (!pvName.trim()) {
-      onNamespaceNameErrorChange('Namespace name is required.');
-      return;
-    }
-    onNamespaceNameErrorChange(null);
-    onNext();
-  };
-
-  const handleDone = () => {
-    if (!pvName.trim()) {
-      onNamespaceNameErrorChange('Namespace name is required.');
-      return;
-    }
-    onNamespaceNameErrorChange(null);
-    onEditDone();
-  };
-
   return (
-    <SectionCard isActive>
-      <SectionCard.Header
-        title="Basic Information"
-        showDivider
-        actions={
-          isEditing ? (
-            <HStack gap={2}>
-              <Button variant="secondary" size="sm" onClick={onEditCancel}>
-                Cancel
-              </Button>
-              <Button variant="primary" size="sm" onClick={handleDone}>
-                Done
-              </Button>
-            </HStack>
-          ) : undefined
-        }
-      />
+    <SectionCard>
+      <SectionCard.Header title="Basic Information" showDivider />
       <SectionCard.Content>
         <VStack gap={4}>
           {/* Name */}
@@ -306,15 +168,6 @@ function BasicInfoSection({
               fullWidth
             />
           </VStack>
-
-          {/* Next Button */}
-          {!isEditing && (
-            <div className="flex justify-end pt-2">
-              <Button variant="primary" size="sm" onClick={handleNext}>
-                Next
-              </Button>
-            </div>
-          )}
         </VStack>
       </SectionCard.Content>
     </SectionCard>
@@ -378,10 +231,6 @@ interface StorageConfigSectionProps {
   onMountOptionsChange: (options: MountOption[]) => void;
   nodeSelectors: NodeSelector[];
   onNodeSelectorsChange: (selectors: NodeSelector[]) => void;
-  onNext: () => void;
-  isEditing: boolean;
-  onEditCancel: () => void;
-  onEditDone: () => void;
 }
 
 function StorageConfigSection({
@@ -393,10 +242,6 @@ function StorageConfigSection({
   onMountOptionsChange,
   nodeSelectors,
   onNodeSelectorsChange,
-  onNext,
-  isEditing,
-  onEditCancel,
-  onEditDone,
 }: StorageConfigSectionProps) {
   // Mount option handlers
   const addMountOption = () => {
@@ -452,23 +297,8 @@ function StorageConfigSection({
   };
 
   return (
-    <SectionCard isActive>
-      <SectionCard.Header
-        title="Customize"
-        showDivider
-        actions={
-          isEditing ? (
-            <HStack gap={2}>
-              <Button variant="secondary" size="sm" onClick={onEditCancel}>
-                Cancel
-              </Button>
-              <Button variant="primary" size="sm" onClick={onEditDone}>
-                Done
-              </Button>
-            </HStack>
-          ) : undefined
-        }
-      />
+    <SectionCard>
+      <SectionCard.Header title="Customize" showDivider />
       <SectionCard.Content>
         <VStack gap={3}>
           {/* Access Modes */}
@@ -649,15 +479,6 @@ function StorageConfigSection({
               Add Node Selector
             </Button>
           </VStack>
-
-          {/* Next Button */}
-          {!isEditing && (
-            <div className="flex justify-end pt-2">
-              <Button variant="primary" size="sm" onClick={onNext}>
-                Next
-              </Button>
-            </div>
-          )}
         </VStack>
       </SectionCard.Content>
     </SectionCard>
@@ -677,10 +498,6 @@ interface LabelsAnnotationsSectionProps {
   onAddAnnotation: () => void;
   onRemoveAnnotation: (index: number) => void;
   onUpdateAnnotation: (index: number, field: 'key' | 'value', value: string) => void;
-  onNext: () => void;
-  isEditing: boolean;
-  onEditCancel: () => void;
-  onEditDone: () => void;
 }
 
 function LabelsAnnotationsSection({
@@ -692,38 +509,19 @@ function LabelsAnnotationsSection({
   onAddAnnotation,
   onRemoveAnnotation,
   onUpdateAnnotation,
-  onNext,
-  isEditing,
-  onEditCancel,
-  onEditDone,
 }: LabelsAnnotationsSectionProps) {
   return (
-    <SectionCard isActive>
-      <SectionCard.Header
-        title="Labels & Annotations"
-        showDivider
-        actions={
-          isEditing ? (
-            <HStack gap={2}>
-              <Button variant="secondary" size="sm" onClick={onEditCancel}>
-                Cancel
-              </Button>
-              <Button variant="primary" size="sm" onClick={onEditDone}>
-                Done
-              </Button>
-            </HStack>
-          ) : undefined
-        }
-      />
+    <SectionCard>
+      <SectionCard.Header title="Labels & Annotations" showDivider />
       <SectionCard.Content>
-        <VStack gap={4}>
+        <VStack gap={6}>
           {/* Labels */}
-          <VStack gap={4}>
+          <VStack gap={3}>
             <VStack gap={1}>
-              <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-[16px]">
+              <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
                 Labels
               </span>
-              <p className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
+              <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
                 Specify the labels used to identify and categorize the resource.
               </p>
             </VStack>
@@ -751,23 +549,25 @@ function LabelsAnnotationsSection({
               </HStack>
             ))}
 
-            <Button
-              variant="outline"
-              size="sm"
-              leftIcon={<IconPlus size={12} stroke={1.5} />}
-              onClick={onAddLabel}
-            >
-              Add Label
-            </Button>
+            <div className="w-fit">
+              <Button
+                variant="secondary"
+                size="sm"
+                leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                onClick={onAddLabel}
+              >
+                Add Label
+              </Button>
+            </div>
           </VStack>
 
           {/* Annotations */}
-          <VStack gap={4}>
+          <VStack gap={3}>
             <VStack gap={1}>
-              <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-[16px]">
+              <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
                 Annotations
               </span>
-              <p className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
+              <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
                 Specify the annotations used to provide additional metadata for the resource.
               </p>
             </VStack>
@@ -795,24 +595,17 @@ function LabelsAnnotationsSection({
               </HStack>
             ))}
 
-            <Button
-              variant="outline"
-              size="sm"
-              leftIcon={<IconPlus size={12} stroke={1.5} />}
-              onClick={onAddAnnotation}
-            >
-              Add Annotation
-            </Button>
-          </VStack>
-
-          {/* Done Button (last section) */}
-          {!isEditing && (
-            <div className="flex justify-end pt-2">
-              <Button variant="primary" size="sm" onClick={onNext}>
-                Done
+            <div className="w-fit">
+              <Button
+                variant="secondary"
+                size="sm"
+                leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                onClick={onAddAnnotation}
+              >
+                Add Annotation
               </Button>
             </div>
-          )}
+          </VStack>
         </VStack>
       </SectionCard.Content>
     </SectionCard>
@@ -845,16 +638,6 @@ export function CreatePersistentVolumePage() {
   const [labels, setLabels] = useState<Label[]>([]);
   const [annotations, setAnnotations] = useState<Annotation[]>([]);
 
-  // Section states
-  const [sectionStatus, setSectionStatus] = useState<Record<SectionStep, SectionState>>({
-    'basic-info': 'active',
-    'storage-config': 'pre',
-    'labels-annotations': 'pre',
-  });
-
-  // Editing state
-  const [editingSection, setEditingSection] = useState<SectionStep | null>(null);
-
   // Validation errors
   const [pvNameError, setNamespaceNameError] = useState<string | null>(null);
 
@@ -876,112 +659,6 @@ export function CreatePersistentVolumePage() {
   // Sidebar width calculation
   const sidebarWidth = sidebarOpen ? 240 : 40;
 
-  // Handle section navigation
-  const handleNext = useCallback((currentSection: SectionStep) => {
-    const currentIndex = SECTION_ORDER.indexOf(currentSection);
-    const nextSection = SECTION_ORDER[currentIndex + 1];
-
-    setSectionStatus((prev) => ({
-      ...prev,
-      [currentSection]: 'done',
-      ...(nextSection && { [nextSection]: 'active' }),
-    }));
-  }, []);
-
-  // Handle edit - when editing a previous section, subsequent sections become 'writing'
-  const handleEdit = useCallback((section: SectionStep) => {
-    setEditingSection(section);
-    const sectionIndex = SECTION_ORDER.indexOf(section);
-
-    setSectionStatus((prev) => {
-      const newStatus = { ...prev };
-
-      // Set all sections to their appropriate state
-      SECTION_ORDER.forEach((key, index) => {
-        if (index < sectionIndex) {
-          newStatus[key] = 'done';
-        } else if (index === sectionIndex) {
-          newStatus[key] = 'active';
-        } else if (prev[key] === 'done' || prev[key] === 'active') {
-          // Subsequent sections that were done/active become 'writing'
-          newStatus[key] = 'writing';
-        }
-      });
-
-      return newStatus;
-    });
-  }, []);
-
-  // Handle edit cancel
-  const handleEditCancel = useCallback(() => {
-    if (!editingSection) return;
-
-    setSectionStatus((prev) => {
-      const newStatus = { ...prev };
-      newStatus[editingSection] = 'done';
-
-      // Find next writing section to activate
-      const editIndex = SECTION_ORDER.indexOf(editingSection);
-      let nextWritingFound = false;
-      for (let i = editIndex + 1; i < SECTION_ORDER.length; i++) {
-        if (newStatus[SECTION_ORDER[i]] === 'writing') {
-          newStatus[SECTION_ORDER[i]] = 'active';
-          nextWritingFound = true;
-          break;
-        }
-      }
-
-      // If no writing section, activate first pre section
-      if (!nextWritingFound) {
-        for (const key of SECTION_ORDER) {
-          if (newStatus[key] === 'pre') {
-            newStatus[key] = 'active';
-            break;
-          }
-        }
-      }
-
-      return newStatus;
-    });
-
-    setEditingSection(null);
-  }, [editingSection]);
-
-  // Handle edit done
-  const handleEditDone = useCallback(() => {
-    if (!editingSection) return;
-
-    setSectionStatus((prev) => {
-      const newStatus = { ...prev };
-      newStatus[editingSection] = 'done';
-
-      // Find next writing section to activate
-      const editIndex = SECTION_ORDER.indexOf(editingSection);
-      let nextWritingFound = false;
-      for (let i = editIndex + 1; i < SECTION_ORDER.length; i++) {
-        if (newStatus[SECTION_ORDER[i]] === 'writing') {
-          newStatus[SECTION_ORDER[i]] = 'active';
-          nextWritingFound = true;
-          break;
-        }
-      }
-
-      // If no writing section, activate first pre section
-      if (!nextWritingFound) {
-        for (const key of SECTION_ORDER) {
-          if (newStatus[key] === 'pre') {
-            newStatus[key] = 'active';
-            break;
-          }
-        }
-      }
-
-      return newStatus;
-    });
-
-    setEditingSection(null);
-  }, [editingSection]);
-
   const handleCancel = useCallback(() => {
     navigate('/container/persistent-volumes');
   }, [navigate]);
@@ -990,10 +667,6 @@ export function CreatePersistentVolumePage() {
     // Validate basic info first
     if (!pvName.trim()) {
       setNamespaceNameError('Namespace name is required.');
-      setSectionStatus((prev) => ({
-        ...prev,
-        'basic-info': 'active',
-      }));
       return;
     }
 
@@ -1067,24 +740,10 @@ export function CreatePersistentVolumePage() {
   // Check if create button should be disabled
   const isCreateDisabled = !pvName.trim();
 
-  // Get display values for done sections
-  const getAccessModesDisplay = () => {
-    const modes = [];
-    if (accessModes.singleNodeReadWrite) modes.push('RWO');
-    if (accessModes.manyNodesReadOnly) modes.push('ROX');
-    if (accessModes.manyNodesReadWrite) modes.push('RWX');
-    return modes.length > 0 ? modes.join(', ') : 'None';
-  };
-
-  const getLabelsDisplay = () => {
-    if (labels.length === 0) return 'None';
-    return labels.map((l) => `${l.key}: ${l.value}`).join(', ');
-  };
-
-  const getAnnotationsDisplay = () => {
-    if (annotations.length === 0) return 'None';
-    return annotations.map((a) => `${a.key}: ${a.value}`).join(', ');
-  };
+  // Compute section statuses for summary
+  const basicInfoComplete = pvName.trim().length > 0;
+  const storageConfigComplete = true; // Optional section, always considered complete
+  const labelsAnnotationsComplete = true; // Optional section, always considered complete
 
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
@@ -1145,7 +804,7 @@ export function CreatePersistentVolumePage() {
 
         {/* Content Area */}
         <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
+          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
             <VStack gap={3}>
               {/* Page Header */}
               <div className="flex items-center justify-between h-8">
@@ -1159,137 +818,87 @@ export function CreatePersistentVolumePage() {
                 {/* Form Content */}
                 <VStack gap={4} className="flex-1">
                   {/* Basic Information Section */}
-                  {sectionStatus['basic-info'] === 'pre' && (
-                    <PreSection title={SECTION_LABELS['basic-info']} />
-                  )}
-                  {sectionStatus['basic-info'] === 'writing' && (
-                    <WritingSection title={SECTION_LABELS['basic-info']} />
-                  )}
-                  {sectionStatus['basic-info'] === 'active' && (
-                    <BasicInfoSection
-                      pvName={pvName}
-                      onNamespaceNameChange={setNamespaceName}
-                      pvNameError={pvNameError}
-                      onNamespaceNameErrorChange={setNamespaceNameError}
-                      description={description}
-                      onDescriptionChange={setDescription}
-                      onNext={() => handleNext('basic-info')}
-                      isEditing={editingSection === 'basic-info'}
-                      onEditCancel={handleEditCancel}
-                      onEditDone={handleEditDone}
-                    />
-                  )}
-                  {sectionStatus['basic-info'] === 'done' && (
-                    <DoneSection
-                      title={SECTION_LABELS['basic-info']}
-                      onEdit={() => handleEdit('basic-info')}
-                    >
-                      <SectionCard.DataRow label="Name" value={pvName} showDivider={false} />
-                      <SectionCard.DataRow label="Description" value={description || '-'} />
-                    </DoneSection>
-                  )}
+                  <BasicInfoSection
+                    pvName={pvName}
+                    onNamespaceNameChange={setNamespaceName}
+                    pvNameError={pvNameError}
+                    onNamespaceNameErrorChange={setNamespaceNameError}
+                    description={description}
+                    onDescriptionChange={setDescription}
+                  />
 
                   {/* Storage Configuration Section */}
-                  {sectionStatus['storage-config'] === 'pre' && (
-                    <PreSection title={SECTION_LABELS['storage-config']} />
-                  )}
-                  {sectionStatus['storage-config'] === 'writing' && (
-                    <WritingSection title={SECTION_LABELS['storage-config']} />
-                  )}
-                  {sectionStatus['storage-config'] === 'active' && (
-                    <StorageConfigSection
-                      accessModes={accessModes}
-                      onAccessModesChange={setAccessModes}
-                      storageClassName={storageClassName}
-                      onStorageClassNameChange={setStorageClassName}
-                      mountOptions={mountOptions}
-                      onMountOptionsChange={setMountOptions}
-                      nodeSelectors={nodeSelectors}
-                      onNodeSelectorsChange={setNodeSelectors}
-                      onNext={() => handleNext('storage-config')}
-                      isEditing={editingSection === 'storage-config'}
-                      onEditCancel={handleEditCancel}
-                      onEditDone={handleEditDone}
-                    />
-                  )}
-                  {sectionStatus['storage-config'] === 'done' && (
-                    <DoneSection
-                      title={SECTION_LABELS['storage-config']}
-                      onEdit={() => handleEdit('storage-config')}
-                    >
-                      <SectionCard.DataRow
-                        label="Access Modes"
-                        value={getAccessModesDisplay()}
-                        showDivider={false}
-                      />
-                      {storageClassName && (
-                        <SectionCard.DataRow label="Storage Class" value={storageClassName} />
-                      )}
-                      {mountOptions.length > 0 && (
-                        <SectionCard.DataRow
-                          label="Mount Options"
-                          value={
-                            mountOptions
-                              .map((o) => o.key)
-                              .filter((k) => k)
-                              .join(', ') || 'None'
-                          }
-                        />
-                      )}
-                      {nodeSelectors.length > 0 && (
-                        <SectionCard.DataRow
-                          label="Node Selectors"
-                          value={`${nodeSelectors.length} selector(s)`}
-                        />
-                      )}
-                    </DoneSection>
-                  )}
+                  <StorageConfigSection
+                    accessModes={accessModes}
+                    onAccessModesChange={setAccessModes}
+                    storageClassName={storageClassName}
+                    onStorageClassNameChange={setStorageClassName}
+                    mountOptions={mountOptions}
+                    onMountOptionsChange={setMountOptions}
+                    nodeSelectors={nodeSelectors}
+                    onNodeSelectorsChange={setNodeSelectors}
+                  />
 
                   {/* Labels & Annotations Section */}
-                  {sectionStatus['labels-annotations'] === 'pre' && (
-                    <PreSection title={SECTION_LABELS['labels-annotations']} />
-                  )}
-                  {sectionStatus['labels-annotations'] === 'writing' && (
-                    <WritingSection title={SECTION_LABELS['labels-annotations']} />
-                  )}
-                  {sectionStatus['labels-annotations'] === 'active' && (
-                    <LabelsAnnotationsSection
-                      labels={labels}
-                      onAddLabel={addLabel}
-                      onRemoveLabel={removeLabel}
-                      onUpdateLabel={updateLabel}
-                      annotations={annotations}
-                      onAddAnnotation={addAnnotation}
-                      onRemoveAnnotation={removeAnnotation}
-                      onUpdateAnnotation={updateAnnotation}
-                      onNext={() => handleNext('labels-annotations')}
-                      isEditing={editingSection === 'labels-annotations'}
-                      onEditCancel={handleEditCancel}
-                      onEditDone={handleEditDone}
-                    />
-                  )}
-                  {sectionStatus['labels-annotations'] === 'done' && (
-                    <DoneSection
-                      title={SECTION_LABELS['labels-annotations']}
-                      onEdit={() => handleEdit('labels-annotations')}
-                    >
-                      <SectionCard.DataRow
-                        label="Labels"
-                        value={getLabelsDisplay()}
-                        showDivider={false}
-                      />
-                      <SectionCard.DataRow label="Annotations" value={getAnnotationsDisplay()} />
-                    </DoneSection>
-                  )}
+                  <LabelsAnnotationsSection
+                    labels={labels}
+                    onAddLabel={addLabel}
+                    onRemoveLabel={removeLabel}
+                    onUpdateLabel={updateLabel}
+                    annotations={annotations}
+                    onAddAnnotation={addAnnotation}
+                    onRemoveAnnotation={removeAnnotation}
+                    onUpdateAnnotation={updateAnnotation}
+                  />
                 </VStack>
 
                 {/* Summary Sidebar */}
-                <SummarySidebar
-                  sectionStatus={sectionStatus}
-                  onCancel={handleCancel}
-                  onCreate={handleCreate}
-                  isCreateDisabled={isCreateDisabled}
-                />
+                <div className="w-[280px] shrink-0">
+                  <div className="sticky top-4">
+                    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[8px] shadow-[var(--shadow-md)] overflow-hidden flex flex-col gap-6 pt-3 pb-4 px-3">
+                      <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[8px] px-4 py-4">
+                        <VStack gap={4}>
+                          <h5 className="text-[16px] leading-6 font-semibold text-[var(--color-text-default)]">
+                            Summary
+                          </h5>
+                          <VStack gap={0}>
+                            <SummaryItem
+                              label="Basic Information"
+                              status={basicInfoComplete ? 'complete' : 'in-progress'}
+                            />
+                            <SummaryItem
+                              label="Customize"
+                              status={storageConfigComplete ? 'complete' : 'in-progress'}
+                            />
+                            <SummaryItem
+                              label="Labels & Annotations"
+                              status={labelsAnnotationsComplete ? 'complete' : 'in-progress'}
+                            />
+                          </VStack>
+                        </VStack>
+                      </div>
+                      <HStack gap={2} className="w-full justify-end">
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          onClick={handleCancel}
+                          className="w-[80px]"
+                        >
+                          Cancel
+                        </Button>
+                        <Button
+                          variant="primary"
+                          size="sm"
+                          onClick={handleCreate}
+                          className="flex-1 min-w-[80px]"
+                          disabled={isCreateDisabled}
+                        >
+                          Create
+                        </Button>
+                      </HStack>
+                    </div>
+                  </div>
+                </div>
               </HStack>
             </VStack>
           </div>
