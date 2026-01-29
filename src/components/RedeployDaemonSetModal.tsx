@@ -38,7 +38,7 @@ export function RedeployDaemonSetModal({
       isOpen={isOpen}
       onClose={onClose}
       title="Redeploy DaemonSet"
-      description="Are you sure you want to redeploy this daemon set? This action cannot be undone."
+      description="This action redeploys the daemon set."
       size="sm"
     >
       {/* Info Box */}

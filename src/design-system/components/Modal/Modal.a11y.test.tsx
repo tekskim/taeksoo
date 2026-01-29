@@ -38,7 +38,7 @@ describe('ConfirmModal Accessibility', () => {
         onClose={() => {}}
         onConfirm={() => {}}
         title="Confirm Action"
-        description="Are you sure?"
+        description="This action confirms the changes."
       />
     );
     const results = await axe(container);

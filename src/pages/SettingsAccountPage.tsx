@@ -339,14 +339,14 @@ export default function SettingsAccountPage() {
       {/* Logout Confirmation Modal */}
       <Modal isOpen={showLogoutModal} onClose={() => setShowLogoutModal(false)} title="Logout">
         <p className="text-sm text-[var(--color-text-default)] mb-6">
-          Are you sure you want to logout of your account?
+          This action logs you out of your account.
         </p>
         <div className="flex justify-end gap-3">
           <Button variant="secondary" onClick={() => setShowLogoutModal(false)}>
             Cancel
           </Button>
           <Button
-            variant="danger"
+            variant="primary"
             onClick={() => {
               setShowLogoutModal(false);
               window.location.href = '/';

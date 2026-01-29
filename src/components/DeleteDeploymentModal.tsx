@@ -37,12 +37,12 @@ export function DeleteDeploymentModal({
       isOpen={isOpen}
       onClose={onClose}
       title="Delete Deployment"
-      description="Are you sure you want to delete this deployment? This action cannot be undone."
+      description="Removing the selected instances is permanent and cannot be undone."
       infoLabel="Deployment name"
       infoValue={deployment?.name ?? ''}
       confirmText="Delete"
       cancelText="Cancel"
-      confirmVariant="primary"
+      confirmVariant="danger"
       onConfirm={handleConfirm}
       isLoading={isLoading}
     />

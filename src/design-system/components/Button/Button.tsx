@@ -64,8 +64,8 @@ const buttonVariants = cva(
         ],
         danger: [
           'bg-[var(--color-state-danger)] text-[var(--color-text-on-primary)]',
-          'hover:bg-[var(--color-red-700)]',
-          'active:bg-[var(--color-red-800)]',
+          'hover:bg-[var(--color-state-danger-hover)]',
+          'active:bg-[var(--color-state-danger-active)]',
           'disabled:opacity-50',
         ],
         warning: [

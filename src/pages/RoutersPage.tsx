@@ -519,7 +519,7 @@ export function RoutersPage() {
           setRouterToDelete(null);
         }}
         title="Delete Router"
-        description={`Are you sure you want to delete "${routerToDelete?.name}"? This action cannot be undone.`}
+        description="Removing the selected instances is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"
         confirmVariant="danger"

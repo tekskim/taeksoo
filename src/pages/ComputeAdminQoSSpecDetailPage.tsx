@@ -433,7 +433,7 @@ export default function ComputeAdminQoSSpecDetailPage() {
         onClose={() => setDeleteModalOpen(false)}
         onConfirm={handleConfirmDelete}
         title="Delete Extra Spec"
-        description={`Are you sure you want to delete the extra spec "${specToDelete?.parameter}"? This action cannot be undone.`}
+        description="Removing the selected instances is permanent and cannot be undone."
         confirmText="Delete"
         variant="danger"
       />

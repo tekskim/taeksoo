@@ -38,7 +38,7 @@ export function RedeployStatefulSetModal({
       isOpen={isOpen}
       onClose={onClose}
       title="Redeploy StatefulSet"
-      description="Are you sure you want to redeploy this stateful set? This action cannot be undone."
+      description="This action redeploys the stateful set."
       size="sm"
     >
       {/* Info Box */}

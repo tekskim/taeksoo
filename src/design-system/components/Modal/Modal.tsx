@@ -138,7 +138,7 @@ export function Modal({
     'rounded-[var(--radius-lg)]',
     'shadow-[0px_0px_4px_0px_rgba(0,0,0,0.1)]',
     'p-4',
-    'flex flex-col gap-6',
+    'flex flex-col gap-4',
     'transition-all duration-200 ease-out',
     isAnimating ? 'opacity-100 scale-100' : 'opacity-0 scale-95',
     sizeClasses[size],
