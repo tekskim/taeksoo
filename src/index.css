@@ -407,9 +407,9 @@ html.theme-transition *::after {
 
   --button-radius: var(--radius-button);
 
-  --button-font-size-sm: var(--font-size-11);
+  --button-font-size-sm: var(--font-size-12);
   --button-font-size-md: var(--font-size-11);
-  --button-font-size-lg: var(--font-size-14);
+  --button-font-size-lg: var(--font-size-12);
 
   /* Button - Hover Colors */
   --button-secondary-hover-bg: var(--color-slate-100);
