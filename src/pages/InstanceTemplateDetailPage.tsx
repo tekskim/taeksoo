@@ -412,7 +412,7 @@ export function InstanceTemplateDetailPage() {
   };
 
   const handleDelete = () => {
-    if (window.confirm('Are you sure you want to delete this template?')) {
+    if (window.confirm('Removing the selected instances is permanent and cannot be undone.')) {
       navigate('/compute/instance-templates');
     }
   };

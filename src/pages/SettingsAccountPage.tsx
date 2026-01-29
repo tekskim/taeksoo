@@ -13,7 +13,7 @@ import {
 import type { TableColumn } from '@/design-system/components/Table/Table';
 import { SettingsSidebar } from '@/components/SettingsSidebar';
 import { useDarkMode } from '@/hooks/useDarkMode';
-import { IconShieldCheck, IconCheck } from '@tabler/icons-react';
+import { IconShieldCheck, IconCheck, IconEdit } from '@tabler/icons-react';
 import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
 import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
 
@@ -27,7 +27,7 @@ export default function SettingsAccountPage() {
 
   // Account State
   const [name, setName] = useState('John Doe');
-  const [email] = useState('taeksoo.kim@thakicloud.co.kr');
+  const [email] = useState('john.doe@thakicloud.co.kr');
   const [isEditingPassword, setIsEditingPassword] = useState(false);
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -141,46 +141,19 @@ export default function SettingsAccountPage() {
 
                 {/* Account Information */}
                 <SectionCard>
-                  <SectionCard.Header title="Account Information" />
-                  <SectionCard.Content gap={6}>
-                    {/* ID */}
-                    <VStack gap={2}>
-                      <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
-                        ID
-                      </span>
-                      <Input value="john.doe" disabled className="w-[400px]" />
-                    </VStack>
-
-                    {/* Divider */}
-                    <div className="h-px w-full bg-[var(--color-border-subtle)]" />
-
-                    {/* Name */}
-                    <VStack gap={2}>
-                      <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
-                        Name
-                      </span>
-                      <Input
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        className="w-[400px]"
-                      />
-                    </VStack>
-
-                    {/* Divider */}
-                    <div className="h-px w-full bg-[var(--color-border-subtle)]" />
-
-                    {/* Email */}
-                    <VStack gap={2}>
-                      <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
-                        Email
-                      </span>
-                      <div className="flex items-center gap-3">
-                        <Input value={email} disabled className="w-[400px]" />
-                        <Button variant="primary" size="sm">
-                          Change email
-                        </Button>
-                      </div>
-                    </VStack>
+                  <SectionCard.Header
+                    title="Account Information"
+                    actions={
+                      <Button variant="outline" size="sm" className="gap-1.5">
+                        <IconEdit size={12} />
+                        Edit
+                      </Button>
+                    }
+                  />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="ID" value="john.doe" />
+                    <SectionCard.DataRow label="Email" value={email} />
+                    <SectionCard.DataRow label="Name" value={name} />
                   </SectionCard.Content>
                 </SectionCard>
 
@@ -352,7 +325,7 @@ export default function SettingsAccountPage() {
                 </SectionCard>
 
                 {/* Logout */}
-                <div className="pt-6 border-t border-[var(--color-border-default)] flex justify-end">
+                <div className="pt-6 border-t border-[var(--color-border-default)] flex justify-end min-w-[600px]">
                   <Button variant="secondary" size="md" onClick={() => setShowLogoutModal(true)}>
                     Logout
                   </Button>
@@ -366,14 +339,14 @@ export default function SettingsAccountPage() {
       {/* Logout Confirmation Modal */}
       <Modal isOpen={showLogoutModal} onClose={() => setShowLogoutModal(false)} title="Logout">
         <p className="text-sm text-[var(--color-text-default)] mb-6">
-          Are you sure you want to logout of your account?
+          This action logs you out of your account.
         </p>
         <div className="flex justify-end gap-3">
           <Button variant="secondary" onClick={() => setShowLogoutModal(false)}>
             Cancel
           </Button>
           <Button
-            variant="danger"
+            variant="primary"
             onClick={() => {
               setShowLogoutModal(false);
               window.location.href = '/';

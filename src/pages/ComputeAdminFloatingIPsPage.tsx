@@ -614,7 +614,7 @@ export function ComputeAdminFloatingIPsPage() {
           setFloatingIPToDelete(null);
         }}
         title="Release floating IP"
-        description={`Are you sure you want to release "${floatingIPToDelete?.floatingIp}"? This action cannot be undone.`}
+        description="This action releases the floating IP."
         confirmText="Release"
         cancelText="Cancel"
         confirmVariant="danger"

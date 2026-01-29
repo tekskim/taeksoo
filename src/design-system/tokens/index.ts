@@ -297,9 +297,9 @@ export const component = {
     },
     radius: 'var(--button-radius)', // 6px
     fontSize: {
-      sm: 'var(--button-font-size-sm)', // 11px
+      sm: 'var(--button-font-size-sm)', // 12px
       md: 'var(--button-font-size-md)', // 11px
-      lg: 'var(--button-font-size-lg)', // 14px
+      lg: 'var(--button-font-size-lg)', // 12px
     },
     // Border colors per Figma spec
     borderColor: {

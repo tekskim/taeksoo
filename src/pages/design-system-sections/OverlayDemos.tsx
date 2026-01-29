@@ -53,7 +53,7 @@ export function ModalDemo({
             setIsOpen(false);
           }}
           title="Delete Template"
-          description="Are you sure you want to delete this template? This action cannot be undone."
+          description="Removing the selected instances is permanent and cannot be undone."
           confirmText="Delete"
           cancelText="Cancel"
           confirmVariant="danger"
@@ -106,8 +106,7 @@ export function ModalUseCaseDemo({
     'delete-single': {
       button: 'Delete (Single)',
       title: 'Delete Security group',
-      description:
-        'Are you sure you want to delete this security group? This action cannot be undone.',
+      description: 'Removing the selected instances is permanent and cannot be undone.',
       size: 'sm' as const,
       infoLabel: 'Security group',
       infoValue: 'sg-01',
@@ -120,7 +119,7 @@ export function ModalUseCaseDemo({
     'delete-multiple': {
       button: 'Delete (Multiple)',
       title: 'Delete Security groups',
-      description: 'Are you sure you want to delete the selected security groups?',
+      description: 'Removing the selected instances is permanent and cannot be undone.',
       size: 'md' as const,
       infoLabel: 'Security groups (5)',
       infoList: ['sg-01', 'sg-02', 'sg-03', 'sg-04', 'sg-05'],
