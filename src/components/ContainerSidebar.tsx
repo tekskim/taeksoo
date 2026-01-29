@@ -15,7 +15,6 @@ import {
   IconSearch,
   IconCheck,
   IconLayoutSidebar,
-  IconSettings,
   IconFolders,
   IconRocket,
   IconRefresh,
@@ -489,18 +488,12 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
           />
         </div>
 
-        {/* Settings and Cluster Management at bottom */}
+        {/* Cluster Management at bottom */}
         <div className="border-t border-[var(--color-border-subtle)] py-1 flex flex-col items-center gap-1">
           <IconSidebarItem
-            icon={<IconSettings size={16} stroke={1.5} />}
-            active={false}
-            onClick={() => navigate('/container/settings')}
-            tooltip="Settings"
-          />
-          <IconSidebarItem
             icon={<FolderCog size={16} strokeWidth={1.5} />}
-            active={false}
-            onClick={() => {}}
+            active={location.pathname.startsWith('/container/cluster-management')}
+            onClick={() => navigate('/container/cluster-management')}
             tooltip="Cluster Management"
           />
         </div>
