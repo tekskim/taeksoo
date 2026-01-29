@@ -362,7 +362,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
 
   return (
     <VStack gap={3}>
-      <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
+      <h3 className="text-heading-h5 text-[var(--color-text-default)]">
         Pods
       </h3>
       <Pagination
@@ -447,7 +447,7 @@ function PortsTab({ ports }: PortsTabProps) {
 
   return (
     <VStack gap={3}>
-      <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
+      <h3 className="text-heading-h5 text-[var(--color-text-default)]">
         Ports
       </h3>
       <Pagination
@@ -491,7 +491,7 @@ function SelectorsTab({ selectors }: SelectorsTabProps) {
 
   return (
     <VStack gap={3}>
-      <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
+      <h3 className="text-heading-h5 text-[var(--color-text-default)]">
         Selectors
       </h3>
       <Pagination
@@ -550,7 +550,7 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
 
   return (
     <VStack gap={3}>
-      <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
+      <h3 className="text-heading-h5 text-[var(--color-text-default)]">
         Conditions
       </h3>
       <Pagination
@@ -740,7 +740,7 @@ export function ContainerServiceDetailPage() {
                 <HStack gap={3} className="w-full mt-3">
                   <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
                     <VStack gap={2}>
-                      <span className="text-[11px] font-medium text-[var(--color-text-subtle)] leading-4">
+                      <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
                         Labels ({Object.keys(service.labels).length})
                       </span>
                       <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
@@ -750,7 +750,7 @@ export function ContainerServiceDetailPage() {
                             <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
                           ))}
                         {Object.keys(service.labels).length > 1 && (
-                          <span className="text-[11px] text-[var(--color-text-default)] cursor-pointer hover:underline">
+                          <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
                             (+{Object.keys(service.labels).length - 1})
                           </span>
                         )}
@@ -759,7 +759,7 @@ export function ContainerServiceDetailPage() {
                   </div>
                   <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
                     <VStack gap={2}>
-                      <span className="text-[11px] font-medium text-[var(--color-text-subtle)] leading-4">
+                      <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
                         Annotations ({Object.keys(service.annotations).length})
                       </span>
                       <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
@@ -769,7 +769,7 @@ export function ContainerServiceDetailPage() {
                             <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
                           ))}
                         {Object.keys(service.annotations).length > 1 && (
-                          <span className="text-[11px] text-[var(--color-text-default)] cursor-pointer hover:underline">
+                          <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
                             (+{Object.keys(service.annotations).length - 1})
                           </span>
                         )}

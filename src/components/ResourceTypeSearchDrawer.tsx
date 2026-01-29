@@ -200,7 +200,7 @@ export function ResourceTypeSearchDrawer({
                       className="text-[var(--color-text-subtle)] shrink-0"
                     />
                   )}
-                  <span className="text-[12px] text-[var(--color-text-default)]">
+                  <span className="text-body-md text-[var(--color-text-default)]">
                     {category.name}
                   </span>
                 </button>
@@ -222,9 +222,9 @@ export function ResourceTypeSearchDrawer({
                               : 'hover:bg-[var(--color-surface-subtle)]'
                           }`}
                         >
-                          <span className="text-[12px] truncate">{item.name}</span>
+                          <span className="text-body-md truncate">{item.name}</span>
                           <span
-                            className={`text-[12px] shrink-0 ml-2 ${
+                            className={`text-body-md shrink-0 ml-2 ${
                               isSelected ? 'text-white' : 'text-[var(--color-text-subtle)]'
                             }`}
                           >
@@ -241,7 +241,7 @@ export function ResourceTypeSearchDrawer({
 
           {/* Empty State */}
           {filteredCategories.length === 0 && (
-            <div className="flex items-center justify-center h-[100px] text-[12px] text-[var(--color-text-subtle)]">
+            <div className="flex items-center justify-center h-[100px] text-body-md text-[var(--color-text-subtle)]">
               No resource types found
             </div>
           )}

@@ -164,7 +164,7 @@ export function ViewPreferencesDrawer({
       <div className="flex flex-col gap-6">
         {/* Rows per page */}
         <div className="flex flex-col gap-2">
-          <label className="text-[length:var(--font-size-14)] font-medium text-[var(--color-text-default)] leading-[var(--line-height-20)]">
+          <label className="text-label-lg text-[var(--color-text-default)]">
             Rows per page
           </label>
           <Select
@@ -178,13 +178,13 @@ export function ViewPreferencesDrawer({
         {/* Attribute Columns */}
         <div className="flex flex-col gap-3">
           <div className="flex items-center justify-between">
-            <span className="text-[length:var(--font-size-14)] font-medium text-[var(--color-text-default)] leading-[var(--line-height-20)]">
+            <span className="text-label-lg text-[var(--color-text-default)]">
               Attribute Columns
             </span>
             <button
               type="button"
               onClick={handleResetToDefault}
-              className="flex items-center gap-1.5 text-[length:var(--font-size-12)] font-medium text-[var(--color-action-primary)] hover:text-[var(--color-action-primary-hover)] transition-colors"
+              className="flex items-center gap-1.5 text-label-md text-[var(--color-action-primary)] hover:text-[var(--color-action-primary-hover)] transition-colors"
             >
               <IconRefresh size={12} stroke={1} />
               <span>Reset to default</span>
@@ -222,7 +222,7 @@ export function ViewPreferencesDrawer({
                       stroke={1}
                     />
                   )}
-                  <span className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)] leading-[var(--line-height-16)]">
+                  <span className="text-label-md text-[var(--color-text-default)]">
                     {column.label}
                   </span>
                 </div>

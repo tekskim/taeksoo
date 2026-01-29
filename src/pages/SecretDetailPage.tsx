@@ -398,10 +398,10 @@ export function SecretDetailPage() {
                     <VStack gap={3}>
                       {/* Section Header */}
                       <HStack gap={1} align="center">
-                        <span className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
+                        <span className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
                           Data
                         </span>
-                        <span className="text-[14px] font-medium leading-[20px] text-[var(--color-text-subtle)]">
+                        <span className="text-label-lg leading-[20px] text-[var(--color-text-subtle)]">
                           ({dataEntries.length})
                         </span>
                       </HStack>
@@ -414,22 +414,22 @@ export function SecretDetailPage() {
                               {/* Key Column */}
                               <div className="w-[240px]">
                                 {index === 0 && (
-                                  <label className="text-[11px] font-medium text-[var(--color-text-default)] mb-2 block">
+                                  <label className="text-label-sm text-[var(--color-text-default)] mb-2 block">
                                     Key
                                   </label>
                                 )}
-                                <div className="w-full h-[36px] px-[10px] py-[8px] bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[6px] text-[12px] text-[var(--color-text-default)] flex items-center">
+                                <div className="w-full h-[36px] px-[10px] py-[8px] bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[6px] text-body-md text-[var(--color-text-default)] flex items-center">
                                   {key}
                                 </div>
                               </div>
                               {/* Value Column */}
                               <div className="flex-1">
                                 {index === 0 && (
-                                  <label className="text-[11px] font-medium text-[var(--color-text-default)] mb-2 block">
+                                  <label className="text-label-sm text-[var(--color-text-default)] mb-2 block">
                                     Value
                                   </label>
                                 )}
-                                <div className="w-full h-[36px] px-[10px] py-[6px] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-[6px] text-[12px] text-[var(--color-text-default)] flex items-center justify-between">
+                                <div className="w-full h-[36px] px-[10px] py-[6px] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-[6px] text-body-md text-[var(--color-text-default)] flex items-center justify-between">
                                   <span className="truncate font-mono">
                                     {visibleValues[key] ? value : maskValue(value)}
                                   </span>
@@ -471,7 +471,7 @@ export function SecretDetailPage() {
                           ))}
                         </VStack>
                       ) : (
-                        <p className="text-[12px] text-[var(--color-text-subtle)]">
+                        <p className="text-body-md text-[var(--color-text-subtle)]">
                           No data entries.
                         </p>
                       )}

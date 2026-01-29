@@ -80,13 +80,13 @@ export function EditImageDrawer({ isOpen, onClose, image, onSubmit }: EditImageD
     >
       <VStack gap={6}>
         {/* Header */}
-        <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+        <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
           Edit Image
         </h2>
 
         {/* Image Name Input */}
         <VStack gap={2} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             Image name
           </label>
           <Input
@@ -97,11 +97,11 @@ export function EditImageDrawer({ isOpen, onClose, image, onSubmit }: EditImageD
             error={hasAttemptedSubmit && !imageName.trim()}
           />
           {hasAttemptedSubmit && !imageName.trim() ? (
-            <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+            <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
               Image name is required
             </p>
           ) : (
-            <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
               Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
             </p>
           )}
@@ -110,10 +110,10 @@ export function EditImageDrawer({ isOpen, onClose, image, onSubmit }: EditImageD
         {/* Description Input */}
         <VStack gap={2} className="w-full">
           <HStack gap={1} className="items-center">
-            <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+            <label className="text-label-lg text-[var(--color-text-default)] leading-5">
               Description
             </label>
-            <span className="text-[12px] text-[var(--color-text-subtle)]">(optional)</span>
+            <span className="text-body-md text-[var(--color-text-subtle)]">(optional)</span>
           </HStack>
           <Input
             value={description}

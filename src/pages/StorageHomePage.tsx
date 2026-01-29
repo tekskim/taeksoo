@@ -546,7 +546,7 @@ function InventoryStatBox({ value, label }: InventoryStatBoxProps) {
   return (
     <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg p-4 border-2 border-transparent transition-colors hover:border-[var(--color-action-primary)] cursor-pointer">
       <div className={`text-[20px] font-medium ${textColor} pb-1`}>{value}</div>
-      <div className="text-[11px] text-[var(--color-text-subtle)]">{label}</div>
+      <div className="text-body-sm text-[var(--color-text-subtle)]">{label}</div>
     </div>
   );
 }
@@ -683,10 +683,10 @@ function CapacityGauge({ percentage, used, total, unit }: CapacityGaugeProps) {
     >
       <ReactECharts option={getOption()} style={{ height: '180px', width: '210px' }} />
       <div className="absolute inset-0 flex flex-col items-center justify-center pt-8 pointer-events-none">
-        <span className="text-[24px] leading-[28px] font-semibold text-[var(--color-text-default)]">
+        <span className="text-heading-h3 text-[var(--color-text-default)]">
           {percentage.toFixed(2)}%
         </span>
-        <span className="text-[12px] text-[var(--color-text-subtle)]">
+        <span className="text-body-md text-[var(--color-text-subtle)]">
           {used}
           {unit}/{total}
           {unit}
@@ -701,14 +701,14 @@ function CapacityGauge({ percentage, used, total, unit }: CapacityGaugeProps) {
         >
           <div className="flex items-center gap-1.5">
             <div className="w-[5px] h-[5px] rounded-[1px]" style={{ backgroundColor: color }} />
-            <span className="text-[11px] leading-[14px] text-[var(--color-text-default)] whitespace-nowrap">
+            <span className="text-body-sm text-[var(--color-text-default)] whitespace-nowrap">
               Used: {used}
               {unit} ({Math.round(percentage)}%)
             </span>
           </div>
           <div className="flex items-center gap-1.5">
             <div className="w-[5px] h-[5px] rounded-[1px] bg-[var(--color-border-subtle)]" />
-            <span className="text-[11px] leading-[14px] text-[var(--color-text-default)] whitespace-nowrap">
+            <span className="text-body-sm text-[var(--color-text-default)] whitespace-nowrap">
               Available: {available.toFixed(1)}
               {unit} ({availablePercent}%)
             </span>
@@ -739,7 +739,7 @@ function Card({
     <div
       className={`p-4 rounded-2xl border border-[var(--color-border-default)] ${bgColor} ${className}`}
     >
-      <h6 className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-semibold text-[var(--color-text-muted)] mb-4">
+      <h6 className="text-heading-h6 text-[var(--color-text-muted)] mb-4">
         {title}
       </h6>
       {children}
@@ -858,10 +858,10 @@ export function StorageHomePage() {
               <Card title="INVENTORY" className="flex flex-col">
                 {/* Total */}
                 <div className="mb-4">
-                  <div className="text-[24px] leading-[32px] font-semibold text-[var(--color-text-default)]">
+                  <div className="text-heading-h3 text-[var(--color-text-default)]">
                     54
                   </div>
-                  <div className="text-[12px] text-[var(--color-text-subtle)]">Total</div>
+                  <div className="text-body-md text-[var(--color-text-subtle)]">Total</div>
                 </div>
                 {/* Stats Grid */}
                 <div className="space-y-2 mt-auto">
@@ -887,7 +887,7 @@ export function StorageHomePage() {
             <div className="p-4 rounded-2xl border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
               {/* Header */}
               <div className="flex items-center justify-between mb-6">
-                <h6 className="text-[length:var(--font-size-14)] leading-[var(--line-height-20)] font-semibold text-[var(--color-text-default)]">
+                <h6 className="text-heading-h6 text-[var(--color-text-default)]">
                   CLUSTER UTILIZATION
                 </h6>
                 <TimeControls

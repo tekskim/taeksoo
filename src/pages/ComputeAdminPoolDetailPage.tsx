@@ -428,18 +428,18 @@ export default function PoolDetailPage() {
                           <div className="flex flex-col gap-3 w-full">
                             <div className="h-px w-full bg-[var(--color-border-subtle)]" />
                             <div className="flex flex-col gap-1.5">
-                              <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)]">
+                              <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
                                 Listener
                               </span>
                               {pool.listener && pool.listener.id ? (
                                 <Link
                                   to={`/compute-admin/listeners/${pool.listener.id}`}
-                                  className="flex items-center gap-1.5 text-[12px] font-medium leading-4 text-[var(--color-action-primary)] hover:underline"
+                                  className="flex items-center gap-1.5 text-label-md leading-4 text-[var(--color-action-primary)] hover:underline"
                                 >
                                   {pool.listener.name}
                                 </Link>
                               ) : (
-                                <span className="text-[12px] leading-4 text-[var(--color-text-default)]">
+                                <span className="text-body-md leading-4 text-[var(--color-text-default)]">
                                   -
                                 </span>
                               )}
@@ -455,7 +455,7 @@ export default function PoolDetailPage() {
                     <VStack gap={4} className="pt-4">
                       {/* Header */}
                       <div className="flex items-center justify-between">
-                        <h3 className="text-[16px] font-semibold text-[var(--color-text-default)]">
+                        <h3 className="text-heading-h5 text-[var(--color-text-default)]">
                           Members
                         </h3>
                       </div>

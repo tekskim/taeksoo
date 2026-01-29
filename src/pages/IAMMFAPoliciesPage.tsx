@@ -153,7 +153,7 @@ export default function IAMMFAPoliciesPage() {
             <VStack gap={6}>
               {/* Header */}
               <HStack justify="between" align="center" className="w-full min-h-[28px]">
-                <h1 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+                <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
                   MFA policies
                 </h1>
               </HStack>
@@ -173,7 +173,7 @@ export default function IAMMFAPoliciesPage() {
                         <SectionCard.Header title="MFA enforcement" />
                         <SectionCard.Content gap={6}>
                           {/* Description */}
-                          <p className="text-[12px] leading-[16px] text-[var(--color-text-subtle)]">
+                          <p className="text-body-md leading-[16px] text-[var(--color-text-subtle)]">
                             Choose whether to make Multi-Factor Authentication (MFA) mandatory for
                             all users, or let them enable it voluntarily.
                           </p>
@@ -206,7 +206,7 @@ export default function IAMMFAPoliciesPage() {
                             <button
                               type="button"
                               onClick={handleResetToDefault}
-                              className="flex items-center gap-1.5 text-[12px] font-medium text-[var(--color-action-primary)] hover:underline"
+                              className="flex items-center gap-1.5 text-label-md text-[var(--color-action-primary)] hover:underline"
                             >
                               <IconRefresh size={12} stroke={1.5} />
                               Reset to default
@@ -231,7 +231,7 @@ export default function IAMMFAPoliciesPage() {
                         <button
                           type="button"
                           onClick={() => setActiveMethodTab('otp')}
-                          className={`flex items-center justify-center min-w-[200px] px-[24px] text-[14px] font-medium leading-5 text-center rounded-md transition-colors cursor-pointer ${
+                          className={`flex items-center justify-center min-w-[200px] px-[24px] text-label-lg leading-5 text-center rounded-md transition-colors cursor-pointer ${
                             activeMethodTab === 'otp'
                               ? 'bg-[var(--color-surface-default)] border border-[var(--color-border-default)] text-[var(--color-action-primary)]'
                               : 'bg-transparent text-[var(--color-text-default)]'
@@ -242,7 +242,7 @@ export default function IAMMFAPoliciesPage() {
                         <button
                           type="button"
                           onClick={() => setActiveMethodTab('email')}
-                          className={`flex items-center justify-center min-w-[200px] px-[24px] text-[14px] font-medium leading-5 text-center rounded-md transition-colors cursor-pointer ${
+                          className={`flex items-center justify-center min-w-[200px] px-[24px] text-label-lg leading-5 text-center rounded-md transition-colors cursor-pointer ${
                             activeMethodTab === 'email'
                               ? 'bg-[var(--color-surface-default)] border border-[var(--color-border-default)] text-[var(--color-action-primary)]'
                               : 'bg-transparent text-[var(--color-text-default)]'
@@ -271,12 +271,12 @@ export default function IAMMFAPoliciesPage() {
                             <VStack gap={4}>
                               <VStack gap={2}>
                                 <HStack gap={0.5}>
-                                  <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
+                                  <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
                                     Look around window
                                   </span>
                                   <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                                 </HStack>
-                                <p className="text-[11px] leading-4 text-[var(--color-text-subtle)]">
+                                <p className="text-body-sm leading-4 text-[var(--color-text-subtle)]">
                                   Allows for slight time differences between the server and the
                                   user's device to prevent login failures. 1 is recommended.
                                 </p>
@@ -291,7 +291,7 @@ export default function IAMMFAPoliciesPage() {
                                   className="w-[200px]"
                                   disabled={!otpEnabled}
                                 />
-                                <p className="text-[11px] leading-4 text-[var(--color-text-subtle)]">
+                                <p className="text-body-sm leading-4 text-[var(--color-text-subtle)]">
                                   0 - 2
                                 </p>
                               </VStack>
@@ -303,10 +303,10 @@ export default function IAMMFAPoliciesPage() {
                             {/* Reusable Token */}
                             <VStack gap={4}>
                               <VStack gap={2}>
-                                <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
+                                <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
                                   Reusable token
                                 </span>
-                                <p className="text-[12px] leading-4 text-[var(--color-text-subtle)]">
+                                <p className="text-body-md leading-4 text-[var(--color-text-subtle)]">
                                   For security, always keep this disabled. Enabling it may expose
                                   the system to replay attacks.
                                 </p>
@@ -325,10 +325,10 @@ export default function IAMMFAPoliciesPage() {
                             {/* Supported Applications */}
                             <VStack gap={4}>
                               <VStack gap={2}>
-                                <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
+                                <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
                                   Supported applications
                                 </span>
-                                <p className="text-[12px] leading-4 text-[var(--color-text-subtle)]">
+                                <p className="text-body-md leading-4 text-[var(--color-text-subtle)]">
                                   Recommended authenticator apps that support this policy.
                                 </p>
                               </VStack>
@@ -352,7 +352,7 @@ export default function IAMMFAPoliciesPage() {
                               <button
                                 type="button"
                                 onClick={handleMethodsResetToDefault}
-                                className="flex items-center gap-1.5 text-[12px] font-medium text-[var(--color-action-primary)] hover:underline"
+                                className="flex items-center gap-1.5 text-label-md text-[var(--color-action-primary)] hover:underline"
                               >
                                 <IconRefresh size={12} stroke={1.5} />
                                 Reset to default
@@ -387,12 +387,12 @@ export default function IAMMFAPoliciesPage() {
                             <VStack gap={4}>
                               <VStack gap={2}>
                                 <HStack gap={0.5}>
-                                  <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
+                                  <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
                                     Code validity period
                                   </span>
                                   <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                                 </HStack>
-                                <p className="text-[11px] leading-4 text-[var(--color-text-subtle)]">
+                                <p className="text-body-sm leading-4 text-[var(--color-text-subtle)]">
                                   Set the time limit within which the user must enter the email
                                   code.
                                 </p>
@@ -408,11 +408,11 @@ export default function IAMMFAPoliciesPage() {
                                     className="w-[200px]"
                                     disabled={!emailEnabled}
                                   />
-                                  <span className="text-[12px] leading-4 text-[var(--color-text-default)]">
+                                  <span className="text-body-md leading-4 text-[var(--color-text-default)]">
                                     Seconds
                                   </span>
                                 </HStack>
-                                <p className="text-[11px] leading-4 text-[var(--color-text-subtle)]">
+                                <p className="text-body-sm leading-4 text-[var(--color-text-subtle)]">
                                   1-600 Seconds
                                 </p>
                               </VStack>
@@ -425,12 +425,12 @@ export default function IAMMFAPoliciesPage() {
                             <VStack gap={4}>
                               <VStack gap={2}>
                                 <HStack gap={0.5}>
-                                  <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
+                                  <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
                                     Resend cooldown
                                   </span>
                                   <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                                 </HStack>
-                                <p className="text-[11px] leading-4 text-[var(--color-text-subtle)]">
+                                <p className="text-body-sm leading-4 text-[var(--color-text-subtle)]">
                                   The minimum time a user must wait before requesting a new
                                   authentication code.
                                 </p>
@@ -446,11 +446,11 @@ export default function IAMMFAPoliciesPage() {
                                     className="w-[200px]"
                                     disabled={!emailEnabled}
                                   />
-                                  <span className="text-[12px] leading-4 text-[var(--color-text-default)]">
+                                  <span className="text-body-md leading-4 text-[var(--color-text-default)]">
                                     Seconds
                                   </span>
                                 </HStack>
-                                <p className="text-[11px] leading-4 text-[var(--color-text-subtle)]">
+                                <p className="text-body-sm leading-4 text-[var(--color-text-subtle)]">
                                   1-120 Seconds
                                 </p>
                               </VStack>
@@ -463,12 +463,12 @@ export default function IAMMFAPoliciesPage() {
                             <VStack gap={4}>
                               <VStack gap={2}>
                                 <HStack gap={0.5}>
-                                  <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
+                                  <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
                                     Verification attempts
                                   </span>
                                   <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                                 </HStack>
-                                <p className="text-[11px] leading-4 text-[var(--color-text-subtle)]">
+                                <p className="text-body-sm leading-4 text-[var(--color-text-subtle)]">
                                   Protect user accounts from unusual activities by limiting the
                                   number of verification attempts allowed within a time frame.
                                 </p>
@@ -476,7 +476,7 @@ export default function IAMMFAPoliciesPage() {
                               <VStack gap={2}>
                                 <div className="flex items-center gap-6 px-4 py-2 border border-[var(--color-border-default)] rounded-md w-full bg-[var(--color-surface-default)]">
                                   <HStack align="center" className="gap-[6px]">
-                                    <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
+                                    <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
                                       Time window
                                     </span>
                                     <NumberInput
@@ -488,12 +488,12 @@ export default function IAMMFAPoliciesPage() {
                                       className="w-[80px]"
                                       disabled={!emailEnabled}
                                     />
-                                    <span className="text-[12px] leading-4 text-[var(--color-text-default)]">
+                                    <span className="text-body-md leading-4 text-[var(--color-text-default)]">
                                       Minutes
                                     </span>
                                   </HStack>
                                   <HStack align="center" className="gap-[6px]">
-                                    <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
+                                    <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
                                       Max attempts
                                     </span>
                                     <NumberInput
@@ -505,12 +505,12 @@ export default function IAMMFAPoliciesPage() {
                                       className="w-[80px]"
                                       disabled={!emailEnabled}
                                     />
-                                    <span className="text-[12px] leading-4 text-[var(--color-text-default)]">
+                                    <span className="text-body-md leading-4 text-[var(--color-text-default)]">
                                       Times
                                     </span>
                                   </HStack>
                                 </div>
-                                <p className="text-[11px] leading-4 text-[var(--color-text-subtle)]">
+                                <p className="text-body-sm leading-4 text-[var(--color-text-subtle)]">
                                   1-60 Minutes / 1-10 Times
                                 </p>
                               </VStack>
@@ -524,7 +524,7 @@ export default function IAMMFAPoliciesPage() {
                               <button
                                 type="button"
                                 onClick={handleMethodsResetToDefault}
-                                className="flex items-center gap-1.5 text-[12px] font-medium text-[var(--color-action-primary)] hover:underline"
+                                className="flex items-center gap-1.5 text-label-md text-[var(--color-action-primary)] hover:underline"
                               >
                                 <IconRefresh size={12} stroke={1.5} />
                                 Reset to default

@@ -1220,12 +1220,12 @@ export function ComputeAdminInstanceDetailPage() {
                             label="Tags"
                             value={
                               <div className="flex gap-1.5">
-                                <span className="inline-flex items-center gap-1 px-2 py-1 text-[11px] font-medium border border-[var(--color-border-default)] rounded-md bg-[var(--color-surface-default)]">
+                                <span className="inline-flex items-center gap-1 px-2 py-1 text-label-sm border border-[var(--color-border-default)] rounded-md bg-[var(--color-surface-default)]">
                                   <span className="text-[var(--color-text-default)]">Team</span>
                                   <span className="text-[var(--color-border-default)]">|</span>
                                   <span className="text-[var(--color-text-default)]">dev</span>
                                 </span>
-                                <span className="inline-flex items-center gap-1 px-2 py-1 text-[11px] font-medium border border-[var(--color-border-default)] rounded-md bg-[var(--color-surface-default)]">
+                                <span className="inline-flex items-center gap-1 px-2 py-1 text-label-sm border border-[var(--color-border-default)] rounded-md bg-[var(--color-surface-default)]">
                                   <span className="text-[var(--color-text-default)]">Env</span>
                                   <span className="text-[var(--color-border-default)]">|</span>
                                   <span className="text-[var(--color-text-default)]">prod</span>
@@ -1250,7 +1250,7 @@ export function ComputeAdminInstanceDetailPage() {
                     <VStack gap={4} className="pt-4">
                       {/* Header */}
                       <div className="flex items-center w-full">
-                        <h2 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+                        <h2 className="text-heading-h5 text-[var(--color-text-default)]">
                           Volumes
                         </h2>
                       </div>
@@ -1294,7 +1294,7 @@ export function ComputeAdminInstanceDetailPage() {
                                 >
                                   {value}
                                 </Link>
-                                <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+                                <span className="text-body-sm text-[var(--color-text-subtle)]">
                                   ID : {row.id}
                                 </span>
                               </div>
@@ -1337,7 +1337,7 @@ export function ComputeAdminInstanceDetailPage() {
                     <VStack gap={4} className="pt-4">
                       {/* Header */}
                       <div className="flex items-center w-full">
-                        <h2 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+                        <h2 className="text-heading-h5 text-[var(--color-text-default)]">
                           Interfaces
                         </h2>
                       </div>
@@ -1395,7 +1395,7 @@ export function ComputeAdminInstanceDetailPage() {
                                 >
                                   {iface.name}
                                 </Link>
-                                <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+                                <span className="text-body-sm text-[var(--color-text-subtle)]">
                                   ID : {iface.id}
                                 </span>
                               </div>
@@ -1413,7 +1413,7 @@ export function ComputeAdminInstanceDetailPage() {
                                 >
                                   {iface.network}
                                 </Link>
-                                <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+                                <span className="text-body-sm text-[var(--color-text-subtle)]">
                                   ID : {iface.id}
                                 </span>
                               </div>
@@ -1462,7 +1462,7 @@ export function ComputeAdminInstanceDetailPage() {
                     <VStack gap={4} className="pt-4">
                       {/* Header */}
                       <div className="flex items-center w-full">
-                        <h2 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+                        <h2 className="text-heading-h5 text-[var(--color-text-default)]">
                           Floating IPs
                         </h2>
                       </div>
@@ -1505,7 +1505,7 @@ export function ComputeAdminInstanceDetailPage() {
                                 >
                                   {row.floatingIp}
                                 </Link>
-                                <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+                                <span className="text-body-sm text-[var(--color-text-subtle)]">
                                   ID : {row.id}
                                 </span>
                               </div>
@@ -1535,7 +1535,7 @@ export function ComputeAdminInstanceDetailPage() {
                     <VStack gap={4} className="pt-4">
                       {/* Header */}
                       <div className="flex items-center w-full">
-                        <h2 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+                        <h2 className="text-heading-h5 text-[var(--color-text-default)]">
                           Security groups
                         </h2>
                       </div>
@@ -1586,7 +1586,7 @@ export function ComputeAdminInstanceDetailPage() {
                                 >
                                   {row.name}
                                 </Link>
-                                <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+                                <span className="text-body-sm text-[var(--color-text-subtle)]">
                                   ID : {row.id}
                                 </span>
                               </div>
@@ -1622,7 +1622,7 @@ export function ComputeAdminInstanceDetailPage() {
                     <VStack gap={4} className="pt-4">
                       {/* Header */}
                       <div className="flex items-center w-full">
-                        <h2 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+                        <h2 className="text-heading-h5 text-[var(--color-text-default)]">
                           Instance snapshots
                         </h2>
                       </div>
@@ -1682,7 +1682,7 @@ export function ComputeAdminInstanceDetailPage() {
                                 >
                                   {row.name}
                                 </Link>
-                                <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+                                <span className="text-body-sm text-[var(--color-text-subtle)]">
                                   ID : {row.id}
                                 </span>
                               </div>
@@ -1781,7 +1781,7 @@ export function ComputeAdminInstanceDetailPage() {
                     <VStack gap={4} className="pt-4">
                       {/* Header */}
                       <div className="flex items-center h-7">
-                        <h2 className="text-[16px] font-semibold text-[var(--color-text-default)]">
+                        <h2 className="text-heading-h5 text-[var(--color-text-default)]">
                           Console Logs
                         </h2>
                       </div>
@@ -1790,13 +1790,13 @@ export function ComputeAdminInstanceDetailPage() {
                       <div className="flex items-center justify-between px-4 py-3 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md w-full">
                         {/* Left side - Log Length */}
                         <div className="flex items-center gap-3">
-                          <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                          <span className="text-label-lg text-[var(--color-text-default)]">
                             Log Length
                           </span>
                           <div className="flex items-center gap-1">
                             {/* Number Input with Spinner */}
                             <div className="flex items-center justify-between w-20 h-7 px-2.5 py-1 bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md">
-                              <span className="text-[12px] text-[var(--color-text-default)]">
+                              <span className="text-body-md text-[var(--color-text-default)]">
                                 {logLength}
                               </span>
                               <div className="flex flex-col">
@@ -1870,7 +1870,7 @@ export function ComputeAdminInstanceDetailPage() {
                     <VStack gap={4} className="pt-4">
                       {/* Header */}
                       <div className="flex items-center h-7">
-                        <h2 className="text-[16px] font-semibold text-[var(--color-text-default)]">
+                        <h2 className="text-heading-h5 text-[var(--color-text-default)]">
                           Action logs
                         </h2>
                       </div>
@@ -1908,7 +1908,7 @@ export function ComputeAdminInstanceDetailPage() {
                             onClick={() => handleActionLogSort('operationName')}
                           >
                             <div className="flex items-center gap-1 w-full">
-                              <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                              <span className="text-label-sm text-[var(--color-text-default)]">
                                 Action
                               </span>
                               {actionLogSortKey === 'operationName' ? (
@@ -1939,7 +1939,7 @@ export function ComputeAdminInstanceDetailPage() {
                             onClick={() => handleActionLogSort('requestId')}
                           >
                             <div className="flex items-center gap-1 w-full">
-                              <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                              <span className="text-label-sm text-[var(--color-text-default)]">
                                 Request ID
                               </span>
                               {actionLogSortKey === 'requestId' ? (
@@ -1970,7 +1970,7 @@ export function ComputeAdminInstanceDetailPage() {
                             onClick={() => handleActionLogSort('requestedTime')}
                           >
                             <div className="flex items-center gap-1 w-full">
-                              <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                              <span className="text-label-sm text-[var(--color-text-default)]">
                                 Requested Time
                               </span>
                               {actionLogSortKey === 'requestedTime' ? (
@@ -2032,12 +2032,12 @@ export function ComputeAdminInstanceDetailPage() {
                                         />
                                       )}
                                     </button>
-                                    <span className="text-[12px] text-[var(--color-text-default)]">
+                                    <span className="text-body-md text-[var(--color-text-default)]">
                                       {log.operationName}
                                     </span>
                                   </div>
                                   <div className="flex-1 flex items-center gap-1.5 min-h-[40px] px-3 py-2">
-                                    <span className="text-[12px] text-[var(--color-text-default)]">
+                                    <span className="text-body-md text-[var(--color-text-default)]">
                                       {log.requestId}
                                     </span>
                                     <button
@@ -2052,7 +2052,7 @@ export function ComputeAdminInstanceDetailPage() {
                                     </button>
                                   </div>
                                   <div className="flex-1 flex items-center min-h-[40px] px-3 py-2">
-                                    <span className="text-[12px] text-[var(--color-text-default)]">
+                                    <span className="text-body-md text-[var(--color-text-default)]">
                                       {log.requestedTime}
                                     </span>
                                   </div>
@@ -2061,17 +2061,17 @@ export function ComputeAdminInstanceDetailPage() {
                                 {/* Expanded Details */}
                                 {isExpanded && (
                                   <div className="flex items-center gap-4 min-h-[40px] px-8 py-2 border-t border-[var(--color-border-default)]">
-                                    <div className="flex items-center gap-2 text-[12px] text-[var(--color-text-default)]">
+                                    <div className="flex items-center gap-2 text-body-md text-[var(--color-text-default)]">
                                       <span className="font-medium">Result :</span>
                                       <span>{log.result}</span>
                                     </div>
                                     <div className="w-px h-3 bg-[var(--color-border-default)]" />
-                                    <div className="flex items-center gap-2 text-[12px] text-[var(--color-text-default)]">
+                                    <div className="flex items-center gap-2 text-body-md text-[var(--color-text-default)]">
                                       <span className="font-medium">Start Time :</span>
                                       <span>{log.startTime}</span>
                                     </div>
                                     <div className="w-px h-3 bg-[var(--color-border-default)]" />
-                                    <div className="flex items-center gap-2 text-[12px] text-[var(--color-text-default)]">
+                                    <div className="flex items-center gap-2 text-body-md text-[var(--color-text-default)]">
                                       <span className="font-medium">End Time :</span>
                                       <span>{log.endTime}</span>
                                     </div>

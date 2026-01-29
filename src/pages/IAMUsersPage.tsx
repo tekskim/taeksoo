@@ -368,7 +368,7 @@ export function IAMUsersPage() {
             <VStack gap={3}>
               {/* Header */}
               <HStack justify="between" align="center" className="w-full">
-                <h1 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+                <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
                   Users
                 </h1>
                 <Button variant="primary" size="sm" onClick={() => navigate('/iam/users/create')}>

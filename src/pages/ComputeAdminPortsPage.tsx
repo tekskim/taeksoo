@@ -426,7 +426,7 @@ export function ComputeAdminPortsPage() {
           >
             {row.name}
           </Link>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+          <span className="text-body-sm text-[var(--color-text-subtle)]">
             ID: {row.id}
           </span>
         </div>
@@ -447,7 +447,7 @@ export function ComputeAdminPortsPage() {
           >
             {row.tenant}
           </Link>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
+          <span className="text-body-sm text-[var(--color-text-muted)]">
             ID: {row.tenantId}
           </span>
         </div>
@@ -473,7 +473,7 @@ export function ComputeAdminPortsPage() {
               >
                 {row.attachedTo}
               </Link>
-              <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+              <span className="text-body-sm text-[var(--color-text-subtle)]">
                 ID: {row.attachedToId}
               </span>
             </div>
@@ -506,7 +506,7 @@ export function ComputeAdminPortsPage() {
           >
             {row.ownedNetwork}
           </Link>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
+          <span className="text-body-sm text-[var(--color-text-muted)]">
             ID: {row.ownedNetworkId}
           </span>
         </div>
@@ -519,9 +519,9 @@ export function ComputeAdminPortsPage() {
       minWidth: columnMinWidths.securityGroups,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
-          <span className="text-[12px] text-[var(--color-text-default)]">{row.securityGroups}</span>
+          <span className="text-body-md text-[var(--color-text-default)]">{row.securityGroups}</span>
           {row.securityGroupId && (
-            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+            <span className="text-body-sm text-[var(--color-text-subtle)]">
               ID:{row.securityGroupId}
             </span>
           )}
@@ -662,7 +662,7 @@ export function ComputeAdminPortsPage() {
             <VStack gap={3}>
               {/* Page Header */}
               <div className="flex justify-between items-center h-8 w-full">
-                <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
                   Ports
                 </h1>
               </div>

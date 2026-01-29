@@ -150,17 +150,17 @@ export function CreateObjectDrawer({
     >
       <VStack gap={3}>
         {/* Header */}
-        <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+        <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
           Create Object
         </h2>
 
         {/* Folder Path */}
         <VStack gap={2} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             Folder path
           </label>
           <div className="w-full px-[10px] py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md">
-            <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+            <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
               {currentPath}
             </span>
           </div>
@@ -168,7 +168,7 @@ export function CreateObjectDrawer({
 
         {/* Upload Files Section */}
         <VStack gap={2} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             Upload Files
           </label>
           <Button variant="secondary" size="sm" onClick={handleUploadClick} className="w-fit">
@@ -182,25 +182,25 @@ export function CreateObjectDrawer({
               {/* Header */}
               <div className="flex items-center bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md">
                 <div className="flex-1 px-3 py-2 h-10 flex items-center">
-                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  <span className="text-label-sm text-[var(--color-text-default)]">
                     Name
                   </span>
                   <IconChevronDown size={12} className="ml-1.5 text-[var(--color-text-subtle)]" />
                 </div>
                 <div className="flex-1 px-3 py-2 h-10 flex items-center">
-                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  <span className="text-label-sm text-[var(--color-text-default)]">
                     Type
                   </span>
                   <IconChevronDown size={12} className="ml-1.5 text-[var(--color-text-subtle)]" />
                 </div>
                 <div className="flex-1 px-3 py-2 h-10 flex items-center">
-                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  <span className="text-label-sm text-[var(--color-text-default)]">
                     Size
                   </span>
                   <IconChevronDown size={12} className="ml-1.5 text-[var(--color-text-subtle)]" />
                 </div>
                 <div className="flex-1 px-3 py-2 h-10 flex items-center">
-                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  <span className="text-label-sm text-[var(--color-text-default)]">
                     Count
                   </span>
                   <IconChevronDown size={12} className="ml-1.5 text-[var(--color-text-subtle)]" />
@@ -215,22 +215,22 @@ export function CreateObjectDrawer({
                   className="flex items-center bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md"
                 >
                   <div className="flex-1 px-3 py-2 min-h-[40px] flex items-center">
-                    <span className="text-[12px] text-[var(--color-text-default)]">
+                    <span className="text-body-md text-[var(--color-text-default)]">
                       {file.name}
                     </span>
                   </div>
                   <div className="flex-1 px-3 py-2 min-h-[40px] flex items-center">
-                    <span className="text-[12px] text-[var(--color-text-default)]">
+                    <span className="text-body-md text-[var(--color-text-default)]">
                       {file.type}
                     </span>
                   </div>
                   <div className="flex-1 px-3 py-2 min-h-[40px] flex items-center">
-                    <span className="text-[12px] text-[var(--color-text-default)]">
+                    <span className="text-body-md text-[var(--color-text-default)]">
                       {file.size}
                     </span>
                   </div>
                   <div className="flex-1 px-3 py-2 min-h-[40px] flex items-center">
-                    <span className="text-[12px] text-[var(--color-text-default)]">
+                    <span className="text-body-md text-[var(--color-text-default)]">
                       {file.count}
                     </span>
                   </div>
@@ -251,7 +251,7 @@ export function CreateObjectDrawer({
 
         {/* ACL Section */}
         <VStack gap={4} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             ACL
           </label>
 
@@ -274,7 +274,7 @@ export function CreateObjectDrawer({
             <div className="w-full p-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md">
               <VStack gap={1.5}>
                 <VStack gap={2}>
-                  <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                  <label className="text-label-lg text-[var(--color-text-default)] leading-5">
                     Grantee
                   </label>
                   <Select
@@ -285,7 +285,7 @@ export function CreateObjectDrawer({
                   />
                 </VStack>
                 <HStack gap={1.5} align="center">
-                  <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                  <label className="text-label-lg text-[var(--color-text-default)] leading-5">
                     Permissions
                   </label>
                   <Select
@@ -299,7 +299,7 @@ export function CreateObjectDrawer({
             </div>
           )}
 
-          <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+          <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
             Any changes to the ACL will overwrite previous one. You can choose any of the available
             options to modify the specified user group.
           </p>
@@ -308,7 +308,7 @@ export function CreateObjectDrawer({
         {/* Tags Section */}
         <VStack gap={4} className="w-full">
           <HStack justify="between" className="w-full">
-            <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+            <label className="text-label-lg text-[var(--color-text-default)] leading-5">
               Tags
             </label>
             <Button variant="primary" size="sm" onClick={handleAddTag}>
@@ -321,12 +321,12 @@ export function CreateObjectDrawer({
             {/* Header */}
             <div className="flex items-center bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md">
               <div className="flex-1 px-3 py-2 h-10 flex items-center">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                <span className="text-label-sm text-[var(--color-text-default)]">
                   Key
                 </span>
               </div>
               <div className="flex-1 px-3 py-2 h-10 flex items-center">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                <span className="text-label-sm text-[var(--color-text-default)]">
                   Value
                 </span>
               </div>

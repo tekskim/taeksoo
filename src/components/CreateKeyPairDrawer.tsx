@@ -37,15 +37,15 @@ function QuotaProgressBar({ label, used, total }: QuotaProgressBarProps) {
   return (
     <VStack gap={2} className="w-full">
       <HStack className="w-full justify-between items-center">
-        <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+        <span className="text-label-lg text-[var(--color-text-default)] leading-5">
           {label}
         </span>
         <HStack gap={0} className="items-center">
-          <span className="text-[12px] text-[var(--color-text-default)] leading-4">{used}/</span>
+          <span className="text-body-md text-[var(--color-text-default)] leading-4">{used}/</span>
           {isUnlimited ? (
             <IconInfinity size={16} className="text-[var(--color-text-default)]" stroke={1} />
           ) : (
-            <span className="text-[12px] text-[var(--color-text-default)] leading-4">{total}</span>
+            <span className="text-body-md text-[var(--color-text-default)] leading-4">{total}</span>
           )}
         </HStack>
       </HStack>
@@ -158,17 +158,17 @@ export function CreateKeyPairDrawer({
       <VStack gap={6}>
         {/* Header */}
         <VStack gap={2}>
-          <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
             Create Key pair
           </h2>
-          <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+          <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
             Create a new SSH key pair to securely access your instances.
           </p>
         </VStack>
 
         {/* Create Type Radio */}
         <VStack gap={3} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             Create type
           </label>
           <RadioGroup
@@ -184,7 +184,7 @@ export function CreateKeyPairDrawer({
 
         {/* Key Pair Name Input */}
         <VStack gap={2} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             Key pair name
           </label>
           <Input
@@ -195,11 +195,11 @@ export function CreateKeyPairDrawer({
             error={hasAttemptedSubmit && !keyPairName.trim()}
           />
           {hasAttemptedSubmit && !keyPairName.trim() ? (
-            <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+            <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
               Key pair name is required
             </p>
           ) : (
-            <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
               Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
             </p>
           )}
@@ -208,7 +208,7 @@ export function CreateKeyPairDrawer({
         {/* Public Key Input (only for Import) */}
         {createType === 'import' && (
           <VStack gap={2} className="w-full">
-            <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+            <label className="text-label-lg text-[var(--color-text-default)] leading-5">
               Public key
             </label>
             {/* Hidden file input */}
@@ -223,7 +223,7 @@ export function CreateKeyPairDrawer({
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="flex items-center gap-1.5 px-3 py-2 text-[12px] font-medium text-[var(--color-text-default)] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md hover:bg-[var(--color-surface-muted)] transition-colors"
+              className="flex items-center gap-1.5 px-3 py-2 text-label-md text-[var(--color-text-default)] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md hover:bg-[var(--color-surface-muted)] transition-colors"
             >
               <IconUpload size={12} stroke={1} />
               Upload a File
@@ -233,10 +233,10 @@ export function CreateKeyPairDrawer({
               value={publicKey}
               onChange={(e) => setPublicKey(e.target.value)}
               placeholder="Upload a file with a public key or enter it in the field."
-              className={`w-full min-h-[80px] px-[10px] py-2 text-[12px] leading-4 text-[var(--color-text-default)] placeholder:text-[var(--color-text-subtle)] bg-[var(--color-surface-default)] border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[var(--color-action-primary)] focus:border-transparent ${hasAttemptedSubmit && !publicKey.trim() ? 'border-[var(--color-state-danger)]' : 'border-[var(--color-border-strong)]'}`}
+              className={`w-full min-h-[80px] px-[10px] py-2 text-body-md leading-4 text-[var(--color-text-default)] placeholder:text-[var(--color-text-subtle)] bg-[var(--color-surface-default)] border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[var(--color-action-primary)] focus:border-transparent ${hasAttemptedSubmit && !publicKey.trim() ? 'border-[var(--color-state-danger)]' : 'border-[var(--color-border-strong)]'}`}
             />
             {hasAttemptedSubmit && !publicKey.trim() && (
-              <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+              <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
                 Public key is required
               </p>
             )}

@@ -66,10 +66,10 @@ function StatusCard({ label, count, status }: StatusCardProps) {
       className={`${bgColor} flex flex-[1_0_0] items-center justify-between min-h-px min-w-px px-4 py-3 relative rounded-lg shrink-0`}
     >
       <div className="flex flex-col gap-1.5 items-start leading-4 not-italic relative shrink-0">
-        <p className="font-medium text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+        <p className="text-label-sm leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
           {label}
         </p>
-        <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">
+        <p className="text-body-md leading-[var(--line-height-18)] text-[var(--color-text-default)]">
           {count}
         </p>
       </div>
@@ -524,7 +524,7 @@ export function MCPToolsPage() {
                 target.style.display = 'none';
                 const parent = target.parentElement;
                 if (parent) {
-                  parent.innerHTML = `<span class="text-[10px] font-medium text-[var(--color-text-muted)]">${row.mcpServer.label.charAt(0).toUpperCase()}</span>`;
+                  parent.innerHTML = `<span class="text-body-xs text-[var(--color-text-muted)]">${row.mcpServer.label.charAt(0).toUpperCase()}</span>`;
                 }
               }}
             />
@@ -549,12 +549,12 @@ export function MCPToolsPage() {
       render: (_, row) => (
         <div className="flex flex-wrap gap-1">
           {row.tags.slice(0, 3).map((tag, idx) => (
-            <span key={idx} className="text-[11px] text-[var(--color-text-subtle)]">
+            <span key={idx} className="text-body-sm text-[var(--color-text-subtle)]">
               {tag}
             </span>
           ))}
           {row.tags.length > 3 && (
-            <span className="text-[11px] text-[var(--color-text-subtle)]">
+            <span className="text-body-sm text-[var(--color-text-subtle)]">
               +{row.tags.length - 3}
             </span>
           )}
@@ -611,7 +611,7 @@ export function MCPToolsPage() {
       render: (_, row) => (
         <div className="flex items-center gap-2">
           {row.isOfficial && (
-            <span className="text-[10px] px-1.5 py-0.5 bg-[var(--color-info-weak-bg)] text-[var(--color-action-primary)] rounded">
+            <span className="text-body-xs px-1.5 py-0.5 bg-[var(--color-info-weak-bg)] text-[var(--color-action-primary)] rounded">
               Official
             </span>
           )}
@@ -889,21 +889,21 @@ export function MCPToolsPage() {
 
               {/* Title */}
               <div className="flex flex-col items-start justify-center relative shrink-0 w-full">
-                <p className="font-medium text-[length:var(--font-size-14)] leading-[var(--line-height-20)] text-[var(--color-text-default)]">
+                <p className="text-label-lg leading-[var(--line-height-20)] text-[var(--color-text-default)]">
                   {tool.title}
                 </p>
               </div>
 
               {/* Category */}
               <div className="flex flex-col items-start justify-center relative shrink-0">
-                <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] text-[var(--color-action-primary)]">
+                <p className="text-body-md leading-[var(--line-height-16)] text-[var(--color-action-primary)]">
                   {tool.category}
                 </p>
               </div>
 
               {/* Description */}
               <div className="flex flex-col items-start justify-center relative shrink-0 w-full">
-                <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-20)] text-[var(--color-text-subtle)] line-clamp-3">
+                <p className="text-body-md leading-[var(--line-height-20)] text-[var(--color-text-subtle)] line-clamp-3">
                   {tool.description}
                 </p>
               </div>
@@ -913,13 +913,13 @@ export function MCPToolsPage() {
                 {tool.tags.slice(0, 10).map((tag, idx) => (
                   <div
                     key={idx}
-                    className="bg-[var(--color-surface-subtle,#f8fafc)] border border-[var(--color-border-default,#e2e8f0)] px-2 py-0.5 rounded-md text-[11px] leading-4 text-[var(--color-text-default)] whitespace-nowrap flex-shrink-0"
+                    className="bg-[var(--color-surface-subtle,#f8fafc)] border border-[var(--color-border-default,#e2e8f0)] px-2 py-0.5 rounded-md text-body-sm leading-4 text-[var(--color-text-default)] whitespace-nowrap flex-shrink-0"
                   >
                     {tag}
                   </div>
                 ))}
                 {tool.tags.length > 10 && (
-                  <span className="text-[11px] text-[var(--color-text-default)] whitespace-nowrap flex-shrink-0 ml-1">
+                  <span className="text-body-sm text-[var(--color-text-default)] whitespace-nowrap flex-shrink-0 ml-1">
                     +{tool.tags.length - 10}
                   </span>
                 )}

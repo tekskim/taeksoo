@@ -79,18 +79,18 @@ export function EditFloatingIPDrawer({
       <VStack gap={6}>
         {/* Header */}
         <VStack gap={2}>
-          <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
             Edit Floating IP
           </h2>
         </VStack>
 
         {/* Floating IP (Read-only) */}
         <VStack gap={2} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             Floating IP
           </label>
           <div className="w-full px-[10px] py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-md">
-            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+            <span className="text-body-md text-[var(--color-text-default)] leading-4">
               {floatingIP.ipAddress}
             </span>
           </div>
@@ -99,10 +99,10 @@ export function EditFloatingIPDrawer({
         {/* Description Input */}
         <VStack gap={2} className="w-full">
           <HStack gap={1} className="items-center">
-            <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+            <label className="text-label-lg text-[var(--color-text-default)] leading-5">
               Description
             </label>
-            <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+            <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
               (optional)
             </span>
           </HStack>

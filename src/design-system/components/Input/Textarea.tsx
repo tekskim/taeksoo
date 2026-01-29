@@ -124,7 +124,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         {label && (
           <label
             htmlFor={inputId}
-            className="font-medium text-[var(--color-text-default)] text-[14px] leading-5"
+            className="text-label-lg text-[var(--color-text-default)]"
           >
             {label}
             {required && <span className="text-[var(--color-state-danger)] ml-0.5">*</span>}
@@ -135,7 +135,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         {helperText && !error && (
           <p
             id={`${inputId}-helper`}
-            className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]"
+            className="text-body-sm text-[var(--color-text-subtle)]"
           >
             {helperText}
           </p>

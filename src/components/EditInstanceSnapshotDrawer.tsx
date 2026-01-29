@@ -82,13 +82,13 @@ export function EditInstanceSnapshotDrawer({
     >
       <VStack gap={6}>
         {/* Header */}
-        <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+        <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
           Edit Instance Snapshot
         </h2>
 
         {/* Snapshot Name Input */}
         <VStack gap={2} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             Instance snapshot name
           </label>
           <Input
@@ -97,7 +97,7 @@ export function EditInstanceSnapshotDrawer({
             placeholder="Enter snapshot name"
             fullWidth
           />
-          <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+          <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
             The name should start with upper letter, lower letter or chinese, and be a string of 1
             to 128, characters can only contain "0-9, a-z, A-Z, "-'_.".
           </p>
@@ -106,10 +106,10 @@ export function EditInstanceSnapshotDrawer({
         {/* Description Input */}
         <VStack gap={2} className="w-full">
           <HStack gap={1} className="items-center">
-            <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+            <label className="text-label-lg text-[var(--color-text-default)] leading-5">
               Description
             </label>
-            <span className="text-[12px] text-[var(--color-text-subtle)]">(optional)</span>
+            <span className="text-body-md text-[var(--color-text-subtle)]">(optional)</span>
           </HStack>
           <Input
             value={description}

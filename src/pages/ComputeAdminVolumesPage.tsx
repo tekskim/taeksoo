@@ -350,7 +350,7 @@ export function ComputeAdminVolumesPage() {
           >
             {row.name}
           </Link>
-          <span className="text-[11px] text-[var(--color-text-muted)]">ID: {row.id}</span>
+          <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.id}</span>
         </div>
       ),
     },
@@ -370,7 +370,7 @@ export function ComputeAdminVolumesPage() {
             >
               {row.tenant}
             </Link>
-            <span className="text-[11px] text-[var(--color-text-muted)]">ID: {row.tenantId}</span>
+            <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.tenantId}</span>
           </div>
         ) : (
           <span className="text-[var(--color-text-muted)]">-</span>
@@ -418,7 +418,7 @@ export function ComputeAdminVolumesPage() {
             >
               {row.attachedTo}
             </Link>
-            <span className="text-[11px] text-[var(--color-text-muted)]">
+            <span className="text-body-sm text-[var(--color-text-muted)]">
               ID: {row.attachedToId}
             </span>
           </div>
@@ -544,7 +544,7 @@ export function ComputeAdminVolumesPage() {
             <VStack gap={3}>
               {/* Page Header */}
               <div className="flex items-center justify-between h-8">
-                <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
                   Volumes
                 </h1>
               </div>

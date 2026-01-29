@@ -145,11 +145,11 @@ export function RestoreFromSnapshotDrawer({
         {/* Header Section */}
         <VStack gap={2}>
           <VStack gap={0}>
-            <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
               Restore From Snapshot
             </h2>
           </VStack>
-          <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+          <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
             Create a new image using this volume as the source. The image will contain all data
             currently stored on the volume and can be used to launch new instances.
           </p>
@@ -158,10 +158,10 @@ export function RestoreFromSnapshotDrawer({
         {/* Volume Info Box */}
         <div className="w-full bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
           <VStack gap={1.5}>
-            <span className="text-[11px] font-medium text-[var(--color-text-subtle)] leading-4">
+            <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
               Volume
             </span>
-            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+            <span className="text-body-md text-[var(--color-text-default)] leading-4">
               {volume.name}
             </span>
           </VStack>
@@ -169,7 +169,7 @@ export function RestoreFromSnapshotDrawer({
 
         {/* Volume Snapshots Section */}
         <VStack gap={3}>
-          <h3 className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">
             Volume snapshots
           </h3>
 
@@ -259,7 +259,7 @@ export function RestoreFromSnapshotDrawer({
                       className="shrink-0 text-[var(--color-action-primary)]"
                     />
                   </HStack>
-                  <span className="text-[11px] text-[var(--color-text-subtle)] truncate">
+                  <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
                     ID : {snap.id}
                   </span>
                 </div>

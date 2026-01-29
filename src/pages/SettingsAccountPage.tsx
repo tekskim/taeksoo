@@ -18,38 +18,32 @@ import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
 import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
 
 /* ----------------------------------------
-   Settings Account Page
-   ---------------------------------------- */
+   Settings Account Page ---------------------------------------- */
 
 export default function SettingsAccountPage() {
   const navigate = useNavigate();
   const { isDark } = useDarkMode();
 
-  // Account State
-  const [name, setName] = useState('John Doe');
+  // Account State const [name, setName] = useState('John Doe');
   const [email] = useState('john.doe@thakicloud.co.kr');
   const [isEditingPassword, setIsEditingPassword] = useState(false);
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordLastUpdated, setPasswordLastUpdated] = useState('2024-01-10 09:30');
 
-  // 2-Step Verification State
-  const [twoStepEnabled, setTwoStepEnabled] = useState(false);
+  // 2-Step Verification State const [twoStepEnabled, setTwoStepEnabled] = useState(false);
   const [authenticatorSetup, setAuthenticatorSetup] = useState<{
     configured: boolean;
     addedAt?: string;
   }>({ configured: false });
 
-  // Modal State
-  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  // Modal State const [showLogoutModal, setShowLogoutModal] = useState(false);
 
-  // Handle window close
-  const handleWindowClose = () => {
+  // Handle window close const handleWindowClose = () => {
     navigate('/');
   };
 
-  // Session data
-  const sessions = [
+  // Session data const sessions = [
     {
       id: '1',
       location: 'Gangnam-gu, Seoul, South Korea',
@@ -87,8 +81,7 @@ export default function SettingsAccountPage() {
     },
   ];
 
-  // Session table columns
-  const sessionColumns: TableColumn[] = [
+  // Session table columns const sessionColumns: TableColumn[] = [
     { key: 'location', label: 'Location', minWidth: '180px' },
     { key: 'ip', label: 'IP Address', flex: 1, minWidth: columnMinWidths.ip },
     { key: 'device', label: 'Device', minWidth: '140px' },
@@ -106,8 +99,7 @@ export default function SettingsAccountPage() {
 
         {/* TabBar (Window controls only) */}
         <div className="flex-1">
-          <TabBar
-            tabs={[]}
+          <TabBar tabs={[]}
             activeTab=""
             onTabChange={() => {}}
             showAddButton={false}
@@ -131,23 +123,20 @@ export default function SettingsAccountPage() {
               <VStack gap={6}>
                 {/* Header */}
                 <div>
-                  <h1 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
-                    Account
-                  </h1>
-                  <p className="text-[12px] leading-[18px] text-[var(--color-text-muted)] mt-1">
+                  <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
+                    Account </h1>
+                  <p className="text-body-md leading-[18px] text-[var(--color-text-muted)] mt-1">
                     Manage your account information and security settings.
                   </p>
                 </div>
 
                 {/* Account Information */}
                 <SectionCard>
-                  <SectionCard.Header
-                    title="Account Information"
+                  <SectionCard.Header title="Account Information"
                     actions={
                       <Button variant="outline" size="sm" className="gap-1.5">
                         <IconEdit size={12} />
-                        Edit
-                      </Button>
+                        Edit </Button>
                     }
                   />
                   <SectionCard.Content>
@@ -164,49 +153,41 @@ export default function SettingsAccountPage() {
                     {/* Password */}
                     <VStack gap={4}>
                       <VStack gap={2}>
-                        <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
-                          Password
-                        </span>
-                        <p className="text-[12px] leading-4 text-[var(--color-text-subtle)]">
+                        <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
+                          Password </span>
+                        <p className="text-body-md leading-4 text-[var(--color-text-subtle)]">
                           Last updated: {passwordLastUpdated}
                         </p>
                       </VStack>
                       {!isEditingPassword ? (
-                        <Button
-                          variant="primary"
+                        <Button variant="primary"
                           size="sm"
                           onClick={() => setIsEditingPassword(true)}
                           className="w-fit"
                         >
-                          Change Password
-                        </Button>
+                          Change Password </Button>
                       ) : (
                         <VStack gap={3} className="max-w-[400px]">
                           <VStack gap={2}>
-                            <span className="text-[12px] font-medium text-[var(--color-text-default)]">
-                              Enter a new password
-                            </span>
-                            <Input
-                              type="password"
+                            <span className="text-label-md text-[var(--color-text-default)]">
+                              Enter a new password </span>
+                            <Input type="password"
                               value={newPassword}
                               onChange={(e) => setNewPassword(e.target.value)}
                               placeholder="New password"
                             />
                           </VStack>
                           <VStack gap={2}>
-                            <span className="text-[12px] font-medium text-[var(--color-text-default)]">
-                              Confirm your new password
-                            </span>
-                            <Input
-                              type="password"
+                            <span className="text-label-md text-[var(--color-text-default)]">
+                              Confirm your new password </span>
+                            <Input type="password"
                               value={confirmPassword}
                               onChange={(e) => setConfirmPassword(e.target.value)}
                               placeholder="Confirm password"
                             />
                           </VStack>
                           <div className="flex gap-2">
-                            <Button
-                              variant="secondary"
+                            <Button variant="secondary"
                               size="sm"
                               onClick={() => {
                                 setIsEditingPassword(false);
@@ -214,10 +195,8 @@ export default function SettingsAccountPage() {
                                 setConfirmPassword('');
                               }}
                             >
-                              Cancel
-                            </Button>
-                            <Button
-                              variant="primary"
+                              Cancel </Button>
+                            <Button variant="primary"
                               size="sm"
                               onClick={() => {
                                 const now = new Date();
@@ -235,11 +214,9 @@ export default function SettingsAccountPage() {
                                 setConfirmPassword('');
                               }}
                               disabled={
-                                !newPassword || !confirmPassword || newPassword !== confirmPassword
-                              }
+                                !newPassword || !confirmPassword || newPassword !== confirmPassword }
                             >
-                              Save
-                            </Button>
+                              Save </Button>
                           </div>
                         </VStack>
                       )}
@@ -251,10 +228,9 @@ export default function SettingsAccountPage() {
                     {/* MFA Setting */}
                     <VStack gap={4}>
                       <VStack gap={2}>
-                        <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
-                          MFA Setting
-                        </span>
-                        <p className="text-[12px] leading-4 text-[var(--color-text-subtle)]">
+                        <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
+                          MFA Setting </span>
+                        <p className="text-body-md leading-4 text-[var(--color-text-subtle)]">
                           Add an extra layer of security to your account.
                         </p>
                       </VStack>
@@ -263,29 +239,26 @@ export default function SettingsAccountPage() {
                       <div className="flex items-center justify-between p-4 border border-[var(--color-border-default)] rounded-lg bg-[var(--color-surface-subtle)]">
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 rounded-lg bg-[var(--color-action-primary-subtle)] flex items-center justify-center">
-                            <IconShieldCheck
-                              size={20}
+                            <IconShieldCheck size={20}
                               className="text-[var(--color-action-primary)]"
                             />
                           </div>
                           <div>
-                            <div className="text-[12px] font-medium text-[var(--color-text-default)]">
-                              Authenticator App
-                            </div>
+                            <div className="text-label-md text-[var(--color-text-default)]">
+                              Authenticator App </div>
                             {authenticatorSetup.configured ? (
-                              <div className="flex items-center gap-1.5 text-[12px] text-[var(--color-state-success)]">
+                              <div className="flex items-center gap-1.5 text-body-md text-[var(--color-state-success)]">
                                 <IconCheck size={12} />
                                 <span>Added {authenticatorSetup.addedAt}</span>
                               </div>
                             ) : (
-                              <div className="text-[12px] text-[var(--color-text-muted)]">
+                              <div className="text-body-md text-[var(--color-text-muted)]">
                                 Use Google Authenticator, Authy, etc.
                               </div>
                             )}
                           </div>
                         </div>
-                        <Button
-                          variant={authenticatorSetup.configured ? 'secondary' : 'primary'}
+                        <Button variant={authenticatorSetup.configured ? 'secondary' : 'primary'}
                           size="sm"
                           onClick={() => {
                             if (authenticatorSetup.configured) {
@@ -312,11 +285,10 @@ export default function SettingsAccountPage() {
                 <SectionCard>
                   <SectionCard.Header title="Sessions" />
                   <SectionCard.Content>
-                    <p className="text-[12px] leading-[18px] text-[var(--color-text-muted)] mb-4">
+                    <p className="text-body-md leading-[18px] text-[var(--color-text-muted)] mb-4">
                       View your recent login sessions.
                     </p>
-                    <Table
-                      columns={sessionColumns}
+                    <Table columns={sessionColumns}
                       data={sessions}
                       rowKey="id"
                       emptyMessage="No sessions found"
@@ -327,8 +299,7 @@ export default function SettingsAccountPage() {
                 {/* Logout */}
                 <div className="pt-6 border-t border-[var(--color-border-default)] flex justify-end min-w-[600px]">
                   <Button variant="secondary" size="md" onClick={() => setShowLogoutModal(true)}>
-                    Logout
-                  </Button>
+                    Logout </Button>
                 </div>
               </VStack>
             </div>
@@ -343,17 +314,14 @@ export default function SettingsAccountPage() {
         </p>
         <div className="flex justify-end gap-3">
           <Button variant="secondary" onClick={() => setShowLogoutModal(false)}>
-            Cancel
-          </Button>
-          <Button
-            variant="primary"
+            Cancel </Button>
+          <Button variant="primary"
             onClick={() => {
               setShowLogoutModal(false);
               window.location.href = '/';
             }}
           >
-            Logout
-          </Button>
+            Logout </Button>
         </div>
       </Modal>
     </div>

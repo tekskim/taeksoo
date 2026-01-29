@@ -375,7 +375,7 @@ export default function PortDetailPage() {
             >
               {row.floatingIp.address}
             </Link>
-            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+            <span className="text-body-sm text-[var(--color-text-subtle)]">
               ID : {row.floatingIp.id}
             </span>
           </div>
@@ -398,7 +398,7 @@ export default function PortDetailPage() {
           >
             {row.ownedSubnet.name}
           </Link>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+          <span className="text-body-sm text-[var(--color-text-subtle)]">
             ID : {row.ownedSubnet.id}
           </span>
         </div>
@@ -504,7 +504,7 @@ export default function PortDetailPage() {
             {row.name}
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </Link>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+          <span className="text-body-sm text-[var(--color-text-subtle)]">
             ID : {row.id}
           </span>
         </div>
@@ -639,7 +639,7 @@ export default function PortDetailPage() {
               {/* Header Card */}
               <DetailHeader>
                 {/* Title */}
-                <h1 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6 mb-3">
+                <h1 className="text-heading-h5 text-[var(--color-text-default)] mb-3">
                   {port.name}
                 </h1>
 
@@ -814,7 +814,7 @@ export default function PortDetailPage() {
                     <VStack gap={4} className="pt-4">
                       {/* Header */}
                       <div className="flex items-center justify-between">
-                        <h3 className="text-[16px] font-semibold text-[var(--color-text-default)]">
+                        <h3 className="text-heading-h5 text-[var(--color-text-default)]">
                           Fixed IPs
                         </h3>
                         <div className="flex items-center gap-1">
@@ -861,7 +861,7 @@ export default function PortDetailPage() {
                       <VStack gap={4} className="pt-4">
                         {/* Header */}
                         <div className="flex items-center justify-between">
-                          <h3 className="text-[16px] font-semibold text-[var(--color-text-default)]">
+                          <h3 className="text-heading-h5 text-[var(--color-text-default)]">
                             Allowed Address Pairs
                           </h3>
                           <Button
@@ -908,7 +908,7 @@ export default function PortDetailPage() {
                       <VStack gap={4} className="pt-4">
                         {/* Header */}
                         <div className="flex items-center justify-between">
-                          <h3 className="text-[16px] font-semibold text-[var(--color-text-default)]">
+                          <h3 className="text-heading-h5 text-[var(--color-text-default)]">
                             Security groups
                           </h3>
                           <Button variant="secondary" size="sm">
@@ -965,20 +965,20 @@ export default function PortDetailPage() {
         <div className="flex flex-col gap-2">
           {/* Port Info */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] font-medium leading-4">
+            <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
               Port
             </span>
-            <span className="text-[length:var(--font-size-12)] text-[var(--color-text-default)] leading-4">
+            <span className="text-body-md text-[var(--color-text-default)] leading-4">
               {port.name}
             </span>
           </div>
 
           {/* Security group Info */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] font-medium leading-4">
+            <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
               Security group
             </span>
-            <span className="text-[length:var(--font-size-12)] text-[var(--color-text-default)] leading-4">
+            <span className="text-body-md text-[var(--color-text-default)] leading-4">
               {securityGroupToDetach?.name || '-'}
             </span>
           </div>
@@ -986,7 +986,7 @@ export default function PortDetailPage() {
           {/* Warning Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle size={16} className="text-red-400 flex-shrink-0 mt-0.5" />
-            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-default)] leading-4">
+            <span className="text-body-sm text-[var(--color-text-default)] leading-4">
               Detaching this security group may affect network access for the port.
             </span>
           </div>

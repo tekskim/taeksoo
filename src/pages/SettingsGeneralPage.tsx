@@ -37,25 +37,21 @@ const timezoneOptions = [
 ];
 
 /* ----------------------------------------
-   Settings General Page
-   ---------------------------------------- */
+   Settings General Page ---------------------------------------- */
 
 export default function SettingsGeneralPage() {
   const navigate = useNavigate();
   const { theme, setTheme, isDark } = useDarkMode();
 
-  // General settings state
-  const [language, setLanguage] = useState('en');
+  // General settings state const [language, setLanguage] = useState('en');
   const [timezone, setTimezone] = useState('Asia/Seoul');
   const [useLocationTimezone, setUseLocationTimezone] = useState(false);
 
-  // Handle theme change
-  const handleThemeChange = (value: string) => {
+  // Handle theme change const handleThemeChange = (value: string) => {
     setTheme(value as 'light' | 'dark' | 'system');
   };
 
-  // Handle window close
-  const handleWindowClose = () => {
+  // Handle window close const handleWindowClose = () => {
     navigate('/');
   };
 
@@ -70,8 +66,7 @@ export default function SettingsGeneralPage() {
 
         {/* TabBar (Window controls only) */}
         <div className="flex-1">
-          <TabBar
-            tabs={[]}
+          <TabBar tabs={[]}
             activeTab=""
             onTabChange={() => {}}
             showAddButton={false}
@@ -95,10 +90,9 @@ export default function SettingsGeneralPage() {
               <VStack gap={6}>
                 {/* Header */}
                 <div>
-                  <h1 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
-                    General
-                  </h1>
-                  <p className="text-[12px] leading-[18px] text-[var(--color-text-muted)] mt-1">
+                  <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
+                    General </h1>
+                  <p className="text-body-md leading-[18px] text-[var(--color-text-muted)] mt-1">
                     Configure your display and localization preferences.
                   </p>
                 </div>
@@ -110,15 +104,13 @@ export default function SettingsGeneralPage() {
                     {/* Theme */}
                     <VStack gap={4}>
                       <VStack gap={2}>
-                        <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
-                          Theme
-                        </span>
-                        <p className="text-[12px] leading-4 text-[var(--color-text-subtle)]">
+                        <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
+                          Theme </span>
+                        <p className="text-body-md leading-4 text-[var(--color-text-subtle)]">
                           Choose your preferred color theme.
                         </p>
                       </VStack>
-                      <Select
-                        value={theme}
+                      <Select value={theme}
                         onChange={handleThemeChange}
                         options={themeOptions}
                         width="md"
@@ -131,15 +123,13 @@ export default function SettingsGeneralPage() {
                     {/* Language */}
                     <VStack gap={4}>
                       <VStack gap={2}>
-                        <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
-                          Language
-                        </span>
-                        <p className="text-[12px] leading-4 text-[var(--color-text-subtle)]">
+                        <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
+                          Language </span>
+                        <p className="text-body-md leading-4 text-[var(--color-text-subtle)]">
                           Select your preferred language for the interface.
                         </p>
                       </VStack>
-                      <Select
-                        value={language}
+                      <Select value={language}
                         onChange={setLanguage}
                         options={languageOptions}
                         width="md"
@@ -152,23 +142,20 @@ export default function SettingsGeneralPage() {
                     {/* Time Zone */}
                     <VStack gap={4}>
                       <VStack gap={2}>
-                        <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
-                          Time Zone
-                        </span>
-                        <p className="text-[12px] leading-4 text-[var(--color-text-subtle)]">
+                        <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
+                          Time Zone </span>
+                        <p className="text-body-md leading-4 text-[var(--color-text-subtle)]">
                           Select your time zone. This affects timestamps globally.
                         </p>
                       </VStack>
-                      <Select
-                        value={timezone}
+                      <Select value={timezone}
                         onChange={setTimezone}
                         options={timezoneOptions}
                         width="md"
                         disabled={useLocationTimezone}
                       />
                       <HStack gap={2} align="center" className="mt-2">
-                        <Toggle
-                          checked={useLocationTimezone}
+                        <Toggle checked={useLocationTimezone}
                           onChange={(e) => {
                             const checked = e.target.checked;
                             setUseLocationTimezone(checked);
@@ -176,8 +163,7 @@ export default function SettingsGeneralPage() {
                               const detectedTimezone =
                                 Intl.DateTimeFormat().resolvedOptions().timeZone;
                               const matchingOption = timezoneOptions.find(
-                                (opt) => opt.value === detectedTimezone
-                              );
+                                (opt) => opt.value === detectedTimezone );
                               if (matchingOption) {
                                 setTimezone(detectedTimezone);
                               }
@@ -186,9 +172,8 @@ export default function SettingsGeneralPage() {
                           label="Set current time zone"
                         />
                       </HStack>
-                      <p className="text-[11px] leading-4 text-[var(--color-text-subtle)]">
-                        Automatically set time zone based on your location
-                      </p>
+                      <p className="text-body-sm leading-4 text-[var(--color-text-subtle)]">
+                        Automatically set time zone based on your location </p>
                     </VStack>
                   </SectionCard.Content>
                 </SectionCard>

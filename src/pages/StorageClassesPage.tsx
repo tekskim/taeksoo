@@ -35,8 +35,7 @@ import {
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
-   Types
-   ---------------------------------------- */
+   Types ---------------------------------------- */
 
 interface StorageClassRow {
   id: string;
@@ -47,8 +46,7 @@ interface StorageClassRow {
 }
 
 /* ----------------------------------------
-   Mock Data
-   ---------------------------------------- */
+   Mock Data ---------------------------------------- */
 
 const storageClassesData: StorageClassRow[] = [
   {
@@ -89,8 +87,7 @@ const storageClassesData: StorageClassRow[] = [
 ];
 
 /* ----------------------------------------
-   Component
-   ---------------------------------------- */
+   Component ---------------------------------------- */
 
 export function StorageClassesPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -136,8 +133,7 @@ export function StorageClassesPage() {
   const totalPages = Math.ceil(storageClassesData.length / rowsPerPage);
   const paginatedData = storageClassesData.slice(
     (currentPage - 1) * rowsPerPage,
-    currentPage * rowsPerPage
-  );
+    currentPage * rowsPerPage );
 
   // Sidebar width calculation
   const sidebarWidth = sidebarOpen ? 240 : 40;
@@ -191,8 +187,7 @@ export function StorageClassesPage() {
       sortable: true,
       align: 'center',
       render: (value: string) => (
-        <StatusIndicator
-          status={
+        <StatusIndicator status={
             value === 'Active'
               ? 'active'
               : value === 'Pending'
@@ -211,8 +206,7 @@ export function StorageClassesPage() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row) => (
-        <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block"
+        <span className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate block"
           title={value}
           onClick={(e) => {
             e.stopPropagation();
@@ -252,8 +246,7 @@ export function StorageClassesPage() {
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={createMenuItems(row)} trigger="click" align="left">
             <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-              <IconDotsCircleHorizontal
-                size={16}
+              <IconDotsCircleHorizontal size={16}
                 stroke={1.5}
                 className="text-[var(--action-icon-color)]"
               />
@@ -292,13 +285,11 @@ export function StorageClassesPage() {
       <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
 
       {/* Main Content */}
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
+      <main className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
         style={{ left: `${sidebarWidth}px` }}
       >
         {/* Tab Bar */}
-        <TabBar
-          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+        <TabBar tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
@@ -307,21 +298,18 @@ export function StorageClassesPage() {
         />
 
         {/* Top Bar */}
-        <TopBar
-          showSidebarToggle={!sidebarOpen}
+        <TopBar showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
           breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'clusterName', href: '/container' }, { label: 'Storage Classes' }]}
+            <Breadcrumb items={[{ label: 'clusterName', href: '/container' }, { label: 'Storage Classes' }]}
             />
           }
           actions={
             <>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                 onClick={() => {
                   if (shellPanel.isExpanded) {
                     shellPanel.setIsExpanded(false);
@@ -330,11 +318,9 @@ export function StorageClassesPage() {
                   }
                 }}
               >
-                <IconTerminal2
-                  size={16}
+                <IconTerminal2 size={16}
                   className={
-                    shellPanel.isExpanded
-                      ? 'text-[var(--color-action-primary)]'
+                    shellPanel.isExpanded ? 'text-[var(--color-action-primary)]'
                       : 'text-[var(--color-text-muted)]'
                   }
                   stroke={1.5}
@@ -357,8 +343,7 @@ export function StorageClassesPage() {
         />
 
         {/* Content Area */}
-        <div
-          className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll"
+        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll"
           style={{ paddingBottom: shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0' }}
         >
           <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
@@ -366,20 +351,17 @@ export function StorageClassesPage() {
               {/* Header */}
               <HStack justify="between" align="center" className="w-full min-h-8">
                 <HStack gap={2} align="center">
-                  <h1 className="text-[16px] leading-6 font-semibold text-[var(--color-text-default)]">
-                    Storage Classes
-                  </h1>
+                  <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
+                    Storage Classes </h1>
                 </HStack>
 
                 {/* Create Button with Dropdown */}
                 <ContextMenu items={createDropdownItems} trigger="click" align="right">
-                  <Button
-                    variant="primary"
+                  <Button variant="primary"
                     size="md"
                     rightIcon={<IconChevronDown size={14} stroke={1.5} />}
                   >
-                    Create Storage Class
-                  </Button>
+                    Create Storage Class </Button>
                 </ContextMenu>
               </HStack>
 
@@ -387,13 +369,11 @@ export function StorageClassesPage() {
               <HStack gap={2} align="center" className="w-full min-h-7">
                 {/* Search */}
                 <HStack gap={1} align="center">
-                  <SearchInput
-                    placeholder="Search Storage Classes by attributes"
+                  <SearchInput placeholder="Search Storage Classes by attributes"
                     size="sm"
                     className="w-[var(--search-input-width)]"
                   />
-                  <Button
-                    variant="secondary"
+                  <Button variant="secondary"
                     size="sm"
                     aria-label="Download"
                     className="!p-0 !w-7 !h-7 !min-w-7"
@@ -407,60 +387,50 @@ export function StorageClassesPage() {
 
                 {/* Actions */}
                 <HStack gap={1} align="center">
-                  <Button
-                    variant="secondary"
+                  <Button variant="secondary"
                     size="sm"
                     leftIcon={<IconDownload size={12} stroke={1.5} />}
                     disabled={selectedRows.length === 0}
                   >
-                    Download YAML
-                  </Button>
-                  <Button
-                    variant="secondary"
+                    Download YAML </Button>
+                  <Button variant="secondary"
                     size="sm"
                     leftIcon={<IconTrash size={12} stroke={1.5} />}
                     disabled={selectedRows.length === 0}
                   >
-                    Delete
-                  </Button>
+                    Delete </Button>
                 </HStack>
               </HStack>
 
               {/* Filter Bar */}
               {filters.length > 0 && (
-                <HStack
-                  justify="between"
+                <HStack justify="between"
                   align="center"
                   className="w-full pl-2 pr-4 py-2 bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)]"
                 >
                   <HStack gap={1} align="center">
                     {filters.map((filter, index) => (
-                      <Chip
-                        key={index}
+                      <Chip key={index}
                         label={filter.key}
                         value={filter.value}
                         onRemove={() => handleRemoveFilter(index)}
                       />
                     ))}
                   </HStack>
-                  <button
-                    onClick={handleClearFilters}
-                    className="text-[11px] font-medium text-[var(--color-action-primary)] hover:underline"
+                  <button onClick={handleClearFilters}
+                    className="text-label-sm text-[var(--color-action-primary)] hover:underline"
                   >
-                    Clear Filters
-                  </button>
+                    Clear Filters </button>
                 </HStack>
               )}
 
               {/* Pagination */}
-              <Pagination
-                currentPage={currentPage}
+              <Pagination currentPage={currentPage}
                 totalPages={totalPages}
                 onPageChange={setCurrentPage}
                 totalItems={storageClassesData.length}
                 selectedCount={selectedRows.length}
-                showSettings
-                onSettingsClick={() => {}}
+                showSettings onSettingsClick={() => {}}
               />
 
               {/* Table */}
@@ -468,8 +438,7 @@ export function StorageClassesPage() {
                 columns={columns}
                 data={paginatedData}
                 rowKey="id"
-                selectable
-                selectedKeys={selectedRows}
+                selectable selectedKeys={selectedRows}
                 onSelectionChange={setSelectedRows}
               />
             </VStack>
@@ -478,8 +447,7 @@ export function StorageClassesPage() {
       </main>
 
       {/* Shell Panel */}
-      <ShellPanel
-        isExpanded={shellPanel.isExpanded}
+      <ShellPanel isExpanded={shellPanel.isExpanded}
         onExpandedChange={shellPanel.setIsExpanded}
         tabs={shellPanel.tabs}
         activeTabId={shellPanel.activeTabId}

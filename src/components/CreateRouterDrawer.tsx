@@ -79,15 +79,15 @@ function QuotaProgressBar({ label, used, total }: QuotaProgressBarProps) {
   return (
     <VStack gap={2} className="w-full">
       <HStack className="w-full justify-between items-center">
-        <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+        <span className="text-label-lg text-[var(--color-text-default)] leading-5">
           {label}
         </span>
         <HStack gap={0} align="center">
-          <span className="text-[12px] text-[var(--color-text-default)] leading-4">{used}/</span>
+          <span className="text-body-md text-[var(--color-text-default)] leading-4">{used}/</span>
           {isUnlimited ? (
             <IconInfinity size={16} className="text-[var(--color-text-default)]" />
           ) : (
-            <span className="text-[12px] text-[var(--color-text-default)] leading-4">{total}</span>
+            <span className="text-body-md text-[var(--color-text-default)] leading-4">{total}</span>
           )}
         </HStack>
       </HStack>
@@ -233,10 +233,10 @@ export function CreateRouterDrawer({
       <VStack gap={3} className="h-full">
         {/* Header */}
         <VStack gap={2}>
-          <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
             Create Router
           </h2>
-          <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+          <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
             Create a virtual router to route traffic between different networks or subnets. You can
             optionally connect the router to an external network to enable internet access or
             floating IP usage.
@@ -246,7 +246,7 @@ export function CreateRouterDrawer({
         <VStack gap={6}>
           {/* Router name */}
           <VStack gap={2}>
-            <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+            <span className="text-label-lg text-[var(--color-text-default)] leading-5">
               Router name
             </span>
             <Input
@@ -257,11 +257,11 @@ export function CreateRouterDrawer({
               error={hasAttemptedSubmit && !routerName.trim()}
             />
             {hasAttemptedSubmit && !routerName.trim() ? (
-              <span className="text-[11px] text-[var(--color-state-danger)]">
+              <span className="text-body-sm text-[var(--color-state-danger)]">
                 Router name is required
               </span>
             ) : (
-              <span className="text-[11px] text-[var(--color-text-subtle)]">
+              <span className="text-body-sm text-[var(--color-text-subtle)]">
                 Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
               </span>
             )}
@@ -270,10 +270,10 @@ export function CreateRouterDrawer({
           {/* Description */}
           <VStack gap={2}>
             <HStack gap={1.5} align="center">
-              <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+              <span className="text-label-lg text-[var(--color-text-default)] leading-5">
                 Description
               </span>
-              <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+              <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
                 (Optional)
               </span>
             </HStack>
@@ -293,10 +293,10 @@ export function CreateRouterDrawer({
                 {/* Admin State */}
                 <VStack gap={3}>
                   <VStack gap={2}>
-                    <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                    <span className="text-label-lg text-[var(--color-text-default)] leading-5">
                       Admin State
                     </span>
-                    <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+                    <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
                       Setting it to "Down" disables all related network or control operations,
                       regardless of runtime status.
                     </span>
@@ -311,10 +311,10 @@ export function CreateRouterDrawer({
                 {/* External Gateway */}
                 <VStack gap={3}>
                   <VStack gap={2}>
-                    <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                    <span className="text-label-lg text-[var(--color-text-default)] leading-5">
                       External Gateway
                     </span>
-                    <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+                    <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
                       The external gateway connects your router to an external (public) network.
                       <br />
                       When enabled, instances in the connected subnets can access the internet using
@@ -415,7 +415,7 @@ export function CreateRouterDrawer({
                           className="shrink-0 text-[var(--color-action-primary)]"
                         />
                       </HStack>
-                      <span className="text-[11px] text-[var(--color-text-subtle)] truncate">
+                      <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
                         ID : {net.id}
                       </span>
                     </div>

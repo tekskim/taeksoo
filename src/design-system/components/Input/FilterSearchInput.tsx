@@ -112,7 +112,7 @@ function FilterDropdown({
   if (selectedFilter && selectedFilter.type === 'select' && selectedFilter.options) {
     return (
       <div className="absolute left-0 top-full mt-1 min-w-[var(--context-menu-min-width)] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-[var(--context-menu-radius)] shadow-[var(--shadow-md)] z-50 overflow-hidden">
-        <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-[length:var(--font-size-10)] font-medium text-[var(--color-text-subtle)] uppercase tracking-wide border-b border-[var(--color-border-subtle)]">
+        <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-xs font-medium text-[var(--color-text-subtle)] uppercase tracking-wide border-b border-[var(--color-border-subtle)]">
           {selectedFilter.label}
         </div>
         <div>
@@ -121,7 +121,7 @@ function FilterDropdown({
               key={option.value}
               type="button"
               onClick={() => onOptionSelect(option)}
-              className="w-full px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-left text-[length:var(--font-size-11)] text-[var(--color-text-default)] hover:bg-[var(--context-menu-hover-bg)] transition-colors duration-[var(--duration-fast)]"
+              className="w-full px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-left text-body-sm text-[var(--color-text-default)] hover:bg-[var(--context-menu-hover-bg)] transition-colors duration-[var(--duration-fast)]"
             >
               {option.label}
             </button>
@@ -131,7 +131,7 @@ function FilterDropdown({
           <button
             type="button"
             onClick={onBack}
-            className="w-full px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-left text-[length:var(--font-size-11)] text-[var(--color-text-muted)] hover:bg-[var(--context-menu-hover-bg)] transition-colors duration-[var(--duration-fast)]"
+            className="w-full px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-left text-body-sm text-[var(--color-text-muted)] hover:bg-[var(--context-menu-hover-bg)] transition-colors duration-[var(--duration-fast)]"
           >
             ← Back to filters
           </button>
@@ -143,7 +143,7 @@ function FilterDropdown({
   // Show filter list
   return (
     <div className="absolute left-0 top-full mt-1 min-w-[var(--context-menu-min-width)] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-[var(--context-menu-radius)] shadow-[var(--shadow-md)] z-50 overflow-hidden">
-      <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-[length:var(--font-size-10)] font-medium text-[var(--color-text-subtle)] uppercase tracking-wide border-b border-[var(--color-border-subtle)]">
+      <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-xs font-medium text-[var(--color-text-subtle)] uppercase tracking-wide border-b border-[var(--color-border-subtle)]">
         Filter by
       </div>
       <div>
@@ -152,7 +152,7 @@ function FilterDropdown({
             key={filter.id}
             type="button"
             onClick={() => onFilterSelect(filter)}
-            className="w-full px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-left text-[length:var(--font-size-11)] text-[var(--color-text-default)] hover:bg-[var(--context-menu-hover-bg)] transition-colors duration-[var(--duration-fast)]"
+            className="w-full px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-left text-body-sm text-[var(--color-text-default)] hover:bg-[var(--context-menu-hover-bg)] transition-colors duration-[var(--duration-fast)]"
           >
             {filter.label}
           </button>
@@ -336,8 +336,8 @@ export const FilterSearchInput = forwardRef<HTMLInputElement, FilterSearchInputP
     const getInputPrefix = () => {
       if (selectedFilter) {
         return (
-          <span className="flex items-center gap-1 px-2 py-0.5 bg-[var(--color-surface-subtle)] rounded text-[11px] mr-1">
-            <span className="font-medium text-[var(--color-text-default)]">
+          <span className="flex items-center gap-1 px-2 py-0.5 bg-[var(--color-surface-subtle)] rounded text-body-sm mr-1">
+            <span className="text-label-sm text-[var(--color-text-default)]">
               {selectedFilter.label}
             </span>
             <span className="text-[var(--color-border-strong)]">|</span>
@@ -446,7 +446,7 @@ export const FilterSearchInput = forwardRef<HTMLInputElement, FilterSearchInputP
             <button
               type="button"
               onClick={handleClearFilters}
-              className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] font-medium text-[var(--color-action-primary)] hover:text-[var(--color-action-primary-hover)] transition-colors whitespace-nowrap"
+              className="text-label-sm font-medium text-[var(--color-action-primary)] hover:text-[var(--color-action-primary-hover)] transition-colors whitespace-nowrap"
             >
               {clearFiltersLabel}
             </button>

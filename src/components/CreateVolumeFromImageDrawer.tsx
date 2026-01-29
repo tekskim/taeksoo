@@ -50,15 +50,15 @@ function QuotaProgressBar({ label, used, total }: QuotaProgressBarProps) {
   return (
     <VStack gap={2} className="w-full">
       <HStack className="w-full justify-between items-center">
-        <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+        <span className="text-label-lg text-[var(--color-text-default)] leading-5">
           {label}
         </span>
         <HStack gap={0} className="items-center">
-          <span className="text-[12px] text-[var(--color-text-default)] leading-4">{used}/</span>
+          <span className="text-body-md text-[var(--color-text-default)] leading-4">{used}/</span>
           {isUnlimited ? (
             <IconInfinity size={16} className="text-[var(--color-text-default)]" stroke={1} />
           ) : (
-            <span className="text-[12px] text-[var(--color-text-default)] leading-4">{total}</span>
+            <span className="text-body-md text-[var(--color-text-default)] leading-4">{total}</span>
           )}
         </HStack>
       </HStack>
@@ -196,10 +196,10 @@ export function CreateVolumeFromImageDrawer({
         <VStack gap={3}>
           {/* Header */}
           <VStack gap={2}>
-            <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
               Create Volume from Image
             </h2>
-            <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
               Create a new volume using the selected image. The new volume will contain an identical
               copy of the image data.
             </p>
@@ -207,8 +207,8 @@ export function CreateVolumeFromImageDrawer({
 
           {/* Image Info Box */}
           <div className="w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg">
-            <p className="text-[11px] font-medium text-[var(--color-text-subtle)] mb-1.5">Image</p>
-            <p className="text-[12px] text-[var(--color-text-default)]">
+            <p className="text-label-sm text-[var(--color-text-subtle)] mb-1.5">Image</p>
+            <p className="text-body-md text-[var(--color-text-default)]">
               {image ? `${image.name} (${image.size}GiB)` : '-'}
             </p>
           </div>
@@ -216,7 +216,7 @@ export function CreateVolumeFromImageDrawer({
 
         {/* Volume Name Input */}
         <VStack gap={2} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             Volume name
           </label>
           <Input
@@ -227,11 +227,11 @@ export function CreateVolumeFromImageDrawer({
             error={hasAttemptedSubmit && !volumeName.trim()}
           />
           {hasAttemptedSubmit && !volumeName.trim() ? (
-            <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+            <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
               Volume name is required
             </p>
           ) : (
-            <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
               Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
             </p>
           )}
@@ -240,10 +240,10 @@ export function CreateVolumeFromImageDrawer({
         {/* Capacity Slider */}
         <VStack gap={5} className="w-full">
           <HStack className="w-full justify-between items-center">
-            <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+            <label className="text-label-lg text-[var(--color-text-default)] leading-5">
               Capacity (GiB)
             </label>
-            <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+            <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
               {minCapacity} - {maxCapacity} GiB
             </span>
           </HStack>
@@ -271,7 +271,7 @@ export function CreateVolumeFromImageDrawer({
 
         {/* Volume Type Select */}
         <VStack gap={2} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             Volume type
           </label>
           <Select options={volumeTypes} value={volumeType} onChange={setVolumeType} fullWidth />

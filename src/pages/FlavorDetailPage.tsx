@@ -498,7 +498,7 @@ export function FlavorDetailPage() {
               className="flex-shrink-0 text-[var(--color-action-primary)]"
             />
           </div>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] truncate">
+          <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
             ID : {row.id}
           </span>
         </div>
@@ -714,7 +714,7 @@ export function FlavorDetailPage() {
                   <TabPanel value="instances" className="pt-0">
                     <VStack gap={4} className="pt-4">
                       {/* Section Header */}
-                      <h2 className="text-[length:var(--font-size-16)] leading-[var(--line-height-24)] font-semibold text-[var(--color-text-default)]">
+                      <h2 className="text-heading-h5 text-[var(--color-text-default)]">
                         Instances
                       </h2>
 
@@ -752,7 +752,7 @@ export function FlavorDetailPage() {
                   <TabPanel value="parameters" className="pt-0">
                     <div className="pt-6">
                       <div className="bg-[#141414] dark:bg-[#FAFAFA] border border-[var(--color-border-default)] rounded-md p-4 w-full min-h-[576px] overflow-auto">
-                        <pre className="font-mono text-[12px] leading-[18px] text-[#e2e8f0] dark:text-[#1e293b] whitespace-pre">
+                        <pre className="font-mono text-body-md leading-[18px] text-[#e2e8f0] dark:text-[#1e293b] whitespace-pre">
                           {JSON.stringify(mockFlavorParameters, null, 5)}
                         </pre>
                       </div>

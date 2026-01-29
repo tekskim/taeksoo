@@ -97,7 +97,7 @@ export function ListToolbarFilters({
       {onFiltersClear && (
         <button
           onClick={onFiltersClear}
-          className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] font-medium text-[var(--color-action-primary)] hover:text-[var(--color-action-primary-hover)] transition-colors"
+          className="text-label-sm font-medium text-[var(--color-action-primary)] hover:text-[var(--color-action-primary-hover)] transition-colors"
         >
           {clearFiltersLabel}
         </button>

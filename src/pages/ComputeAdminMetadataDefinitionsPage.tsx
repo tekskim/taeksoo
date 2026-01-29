@@ -230,7 +230,7 @@ export default function ComputeAdminMetadataDefinitionsPage() {
             <VStack gap={3}>
               {/* Page Header */}
               <div className="flex items-center justify-between h-8">
-                <h1 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+                <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
                   Metadata Definitions
                 </h1>
                 <Button variant="primary" size="md">

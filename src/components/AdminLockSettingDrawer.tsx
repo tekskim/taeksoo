@@ -77,10 +77,10 @@ export function AdminLockSettingDrawer({
         {/* Header */}
         <VStack gap={3}>
           <VStack gap={2}>
-            <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
               Lock Setting
             </h2>
-            <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
               When a system administrator is locked, sign-in is disabled and modifications or
               deletion of the account are restricted.
             </p>
@@ -89,10 +89,10 @@ export function AdminLockSettingDrawer({
           {/* Admin Info Card */}
           <div className="bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
             <VStack gap={1.5}>
-              <span className="text-[11px] font-medium text-[var(--color-text-subtle)] leading-4">
+              <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
                 System administrator
               </span>
-              <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              <span className="text-body-md text-[var(--color-text-default)] leading-4">
                 {adminUsername}
               </span>
             </VStack>
@@ -101,12 +101,12 @@ export function AdminLockSettingDrawer({
 
         {/* Lock Status */}
         <VStack gap={3}>
-          <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <span className="text-label-lg text-[var(--color-text-default)] leading-5">
             Lock Status
           </span>
           <HStack gap={2} align="center">
             <Toggle checked={locked} onChange={setLocked} />
-            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+            <span className="text-body-md text-[var(--color-text-default)] leading-4">
               {locked ? 'Locked' : 'Unlocked'}
             </span>
           </HStack>

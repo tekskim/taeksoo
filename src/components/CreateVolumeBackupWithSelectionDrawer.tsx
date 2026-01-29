@@ -74,15 +74,15 @@ function QuotaProgressBar({ label, used, total }: QuotaProgressBarProps) {
   return (
     <VStack gap={2} className="w-full">
       <HStack className="w-full justify-between items-center">
-        <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+        <span className="text-label-lg text-[var(--color-text-default)] leading-5">
           {label}
         </span>
         <HStack gap={0} align="center">
-          <span className="text-[12px] text-[var(--color-text-default)] leading-4">{used}/</span>
+          <span className="text-body-md text-[var(--color-text-default)] leading-4">{used}/</span>
           {isUnlimited ? (
             <IconInfinity size={16} className="text-[var(--color-text-default)]" />
           ) : (
-            <span className="text-[12px] text-[var(--color-text-default)] leading-4">{total}</span>
+            <span className="text-body-md text-[var(--color-text-default)] leading-4">{total}</span>
           )}
         </HStack>
       </HStack>
@@ -220,13 +220,13 @@ export function CreateVolumeBackupWithSelectionDrawer({
     >
       <VStack gap={6} className="h-full">
         {/* Header */}
-        <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+        <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
           Create Volume Backup
         </h2>
 
         {/* Volumes Section */}
         <VStack gap={3}>
-          <h3 className="text-[14px] font-medium text-[var(--color-text-default)]">Volumes</h3>
+          <h3 className="text-label-lg text-[var(--color-text-default)]">Volumes</h3>
 
           {/* Search */}
           <div className="w-[280px]">
@@ -365,7 +365,7 @@ export function CreateVolumeBackupWithSelectionDrawer({
 
         {/* Backup Mode */}
         <VStack gap={3}>
-          <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+          <span className="text-label-lg text-[var(--color-text-default)]">
             Backup mode
           </span>
           <VStack gap={3}>
@@ -388,7 +388,7 @@ export function CreateVolumeBackupWithSelectionDrawer({
 
         {/* Volume Backup Name */}
         <VStack gap={2}>
-          <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+          <span className="text-label-lg text-[var(--color-text-default)]">
             Volume Backup name
           </span>
           <Input
@@ -397,14 +397,14 @@ export function CreateVolumeBackupWithSelectionDrawer({
             placeholder="e.g. data-backup"
             fullWidth
           />
-          <span className="text-[11px] text-[var(--color-text-subtle)]">
+          <span className="text-body-sm text-[var(--color-text-subtle)]">
             Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
           </span>
         </VStack>
 
         {/* Description */}
         <VStack gap={2} className="pb-5">
-          <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+          <span className="text-label-lg text-[var(--color-text-default)]">
             Description (optional)
           </span>
           <Input

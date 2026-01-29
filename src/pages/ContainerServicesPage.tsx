@@ -158,7 +158,7 @@ function CreateServiceDropdown({ onCreateForm, onCreateYaml }: CreateServiceDrop
               }}
             >
               <button
-                className="w-full px-3 py-2 text-left text-[12px] text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] transition-colors"
+                className="w-full px-3 py-2 text-left text-body-md text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] transition-colors"
                 onClick={() => {
                   setIsOpen(false);
                   onCreateForm();
@@ -167,7 +167,7 @@ function CreateServiceDropdown({ onCreateForm, onCreateYaml }: CreateServiceDrop
                 Create as Form
               </button>
               <button
-                className="w-full px-3 py-2 text-left text-[12px] text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] transition-colors"
+                className="w-full px-3 py-2 text-left text-body-md text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] transition-colors"
                 onClick={() => {
                   setIsOpen(false);
                   onCreateYaml();
@@ -290,7 +290,7 @@ export function ContainerServicesPage() {
       minWidth: columnMinWidths.type,
       sortable: true,
       render: (value: string) => (
-        <span className="text-[12px] text-[var(--color-text-default)]">{value}</span>
+        <span className="text-body-md text-[var(--color-text-default)]">{value}</span>
       ),
     },
     {
@@ -437,7 +437,7 @@ export function ContainerServicesPage() {
               {/* Header */}
               <HStack justify="between" align="center" className="w-full min-h-8">
                 <HStack gap={2} align="center">
-                  <h1 className="text-[16px] leading-6 font-semibold text-[var(--color-text-default)]">
+                  <h1 className="text-heading-h5 text-[var(--color-text-default)]">
                     Services
                   </h1>
                   <button className="p-1 hover:bg-[var(--color-surface-subtle)] rounded transition-colors">
@@ -512,7 +512,7 @@ export function ContainerServicesPage() {
                   </HStack>
                   <button
                     onClick={handleClearFilters}
-                    className="text-[11px] font-medium text-[var(--color-action-primary)] hover:underline"
+                    className="text-label-sm text-[var(--color-action-primary)] hover:underline"
                   >
                     Clear Filters
                   </button>

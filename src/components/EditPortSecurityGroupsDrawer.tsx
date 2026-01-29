@@ -63,9 +63,9 @@ interface FilterTagProps {
 function FilterTag({ label, value, onRemove }: FilterTagProps) {
   return (
     <div className="flex items-center gap-1.5 px-2 py-1 bg-white border border-[var(--color-border-default)] rounded-md">
-      <span className="text-[11px] font-medium text-[var(--color-text-default)]">{label}</span>
-      <span className="text-[11px] text-[var(--color-border-default)]">|</span>
-      <span className="text-[11px] font-medium text-[var(--color-text-default)]">{value}</span>
+      <span className="text-label-sm text-[var(--color-text-default)]">{label}</span>
+      <span className="text-body-sm text-[var(--color-border-default)]">|</span>
+      <span className="text-label-sm text-[var(--color-text-default)]">{value}</span>
       <button
         onClick={onRemove}
         className="flex items-center justify-center hover:bg-[var(--color-surface-subtle)] rounded"
@@ -199,7 +199,7 @@ export function EditPortSecurityGroupsDrawer({
       <VStack gap={6} className="h-full">
         {/* Header Section */}
         <VStack gap={3}>
-          <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+          <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
             When disabled, no security groups will be applied, and anti-spoofing checks are turned
             off.
           </p>
@@ -207,10 +207,10 @@ export function EditPortSecurityGroupsDrawer({
           {/* Port Info Box */}
           <div className="w-full px-4 py-3 bg-[var(--color-surface-muted)] rounded-lg">
             <VStack gap={1.5}>
-              <span className="text-[11px] font-medium text-[var(--color-text-subtle)] leading-4">
+              <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
                 Port name
               </span>
-              <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              <span className="text-body-md text-[var(--color-text-default)] leading-4">
                 {port.name}
               </span>
             </VStack>
@@ -219,7 +219,7 @@ export function EditPortSecurityGroupsDrawer({
 
         {/* Port Security Toggle Section */}
         <VStack gap={3}>
-          <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <span className="text-label-lg text-[var(--color-text-default)] leading-5">
             Port security
           </span>
           <Toggle
@@ -232,7 +232,7 @@ export function EditPortSecurityGroupsDrawer({
         {/* Security Groups Section - Only shown when port security is enabled */}
         {portSecurityEnabled && (
           <VStack gap={3} className="pb-5">
-            <h3 className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+            <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">
               Security Groups
             </h3>
 
@@ -259,7 +259,7 @@ export function EditPortSecurityGroupsDrawer({
                 />
                 <button
                   onClick={handleClearFilters}
-                  className="text-[11px] font-medium text-[var(--color-action-primary)] hover:underline"
+                  className="text-label-sm text-[var(--color-action-primary)] hover:underline"
                 >
                   Clear Filters
                 </button>
@@ -313,18 +313,18 @@ export function EditPortSecurityGroupsDrawer({
                   />
                 </div>
                 <div className="flex-1 flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)]">
-                  <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-4">
+                  <span className="text-label-sm text-[var(--color-text-default)] leading-4">
                     Name
                   </span>
                 </div>
                 <div className="flex-1 flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                  <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-4">
+                  <span className="text-label-sm text-[var(--color-text-default)] leading-4">
                     Description
                   </span>
                   <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
                 </div>
                 <div className="flex-1 flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                  <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-4">
+                  <span className="text-label-sm text-[var(--color-text-default)] leading-4">
                     Created At
                   </span>
                   <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
@@ -355,7 +355,7 @@ export function EditPortSecurityGroupsDrawer({
                   {/* Name */}
                   <div className="flex-1 flex flex-col gap-0.5 justify-center px-3 py-2 overflow-hidden min-w-0">
                     <div className="flex items-center gap-1.5">
-                      <span className="text-[12px] font-medium text-[var(--color-action-primary)] leading-4 truncate">
+                      <span className="text-label-md text-[var(--color-action-primary)] leading-4 truncate">
                         {sg.name}
                       </span>
                       <IconExternalLink
@@ -363,19 +363,19 @@ export function EditPortSecurityGroupsDrawer({
                         className="shrink-0 text-[var(--color-action-primary)]"
                       />
                     </div>
-                    <span className="text-[11px] text-[var(--color-text-subtle)] leading-4 truncate">
+                    <span className="text-body-sm text-[var(--color-text-subtle)] leading-4 truncate">
                       ID : {sg.id}
                     </span>
                   </div>
                   {/* Description */}
                   <div className="flex-1 flex items-center px-3 py-2 overflow-hidden min-w-0">
-                    <span className="text-[12px] text-[var(--color-text-default)] leading-4 truncate">
+                    <span className="text-body-md text-[var(--color-text-default)] leading-4 truncate">
                       {sg.description}
                     </span>
                   </div>
                   {/* Created At */}
                   <div className="flex-1 flex items-center px-3 py-2 overflow-hidden min-w-0">
-                    <span className="text-[12px] text-[var(--color-text-default)] leading-4 truncate">
+                    <span className="text-body-md text-[var(--color-text-default)] leading-4 truncate">
                       {sg.createdAt}
                     </span>
                   </div>

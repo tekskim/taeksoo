@@ -121,7 +121,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
             px-2 py-1
             bg-[var(--color-text-default)]
             text-[var(--color-surface-default)]
-            text-[11px]
+            text-body-sm
             rounded
             whitespace-nowrap
             opacity-0
@@ -164,7 +164,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
       {/* Notifications List */}
       <div className="max-h-[400px] overflow-y-auto p-2 drawer-scroll">
         {filteredNotifications.length === 0 ? (
-          <div className="flex items-center justify-center h-[100px] text-[var(--color-text-muted)] text-[13px]">
+          <div className="flex items-center justify-center h-[100px] text-[var(--color-text-muted)] text-body-md">
             No notifications
           </div>
         ) : (
@@ -256,7 +256,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
         {/* Content */}
         <div className="flex-1 min-w-0">
           {/* Message */}
-          <p className="text-[13px] leading-[18px] text-[var(--color-text-default)] mb-2 pr-6">
+          <p className="text-body-lg text-[var(--color-text-default)] mb-2 pr-6">
             {notification.message}
           </p>
 
@@ -274,7 +274,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
           </div>
 
           {/* Time */}
-          <span className="text-[12px] text-[var(--color-text-muted)]">{notification.time}</span>
+          <span className="text-body-md text-[var(--color-text-muted)]">{notification.time}</span>
         </div>
       </div>
 
@@ -290,7 +290,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
             className="
               flex items-center justify-end gap-1
               w-full px-3 py-2
-              text-[12px] font-medium
+              text-label-md
               text-[var(--color-text-muted)]
               hover:text-[var(--color-text-default)]
               border-t border-[var(--color-border-subtle)]
@@ -310,12 +310,12 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
             <div className="px-3 pb-3">
               <div className="p-3 bg-[var(--color-surface-subtle)] rounded-md">
                 {notification.detail?.code && (
-                  <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] font-medium text-[var(--color-text-default)] mb-1">
+                  <p className="text-label-md text-[var(--color-text-default)] mb-1">
                     code: {notification.detail.code}
                   </p>
                 )}
                 {notification.detail?.message && (
-                  <p className="text-[12px] leading-[18px] text-[var(--color-text-muted)]">
+                  <p className="text-body-md text-[var(--color-text-muted)]">
                     {notification.detail.message}
                   </p>
                 )}

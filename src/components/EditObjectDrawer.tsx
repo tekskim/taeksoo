@@ -109,14 +109,14 @@ export function EditObjectDrawer({
     >
       <VStack gap={3}>
         {/* Header */}
-        <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+        <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
           Edit Object
         </h2>
 
         <VStack gap={4} className="w-full">
           {/* Folder Name Input */}
           <VStack gap={2} className="w-full">
-            <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+            <label className="text-label-lg text-[var(--color-text-default)] leading-5">
               Folder Name
             </label>
             <Input
@@ -130,7 +130,7 @@ export function EditObjectDrawer({
           {/* Tags Section */}
           <VStack gap={1} className="w-full">
             <HStack justify="between" className="w-full">
-              <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+              <label className="text-label-lg text-[var(--color-text-default)] leading-5">
                 Tags
               </label>
               <Button variant="primary" size="sm" onClick={handleAddTag}>
@@ -143,12 +143,12 @@ export function EditObjectDrawer({
               {/* Table Header */}
               <div className="flex items-center w-full bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md">
                 <div className="flex-1 px-3 py-2.5">
-                  <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-4">
+                  <span className="text-label-sm text-[var(--color-text-default)] leading-4">
                     Key
                   </span>
                 </div>
                 <div className="flex-1 px-3 py-2.5">
-                  <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-4">
+                  <span className="text-label-sm text-[var(--color-text-default)] leading-4">
                     Value
                   </span>
                 </div>
@@ -166,7 +166,7 @@ export function EditObjectDrawer({
                       type="text"
                       value={tag.key}
                       onChange={(e) => handleTagChange(tag.id, 'key', e.target.value)}
-                      className="w-20 px-2.5 py-1 text-[12px] text-[var(--color-text-default)] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md leading-4 outline-none focus:border-[var(--color-action-primary)]"
+                      className="w-20 px-2.5 py-1 text-body-md text-[var(--color-text-default)] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md leading-4 outline-none focus:border-[var(--color-action-primary)]"
                       placeholder="Key"
                     />
                   </div>
@@ -175,7 +175,7 @@ export function EditObjectDrawer({
                       type="text"
                       value={tag.value}
                       onChange={(e) => handleTagChange(tag.id, 'value', e.target.value)}
-                      className="w-20 px-2.5 py-1 text-[12px] text-[var(--color-text-default)] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md leading-4 outline-none focus:border-[var(--color-action-primary)]"
+                      className="w-20 px-2.5 py-1 text-body-md text-[var(--color-text-default)] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md leading-4 outline-none focus:border-[var(--color-action-primary)]"
                       placeholder="Value"
                     />
                   </div>

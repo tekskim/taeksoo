@@ -138,12 +138,12 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
         {/* Header */}
         <div className="flex items-center justify-between">
           {label && (
-            <span className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)]">
+            <span className="text-label-sm text-[var(--color-text-default)]">
               {label}
             </span>
           )}
           {showValue && (
-            <div className="flex items-center text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-default)]">
+            <div className="flex items-center text-body-sm text-[var(--color-text-default)]">
               <span>{value + newValue}/</span>
               {isUnlimited ? <IconInfinity size={16} stroke={1} /> : <span>{max}</span>}
             </div>
@@ -194,7 +194,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
           {/* Tooltip */}
           {showTooltip && newValue > 0 && (
             <div className="absolute left-1/2 -translate-x-1/2 -top-2 -translate-y-full z-10">
-              <div className="bg-[var(--tooltip-bg)] text-[var(--tooltip-text)] text-[length:var(--font-size-11)] leading-[var(--line-height-16)] px-2 py-1 rounded-[var(--radius-sm)] shadow-[var(--shadow-md)]">
+              <div className="bg-[var(--tooltip-bg)] text-[var(--tooltip-text)] text-body-sm px-2 py-1 rounded-[var(--radius-sm)] shadow-[var(--shadow-md)]">
                 <div className="flex flex-col gap-1">
                   <div className="flex items-center gap-1">
                     <span
@@ -227,7 +227,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1">
             {label && (
-              <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] text-[var(--color-text-default)]">
+              <span className="text-body-md text-[var(--color-text-default)]">
                 {label}
               </span>
             )}
@@ -240,7 +240,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
                 />
                 {errorMessage && (
                   <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-1 hidden group-hover:block z-10">
-                    <div className="bg-[var(--tooltip-bg)] text-[var(--tooltip-text)] text-[length:var(--font-size-11)] leading-[var(--line-height-16)] px-2 py-1 rounded-[var(--radius-sm)] shadow-[var(--shadow-md)] whitespace-nowrap">
+                    <div className="bg-[var(--tooltip-bg)] text-[var(--tooltip-text)] text-body-sm px-2 py-1 rounded-[var(--radius-sm)] shadow-[var(--shadow-md)] whitespace-nowrap">
                       {errorMessage}
                     </div>
                   </div>
@@ -249,7 +249,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
             )}
           </div>
           {statusText && (
-            <span className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+            <span className="text-body-sm text-[var(--color-text-subtle)]">
               {statusText}
             </span>
           )}

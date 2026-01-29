@@ -447,7 +447,7 @@ export default function RouterDetailPage() {
               className="flex-shrink-0 text-[var(--color-action-primary)]"
             />
           </div>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] truncate">
+          <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
             ID : {row.id}
           </span>
         </div>
@@ -743,7 +743,7 @@ export default function RouterDetailPage() {
                     <VStack gap={4} className="pt-4">
                       {/* Header */}
                       <div className="flex items-center justify-between">
-                        <h3 className="text-[16px] leading-[24px] font-semibold text-[var(--color-text-default)]">
+                        <h3 className="text-heading-h5 text-[var(--color-text-default)]">
                           Ports
                         </h3>
                         <Button
@@ -807,7 +807,7 @@ export default function RouterDetailPage() {
                     <VStack gap={4} className="pt-4">
                       {/* Header */}
                       <div className="flex items-center justify-between">
-                        <h3 className="text-[16px] leading-[24px] font-semibold text-[var(--color-text-default)]">
+                        <h3 className="text-heading-h5 text-[var(--color-text-default)]">
                           Static Route
                         </h3>
                         <Button

@@ -126,10 +126,10 @@ export function DetachInterfaceDrawer({
         {/* Header Section */}
         <VStack gap={3}>
           <VStack gap={2}>
-            <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
               Detach Interface
             </h2>
-            <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
               Detach a network interface from this instance. This may interrupt connectivity if the
               selected port is primary.
             </p>
@@ -137,14 +137,14 @@ export function DetachInterfaceDrawer({
 
           {/* Instance Info Box */}
           <div className="w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg">
-            <div className="text-[11px] text-[var(--color-text-subtle)] mb-1.5">Instance</div>
-            <div className="text-[12px] text-[var(--color-text-default)]">{instance.name}</div>
+            <div className="text-body-sm text-[var(--color-text-subtle)] mb-1.5">Instance</div>
+            <div className="text-body-md text-[var(--color-text-default)]">{instance.name}</div>
           </div>
 
           {/* Warning Message */}
           <div className="w-full p-3 bg-[#fef2f2] rounded-lg flex gap-2 items-start">
             <IconAlertCircle size={16} className="shrink-0 text-[#f87171] mt-0.5" />
-            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+            <p className="text-body-sm text-[var(--color-text-default)] leading-4">
               For data consistency, stop all write operations on the instance before detaching a
               interface.
             </p>
@@ -154,7 +154,7 @@ export function DetachInterfaceDrawer({
         {/* Interfaces Section */}
         <VStack gap={3} className="flex-1 min-h-0 pb-5">
           {/* Interfaces Header */}
-          <h3 className="text-[14px] font-medium text-[var(--color-text-default)]">Interfaces</h3>
+          <h3 className="text-label-lg text-[var(--color-text-default)]">Interfaces</h3>
 
           {/* Search */}
           <div className="w-[280px]">
@@ -176,7 +176,7 @@ export function DetachInterfaceDrawer({
               onPageChange={setCurrentPage}
             />
             <div className="w-px h-4 bg-[var(--color-border-default)] mx-2" />
-            <span className="text-[11px] text-[var(--color-text-subtle)]">{totalItems} items</span>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">{totalItems} items</span>
           </HStack>
 
           {/* Interfaces Table */}
@@ -197,7 +197,7 @@ export function DetachInterfaceDrawer({
                 style={{ width: '59px', flexShrink: 0 }}
                 className="flex items-center justify-center px-3 border-l border-[var(--color-border-default)]"
               >
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                <span className="text-label-sm text-[var(--color-text-default)]">
                   Status
                 </span>
               </div>
@@ -205,7 +205,7 @@ export function DetachInterfaceDrawer({
                 style={{ width: '125px', flexShrink: 0 }}
                 className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
               >
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                <span className="text-label-sm text-[var(--color-text-default)]">
                   Name
                 </span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
@@ -214,7 +214,7 @@ export function DetachInterfaceDrawer({
                 style={{ width: '108px', flexShrink: 0 }}
                 className="flex items-center px-3 border-l border-[var(--color-border-default)]"
               >
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                <span className="text-label-sm text-[var(--color-text-default)]">
                   Fixed IP
                 </span>
               </div>
@@ -222,7 +222,7 @@ export function DetachInterfaceDrawer({
                 style={{ width: '108px', flexShrink: 0 }}
                 className="flex items-center px-3 border-l border-[var(--color-border-default)]"
               >
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                <span className="text-label-sm text-[var(--color-text-default)]">
                   Floating IP
                 </span>
               </div>
@@ -230,7 +230,7 @@ export function DetachInterfaceDrawer({
                 style={{ width: '148px', flexShrink: 0 }}
                 className="flex items-center px-3 border-l border-[var(--color-border-default)]"
               >
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                <span className="text-label-sm text-[var(--color-text-default)]">
                   MAC Address
                 </span>
               </div>
@@ -284,7 +284,7 @@ export function DetachInterfaceDrawer({
                     className="flex flex-col gap-0.5 justify-center px-3 py-2 overflow-hidden"
                   >
                     <div className="flex items-center gap-1.5">
-                      <span className="text-[12px] font-medium text-[var(--color-action-primary)] truncate">
+                      <span className="text-label-md text-[var(--color-action-primary)] truncate">
                         {iface.name}
                       </span>
                       <IconExternalLink
@@ -292,7 +292,7 @@ export function DetachInterfaceDrawer({
                         className="shrink-0 text-[var(--color-action-primary)]"
                       />
                     </div>
-                    <span className="text-[11px] text-[var(--color-text-subtle)] truncate">
+                    <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
                       ID : 17kfj123
                     </span>
                   </div>
@@ -301,7 +301,7 @@ export function DetachInterfaceDrawer({
                     style={{ width: '108px', flexShrink: 0 }}
                     className="flex items-center px-3 py-2 overflow-hidden"
                   >
-                    <span className="text-[12px] text-[var(--color-text-default)] truncate">
+                    <span className="text-body-md text-[var(--color-text-default)] truncate">
                       {iface.fixedIp}
                     </span>
                   </div>
@@ -310,7 +310,7 @@ export function DetachInterfaceDrawer({
                     style={{ width: '108px', flexShrink: 0 }}
                     className="flex items-center px-3 py-2 overflow-hidden"
                   >
-                    <span className="text-[12px] text-[var(--color-text-default)] truncate">
+                    <span className="text-body-md text-[var(--color-text-default)] truncate">
                       {iface.floatingIp}
                     </span>
                   </div>
@@ -319,7 +319,7 @@ export function DetachInterfaceDrawer({
                     style={{ width: '148px', flexShrink: 0 }}
                     className="flex items-center px-3 py-2 overflow-hidden"
                   >
-                    <span className="text-[12px] text-[var(--color-text-default)] truncate">
+                    <span className="text-body-md text-[var(--color-text-default)] truncate">
                       {iface.macAddress}
                     </span>
                   </div>

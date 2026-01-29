@@ -150,10 +150,10 @@ export function ExternalGatewaySettingDrawer({
         {/* Header Section */}
         <VStack gap={3} className="w-[648px]">
           <VStack gap={2}>
-            <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
               External Gateway Setting
             </h2>
-            <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
               Configure or update the external gateway for this router. The external gateway
               connects your router to a public network, allowing instances in attached subnets to
               access external networks through floating IPs.
@@ -163,10 +163,10 @@ export function ExternalGatewaySettingDrawer({
           {/* Router Info Box */}
           <div className="w-full bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
             <VStack gap={1.5}>
-              <span className="text-[11px] font-medium text-[var(--color-text-subtle)] leading-4">
+              <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
                 Router
               </span>
-              <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              <span className="text-body-md text-[var(--color-text-default)] leading-4">
                 {router.name}
               </span>
             </VStack>
@@ -175,12 +175,12 @@ export function ExternalGatewaySettingDrawer({
 
         {/* External Gateway Toggle Section */}
         <VStack gap={3}>
-          <h3 className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">
             External gateway
           </h3>
           <HStack gap={2} align="center">
             <Toggle checked={gatewayEnabled} onChange={setGatewayEnabled} />
-            <span className="text-[12px] text-[var(--color-text-default)]">
+            <span className="text-body-md text-[var(--color-text-default)]">
               {gatewayEnabled ? 'Open' : 'Closed'}
             </span>
           </HStack>
@@ -269,7 +269,7 @@ export function ExternalGatewaySettingDrawer({
                       className="shrink-0 text-[var(--color-action-primary)]"
                     />
                   </HStack>
-                  <span className="text-[11px] text-[var(--color-text-subtle)] truncate">
+                  <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
                     ID : {net.id}
                   </span>
                 </div>

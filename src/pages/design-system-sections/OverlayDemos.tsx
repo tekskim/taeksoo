@@ -5,8 +5,7 @@ import { Label } from './HelperComponents';
 import { AttachVolumeDrawer } from '@/components/AttachVolumeDrawer';
 
 /* ----------------------------------------
-   Modal Demo Components
-   ---------------------------------------- */
+   Modal Demo Components ---------------------------------------- */
 
 // Basic Modal Demo
 export function ModalDemo({
@@ -45,8 +44,7 @@ export function ModalDemo({
         <Button variant="outline" size="sm" onClick={() => setIsOpen(true)}>
           {getButtonLabel()}
         </Button>
-        <ConfirmModal
-          isOpen={isOpen}
+        <ConfirmModal isOpen={isOpen}
           onClose={() => setIsOpen(false)}
           onConfirm={() => {
             console.log('Deleted!');
@@ -69,25 +67,22 @@ export function ModalDemo({
       <Button variant="outline" size="sm" onClick={() => setIsOpen(true)}>
         {getButtonLabel()}
       </Button>
-      <Modal
-        isOpen={isOpen}
+      <Modal isOpen={isOpen}
         onClose={() => setIsOpen(false)}
         title="Modal Title"
         description="This is a modal description that provides additional context."
         size={getSize()}
       >
         <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] p-4">
-          <p className="text-[length:var(--font-size-12)] text-[var(--color-text-default)]">
+          <p className="text-body-md text-[var(--color-text-default)]">
             Modal content goes here. You can put any content inside a modal.
           </p>
         </div>
         <div className="flex gap-2 w-full">
           <Button variant="outline" size="md" onClick={() => setIsOpen(false)} className="flex-1">
-            Cancel
-          </Button>
+            Cancel </Button>
           <Button variant="primary" size="md" onClick={() => setIsOpen(false)} className="flex-1">
-            Confirm
-          </Button>
+            Confirm </Button>
         </div>
       </Modal>
     </>
@@ -167,8 +162,7 @@ export function ModalUseCaseDemo({
       <Button variant="outline" size="sm" onClick={() => setIsOpen(true)}>
         {c.button}
       </Button>
-      <Modal
-        isOpen={isOpen}
+      <Modal isOpen={isOpen}
         onClose={() => setIsOpen(false)}
         title={c.title}
         description={c.description}
@@ -176,19 +170,18 @@ export function ModalUseCaseDemo({
       >
         <div className="flex flex-col gap-2">
           {/* Info Box */}
-          <div
-            className={`bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 ${'infoList' in c ? 'max-h-[96px] overflow-y-auto sidebar-scroll' : ''}`}
+          <div className={`bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 ${'infoList' in c ? 'max-h-[96px] overflow-y-auto sidebar-scroll' : ''}`}
           >
-            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+            <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
               {c.infoLabel}
             </span>
             {'infoValue' in c && (
-              <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              <span className="text-body-md text-[var(--color-text-default)] leading-4">
                 {c.infoValue}
               </span>
             )}
             {'infoList' in c && (
-              <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
+              <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
                 {c.infoList?.map((item, i) => (
                   <li key={i}>{item}</li>
                 ))}
@@ -199,10 +192,10 @@ export function ModalUseCaseDemo({
           {/* Second Info Box (if exists) */}
           {'secondInfoLabel' in c && (
             <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-              <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
                 {c.secondInfoLabel}
               </span>
-              <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
+              <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
                 {c.secondInfoList?.map((item, i) => (
                   <li key={i}>{item}</li>
                 ))}
@@ -213,12 +206,11 @@ export function ModalUseCaseDemo({
           {/* Warning Alert */}
           {c.hasWarning && (
             <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-              <IconAlertCircle
-                size={16}
+              <IconAlertCircle size={16}
                 className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
                 stroke={1.5}
               />
-              <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              <p className="text-body-sm text-[var(--color-text-default)] leading-4">
                 {c.warningText}
               </p>
             </div>
@@ -228,10 +220,8 @@ export function ModalUseCaseDemo({
         {/* Button Group */}
         <div className="flex gap-2 w-full">
           <Button variant="outline" size="md" onClick={() => setIsOpen(false)} className="flex-1">
-            Cancel
-          </Button>
-          <Button
-            variant={c.actionVariant}
+            Cancel </Button>
+          <Button variant={c.actionVariant}
             size="md"
             onClick={() => setIsOpen(false)}
             className="flex-1"
@@ -259,24 +249,22 @@ export function DrawerDemo() {
     <div className="flex gap-2 flex-wrap">
       {/* Basic Drawer */}
       <Button variant="outline" size="sm" onClick={() => setIsBasicOpen(true)}>
-        Basic Drawer
-      </Button>
-      <Drawer
-        isOpen={isBasicOpen}
+        Basic Drawer </Button>
+      <Drawer isOpen={isBasicOpen}
         onClose={() => setIsBasicOpen(false)}
         title="Drawer Title"
         width={376}
       >
         <VStack gap={4}>
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] p-4">
-            <p className="text-[length:var(--font-size-12)] text-[var(--color-text-default)]">
+            <p className="text-body-md text-[var(--color-text-default)]">
               This is a basic drawer with content. Drawers are useful for secondary content, forms,
               or detail views.
             </p>
           </div>
           <VStack gap={2}>
             <Label>Example content</Label>
-            <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+            <p className="text-body-sm text-[var(--color-text-subtle)]">
               You can put any content inside a drawer, including forms, lists, or details.
             </p>
           </VStack>
@@ -285,38 +273,31 @@ export function DrawerDemo() {
 
       {/* Drawer with Footer */}
       <Button variant="outline" size="sm" onClick={() => setIsFormOpen(true)}>
-        With button
-      </Button>
-      <Drawer
-        isOpen={isFormOpen}
+        With button </Button>
+      <Drawer isOpen={isFormOpen}
         onClose={() => setIsFormOpen(false)}
         title="Edit Settings"
         width={376}
         footer={
           <div className="flex gap-2 w-full">
             <Button variant="secondary" className="flex-1" onClick={() => setIsFormOpen(false)}>
-              Cancel
-            </Button>
+              Cancel </Button>
             <Button variant="primary" className="flex-1" onClick={() => setIsFormOpen(false)}>
-              Save
-            </Button>
+              Save </Button>
           </div>
         }
       >
         <VStack gap={4}>
           <VStack gap={2}>
-            <label className="text-[length:var(--font-size-12)] font-medium text-[var(--color-text-default)]">
-              Setting Name
-            </label>
-            <Input
-              value={formValue}
+            <label className="text-label-md text-[var(--color-text-default)]">
+              Setting Name </label>
+            <Input value={formValue}
               onChange={(e) => setFormValue(e.target.value)}
               placeholder="Enter value..."
-              fullWidth
-            />
+              fullWidth />
           </VStack>
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] p-3">
-            <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+            <p className="text-body-sm text-[var(--color-text-subtle)]">
               Drawers with footers are useful for forms with action buttons.
             </p>
           </div>
@@ -325,10 +306,8 @@ export function DrawerDemo() {
 
       {/* Attach volume Drawer */}
       <Button variant="outline" size="sm" onClick={() => setIsAttachVolumeOpen(true)}>
-        Attach volume
-      </Button>
-      <AttachVolumeDrawer
-        isOpen={isAttachVolumeOpen}
+        Attach volume </Button>
+      <AttachVolumeDrawer isOpen={isAttachVolumeOpen}
         onClose={() => setIsAttachVolumeOpen(false)}
         instanceName="web-server-10"
         onAttach={(volumeId) => {

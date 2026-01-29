@@ -81,7 +81,7 @@ export function PreSection({ title }: PreSectionProps) {
   return (
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
       <div className="h-8 flex items-center">
-        <h5 className="text-[length:var(--font-size-16)] font-semibold leading-[var(--line-height-24)] text-[var(--color-text-default)]">
+        <h5 className="text-heading-h5 text-[var(--color-text-default)]">
           {title}
         </h5>
       </div>
@@ -102,18 +102,18 @@ export function WritingSection({ title, onEdit }: WritingSectionProps) {
   return (
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
       <div className="h-8 flex items-center justify-between">
-        <h5 className="text-[length:var(--font-size-16)] font-semibold leading-[var(--line-height-24)] text-[var(--color-text-default)]">
+        <h5 className="text-heading-h5 text-[var(--color-text-default)]">
           {title}
         </h5>
         {onEdit ? (
           <HStack gap={3} align="center">
-            <span className="text-[11px] text-[var(--color-text-subtle)]">Writing...</span>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">Writing...</span>
             <Button variant="outline" size="sm" leftIcon={<IconEdit size={12} />} onClick={onEdit}>
               Edit
             </Button>
           </HStack>
         ) : (
-          <span className="text-[11px] text-[var(--color-text-subtle)]">Writing...</span>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">Writing...</span>
         )}
       </div>
     </div>
@@ -133,11 +133,11 @@ export function SkippedSection({ title, onEdit }: SkippedSectionProps) {
   return (
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
       <div className="flex items-center justify-between h-8">
-        <h5 className="text-[length:var(--font-size-16)] font-semibold leading-[var(--line-height-24)] text-[var(--color-text-default)]">
+        <h5 className="text-heading-h5 text-[var(--color-text-default)]">
           {title}
         </h5>
         <div className="flex items-center gap-3">
-          <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-muted)]">
+          <span className="text-body-md text-[var(--color-text-muted)]">
             Not configured
           </span>
           <Button variant="outline" size="sm" leftIcon={<IconEdit size={12} />} onClick={onEdit}>
@@ -163,8 +163,8 @@ export function DoneSectionRow({ label, value }: DoneSectionRowProps) {
     <VStack gap={0} className="pt-3">
       <div className="w-full h-px bg-[var(--color-border-subtle)]" />
       <VStack gap={2} className="pt-3">
-        <span className="text-[11px] font-medium text-[var(--color-text-subtle)]">{label}</span>
-        <span className="text-[12px] text-[var(--color-text-default)]">{value || '-'}</span>
+        <span className="text-label-sm text-[var(--color-text-subtle)]">{label}</span>
+        <span className="text-body-md text-[var(--color-text-default)]">{value || '-'}</span>
       </VStack>
     </VStack>
   );

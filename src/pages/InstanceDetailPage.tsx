@@ -1188,7 +1188,7 @@ export function InstanceDetailPage() {
                     <VStack gap={4} className="pt-4">
                       {/* Header */}
                       <div className="flex items-center justify-between w-full">
-                        <h2 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+                        <h2 className="text-heading-h5 text-[var(--color-text-default)]">
                           Volumes
                         </h2>
                         <Button
@@ -1242,7 +1242,7 @@ export function InstanceDetailPage() {
                                 >
                                   {value}
                                 </Link>
-                                <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] truncate">
+                                <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
                                   ID : {row.id}
                                 </span>
                               </div>
@@ -1353,7 +1353,7 @@ export function InstanceDetailPage() {
                     <VStack gap={4} className="pt-4">
                       {/* Header */}
                       <div className="flex items-center justify-between w-full">
-                        <h2 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+                        <h2 className="text-heading-h5 text-[var(--color-text-default)]">
                           Interfaces
                         </h2>
                         <Button
@@ -1422,7 +1422,7 @@ export function InstanceDetailPage() {
                                 >
                                   {iface.name}
                                 </Link>
-                                <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] truncate">
+                                <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
                                   ID : {iface.id}
                                 </span>
                               </div>
@@ -1442,7 +1442,7 @@ export function InstanceDetailPage() {
                                 >
                                   {iface.network}
                                 </Link>
-                                <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] truncate">
+                                <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
                                   ID : {iface.id}
                                 </span>
                               </div>
@@ -1526,7 +1526,7 @@ export function InstanceDetailPage() {
                     <VStack gap={4} className="pt-4">
                       {/* Header */}
                       <div className="flex items-center justify-between w-full">
-                        <h2 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+                        <h2 className="text-heading-h5 text-[var(--color-text-default)]">
                           Floating IPs
                         </h2>
                         <Button
@@ -1580,7 +1580,7 @@ export function InstanceDetailPage() {
                                 >
                                   {row.floatingIp}
                                 </Link>
-                                <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] truncate">
+                                <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
                                   ID : {row.id}
                                 </span>
                               </div>
@@ -1643,7 +1643,7 @@ export function InstanceDetailPage() {
                     <VStack gap={4} className="pt-4">
                       {/* Header */}
                       <div className="flex items-center justify-between w-full">
-                        <h2 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+                        <h2 className="text-heading-h5 text-[var(--color-text-default)]">
                           Security groups
                         </h2>
                         <Button
@@ -1705,7 +1705,7 @@ export function InstanceDetailPage() {
                                 >
                                   {row.name}
                                 </Link>
-                                <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] truncate">
+                                <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
                                   ID : {row.id}
                                 </span>
                               </div>
@@ -1774,7 +1774,7 @@ export function InstanceDetailPage() {
                     <VStack gap={4} className="pt-4">
                       {/* Header */}
                       <div className="flex items-center justify-between w-full">
-                        <h2 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+                        <h2 className="text-heading-h5 text-[var(--color-text-default)]">
                           Instance snapshots
                         </h2>
                         <Button variant="secondary" size="sm">
@@ -1842,7 +1842,7 @@ export function InstanceDetailPage() {
                                 >
                                   {row.name}
                                 </Link>
-                                <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] truncate">
+                                <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
                                   ID : {row.id}
                                 </span>
                               </div>
@@ -1947,7 +1947,7 @@ export function InstanceDetailPage() {
                     <VStack gap={4} className="pt-4">
                       {/* Header */}
                       <div className="flex items-center h-7">
-                        <h2 className="text-[16px] font-semibold text-[var(--color-text-default)]">
+                        <h2 className="text-heading-h5 text-[var(--color-text-default)]">
                           Console Logs
                         </h2>
                       </div>
@@ -1956,13 +1956,13 @@ export function InstanceDetailPage() {
                       <div className="flex items-center justify-between px-4 py-3 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md w-full">
                         {/* Left side - Log Length */}
                         <div className="flex items-center gap-3">
-                          <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                          <span className="text-label-lg text-[var(--color-text-default)]">
                             Log Length
                           </span>
                           <div className="flex items-center gap-1">
                             {/* Number Input with Spinner */}
                             <div className="flex items-center justify-between w-20 h-7 px-2.5 py-1 bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md">
-                              <span className="text-[12px] text-[var(--color-text-default)]">
+                              <span className="text-body-md text-[var(--color-text-default)]">
                                 {logLength}
                               </span>
                               <div className="flex flex-col">
@@ -2013,7 +2013,7 @@ export function InstanceDetailPage() {
 
                       {/* Console Area */}
                       <div className="w-full flex-1 min-h-[500px] bg-[#141414] dark:bg-[#FAFAFA] border border-[var(--color-border-default)] rounded-lg p-6 overflow-auto text-[#fafafa] dark:text-[#0f172a]">
-                        <pre className="font-mono text-[13px] leading-[22px] text-[#e2e8f0] dark:text-[#1e293b] whitespace-pre-wrap">
+                        <pre className="font-mono text-body-md leading-[22px] text-[#e2e8f0] dark:text-[#1e293b] whitespace-pre-wrap">
                           {`[    0.000000] Linux version 5.15.0-107-cloud (buildd@ubuntu) (gcc 11.3.0) #119-Ubuntu SMP Thu Sep 5 10:10:10 UTC 2025
 [    0.500123] cloud-init[101]: Starting network configuration...
 [    1.002345] cloud-init[101]: eth0: assigned 192.168.0.15 via DHCP
@@ -2036,7 +2036,7 @@ export function InstanceDetailPage() {
                     <VStack gap={4} className="pt-4">
                       {/* Header */}
                       <div className="flex items-center h-7">
-                        <h2 className="text-[16px] font-semibold text-[var(--color-text-default)]">
+                        <h2 className="text-heading-h5 text-[var(--color-text-default)]">
                           Action logs
                         </h2>
                       </div>
@@ -2076,7 +2076,7 @@ export function InstanceDetailPage() {
                             onClick={() => handleActionLogSort('operationName')}
                           >
                             <div className="flex items-center gap-1 w-full">
-                              <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                              <span className="text-label-sm text-[var(--color-text-default)]">
                                 Action
                               </span>
                               {actionLogSortKey === 'operationName' ? (
@@ -2107,7 +2107,7 @@ export function InstanceDetailPage() {
                             onClick={() => handleActionLogSort('requestId')}
                           >
                             <div className="flex items-center gap-1 w-full">
-                              <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                              <span className="text-label-sm text-[var(--color-text-default)]">
                                 Request ID
                               </span>
                               {actionLogSortKey === 'requestId' ? (
@@ -2138,7 +2138,7 @@ export function InstanceDetailPage() {
                             onClick={() => handleActionLogSort('requestedTime')}
                           >
                             <div className="flex items-center gap-1 w-full">
-                              <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                              <span className="text-label-sm text-[var(--color-text-default)]">
                                 Requested Time
                               </span>
                               {actionLogSortKey === 'requestedTime' ? (
@@ -2200,12 +2200,12 @@ export function InstanceDetailPage() {
                                         />
                                       )}
                                     </button>
-                                    <span className="text-[12px] text-[var(--color-text-default)]">
+                                    <span className="text-body-md text-[var(--color-text-default)]">
                                       {log.operationName}
                                     </span>
                                   </div>
                                   <div className="flex-1 flex items-center gap-1.5 min-h-[40px] px-3 py-2">
-                                    <span className="text-[12px] text-[var(--color-text-default)]">
+                                    <span className="text-body-md text-[var(--color-text-default)]">
                                       {log.requestId}
                                     </span>
                                     <button
@@ -2220,7 +2220,7 @@ export function InstanceDetailPage() {
                                     </button>
                                   </div>
                                   <div className="flex-1 flex items-center min-h-[40px] px-3 py-2">
-                                    <span className="text-[12px] text-[var(--color-text-default)]">
+                                    <span className="text-body-md text-[var(--color-text-default)]">
                                       {log.requestedTime}
                                     </span>
                                   </div>
@@ -2229,17 +2229,17 @@ export function InstanceDetailPage() {
                                 {/* Expanded Details */}
                                 {isExpanded && (
                                   <div className="flex items-center gap-4 min-h-[40px] px-8 py-2 border-t border-[var(--color-border-default)]">
-                                    <div className="flex items-center gap-2 text-[12px] text-[var(--color-text-default)]">
+                                    <div className="flex items-center gap-2 text-body-md text-[var(--color-text-default)]">
                                       <span className="font-medium">Result :</span>
                                       <span>{log.result}</span>
                                     </div>
                                     <div className="w-px h-3 bg-[var(--color-border-default)]" />
-                                    <div className="flex items-center gap-2 text-[12px] text-[var(--color-text-default)]">
+                                    <div className="flex items-center gap-2 text-body-md text-[var(--color-text-default)]">
                                       <span className="font-medium">Start Time :</span>
                                       <span>{log.startTime}</span>
                                     </div>
                                     <div className="w-px h-3 bg-[var(--color-border-default)]" />
-                                    <div className="flex items-center gap-2 text-[12px] text-[var(--color-text-default)]">
+                                    <div className="flex items-center gap-2 text-body-md text-[var(--color-text-default)]">
                                       <span className="font-medium">End Time :</span>
                                       <span>{log.endTime}</span>
                                     </div>

@@ -126,10 +126,10 @@ export function DetachVolumeDrawer({
         {/* Header Section */}
         <VStack gap={3}>
           <VStack gap={2}>
-            <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
               Detach Volume
             </h2>
-            <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
               Detach the selected volume from this instance. Once detached, it will no longer be
               accessible.
             </p>
@@ -141,7 +141,7 @@ export function DetachVolumeDrawer({
               size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
             />
-            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+            <p className="text-body-sm text-[var(--color-text-default)] leading-4">
               For data consistency, stop all write operations on the instance before detaching a
               volume.
             </p>
@@ -149,8 +149,8 @@ export function DetachVolumeDrawer({
 
           {/* Instance Info Box */}
           <div className="w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg">
-            <div className="text-[11px] text-[var(--color-text-subtle)] mb-1.5">Instance Name</div>
-            <div className="text-[12px] text-[var(--color-text-default)]">{instance.name}</div>
+            <div className="text-body-sm text-[var(--color-text-subtle)] mb-1.5">Instance Name</div>
+            <div className="text-body-md text-[var(--color-text-default)]">{instance.name}</div>
           </div>
         </VStack>
 
@@ -158,7 +158,7 @@ export function DetachVolumeDrawer({
         <VStack gap={3} className="flex-1 min-h-0 pb-5">
           {/* Volume Header */}
           <HStack justify="between" align="center" className="w-full">
-            <h3 className="text-[14px] font-medium text-[var(--color-text-default)]">Volumes</h3>
+            <h3 className="text-label-lg text-[var(--color-text-default)]">Volumes</h3>
             <Button
               variant="muted"
               size="sm"
@@ -189,7 +189,7 @@ export function DetachVolumeDrawer({
               onPageChange={setCurrentPage}
             />
             <div className="w-px h-4 bg-[var(--color-border-default)] mx-2" />
-            <span className="text-[11px] text-[var(--color-text-subtle)]">{totalItems} items</span>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">{totalItems} items</span>
           </HStack>
 
           {/* Volume Table */}
@@ -210,7 +210,7 @@ export function DetachVolumeDrawer({
                 style={{ width: '59px', flexShrink: 0 }}
                 className="flex items-center justify-center px-3 border-l border-[var(--color-border-default)]"
               >
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                <span className="text-label-sm text-[var(--color-text-default)]">
                   Status
                 </span>
               </div>
@@ -218,7 +218,7 @@ export function DetachVolumeDrawer({
                 style={{ width: '137px', flexShrink: 0 }}
                 className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
               >
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                <span className="text-label-sm text-[var(--color-text-default)]">
                   Name
                 </span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
@@ -227,7 +227,7 @@ export function DetachVolumeDrawer({
                 style={{ width: '137px', flexShrink: 0 }}
                 className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
               >
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                <span className="text-label-sm text-[var(--color-text-default)]">
                   Type
                 </span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
@@ -236,7 +236,7 @@ export function DetachVolumeDrawer({
                 style={{ width: '137px', flexShrink: 0 }}
                 className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
               >
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                <span className="text-label-sm text-[var(--color-text-default)]">
                   Size
                 </span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
@@ -245,7 +245,7 @@ export function DetachVolumeDrawer({
                 style={{ width: '138px', flexShrink: 0 }}
                 className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
               >
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                <span className="text-label-sm text-[var(--color-text-default)]">
                   Disk Tag
                 </span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
@@ -300,7 +300,7 @@ export function DetachVolumeDrawer({
                     className="flex flex-col gap-0.5 justify-center px-3 py-2 overflow-hidden"
                   >
                     <div className="flex items-center gap-1.5">
-                      <span className="text-[12px] font-medium text-[var(--color-action-primary)] truncate">
+                      <span className="text-label-md text-[var(--color-action-primary)] truncate">
                         {volume.name}
                       </span>
                       <IconExternalLink
@@ -308,7 +308,7 @@ export function DetachVolumeDrawer({
                         className="shrink-0 text-[var(--color-action-primary)]"
                       />
                     </div>
-                    <span className="text-[11px] text-[var(--color-text-subtle)] truncate">
+                    <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
                       ID : 30ujh345
                     </span>
                   </div>
@@ -317,7 +317,7 @@ export function DetachVolumeDrawer({
                     style={{ width: '137px', flexShrink: 0 }}
                     className="flex items-center px-3 py-2 overflow-hidden"
                   >
-                    <span className="text-[12px] text-[var(--color-text-default)] truncate">
+                    <span className="text-body-md text-[var(--color-text-default)] truncate">
                       {volume.type}
                     </span>
                   </div>
@@ -326,7 +326,7 @@ export function DetachVolumeDrawer({
                     style={{ width: '137px', flexShrink: 0 }}
                     className="flex items-center px-3 py-2 overflow-hidden"
                   >
-                    <span className="text-[12px] text-[var(--color-text-default)] truncate">
+                    <span className="text-body-md text-[var(--color-text-default)] truncate">
                       {volume.size}
                     </span>
                   </div>
@@ -335,7 +335,7 @@ export function DetachVolumeDrawer({
                     style={{ width: '138px', flexShrink: 0 }}
                     className="flex items-center px-3 py-2 overflow-hidden"
                   >
-                    <span className="text-[12px] text-[var(--color-text-default)] truncate">
+                    <span className="text-body-md text-[var(--color-text-default)] truncate">
                       {volume.diskTag}
                     </span>
                   </div>

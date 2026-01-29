@@ -258,7 +258,7 @@ export function Toast({ toast, onDismiss, className = '' }: ToastProps) {
         <div className="flex-1 min-w-0 flex flex-col gap-[var(--space-2)]">
           {/* Title */}
           {toast.title && (
-            <p className="text-[length:var(--font-size-12)] font-medium leading-[var(--line-height-16)] text-[var(--color-text-default)]">
+            <p className="text-label-md text-[var(--color-text-default)]">
               {toast.title}
             </p>
           )}
@@ -270,7 +270,7 @@ export function Toast({ toast, onDismiss, className = '' }: ToastProps) {
 
           {/* Project Badge */}
           {toast.project && (
-            <span className="inline-flex self-start px-[var(--space-1-5)] py-[var(--space-0-5)] text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--toast-project-text)] bg-[var(--toast-project-bg)] rounded-[var(--radius-sm)]">
+            <span className="inline-flex self-start px-[var(--space-1-5)] py-[var(--space-0-5)] text-body-sm text-[var(--toast-project-text)] bg-[var(--toast-project-bg)] rounded-[var(--radius-sm)]">
               {toast.project}
             </span>
           )}
@@ -299,7 +299,7 @@ export function Toast({ toast, onDismiss, className = '' }: ToastProps) {
           )}
 
           {/* Timestamp */}
-          <span className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--toast-time-color)]">
+          <span className="text-body-sm text-[var(--toast-time-color)]">
             {formatTime(timestamp)}
           </span>
 
@@ -333,7 +333,7 @@ export function Toast({ toast, onDismiss, className = '' }: ToastProps) {
             onClick={handleLinkClick}
             className={twMerge(
               'inline-flex items-center gap-[var(--space-1)]',
-              'text-[length:var(--font-size-12)] font-medium leading-[var(--line-height-16)]',
+              'text-label-md',
               'text-[var(--color-action-primary)]',
               'hover:underline hover:underline-offset-2',
               'transition-colors duration-[var(--duration-fast)]',
@@ -355,7 +355,7 @@ export function Toast({ toast, onDismiss, className = '' }: ToastProps) {
             onClick={toggleDetail}
             className={twMerge(
               'inline-flex items-center justify-end gap-[var(--space-1-5)] w-full',
-              'text-[length:var(--font-size-12)] font-medium leading-[var(--line-height-16)]',
+              'text-label-md',
               'text-[var(--color-text-default)]',
               'hover:text-[var(--color-text-muted)]',
               'transition-colors duration-[var(--duration-fast)]',
@@ -378,11 +378,11 @@ export function Toast({ toast, onDismiss, className = '' }: ToastProps) {
           {isDetailExpanded && (
             <div className="flex flex-col gap-[var(--space-1-5)] px-[var(--space-4)] py-[var(--space-3)] bg-[var(--color-gray-50)] rounded-[var(--radius-base)]">
               {toast.detail.code && (
-                <p className="text-[length:var(--font-size-12)] font-medium leading-[var(--line-height-16)] text-[var(--color-text-default)]">
+                <p className="text-label-md text-[var(--color-text-default)]">
                   code: {toast.detail.code}
                 </p>
               )}
-              <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] text-[var(--color-text-muted)]">
+              <p className="text-body-md text-[var(--color-text-muted)]">
                 {toast.detail.content}
               </p>
             </div>

@@ -224,7 +224,7 @@ export default function CreateNetworkPage() {
             <VStack gap={3} className="min-w-[1176px]">
               {/* Page Title */}
               <div className="flex items-center justify-between h-8">
-                <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
                   Create network
                 </h1>
               </div>
@@ -269,7 +269,7 @@ export default function CreateNetworkPage() {
                                 error={!!networkNameError}
                               />
                               {networkNameError && (
-                                <span className="text-[11px] leading-[var(--line-height-16)] text-[var(--color-state-danger)]">
+                                <span className="text-body-sm text-[var(--color-state-danger)]">
                                   {networkNameError}
                                 </span>
                               )}
@@ -287,10 +287,10 @@ export default function CreateNetworkPage() {
                             <VStack gap={6} align="stretch" className="mt-4">
                               {/* Admin state */}
                               <VStack gap={2} align="start">
-                                <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
+                                <span className="text-label-lg text-[var(--color-text-default)]">
                                   Admin state
                                 </span>
-                                <span className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
+                                <span className="text-body-md text-[var(--color-text-subtle)]">
                                   Setting it to "Down" disables all related network or control
                                   operations, regardless of runtime status.
                                 </span>
@@ -303,10 +303,10 @@ export default function CreateNetworkPage() {
 
                               {/* Port security */}
                               <VStack gap={2} align="start">
-                                <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
+                                <span className="text-label-lg text-[var(--color-text-default)]">
                                   Port security
                                 </span>
-                                <span className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
+                                <span className="text-body-md text-[var(--color-text-subtle)]">
                                   Enhances security by allowing only permitted devices to access
                                   this network. It is recommended to keep this enabled in most
                                   cases.
@@ -320,10 +320,10 @@ export default function CreateNetworkPage() {
 
                               {/* MTU */}
                               <VStack gap={2} align="start">
-                                <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
+                                <span className="text-label-lg text-[var(--color-text-default)]">
                                   MTU
                                 </span>
-                                <span className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
+                                <span className="text-body-md text-[var(--color-text-subtle)]">
                                   Specifies the maximum transmission unit (MTU) size for a network
                                   packet. Leave blank to use the system default unless you have a
                                   specific requirement.
@@ -338,11 +338,11 @@ export default function CreateNetworkPage() {
                                       placeholder=""
                                     />
                                   </div>
-                                  <span className="text-[12px] text-[var(--color-text-default)]">
+                                  <span className="text-body-md text-[var(--color-text-default)]">
                                     bytes
                                   </span>
                                 </div>
-                                <span className="text-[11px] text-[var(--color-text-subtle)]">
+                                <span className="text-body-sm text-[var(--color-text-subtle)]">
                                   68 - 9000
                                 </span>
                               </VStack>
@@ -435,7 +435,7 @@ export default function CreateNetworkPage() {
                       <SectionCard.Content gap={6}>
                         {/* Create subnet Toggle */}
                         <VStack gap={2} align="start">
-                          <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
+                          <span className="text-label-lg text-[var(--color-text-default)]">
                             Create subnet
                           </span>
                           <Toggle
@@ -480,7 +480,7 @@ export default function CreateNetworkPage() {
 
                             {/* Gateway */}
                             <VStack gap={2} align="start">
-                              <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
+                              <span className="text-label-lg text-[var(--color-text-default)]">
                                 Gateway
                               </span>
                               <Toggle
@@ -514,7 +514,7 @@ export default function CreateNetworkPage() {
                                 <VStack gap={6} align="stretch" className="mt-4">
                                   {/* DHCP */}
                                   <VStack gap={2} align="start">
-                                    <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
+                                    <span className="text-label-lg text-[var(--color-text-default)]">
                                       DHCP
                                     </span>
                                     <Toggle
@@ -527,7 +527,7 @@ export default function CreateNetworkPage() {
                                   {/* Allocation pools */}
                                   <FormField>
                                     <FormField.Label>Allocation pools</FormField.Label>
-                                    <span className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
+                                    <span className="text-body-md text-[var(--color-text-subtle)]">
                                       Manually define the range of IP addresses to be automatically
                                       allocated by DHCP. IPs outside this range will not be
                                       allocated, which is useful for reserving static IPs.
@@ -549,7 +549,7 @@ export default function CreateNetworkPage() {
                                   {/* Host routes */}
                                   <FormField>
                                     <FormField.Label>Host routes</FormField.Label>
-                                    <span className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
+                                    <span className="text-body-md text-[var(--color-text-subtle)]">
                                       An advanced feature for manually specifying a route to a
                                       specific network destination.
                                     </span>

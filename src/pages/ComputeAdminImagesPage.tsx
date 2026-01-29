@@ -355,7 +355,7 @@ export function ComputeAdminImagesPage() {
           >
             {row.name}
           </Link>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+          <span className="text-body-sm text-[var(--color-text-subtle)]">
             ID : {row.id}
           </span>
         </div>
@@ -376,7 +376,7 @@ export function ComputeAdminImagesPage() {
           >
             {row.tenant}
           </Link>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+          <span className="text-body-sm text-[var(--color-text-subtle)]">
             ID : {row.tenantId}
           </span>
         </div>
@@ -528,7 +528,7 @@ export function ComputeAdminImagesPage() {
             <VStack gap={3}>
               {/* Page Header */}
               <div className="flex items-center justify-between h-8">
-                <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
                   Images
                 </h1>
                 <Button onClick={() => navigate('/compute-admin/images/create')}>

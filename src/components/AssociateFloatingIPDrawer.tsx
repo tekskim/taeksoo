@@ -367,10 +367,10 @@ export function AssociateFloatingIPDrawer({
         {/* Floating IP Info */}
         <VStack gap={3}>
           <div className="bg-[var(--color-surface-subtle)] px-4 py-3 rounded-lg w-full">
-            <p className="text-[11px] text-[var(--color-text-subtle)] leading-4 mb-1.5">
+            <p className="text-body-sm text-[var(--color-text-subtle)] leading-4 mb-1.5">
               Floating IP
             </p>
-            <p className="text-[12px] text-[var(--color-text-default)] leading-4">
+            <p className="text-body-md text-[var(--color-text-default)] leading-4">
               {floatingIP.address}
             </p>
           </div>
@@ -378,7 +378,7 @@ export function AssociateFloatingIPDrawer({
 
         {/* Resource Type Section */}
         <VStack gap={3} className="w-full">
-          <h3 className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">
             Resource type
           </h3>
 
@@ -486,7 +486,7 @@ export function AssociateFloatingIPDrawer({
                           <IconAlertCircle size={16} className="text-[var(--color-state-danger)]" />
                         )}
                       </HStack>
-                      <span className="text-[11px] text-[var(--color-text-subtle)]">
+                      <span className="text-body-sm text-[var(--color-text-subtle)]">
                         ID : {instance.id}
                       </span>
                     </div>
@@ -605,7 +605,7 @@ export function AssociateFloatingIPDrawer({
                           <IconAlertCircle size={16} className="text-[var(--color-state-danger)]" />
                         )}
                       </HStack>
-                      <span className="text-[11px] text-[var(--color-text-subtle)]">
+                      <span className="text-body-sm text-[var(--color-text-subtle)]">
                         ID : {lb.id}
                       </span>
                     </div>
@@ -712,7 +712,7 @@ export function AssociateFloatingIPDrawer({
                           className="text-[var(--color-action-primary)]"
                         />
                       </HStack>
-                      <span className="text-[11px] text-[var(--color-text-subtle)]">
+                      <span className="text-body-sm text-[var(--color-text-subtle)]">
                         ID : {va.id}
                       </span>
                     </div>
@@ -752,7 +752,7 @@ export function AssociateFloatingIPDrawer({
         {/* Fixed IP Section - only show when Instance tab is active */}
         {activeTab === 'instance' && (
           <VStack gap={3} className="w-full pb-5">
-            <h3 className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+            <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">
               Fixed IP
             </h3>
 
@@ -854,7 +854,7 @@ export function AssociateFloatingIPDrawer({
         {/* Fixed IP Section - show when Virtual Adapter tab is active (different columns) */}
         {activeTab === 'virtualAdapter' && (
           <VStack gap={3} className="w-full pb-5">
-            <h3 className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+            <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">
               Fixed IP
             </h3>
 

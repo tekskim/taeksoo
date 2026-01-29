@@ -79,10 +79,10 @@ export function AcceptVolumeTransferDrawer({
       <VStack gap={6}>
         {/* Header */}
         <VStack gap={2}>
-          <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
             Accept Volume Transfer
           </h2>
-          <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+          <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
             Accept a volume transfer using the provided transfer ID and authorization key. Once
             accepted, the volume will be moved to your project and ownership cannot be reverted.
           </p>
@@ -90,7 +90,7 @@ export function AcceptVolumeTransferDrawer({
 
         {/* Transfer ID Input */}
         <VStack gap={2} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             Transfer ID
           </label>
           <Input
@@ -101,7 +101,7 @@ export function AcceptVolumeTransferDrawer({
             error={hasAttemptedSubmit && !transferId.trim()}
           />
           {hasAttemptedSubmit && !transferId.trim() && (
-            <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+            <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
               Transfer ID is required
             </p>
           )}
@@ -109,7 +109,7 @@ export function AcceptVolumeTransferDrawer({
 
         {/* Auth Key Input */}
         <VStack gap={2} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             Auth Key
           </label>
           <Input
@@ -120,7 +120,7 @@ export function AcceptVolumeTransferDrawer({
             error={hasAttemptedSubmit && !authKey.trim()}
           />
           {hasAttemptedSubmit && !authKey.trim() && (
-            <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+            <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
               Auth Key is required
             </p>
           )}

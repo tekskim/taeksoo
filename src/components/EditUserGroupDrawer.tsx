@@ -95,10 +95,10 @@ export function EditUserGroupDrawer({
       <VStack gap={6} className="pb-6">
         {/* Header */}
         <VStack gap={2}>
-          <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
             Edit user group
           </h2>
-          <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+          <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
             Edit the user group's basic information.
           </p>
         </VStack>
@@ -106,10 +106,10 @@ export function EditUserGroupDrawer({
         {/* User group name field */}
         <VStack gap={2}>
           <div className="flex items-start gap-[3px]">
-            <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+            <span className="text-label-lg text-[var(--color-text-default)] leading-5">
               User group name
             </span>
-            <span className="text-[14px] font-medium text-[var(--color-state-danger)] leading-5">
+            <span className="text-label-lg text-[var(--color-state-danger)] leading-5">
               *
             </span>
           </div>
@@ -119,7 +119,7 @@ export function EditUserGroupDrawer({
             placeholder="Enter user group name"
             fullWidth
           />
-          <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+          <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
             You can use letters, numbers, and special characters (+=,.@-_), and the length must be
             between 2-128 characters.
           </p>
@@ -127,7 +127,7 @@ export function EditUserGroupDrawer({
 
         {/* Description field */}
         <VStack gap={2}>
-          <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <span className="text-label-lg text-[var(--color-text-default)] leading-5">
             Description
           </span>
           <Input
@@ -136,7 +136,7 @@ export function EditUserGroupDrawer({
             placeholder="Enter description"
             fullWidth
           />
-          <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+          <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
             You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255
             characters.
           </p>

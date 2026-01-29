@@ -307,7 +307,7 @@ export default function ComputeAdminFirewallsPage() {
           >
             {row.name}
           </Link>
-          <span className="text-[11px] text-[var(--color-text-muted)]">ID: {row.id}</span>
+          <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.id}</span>
         </div>
       ),
     },
@@ -325,7 +325,7 @@ export default function ComputeAdminFirewallsPage() {
           >
             {row.tenant}
           </Link>
-          <span className="text-[11px] text-[var(--color-text-muted)]">ID: {row.tenantId}</span>
+          <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.tenantId}</span>
         </div>
       ),
     },
@@ -344,7 +344,7 @@ export default function ComputeAdminFirewallsPage() {
             >
               {row.ingressPolicy}
             </Link>
-            <span className="text-[11px] text-[var(--color-text-muted)]">
+            <span className="text-body-sm text-[var(--color-text-muted)]">
               ID: {row.ingressPolicyId}
             </span>
           </div>
@@ -367,7 +367,7 @@ export default function ComputeAdminFirewallsPage() {
             >
               {row.egressPolicy}
             </Link>
-            <span className="text-[11px] text-[var(--color-text-muted)]">
+            <span className="text-body-sm text-[var(--color-text-muted)]">
               ID: {row.egressPolicyId}
             </span>
           </div>
@@ -387,7 +387,7 @@ export default function ComputeAdminFirewallsPage() {
               {row.associatedPorts[0].name}
               {row.associatedPorts.length > 1 && ` (+${row.associatedPorts.length - 1})`}
             </span>
-            <span className="text-[11px] text-[var(--color-text-subtle)]">
+            <span className="text-body-sm text-[var(--color-text-subtle)]">
               ID: {row.associatedPorts[0].id}
             </span>
           </div>
@@ -447,7 +447,7 @@ export default function ComputeAdminFirewallsPage() {
           >
             {row.name}
           </Link>
-          <span className="text-[11px] text-[var(--color-text-muted)]">ID: {row.id}</span>
+          <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.id}</span>
         </div>
       ),
     },
@@ -465,7 +465,7 @@ export default function ComputeAdminFirewallsPage() {
           >
             {row.tenant}
           </Link>
-          <span className="text-[11px] text-[var(--color-text-muted)]">ID: {row.tenantId}</span>
+          <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.tenantId}</span>
         </div>
       ),
     },
@@ -479,7 +479,7 @@ export default function ComputeAdminFirewallsPage() {
           <span className="text-[var(--color-text-default)]">
             {row.firstRule} {row.rulesCount > 1 ? `(+${row.rulesCount - 1})` : ''}
           </span>
-          <span className="text-[11px] text-[var(--color-text-subtle)]">ID:{row.firstRuleId}</span>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">ID:{row.firstRuleId}</span>
         </div>
       ),
     },
@@ -493,7 +493,7 @@ export default function ComputeAdminFirewallsPage() {
           <span className="text-[var(--color-text-default)]">
             {row.firstFirewall} {row.firewallsCount > 1 ? `(+${row.firewallsCount - 1})` : ''}
           </span>
-          <span className="text-[11px] text-[var(--color-text-subtle)]">
+          <span className="text-body-sm text-[var(--color-text-subtle)]">
             ID:{row.firstFirewallId}
           </span>
         </div>
@@ -548,7 +548,7 @@ export default function ComputeAdminFirewallsPage() {
           >
             {row.name}
           </Link>
-          <span className="text-[11px] text-[var(--color-text-muted)]">ID: {row.id}</span>
+          <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.id}</span>
         </div>
       ),
     },
@@ -566,7 +566,7 @@ export default function ComputeAdminFirewallsPage() {
           >
             {row.tenant}
           </Link>
-          <span className="text-[11px] text-[var(--color-text-muted)]">ID: {row.tenantId}</span>
+          <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.tenantId}</span>
         </div>
       ),
     },
@@ -673,7 +673,7 @@ export default function ComputeAdminFirewallsPage() {
             <VStack gap={3}>
               {/* Page Header */}
               <div className="flex items-center justify-between h-8">
-                <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
                   Firewalls
                 </h1>
                 <Button

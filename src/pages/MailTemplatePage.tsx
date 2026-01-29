@@ -4,8 +4,7 @@ import { Button, VStack, HStack, SectionCard, Input, Badge } from '@/design-syst
 import { IconArrowLeft, IconPlus, IconMail, IconKey, IconShieldCheck } from '@tabler/icons-react';
 
 /* ----------------------------------------
-   Types
-   ---------------------------------------- */
+   Types ---------------------------------------- */
 
 interface MailTemplate {
   id: string;
@@ -17,8 +16,7 @@ interface MailTemplate {
 }
 
 /* ----------------------------------------
-   Mock Data
-   ---------------------------------------- */
+   Mock Data ---------------------------------------- */
 
 const mockTemplates: MailTemplate[] = [
   {
@@ -53,8 +51,7 @@ const typeConfig = {
 } as const;
 
 /* ----------------------------------------
-   MailTemplatePage
-   ---------------------------------------- */
+   MailTemplatePage ---------------------------------------- */
 
 export function MailTemplatePage() {
   const navigate = useNavigate();
@@ -77,8 +74,7 @@ export function MailTemplatePage() {
       <header className="sticky top-0 z-50 bg-[var(--color-surface-default)] border-b border-[var(--color-border-default)]">
         <div className="max-w-7xl mx-auto px-8 h-14 flex items-center justify-between">
           <HStack gap={3} align="center">
-            <Button
-              variant="ghost"
+            <Button variant="ghost"
               size="sm"
               icon={<IconArrowLeft size={16} stroke={1.5} />}
               onClick={() => navigate('/')}
@@ -87,14 +83,12 @@ export function MailTemplatePage() {
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-rose-500 to-pink-500 flex items-center justify-center">
                 <IconMail size={18} className="text-white" stroke={1.5} />
               </div>
-              <h1 className="text-[16px] font-semibold text-[var(--color-text-default)]">
-                Mail templates
-              </h1>
+              <h1 className="text-heading-h5 text-[var(--color-text-default)]">
+                Mail templates </h1>
             </div>
           </HStack>
           <Button variant="primary" size="sm" icon={<IconPlus size={14} stroke={1.5} />}>
-            Create template
-          </Button>
+            Create template </Button>
         </div>
       </header>
 
@@ -103,25 +97,21 @@ export function MailTemplatePage() {
         <VStack gap={6}>
           {/* Filters */}
           <HStack gap={4} align="center" className="w-full">
-            <Input
-              placeholder="Search templates..."
+            <Input placeholder="Search templates..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-[300px]"
             />
             <HStack gap={2}>
-              <Button
-                variant={selectedType === null ? 'primary' : 'secondary'}
+              <Button variant={selectedType === null ? 'primary' : 'secondary'}
                 size="sm"
                 onClick={() => setSelectedType(null)}
               >
-                All
-              </Button>
+                All </Button>
               {types.map((type) => {
                 const config = typeConfig[type];
                 return (
-                  <Button
-                    key={type}
+                  <Button key={type}
                     variant={selectedType === type ? 'primary' : 'secondary'}
                     size="sm"
                     onClick={() => setSelectedType(type)}
@@ -153,33 +143,30 @@ export function MailTemplatePage() {
                       </HStack>
 
                       <VStack gap={1}>
-                        <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                        <span className="text-label-lg text-[var(--color-text-default)]">
                           {template.name}
                         </span>
-                        <span className="text-[12px] text-[var(--color-text-subtle)]">
+                        <span className="text-body-md text-[var(--color-text-subtle)]">
                           {template.subject}
                         </span>
                       </VStack>
 
-                      <span className="text-[11px] text-[var(--color-text-subtle)] line-clamp-2">
+                      <span className="text-body-sm text-[var(--color-text-subtle)] line-clamp-2">
                         {template.description}
                       </span>
 
-                      <HStack
-                        justify="between"
+                      <HStack justify="between"
                         align="center"
                         className="w-full pt-2 border-t border-[var(--color-border-subtle)]"
                       >
-                        <span className="text-[10px] text-[var(--color-text-subtle)]">
+                        <span className="text-body-xs text-[var(--color-text-subtle)]">
                           Modified {template.lastModified}
                         </span>
-                        <Button
-                          variant="ghost"
+                        <Button variant="ghost"
                           size="sm"
                           onClick={() => navigate(`/mail-template/${template.id}`)}
                         >
-                          Edit
-                        </Button>
+                          Edit </Button>
                       </HStack>
                     </VStack>
                   </div>
@@ -190,12 +177,11 @@ export function MailTemplatePage() {
 
           {filteredTemplates.length === 0 && (
             <div className="text-center py-12">
-              <IconMail
-                size={48}
+              <IconMail size={48}
                 className="mx-auto text-[var(--color-text-subtle)] mb-4"
                 stroke={1}
               />
-              <p className="text-[14px] text-[var(--color-text-subtle)]">No templates found</p>
+              <p className="text-body-lg text-[var(--color-text-subtle)]">No templates found</p>
             </div>
           )}
         </VStack>

@@ -259,8 +259,7 @@ const ContextMenuItemComponent: React.FC<{
         min-w-[var(--context-menu-min-width)]
         px-[var(--context-menu-padding-x)]
         py-[var(--context-menu-padding-y)]
-        text-[length:var(--font-size-11)]
-        leading-[var(--line-height-16)]
+        text-body-sm
         whitespace-nowrap
         cursor-pointer
         transition-colors duration-[var(--duration-fast)]

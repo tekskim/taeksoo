@@ -33,9 +33,9 @@ export interface LoadingProps {
    ---------------------------------------- */
 
 const spinnerSizes: Record<LoadingSize, { icon: number; text: string; gap: string }> = {
-  sm: { icon: 16, text: 'text-[11px] leading-4', gap: 'gap-1.5' },
-  md: { icon: 22, text: 'text-[12px] leading-4', gap: 'gap-2' },
-  lg: { icon: 32, text: 'text-[14px] leading-5', gap: 'gap-3' },
+  sm: { icon: 16, text: 'text-body-sm leading-4', gap: 'gap-1.5' },
+  md: { icon: 22, text: 'text-body-md leading-4', gap: 'gap-2' },
+  lg: { icon: 32, text: 'text-body-lg leading-5', gap: 'gap-3' },
 };
 
 /* ----------------------------------------
@@ -85,9 +85,9 @@ export const Loading: React.FC<LoadingProps> = ({
       <div className={twMerge('flex flex-col items-center gap-3', className)}>
         {/* Title and Description */}
         <div className="flex flex-col items-center gap-2 text-[var(--color-text-default)]">
-          <p className="font-medium text-[14px] leading-5">{text}</p>
+          <p className="font-medium text-body-lg leading-5">{text}</p>
           {description && (
-            <p className="font-normal text-[12px] leading-4 text-center">{description}</p>
+            <p className="font-normal text-body-md leading-4 text-center">{description}</p>
           )}
         </div>
 
@@ -103,7 +103,7 @@ export const Loading: React.FC<LoadingProps> = ({
             />
           </div>
           {statusText && (
-            <p className="font-normal text-[12px] leading-4 text-[var(--color-text-subtle)] text-center">
+            <p className="font-normal text-body-md leading-4 text-[var(--color-text-subtle)] text-center">
               {statusText}
             </p>
           )}
@@ -127,7 +127,7 @@ export const Loading: React.FC<LoadingProps> = ({
           )}
         >
           <IconLoader2 size={16} stroke={2} className="text-white animate-spin" />
-          <span className="font-medium text-[12px] leading-4 text-white text-center">
+          <span className="font-medium text-body-md leading-4 text-white text-center">
             {buttonLabel}
           </span>
         </button>
