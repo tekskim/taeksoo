@@ -10,7 +10,7 @@ import {
   columnMinWidths,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system/components/Table/Table';
-import { IconShieldCheck, IconCheck, IconEye, IconEyeOff } from '@tabler/icons-react';
+import { IconCheck, IconEye, IconEyeClosed, IconEdit, IconLock } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -73,8 +73,7 @@ const generateActivitySessions = () => {
     const timestamp =
       now.toLocaleDateString('en-CA') +
       ' ' +
-      now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false }) +
-      ' +0900';
+      now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
 
     sessions.push({
       id: `session-${i + 1}`,
@@ -103,7 +102,7 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
   const sessionColumns: TableColumn[] = [
     { key: 'ipAddress', label: 'IP Address', flex: 1, minWidth: columnMinWidths.ipAddress },
     { key: 'device', label: 'Device', flex: 1 },
-    { key: 'timestamp', label: 'Timestamp', flex: 1, minWidth: columnMinWidths.timestamp },
+    { key: 'timestamp', label: 'Time', flex: 1, minWidth: columnMinWidths.timestamp },
   ];
 
   // Reset focus when window opens
@@ -112,13 +111,13 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
       setIsFocused(true);
     }
   }, [isOpen]);
-  // Center the window: 50% of screen size, centered position
+  // Center the window: fixed 648px width
   const [size, setSize] = useState<WindowSize>(() => ({
-    width: typeof window !== 'undefined' ? window.innerWidth * 0.5 : 960,
+    width: 648,
     height: typeof window !== 'undefined' ? window.innerHeight * 0.5 : 540,
   }));
   const [position, setPosition] = useState<WindowPosition>(() => ({
-    x: typeof window !== 'undefined' ? (window.innerWidth - window.innerWidth * 0.5) / 2 : 300,
+    x: typeof window !== 'undefined' ? (window.innerWidth - 648) / 2 : 300,
     y: typeof window !== 'undefined' ? (window.innerHeight - window.innerHeight * 0.5) / 2 : 100,
   }));
   const [isDragging, setIsDragging] = useState(false);
@@ -137,7 +136,17 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
   // Account State
   const [name, setName] = useState('John Doe');
   const [localName, setLocalName] = useState('John Doe');
-  const [email, setEmail] = useState('taeksoo.kim@thakicloud.co.kr');
+  const [email, setEmail] = useState('john.doe@thakicloud.co.kr');
+  const [localEmail, setLocalEmail] = useState('john.doe@thakicloud.co.kr');
+  const [isEditingAccount, setIsEditingAccount] = useState(false);
+
+  // Sync local values when entering edit mode
+  useEffect(() => {
+    if (isEditingAccount) {
+      setLocalName(name);
+      setLocalEmail(email);
+    }
+  }, [isEditingAccount, name, email]);
 
   // Sync localName with name when name changes externally
   useEffect(() => {
@@ -163,11 +172,12 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
   }, [isOpen]);
 
   const [showPasswordChangeModal, setShowPasswordChangeModal] = useState(false);
+  const [isEditingPassword, setIsEditingPassword] = useState(false);
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [passwordLastUpdated, setPasswordLastUpdated] = useState('2024-01-10 09:30');
+  const [passwordLastUpdated, setPasswordLastUpdated] = useState('Jan 14, 2026');
   const [newPasswordError, setNewPasswordError] = useState('');
   const [confirmPasswordError, setConfirmPasswordError] = useState('');
 
@@ -218,12 +228,10 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
   const handlePasswordChangeSubmit = useCallback(() => {
     if (validatePasswordChange()) {
       const now = new Date();
-      const formattedDate =
-        now.toLocaleDateString('en-CA') +
-        ' ' +
-        now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+      const formattedDate = `Jan ${now.getDate()}, ${now.getFullYear()}`;
       setPasswordLastUpdated(formattedDate);
       setShowPasswordChangeModal(false);
+      setIsEditingPassword(false);
       setNewPassword('');
       setConfirmPassword('');
       setShowNewPassword(false);
@@ -461,160 +469,263 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
             <div className="max-w-[1000px]">
               {/* Account Content */}
               <div className="animate-in fade-in slide-in-from-bottom-2 duration-200">
-                <h5 className="text-[length:var(--font-size-16)] leading-[var(--line-height-24)] font-semibold text-[var(--color-text-default)]">
-                  Account
-                </h5>
-                <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-muted)] mb-6">
-                  Manage your account information and security settings.
-                </p>
-
                 {/* Account Information */}
-                <SectionCard className="mb-6">
-                  <SectionCard.Header title="Account Information" />
-                  <SectionCard.Content gap={4}>
-                    {/* ID - Read only */}
-                    <div>
-                      <label className="block text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)] mb-2">
-                        ID
-                      </label>
-                      <Input value="john.doe" disabled className="min-w-[300px] max-w-[750px]" />
-                    </div>
-                    {/* Email - Read only */}
-                    <div>
-                      <label className="block text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)] mb-2">
-                        Email
-                      </label>
-                      <Input value={email} disabled className="min-w-[300px] max-w-[750px]" />
-                    </div>
-                    {/* Name - Always editable */}
-                    <div>
-                      <label className="block text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)] mb-2">
-                        Name
-                      </label>
+                <SectionCard className="mb-6 min-w-[600px]" isActive={isEditingAccount}>
+                  <SectionCard.Header
+                    title="Account Information"
+                    actions={
+                      isEditingAccount ? (
+                        <div className="flex items-center gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setIsEditingAccount(false);
+                              setLocalName(name);
+                              setLocalEmail(email);
+                            }}
+                          >
+                            Cancel
+                          </Button>
+                          <Button
+                            variant="primary"
+                            size="sm"
+                            onClick={() => {
+                              setName(localName);
+                              setEmail(localEmail);
+                              setIsEditingAccount(false);
+                            }}
+                          >
+                            Done
+                          </Button>
+                        </div>
+                      ) : (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="gap-1.5"
+                          onClick={() => setIsEditingAccount(true)}
+                        >
+                          <IconEdit size={12} />
+                          Edit
+                        </Button>
+                      )
+                    }
+                  />
+                  {isEditingAccount ? (
+                    <SectionCard.Content>
+                      {/* ID - Read only */}
+                      <SectionCard.DataRow label="ID" value="john.doe" />
+                      {/* Email - Editable */}
                       <Input
+                        label="Email"
+                        value={localEmail}
+                        onChange={(e) => setLocalEmail(e.target.value)}
+                        fullWidth
+                      />
+                      {/* Name - Editable */}
+                      <Input
+                        label="Name"
                         value={localName}
                         onChange={(e) => setLocalName(e.target.value)}
-                        onBlur={() => setName(localName)}
-                        className="min-w-[300px] max-w-[750px]"
+                        fullWidth
                       />
-                    </div>
-                  </SectionCard.Content>
+                    </SectionCard.Content>
+                  ) : (
+                    <SectionCard.Content>
+                      <SectionCard.DataRow label="ID" value="john.doe" />
+                      <SectionCard.DataRow label="Email" value={email} />
+                      <SectionCard.DataRow label="Name" value={name} />
+                    </SectionCard.Content>
+                  )}
                 </SectionCard>
 
                 {/* Authentication */}
-                <SectionCard className="mb-6">
-                  <SectionCard.Header title="Authentication" />
-                  <SectionCard.Content gap={4}>
-                    <div>
-                      <label className="block text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)] mb-1">
-                        Password
-                      </label>
-                      <span className="block text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-muted)] mb-2">
-                        Last updated: {passwordLastUpdated}
-                      </span>
-                      <Button
-                        variant="primary"
-                        size="sm"
-                        onClick={() => setShowPasswordChangeModal(true)}
-                      >
-                        Change Password
-                      </Button>
-                    </div>
-                    {/* MFA Setting */}
-                    <div className="space-y-4 pt-4 border-t border-[var(--color-border-default)]">
-                      <div>
-                        <label className="block text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)] mb-1">
-                          MFA Setting
-                        </label>
-                        <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] text-[var(--color-text-muted)] max-w-[400px]">
-                          Add an extra layer of security to your account.
-                        </p>
-                      </div>
-
-                      {/* Verification Methods - Always visible */}
-                      <div className="space-y-3 mt-4">
-                        <span className="block text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-muted)] mb-3">
-                          Verification Methods
-                        </span>
-
-                        {/* Authenticator App */}
-                        <div className="flex items-center justify-between p-4 border border-[var(--color-border-default)] rounded-lg bg-[var(--color-surface-subtle)]">
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-lg bg-[var(--color-action-primary-subtle)] flex items-center justify-center">
-                              <IconShieldCheck
-                                size={20}
-                                className="text-[var(--color-action-primary)]"
-                              />
-                            </div>
-                            <div>
-                              <div className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)]">
-                                Authenticator App
-                              </div>
-                              {authenticatorSetup.configured ? (
-                                <div className="flex items-center gap-1.5 text-[length:var(--font-size-12)] leading-[var(--line-height-14)] text-[var(--color-state-success)]">
-                                  <IconCheck size={12} />
-                                  <span>Added {authenticatorSetup.addedAt}</span>
-                                </div>
-                              ) : (
-                                <div className="text-[length:var(--font-size-12)] leading-[var(--line-height-14)] text-[var(--color-text-muted)]">
-                                  Use Google Authenticator, Authy, etc.
-                                </div>
-                              )}
-                            </div>
-                          </div>
+                <SectionCard className="mb-6 min-w-[600px]" isActive={isEditingPassword}>
+                  <SectionCard.Header
+                    title="Authentication"
+                    actions={
+                      isEditingPassword ? (
+                        <div className="flex items-center gap-2">
                           <Button
-                            variant={authenticatorSetup.configured ? 'secondary' : 'primary'}
+                            variant="outline"
                             size="sm"
                             onClick={() => {
-                              setCurrentSetupMethod('authenticator');
-                              if (authenticatorSetup.configured) {
-                                // Remove - show password modal for confirmation
-                                setSetupStep(1);
-                                setShowPasswordModal(true);
-                              } else {
-                                // Set up - go directly to OTP setup
-                                setShowEnrollmentModal(true);
-                              }
+                              setIsEditingPassword(false);
+                              setNewPassword('');
+                              setConfirmPassword('');
+                              setShowNewPassword(false);
+                              setShowConfirmPassword(false);
+                              setNewPasswordError('');
+                              setConfirmPasswordError('');
                             }}
                           >
-                            {authenticatorSetup.configured ? 'Remove' : 'Set up'}
+                            Cancel
+                          </Button>
+                          <Button variant="primary" size="sm" onClick={handlePasswordChangeSubmit}>
+                            Change
                           </Button>
                         </div>
+                      ) : (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setIsEditingPassword(true)}
+                        >
+                          Change Password
+                        </Button>
+                      )
+                    }
+                  />
+                  <SectionCard.Content>
+                    {isEditingPassword ? (
+                      <>
+                        {/* Password change description */}
+                        <p className="text-[12px] leading-4 text-[var(--color-text-subtle)]">
+                          Enter your new password below.
+                        </p>
+                        {/* New Password Field */}
+                        <Input
+                          label="New password"
+                          type={showNewPassword ? 'text' : 'password'}
+                          value={newPassword}
+                          onChange={(e) => {
+                            setNewPassword(e.target.value);
+                            setNewPasswordError('');
+                          }}
+                          placeholder="Enter new password"
+                          fullWidth
+                          error={newPasswordError}
+                          rightElement={
+                            <button
+                              type="button"
+                              className="flex items-center justify-center p-0 leading-none"
+                              onClick={() => setShowNewPassword(!showNewPassword)}
+                            >
+                              {showNewPassword ? (
+                                <IconEye size={12} />
+                              ) : (
+                                <IconEyeClosed size={12} />
+                              )}
+                            </button>
+                          }
+                        />
+                        {/* Confirm New Password Field */}
+                        <Input
+                          label="Confirm new password"
+                          type={showConfirmPassword ? 'text' : 'password'}
+                          value={confirmPassword}
+                          onChange={(e) => {
+                            setConfirmPassword(e.target.value);
+                            setConfirmPasswordError('');
+                          }}
+                          placeholder="Enter new password again"
+                          fullWidth
+                          error={confirmPasswordError}
+                          rightElement={
+                            <button
+                              type="button"
+                              className="flex items-center justify-center p-0 leading-none"
+                              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                            >
+                              {showConfirmPassword ? (
+                                <IconEye size={12} />
+                              ) : (
+                                <IconEyeClosed size={12} />
+                              )}
+                            </button>
+                          }
+                        />
+                      </>
+                    ) : (
+                      /* Password - View Mode */
+                      <SectionCard.DataRow
+                        label="Password"
+                        value={`Last updated ${passwordLastUpdated}`}
+                      />
+                    )}
+                    {/* MFA Setting */}
+                    <div className="flex flex-col gap-1.5 w-full">
+                      <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)]">
+                        MFA Setting
+                      </span>
+                      <p className="text-[12px] leading-4 text-[var(--color-text-subtle)]">
+                        Add an extra layer of security to your account.
+                      </p>
+                    </div>
+                    {/* Authenticator App Card */}
+                    <div className="flex items-center justify-between p-3 border border-[var(--color-border-default)] rounded-md bg-[var(--color-surface-subtle)]">
+                      <div className="flex items-center gap-3">
+                        <div className="w-9 h-9 rounded-md bg-[var(--color-surface-default)] border border-[var(--color-border-default)] flex items-center justify-center">
+                          <IconLock size={16} className="text-[var(--color-text-subtle)]" />
+                        </div>
+                        <div className="flex flex-col gap-1">
+                          <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)]">
+                            Authenticator App
+                          </span>
+                          {authenticatorSetup.configured ? (
+                            <div className="flex items-center gap-1.5 text-[11px] leading-4 text-[var(--color-state-success)]">
+                              <IconCheck size={12} />
+                              <span>Added {authenticatorSetup.addedAt}</span>
+                            </div>
+                          ) : (
+                            <span className="text-[11px] leading-4 text-[var(--color-text-subtle)]">
+                              Use Google Authenticator, Authy, etc.
+                            </span>
+                          )}
+                        </div>
                       </div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          setCurrentSetupMethod('authenticator');
+                          if (authenticatorSetup.configured) {
+                            setSetupStep(1);
+                            setShowPasswordModal(true);
+                          } else {
+                            setShowEnrollmentModal(true);
+                          }
+                        }}
+                      >
+                        {authenticatorSetup.configured ? 'Remove' : 'Set up'}
+                      </Button>
                     </div>
                   </SectionCard.Content>
                 </SectionCard>
 
                 {/* Sessions */}
-                <SectionCard className="mb-6">
-                  <SectionCard.Header title="Activity" />
+                <SectionCard className="mb-6 min-w-[600px]">
+                  <SectionCard.Header title="Activity" showDivider={false} />
                   <SectionCard.Content>
-                    <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-muted)] mb-4">
-                      Displaying your latest account activity.
-                    </p>
+                    <div>
+                      <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-muted)] mb-4">
+                        Displaying your latest account activity.
+                      </p>
 
-                    {/* Pagination */}
-                    <div className="mb-4">
-                      <Pagination
-                        currentPage={currentPage}
-                        totalPages={totalPages}
-                        onPageChange={setCurrentPage}
-                        totalItems={activitySessions.length}
+                      {/* Pagination */}
+                      <div className="mb-4">
+                        <Pagination
+                          currentPage={currentPage}
+                          totalPages={totalPages}
+                          onPageChange={setCurrentPage}
+                          totalItems={activitySessions.length}
+                        />
+                      </div>
+
+                      <Table
+                        columns={sessionColumns}
+                        data={paginatedSessions}
+                        rowKey="id"
+                        rowHeight="40px"
+                        emptyMessage="No sessions found"
                       />
                     </div>
-
-                    <Table
-                      columns={sessionColumns}
-                      data={paginatedSessions}
-                      rowKey="id"
-                      rowHeight="40px"
-                      emptyMessage="No sessions found"
-                    />
                   </SectionCard.Content>
                 </SectionCard>
 
                 {/* Logout */}
-                <div className="mt-6 flex justify-end">
+                <div className="mt-6 flex justify-end min-w-[600px]">
                   <Button variant="secondary" size="lg" onClick={() => setShowLogoutModal(true)}>
                     Logout
                   </Button>
@@ -1134,9 +1245,9 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
                 onClick={() => setShowNewPassword(!showNewPassword)}
               >
                 {showNewPassword ? (
-                  <IconEyeOff size={16} stroke={1.5} />
+                  <IconEye size={12} stroke={1.5} />
                 ) : (
-                  <IconEye size={16} stroke={1.5} />
+                  <IconEyeClosed size={12} stroke={1.5} />
                 )}
               </button>
             </div>
@@ -1170,9 +1281,9 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               >
                 {showConfirmPassword ? (
-                  <IconEyeOff size={16} stroke={1.5} />
+                  <IconEye size={12} stroke={1.5} />
                 ) : (
-                  <IconEye size={16} stroke={1.5} />
+                  <IconEyeClosed size={12} stroke={1.5} />
                 )}
               </button>
             </div>

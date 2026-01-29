@@ -160,7 +160,17 @@ export function ModalsPage() {
   const [isComputeOpen, setIsComputeOpen] = useState(false);
   const [isIAMOpen, setIsIAMOpen] = useState(false);
   const [isContainerOpen, setIsContainerOpen] = useState(false);
+  const [isComputeAdminOpen, setIsComputeAdminOpen] = useState(false);
   const [isStorageOpen, setIsStorageOpen] = useState(false);
+
+  // Compute Admin Modal states
+  const [isDeleteTenantOpen, setIsDeleteTenantOpen] = useState(false);
+  const [isDeleteFirewallOpen, setIsDeleteFirewallOpen] = useState(false);
+  const [isDeleteFirewallPolicyOpen, setIsDeleteFirewallPolicyOpen] = useState(false);
+  const [isDeleteFirewallRuleOpen, setIsDeleteFirewallRuleOpen] = useState(false);
+  const [isDeleteImageAdminOpen, setIsDeleteImageAdminOpen] = useState(false);
+  const [isDeleteFlavorOpen, setIsDeleteFlavorOpen] = useState(false);
+  const [isDeleteVolumeTypeOpen, setIsDeleteVolumeTypeOpen] = useState(false);
 
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
@@ -769,6 +779,109 @@ export function ModalsPage() {
                             category="CronJob"
                             size="sm"
                             onOpen={() => setIsDeleteCronJobOpen(true)}
+                          />
+                        </div>
+                      </VStack>
+                    </VStack>
+                  </Disclosure.Panel>
+                </Disclosure>
+
+                {/* Compute Admin Modals */}
+                <Disclosure open={isComputeAdminOpen} onChange={setIsComputeAdminOpen}>
+                  <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
+                    <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
+                      <div className="flex items-center gap-3">
+                        {isComputeAdminOpen ? (
+                          <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
+                        ) : (
+                          <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
+                        )}
+                        <Badge variant="purple" size="sm" className="w-[100px] justify-center">
+                          Compute Admin
+                        </Badge>
+                        <span className="text-[14px] font-semibold text-[var(--color-text-default)]">
+                          Modals
+                        </span>
+                        <span className="text-[12px] text-[var(--color-text-subtle)]">
+                          (7 modals)
+                        </span>
+                      </div>
+                    </div>
+                  </Disclosure.Trigger>
+                  <Disclosure.Panel>
+                    <VStack gap={4} className="pt-4">
+                      {/* Tenant Actions */}
+                      <VStack gap={2}>
+                        <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                          Tenant Actions
+                        </h2>
+                        <div className="flex flex-col gap-2">
+                          <ModalListItem
+                            title="Delete Tenant"
+                            description="Confirm deletion of a tenant with warning about associated resources."
+                            category="Tenant"
+                            size="sm"
+                            onOpen={() => setIsDeleteTenantOpen(true)}
+                          />
+                        </div>
+                      </VStack>
+
+                      {/* Firewall Actions */}
+                      <VStack gap={2}>
+                        <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                          Firewall Actions
+                        </h2>
+                        <div className="flex flex-col gap-2">
+                          <ModalListItem
+                            title="Delete Firewall"
+                            description="Confirm deletion of a firewall with warning about security implications."
+                            category="Firewall"
+                            size="sm"
+                            onOpen={() => setIsDeleteFirewallOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Firewall Policy"
+                            description="Confirm deletion of a firewall policy."
+                            category="Firewall"
+                            size="sm"
+                            onOpen={() => setIsDeleteFirewallPolicyOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Firewall Rule"
+                            description="Confirm deletion of a firewall rule."
+                            category="Firewall"
+                            size="sm"
+                            onOpen={() => setIsDeleteFirewallRuleOpen(true)}
+                          />
+                        </div>
+                      </VStack>
+
+                      {/* Resource Management */}
+                      <VStack gap={2}>
+                        <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                          Resource Management
+                        </h2>
+                        <div className="flex flex-col gap-2">
+                          <ModalListItem
+                            title="Delete Image"
+                            description="Confirm deletion of an image from the admin console."
+                            category="Image"
+                            size="sm"
+                            onOpen={() => setIsDeleteImageAdminOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Flavor"
+                            description="Confirm deletion of a flavor with warning about instances using it."
+                            category="Flavor"
+                            size="sm"
+                            onOpen={() => setIsDeleteFlavorOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Volume Type"
+                            description="Confirm deletion of a volume type."
+                            category="Volume"
+                            size="sm"
+                            onOpen={() => setIsDeleteVolumeTypeOpen(true)}
                           />
                         </div>
                       </VStack>
@@ -3547,6 +3660,337 @@ export function ModalsPage() {
           setIsRollBackDeploymentOpen(false);
         }}
       />
+
+      {/* ----------------------------------------
+         Compute Admin Modals
+         ---------------------------------------- */}
+
+      {/* Delete Tenant Modal */}
+      <Modal
+        isOpen={isDeleteTenantOpen}
+        onClose={() => setIsDeleteTenantOpen(false)}
+        title="Delete Tenant"
+        description="Are you sure you want to delete this tenant?"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Tenant name
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              project-alpha
+            </span>
+          </div>
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+              stroke={1.5}
+            />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Deleting a tenant will permanently remove all associated resources including
+              instances, volumes, networks, and security groups.
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteTenantOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('Tenant deleted');
+              setIsDeleteTenantOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Firewall Modal */}
+      <Modal
+        isOpen={isDeleteFirewallOpen}
+        onClose={() => setIsDeleteFirewallOpen(false)}
+        title="Delete Firewall"
+        description="Are you sure you want to delete this firewall?"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Firewall name
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              fw-production-01
+            </span>
+          </div>
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+              stroke={1.5}
+            />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Deleting this firewall will remove all associated rules and policies. Network traffic
+              may become unprotected.
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteFirewallOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('Firewall deleted');
+              setIsDeleteFirewallOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Firewall Policy Modal */}
+      <Modal
+        isOpen={isDeleteFirewallPolicyOpen}
+        onClose={() => setIsDeleteFirewallPolicyOpen(false)}
+        title="Delete Firewall Policy"
+        description="Are you sure you want to delete this firewall policy?"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Policy name
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              policy-web-tier
+            </span>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteFirewallPolicyOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('Firewall policy deleted');
+              setIsDeleteFirewallPolicyOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Firewall Rule Modal */}
+      <Modal
+        isOpen={isDeleteFirewallRuleOpen}
+        onClose={() => setIsDeleteFirewallRuleOpen(false)}
+        title="Delete Firewall Rule"
+        description="Are you sure you want to delete this firewall rule?"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Rule name
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              allow-http-443
+            </span>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteFirewallRuleOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('Firewall rule deleted');
+              setIsDeleteFirewallRuleOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Image (Admin) Modal */}
+      <Modal
+        isOpen={isDeleteImageAdminOpen}
+        onClose={() => setIsDeleteImageAdminOpen(false)}
+        title="Delete Image"
+        description="Are you sure you want to delete this image?"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Image name
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              ubuntu-22.04-server
+            </span>
+          </div>
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+              stroke={1.5}
+            />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              This image is shared across multiple tenants. Deleting it may affect existing
+              instances.
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteImageAdminOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('Image deleted');
+              setIsDeleteImageAdminOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Flavor Modal */}
+      <Modal
+        isOpen={isDeleteFlavorOpen}
+        onClose={() => setIsDeleteFlavorOpen(false)}
+        title="Delete Flavor"
+        description="Are you sure you want to delete this flavor?"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Flavor name
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">m1.large</span>
+          </div>
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+              stroke={1.5}
+            />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Existing instances using this flavor will not be affected, but new instances cannot be
+              created with this flavor.
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteFlavorOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('Flavor deleted');
+              setIsDeleteFlavorOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Volume Type Modal */}
+      <Modal
+        isOpen={isDeleteVolumeTypeOpen}
+        onClose={() => setIsDeleteVolumeTypeOpen(false)}
+        title="Delete Volume Type"
+        description="Are you sure you want to delete this volume type?"
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Volume type
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">SSD-Fast</span>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteVolumeTypeOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('Volume type deleted');
+              setIsDeleteVolumeTypeOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
     </div>
   );
 }
