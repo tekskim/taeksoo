@@ -186,14 +186,15 @@ export function DoneSection({ title, onEdit, children }: DoneSectionProps) {
     <SectionCard>
       <SectionCard.Header
         title={title}
-        showDivider
+        showDivider={false}
         actions={
           <Button variant="outline" size="sm" leftIcon={<IconEdit size={12} />} onClick={onEdit}>
             Edit
           </Button>
         }
       />
-      <SectionCard.Content>{children}</SectionCard.Content>
+      {/* DoneSectionRow already includes dividers, so we don't use SectionCard.Content */}
+      <div className="flex flex-col w-full">{children}</div>
     </SectionCard>
   );
 }

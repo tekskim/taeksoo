@@ -18,6 +18,7 @@ import {
   type FilterField,
   type AppliedFilter,
   fixedColumns,
+  columnMinWidths,
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';

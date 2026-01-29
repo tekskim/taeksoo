@@ -30,6 +30,7 @@ import {
   InlineMessage,
   SelectionIndicator,
   fixedColumns,
+  columnMinWidths,
 } from '@/design-system';
 import type { WizardSummaryItem, WizardSectionState, TableColumn } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
@@ -757,6 +758,7 @@ export default function CreateLoadBalancerPage() {
         key: 'name',
         label: 'Name',
         flex: 1,
+        minWidth: columnMinWidths.name,
         sortable: true,
         render: (_value, row) => (
           <VStack gap={0.5} align="start">
@@ -777,16 +779,19 @@ export default function CreateLoadBalancerPage() {
         key: 'subnetCidr',
         label: 'Subnet CIDR',
         flex: 1,
+        minWidth: columnMinWidths.subnetCidr,
       },
       {
         key: 'external',
         label: 'External',
         flex: 1,
+        minWidth: columnMinWidths.external,
       },
       {
         key: 'shared',
         label: 'Shared',
         flex: 1,
+        minWidth: columnMinWidths.type,
       },
     ],
     [selectedNetwork]
@@ -821,6 +826,7 @@ export default function CreateLoadBalancerPage() {
         key: 'name',
         label: 'Name',
         flex: 1,
+        minWidth: columnMinWidths.name,
         sortable: true,
         render: (_value, row) => (
           <VStack gap={0.5} align="start">
@@ -841,12 +847,14 @@ export default function CreateLoadBalancerPage() {
         key: 'san',
         label: 'SAN',
         flex: 1,
+        minWidth: columnMinWidths.name,
         sortable: true,
       },
       {
         key: 'listener',
         label: 'Listener',
         flex: 1,
+        minWidth: columnMinWidths.listener,
         sortable: true,
         render: (_value, row) => (
           <VStack gap={0.5} align="start">
@@ -864,11 +872,13 @@ export default function CreateLoadBalancerPage() {
         key: 'expiresAt',
         label: 'Expires At',
         flex: 1,
+        minWidth: columnMinWidths.expiresAt,
       },
       {
         key: 'createdAt',
         label: 'Created At',
         flex: 1,
+        minWidth: columnMinWidths.createdAt,
       },
     ],
     [selectedCertificate]
@@ -903,6 +913,7 @@ export default function CreateLoadBalancerPage() {
         key: 'name',
         label: 'Name',
         flex: 1,
+        minWidth: columnMinWidths.name,
         sortable: true,
         render: (_value, row) => (
           <VStack gap={0.5} align="start">
@@ -923,6 +934,7 @@ export default function CreateLoadBalancerPage() {
         key: 'listener',
         label: 'Listeners',
         flex: 1,
+        minWidth: columnMinWidths.listener,
         sortable: true,
         render: (_value, row) => (
           <VStack gap={0.5} align="start">
@@ -940,11 +952,13 @@ export default function CreateLoadBalancerPage() {
         key: 'expiresAt',
         label: 'Expires At',
         flex: 1,
+        minWidth: columnMinWidths.expiresAt,
       },
       {
         key: 'createdAt',
         label: 'Created At',
         flex: 1,
+        minWidth: columnMinWidths.createdAt,
       },
     ],
     [selectedCaCertificate]
@@ -989,6 +1003,7 @@ export default function CreateLoadBalancerPage() {
         key: 'name',
         label: 'Name',
         flex: 1,
+        minWidth: columnMinWidths.name,
         sortable: true,
         render: (_value, row) => (
           <VStack gap={0.5} align="start">
@@ -1009,12 +1024,14 @@ export default function CreateLoadBalancerPage() {
         key: 'domain',
         label: 'Domain',
         flex: 1,
+        minWidth: columnMinWidths.domain,
         sortable: true,
       },
       {
         key: 'listener',
         label: 'Listener',
         flex: 1,
+        minWidth: columnMinWidths.listener,
         sortable: true,
         render: (_value, row) => (
           <HStack gap={1} align="center">
@@ -1034,11 +1051,13 @@ export default function CreateLoadBalancerPage() {
         key: 'expiresAt',
         label: 'Expires At',
         flex: 1,
+        minWidth: columnMinWidths.expiresAt,
       },
       {
         key: 'createdAt',
         label: 'Created At',
         flex: 1,
+        minWidth: columnMinWidths.createdAt,
       },
     ],
     [selectedSniCertificates]

@@ -962,14 +962,15 @@ export function OverallPerformancePage() {
 
   // Pool Overview table columns
   const poolOverviewColumns: TableColumn<PoolOverviewRow>[] = [
-    { key: 'poolName', label: 'Pool name', flex: 1, sortable: true },
-    { key: 'type', label: 'Type', flex: 1, sortable: false },
-    { key: 'usableFree', label: 'Usable free', flex: 1, sortable: true },
-    { key: 'percentUsed', label: '% Used', flex: 1, sortable: true },
+    { key: 'poolName', label: 'Pool name', flex: 1, minWidth: columnMinWidths.name, sortable: true },
+    { key: 'type', label: 'Type', flex: 1, minWidth: columnMinWidths.type, sortable: false },
+    { key: 'usableFree', label: 'Usable free', flex: 1, minWidth: columnMinWidths.size, sortable: true },
+    { key: 'percentUsed', label: '% Used', flex: 1, minWidth: columnMinWidths.usagePercent, sortable: true },
     {
       key: 'growth5d',
       label: 'Growth (5d)',
       flex: 1,
+      minWidth: columnMinWidths.size,
       sortable: true,
       render: (_, row) => (
         <span
@@ -983,9 +984,9 @@ export function OverallPerformancePage() {
         </span>
       ),
     },
-    { key: 'iops', label: 'IOPS', flex: 1, sortable: true },
-    { key: 'bandwidth', label: 'Bandwidth', flex: 1, sortable: true },
-    { key: 'stored', label: 'Stored', flex: 1, sortable: true },
+    { key: 'iops', label: 'IOPS', flex: 1, minWidth: columnMinWidths.readOps, sortable: true },
+    { key: 'bandwidth', label: 'Bandwidth', flex: 1, minWidth: columnMinWidths.size, sortable: true },
+    { key: 'stored', label: 'Stored', flex: 1, minWidth: columnMinWidths.size, sortable: true },
     {
       key: 'id',
       label: 'Detail performance',
@@ -1002,9 +1003,9 @@ export function OverallPerformancePage() {
 
   // Host Overview table columns
   const hostOverviewColumns: TableColumn<HostOverviewRow>[] = [
-    { key: 'hostname', label: 'Hostname', flex: 2, sortable: true },
-    { key: 'totalMemory', label: 'Total memory', flex: 1, sortable: true },
-    { key: 'rawCapacity', label: 'Raw capacity', flex: 1, sortable: true },
+    { key: 'hostname', label: 'Hostname', flex: 1, minWidth: columnMinWidths.hostname, sortable: true },
+    { key: 'totalMemory', label: 'Total memory', flex: 1, minWidth: columnMinWidths.totalMemory, sortable: true },
+    { key: 'rawCapacity', label: 'Raw capacity', flex: 1, minWidth: columnMinWidths.rawCapacity, sortable: true },
     {
       key: 'id',
       label: 'Detail performance',
@@ -1021,8 +1022,8 @@ export function OverallPerformancePage() {
 
   // OSD Latency table columns
   const osdLatencyColumns: TableColumn<OsdLatencyRow>[] = [
-    { key: 'osdId', label: 'OSD ID', flex: 1, sortable: true },
-    { key: 'latency', label: 'Latency', flex: 1, sortable: true },
+    { key: 'osdId', label: 'OSD ID', flex: 1, minWidth: columnMinWidths.osd, sortable: true },
+    { key: 'latency', label: 'Latency', flex: 1, minWidth: columnMinWidths.type, sortable: true },
   ];
 
   // Top Slow OSD Ops table columns
@@ -1030,7 +1031,8 @@ export function OverallPerformancePage() {
     {
       key: 'osdId',
       label: 'OSD ID',
-      flex: 2,
+      flex: 1,
+      minWidth: columnMinWidths.osd,
       sortable: true,
       render: (_, row) => (
         <span className="text-[var(--color-action-primary)] hover:underline cursor-pointer">
@@ -1038,7 +1040,7 @@ export function OverallPerformancePage() {
         </span>
       ),
     },
-    { key: 'slowOps', label: 'Slow ops', flex: 2, sortable: true },
+    { key: 'slowOps', label: 'Slow ops', flex: 1, minWidth: columnMinWidths.readOps, sortable: true },
     {
       key: 'id',
       label: 'Action',
@@ -1417,12 +1419,14 @@ export function OverallPerformancePage() {
                                     key: 'imageName',
                                     label: 'Image name',
                                     flex: 1,
+                                    minWidth: columnMinWidths.name,
                                     sortable: true,
                                   },
                                   {
                                     key: 'throughput',
                                     label: 'Throughput',
                                     flex: 1,
+                                    minWidth: '100px',
                                     sortable: true,
                                   },
                                 ]}
@@ -1460,9 +1464,10 @@ export function OverallPerformancePage() {
                                     key: 'imageName',
                                     label: 'Image name',
                                     flex: 1,
+                                    minWidth: columnMinWidths.name,
                                     sortable: true,
                                   },
-                                  { key: 'latency', label: 'Latency', flex: 1, sortable: true },
+                                  { key: 'latency', label: 'Latency', flex: 1, minWidth: '100px', sortable: true },
                                 ]}
                                 data={[
                                   { id: '1', imageName: 'windows-server-2019', latency: '45 ms' },
@@ -1613,6 +1618,7 @@ export function OverallPerformancePage() {
                                 key: 'imageName',
                                 label: 'Image name',
                                 flex: 1,
+                                minWidth: columnMinWidths.name,
                                 sortable: true,
                                 render: (_, row) => (
                                   <Link
@@ -1624,8 +1630,8 @@ export function OverallPerformancePage() {
                                   </Link>
                                 ),
                               },
-                              { key: 'iops', label: 'IOPS', flex: 1, sortable: true },
-                              { key: 'throughput', label: 'Throughput', flex: 1, sortable: true },
+                              { key: 'iops', label: 'IOPS', flex: 1, minWidth: columnMinWidths.readOps, sortable: true },
+                              { key: 'throughput', label: 'Throughput', flex: 1, minWidth: '100px', sortable: true },
                               {
                                 key: 'actions',
                                 label: 'Action',

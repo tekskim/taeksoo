@@ -19,6 +19,7 @@ import {
   Table,
   type TableColumn,
   ListToolbar,
+  columnMinWidths,
 } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -574,14 +575,14 @@ export function BucketDetailPage() {
 
   // Tags table columns
   const tagsColumns: TableColumn<{ key: string; value: string }>[] = [
-    { key: 'key', label: 'Key', flex: 1 },
-    { key: 'value', label: 'Value', flex: 1 },
+    { key: 'key', label: 'Key', flex: 1, minWidth: columnMinWidths.key },
+    { key: 'value', label: 'Value', flex: 1, minWidth: columnMinWidths.value },
   ];
 
   // ACL table columns
   const aclColumns: TableColumn<{ grantee: string; permissions: string }>[] = [
-    { key: 'grantee', label: 'Grantee', flex: 1 },
-    { key: 'permissions', label: 'Permissions', flex: 1 },
+    { key: 'grantee', label: 'Grantee', flex: 1, minWidth: columnMinWidths.grantee },
+    { key: 'permissions', label: 'Permissions', flex: 1, minWidth: columnMinWidths.permissions },
   ];
 
   return (

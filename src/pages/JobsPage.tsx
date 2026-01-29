@@ -237,7 +237,8 @@ export function JobsPage() {
     {
       key: 'image',
       label: 'Image',
-      flex: 1.5,
+      flex: 1,
+      minWidth: columnMinWidths.containerImage,
     },
     {
       key: 'completions',

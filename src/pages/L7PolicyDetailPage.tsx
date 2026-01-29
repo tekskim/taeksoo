@@ -18,6 +18,7 @@ import {
   Pagination,
   ContextMenu,
   fixedColumns,
+  columnMinWidths,
 } from '@/design-system';
 import type { TableColumn, ContextMenuItem } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
@@ -217,18 +218,21 @@ export default function L7PolicyDetailPage() {
       key: 'type',
       label: 'Rule type',
       flex: 1,
+      minWidth: columnMinWidths.type,
       sortable: true,
     },
     {
       key: 'compareType',
       label: 'Compare type',
       flex: 1,
+      minWidth: columnMinWidths.compareType,
       sortable: true,
     },
     {
       key: 'key',
       label: 'Key',
       flex: 1,
+      minWidth: columnMinWidths.key,
       sortable: true,
       render: (_, row) => row.key || '-',
     },
@@ -236,12 +240,14 @@ export default function L7PolicyDetailPage() {
       key: 'value',
       label: 'Value',
       flex: 1,
+      minWidth: columnMinWidths.value,
       sortable: true,
     },
     {
       key: 'invert',
       label: 'Invert',
       flex: 1,
+      minWidth: columnMinWidths.invert,
       render: (_, row) => (row.invert ? 'On' : 'Off'),
     },
     {

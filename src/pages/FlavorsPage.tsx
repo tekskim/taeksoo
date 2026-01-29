@@ -340,6 +340,7 @@ export function FlavorsPage() {
         key: 'name',
         label: 'Name',
         flex: 1,
+        minWidth: columnMinWidths.name,
         sortable: true,
         render: (_, row) => (
           <Link

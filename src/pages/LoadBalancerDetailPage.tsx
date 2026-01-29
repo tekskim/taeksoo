@@ -295,24 +295,28 @@ export function LoadBalancerDetailPage() {
       key: 'protocol',
       label: 'Protocol',
       flex: 1,
+      minWidth: columnMinWidths.protocol,
       sortable: true,
     },
     {
       key: 'port',
       label: 'Port',
       flex: 1,
+      minWidth: columnMinWidths.port,
       sortable: true,
     },
     {
       key: 'connectionLimit',
       label: 'Connection limit',
       flex: 1,
+      minWidth: columnMinWidths.connectionLimit,
       sortable: true,
     },
     {
       key: 'adminState',
       label: 'Admin state',
       flex: 1,
+      minWidth: columnMinWidths.adminState,
     },
     {
       key: 'actions',

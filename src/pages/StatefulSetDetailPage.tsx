@@ -645,7 +645,7 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
     { key: 'reason', label: 'Reason', flex: 1, sortable: true },
     { key: 'subobject', label: 'Subobject', flex: 1, sortable: true },
     { key: 'source', label: 'Source', flex: 1, sortable: true },
-    { key: 'message', label: 'Message', flex: 1.5, sortable: true },
+    { key: 'message', label: 'Message', flex: 1, minWidth: columnMinWidths.message, sortable: true },
     {
       key: 'firstSeen',
       label: 'First Seen',

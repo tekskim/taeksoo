@@ -26,6 +26,7 @@ import {
   SelectionIndicator,
   type TableColumn,
   fixedColumns,
+  columnMinWidths,
 } from '@/design-system';
 import { IconBell, IconPalette } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
@@ -219,24 +220,28 @@ export function CreateAgentPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
     },
     {
       key: 'type',
       label: 'Type',
       flex: 1,
+      minWidth: columnMinWidths.type,
       sortable: true,
     },
     {
       key: 'size',
       label: 'Size',
       flex: 1,
+      minWidth: columnMinWidths.size,
       sortable: true,
     },
     {
       key: 'createdAt',
       label: 'Created at',
       flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
     },
   ];
@@ -257,12 +262,14 @@ export function CreateAgentPage() {
       key: 'title',
       label: 'Title',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
     },
     {
       key: 'mcpServer',
       label: 'MCP server',
       flex: 1,
+      minWidth: '100px',
       sortable: false,
       render: (_, row) => (
         <div className="flex items-center gap-1.5">
@@ -281,12 +288,14 @@ export function CreateAgentPage() {
       key: 'category',
       label: 'Category',
       flex: 1,
+      minWidth: columnMinWidths.category,
       sortable: true,
     },
     {
       key: 'tags',
       label: 'Tags',
       flex: 1,
+      minWidth: columnMinWidths.labels,
       sortable: false,
       render: (_, row) => (
         <div className="flex flex-wrap gap-1">
@@ -310,6 +319,7 @@ export function CreateAgentPage() {
       key: 'createdAt',
       label: 'Created at',
       flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
     },
   ];

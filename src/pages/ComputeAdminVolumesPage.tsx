@@ -18,6 +18,7 @@ import {
   type FilterField,
   type AppliedFilter,
   fixedColumns,
+  columnMinWidths,
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -338,6 +339,7 @@ export function ComputeAdminVolumesPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -356,6 +358,7 @@ export function ComputeAdminVolumesPage() {
       key: 'tenant',
       label: 'Tenant',
       flex: 1,
+      minWidth: columnMinWidths.user,
       sortable: true,
       render: (_, row) =>
         row.tenant && row.tenantId ? (
@@ -377,6 +380,7 @@ export function ComputeAdminVolumesPage() {
       key: 'host',
       label: 'Host',
       flex: 1,
+      minWidth: columnMinWidths.hostname,
       sortable: true,
       render: (value) => value || <span className="text-[var(--color-text-muted)]">-</span>,
     },
@@ -384,22 +388,26 @@ export function ComputeAdminVolumesPage() {
       key: 'size',
       label: 'Size',
       flex: 1,
+      minWidth: columnMinWidths.size,
       sortable: true,
     },
     {
       key: 'type',
       label: 'Type',
       flex: 1,
+      minWidth: columnMinWidths.type,
     },
     {
       key: 'diskTag',
       label: 'Disk Tag',
       flex: 1,
+      minWidth: columnMinWidths.diskTag,
     },
     {
       key: 'attachedTo',
       label: 'Attached To',
       flex: 1,
+      minWidth: columnMinWidths.attachedTo,
       render: (_, row) =>
         row.attachedTo && row.attachedToId ? (
           <div className="flex flex-col gap-0.5">
@@ -422,6 +430,7 @@ export function ComputeAdminVolumesPage() {
       key: 'createdAt',
       label: 'Created At',
       flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
     },
     {

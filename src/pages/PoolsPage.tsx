@@ -10,6 +10,7 @@ import {
   TopBarAction,
   Breadcrumb,
   type TableColumn,
+  columnMinWidths,
 } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -197,6 +198,7 @@ export function PoolsPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (_, row) => (
         <Link
@@ -212,18 +214,21 @@ export function PoolsPage() {
       key: 'dataProtection',
       label: 'Data protection',
       flex: 1,
+      minWidth: columnMinWidths.dataProtection,
       sortable: false,
     },
     {
       key: 'applications',
       label: 'Applications',
       flex: 1,
+      minWidth: columnMinWidths.applications,
       sortable: true,
     },
     {
       key: 'pgStatus',
       label: 'PG Status',
-      flex: 1.2,
+      flex: 1,
+      minWidth: columnMinWidths.pgStatus,
       sortable: true,
       render: (_, row) => {
         const fullText = row.pgStatus.join(' ');
@@ -241,25 +246,29 @@ export function PoolsPage() {
       key: 'crushRuleset',
       label: 'Crush ruleset',
       flex: 1,
+      minWidth: columnMinWidths.crushRuleset,
       sortable: true,
     },
     {
       key: 'usagePercent',
       label: 'Usage',
-      flex: 1.2,
+      flex: 1,
+      minWidth: columnMinWidths.usagePercent,
       sortable: true,
       render: (_, row) => <UsageCell percent={row.usagePercent} />,
     },
     {
       key: 'readOps',
       label: 'Read ops',
-      flex: 0.8,
+      flex: 1,
+      minWidth: columnMinWidths.readOps,
       sortable: false,
     },
     {
       key: 'writeOps',
       label: 'Write ops',
-      flex: 0.8,
+      flex: 1,
+      minWidth: columnMinWidths.writeOps,
       sortable: false,
     },
   ];

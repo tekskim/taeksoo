@@ -15,6 +15,7 @@ import {
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
+  columnMinWidths,
 } from '@/design-system';
 import { AgentPageLayout } from '@/layouts';
 import { AgentSidebar } from '@/pages/AgentPage';
@@ -502,12 +503,14 @@ export function MCPToolsPage() {
       key: 'title',
       label: 'Title',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
     },
     {
       key: 'mcpServer',
       label: 'MCP server',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: false,
       render: (_, row) => (
         <div className="flex items-center gap-2">
@@ -534,12 +537,14 @@ export function MCPToolsPage() {
       key: 'category',
       label: 'Category',
       flex: 1,
+      minWidth: columnMinWidths.category,
       sortable: true,
     },
     {
       key: 'tags',
       label: 'Tags',
       flex: 1,
+      minWidth: columnMinWidths.labels,
       sortable: false,
       render: (_, row) => (
         <div className="flex flex-wrap gap-1">
@@ -560,6 +565,7 @@ export function MCPToolsPage() {
       key: 'createdAt',
       label: 'Created at',
       flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
     },
     {
@@ -600,6 +606,7 @@ export function MCPToolsPage() {
       key: 'title',
       label: 'Title',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (_, row) => (
         <div className="flex items-center gap-2">
@@ -616,6 +623,7 @@ export function MCPToolsPage() {
       key: 'visibility',
       label: 'Visibility',
       flex: 1,
+      minWidth: columnMinWidths.visibility,
       sortable: false,
       render: (_, row) => {
         const currentVisibility = templateVisibility[row.id] || row.visibility;
@@ -649,24 +657,28 @@ export function MCPToolsPage() {
       key: 'category',
       label: 'Category',
       flex: 1,
+      minWidth: columnMinWidths.category,
       sortable: true,
     },
     {
       key: 'tools',
       label: 'Tools',
       flex: 1,
+      minWidth: '100px',
       sortable: true,
     },
     {
       key: 'updatedAt',
       label: 'Updated at',
       flex: 1,
+      minWidth: columnMinWidths.updatedAt,
       sortable: true,
     },
     {
       key: 'createdAt',
       label: 'Created at',
       flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
     },
     {

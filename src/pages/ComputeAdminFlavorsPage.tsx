@@ -19,6 +19,7 @@ import {
   type FilterField,
   type AppliedFilter,
   fixedColumns,
+  columnMinWidths,
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -336,6 +337,7 @@ export function ComputeAdminFlavorsPage() {
         key: 'name',
         label: 'Name',
         flex: 1,
+        minWidth: columnMinWidths.name,
         sortable: true,
         render: (_, row) => (
           <div className="flex flex-col gap-0.5">
@@ -356,18 +358,21 @@ export function ComputeAdminFlavorsPage() {
         key: 'vcpu',
         label: 'vCPU',
         flex: 1,
+        minWidth: columnMinWidths.vcpu,
         sortable: true,
       },
       {
         key: 'ram',
         label: 'RAM',
         flex: 1,
+        minWidth: columnMinWidths.ram,
         sortable: true,
       },
       {
         key: 'ephemeralDisk',
         label: 'Root Disk',
         flex: 1,
+        minWidth: columnMinWidths.ephemeralDisk,
         sortable: true,
       },
       // GPU/MPU-specific columns (only shown when GPU or MPU tab is active)
@@ -377,24 +382,28 @@ export function ComputeAdminFlavorsPage() {
               key: 'gpuType',
               label: 'GPU Type',
               flex: 1,
+              minWidth: columnMinWidths.gpuType,
               sortable: true,
             },
             {
               key: 'numaNodes',
               label: 'NUMA Nodes',
               flex: 1,
+              minWidth: columnMinWidths.numaNodes,
               sortable: true,
             },
             {
               key: 'cpuPolicy',
               label: 'CPU Policy',
               flex: 1,
+              minWidth: columnMinWidths.cpuPolicy,
               sortable: true,
             },
             {
               key: 'cpuThreadPolicy',
               label: 'CPU Thread Policy',
               flex: 1,
+              minWidth: columnMinWidths.cpuThreadPolicy,
               sortable: true,
             },
           ] as TableColumn<Flavor>[])
@@ -403,6 +412,7 @@ export function ComputeAdminFlavorsPage() {
         key: 'access',
         label: 'Public',
         flex: 1,
+        minWidth: columnMinWidths.access,
         render: (_, row) => <span>{row.access === 'Public' ? 'On' : 'Off'}</span>,
       },
       {

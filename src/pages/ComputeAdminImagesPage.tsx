@@ -19,6 +19,7 @@ import {
   type FilterField,
   type AppliedFilter,
   fixedColumns,
+  columnMinWidths,
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -343,6 +344,7 @@ export function ComputeAdminImagesPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -363,6 +365,7 @@ export function ComputeAdminImagesPage() {
       key: 'tenant',
       label: 'Tenant',
       flex: 1,
+      minWidth: columnMinWidths.user,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -383,30 +386,35 @@ export function ComputeAdminImagesPage() {
       key: 'os',
       label: 'OS',
       flex: 1,
+      minWidth: columnMinWidths.os,
       sortable: true,
     },
     {
       key: 'size',
       label: 'Size',
       flex: 1,
+      minWidth: columnMinWidths.size,
       sortable: true,
     },
     {
       key: 'diskFormat',
       label: 'Disk format',
       flex: 1,
+      minWidth: columnMinWidths.diskFormat,
       sortable: true,
     },
     {
       key: 'protected',
       label: 'Visibility',
       flex: 1,
+      minWidth: columnMinWidths.visibility,
       render: (_, row) => (row.protected ? 'Private' : 'Public'),
     },
     {
       key: 'createdAt',
       label: 'Created at',
       flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
     },
     {

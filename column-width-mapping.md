@@ -585,13 +585,13 @@ columns={[
 
 #### 📄 HostsPage (Ceph Hosts)
 
-| 컬럼        | 현재 설정                      | 상태 |
-| ----------- | ------------------------------ | :--: |
-| status      | `columnWidths.status`          |  ✅  |
-| hostname    | `flex: 2, minWidth: '150px'`   |  📐  |
-| labels      | `flex: 1, minWidth: '100px'`   |  📐  |
-| model       | `flex: 1.5, minWidth: '180px'` |  📐  |
-| cpus        | `columnWidths.cpus`            |  ✅  |
+| 컬럼        | 현재 설정                               | 상태 |
+| ----------- | --------------------------------------- | :--: |
+| status      | `fixedColumns.status`                   |  ✅  |
+| hostname    | `flex: 1, minWidth: columnMinWidths.hostname` |  ✅  |
+| labels      | `flex: 1, minWidth: columnMinWidths.labels`   |  ✅  |
+| model       | `flex: 1, minWidth: columnMinWidths.model`    |  ✅  |
+| cpus        | `flex: 1, minWidth: columnMinWidths.cpus`     |  ✅  |
 | cores       | `columnWidths.cores`           |  ✅  |
 | totalMemory | `columnWidths.totalMemory`     |  ✅  |
 | rawCapacity | `columnWidths.rawCapacity`     |  ✅  |

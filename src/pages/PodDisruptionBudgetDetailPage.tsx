@@ -315,7 +315,8 @@ export function PodDisruptionBudgetDetailPage() {
     {
       key: 'message',
       label: 'Message',
-      flex: 2,
+      flex: 1,
+      minWidth: columnMinWidths.message,
       sortable: true,
     },
     {

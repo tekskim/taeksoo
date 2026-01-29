@@ -247,7 +247,8 @@ export function PersistentVolumeClaimsPage() {
     {
       key: 'volume',
       label: 'Volume',
-      flex: 1.5,
+      flex: 1,
+      minWidth: columnMinWidths.volume,
       sortable: true,
       render: (value: string) =>
         value ? (

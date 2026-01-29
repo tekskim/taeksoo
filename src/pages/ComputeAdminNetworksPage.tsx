@@ -20,6 +20,7 @@ import {
   type FilterField,
   type AppliedFilter,
   fixedColumns,
+  columnMinWidths,
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -355,6 +356,7 @@ export function ComputeAdminNetworksPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -373,6 +375,7 @@ export function ComputeAdminNetworksPage() {
       key: 'tenant',
       label: 'Tenant',
       flex: 1,
+      minWidth: columnMinWidths.user,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -393,12 +396,14 @@ export function ComputeAdminNetworksPage() {
       key: 'subnetCidr',
       label: 'Subnet CIDR',
       flex: 1,
+      minWidth: columnMinWidths.subnetCidr,
       sortable: true,
     },
     {
       key: 'external',
       label: 'External',
       flex: 1,
+      minWidth: columnMinWidths.external,
       sortable: true,
       render: (value: boolean) => (value ? 'Yes' : 'No'),
     },
@@ -406,6 +411,7 @@ export function ComputeAdminNetworksPage() {
       key: 'shared',
       label: 'Shared',
       flex: 1,
+      minWidth: columnMinWidths.type,
       sortable: true,
       render: (_, row) => (row.shared ? 'Yes' : 'No'),
     },
@@ -413,6 +419,7 @@ export function ComputeAdminNetworksPage() {
       key: 'adminState',
       label: 'Admin State',
       flex: 1,
+      minWidth: columnMinWidths.adminState,
       sortable: false,
       render: (_, row) => (
         <Badge variant={row.adminState === 'Up' ? 'success' : 'default'} size="sm">
@@ -424,6 +431,7 @@ export function ComputeAdminNetworksPage() {
       key: 'createdAt',
       label: 'Created At',
       flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
     },
     {

@@ -201,9 +201,6 @@ export default function IAMMFAPoliciesPage() {
                             />
                           </VStack>
 
-                          {/* Divider */}
-                          <div className="h-px w-full bg-[var(--color-border-subtle)]" />
-
                           {/* Action Buttons */}
                           <HStack gap={2} justify="end" className="w-full">
                             <button

@@ -358,11 +358,13 @@ export default function PortDetailPage() {
       key: 'fixedIp',
       label: 'Fixed IP',
       flex: 1,
+      minWidth: columnMinWidths.fixedIp,
     },
     {
       key: 'floatingIp',
       label: 'Floating IP',
       flex: 1,
+      minWidth: columnMinWidths.floatingIp,
       render: (_, row) =>
         row.floatingIp ? (
           <div className="flex flex-col gap-0.5">
@@ -385,6 +387,7 @@ export default function PortDetailPage() {
       key: 'ownedSubnet',
       label: 'Owned subnet',
       flex: 1,
+      minWidth: columnMinWidths.ownedSubnet,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -444,11 +447,13 @@ export default function PortDetailPage() {
       key: 'ipAddress',
       label: 'IP Address',
       flex: 1,
+      minWidth: columnMinWidths.ipAddress,
     },
     {
       key: 'macAddress',
       label: 'MAC Address',
       flex: 1,
+      minWidth: columnMinWidths.macAddress,
     },
     {
       key: 'actions',
@@ -487,6 +492,7 @@ export default function PortDetailPage() {
       key: 'name',
       label: 'Security group',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -508,6 +514,7 @@ export default function PortDetailPage() {
       key: 'description',
       label: 'Description',
       flex: 1,
+      minWidth: columnMinWidths.description,
       sortable: true,
     },
     {

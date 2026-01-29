@@ -194,6 +194,7 @@ export function ContainerNamespacesPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string) => (
         <span
@@ -211,6 +212,7 @@ export function ContainerNamespacesPage() {
       key: 'description',
       label: 'Description',
       flex: 1,
+      minWidth: columnMinWidths.description,
     },
     {
       key: 'createdAt',

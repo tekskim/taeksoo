@@ -195,8 +195,8 @@ export default function IAMLoginPoliciesPage() {
                   </TabList>
 
                   {/* Password Policy Tab */}
-                  <TabPanel value="password-policy" className="pt-0">
-                    <VStack gap={4} className="pt-4">
+                  <TabPanel value="password-policy" className="pt-4">
+                    <VStack gap={4}>
                       <SectionCard>
                         <SectionCard.Header title="Password policy" />
                         <SectionCard.Content gap={6}>
@@ -261,9 +261,6 @@ export default function IAMLoginPoliciesPage() {
                             </VStack>
                           </VStack>
 
-                          {/* Divider */}
-                          <div className="h-px w-full bg-[var(--color-border-subtle)]" />
-
                           {/* Requirements */}
                           <VStack gap={4}>
                             <VStack gap={2}>
@@ -301,9 +298,6 @@ export default function IAMLoginPoliciesPage() {
                             </VStack>
                           </VStack>
 
-                          {/* Divider */}
-                          <div className="h-px w-full bg-[var(--color-border-subtle)]" />
-
                           {/* Exclusion rules */}
                           <VStack gap={4}>
                             <VStack gap={2}>
@@ -330,9 +324,6 @@ export default function IAMLoginPoliciesPage() {
                               />
                             </VStack>
                           </VStack>
-
-                          {/* Divider */}
-                          <div className="h-px w-full bg-[var(--color-border-subtle)]" />
 
                           {/* Password expiration */}
                           <VStack gap={4}>
@@ -373,9 +364,6 @@ export default function IAMLoginPoliciesPage() {
                               </p>
                             </VStack>
                           </VStack>
-
-                          {/* Divider */}
-                          <div className="h-px w-full bg-[var(--color-border-subtle)]" />
 
                           {/* Prevent password reuse */}
                           <VStack gap={4}>
@@ -449,9 +437,6 @@ export default function IAMLoginPoliciesPage() {
                             </VStack>
                           </VStack>
 
-                          {/* Divider */}
-                          <div className="h-px w-full bg-[var(--color-border-subtle)]" />
-
                           {/* Action Buttons */}
                           <HStack gap={2} justify="end" className="w-full">
                             <button
@@ -479,8 +464,8 @@ export default function IAMLoginPoliciesPage() {
                   </TabPanel>
 
                   {/* Account Lockout Policy Tab */}
-                  <TabPanel value="lockout-policy" className="pt-0">
-                    <VStack gap={4} className="pt-4">
+                  <TabPanel value="lockout-policy" className="pt-4">
+                    <VStack gap={4}>
                       <SectionCard>
                         <SectionCard.Header title="Account lockout policy" />
                         <SectionCard.Content gap={6}>
@@ -490,9 +475,6 @@ export default function IAMLoginPoliciesPage() {
                             onChange={(e) => setLockoutEnabled(e.target.checked)}
                             label={lockoutEnabled ? 'On' : 'Off'}
                           />
-
-                          {/* Divider */}
-                          <div className="h-px w-full bg-[var(--color-border-subtle)]" />
 
                           {/* Lockout Type */}
                           <VStack gap={4}>
@@ -515,9 +497,6 @@ export default function IAMLoginPoliciesPage() {
                               disabled={!lockoutEnabled}
                             />
                           </VStack>
-
-                          {/* Divider */}
-                          <div className="h-px w-full bg-[var(--color-border-subtle)]" />
 
                           {/* Max login failures */}
                           <VStack gap={4}>
@@ -548,9 +527,6 @@ export default function IAMLoginPoliciesPage() {
                               </p>
                             </VStack>
                           </VStack>
-
-                          {/* Divider */}
-                          <div className="h-px w-full bg-[var(--color-border-subtle)]" />
 
                           {/* Maximum Temporary Lockouts - only for permanent_after_temporary */}
                           {lockoutType === 'permanent_after_temporary' && (
@@ -588,9 +564,6 @@ export default function IAMLoginPoliciesPage() {
                           {(lockoutType === 'temporary' ||
                             lockoutType === 'permanent_after_temporary') && (
                             <>
-                              {/* Divider */}
-                              <div className="h-px w-full bg-[var(--color-border-subtle)]" />
-
                               {/* Strategy to increase wait time */}
                               <VStack gap={4}>
                                 <VStack gap={2}>
@@ -643,9 +616,6 @@ export default function IAMLoginPoliciesPage() {
                                 </VStack>
                               </VStack>
 
-                              {/* Divider */}
-                              <div className="h-px w-full bg-[var(--color-border-subtle)]" />
-
                               {/* Wait increment */}
                               <VStack gap={4}>
                                 <VStack gap={2}>
@@ -676,9 +646,6 @@ export default function IAMLoginPoliciesPage() {
                                 </HStack>
                               </VStack>
 
-                              {/* Divider */}
-                              <div className="h-px w-full bg-[var(--color-border-subtle)]" />
-
                               {/* Max wait time */}
                               <VStack gap={4}>
                                 <VStack gap={2}>
@@ -708,9 +675,6 @@ export default function IAMLoginPoliciesPage() {
                                   </span>
                                 </HStack>
                               </VStack>
-
-                              {/* Divider */}
-                              <div className="h-px w-full bg-[var(--color-border-subtle)]" />
 
                               {/* Failure reset time */}
                               <VStack gap={4}>
@@ -743,9 +707,6 @@ export default function IAMLoginPoliciesPage() {
                               </VStack>
                             </>
                           )}
-
-                          {/* Divider */}
-                          <div className="h-px w-full bg-[var(--color-border-subtle)]" />
 
                           {/* Action Buttons */}
                           <HStack gap={2} justify="end" className="w-full">

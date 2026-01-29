@@ -514,6 +514,7 @@ export default function NetworkDetailPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -535,17 +536,20 @@ export default function NetworkDetailPage() {
       key: 'cidr',
       label: 'CIDR',
       flex: 1,
+      minWidth: columnMinWidths.cidr,
     },
     {
       key: 'gatewayIp',
       label: 'Gateway IP',
       flex: 1,
+      minWidth: columnMinWidths.gatewayIp,
       sortable: true,
     },
     {
       key: 'portCount',
       label: 'Port count',
       flex: 1,
+      minWidth: columnMinWidths.portCount,
       sortable: true,
       align: 'left',
     },

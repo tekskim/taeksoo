@@ -20,6 +20,7 @@ import {
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
+  columnMinWidths,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -304,6 +305,7 @@ export default function SecurityGroupDetailPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       render: (_, row) => (
         <Link
           to={`/compute/networks/${row.id}`}
@@ -318,17 +320,20 @@ export default function SecurityGroupDetailPage() {
       key: 'subnet',
       label: 'Subnet',
       flex: 1,
+      minWidth: columnMinWidths.ownedSubnet || '100px',
     },
     {
       key: 'dhcp',
       label: 'DHCP',
       flex: 1,
+      minWidth: '100px',
       render: (value: boolean) => (value ? 'Yes' : 'No'),
     },
     {
       key: 'access',
       label: 'Access',
       flex: 1,
+      minWidth: columnMinWidths.access,
     },
     {
       key: 'actions',
@@ -357,27 +362,32 @@ export default function SecurityGroupDetailPage() {
       key: 'direction',
       label: 'Direction',
       flex: 1,
+      minWidth: columnMinWidths.direction,
     },
     {
       key: 'protocol',
       label: 'Protocol',
       flex: 1,
+      minWidth: columnMinWidths.protocol,
       sortable: true,
     },
     {
       key: 'portRange',
       label: 'Port range',
       flex: 1,
+      minWidth: columnMinWidths.portRange,
     },
     {
       key: 'remote',
       label: 'Remote',
       flex: 1,
+      minWidth: columnMinWidths.remote,
     },
     {
       key: 'icmpTypeCode',
       label: 'ICMP Type/Code',
       flex: 1,
+      minWidth: columnMinWidths.icmpTypeCode,
     },
     {
       key: 'actions',
