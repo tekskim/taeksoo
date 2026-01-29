@@ -37,12 +37,12 @@ export function DeleteStatefulSetModal({
       isOpen={isOpen}
       onClose={onClose}
       title="Delete StatefulSet"
-      description="Are you sure you want to delete this stateful set? This action cannot be undone."
+      description="Removing the selected instances is permanent and cannot be undone."
       infoLabel="StatefulSet name"
       infoValue={statefulSet?.name ?? ''}
       confirmText="Delete"
       cancelText="Cancel"
-      confirmVariant="primary"
+      confirmVariant="danger"
       onConfirm={handleConfirm}
       isLoading={isLoading}
     />

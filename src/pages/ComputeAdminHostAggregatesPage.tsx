@@ -584,7 +584,7 @@ export function ComputeAdminHostAggregatesPage() {
         onClose={() => setDeleteModalOpen(false)}
         onConfirm={handleDeleteConfirm}
         title="Delete Host Aggregate"
-        description="Are you sure you want to delete this host aggregate? This action cannot be undone."
+        description="Removing the selected instances is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"
         confirmVariant="danger"

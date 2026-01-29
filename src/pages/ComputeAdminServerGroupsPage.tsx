@@ -496,7 +496,7 @@ export function ComputeAdminServerGroupsPage() {
         onClose={handleDeleteCancel}
         onConfirm={handleDeleteConfirm}
         title="Delete Server Group"
-        description="Are you sure you want to delete this server group? This action cannot be undone."
+        description="Removing the selected instances is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"
         confirmVariant="danger"

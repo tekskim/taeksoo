@@ -156,21 +156,85 @@ export function ModalsPage() {
   const [isRedeployDaemonSetOpen, setIsRedeployDaemonSetOpen] = useState(false);
   const [isRollBackDeploymentOpen, setIsRollBackDeploymentOpen] = useState(false);
 
+  // Compute Admin Modal states
+  const [isStopInstanceOpen, setIsStopInstanceOpen] = useState(false);
+  const [isRebootInstanceOpen, setIsRebootInstanceOpen] = useState(false);
+  const [isSoftRebootInstanceOpen, setIsSoftRebootInstanceOpen] = useState(false);
+  const [isConfirmResizeOpen, setIsConfirmResizeOpen] = useState(false);
+  const [isRevertResizeOpen, setIsRevertResizeOpen] = useState(false);
+  const [isDeleteInstanceOpen, setIsDeleteInstanceOpen] = useState(false);
+  const [isShelveInstanceOpen, setIsShelveInstanceOpen] = useState(false);
+  const [isStartInstancesOpen, setIsStartInstancesOpen] = useState(false);
+  const [isStopInstancesOpen, setIsStopInstancesOpen] = useState(false);
+  const [isRebootInstancesOpen, setIsRebootInstancesOpen] = useState(false);
+  const [isDeleteInstancesOpen, setIsDeleteInstancesOpen] = useState(false);
+  const [isDeleteInstanceTemplateOpen, setIsDeleteInstanceTemplateOpen] = useState(false);
+  const [isDeleteInstanceTemplatesOpen, setIsDeleteInstanceTemplatesOpen] = useState(false);
+  const [isDeleteImageOpen, setIsDeleteImageOpen] = useState(false);
+  const [isDeleteImagesOpen, setIsDeleteImagesOpen] = useState(false);
+  const [isDeleteSnapshotOpen, setIsDeleteSnapshotOpen] = useState(false);
+  const [isDeleteSnapshotsOpen, setIsDeleteSnapshotsOpen] = useState(false);
+  const [isDeleteVolumeOpen, setIsDeleteVolumeOpen] = useState(false);
+  const [isDeleteVolumesOpen, setIsDeleteVolumesOpen] = useState(false);
+  const [isDeleteVolumeTypeOpen, setIsDeleteVolumeTypeOpen] = useState(false);
+  const [isDeleteVolumeTypesOpen, setIsDeleteVolumeTypesOpen] = useState(false);
+  const [isDeleteBackupOpen, setIsDeleteBackupOpen] = useState(false);
+  const [isDeleteBackupsOpen, setIsDeleteBackupsOpen] = useState(false);
+  const [isDeleteEncryptionOpen, setIsDeleteEncryptionOpen] = useState(false);
+  const [isDeleteExtraSpecOpen, setIsDeleteExtraSpecOpen] = useState(false);
+  const [isDeleteExtraSpecsOpen, setIsDeleteExtraSpecsOpen] = useState(false);
+  const [isDeleteQoSSpecOpen, setIsDeleteQoSSpecOpen] = useState(false);
+  const [isDeleteQoSSpecsOpen, setIsDeleteQoSSpecsOpen] = useState(false);
+  const [isDeleteQoSExtraSpecOpen, setIsDeleteQoSExtraSpecOpen] = useState(false);
+  const [isDeleteQoSExtraSpecsOpen, setIsDeleteQoSExtraSpecsOpen] = useState(false);
+  const [isDeleteNetworkOpen, setIsDeleteNetworkOpen] = useState(false);
+  const [isDeleteNetworksOpen, setIsDeleteNetworksOpen] = useState(false);
+  const [isDeleteSubnetOpen, setIsDeleteSubnetOpen] = useState(false);
+  const [isDeleteSubnetsOpen, setIsDeleteSubnetsOpen] = useState(false);
+  const [isDeletePortOpen, setIsDeletePortOpen] = useState(false);
+  const [isDeletePortsOpen, setIsDeletePortsOpen] = useState(false);
+  const [isDeleteRouterOpen, setIsDeleteRouterOpen] = useState(false);
+  const [isDeleteRoutersOpen, setIsDeleteRoutersOpen] = useState(false);
+  const [isDeleteStaticRoutesOpen, setIsDeleteStaticRoutesOpen] = useState(false);
+  const [isRemoveDHCPAgentsOpen, setIsRemoveDHCPAgentsOpen] = useState(false);
+  const [isReleaseFixedIPOpen, setIsReleaseFixedIPOpen] = useState(false);
+  const [isDeleteAllowedAddressPairOpen, setIsDeleteAllowedAddressPairOpen] = useState(false);
+  const [isDeleteSecurityGroupAdminOpen, setIsDeleteSecurityGroupAdminOpen] = useState(false);
+  const [isDeleteSecurityGroupsAdminOpen, setIsDeleteSecurityGroupsAdminOpen] = useState(false);
+  const [isDeleteFirewallOpen, setIsDeleteFirewallOpen] = useState(false);
+  const [isDeleteFirewallsOpen, setIsDeleteFirewallsOpen] = useState(false);
+  const [isUnsavedChangesAdminOpen, setIsUnsavedChangesAdminOpen] = useState(false);
+  const [isReleaseFloatingIPOpen, setIsReleaseFloatingIPOpen] = useState(false);
+  const [isReleaseFloatingIPsOpen, setIsReleaseFloatingIPsOpen] = useState(false);
+  const [isDeleteLoadBalancerAdminOpen, setIsDeleteLoadBalancerAdminOpen] = useState(false);
+  const [isDeleteLoadBalancersAdminOpen, setIsDeleteLoadBalancersAdminOpen] = useState(false);
+  const [isDeleteListenerOpen, setIsDeleteListenerOpen] = useState(false);
+  const [isDeleteListenersOpen, setIsDeleteListenersOpen] = useState(false);
+  const [isDeletePoolOpen, setIsDeletePoolOpen] = useState(false);
+  const [isDeletePoolsOpen, setIsDeletePoolsOpen] = useState(false);
+  const [isDeleteMemberOpen, setIsDeleteMemberOpen] = useState(false);
+  const [isDeleteMembersOpen, setIsDeleteMembersOpen] = useState(false);
+  const [isDeleteSecurityGroupRuleOpen, setIsDeleteSecurityGroupRuleOpen] = useState(false);
+  const [isDeleteSecurityGroupRulesOpen, setIsDeleteSecurityGroupRulesOpen] = useState(false);
+  const [isDeleteL7PolicyOpen, setIsDeleteL7PolicyOpen] = useState(false);
+  const [isDeleteL7PoliciesOpen, setIsDeleteL7PoliciesOpen] = useState(false);
+  const [isDeleteHealthMonitorOpen, setIsDeleteHealthMonitorOpen] = useState(false);
+  const [isDeleteFirewallPolicyOpen, setIsDeleteFirewallPolicyOpen] = useState(false);
+  const [isDeleteFirewallPoliciesOpen, setIsDeleteFirewallPoliciesOpen] = useState(false);
+  const [isDeleteFirewallRuleOpen, setIsDeleteFirewallRuleOpen] = useState(false);
+  const [isDeleteFirewallRulesOpen, setIsDeleteFirewallRulesOpen] = useState(false);
+  const [isDeleteTenantOpen, setIsDeleteTenantOpen] = useState(false);
+  const [isDeleteTenantsOpen, setIsDeleteTenantsOpen] = useState(false);
+  const [isDeleteMetadataOpen, setIsDeleteMetadataOpen] = useState(false);
+  const [isDeleteMetadatasOpen, setIsDeleteMetadatasOpen] = useState(false);
+  const [isManageMemberOpen, setIsManageMemberOpen] = useState(false);
+
   // Disclosure states
   const [isComputeOpen, setIsComputeOpen] = useState(false);
   const [isIAMOpen, setIsIAMOpen] = useState(false);
   const [isContainerOpen, setIsContainerOpen] = useState(false);
-  const [isComputeAdminOpen, setIsComputeAdminOpen] = useState(false);
   const [isStorageOpen, setIsStorageOpen] = useState(false);
-
-  // Compute Admin Modal states
-  const [isDeleteTenantOpen, setIsDeleteTenantOpen] = useState(false);
-  const [isDeleteFirewallOpen, setIsDeleteFirewallOpen] = useState(false);
-  const [isDeleteFirewallPolicyOpen, setIsDeleteFirewallPolicyOpen] = useState(false);
-  const [isDeleteFirewallRuleOpen, setIsDeleteFirewallRuleOpen] = useState(false);
-  const [isDeleteImageAdminOpen, setIsDeleteImageAdminOpen] = useState(false);
-  const [isDeleteFlavorOpen, setIsDeleteFlavorOpen] = useState(false);
-  const [isDeleteVolumeTypeOpen, setIsDeleteVolumeTypeOpen] = useState(false);
+  const [isComputeAdminOpen, setIsComputeAdminOpen] = useState(false);
 
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
@@ -786,109 +850,6 @@ export function ModalsPage() {
                   </Disclosure.Panel>
                 </Disclosure>
 
-                {/* Compute Admin Modals */}
-                <Disclosure open={isComputeAdminOpen} onChange={setIsComputeAdminOpen}>
-                  <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
-                    <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
-                      <div className="flex items-center gap-3">
-                        {isComputeAdminOpen ? (
-                          <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
-                        ) : (
-                          <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
-                        )}
-                        <Badge variant="purple" size="sm" className="w-[100px] justify-center">
-                          Compute Admin
-                        </Badge>
-                        <span className="text-[14px] font-semibold text-[var(--color-text-default)]">
-                          Modals
-                        </span>
-                        <span className="text-[12px] text-[var(--color-text-subtle)]">
-                          (7 modals)
-                        </span>
-                      </div>
-                    </div>
-                  </Disclosure.Trigger>
-                  <Disclosure.Panel>
-                    <VStack gap={4} className="pt-4">
-                      {/* Tenant Actions */}
-                      <VStack gap={2}>
-                        <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Tenant Actions
-                        </h2>
-                        <div className="flex flex-col gap-2">
-                          <ModalListItem
-                            title="Delete Tenant"
-                            description="Confirm deletion of a tenant with warning about associated resources."
-                            category="Tenant"
-                            size="sm"
-                            onOpen={() => setIsDeleteTenantOpen(true)}
-                          />
-                        </div>
-                      </VStack>
-
-                      {/* Firewall Actions */}
-                      <VStack gap={2}>
-                        <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Firewall Actions
-                        </h2>
-                        <div className="flex flex-col gap-2">
-                          <ModalListItem
-                            title="Delete Firewall"
-                            description="Confirm deletion of a firewall with warning about security implications."
-                            category="Firewall"
-                            size="sm"
-                            onOpen={() => setIsDeleteFirewallOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Firewall Policy"
-                            description="Confirm deletion of a firewall policy."
-                            category="Firewall"
-                            size="sm"
-                            onOpen={() => setIsDeleteFirewallPolicyOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Firewall Rule"
-                            description="Confirm deletion of a firewall rule."
-                            category="Firewall"
-                            size="sm"
-                            onOpen={() => setIsDeleteFirewallRuleOpen(true)}
-                          />
-                        </div>
-                      </VStack>
-
-                      {/* Resource Management */}
-                      <VStack gap={2}>
-                        <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Resource Management
-                        </h2>
-                        <div className="flex flex-col gap-2">
-                          <ModalListItem
-                            title="Delete Image"
-                            description="Confirm deletion of an image from the admin console."
-                            category="Image"
-                            size="sm"
-                            onOpen={() => setIsDeleteImageAdminOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Flavor"
-                            description="Confirm deletion of a flavor with warning about instances using it."
-                            category="Flavor"
-                            size="sm"
-                            onOpen={() => setIsDeleteFlavorOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Volume Type"
-                            description="Confirm deletion of a volume type."
-                            category="Volume"
-                            size="sm"
-                            onOpen={() => setIsDeleteVolumeTypeOpen(true)}
-                          />
-                        </div>
-                      </VStack>
-                    </VStack>
-                  </Disclosure.Panel>
-                </Disclosure>
-
                 {/* Storage App Modals */}
                 <Disclosure open={isStorageOpen} onChange={setIsStorageOpen}>
                   <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
@@ -931,6 +892,600 @@ export function ModalsPage() {
                     </VStack>
                   </Disclosure.Panel>
                 </Disclosure>
+
+                {/* Compute Admin Modals */}
+                <Disclosure open={isComputeAdminOpen} onChange={setIsComputeAdminOpen}>
+                  <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
+                    <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
+                      <div className="flex items-center gap-3">
+                        {isComputeAdminOpen ? (
+                          <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
+                        ) : (
+                          <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
+                        )}
+                        <Badge variant="info" size="sm" className="w-[100px] justify-center">
+                          Compute Admin
+                        </Badge>
+                        <span className="text-[14px] font-semibold text-[var(--color-text-default)]">
+                          Modals
+                        </span>
+                        <span className="text-[12px] text-[var(--color-text-subtle)]">
+                          (71 modals)
+                        </span>
+                      </div>
+                    </div>
+                  </Disclosure.Trigger>
+                  <Disclosure.Panel>
+                    <VStack gap={4} className="pt-4">
+                      {/* Single Instance Actions */}
+                      <VStack gap={2}>
+                        <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                          Single Instance Actions
+                        </h2>
+                        <div className="flex flex-col gap-2">
+                          <ModalListItem
+                            title="Stop Instance"
+                            description="Stop a single instance with warning about service interruption."
+                            category="Instance"
+                            size="sm"
+                            onOpen={() => setIsStopInstanceOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Reboot Instance"
+                            description="Reboot a single instance with warning about service interruption."
+                            category="Instance"
+                            size="sm"
+                            onOpen={() => setIsRebootInstanceOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Soft Reboot Instance"
+                            description="Perform a soft reboot of a single instance."
+                            category="Instance"
+                            size="sm"
+                            onOpen={() => setIsSoftRebootInstanceOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Confirm Resize"
+                            description="Confirm the resized state of an instance."
+                            category="Instance"
+                            size="sm"
+                            onOpen={() => setIsConfirmResizeOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Revert Resize"
+                            description="Revert an instance to its previous state before resize."
+                            category="Instance"
+                            size="sm"
+                            onOpen={() => setIsRevertResizeOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Instance"
+                            description="Permanently delete a single instance."
+                            category="Instance"
+                            size="sm"
+                            onOpen={() => setIsDeleteInstanceOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Shelve Instance"
+                            description="Shelve a single instance with warning about service interruption."
+                            category="Instance"
+                            size="sm"
+                            onOpen={() => setIsShelveInstanceOpen(true)}
+                          />
+                        </div>
+                      </VStack>
+
+                      {/* Multiple Instances Actions */}
+                      <VStack gap={2}>
+                        <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                          Multiple Instances Actions
+                        </h2>
+                        <div className="flex flex-col gap-2">
+                          <ModalListItem
+                            title="Start Instances"
+                            description="Start multiple selected instances with eligibility check."
+                            category="Instances"
+                            size="md"
+                            onOpen={() => setIsStartInstancesOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Stop Instances"
+                            description="Stop multiple selected instances with eligibility check."
+                            category="Instances"
+                            size="md"
+                            onOpen={() => setIsStopInstancesOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Reboot Instances"
+                            description="Reboot multiple selected instances with eligibility check."
+                            category="Instances"
+                            size="md"
+                            onOpen={() => setIsRebootInstancesOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Instances"
+                            description="Permanently delete multiple selected instances with eligibility check."
+                            category="Instances"
+                            size="md"
+                            onOpen={() => setIsDeleteInstancesOpen(true)}
+                          />
+                        </div>
+                      </VStack>
+
+                      {/* Resource Delete Actions */}
+                      <VStack gap={2}>
+                        <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                          Resource Delete Actions
+                        </h2>
+                        <div className="flex flex-col gap-2">
+                          <ModalListItem
+                            title="Delete Instance Template"
+                            description="Permanently delete a single instance template."
+                            category="Template"
+                            size="sm"
+                            onOpen={() => setIsDeleteInstanceTemplateOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Instance Templates"
+                            description="Permanently delete multiple instance templates."
+                            category="Templates"
+                            size="md"
+                            onOpen={() => setIsDeleteInstanceTemplatesOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Image"
+                            description="Permanently delete a single image."
+                            category="Image"
+                            size="sm"
+                            onOpen={() => setIsDeleteImageOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Images"
+                            description="Permanently delete multiple images with eligibility check."
+                            category="Images"
+                            size="md"
+                            onOpen={() => setIsDeleteImagesOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Snapshot"
+                            description="Permanently delete a single snapshot."
+                            category="Snapshot"
+                            size="sm"
+                            onOpen={() => setIsDeleteSnapshotOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Snapshots"
+                            description="Permanently delete multiple snapshots with eligibility check."
+                            category="Snapshots"
+                            size="md"
+                            onOpen={() => setIsDeleteSnapshotsOpen(true)}
+                          />
+                        </div>
+                      </VStack>
+
+                      {/* Storage Delete Actions */}
+                      <VStack gap={2}>
+                        <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                          Storage Delete Actions
+                        </h2>
+                        <div className="flex flex-col gap-2">
+                          <ModalListItem
+                            title="Delete Volume"
+                            description="Permanently delete a single volume."
+                            category="Volume"
+                            size="sm"
+                            onOpen={() => setIsDeleteVolumeOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Volumes"
+                            description="Permanently delete multiple volumes with eligibility check."
+                            category="Volumes"
+                            size="md"
+                            onOpen={() => setIsDeleteVolumesOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Volume Type"
+                            description="Permanently delete a single volume type."
+                            category="VolumeType"
+                            size="sm"
+                            onOpen={() => setIsDeleteVolumeTypeOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Volume Types"
+                            description="Permanently delete multiple volume types."
+                            category="VolumeTypes"
+                            size="sm"
+                            onOpen={() => setIsDeleteVolumeTypesOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Backup"
+                            description="Permanently delete a single backup."
+                            category="Backup"
+                            size="sm"
+                            onOpen={() => setIsDeleteBackupOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Backups"
+                            description="Permanently delete multiple backups with eligibility check."
+                            category="Backups"
+                            size="md"
+                            onOpen={() => setIsDeleteBackupsOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Encryption"
+                            description="Remove encryption configuration from a volume type."
+                            category="Encryption"
+                            size="sm"
+                            onOpen={() => setIsDeleteEncryptionOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Extra Spec"
+                            description="Remove extra specification from a volume type."
+                            category="ExtraSpec"
+                            size="sm"
+                            onOpen={() => setIsDeleteExtraSpecOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Extra Specs"
+                            description="Remove multiple extra specifications from a volume type."
+                            category="ExtraSpecs"
+                            size="sm"
+                            onOpen={() => setIsDeleteExtraSpecsOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete QoS Spec"
+                            description="Permanently delete a single QoS specification."
+                            category="QoSSpec"
+                            size="sm"
+                            onOpen={() => setIsDeleteQoSSpecOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete QoS Specs"
+                            description="Permanently delete multiple QoS specifications."
+                            category="QoSSpecs"
+                            size="sm"
+                            onOpen={() => setIsDeleteQoSSpecsOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete QoS Extra Spec"
+                            description="Remove extra specification from a QoS spec."
+                            category="QoSExtra"
+                            size="sm"
+                            onOpen={() => setIsDeleteQoSExtraSpecOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete QoS Extra Specs"
+                            description="Remove multiple extra specifications from a QoS spec."
+                            category="QoSExtras"
+                            size="sm"
+                            onOpen={() => setIsDeleteQoSExtraSpecsOpen(true)}
+                          />
+                        </div>
+                      </VStack>
+
+                      {/* Network Delete Actions */}
+                      <VStack gap={2}>
+                        <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                          Network Delete Actions
+                        </h2>
+                        <div className="flex flex-col gap-2">
+                          <ModalListItem
+                            title="Delete Network"
+                            description="Permanently delete a single network with warning."
+                            category="Network"
+                            size="sm"
+                            onOpen={() => setIsDeleteNetworkOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Networks"
+                            description="Permanently delete multiple networks with eligibility check."
+                            category="Networks"
+                            size="md"
+                            onOpen={() => setIsDeleteNetworksOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Subnet"
+                            description="Permanently delete a single subnet with warning."
+                            category="Subnet"
+                            size="sm"
+                            onOpen={() => setIsDeleteSubnetOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Subnets"
+                            description="Permanently delete multiple subnets."
+                            category="Subnets"
+                            size="sm"
+                            onOpen={() => setIsDeleteSubnetsOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Port"
+                            description="Permanently delete a single port with warning."
+                            category="Port"
+                            size="sm"
+                            onOpen={() => setIsDeletePortOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Ports"
+                            description="Permanently delete multiple ports with warning."
+                            category="Ports"
+                            size="sm"
+                            onOpen={() => setIsDeletePortsOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Router"
+                            description="Permanently delete a single router with warning."
+                            category="Router"
+                            size="sm"
+                            onOpen={() => setIsDeleteRouterOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Routers"
+                            description="Permanently delete multiple routers with eligibility check."
+                            category="Routers"
+                            size="md"
+                            onOpen={() => setIsDeleteRoutersOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Static Routes"
+                            description="Permanently delete multiple static routes."
+                            category="Routes"
+                            size="sm"
+                            onOpen={() => setIsDeleteStaticRoutesOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Remove DHCP Agents"
+                            description="Remove DHCP agents from a network."
+                            category="DHCP"
+                            size="sm"
+                            onOpen={() => setIsRemoveDHCPAgentsOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Release Fixed IP"
+                            description="Release a fixed IP address from a port."
+                            category="IP"
+                            size="sm"
+                            onOpen={() => setIsReleaseFixedIPOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Allowed Address Pair"
+                            description="Remove an allowed address pair from a port."
+                            category="Address"
+                            size="sm"
+                            onOpen={() => setIsDeleteAllowedAddressPairOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Security Group"
+                            description="Permanently delete a single security group."
+                            category="SecGroup"
+                            size="sm"
+                            onOpen={() => setIsDeleteSecurityGroupAdminOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Security Groups"
+                            description="Permanently delete multiple security groups."
+                            category="SecGroups"
+                            size="md"
+                            onOpen={() => setIsDeleteSecurityGroupsAdminOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Firewall"
+                            description="Permanently delete a single firewall."
+                            category="Firewall"
+                            size="sm"
+                            onOpen={() => setIsDeleteFirewallOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Firewalls"
+                            description="Permanently delete multiple firewalls."
+                            category="Firewalls"
+                            size="md"
+                            onOpen={() => setIsDeleteFirewallsOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Unsaved Changes"
+                            description="Confirm leaving with unsaved changes."
+                            category="Confirm"
+                            size="sm"
+                            onOpen={() => setIsUnsavedChangesAdminOpen(true)}
+                          />
+                        </div>
+                      </VStack>
+
+                      {/* Load Balancer & Security Actions */}
+                      <VStack gap={2}>
+                        <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                          Load Balancer & Security Actions
+                        </h2>
+                        <div className="flex flex-col gap-2">
+                          <ModalListItem
+                            title="Disassociate Floating IP"
+                            description="Disassociate a floating IP from a resource."
+                            category="FloatingIP"
+                            size="sm"
+                            onOpen={() => setIsDisassociateFloatingIPOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Release Floating IP"
+                            description="Release a single floating IP address."
+                            category="FloatingIP"
+                            size="sm"
+                            onOpen={() => setIsReleaseFloatingIPOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Release Floating IPs"
+                            description="Release multiple floating IP addresses."
+                            category="FloatingIPs"
+                            size="sm"
+                            onOpen={() => setIsReleaseFloatingIPsOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Load Balancer"
+                            description="Permanently delete a single load balancer."
+                            category="LB"
+                            size="sm"
+                            onOpen={() => setIsDeleteLoadBalancerAdminOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Load Balancers"
+                            description="Permanently delete multiple load balancers."
+                            category="LBs"
+                            size="md"
+                            onOpen={() => setIsDeleteLoadBalancersAdminOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Listener"
+                            description="Permanently delete a single listener."
+                            category="Listener"
+                            size="sm"
+                            onOpen={() => setIsDeleteListenerOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Listeners"
+                            description="Permanently delete multiple listeners."
+                            category="Listeners"
+                            size="md"
+                            onOpen={() => setIsDeleteListenersOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Pool"
+                            description="Permanently delete a single pool."
+                            category="Pool"
+                            size="sm"
+                            onOpen={() => setIsDeletePoolOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Pools"
+                            description="Permanently delete multiple pools."
+                            category="Pools"
+                            size="md"
+                            onOpen={() => setIsDeletePoolsOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Member"
+                            description="Remove a single member from a pool."
+                            category="Member"
+                            size="sm"
+                            onOpen={() => setIsDeleteMemberOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Members"
+                            description="Remove multiple members from a pool."
+                            category="Members"
+                            size="md"
+                            onOpen={() => setIsDeleteMembersOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Security Group Rule"
+                            description="Permanently delete a single security group rule."
+                            category="Rule"
+                            size="sm"
+                            onOpen={() => setIsDeleteSecurityGroupRuleOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Security Group Rules"
+                            description="Permanently delete multiple security group rules."
+                            category="Rules"
+                            size="md"
+                            onOpen={() => setIsDeleteSecurityGroupRulesOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete L7 Policy"
+                            description="Permanently delete a single L7 policy."
+                            category="L7Policy"
+                            size="sm"
+                            onOpen={() => setIsDeleteL7PolicyOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete L7 Policies"
+                            description="Permanently delete multiple L7 policies."
+                            category="L7Policies"
+                            size="md"
+                            onOpen={() => setIsDeleteL7PoliciesOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Health Monitor"
+                            description="Permanently delete a health monitor from a pool."
+                            category="Monitor"
+                            size="sm"
+                            onOpen={() => setIsDeleteHealthMonitorOpen(true)}
+                          />
+                        </div>
+                      </VStack>
+
+                      {/* Firewall & Tenant Actions */}
+                      <VStack gap={2}>
+                        <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                          Firewall & Tenant Actions
+                        </h2>
+                        <div className="flex flex-col gap-2">
+                          <ModalListItem
+                            title="Delete Firewall Policy"
+                            description="Permanently delete a single firewall policy."
+                            category="FWPolicy"
+                            size="sm"
+                            onOpen={() => setIsDeleteFirewallPolicyOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Firewall Policies"
+                            description="Permanently delete multiple firewall policies."
+                            category="FWPolicies"
+                            size="md"
+                            onOpen={() => setIsDeleteFirewallPoliciesOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Firewall Rule"
+                            description="Permanently delete a single firewall rule."
+                            category="FWRule"
+                            size="sm"
+                            onOpen={() => setIsDeleteFirewallRuleOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Firewall Rules"
+                            description="Permanently delete multiple firewall rules."
+                            category="FWRules"
+                            size="md"
+                            onOpen={() => setIsDeleteFirewallRulesOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Tenant"
+                            description="Permanently delete a single tenant."
+                            category="Tenant"
+                            size="sm"
+                            onOpen={() => setIsDeleteTenantOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Tenants"
+                            description="Permanently delete multiple tenants."
+                            category="Tenants"
+                            size="sm"
+                            onOpen={() => setIsDeleteTenantsOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Metadata"
+                            description="Remove a single metadata entry."
+                            category="Metadata"
+                            size="sm"
+                            onOpen={() => setIsDeleteMetadataOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Delete Metadatas"
+                            description="Remove multiple metadata entries."
+                            category="Metadatas"
+                            size="md"
+                            onOpen={() => setIsDeleteMetadatasOpen(true)}
+                          />
+                          <ModalListItem
+                            title="Manage Member"
+                            description="Redirect to IAM to manage users and groups."
+                            category="IAM"
+                            size="sm"
+                            onOpen={() => setIsManageMemberOpen(true)}
+                          />
+                        </div>
+                      </VStack>
+                    </VStack>
+                  </Disclosure.Panel>
+                </Disclosure>
               </VStack>
             </VStack>
           </div>
@@ -944,7 +1499,7 @@ export function ModalsPage() {
         isOpen={isConfirmDeleteOpen}
         onClose={() => setIsConfirmDeleteOpen(false)}
         title="Delete Snapshot"
-        description="Are you sure you want to delete this Snapshot?"
+        description="Removing the selected instances is permanent and cannot be undone."
         size="sm"
       >
         <div className="flex flex-col gap-2">
@@ -981,7 +1536,7 @@ export function ModalsPage() {
             Cancel
           </Button>
           <Button
-            variant="primary"
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Snapshot deleted');
@@ -999,7 +1554,7 @@ export function ModalsPage() {
         isOpen={isDeleteSecurityGroupOpen}
         onClose={() => setIsDeleteSecurityGroupOpen(false)}
         title="Delete Security group"
-        description="Are you sure you want to delete this security group? This action cannot be undone."
+        description="Removing the selected instances is permanent and cannot be undone."
         size="sm"
       >
         <div className="flex flex-col gap-2">
@@ -1037,7 +1592,7 @@ export function ModalsPage() {
             Cancel
           </Button>
           <Button
-            variant="primary"
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Security group deleted');
@@ -1055,12 +1610,12 @@ export function ModalsPage() {
         isOpen={isDeleteSecurityGroupsMultipleOpen}
         onClose={() => setIsDeleteSecurityGroupsMultipleOpen(false)}
         title="Delete Security groups"
-        description="Are you sure you want to delete the selected security groups? This action cannot be undone."
+        description="Removing the selected instances is permanent and cannot be undone."
         size="md"
       >
         <div className="flex flex-col gap-2">
           {/* Security groups Info Box with Scrollable List */}
-          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto sidebar-scroll">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
               Security groups(10)
             </span>
@@ -1104,7 +1659,7 @@ export function ModalsPage() {
             Cancel
           </Button>
           <Button
-            variant="primary"
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Security groups deleted');
@@ -1122,7 +1677,7 @@ export function ModalsPage() {
         isOpen={isDeleteRuleOpen}
         onClose={() => setIsDeleteRuleOpen(false)}
         title="Delete Rule"
-        description="Are you sure you want to delete this rule? This action cannot be undone."
+        description="Removing the selected instances is permanent and cannot be undone."
         size="sm"
       >
         <div className="flex flex-col gap-2">
@@ -1148,7 +1703,7 @@ export function ModalsPage() {
             Cancel
           </Button>
           <Button
-            variant="primary"
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Rule deleted');
@@ -1166,12 +1721,12 @@ export function ModalsPage() {
         isOpen={isDeleteRulesMultipleOpen}
         onClose={() => setIsDeleteRulesMultipleOpen(false)}
         title="Delete Rules"
-        description="Are you sure you want to delete the selected rules? This action cannot be undone."
+        description="Removing the selected instances is permanent and cannot be undone."
         size="md"
       >
         <div className="flex flex-col gap-2">
           {/* Rules Info Box with Scrollable List */}
-          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto sidebar-scroll">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
               Rules(10)
             </span>
@@ -1215,7 +1770,7 @@ export function ModalsPage() {
             Cancel
           </Button>
           <Button
-            variant="primary"
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Rules deleted');
@@ -1233,7 +1788,7 @@ export function ModalsPage() {
         isOpen={isDetachVolumeOpen}
         onClose={() => setIsDetachVolumeOpen(false)}
         title="Detach volume"
-        description="Are you sure you want to detach this volume?"
+        description="This action detaches the volume."
         size="sm"
       >
         <div className="flex flex-col gap-2">
@@ -1288,7 +1843,7 @@ export function ModalsPage() {
         isOpen={isRestoreBackupSmallOpen}
         onClose={() => setIsRestoreBackupSmallOpen(false)}
         title="Restore backup"
-        description="Are you sure you want to delete this template? Large volume backups may impact performance and network throughput."
+        description="This action restores the backup."
         size="sm"
       >
         <div className="flex flex-col gap-2">
@@ -1332,7 +1887,7 @@ export function ModalsPage() {
         isOpen={isRestoreBackupMediumOpen}
         onClose={() => setIsRestoreBackupMediumOpen(false)}
         title="Restore backup"
-        description="Are you sure you want to delete this template? Large volume backups may impact performance and network throughput."
+        description="This action restores the backup."
         size="md"
       >
         <div className="flex flex-col gap-2">
@@ -1347,7 +1902,7 @@ export function ModalsPage() {
           </div>
 
           {/* Instance Info Box */}
-          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto sidebar-scroll">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
               Instance name
             </span>
@@ -1389,7 +1944,7 @@ export function ModalsPage() {
         isOpen={isRestoreBackupLargeOpen}
         onClose={() => setIsRestoreBackupLargeOpen(false)}
         title="Restore backup"
-        description="Are you sure you want to delete this template? Large volume backups may impact performance and network throughput."
+        description="This action restores the backup."
         size="lg"
       >
         <div className="flex flex-col gap-2">
@@ -1404,7 +1959,7 @@ export function ModalsPage() {
           </div>
 
           {/* Instance Info Box */}
-          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto sidebar-scroll">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
               Instance name
             </span>
@@ -1561,7 +2116,7 @@ export function ModalsPage() {
         isOpen={isReleaseFloatingIPSmallOpen}
         onClose={() => setIsReleaseFloatingIPSmallOpen(false)}
         title="Release floating IP"
-        description="Are you sure you want to release this floating IP? This action cannot be undone."
+        description="This action releases the floating IP."
         size="sm"
       >
         <div className="flex flex-col gap-2">
@@ -1618,12 +2173,12 @@ export function ModalsPage() {
         isOpen={isReleaseFloatingIPMediumOpen}
         onClose={() => setIsReleaseFloatingIPMediumOpen(false)}
         title="Release floating IP"
-        description="Are you sure you want to release this floating IP? This action cannot be undone."
+        description="This action releases the floating IP."
         size="md"
       >
         <div className="flex flex-col gap-2">
           {/* Associated to Info Box with Scrollable List */}
-          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto sidebar-scroll">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
               Associated to
             </span>
@@ -1680,7 +2235,7 @@ export function ModalsPage() {
         isOpen={isDeleteLoadBalancerOpen}
         onClose={() => setIsDeleteLoadBalancerOpen(false)}
         title="Delete Load balancer"
-        description="Are you sure you want to delete this load balancer? This action cannot be undone."
+        description="Removing the selected instances is permanent and cannot be undone."
         size="sm"
       >
         <div className="flex flex-col gap-2">
@@ -1718,7 +2273,7 @@ export function ModalsPage() {
             Cancel
           </Button>
           <Button
-            variant="primary"
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Load balancer deleted');
@@ -1736,12 +2291,12 @@ export function ModalsPage() {
         isOpen={isDeleteLoadBalancersMultipleOpen}
         onClose={() => setIsDeleteLoadBalancersMultipleOpen(false)}
         title="Release Load balancers"
-        description="Are you sure you want to delete the selected load balancers? This action cannot be undone."
+        description="Removing the selected instances is permanent and cannot be undone."
         size="md"
       >
         <div className="flex flex-col gap-2">
           {/* Load balancers Info Box with Scrollable List */}
-          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto sidebar-scroll">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
               Load balancers
             </span>
@@ -1779,7 +2334,7 @@ export function ModalsPage() {
             Cancel
           </Button>
           <Button
-            variant="primary"
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Load balancers deleted');
@@ -1801,13 +2356,7 @@ export function ModalsPage() {
         isOpen={isDeleteUserOpen}
         onClose={() => setIsDeleteUserOpen(false)}
         title="Delete user"
-        description={
-          <>
-            Are you sure you want to delete user "DISPLAY NAME"?
-            <br />
-            Deletes user "DISPLAY NAME" permanently.
-          </>
-        }
+        description="Removing the selected instances is permanent and cannot be undone."
         size="sm"
       >
         <div className="flex flex-col gap-2">
@@ -1846,7 +2395,7 @@ export function ModalsPage() {
             Cancel
           </Button>
           <Button
-            variant="primary"
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('User deleted');
@@ -1864,12 +2413,12 @@ export function ModalsPage() {
         isOpen={isDeleteUsersMultipleOpen}
         onClose={() => setIsDeleteUsersMultipleOpen(false)}
         title="Delete users"
-        description="Are you sure you want to delete these users?"
+        description="Removing the selected instances is permanent and cannot be undone."
         size="md"
       >
         <div className="flex flex-col gap-2">
           {/* Users that can be deleted Info Box */}
-          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto sidebar-scroll">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
               Users that can be deleted
             </span>
@@ -1883,7 +2432,7 @@ export function ModalsPage() {
           </div>
 
           {/* Users that cannot be deleted Info Box */}
-          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto sidebar-scroll">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
               Users that cannot be deleted
             </span>
@@ -1920,7 +2469,7 @@ export function ModalsPage() {
             Cancel
           </Button>
           <Button
-            variant="primary"
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Users deleted');
@@ -2047,7 +2596,7 @@ export function ModalsPage() {
         isOpen={isDetachUserGroupOpen}
         onClose={() => setIsDetachUserGroupOpen(false)}
         title="Detach user group"
-        description="Are you sure you want to detach user 'DISPLAY NAME' from this group?"
+        description="This action detaches the user from the group."
         size="sm"
       >
         <div className="flex flex-col gap-2">
@@ -2114,7 +2663,7 @@ export function ModalsPage() {
         isOpen={isDetachRoleOpen}
         onClose={() => setIsDetachRoleOpen(false)}
         title="Detach role"
-        description={`Are you sure you want to detach role "ROLENAME" from user "DISPLAYNAME"?`}
+        description="This action detaches the role from the user."
         size="sm"
       >
         <div className="flex flex-col gap-2">
@@ -2178,7 +2727,7 @@ export function ModalsPage() {
         isOpen={isRemoveOtpMfaOpen}
         onClose={() => setIsRemoveOtpMfaOpen(false)}
         title="Remove OTP MFA"
-        description="Are you sure you want to remove OTP MFA for user 'DISPLAYNAME'?"
+        description="This action removes OTP MFA for the user."
         size="sm"
       >
         <div className="flex flex-col gap-2">
@@ -2234,7 +2783,7 @@ export function ModalsPage() {
         isOpen={isTerminateAllSessionsOpen}
         onClose={() => setIsTerminateAllSessionsOpen(false)}
         title="Terminate all sessions"
-        description="Are you sure you want to terminate all sessions for user 'DISPLAYNAME'?"
+        description="This action terminates all sessions for the user."
         size="sm"
       >
         <div className="flex flex-col gap-2">
@@ -2291,7 +2840,7 @@ export function ModalsPage() {
         isOpen={isTerminateSessionOpen}
         onClose={() => setIsTerminateSessionOpen(false)}
         title="Terminate session"
-        description="Are you sure you want to terminate this session?"
+        description="This action terminates the session."
         size="sm"
       >
         <div className="flex flex-col gap-2">
@@ -2348,7 +2897,7 @@ export function ModalsPage() {
         isOpen={isRemoveUserFromGroupOpen}
         onClose={() => setIsRemoveUserFromGroupOpen(false)}
         title="Remove user"
-        description="Are you sure you want to remove user 'DISPLAYNAME' from group 'GROUPNAME'?"
+        description="This action removes the user from the group."
         size="sm"
       >
         <div className="flex flex-col gap-2">
@@ -2414,7 +2963,7 @@ export function ModalsPage() {
         isOpen={isDeleteRoleOpen}
         onClose={() => setIsDeleteRoleOpen(false)}
         title="Delete role"
-        description="Are you sure you want to delete role 'ROLENAME'?"
+        description="Removing the selected instances is permanent and cannot be undone."
         size="sm"
       >
         <div className="flex flex-col gap-2">
@@ -2450,7 +2999,7 @@ export function ModalsPage() {
             Cancel
           </Button>
           <Button
-            variant="primary"
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Role deleted');
@@ -2468,12 +3017,12 @@ export function ModalsPage() {
         isOpen={isDeleteRolesMultipleOpen}
         onClose={() => setIsDeleteRolesMultipleOpen(false)}
         title="Delete roles"
-        description="Are you sure you want to delete these roles?"
+        description="Removing the selected instances is permanent and cannot be undone."
         size="md"
       >
         <div className="flex flex-col gap-2">
           {/* Roles that can be deleted */}
-          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto sidebar-scroll">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
               Roles that can be deleted
             </span>
@@ -2487,7 +3036,7 @@ export function ModalsPage() {
           </div>
 
           {/* Roles that cannot be deleted */}
-          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto sidebar-scroll">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
               Roles that cannot be deleted
             </span>
@@ -2524,7 +3073,7 @@ export function ModalsPage() {
             Cancel
           </Button>
           <Button
-            variant="primary"
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Multiple roles deleted');
@@ -2542,7 +3091,7 @@ export function ModalsPage() {
         isOpen={isDetachPolicyOpen}
         onClose={() => setIsDetachPolicyOpen(false)}
         title="Detach policy"
-        description="Are you sure you want to detach this policy from the role?"
+        description="This action detaches the policy from the role."
         size="sm"
       >
         <div className="flex flex-col gap-2">
@@ -2607,7 +3156,7 @@ export function ModalsPage() {
         isOpen={isDeletePolicyOpen}
         onClose={() => setIsDeletePolicyOpen(false)}
         title="Delete policy"
-        description="Are you sure you want to delete this policy?"
+        description="Removing the selected instances is permanent and cannot be undone."
         size="sm"
       >
         <div className="flex flex-col gap-2">
@@ -2646,7 +3195,7 @@ export function ModalsPage() {
             Cancel
           </Button>
           <Button
-            variant="primary"
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Policy deleted');
@@ -2664,12 +3213,12 @@ export function ModalsPage() {
         isOpen={isDeletePoliciesMultipleOpen}
         onClose={() => setIsDeletePoliciesMultipleOpen(false)}
         title="Delete policies"
-        description="Are you sure you want to delete these policies"
+        description="Removing the selected instances is permanent and cannot be undone."
         size="md"
       >
         <div className="flex flex-col gap-2">
           {/* Policies that can be deleted */}
-          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto sidebar-scroll">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
               Policies that can be deleted
             </span>
@@ -2683,7 +3232,7 @@ export function ModalsPage() {
           </div>
 
           {/* Policies that cannot be deleted */}
-          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto sidebar-scroll">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
               Policies that cannot be deleted
             </span>
@@ -2720,7 +3269,7 @@ export function ModalsPage() {
             Cancel
           </Button>
           <Button
-            variant="primary"
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Multiple policies deleted');
@@ -2738,7 +3287,7 @@ export function ModalsPage() {
         isOpen={isRevertPolicyVersionOpen}
         onClose={() => setIsRevertPolicyVersionOpen(false)}
         title="Revert policy version"
-        description="Are you sure you want to revert policy 'POLICYNAME' to 'VERSION'?"
+        description="This action reverts the policy to the selected version."
         size="sm"
       >
         <div className="flex flex-col gap-2">
@@ -2801,7 +3350,7 @@ export function ModalsPage() {
         isOpen={isDeletePolicyVersionOpen}
         onClose={() => setIsDeletePolicyVersionOpen(false)}
         title="Delete policy version"
-        description={`Are you sure you want to delete "VERSION"?`}
+        description="Removing the selected instances is permanent and cannot be undone."
         size="sm"
       >
         <div className="flex flex-col gap-2">
@@ -2830,7 +3379,7 @@ export function ModalsPage() {
             Cancel
           </Button>
           <Button
-            variant="primary"
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Policy version deleted');
@@ -2848,7 +3397,7 @@ export function ModalsPage() {
         isOpen={isUpdateMfaEnforcementOpen}
         onClose={() => setIsUpdateMfaEnforcementOpen(false)}
         title="Update MFA enforcement policy"
-        description="Are you sure you want to apply these changes?"
+        description="This action applies the changes."
         size="sm"
       >
         <div className="flex flex-col gap-2">
@@ -2905,7 +3454,7 @@ export function ModalsPage() {
         isOpen={isUpdateOtpPolicyOpen}
         onClose={() => setIsUpdateOtpPolicyOpen(false)}
         title="Update OTP policy"
-        description="Are you sure you want to apply these changes?"
+        description="This action applies the changes."
         size="sm"
       >
         <div className="flex flex-col gap-2">
@@ -2962,7 +3511,7 @@ export function ModalsPage() {
         isOpen={isUpdateOtpPolicySettingsOpen}
         onClose={() => setIsUpdateOtpPolicySettingsOpen(false)}
         title="Update OTP policy"
-        description="Are you sure you want to apply these changes?"
+        description="This action applies the changes."
         size="sm"
       >
         <div className="flex flex-col gap-2">
@@ -3007,7 +3556,7 @@ export function ModalsPage() {
         isOpen={isUpdateEmailPolicyOpen}
         onClose={() => setIsUpdateEmailPolicyOpen(false)}
         title="Update email policy"
-        description="Are you sure you want to apply these changes?"
+        description="This action applies the changes."
         size="sm"
       >
         <div className="flex flex-col gap-2">
@@ -3064,7 +3613,7 @@ export function ModalsPage() {
         isOpen={isUpdateEmailPolicySettingsOpen}
         onClose={() => setIsUpdateEmailPolicySettingsOpen(false)}
         title="Update email policy"
-        description="Are you sure you want to apply these changes?"
+        description="This action applies the changes."
         size="sm"
       >
         <div className="flex flex-col gap-2">
@@ -3111,7 +3660,7 @@ export function ModalsPage() {
         isOpen={isUpdateGeneralSessionPolicyOpen}
         onClose={() => setIsUpdateGeneralSessionPolicyOpen(false)}
         title="Update general session policy"
-        description="Are you sure you want to apply these changes?"
+        description="This action applies the changes."
         size="sm"
       >
         <div className="flex flex-col gap-2">
@@ -3158,7 +3707,7 @@ export function ModalsPage() {
         isOpen={isDeleteDomainOpen}
         onClose={() => setIsDeleteDomainOpen(false)}
         title="Delete domain"
-        description="Are you sure you want to delete domain 'DOMAINNAME'?"
+        description="Removing the selected instances is permanent and cannot be undone."
         size="sm"
       >
         <div className="flex flex-col gap-2">
@@ -3197,7 +3746,7 @@ export function ModalsPage() {
             Cancel
           </Button>
           <Button
-            variant="primary"
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Domain deleted');
@@ -3268,7 +3817,7 @@ export function ModalsPage() {
         isOpen={isDeleteSystemAdminOpen}
         onClose={() => setIsDeleteSystemAdminOpen(false)}
         title="Delete system administrator"
-        description={`Are you sure you want to delete system administrator "DISPLAY NAME"?`}
+        description="Removing the selected instances is permanent and cannot be undone."
         size="sm"
       >
         <div className="flex flex-col gap-2">
@@ -3307,7 +3856,7 @@ export function ModalsPage() {
             Cancel
           </Button>
           <Button
-            variant="primary"
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('System administrator deleted');
@@ -3325,7 +3874,7 @@ export function ModalsPage() {
         isOpen={isUpdatePasswordPolicyOpen}
         onClose={() => setIsUpdatePasswordPolicyOpen(false)}
         title="Update password policy"
-        description="Are you sure you want to apply these changes?"
+        description="This action applies the changes."
         size="sm"
       >
         <div className="flex flex-col gap-2">
@@ -3375,7 +3924,7 @@ export function ModalsPage() {
         isOpen={isUpdateAccountLockoutPolicyOpen}
         onClose={() => setIsUpdateAccountLockoutPolicyOpen(false)}
         title="Update account lockout policy"
-        description="Are you sure you want to apply these changes?"
+        description="This action applies the changes."
         size="sm"
       >
         <div className="flex flex-col gap-2">
@@ -3421,7 +3970,7 @@ export function ModalsPage() {
         isOpen={isUpdateTokenPolicyOpen}
         onClose={() => setIsUpdateTokenPolicyOpen(false)}
         title="Update token policy"
-        description="Are you sure you want to apply these changes?"
+        description="This action applies the changes."
         size="sm"
       >
         <div className="flex flex-col gap-2">
@@ -3512,7 +4061,7 @@ export function ModalsPage() {
             Cancel
           </Button>
           <Button
-            variant="primary"
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Bucket deleted');
@@ -3665,21 +4214,21 @@ export function ModalsPage() {
          Compute Admin Modals
          ---------------------------------------- */}
 
-      {/* Delete Tenant Modal */}
+      {/* Stop Instance Modal */}
       <Modal
-        isOpen={isDeleteTenantOpen}
-        onClose={() => setIsDeleteTenantOpen(false)}
-        title="Delete Tenant"
-        description="Are you sure you want to delete this tenant?"
+        isOpen={isStopInstanceOpen}
+        onClose={() => setIsStopInstanceOpen(false)}
+        title="Stop Instance"
+        description="This action stops the instance."
         size="sm"
       >
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
-              Tenant name
+              Instance
             </span>
             <span className="text-[12px] text-[var(--color-text-default)] leading-4">
-              project-alpha
+              web-server-01
             </span>
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
@@ -3689,8 +4238,7 @@ export function ModalsPage() {
               stroke={1.5}
             />
             <p className="text-[11px] text-[var(--color-text-default)] leading-4">
-              Deleting a tenant will permanently remove all associated resources including
-              instances, volumes, networks, and security groups.
+              This action may interrupt the services running on the instance.
             </p>
           </div>
         </div>
@@ -3698,7 +4246,262 @@ export function ModalsPage() {
           <Button
             variant="outline"
             size="md"
-            onClick={() => setIsDeleteTenantOpen(false)}
+            onClick={() => setIsStopInstanceOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="primary"
+            size="md"
+            onClick={() => {
+              console.log('Instance stopped');
+              setIsStopInstanceOpen(false);
+            }}
+            className="flex-1"
+          >
+            Stop
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Reboot Instance Modal */}
+      <Modal
+        isOpen={isRebootInstanceOpen}
+        onClose={() => setIsRebootInstanceOpen(false)}
+        title="Reboot Instance"
+        description="This action reboots the instance."
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Instance
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              web-server-01
+            </span>
+          </div>
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+              stroke={1.5}
+            />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              This action may interrupt the services running on the instance.
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsRebootInstanceOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="primary"
+            size="md"
+            onClick={() => {
+              console.log('Instance rebooted');
+              setIsRebootInstanceOpen(false);
+            }}
+            className="flex-1"
+          >
+            Reboot
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Soft Reboot Instance Modal */}
+      <Modal
+        isOpen={isSoftRebootInstanceOpen}
+        onClose={() => setIsSoftRebootInstanceOpen(false)}
+        title="Soft Reboot Instance"
+        description="This action performs a soft reboot of the instance."
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Instance
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              web-server-01
+            </span>
+          </div>
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+              stroke={1.5}
+            />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              This action may interrupt the services running on the instance.
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsSoftRebootInstanceOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="primary"
+            size="md"
+            onClick={() => {
+              console.log('Instance soft rebooted');
+              setIsSoftRebootInstanceOpen(false);
+            }}
+            className="flex-1"
+          >
+            Soft Reboot
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Confirm Resize Modal */}
+      <Modal
+        isOpen={isConfirmResizeOpen}
+        onClose={() => setIsConfirmResizeOpen(false)}
+        title="Confirm Resize"
+        description="This action confirms the resized state of the instance."
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Instance
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              web-server-01
+            </span>
+          </div>
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+              stroke={1.5}
+            />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Confirming the resize may affect the services running on the instance.
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsConfirmResizeOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="primary"
+            size="md"
+            onClick={() => {
+              console.log('Resize confirmed');
+              setIsConfirmResizeOpen(false);
+            }}
+            className="flex-1"
+          >
+            Confirm
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Revert Resize Modal */}
+      <Modal
+        isOpen={isRevertResizeOpen}
+        onClose={() => setIsRevertResizeOpen(false)}
+        title="Revert Resize"
+        description="This action reverts the instance to its previous state before the resize."
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Instance
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              web-server-01
+            </span>
+          </div>
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+              stroke={1.5}
+            />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Reverting the resize may affect the services running on the instance.
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsRevertResizeOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="primary"
+            size="md"
+            onClick={() => {
+              console.log('Resize reverted');
+              setIsRevertResizeOpen(false);
+            }}
+            className="flex-1"
+          >
+            Revert
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Instance Modal */}
+      <Modal
+        isOpen={isDeleteInstanceOpen}
+        onClose={() => setIsDeleteInstanceOpen(false)}
+        title="Delete Instance"
+        description="Removing the instance is permanent and cannot be undone."
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Instance
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              web-server-01
+            </span>
+          </div>
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+              stroke={1.5}
+            />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Deleting this instance may interrupt the services running on it.
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteInstanceOpen(false)}
             className="flex-1"
           >
             Cancel
@@ -3707,8 +4510,1995 @@ export function ModalsPage() {
             variant="danger"
             size="md"
             onClick={() => {
-              console.log('Tenant deleted');
-              setIsDeleteTenantOpen(false);
+              console.log('Instance deleted');
+              setIsDeleteInstanceOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Shelve Instance Modal */}
+      <Modal
+        isOpen={isShelveInstanceOpen}
+        onClose={() => setIsShelveInstanceOpen(false)}
+        title="Shelve Instance"
+        description="This action shelves the instance."
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Instance
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              web-server-01
+            </span>
+          </div>
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+              stroke={1.5}
+            />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              This action may interrupt the services running on the instance.
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsShelveInstanceOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="primary"
+            size="md"
+            onClick={() => {
+              console.log('Instance shelved');
+              setIsShelveInstanceOpen(false);
+            }}
+            className="flex-1"
+          >
+            Shelve
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Start Instances Modal */}
+      <Modal
+        isOpen={isStartInstancesOpen}
+        onClose={() => setIsStartInstancesOpen(false)}
+        title="Start Instances"
+        description="This action starts the selected instances."
+        size="md"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Instances that can be started
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>web-server-01</li>
+              <li>web-server-02</li>
+              <li>api-server-01</li>
+              <li>db-server-01</li>
+            </ul>
+          </div>
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Instances that cannot be started
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>web-server-03</li>
+              <li>web-server-04</li>
+              <li>api-server-02</li>
+              <li>db-server-02</li>
+            </ul>
+          </div>
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+              stroke={1.5}
+            />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Starting these instances may affect the services running on them.
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsStartInstancesOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="primary"
+            size="md"
+            onClick={() => {
+              console.log('Instances started');
+              setIsStartInstancesOpen(false);
+            }}
+            className="flex-1"
+          >
+            Start
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Stop Instances Modal */}
+      <Modal
+        isOpen={isStopInstancesOpen}
+        onClose={() => setIsStopInstancesOpen(false)}
+        title="Stop Instances"
+        description="This action stops the selected instances."
+        size="md"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Instances that can be stopped
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>web-server-01</li>
+              <li>web-server-02</li>
+              <li>api-server-01</li>
+              <li>db-server-01</li>
+            </ul>
+          </div>
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Instances that cannot be stopped
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>web-server-03</li>
+              <li>web-server-04</li>
+              <li>api-server-02</li>
+              <li>db-server-02</li>
+            </ul>
+          </div>
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+              stroke={1.5}
+            />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Stopping these instances may interrupt the services running on them.
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsStopInstancesOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="primary"
+            size="md"
+            onClick={() => {
+              console.log('Instances stopped');
+              setIsStopInstancesOpen(false);
+            }}
+            className="flex-1"
+          >
+            Stop
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Reboot Instances Modal */}
+      <Modal
+        isOpen={isRebootInstancesOpen}
+        onClose={() => setIsRebootInstancesOpen(false)}
+        title="Reboot Instances"
+        description="This action reboots the selected instances."
+        size="md"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Instances that can be rebooted
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>web-server-01</li>
+              <li>web-server-02</li>
+              <li>api-server-01</li>
+              <li>db-server-01</li>
+            </ul>
+          </div>
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Instances that cannot be rebooted
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>web-server-03</li>
+              <li>web-server-04</li>
+              <li>api-server-02</li>
+              <li>db-server-02</li>
+            </ul>
+          </div>
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+              stroke={1.5}
+            />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Rebooting these instances may interrupt the services running on them.
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsRebootInstancesOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="primary"
+            size="md"
+            onClick={() => {
+              console.log('Instances rebooted');
+              setIsRebootInstancesOpen(false);
+            }}
+            className="flex-1"
+          >
+            Reboot
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Instances Modal */}
+      <Modal
+        isOpen={isDeleteInstancesOpen}
+        onClose={() => setIsDeleteInstancesOpen(false)}
+        title="Delete Instances"
+        description="Removing the selected instances is permanent and cannot be undone."
+        size="md"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Instances that can be deleted
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>web-server-01</li>
+              <li>web-server-02</li>
+              <li>api-server-01</li>
+              <li>db-server-01</li>
+            </ul>
+          </div>
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Instances that cannot be deleted
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>web-server-03</li>
+              <li>web-server-04</li>
+              <li>api-server-02</li>
+              <li>db-server-02</li>
+            </ul>
+          </div>
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+              stroke={1.5}
+            />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Deleting these instances may interrupt the services running on them.
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteInstancesOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('Instances deleted');
+              setIsDeleteInstancesOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Instance Template Modal */}
+      <Modal
+        isOpen={isDeleteInstanceTemplateOpen}
+        onClose={() => setIsDeleteInstanceTemplateOpen(false)}
+        title="Delete Instance Template"
+        description="Deleting the instance template is permanent and cannot be undone."
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Instance Template
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              web-server-template-01
+            </span>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteInstanceTemplateOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('Instance template deleted');
+              setIsDeleteInstanceTemplateOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Instance Templates Modal */}
+      <Modal
+        isOpen={isDeleteInstanceTemplatesOpen}
+        onClose={() => setIsDeleteInstanceTemplatesOpen(false)}
+        title="Delete Instance Templates"
+        description="Deleting the selected instance templates is permanent and cannot be undone."
+        size="md"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Instance Templates
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>web-server-template-01</li>
+              <li>api-server-template-01</li>
+              <li>db-server-template-01</li>
+              <li>cache-server-template-01</li>
+            </ul>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteInstanceTemplatesOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('Instance templates deleted');
+              setIsDeleteInstanceTemplatesOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Image Modal */}
+      <Modal
+        isOpen={isDeleteImageOpen}
+        onClose={() => setIsDeleteImageOpen(false)}
+        title="Delete Image"
+        description="Deleting the image is permanent and cannot be undone."
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Image
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              ubuntu-22.04-server
+            </span>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteImageOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('Image deleted');
+              setIsDeleteImageOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Images Modal */}
+      <Modal
+        isOpen={isDeleteImagesOpen}
+        onClose={() => setIsDeleteImagesOpen(false)}
+        title="Delete Images"
+        description="Deleting the selected images is permanent and cannot be undone."
+        size="md"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Images that can be deleted
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>ubuntu-22.04-server</li>
+              <li>centos-8-stream</li>
+              <li>debian-11-bullseye</li>
+              <li>fedora-38-cloud</li>
+            </ul>
+          </div>
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Images that cannot be deleted
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>windows-2022-server (in use)</li>
+              <li>rhel-9-base (protected)</li>
+              <li>alpine-3.18 (in use)</li>
+              <li>rocky-linux-9 (protected)</li>
+            </ul>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteImagesOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('Images deleted');
+              setIsDeleteImagesOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Snapshot Modal */}
+      <Modal
+        isOpen={isDeleteSnapshotOpen}
+        onClose={() => setIsDeleteSnapshotOpen(false)}
+        title="Delete Snapshot"
+        description="Deleting the snapshot is permanent and cannot be undone."
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Snapshot
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              snapshot-2024-01-15
+            </span>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteSnapshotOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('Snapshot deleted');
+              setIsDeleteSnapshotOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Snapshots Modal */}
+      <Modal
+        isOpen={isDeleteSnapshotsOpen}
+        onClose={() => setIsDeleteSnapshotsOpen(false)}
+        title="Delete Snapshots"
+        description="Deleting the selected snapshots is permanent and cannot be undone."
+        size="md"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Snapshots that can be deleted
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>snapshot-2024-01-15</li>
+              <li>snapshot-2024-01-10</li>
+              <li>snapshot-2024-01-05</li>
+              <li>snapshot-2024-01-01</li>
+            </ul>
+          </div>
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Snapshots that cannot be deleted
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>snapshot-2023-12-25 (in use)</li>
+              <li>snapshot-2023-12-20 (protected)</li>
+              <li>snapshot-2023-12-15 (in use)</li>
+              <li>snapshot-2023-12-10 (protected)</li>
+            </ul>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteSnapshotsOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('Snapshots deleted');
+              setIsDeleteSnapshotsOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Volume Modal */}
+      <Modal
+        isOpen={isDeleteVolumeOpen}
+        onClose={() => setIsDeleteVolumeOpen(false)}
+        title="Delete Volume"
+        description="Deleting the volume is permanent and cannot be undone."
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Volume
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              volume-data-01
+            </span>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteVolumeOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('Volume deleted');
+              setIsDeleteVolumeOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Volumes Modal */}
+      <Modal
+        isOpen={isDeleteVolumesOpen}
+        onClose={() => setIsDeleteVolumesOpen(false)}
+        title="Delete Volumes"
+        description="Deleting the selected volumes is permanent and cannot be undone."
+        size="md"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Volumes that can be delete
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>volume-data-01</li>
+              <li>volume-data-02</li>
+              <li>volume-data-03</li>
+              <li>volume-data-04</li>
+            </ul>
+          </div>
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Volumes that cannot be delete
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>volume-data-05</li>
+              <li>volume-data-06</li>
+              <li>volume-data-07</li>
+              <li>volume-data-08</li>
+            </ul>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteVolumesOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('Volumes deleted');
+              setIsDeleteVolumesOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Volume Type Modal */}
+      <Modal
+        isOpen={isDeleteVolumeTypeOpen}
+        onClose={() => setIsDeleteVolumeTypeOpen(false)}
+        title="Delete Volume Type"
+        description="Deleting the volume type is permanent and cannot be undone."
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Volume type
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              ssd-performance
+            </span>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteVolumeTypeOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('Volume type deleted');
+              setIsDeleteVolumeTypeOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Volume Types Modal */}
+      <Modal
+        isOpen={isDeleteVolumeTypesOpen}
+        onClose={() => setIsDeleteVolumeTypesOpen(false)}
+        title="Delete Volume Types"
+        description="Deleting the selected volume types is permanent and cannot be undone."
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Volume types
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>ssd-performance</li>
+              <li>hdd-standard</li>
+              <li>nvme-ultra</li>
+              <li>ssd-economy</li>
+            </ul>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteVolumeTypesOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('Volume types deleted');
+              setIsDeleteVolumeTypesOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Backup Modal */}
+      <Modal
+        isOpen={isDeleteBackupOpen}
+        onClose={() => setIsDeleteBackupOpen(false)}
+        title="Delete Backup"
+        description="Deleting the backup is permanent and cannot be undone."
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Backup
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              backup-2024-01-15
+            </span>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteBackupOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('Backup deleted');
+              setIsDeleteBackupOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Backups Modal */}
+      <Modal
+        isOpen={isDeleteBackupsOpen}
+        onClose={() => setIsDeleteBackupsOpen(false)}
+        title="Delete Backups"
+        description="Deleting the selected backups is permanent and cannot be undone."
+        size="md"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Backups that can be delete
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>backup-2024-01-15</li>
+              <li>backup-2024-01-10</li>
+              <li>backup-2024-01-05</li>
+              <li>backup-2024-01-01</li>
+            </ul>
+          </div>
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Backups that cannot be delete
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>backup-2023-12-25 (in progress)</li>
+              <li>backup-2023-12-20 (restoring)</li>
+              <li>backup-2023-12-15 (in progress)</li>
+              <li>backup-2023-12-10 (restoring)</li>
+            </ul>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteBackupsOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('Backups deleted');
+              setIsDeleteBackupsOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Encryption Modal */}
+      <Modal
+        isOpen={isDeleteEncryptionOpen}
+        onClose={() => setIsDeleteEncryptionOpen(false)}
+        title="Delete Encryption"
+        description="This action removes the encryption configuration from the volume type."
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Volume type
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              ssd-encrypted
+            </span>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteEncryptionOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('Encryption deleted');
+              setIsDeleteEncryptionOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Extra Spec Modal */}
+      <Modal
+        isOpen={isDeleteExtraSpecOpen}
+        onClose={() => setIsDeleteExtraSpecOpen(false)}
+        title="Delete Extra Spec"
+        description="This action removes the extra specification from the volume type."
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Volume type
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              ssd-performance
+            </span>
+          </div>
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Extra spec
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              volume_backend_name=lvm
+            </span>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteExtraSpecOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('Extra spec deleted');
+              setIsDeleteExtraSpecOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Extra Specs Modal */}
+      <Modal
+        isOpen={isDeleteExtraSpecsOpen}
+        onClose={() => setIsDeleteExtraSpecsOpen(false)}
+        title="Delete Extra Specs"
+        description="Deleting the selected extra specifications is permanent and cannot be undone."
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Volume type
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              ssd-performance
+            </span>
+          </div>
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Extra specs
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>volume_backend_name=lvm</li>
+              <li>max_iops=10000</li>
+              <li>disk_type=ssd</li>
+              <li>encryption=aes-256</li>
+            </ul>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteExtraSpecsOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('Extra specs deleted');
+              setIsDeleteExtraSpecsOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete QoS Spec Modal */}
+      <Modal
+        isOpen={isDeleteQoSSpecOpen}
+        onClose={() => setIsDeleteQoSSpecOpen(false)}
+        title="Delete QoS Spec"
+        description="This action removes the QoS specification."
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              QoS Spec
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              high-performance
+            </span>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteQoSSpecOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('QoS spec deleted');
+              setIsDeleteQoSSpecOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete QoS Specs Modal */}
+      <Modal
+        isOpen={isDeleteQoSSpecsOpen}
+        onClose={() => setIsDeleteQoSSpecsOpen(false)}
+        title="Delete QoS Specs"
+        description="This action removes the selected QoS specifications."
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              QoS Specs
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>high-performance</li>
+              <li>standard-iops</li>
+              <li>economy-storage</li>
+              <li>burst-optimized</li>
+            </ul>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteQoSSpecsOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('QoS specs deleted');
+              setIsDeleteQoSSpecsOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete QoS Extra Spec Modal */}
+      <Modal
+        isOpen={isDeleteQoSExtraSpecOpen}
+        onClose={() => setIsDeleteQoSExtraSpecOpen(false)}
+        title="Delete Extra Spec"
+        description="This action removes the extra specification from the volume type."
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Volume type
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              high-performance
+            </span>
+          </div>
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Extra spec
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              minIOPS=1000
+            </span>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteQoSExtraSpecOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('QoS extra spec deleted');
+              setIsDeleteQoSExtraSpecOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete QoS Extra Specs Modal */}
+      <Modal
+        isOpen={isDeleteQoSExtraSpecsOpen}
+        onClose={() => setIsDeleteQoSExtraSpecsOpen(false)}
+        title="Delete Extra Specs"
+        description="Deleting the selected extra specifications is permanent and cannot be undone."
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Volume type
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              high-performance
+            </span>
+          </div>
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Extra specs
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>minIOPS=1000</li>
+              <li>maxIOPS=10000</li>
+              <li>burstIOPS=15000</li>
+              <li>latency=low</li>
+            </ul>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteQoSExtraSpecsOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('QoS extra specs deleted');
+              setIsDeleteQoSExtraSpecsOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Network Modal */}
+      <Modal
+        isOpen={isDeleteNetworkOpen}
+        onClose={() => setIsDeleteNetworkOpen(false)}
+        title="Delete Network"
+        description="Deleting the network is permanent and cannot be undone."
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Network
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              internal-network-01
+            </span>
+          </div>
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+              stroke={1.5}
+            />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Deleting this network may affect subnets, routers, or resources connected to it.
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteNetworkOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('Network deleted');
+              setIsDeleteNetworkOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Networks Modal */}
+      <Modal
+        isOpen={isDeleteNetworksOpen}
+        onClose={() => setIsDeleteNetworksOpen(false)}
+        title="Delete Networks"
+        description="Removing the selected networks is permanent and cannot be undone."
+        size="md"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Networks that can be delete
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>internal-network-01</li>
+              <li>internal-network-02</li>
+              <li>test-network-01</li>
+              <li>dev-network-01</li>
+            </ul>
+          </div>
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Networks that cannot be delete
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>production-network (in use)</li>
+              <li>shared-network (external)</li>
+              <li>management-network (system)</li>
+              <li>public-network (external)</li>
+            </ul>
+          </div>
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+              stroke={1.5}
+            />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Deleting these networks may affect subnets, routers, or resources connected to them.
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteNetworksOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('Networks deleted');
+              setIsDeleteNetworksOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Subnet Modal */}
+      <Modal
+        isOpen={isDeleteSubnetOpen}
+        onClose={() => setIsDeleteSubnetOpen(false)}
+        title="Delete Subnet"
+        description="Deleting the subnet is permanent and cannot be undone."
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Subnet
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              subnet-192-168-1-0
+            </span>
+          </div>
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+              stroke={1.5}
+            />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Deleting this subnet may affect routers, ports, or services connected to it.
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteSubnetOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('Subnet deleted');
+              setIsDeleteSubnetOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Subnets Modal */}
+      <Modal
+        isOpen={isDeleteSubnetsOpen}
+        onClose={() => setIsDeleteSubnetsOpen(false)}
+        title="Delete Subnets"
+        description="Deleting the selected subnets is permanent and cannot be undone."
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Extra specs
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>subnet-192-168-1-0</li>
+              <li>subnet-10-0-0-0</li>
+              <li>subnet-172-16-0-0</li>
+              <li>subnet-192-168-2-0</li>
+            </ul>
+          </div>
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+              stroke={1.5}
+            />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Deleting these subnets may affect routers, ports, or services connected to them.
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteSubnetsOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('Subnets deleted');
+              setIsDeleteSubnetsOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Port Modal */}
+      <Modal
+        isOpen={isDeletePortOpen}
+        onClose={() => setIsDeletePortOpen(false)}
+        title="Delete Port"
+        description="Deleting the port is permanent and cannot be undone."
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Port
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              port-abc12345
+            </span>
+          </div>
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+              stroke={1.5}
+            />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Deleting this port may affect instances, routers, or services connected to it.
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeletePortOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('Port deleted');
+              setIsDeletePortOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Ports Modal */}
+      <Modal
+        isOpen={isDeletePortsOpen}
+        onClose={() => setIsDeletePortsOpen(false)}
+        title="Delete Ports"
+        description="Deleting the selected ports is permanent and cannot be undone."
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Ports
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>port-abc12345</li>
+              <li>port-def67890</li>
+              <li>port-ghi11121</li>
+              <li>port-jkl31415</li>
+            </ul>
+          </div>
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+              stroke={1.5}
+            />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Deleting these ports may affect instances, routers, or services connected to them.
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeletePortsOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('Ports deleted');
+              setIsDeletePortsOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Router Modal */}
+      <Modal
+        isOpen={isDeleteRouterOpen}
+        onClose={() => setIsDeleteRouterOpen(false)}
+        title="Delete Router"
+        description="Deleting the router is permanent and cannot be undone."
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Router
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              main-router-01
+            </span>
+          </div>
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+              stroke={1.5}
+            />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Deleting this router may affect networks, subnets, or resources connected to it.
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteRouterOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('Router deleted');
+              setIsDeleteRouterOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Routers Modal */}
+      <Modal
+        isOpen={isDeleteRoutersOpen}
+        onClose={() => setIsDeleteRoutersOpen(false)}
+        title="Delete Routers"
+        description="Removing the selected routers is permanent and cannot be undone."
+        size="md"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Routers that can be delete
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>main-router-01</li>
+              <li>backup-router-01</li>
+              <li>test-router-01</li>
+              <li>dev-router-01</li>
+            </ul>
+          </div>
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Routers that cannot be delete
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>production-router (in use)</li>
+              <li>gateway-router (external)</li>
+              <li>management-router (system)</li>
+              <li>ha-router (high availability)</li>
+            </ul>
+          </div>
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+              stroke={1.5}
+            />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Deleting these routers may affect networks, subnets, or resources connected to them.
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteRoutersOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('Routers deleted');
+              setIsDeleteRoutersOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Static Routes Modal */}
+      <Modal
+        isOpen={isDeleteStaticRoutesOpen}
+        onClose={() => setIsDeleteStaticRoutesOpen(false)}
+        title="Delete Static Routes"
+        description="Deleting the selected static routers is permanent and cannot be undone."
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Static Routes
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>10.0.0.0/24 via 192.168.1.1</li>
+              <li>172.16.0.0/16 via 192.168.1.1</li>
+              <li>192.168.2.0/24 via 10.0.0.1</li>
+              <li>0.0.0.0/0 via 192.168.1.254</li>
+            </ul>
+          </div>
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+              stroke={1.5}
+            />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Removing these static routes may affect network traffic that depends on them.
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteStaticRoutesOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('Static routes deleted');
+              setIsDeleteStaticRoutesOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Remove DHCP Agents Modal */}
+      <Modal
+        isOpen={isRemoveDHCPAgentsOpen}
+        onClose={() => setIsRemoveDHCPAgentsOpen(false)}
+        title="Remove DHCP Agents"
+        description="This action removes the selected DHCP agents from the network."
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Network
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              internal-network-01
+            </span>
+          </div>
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              DHCP Agents
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>dhcp-agent-001</li>
+              <li>dhcp-agent-002</li>
+              <li>dhcp-agent-003</li>
+              <li>dhcp-agent-004</li>
+            </ul>
+          </div>
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+              stroke={1.5}
+            />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Removing these DHCP agents may affect IP address assignment for instances in the
+              network.
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsRemoveDHCPAgentsOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="primary"
+            size="md"
+            onClick={() => {
+              console.log('DHCP agents removed');
+              setIsRemoveDHCPAgentsOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Release Fixed IP Modal */}
+      <Modal
+        isOpen={isReleaseFixedIPOpen}
+        onClose={() => setIsReleaseFixedIPOpen(false)}
+        title="Release fixed IP"
+        description="This action releases the fixed IP from the port."
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Port
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              port-abc12345
+            </span>
+          </div>
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Fixed IP
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              192.168.1.100
+            </span>
+          </div>
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+              stroke={1.5}
+            />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Releasing this fixed IP may affect network connectivity for the port.
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsReleaseFixedIPOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="primary"
+            size="md"
+            onClick={() => {
+              console.log('Fixed IP released');
+              setIsReleaseFixedIPOpen(false);
+            }}
+            className="flex-1"
+          >
+            Release
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Allowed Address Pair Modal */}
+      <Modal
+        isOpen={isDeleteAllowedAddressPairOpen}
+        onClose={() => setIsDeleteAllowedAddressPairOpen(false)}
+        title="Delete Allowed Address Pair"
+        description="This action removes the allowed address pair from the port."
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Port
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              port-abc12345
+            </span>
+          </div>
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              IP address
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              10.0.0.50
+            </span>
+          </div>
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+              stroke={1.5}
+            />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Deleting these allowed address pairs may affect network access for the port.
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteAllowedAddressPairOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('Allowed address pair deleted');
+              setIsDeleteAllowedAddressPairOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Security Group Admin Modal */}
+      <Modal
+        isOpen={isDeleteSecurityGroupAdminOpen}
+        onClose={() => setIsDeleteSecurityGroupAdminOpen(false)}
+        title="Delete Security Group"
+        description="Deleting the security group is permanent and cannot be undone."
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Security group
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              web-servers-sg
+            </span>
+          </div>
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+              stroke={1.5}
+            />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              This action will permanently delete the security group and all its rules. If this
+              group is attached to any instances, their network traffic may be affected.
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteSecurityGroupAdminOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('Security group deleted');
+              setIsDeleteSecurityGroupAdminOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Security Groups Admin Modal */}
+      <Modal
+        isOpen={isDeleteSecurityGroupsAdminOpen}
+        onClose={() => setIsDeleteSecurityGroupsAdminOpen(false)}
+        title="Delete Security Groups"
+        description="Deleting the selected security groups is permanent and cannot be undone."
+        size="md"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Security groups that can be delete
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>web-servers-sg</li>
+              <li>database-sg</li>
+              <li>api-servers-sg</li>
+              <li>monitoring-sg</li>
+            </ul>
+          </div>
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Security groups that cannot be delete
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>default (system)</li>
+              <li>production-sg (in use)</li>
+              <li>management-sg (system)</li>
+              <li>bastion-sg (in use)</li>
+            </ul>
+          </div>
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+              stroke={1.5}
+            />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              This action will permanently delete the security groups and all their rules.
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteSecurityGroupsAdminOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('Security groups deleted');
+              setIsDeleteSecurityGroupsAdminOpen(false);
             }}
             className="flex-1"
           >
@@ -3722,16 +6512,16 @@ export function ModalsPage() {
         isOpen={isDeleteFirewallOpen}
         onClose={() => setIsDeleteFirewallOpen(false)}
         title="Delete Firewall"
-        description="Are you sure you want to delete this firewall?"
+        description="Deleting the firewall is permanent and cannot be undone."
         size="sm"
       >
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
-              Firewall name
+              Firewall
             </span>
             <span className="text-[12px] text-[var(--color-text-default)] leading-4">
-              fw-production-01
+              perimeter-firewall-01
             </span>
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
@@ -3741,8 +6531,7 @@ export function ModalsPage() {
               stroke={1.5}
             />
             <p className="text-[11px] text-[var(--color-text-default)] leading-4">
-              Deleting this firewall will remove all associated rules and policies. Network traffic
-              may become unprotected.
+              This action will permanently delete the firewall and all its rules.
             </p>
           </div>
         </div>
@@ -3769,21 +6558,950 @@ export function ModalsPage() {
         </div>
       </Modal>
 
-      {/* Delete Firewall Policy Modal */}
+      {/* Delete Firewalls Modal */}
       <Modal
-        isOpen={isDeleteFirewallPolicyOpen}
-        onClose={() => setIsDeleteFirewallPolicyOpen(false)}
-        title="Delete Firewall Policy"
-        description="Are you sure you want to delete this firewall policy?"
+        isOpen={isDeleteFirewallsOpen}
+        onClose={() => setIsDeleteFirewallsOpen(false)}
+        title="Delete Firewalls"
+        description="Deleting the selected firewalls is permanent and cannot be undone."
+        size="md"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Firewalls that can be delete
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>perimeter-firewall-01</li>
+              <li>internal-firewall-01</li>
+              <li>test-firewall-01</li>
+              <li>dev-firewall-01</li>
+            </ul>
+          </div>
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Firewalls that cannot be delete
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>production-firewall (in use)</li>
+              <li>gateway-firewall (system)</li>
+              <li>management-firewall (system)</li>
+              <li>ha-firewall (high availability)</li>
+            </ul>
+          </div>
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+              stroke={1.5}
+            />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              This action will permanently delete the firewalls and all their rules.
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteFirewallsOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('Firewalls deleted');
+              setIsDeleteFirewallsOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Unsaved Changes Admin Modal */}
+      <Modal
+        isOpen={isUnsavedChangesAdminOpen}
+        onClose={() => setIsUnsavedChangesAdminOpen(false)}
+        title="Unsaved changes"
+        description="Any unsaved changes will be lost. Do you want to leave?"
+        size="sm"
+      >
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsUnsavedChangesAdminOpen(false)}
+            className="flex-1"
+          >
+            Leave
+          </Button>
+          <Button
+            variant="primary"
+            size="md"
+            onClick={() => {
+              console.log('Staying on page');
+              setIsUnsavedChangesAdminOpen(false);
+            }}
+            className="flex-1"
+          >
+            Stay
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Release Floating IP Modal */}
+      <Modal
+        isOpen={isReleaseFloatingIPOpen}
+        onClose={() => setIsReleaseFloatingIPOpen(false)}
+        title="Release Floating IP"
+        description="Releasing the floating IP is permanent and cannot be undone."
         size="sm"
       >
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
-              Policy name
+              Floating IP
             </span>
             <span className="text-[12px] text-[var(--color-text-default)] leading-4">
-              policy-web-tier
+              203.0.113.50
+            </span>
+          </div>
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+              stroke={1.5}
+            />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Releasing this floating IP may limit external access for the associated resource.
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsReleaseFloatingIPOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="primary"
+            size="md"
+            onClick={() => {
+              console.log('Floating IP released');
+              setIsReleaseFloatingIPOpen(false);
+            }}
+            className="flex-1"
+          >
+            Release
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Release Floating IPs Modal */}
+      <Modal
+        isOpen={isReleaseFloatingIPsOpen}
+        onClose={() => setIsReleaseFloatingIPsOpen(false)}
+        title="Release Floating IPs"
+        description="Releasing the floating IPs is permanent and cannot be undone."
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Floating IPs
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>203.0.113.50</li>
+              <li>203.0.113.51</li>
+              <li>203.0.113.52</li>
+              <li>203.0.113.53</li>
+            </ul>
+          </div>
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+              stroke={1.5}
+            />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Releasing these floating IPs may limit external access for the associated resource.
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsReleaseFloatingIPsOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="primary"
+            size="md"
+            onClick={() => {
+              console.log('Floating IPs released');
+              setIsReleaseFloatingIPsOpen(false);
+            }}
+            className="flex-1"
+          >
+            Release
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Load Balancer Admin Modal */}
+      <Modal
+        isOpen={isDeleteLoadBalancerAdminOpen}
+        onClose={() => setIsDeleteLoadBalancerAdminOpen(false)}
+        title="Delete Load Balancer"
+        description="Removing the load balancer is permanent and cannot be undone."
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Load balancer
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              web-lb-01
+            </span>
+          </div>
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+              stroke={1.5}
+            />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Deleting this load balancer may affect the listeners, pools that depend on it.
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteLoadBalancerAdminOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('Load balancer deleted');
+              setIsDeleteLoadBalancerAdminOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Load Balancers Admin Modal */}
+      <Modal
+        isOpen={isDeleteLoadBalancersAdminOpen}
+        onClose={() => setIsDeleteLoadBalancersAdminOpen(false)}
+        title="Delete load balancers"
+        description="Removing the load balancers is permanent and cannot be undone."
+        size="md"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Load balancers that can be delete
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>web-lb-01</li>
+              <li>api-lb-01</li>
+              <li>staging-lb-01</li>
+              <li>dev-lb-01</li>
+            </ul>
+          </div>
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Load balancers that cannot be delete
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>production-lb (in use)</li>
+              <li>gateway-lb (external)</li>
+              <li>ha-lb-01 (high availability)</li>
+              <li>critical-lb (protected)</li>
+            </ul>
+          </div>
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+              stroke={1.5}
+            />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Deleting these load balancers may affect the listeners, pools that depend on them.
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteLoadBalancersAdminOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('Load balancers deleted');
+              setIsDeleteLoadBalancersAdminOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Listener Modal */}
+      <Modal
+        isOpen={isDeleteListenerOpen}
+        onClose={() => setIsDeleteListenerOpen(false)}
+        title="Delete Listener"
+        description="Removing the listener is permanent and cannot be undone."
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Listener
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              http-listener-443
+            </span>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteListenerOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('Listener deleted');
+              setIsDeleteListenerOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Listeners Modal */}
+      <Modal
+        isOpen={isDeleteListenersOpen}
+        onClose={() => setIsDeleteListenersOpen(false)}
+        title="Delete Listeners"
+        description="Removing the listeners is permanent and cannot be undone."
+        size="md"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Load balancers that can be delete
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>http-listener-80</li>
+              <li>https-listener-443</li>
+              <li>api-listener-8080</li>
+              <li>ws-listener-8443</li>
+            </ul>
+          </div>
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Load balancers that cannot be delete
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>production-listener (in use)</li>
+              <li>critical-listener (protected)</li>
+              <li>ha-listener (high availability)</li>
+              <li>gateway-listener (external)</li>
+            </ul>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteListenersOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('Listeners deleted');
+              setIsDeleteListenersOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Pool Modal */}
+      <Modal
+        isOpen={isDeletePoolOpen}
+        onClose={() => setIsDeletePoolOpen(false)}
+        title="Delete Pool"
+        description="Removing the pool is permanent and cannot be undone."
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Pool
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              web-servers-pool
+            </span>
+          </div>
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+              stroke={1.5}
+            />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Deleting this pool will also remove its associated members and health monitors.
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeletePoolOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('Pool deleted');
+              setIsDeletePoolOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Pools Modal */}
+      <Modal
+        isOpen={isDeletePoolsOpen}
+        onClose={() => setIsDeletePoolsOpen(false)}
+        title="Delete pools"
+        description="Removing the pools is permanent and cannot be undone."
+        size="md"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Listeners that can be delete
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>web-servers-pool</li>
+              <li>api-servers-pool</li>
+              <li>staging-pool</li>
+              <li>dev-pool</li>
+            </ul>
+          </div>
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Listeners that cannot be delete
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>production-pool (in use)</li>
+              <li>critical-pool (protected)</li>
+              <li>ha-pool (high availability)</li>
+              <li>gateway-pool (external)</li>
+            </ul>
+          </div>
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+              stroke={1.5}
+            />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Deleting these pools will also remove their associated members and health monitors.
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeletePoolsOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('Pools deleted');
+              setIsDeletePoolsOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Member Modal */}
+      <Modal
+        isOpen={isDeleteMemberOpen}
+        onClose={() => setIsDeleteMemberOpen(false)}
+        title="Delete Member"
+        description="Removing the member is permanent and cannot be undone."
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Member
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              192.168.1.10:8080
+            </span>
+          </div>
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+              stroke={1.5}
+            />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Removing this member may affect traffic distribution for the pool.
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteMemberOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('Member deleted');
+              setIsDeleteMemberOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Members Modal */}
+      <Modal
+        isOpen={isDeleteMembersOpen}
+        onClose={() => setIsDeleteMembersOpen(false)}
+        title="Delete Members"
+        description="Removing the members is permanent and cannot be undone."
+        size="md"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Members that can be delete
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>192.168.1.10:8080</li>
+              <li>192.168.1.11:8080</li>
+              <li>192.168.1.12:8080</li>
+              <li>192.168.1.13:8080</li>
+            </ul>
+          </div>
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Members that cannot be delete
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>192.168.1.1:8080 (primary)</li>
+              <li>192.168.1.2:8080 (backup)</li>
+              <li>192.168.1.3:8080 (protected)</li>
+              <li>192.168.1.4:8080 (critical)</li>
+            </ul>
+          </div>
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+              stroke={1.5}
+            />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Removing these members may affect traffic distribution for the pool.
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteMembersOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('Members deleted');
+              setIsDeleteMembersOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Security Group Rule Modal */}
+      <Modal
+        isOpen={isDeleteSecurityGroupRuleOpen}
+        onClose={() => setIsDeleteSecurityGroupRuleOpen(false)}
+        title="Delete Rule"
+        description="Removing the rule group is permanent and cannot be undone."
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Rule
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              Ingress/TCP/443
+            </span>
+          </div>
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+              stroke={1.5}
+            />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Deleting this rule may affect network access for the resources that rely on it.
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteSecurityGroupRuleOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('Security group rule deleted');
+              setIsDeleteSecurityGroupRuleOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Security Group Rules Modal */}
+      <Modal
+        isOpen={isDeleteSecurityGroupRulesOpen}
+        onClose={() => setIsDeleteSecurityGroupRulesOpen(false)}
+        title="Delete Rules"
+        description="Removing the rules is permanent and cannot be undone."
+        size="md"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Rules that can be delete
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>Ingress/TCP/80</li>
+              <li>Ingress/TCP/443</li>
+              <li>Egress/TCP/All</li>
+              <li>Ingress/UDP/53</li>
+            </ul>
+          </div>
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Rules that cannot be delete
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>Ingress/TCP/22 (SSH required)</li>
+              <li>Egress/All/All (default)</li>
+              <li>Ingress/ICMP/All (monitoring)</li>
+              <li>Ingress/TCP/3389 (RDP required)</li>
+            </ul>
+          </div>
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+              stroke={1.5}
+            />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Deleting this rule may affect network access for the resources that rely on them.
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteSecurityGroupRulesOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('Security group rules deleted');
+              setIsDeleteSecurityGroupRulesOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete L7 Policy Modal */}
+      <Modal
+        isOpen={isDeleteL7PolicyOpen}
+        onClose={() => setIsDeleteL7PolicyOpen(false)}
+        title="Delete L7 Policy"
+        description="Removing the L7 policy is permanent and cannot be undone."
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              L7 Policy
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              redirect-to-https
+            </span>
+          </div>
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+              stroke={1.5}
+            />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Deleting this L7 policy may affect traffic routing for the listener.
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteL7PolicyOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('L7 policy deleted');
+              setIsDeleteL7PolicyOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete L7 Policies Modal */}
+      <Modal
+        isOpen={isDeleteL7PoliciesOpen}
+        onClose={() => setIsDeleteL7PoliciesOpen(false)}
+        title="Delete L7 Policies"
+        description="Removing the L7 policies is permanent and cannot be undone."
+        size="md"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              L7 Policies that can be delete
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>redirect-to-https</li>
+              <li>block-bad-bots</li>
+              <li>rate-limit-api</li>
+              <li>geo-redirect</li>
+            </ul>
+          </div>
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              L7 Policies that cannot be delete
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>default-redirect (system)</li>
+              <li>security-headers (required)</li>
+              <li>cors-policy (protected)</li>
+              <li>auth-redirect (critical)</li>
+            </ul>
+          </div>
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+              stroke={1.5}
+            />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Deleting these L7 policies may affect traffic routing for the listeners.
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteL7PoliciesOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('L7 policies deleted');
+              setIsDeleteL7PoliciesOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Health Monitor Modal */}
+      <Modal
+        isOpen={isDeleteHealthMonitorOpen}
+        onClose={() => setIsDeleteHealthMonitorOpen(false)}
+        title="Delete Health Monitor"
+        description="Removing the health monitor is permanent and cannot be undone."
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Health Monitor
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              http-health-check
+            </span>
+          </div>
+          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+            <IconAlertCircle
+              size={16}
+              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+              stroke={1.5}
+            />
+            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+              Deleting this health monitor may affect the pool&apos;s ability to detect unhealthy
+              members.
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteHealthMonitorOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('Health monitor deleted');
+              setIsDeleteHealthMonitorOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Firewall Policy Modal */}
+      <Modal
+        isOpen={isDeleteFirewallPolicyOpen}
+        onClose={() => setIsDeleteFirewallPolicyOpen(false)}
+        title="Delete Firewall Policy"
+        description="Deleting the firewall policy is permanent and cannot be undone."
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Firewall Policy
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              web-policy-01
             </span>
           </div>
         </div>
@@ -3810,21 +7528,76 @@ export function ModalsPage() {
         </div>
       </Modal>
 
+      {/* Delete Firewall Policies Modal */}
+      <Modal
+        isOpen={isDeleteFirewallPoliciesOpen}
+        onClose={() => setIsDeleteFirewallPoliciesOpen(false)}
+        title="Delete Firewall Policies"
+        description="Removing the selected firewall policies is permanent and cannot be undone."
+        size="md"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Firewall policies that can be delete
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>web-policy-01</li>
+              <li>api-policy-01</li>
+              <li>staging-policy</li>
+              <li>dev-policy</li>
+            </ul>
+          </div>
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Firewall policies that cannot be delete
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>production-policy (in use)</li>
+              <li>gateway-policy (system)</li>
+              <li>default-policy (protected)</li>
+              <li>critical-policy (in use)</li>
+            </ul>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteFirewallPoliciesOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('Firewall policies deleted');
+              setIsDeleteFirewallPoliciesOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
       {/* Delete Firewall Rule Modal */}
       <Modal
         isOpen={isDeleteFirewallRuleOpen}
         onClose={() => setIsDeleteFirewallRuleOpen(false)}
         title="Delete Firewall Rule"
-        description="Are you sure you want to delete this firewall rule?"
+        description="Deleting the firewall rule is permanent and cannot be undone."
         size="sm"
       >
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
-              Rule name
+              Firewall Rule
             </span>
             <span className="text-[12px] text-[var(--color-text-default)] leading-4">
-              allow-http-443
+              allow-https-443
             </span>
           </div>
         </div>
@@ -3851,21 +7624,76 @@ export function ModalsPage() {
         </div>
       </Modal>
 
-      {/* Delete Image (Admin) Modal */}
+      {/* Delete Firewall Rules Modal */}
       <Modal
-        isOpen={isDeleteImageAdminOpen}
-        onClose={() => setIsDeleteImageAdminOpen(false)}
-        title="Delete Image"
-        description="Are you sure you want to delete this image?"
+        isOpen={isDeleteFirewallRulesOpen}
+        onClose={() => setIsDeleteFirewallRulesOpen(false)}
+        title="Delete Firewall Rules"
+        description="Removing the selected firewall rules is permanent and cannot be undone."
+        size="md"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Firewall rules that can be delete
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>allow-https-443</li>
+              <li>allow-http-80</li>
+              <li>allow-ssh-22</li>
+              <li>allow-dns-53</li>
+            </ul>
+          </div>
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Firewall rules that cannot be delete
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>default-egress (system)</li>
+              <li>management-access (protected)</li>
+              <li>monitoring-rule (required)</li>
+              <li>critical-ingress (in use)</li>
+            </ul>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteFirewallRulesOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('Firewall rules deleted');
+              setIsDeleteFirewallRulesOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Tenant Modal */}
+      <Modal
+        isOpen={isDeleteTenantOpen}
+        onClose={() => setIsDeleteTenantOpen(false)}
+        title="Delete Tenant"
+        description="Deleting the tenant is permanent and cannot be undone."
         size="sm"
       >
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
-              Image name
+              Tenant
             </span>
             <span className="text-[12px] text-[var(--color-text-default)] leading-4">
-              ubuntu-22.04-server
+              project-alpha
             </span>
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
@@ -3875,8 +7703,8 @@ export function ModalsPage() {
               stroke={1.5}
             />
             <p className="text-[11px] text-[var(--color-text-default)] leading-4">
-              This image is shared across multiple tenants. Deleting it may affect existing
-              instances.
+              Deleting this tenant does not delete the resources inside it. Those resources will
+              remain and must be managed separately.
             </p>
           </div>
         </div>
@@ -3884,7 +7712,7 @@ export function ModalsPage() {
           <Button
             variant="outline"
             size="md"
-            onClick={() => setIsDeleteImageAdminOpen(false)}
+            onClick={() => setIsDeleteTenantOpen(false)}
             className="flex-1"
           >
             Cancel
@@ -3893,8 +7721,8 @@ export function ModalsPage() {
             variant="danger"
             size="md"
             onClick={() => {
-              console.log('Image deleted');
-              setIsDeleteImageAdminOpen(false);
+              console.log('Tenant deleted');
+              setIsDeleteTenantOpen(false);
             }}
             className="flex-1"
           >
@@ -3903,20 +7731,25 @@ export function ModalsPage() {
         </div>
       </Modal>
 
-      {/* Delete Flavor Modal */}
+      {/* Delete Tenants Modal */}
       <Modal
-        isOpen={isDeleteFlavorOpen}
-        onClose={() => setIsDeleteFlavorOpen(false)}
-        title="Delete Flavor"
-        description="Are you sure you want to delete this flavor?"
+        isOpen={isDeleteTenantsOpen}
+        onClose={() => setIsDeleteTenantsOpen(false)}
+        title="Delete Tenant"
+        description="Removing the selected tenants is permanent and cannot be undone."
         size="sm"
       >
         <div className="flex flex-col gap-2">
-          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
-              Flavor name
+              Tenants
             </span>
-            <span className="text-[12px] text-[var(--color-text-default)] leading-4">m1.large</span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>project-alpha</li>
+              <li>project-beta</li>
+              <li>project-gamma</li>
+              <li>project-delta</li>
+            </ul>
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
             <IconAlertCircle
@@ -3925,8 +7758,8 @@ export function ModalsPage() {
               stroke={1.5}
             />
             <p className="text-[11px] text-[var(--color-text-default)] leading-4">
-              Existing instances using this flavor will not be affected, but new instances cannot be
-              created with this flavor.
+              Deleting these tenants does not delete the resources inside them. Those resources will
+              remain and must be managed separately.
             </p>
           </div>
         </div>
@@ -3934,7 +7767,7 @@ export function ModalsPage() {
           <Button
             variant="outline"
             size="md"
-            onClick={() => setIsDeleteFlavorOpen(false)}
+            onClick={() => setIsDeleteTenantsOpen(false)}
             className="flex-1"
           >
             Cancel
@@ -3943,8 +7776,8 @@ export function ModalsPage() {
             variant="danger"
             size="md"
             onClick={() => {
-              console.log('Flavor deleted');
-              setIsDeleteFlavorOpen(false);
+              console.log('Tenants deleted');
+              setIsDeleteTenantsOpen(false);
             }}
             className="flex-1"
           >
@@ -3953,27 +7786,29 @@ export function ModalsPage() {
         </div>
       </Modal>
 
-      {/* Delete Volume Type Modal */}
+      {/* Delete Metadata Modal */}
       <Modal
-        isOpen={isDeleteVolumeTypeOpen}
-        onClose={() => setIsDeleteVolumeTypeOpen(false)}
-        title="Delete Volume Type"
-        description="Are you sure you want to delete this volume type?"
+        isOpen={isDeleteMetadataOpen}
+        onClose={() => setIsDeleteMetadataOpen(false)}
+        title="Delete Metadata"
+        description="This action removes the metadata."
         size="sm"
       >
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
-              Volume type
+              Metadata
             </span>
-            <span className="text-[12px] text-[var(--color-text-default)] leading-4">SSD-Fast</span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              environment=production
+            </span>
           </div>
         </div>
         <div className="flex gap-2 w-full">
           <Button
             variant="outline"
             size="md"
-            onClick={() => setIsDeleteVolumeTypeOpen(false)}
+            onClick={() => setIsDeleteMetadataOpen(false)}
             className="flex-1"
           >
             Cancel
@@ -3982,12 +7817,108 @@ export function ModalsPage() {
             variant="danger"
             size="md"
             onClick={() => {
-              console.log('Volume type deleted');
-              setIsDeleteVolumeTypeOpen(false);
+              console.log('Metadata deleted');
+              setIsDeleteMetadataOpen(false);
             }}
             className="flex-1"
           >
             Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Delete Metadatas Modal */}
+      <Modal
+        isOpen={isDeleteMetadatasOpen}
+        onClose={() => setIsDeleteMetadatasOpen(false)}
+        title="Delete Metadata"
+        description="This action removes the selected metadata."
+        size="md"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Metadata that can be delete
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>environment=production</li>
+              <li>team=platform</li>
+              <li>cost-center=eng-001</li>
+              <li>owner=admin</li>
+            </ul>
+          </div>
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Metadata that cannot be delete
+            </span>
+            <ul className="text-[12px] text-[var(--color-text-default)] leading-4 list-disc list-inside">
+              <li>system-id=xyz (system)</li>
+              <li>created-by=admin (protected)</li>
+              <li>managed-by=openstack (required)</li>
+              <li>instance-type=vm (system)</li>
+            </ul>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsDeleteMetadatasOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            size="md"
+            onClick={() => {
+              console.log('Metadatas deleted');
+              setIsDeleteMetadatasOpen(false);
+            }}
+            className="flex-1"
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Manage Member Modal */}
+      <Modal
+        isOpen={isManageMemberOpen}
+        onClose={() => setIsManageMemberOpen(false)}
+        title="Manage Member"
+        description="User management for this project is handled in the IAM app. You will be redirected to IAM to manage users and user groups."
+        size="sm"
+      >
+        <div className="flex flex-col gap-2">
+          <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
+            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium leading-4">
+              Tenant
+            </span>
+            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              project-alpha
+            </span>
+          </div>
+        </div>
+        <div className="flex gap-2 w-full">
+          <Button
+            variant="outline"
+            size="md"
+            onClick={() => setIsManageMemberOpen(false)}
+            className="flex-1"
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="primary"
+            size="md"
+            onClick={() => {
+              console.log('Redirecting to IAM');
+              setIsManageMemberOpen(false);
+            }}
+            className="flex-1"
+          >
+            Go to IAM
           </Button>
         </div>
       </Modal>

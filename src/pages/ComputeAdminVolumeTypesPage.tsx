@@ -677,13 +677,7 @@ export function ComputeAdminVolumeTypesPage() {
         onClose={handleDeleteCancel}
         onConfirm={handleDeleteConfirm}
         title={volumeTypeToDelete ? 'Delete Volume Type' : 'Delete QoS Spec'}
-        message={
-          volumeTypeToDelete
-            ? `Are you sure you want to delete "${volumeTypeToDelete.name}"? This action cannot be undone.`
-            : qosSpecToDelete
-              ? `Are you sure you want to delete "${qosSpecToDelete.name}"? This action cannot be undone.`
-              : ''
-        }
+        message="Removing the selected instances is permanent and cannot be undone."
         confirmText="Delete"
         variant="danger"
       />

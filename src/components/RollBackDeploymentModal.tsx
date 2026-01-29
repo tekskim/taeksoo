@@ -63,7 +63,7 @@ export function RollBackDeploymentModal({
       isOpen={isOpen}
       onClose={handleClose}
       title="Roll Back Deployment"
-      description="Are you sure you want to roll back this deployment? This action rolls back the deployment to a previous version."
+      description="This action rolls back the deployment to a previous version."
       size="sm"
     >
       {/* Info Box and Select */}

@@ -157,7 +157,7 @@ export const Confirm: Story = {
             setIsOpen(false);
           }}
           title="Confirm Action"
-          description="Are you sure you want to proceed with this action?"
+          description="This action proceeds with the changes."
         />
       </>
     );
@@ -182,7 +182,7 @@ export const DeleteConfirm: Story = {
             setIsOpen(false);
           }}
           title="Delete Item"
-          description="This action cannot be undone. Are you sure you want to delete this item?"
+          description="Removing the selected instances is permanent and cannot be undone."
           confirmText="Delete"
           cancelText="Cancel"
           confirmVariant="danger"
