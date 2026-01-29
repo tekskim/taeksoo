@@ -374,7 +374,7 @@ function QuotaSidebar({
         {/* Summary Card */}
         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
           <VStack gap={3}>
-            <h5 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+            <h5 className="text-heading-h5 text-[var(--color-text-default)]">
               Summary
             </h5>
             <div className="flex flex-col">
@@ -384,11 +384,11 @@ function QuotaSidebar({
 
                 return (
                   <div key={sectionKey} className="flex items-center justify-between py-1">
-                    <span className="text-[12px] leading-5 text-[var(--color-text-default)]">
+                    <span className="text-body-md text-[var(--color-text-default)]">
                       {SECTION_LABELS[sectionKey]}
                     </span>
                     {isWriting ? (
-                      <span className="text-[11px] text-[var(--color-text-subtle)]">
+                      <span className="text-body-sm text-[var(--color-text-subtle)]">
                         Writing...
                       </span>
                     ) : (
@@ -404,7 +404,7 @@ function QuotaSidebar({
         {/* Quota Card */}
         <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
           <VStack gap={3}>
-            <h5 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+            <h5 className="text-heading-h5 text-[var(--color-text-default)]">
               Quota
             </h5>
             <VStack gap={3}>
@@ -425,7 +425,7 @@ function QuotaSidebar({
 
         {/* Number of Instances */}
         <VStack gap={2}>
-          <label className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
+          <label className="text-label-lg text-[var(--color-text-default)]">
             Number of Instances
           </label>
           <NumberInput
@@ -463,7 +463,7 @@ function PreSection({ title }: PreSectionProps) {
   return (
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
       <div className="h-8 flex items-center">
-        <h5 className="text-[length:var(--font-size-16)] font-semibold leading-[var(--line-height-24)] text-[var(--color-text-default)]">
+        <h5 className="text-heading-h5 text-[var(--color-text-default)]">
           {title}
         </h5>
       </div>
@@ -483,10 +483,10 @@ function WritingSection({ title }: WritingSectionProps) {
   return (
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
       <div className="h-8 flex items-center justify-between">
-        <h5 className="text-[length:var(--font-size-16)] font-semibold leading-[var(--line-height-24)] text-[var(--color-text-default)]">
+        <h5 className="text-heading-h5 text-[var(--color-text-default)]">
           {title}
         </h5>
-        <span className="text-[11px] text-[var(--color-text-subtle)]">Writing...</span>
+        <span className="text-body-sm text-[var(--color-text-subtle)]">Writing...</span>
       </div>
     </div>
   );
@@ -505,11 +505,11 @@ function SkippedSection({ title, onEdit }: SkippedSectionProps) {
   return (
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
       <div className="flex items-center justify-between h-8">
-        <h5 className="text-[length:var(--font-size-16)] font-semibold leading-[var(--line-height-24)] text-[var(--color-text-default)]">
+        <h5 className="text-heading-h5 text-[var(--color-text-default)]">
           {title}
         </h5>
         <div className="flex items-center gap-3">
-          <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-muted)]">
+          <span className="text-body-md text-[var(--color-text-muted)]">
             Not configured
           </span>
           <Button variant="outline" size="sm" leftIcon={<IconEdit size={12} />} onClick={onEdit}>
@@ -640,7 +640,7 @@ function BasicInformationSection({
         <VStack gap={0}>
           {/* Instance name */}
           <VStack gap={2} className="pt-2 pb-6">
-            <label className="text-[14px] font-medium text-[var(--color-text-default)]">
+            <label className="text-label-lg text-[var(--color-text-default)]">
               Instance name <span className="ml-1 text-[var(--color-state-danger)]">*</span>
             </label>
             <VStack gap={1}>
@@ -652,12 +652,12 @@ function BasicInformationSection({
                 error={!!instanceNameError}
               />
               {instanceNameError && (
-                <span className="text-[11px] leading-[var(--line-height-16)] text-[var(--color-state-danger)]">
+                <span className="text-body-sm text-[var(--color-state-danger)]">
                   {instanceNameError}
                 </span>
               )}
             </VStack>
-            <span className="text-[11px] text-[var(--color-text-subtle)]">
+            <span className="text-body-sm text-[var(--color-text-subtle)]">
               The name should start with upper letter, lower letter or chinese, and be a string with
               1~128 characters.
             </span>
@@ -668,7 +668,7 @@ function BasicInformationSection({
 
           {/* AZ (Availability zone) */}
           <VStack gap={2} className="py-6">
-            <label className="text-[14px] font-medium text-[var(--color-text-default)]">
+            <label className="text-label-lg text-[var(--color-text-default)]">
               AZ (Availability zone){' '}
               <span className="ml-1 text-[var(--color-state-danger)]">*</span>
             </label>
@@ -679,7 +679,7 @@ function BasicInformationSection({
               placeholder="Select AZ"
               fullWidth
             />
-            <span className="text-[11px] text-[var(--color-text-subtle)]">
+            <span className="text-body-sm text-[var(--color-text-subtle)]">
               Select the availability zone for the instance.
             </span>
           </VStack>
@@ -689,7 +689,7 @@ function BasicInformationSection({
 
           {/* Description */}
           <VStack gap={2} className="py-6">
-            <label className="text-[14px] font-medium text-[var(--color-text-default)]">
+            <label className="text-label-lg text-[var(--color-text-default)]">
               Description
             </label>
             <Input
@@ -698,7 +698,7 @@ function BasicInformationSection({
               onChange={(e) => onDescriptionChange(e.target.value)}
               fullWidth
             />
-            <span className="text-[11px] text-[var(--color-text-subtle)]">
+            <span className="text-body-sm text-[var(--color-text-subtle)]">
               You can use letters, numbers, and special characters (+=.@-_,()[]), and maximum 255
               characters.
             </span>
@@ -1106,13 +1106,13 @@ function ImageSection({
           <HStack gap={1} align="center">
             <a
               href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-[length:var(--font-size-12)] leading-[var(--line-height-18)] font-medium"
+              className="text-[var(--color-action-primary)] hover:underline text-body-md font-medium"
             >
               {value}
             </a>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </HStack>
-          <span className="text-[11px] text-[var(--color-text-subtle)]">ID: {row.id}</span>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
         </VStack>
       ),
     },
@@ -1226,7 +1226,7 @@ function ImageSection({
   ];
 
   const osChipStyle = (active: boolean) => `
-    inline-flex items-center gap-1.5 px-3 py-2 rounded-[4px] cursor-pointer text-[12px] font-medium transition-colors
+    inline-flex items-center gap-1.5 px-3 py-2 rounded-[4px] cursor-pointer text-label-md transition-colors
     ${
       active
         ? 'bg-[var(--color-surface-default)] text-[var(--color-text-default)] shadow-sm'
@@ -1256,10 +1256,10 @@ function ImageSection({
         <VStack gap={0}>
           {/* Start Source */}
           <VStack gap={2} className="pt-2">
-            <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+            <span className="text-label-lg text-[var(--color-text-default)]">
               Start source<span className="ml-1 text-[var(--color-state-danger)]">*</span>
             </span>
-            <span className="text-[12px] text-[var(--color-text-muted)] mb-4">
+            <span className="text-body-md text-[var(--color-text-muted)] mb-4">
               Select a template to launch the instance. You can start from an OS image, a snapshot,
               or an existing volume.
             </span>
@@ -1398,10 +1398,10 @@ function ImageSection({
           {/* System disk Section */}
           <VStack gap={3} className="py-6">
             <VStack gap={1}>
-              <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+              <span className="text-label-lg text-[var(--color-text-default)]">
                 System disk<span className="ml-1 text-[var(--color-state-danger)]">*</span>
               </span>
-              <span className="text-[12px] text-[var(--color-text-muted)]">
+              <span className="text-body-md text-[var(--color-text-muted)]">
                 Configure whether to create a system disk for booting.
               </span>
             </VStack>
@@ -1417,7 +1417,7 @@ function ImageSection({
             {createSystemDisk && (
               <HStack gap={4} align="end" className="flex-wrap">
                 <VStack gap={2}>
-                  <label className="text-[12px] font-medium text-[var(--color-text-default)]">
+                  <label className="text-label-md text-[var(--color-text-default)]">
                     Type
                   </label>
                   <Select
@@ -1428,12 +1428,12 @@ function ImageSection({
                 </VStack>
                 <HStack gap={2} align="end">
                   <VStack gap={2}>
-                    <label className="text-[12px] font-medium text-[var(--color-text-default)]">
+                    <label className="text-label-md text-[var(--color-text-default)]">
                       Size
                     </label>
                     <NumberInput value={storageSize} onChange={setStorageSize} min={1} max={1000} />
                   </VStack>
-                  <span className="text-[12px] text-[var(--color-text-default)] pb-2">GiB</span>
+                  <span className="text-body-md text-[var(--color-text-default)] pb-2">GiB</span>
                 </HStack>
                 <div className="self-end pb-[6px]">
                   <Checkbox
@@ -1452,10 +1452,10 @@ function ImageSection({
           {/* Data disk Section */}
           <VStack gap={3} align="start" className="py-6">
             <VStack gap={1}>
-              <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+              <span className="text-label-lg text-[var(--color-text-default)]">
                 Data disk
               </span>
-              <span className="text-[12px] text-[var(--color-text-muted)]">
+              <span className="text-body-md text-[var(--color-text-muted)]">
                 Attach additional volumes for data storage.
               </span>
             </VStack>
@@ -1672,14 +1672,14 @@ function FlavorSection({
           <HStack gap={1} align="center">
             <a
               href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-[length:var(--font-size-12)] leading-[var(--line-height-18)] font-medium"
+              className="text-[var(--color-action-primary)] hover:underline text-body-md font-medium"
             >
               {value}
             </a>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
             {row.hasWarning && <span className="text-[var(--color-state-warning)]">⚠</span>}
           </HStack>
-          <span className="text-[11px] text-[var(--color-text-subtle)]">ID : {row.id}</span>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
         </VStack>
       ),
     },
@@ -1724,10 +1724,10 @@ function FlavorSection({
         <VStack gap={0}>
           {/* Flavors Label & Description */}
           <VStack gap={2} className="pt-2 pb-4">
-            <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+            <span className="text-label-lg text-[var(--color-text-default)]">
               Flavors<span className="ml-1 text-[var(--color-state-danger)]">*</span>
             </span>
-            <span className="text-[12px] text-[var(--color-text-muted)] mb-4">
+            <span className="text-body-md text-[var(--color-text-muted)] mb-4">
               Select the flavor that defines the vCPU, RAM, and disk capacity allocated to the
               instance.
             </span>
@@ -2077,7 +2077,7 @@ function NetworkSection({
       sortable: true,
       render: (_, row) => (
         <VStack gap={0} align="start">
-          <span className="text-[11px] text-[var(--color-text-subtle)]">{row.id}</span>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">{row.id}</span>
           <span>{row.name}</span>
         </VStack>
       ),
@@ -2159,7 +2159,7 @@ function NetworkSection({
       sortable: true,
       render: (_, row) => (
         <VStack gap={0} align="start">
-          <span className="text-[11px] text-[var(--color-text-subtle)]">{row.id}</span>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">{row.id}</span>
           <span>{row.description}</span>
         </VStack>
       ),
@@ -2251,7 +2251,7 @@ function NetworkSection({
       sortable: true,
       render: (_, row) => (
         <VStack gap={0} align="start">
-          <span className="text-[11px] text-[var(--color-text-subtle)]">{row.id}</span>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">{row.id}</span>
           <span>{row.name}</span>
         </VStack>
       ),
@@ -2312,7 +2312,7 @@ function NetworkSection({
         <VStack gap={4} className="pt-2">
           {/* Network Sub-section */}
           <VStack gap={3}>
-            <span className="text-[14px] font-medium">Network</span>
+            <span className="text-label-lg">Network</span>
 
             {/* Search */}
             <SearchInput
@@ -2376,8 +2376,8 @@ function NetworkSection({
           <Disclosure open={vlanOpen} onChange={setVlanOpen}>
             <Disclosure.Trigger>
               <HStack gap={2} align="center">
-                <span className="text-[14px] font-medium">Virtual LAN</span>
-                <span className="text-[12px] text-[var(--color-text-subtle)]">(Optional)</span>
+                <span className="text-label-lg">Virtual LAN</span>
+                <span className="text-body-md text-[var(--color-text-subtle)]">(Optional)</span>
               </HStack>
             </Disclosure.Trigger>
             <Disclosure.Panel>
@@ -2392,7 +2392,7 @@ function NetworkSection({
 
           {/* Floating IP Section */}
           <VStack gap={3}>
-            <span className="text-[14px] font-medium">Floating IP</span>
+            <span className="text-label-lg">Floating IP</span>
 
             {/* Radio Options */}
             <VStack gap={2}>
@@ -2402,7 +2402,7 @@ function NetworkSection({
                   checked={floatingIpOption === 'none'}
                   onChange={() => setFloatingIpOption('none')}
                 />
-                <span className="text-[12px]">None (internal only)</span>
+                <span className="text-body-md">None (internal only)</span>
               </label>
               <label className="flex items-center gap-2 cursor-pointer">
                 <Radio
@@ -2410,7 +2410,7 @@ function NetworkSection({
                   checked={floatingIpOption === 'auto'}
                   onChange={() => setFloatingIpOption('auto')}
                 />
-                <span className="text-[12px]">Auto-assign IP</span>
+                <span className="text-body-md">Auto-assign IP</span>
               </label>
               <label className="flex items-center gap-2 cursor-pointer">
                 <Radio
@@ -2418,7 +2418,7 @@ function NetworkSection({
                   checked={floatingIpOption === 'existing'}
                   onChange={() => setFloatingIpOption('existing')}
                 />
-                <span className="text-[12px]">Use existing IP</span>
+                <span className="text-body-md">Use existing IP</span>
               </label>
             </VStack>
 
@@ -2506,7 +2506,7 @@ function NetworkSection({
 
           {/* Security groups Section */}
           <VStack gap={3}>
-            <span className="text-[14px] font-medium">Security groups</span>
+            <span className="text-label-lg">Security groups</span>
 
             <HStack justify="between" align="center" className="w-full">
               <SearchInput
@@ -2578,8 +2578,8 @@ function NetworkSection({
           <Disclosure open={portOpen} onChange={setPortOpen}>
             <Disclosure.Trigger>
               <HStack gap={2} align="center">
-                <span className="text-[14px] font-medium">Port</span>
-                <span className="text-[12px] text-[var(--color-text-subtle)]">(Optional)</span>
+                <span className="text-label-lg">Port</span>
+                <span className="text-body-md text-[var(--color-text-subtle)]">(Optional)</span>
               </HStack>
             </Disclosure.Trigger>
             <Disclosure.Panel>
@@ -2828,7 +2828,7 @@ function AuthenticationSection({
       <SectionCard.Content>
         <VStack gap={4} className="pt-2">
           {/* Login type Header */}
-          <span className="text-[14px] font-medium">Login type</span>
+          <span className="text-label-lg">Login type</span>
 
           {/* Login type Tabs */}
           <Tabs value={loginType} onChange={(v) => setLoginType(v as 'keypair' | 'password')}>
@@ -2890,7 +2890,7 @@ function AuthenticationSection({
             <TabPanel value="password" className="pt-4">
               <VStack gap={4}>
                 <div>
-                  <label className="block text-[14px] font-medium mb-2">Login Name</label>
+                  <label className="block text-label-lg mb-2">Login Name</label>
                   <Input
                     value={loginName}
                     onChange={(e) => {
@@ -2901,7 +2901,7 @@ function AuthenticationSection({
                   />
                 </div>
                 <div>
-                  <label className="block text-[14px] font-medium mb-2">Password</label>
+                  <label className="block text-label-lg mb-2">Password</label>
                   <div className="relative">
                     <Input
                       type={showPassword ? 'text' : 'password'}
@@ -2944,7 +2944,7 @@ function AuthenticationSection({
                   </div>
                 </div>
                 <div>
-                  <label className="block text-[14px] font-medium mb-2">Confirm Password</label>
+                  <label className="block text-label-lg mb-2">Confirm Password</label>
                   <VStack gap={1}>
                     <div className="relative">
                       <Input
@@ -2987,7 +2987,7 @@ function AuthenticationSection({
                       </button>
                     </div>
                     {authError && loginType === 'password' && (
-                      <span className="text-[11px] leading-[var(--line-height-16)] text-[var(--color-state-danger)]">
+                      <span className="text-body-sm text-[var(--color-state-danger)]">
                         {authError}
                       </span>
                     )}
@@ -3130,8 +3130,8 @@ function AdvancedSection({
           <Disclosure open={serverGroupOpen} onChange={setServerGroupOpen}>
             <Disclosure.Trigger>
               <HStack gap={2} align="center">
-                <span className="text-[14px] font-medium">Server group</span>
-                <span className="text-[12px] text-[var(--color-text-subtle)]">(Optional)</span>
+                <span className="text-label-lg">Server group</span>
+                <span className="text-body-md text-[var(--color-text-subtle)]">(Optional)</span>
               </HStack>
             </Disclosure.Trigger>
             <Disclosure.Panel>
@@ -3190,8 +3190,8 @@ function AdvancedSection({
           <Disclosure open={userDataOpen} onChange={setUserDataOpen}>
             <Disclosure.Trigger>
               <HStack gap={2} align="center">
-                <span className="text-[14px] font-medium">User data</span>
-                <span className="text-[12px] text-[var(--color-text-subtle)]">(Optional)</span>
+                <span className="text-label-lg">User data</span>
+                <span className="text-body-md text-[var(--color-text-subtle)]">(Optional)</span>
               </HStack>
             </Disclosure.Trigger>
             <Disclosure.Panel>
@@ -3232,7 +3232,7 @@ function AdvancedSection({
                   placeholder="input user data"
                   rows={6}
                   fullWidth
-                  className="font-mono text-[12px]"
+                  className="font-mono text-body-md"
                 />
               </VStack>
             </Disclosure.Panel>
@@ -3343,7 +3343,7 @@ function TemplatesSection({
       render: (_, row) => (
         <VStack gap={0} align="start">
           <HStack gap={1} align="center">
-            <span className="text-[12px] font-medium text-[var(--color-action-primary)]">
+            <span className="text-label-md text-[var(--color-action-primary)]">
               {row.name}
             </span>
             <IconExternalLink
@@ -3352,7 +3352,7 @@ function TemplatesSection({
               className="text-[var(--color-action-primary)]"
             />
           </HStack>
-          <span className="text-[11px] text-[var(--color-text-subtle)]">ID: {row.id}</span>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
         </VStack>
       ),
     },
@@ -3398,10 +3398,10 @@ function TemplatesSection({
       <SectionCard.Content gap={6} className="pt-2">
         {/* Resource type */}
         <VStack gap={2} align="start">
-          <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+          <span className="text-label-lg text-[var(--color-text-default)]">
             Resource type <span className="text-[var(--color-state-danger)]">*</span>
           </span>
-          <span className="text-[12px] text-[var(--color-text-subtle)]">
+          <span className="text-body-md text-[var(--color-text-subtle)]">
             Choose the resource category to apply to the flavor.
           </span>
           <VStack gap={2} align="start">
@@ -3411,7 +3411,7 @@ function TemplatesSection({
                 checked={resourceType === 'vm'}
                 onChange={() => setResourceType('vm')}
               />
-              <span className="text-[12px] text-[var(--color-text-default)]">Virtual Machine</span>
+              <span className="text-body-md text-[var(--color-text-default)]">Virtual Machine</span>
             </label>
             <label className="flex items-center gap-1.5 cursor-pointer">
               <Radio
@@ -3419,17 +3419,17 @@ function TemplatesSection({
                 checked={resourceType === 'baremetal'}
                 onChange={() => setResourceType('baremetal')}
               />
-              <span className="text-[12px] text-[var(--color-text-default)]">Bare metal</span>
+              <span className="text-body-md text-[var(--color-text-default)]">Bare metal</span>
             </label>
           </VStack>
         </VStack>
 
         {/* Templates Sub-section */}
         <VStack gap={3} align="start" className="w-full">
-          <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+          <span className="text-label-lg text-[var(--color-text-default)]">
             Templates
           </span>
-          <span className="text-[12px] text-[var(--color-text-subtle)]">
+          <span className="text-body-md text-[var(--color-text-subtle)]">
             Select the template to use for creating the instance. A template includes predefined
             settings such as the image, flavor, and network configuration required for the instance.
           </span>
@@ -3483,7 +3483,7 @@ function TemplatesSection({
                     onRowClick={(row) => onSelect(row.id)}
                   />
                 ) : (
-                  <div className="text-[12px] text-[var(--color-text-subtle)] py-8 text-center border border-[var(--color-border-default)] rounded-md">
+                  <div className="text-body-md text-[var(--color-text-subtle)] py-8 text-center border border-[var(--color-border-default)] rounded-md">
                     No favorite templates
                   </div>
                 )}
@@ -3525,7 +3525,7 @@ function TemplatesSection({
                     onRowClick={(row) => onSelect(row.id)}
                   />
                 ) : (
-                  <div className="text-[12px] text-[var(--color-text-subtle)] py-8 text-center border border-[var(--color-border-default)] rounded-md">
+                  <div className="text-body-md text-[var(--color-text-subtle)] py-8 text-center border border-[var(--color-border-default)] rounded-md">
                     No templates in current tenant
                   </div>
                 )}
@@ -3567,7 +3567,7 @@ function TemplatesSection({
                     onRowClick={(row) => onSelect(row.id)}
                   />
                 ) : (
-                  <div className="text-[12px] text-[var(--color-text-subtle)] py-8 text-center border border-[var(--color-border-default)] rounded-md">
+                  <div className="text-body-md text-[var(--color-text-subtle)] py-8 text-center border border-[var(--color-border-default)] rounded-md">
                     No public templates available
                   </div>
                 )}
@@ -3989,7 +3989,7 @@ export function CreateInstancePage() {
             <VStack gap={3} className="min-w-[1176px]">
               {/* Page Title */}
               <div className="flex items-center justify-between h-8">
-                <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
                   Create instance
                 </h1>
               </div>

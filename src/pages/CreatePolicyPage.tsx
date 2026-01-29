@@ -58,7 +58,7 @@ function PreSection({ title }: PreSectionProps) {
   return (
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
       <div className="h-8 flex items-center">
-        <h5 className="text-[length:var(--font-size-16)] font-semibold leading-[var(--line-height-24)] text-[var(--color-text-default)]">
+        <h5 className="text-heading-h5 text-[var(--color-text-default)]">
           {title}
         </h5>
       </div>
@@ -78,10 +78,10 @@ function WritingSection({ title }: WritingSectionProps) {
   return (
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
       <div className="h-8 flex items-center justify-between">
-        <h5 className="text-[length:var(--font-size-16)] font-semibold leading-[var(--line-height-24)] text-[var(--color-text-default)]">
+        <h5 className="text-heading-h5 text-[var(--color-text-default)]">
           {title}
         </h5>
-        <span className="text-[11px] text-[var(--color-text-subtle)]">Writing...</span>
+        <span className="text-body-sm text-[var(--color-text-subtle)]">Writing...</span>
       </div>
     </div>
   );
@@ -172,7 +172,7 @@ function SummarySidebar({
         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
           <VStack gap={3}>
             {/* Header */}
-            <h4 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+            <h4 className="text-heading-h5 text-[var(--color-text-default)]">
               Create policy
             </h4>
 
@@ -183,11 +183,11 @@ function SummarySidebar({
 
                 return (
                   <div key={sectionKey} className="flex items-center justify-between py-1">
-                    <span className="text-[12px] leading-5 text-[var(--color-text-default)]">
+                    <span className="text-body-md text-[var(--color-text-default)]">
                       {SECTION_LABELS[sectionKey]}
                     </span>
                     {isWriting ? (
-                      <span className="text-[11px] text-[var(--color-text-subtle)]">
+                      <span className="text-body-sm text-[var(--color-text-subtle)]">
                         Writing...
                       </span>
                     ) : (
@@ -202,16 +202,16 @@ function SummarySidebar({
 
         {/* Quota Section */}
         <VStack gap={2}>
-          <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
+          <span className="text-label-lg text-[var(--color-text-default)]">
             Quota
           </span>
           <div className="bg-white border border-[var(--color-border-subtle)] rounded-lg p-4">
             <VStack gap={2}>
               <div className="flex items-center justify-between w-full">
-                <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
+                <span className="text-label-lg text-[var(--color-text-default)]">
                   Permissions
                 </span>
-                <span className="text-[12px] leading-4 text-[var(--color-text-default)]">
+                <span className="text-body-md text-[var(--color-text-default)]">
                   20/50
                 </span>
               </div>
@@ -311,7 +311,7 @@ function BasicInformationSection({
         <VStack gap={0}>
           {/* Policy Name */}
           <div className="flex flex-col pt-2 pb-6">
-            <label className="text-[14px] font-medium text-[var(--color-text-default)] mb-2">
+            <label className="text-label-lg text-[var(--color-text-default)] mb-2">
               Policy name <span className="text-[var(--color-state-danger)]">*</span>
             </label>
             <Input
@@ -326,11 +326,11 @@ function BasicInformationSection({
             />
             <div className="flex flex-col gap-1 mt-1">
               {policyNameError && (
-                <span className="text-[11px] text-[var(--color-state-danger)] leading-[16px]">
+                <span className="text-body-sm text-[var(--color-state-danger)]">
                   {policyNameError}
                 </span>
               )}
-              <span className="text-[11px] text-[var(--color-text-subtle)] leading-[16px]">
+              <span className="text-body-sm text-[var(--color-text-subtle)]">
                 You can use letters, numbers, and special characters (+=,.@-_), and the length must
                 be between 2-128 characters.
               </span>
@@ -342,7 +342,7 @@ function BasicInformationSection({
 
           {/* Description */}
           <div className="flex flex-col pt-2 pb-6">
-            <label className="text-[14px] font-medium text-[var(--color-text-default)] mb-2">
+            <label className="text-label-lg text-[var(--color-text-default)] mb-2">
               Description
             </label>
             <Input
@@ -351,7 +351,7 @@ function BasicInformationSection({
               onChange={(e) => onDescriptionChange(e.target.value)}
               fullWidth
             />
-            <span className="text-[11px] text-[var(--color-text-subtle)] leading-[16px] mt-1">
+            <span className="text-body-sm text-[var(--color-text-subtle)] mt-1">
               You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255
               characters.
             </span>
@@ -767,12 +767,12 @@ function PolicyEditorSection({
           {/* Permissions Label */}
           <div className="flex flex-col gap-2">
             <div className="flex gap-[3px]">
-              <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+              <span className="text-label-lg text-[var(--color-text-default)]">
                 Permissions
               </span>
               <span className="text-[var(--color-state-danger)]">*</span>
             </div>
-            <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+            <span className="text-body-md text-[var(--color-text-subtle)]">
               A permission consists of a Target resource and allowed Actions. You can create a
               single policy for various targets by adding multiple permissions.
             </span>
@@ -798,7 +798,7 @@ function PolicyEditorSection({
               <VStack gap={6}>
                 {/* Target */}
                 <div className="flex flex-col gap-2 w-full">
-                  <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                  <span className="text-label-lg text-[var(--color-text-default)]">
                     Target
                   </span>
                   <div
@@ -829,7 +829,7 @@ function PolicyEditorSection({
                       size="sm"
                       fullWidth
                     />
-                    <span className="text-[12px] text-[var(--color-text-default)]">:</span>
+                    <span className="text-body-md text-[var(--color-text-default)]">:</span>
                     <Select
                       placeholder="Partition"
                       value={permission.partition}
@@ -843,7 +843,7 @@ function PolicyEditorSection({
                       size="sm"
                       fullWidth
                     />
-                    <span className="text-[12px] text-[var(--color-text-default)]">:</span>
+                    <span className="text-body-md text-[var(--color-text-default)]">:</span>
                     <Select
                       placeholder="Resource"
                       value={permission.resource}
@@ -857,7 +857,7 @@ function PolicyEditorSection({
                       size="sm"
                       fullWidth
                     />
-                    <span className="text-[12px] text-[var(--color-text-default)]">:</span>
+                    <span className="text-body-md text-[var(--color-text-default)]">:</span>
                     <Select
                       placeholder="Resource ID"
                       value={permission.resourceId}
@@ -873,19 +873,19 @@ function PolicyEditorSection({
                     />
                   </div>
                   {targetErrors[permission.id] && (
-                    <span className="text-[11px] text-[var(--color-state-danger)] leading-[16px]">
+                    <span className="text-body-sm text-[var(--color-state-danger)]">
                       All Target fields must contain a valid value or a wildcard (∗).
                     </span>
                   )}
                   {!targetErrors[permission.id] && hasPartialFill(permission) && (
-                    <span className="text-[11px] text-[var(--color-state-danger)] leading-[16px]">
+                    <span className="text-body-sm text-[var(--color-state-danger)]">
                       All Target fields must contain a valid value or a wildcard (∗).
                     </span>
                   )}
                   {!targetErrors[permission.id] &&
                     !hasPartialFill(permission) &&
                     isInvalidTargetCombination(permission) && (
-                      <span className="text-[11px] text-[var(--color-state-danger)] leading-[16px]">
+                      <span className="text-body-sm text-[var(--color-state-danger)]">
                         The entered Target combination is invalid for the Thaki Cloud system
                         structure. Please verify fields.
                       </span>
@@ -894,7 +894,7 @@ function PolicyEditorSection({
 
                 {/* Actions */}
                 <div className="flex flex-col gap-2 w-full">
-                  <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                  <span className="text-label-lg text-[var(--color-text-default)]">
                     Actions
                   </span>
 
@@ -906,7 +906,7 @@ function PolicyEditorSection({
                         placeholder="Search actions"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full h-8 pl-3 pr-8 text-[11px] bg-white border border-[var(--color-border-strong)] rounded-[6px] placeholder:text-[var(--color-text-subtle)] focus:outline-none focus:border-[var(--color-action-primary)]"
+                        className="w-full h-8 pl-3 pr-8 text-body-sm bg-white border border-[var(--color-border-strong)] rounded-[6px] placeholder:text-[var(--color-text-subtle)] focus:outline-none focus:border-[var(--color-action-primary)]"
                       />
                       <IconSearch
                         size={12}
@@ -919,7 +919,7 @@ function PolicyEditorSection({
                         checked={permission.allActions}
                         onChange={() => toggleAllActions(permission.id)}
                       />
-                      <span className="text-[12px] text-[var(--color-text-default)]">
+                      <span className="text-body-md text-[var(--color-text-default)]">
                         All actions
                       </span>
                     </label>
@@ -945,7 +945,7 @@ function PolicyEditorSection({
                               checked={permission.actions[action]}
                               onChange={() => toggleAction(permission.id, action)}
                             />
-                            <span className="text-[12px] font-normal text-[var(--color-text-default)] capitalize">
+                            <span className="text-body-md font-normal text-[var(--color-text-default)] capitalize">
                               {action}
                             </span>
                           </label>
@@ -988,11 +988,11 @@ function PolicyEditorSection({
                                 checked={allCategorySelected}
                                 onChange={() => toggleCategoryActions(permission.id, category)}
                               />
-                              <span className="text-[12px] text-[var(--color-text-default)] capitalize">
+                              <span className="text-body-md text-[var(--color-text-default)] capitalize">
                                 {category}
                               </span>
                               <div className="h-4 w-px bg-[var(--color-border-default)]" />
-                              <span className="text-[11px] text-[var(--color-text-subtle)]">
+                              <span className="text-body-sm text-[var(--color-text-subtle)]">
                                 {selectedCount > 0
                                   ? `${selectedCount}/${categoryActions.length}`
                                   : `${categoryActions.length} items`}
@@ -1019,7 +1019,7 @@ function PolicyEditorSection({
                                       }
                                     />
                                     <span
-                                      className="text-[12px] text-[var(--color-text-default)] truncate min-w-0"
+                                      className="text-body-md text-[var(--color-text-default)] truncate min-w-0"
                                       title={actionName}
                                     >
                                       {actionName}
@@ -1036,7 +1036,7 @@ function PolicyEditorSection({
 
                   {/* Action Error Message */}
                   {actionErrors[permission.id] && (
-                    <span className="text-[11px] text-[var(--color-state-danger)] leading-[16px]">
+                    <span className="text-body-sm text-[var(--color-state-danger)]">
                       Please select at least one action.
                     </span>
                   )}
@@ -1068,11 +1068,11 @@ function PolicyEditorSection({
                 ) : (
                   <IconChevronRight size={12} className="text-[var(--color-text-default)]" />
                 )}
-                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                <span className="text-label-lg text-[var(--color-text-default)]">
                   Conditions
                 </span>
               </button>
-              <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+              <span className="text-body-md text-[var(--color-text-subtle)]">
                 Select additional conditions required for this policy. All enabled conditions are
                 evaluated using AND logic.
               </span>
@@ -1089,7 +1089,7 @@ function PolicyEditorSection({
                     });
                   }}
                 />
-                <span className="text-[12px] text-[var(--color-text-default)]">
+                <span className="text-body-md text-[var(--color-text-default)]">
                   Only applies if the user has completed MFA.
                 </span>
               </label>
@@ -1098,7 +1098,7 @@ function PolicyEditorSection({
 
           {/* Error Message */}
           {permissionsError && (
-            <span className="text-[11px] text-[var(--color-state-danger)] leading-[16px]">
+            <span className="text-body-sm text-[var(--color-state-danger)]">
               {permissionsError}
             </span>
           )}
@@ -1330,7 +1330,7 @@ export default function CreatePolicyPage() {
             <VStack gap={3} className="min-w-[1176px]">
               {/* Page Title */}
               <div className="flex items-center justify-between h-8">
-                <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
                   Create policy
                 </h1>
               </div>

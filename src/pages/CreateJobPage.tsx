@@ -198,7 +198,7 @@ function SummarySidebar({
         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
           <VStack gap={3}>
             {/* Title */}
-            <span className="text-[length:var(--font-size-16)] font-semibold leading-[var(--line-height-24)] text-[var(--color-text-default)]">
+            <span className="text-heading-h5 text-[var(--color-text-default)]">
               Summary
             </span>
 
@@ -211,10 +211,10 @@ function SummarySidebar({
                 onClick={() => setJobExpanded(!jobExpanded)}
               >
                 <HStack gap={1} align="center">
-                  <span className="text-[10px] text-[var(--color-text-muted)]">
+                  <span className="text-body-xs text-[var(--color-text-muted)]">
                     {jobExpanded ? '▼' : '▶'}
                   </span>
-                  <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] font-medium text-[var(--color-text-default)]">
+                  <span className="text-body-md font-medium text-[var(--color-text-default)]">
                     Deployment
                   </span>
                 </HStack>
@@ -228,11 +228,11 @@ function SummarySidebar({
                     const status = mapState(jobSectionStatus[key]);
                     return (
                       <HStack key={key} justify="between" align="center" className="py-1">
-                        <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">
+                        <span className="text-body-md text-[var(--color-text-default)]">
                           {JOB_SECTION_LABELS[key]}
                         </span>
                         {status === 'writing' ? (
-                          <span className="text-[11px] text-[var(--color-text-subtle)]">
+                          <span className="text-body-sm text-[var(--color-text-subtle)]">
                             Writing...
                           </span>
                         ) : (
@@ -252,10 +252,10 @@ function SummarySidebar({
                 onClick={() => setPodExpanded(!podExpanded)}
               >
                 <HStack gap={1} align="center">
-                  <span className="text-[10px] text-[var(--color-text-muted)]">
+                  <span className="text-body-xs text-[var(--color-text-muted)]">
                     {podExpanded ? '▼' : '▶'}
                   </span>
-                  <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] font-medium text-[var(--color-text-default)]">
+                  <span className="text-body-md font-medium text-[var(--color-text-default)]">
                     Pod
                   </span>
                 </HStack>
@@ -269,11 +269,11 @@ function SummarySidebar({
                     const status = mapState(podSectionStatus[key]);
                     return (
                       <HStack key={key} justify="between" align="center" className="py-1">
-                        <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">
+                        <span className="text-body-md text-[var(--color-text-default)]">
                           {POD_SECTION_LABELS[key]}
                         </span>
                         {status === 'writing' ? (
-                          <span className="text-[11px] text-[var(--color-text-subtle)]">
+                          <span className="text-body-sm text-[var(--color-text-subtle)]">
                             Writing...
                           </span>
                         ) : (
@@ -296,8 +296,8 @@ function SummarySidebar({
                   <div key={container.id}>
                     <HStack justify="between" align="center" className="py-1 cursor-pointer">
                       <HStack gap={1} align="center">
-                        <span className="text-[10px] text-[var(--color-text-muted)]">▼</span>
-                        <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] font-medium text-[var(--color-text-default)]">
+                        <span className="text-body-xs text-[var(--color-text-muted)]">▼</span>
+                        <span className="text-body-md font-medium text-[var(--color-text-default)]">
                           {container.name}
                         </span>
                       </HStack>
@@ -310,11 +310,11 @@ function SummarySidebar({
                         const status = mapState(sectionStatus[key] || 'pre');
                         return (
                           <HStack key={key} justify="between" align="center" className="py-1">
-                            <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">
+                            <span className="text-body-md text-[var(--color-text-default)]">
                               {CONTAINER_SECTION_LABELS[key]}
                             </span>
                             {status === 'writing' ? (
-                              <span className="text-[11px] text-[var(--color-text-subtle)]">
+                              <span className="text-body-sm text-[var(--color-text-subtle)]">
                                 Writing...
                               </span>
                             ) : (
@@ -427,7 +427,7 @@ function BasicInfoSection({
         <VStack gap={4}>
           {/* Namespace */}
           <VStack gap={2}>
-            <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
+            <label className="text-label-lg text-[var(--color-text-default)]">
               Namespace<span className="text-[var(--color-state-danger)]"> *</span>
             </label>
             <Select
@@ -440,7 +440,7 @@ function BasicInfoSection({
 
           {/* Name */}
           <VStack gap={2}>
-            <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
+            <label className="text-label-lg text-[var(--color-text-default)]">
               Name<span className="text-[var(--color-state-danger)]"> *</span>
             </label>
             <Input
@@ -454,7 +454,7 @@ function BasicInfoSection({
               fullWidth
             />
             {nameError && (
-              <span className="text-[11px] text-[var(--color-state-danger)] leading-[16px]">
+              <span className="text-body-sm text-[var(--color-state-danger)]">
                 {nameError}
               </span>
             )}
@@ -462,10 +462,10 @@ function BasicInfoSection({
 
           {/* Replicas */}
           <VStack gap={2}>
-            <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
+            <label className="text-label-lg text-[var(--color-text-default)]">
               Replicas<span className="text-[var(--color-state-danger)]"> *</span>
             </label>
-            <p className="text-[11px] text-[var(--color-text-subtle)] leading-[16px]">
+            <p className="text-body-sm text-[var(--color-text-subtle)]">
               Select the number of pod replicas to create.
             </p>
             <NumberInput
@@ -556,7 +556,7 @@ function LabelsAnnotationsSection({
         <VStack gap={6}>
           {/* Labels */}
           <VStack gap={3}>
-            <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-[16px]">
+            <span className="text-label-sm text-[var(--color-text-default)]">
               Labels
             </span>
 
@@ -564,10 +564,10 @@ function LabelsAnnotationsSection({
               <>
                 {/* Label Header */}
                 <div className="grid grid-cols-[1fr_1fr_32px] gap-4 w-full">
-                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  <span className="text-label-sm text-[var(--color-text-default)]">
                     Key
                   </span>
-                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  <span className="text-label-sm text-[var(--color-text-default)]">
                     Value
                   </span>
                   <div />
@@ -613,7 +613,7 @@ function LabelsAnnotationsSection({
 
           {/* Annotations */}
           <VStack gap={3}>
-            <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-[16px]">
+            <span className="text-label-sm text-[var(--color-text-default)]">
               Annotations
             </span>
 
@@ -621,10 +621,10 @@ function LabelsAnnotationsSection({
               <>
                 {/* Annotation Header */}
                 <div className="grid grid-cols-[1fr_1fr_32px] gap-4 w-full">
-                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  <span className="text-label-sm text-[var(--color-text-default)]">
                     Key
                   </span>
-                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                  <span className="text-label-sm text-[var(--color-text-default)]">
                     Value
                   </span>
                   <div />
@@ -785,10 +785,10 @@ function ScalingPolicySection({
               {/* Max Surge & Max Unavailable */}
               <div className="grid grid-cols-2 gap-4">
                 <VStack gap={2}>
-                  <label className="text-[11px] font-medium text-[var(--color-text-default)] leading-[16px]">
+                  <label className="text-label-sm text-[var(--color-text-default)]">
                     Max Surge
                   </label>
-                  <p className="text-[11px] text-[var(--color-text-subtle)] leading-[16px]">
+                  <p className="text-body-sm text-[var(--color-text-subtle)]">
                     The maximum number of additional pods that can be created during an update.
                   </p>
                   <HStack gap={2}>
@@ -808,10 +808,10 @@ function ScalingPolicySection({
                 </VStack>
 
                 <VStack gap={2}>
-                  <label className="text-[11px] font-medium text-[var(--color-text-default)] leading-[16px]">
+                  <label className="text-label-sm text-[var(--color-text-default)]">
                     Max Unavailable
                   </label>
-                  <p className="text-[11px] text-[var(--color-text-subtle)] leading-[16px]">
+                  <p className="text-body-sm text-[var(--color-text-subtle)]">
                     The maximum number of pods that can be unavailable during an update.
                   </p>
                   <HStack gap={2}>
@@ -834,10 +834,10 @@ function ScalingPolicySection({
               {/* Minimum Ready & Revision History Limit */}
               <div className="grid grid-cols-2 gap-4">
                 <VStack gap={2}>
-                  <label className="text-[11px] font-medium text-[var(--color-text-default)] leading-[16px]">
+                  <label className="text-label-sm text-[var(--color-text-default)]">
                     Minimum Ready
                   </label>
-                  <p className="text-[11px] text-[var(--color-text-subtle)] leading-[16px]">
+                  <p className="text-body-sm text-[var(--color-text-subtle)]">
                     The minimum time a pod must remain in a ready state before it is considered
                     available.
                   </p>
@@ -849,17 +849,17 @@ function ScalingPolicySection({
                       className="w-[120px]"
                       hideSteppers
                     />
-                    <span className="flex items-center text-[12px] text-[var(--color-text-default)]">
+                    <span className="flex items-center text-body-md text-[var(--color-text-default)]">
                       Seconds
                     </span>
                   </HStack>
                 </VStack>
 
                 <VStack gap={2}>
-                  <label className="text-[11px] font-medium text-[var(--color-text-default)] leading-[16px]">
+                  <label className="text-label-sm text-[var(--color-text-default)]">
                     Revision History Limit
                   </label>
-                  <p className="text-[11px] text-[var(--color-text-subtle)] leading-[16px]">
+                  <p className="text-body-sm text-[var(--color-text-subtle)]">
                     The maximum number of revision histories to retain for the Job.
                   </p>
                   <HStack gap={2}>
@@ -870,7 +870,7 @@ function ScalingPolicySection({
                       className="w-[120px]"
                       hideSteppers
                     />
-                    <span className="flex items-center text-[12px] text-[var(--color-text-default)]">
+                    <span className="flex items-center text-body-md text-[var(--color-text-default)]">
                       Revisions
                     </span>
                   </HStack>
@@ -879,10 +879,10 @@ function ScalingPolicySection({
 
               {/* Progress Deadline */}
               <VStack gap={2} className="max-w-[calc(50%-8px)]">
-                <label className="text-[11px] font-medium text-[var(--color-text-default)] leading-[16px]">
+                <label className="text-label-sm text-[var(--color-text-default)]">
                   Progress Deadline
                 </label>
-                <p className="text-[11px] text-[var(--color-text-subtle)] leading-[16px]">
+                <p className="text-body-sm text-[var(--color-text-subtle)]">
                   The maximum time allowed for a Job to progress before it is considered failed.
                 </p>
                 <HStack gap={2}>
@@ -893,7 +893,7 @@ function ScalingPolicySection({
                     className="w-[120px]"
                     hideSteppers
                   />
-                  <span className="flex items-center text-[12px] text-[var(--color-text-default)]">
+                  <span className="flex items-center text-body-md text-[var(--color-text-default)]">
                     Seconds
                   </span>
                 </HStack>
@@ -1739,10 +1739,10 @@ export function CreateJobPage() {
             <VStack gap={6}>
               {/* Page Header */}
               <VStack gap={2}>
-                <h1 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
                   Create Job
                 </h1>
-                <p className="text-[11px] text-[var(--color-text-subtle)] leading-[16px]">
+                <p className="text-body-sm text-[var(--color-text-subtle)]">
                   Jobs create one or more Pods and ensure that a specified number of them
                   successfully terminate.
                 </p>
@@ -1966,16 +1966,16 @@ export function CreateJobPage() {
                             <VStack gap={6}>
                               {/* Labels */}
                               <VStack gap={3}>
-                                <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-[16px]">
+                                <span className="text-label-sm text-[var(--color-text-default)]">
                                   Labels
                                 </span>
                                 {podLabels.length > 0 && (
                                   <>
                                     <div className="grid grid-cols-[1fr_1fr_32px] gap-4 w-full">
-                                      <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                      <span className="text-label-sm text-[var(--color-text-default)]">
                                         Key
                                       </span>
-                                      <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                      <span className="text-label-sm text-[var(--color-text-default)]">
                                         Value
                                       </span>
                                       <div />
@@ -2028,16 +2028,16 @@ export function CreateJobPage() {
 
                               {/* Annotations */}
                               <VStack gap={3}>
-                                <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-[16px]">
+                                <span className="text-label-sm text-[var(--color-text-default)]">
                                   Annotations
                                 </span>
                                 {podAnnotations.length > 0 && (
                                   <>
                                     <div className="grid grid-cols-[1fr_1fr_32px] gap-4 w-full">
-                                      <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                      <span className="text-label-sm text-[var(--color-text-default)]">
                                         Key
                                       </span>
-                                      <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                      <span className="text-label-sm text-[var(--color-text-default)]">
                                         Value
                                       </span>
                                       <div />
@@ -2167,14 +2167,14 @@ export function CreateJobPage() {
                           />
                           <SectionCard.Content>
                             <VStack gap={3}>
-                              <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                              <span className="text-label-lg text-[var(--color-text-default)]">
                                 Pod Policy
                               </span>
                               <VStack gap={1} className="w-full max-w-[578px]">
-                                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                <span className="text-label-sm text-[var(--color-text-default)]">
                                   Termination Grace Period
                                 </span>
-                                <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                <span className="text-body-md text-[var(--color-text-subtle)]">
                                   The period allowed after receiving a termination request before
                                   the pod is forcibly terminated.
                                 </span>
@@ -2185,7 +2185,7 @@ export function CreateJobPage() {
                                     value={terminationGracePeriod}
                                     onChange={(e) => setTerminationGracePeriod(e.target.value)}
                                   />
-                                  <span className="text-[12px] text-[var(--color-text-default)] whitespace-nowrap">
+                                  <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
                                     Seconds
                                   </span>
                                 </HStack>
@@ -2260,15 +2260,15 @@ export function CreateJobPage() {
                             <VStack gap={4}>
                               {/* Network Settings */}
                               <VStack gap={3}>
-                                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                <span className="text-label-lg text-[var(--color-text-default)]">
                                   Network Settings
                                 </span>
                                 <div className="grid grid-cols-2 gap-x-4 gap-y-4 w-full items-end">
                                   <VStack gap={1}>
-                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                    <span className="text-label-sm text-[var(--color-text-default)]">
                                       Network Mode
                                     </span>
-                                    <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                    <span className="text-body-md text-[var(--color-text-subtle)]">
                                       Select the networking mode for the pod.
                                     </span>
                                     <Select
@@ -2282,10 +2282,10 @@ export function CreateJobPage() {
                                     />
                                   </VStack>
                                   <VStack gap={1}>
-                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                    <span className="text-label-sm text-[var(--color-text-default)]">
                                       DNS Policy
                                     </span>
-                                    <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                    <span className="text-body-md text-[var(--color-text-subtle)]">
                                       Select the DNS policy to apply to the pod.
                                     </span>
                                     <Select
@@ -2300,19 +2300,19 @@ export function CreateJobPage() {
                                     />
                                   </VStack>
                                   <VStack gap={1}>
-                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                    <span className="text-label-sm text-[var(--color-text-default)]">
                                       Hostname
                                     </span>
-                                    <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                    <span className="text-body-md text-[var(--color-text-subtle)]">
                                       Specify the hostname assigned to the pod.
                                     </span>
                                     <Input placeholder="e.g. web" fullWidth />
                                   </VStack>
                                   <VStack gap={1}>
-                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                    <span className="text-label-sm text-[var(--color-text-default)]">
                                       Subdomain
                                     </span>
-                                    <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                    <span className="text-body-md text-[var(--color-text-subtle)]">
                                       Specify the subdomain assigned to the pod.
                                     </span>
                                     <Input placeholder="e.g. web" fullWidth />
@@ -2324,10 +2324,10 @@ export function CreateJobPage() {
                               <div className="grid grid-cols-2 gap-3 w-full">
                                 <VStack gap={2}>
                                   <VStack gap={1}>
-                                    <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                    <span className="text-label-lg text-[var(--color-text-default)]">
                                       Nameservers
                                     </span>
-                                    <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                    <span className="text-body-md text-[var(--color-text-subtle)]">
                                       Specify the DNS nameserver addresses used by the pod.
                                     </span>
                                   </VStack>
@@ -2338,10 +2338,10 @@ export function CreateJobPage() {
                                 </VStack>
                                 <VStack gap={2}>
                                   <VStack gap={1}>
-                                    <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                    <span className="text-label-lg text-[var(--color-text-default)]">
                                       Search Domains
                                     </span>
-                                    <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                    <span className="text-body-md text-[var(--color-text-subtle)]">
                                       Specify the search domains used for DNS resolution.
                                     </span>
                                   </VStack>
@@ -2355,25 +2355,25 @@ export function CreateJobPage() {
                               {/* Resolver Options */}
                               <VStack gap={2}>
                                 <VStack gap={1}>
-                                  <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                  <span className="text-label-lg text-[var(--color-text-default)]">
                                     Resolver Options
                                   </span>
                                 </VStack>
                                 <div className="grid grid-cols-2 gap-3 w-full pl-3">
                                   <VStack gap={1}>
-                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                    <span className="text-label-sm text-[var(--color-text-default)]">
                                       Name
                                     </span>
-                                    <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                    <span className="text-body-md text-[var(--color-text-subtle)]">
                                       Specify the name of the DNS resolver option.
                                     </span>
                                     <Input placeholder="input name" fullWidth />
                                   </VStack>
                                   <VStack gap={1}>
-                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                    <span className="text-label-sm text-[var(--color-text-default)]">
                                       Value
                                     </span>
-                                    <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                    <span className="text-body-md text-[var(--color-text-subtle)]">
                                       The value of the DNS resolver option.
                                     </span>
                                     <Input placeholder="input value" fullWidth />
@@ -2388,25 +2388,25 @@ export function CreateJobPage() {
                               {/* Host Aliases */}
                               <VStack gap={2}>
                                 <VStack gap={1}>
-                                  <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                  <span className="text-label-lg text-[var(--color-text-default)]">
                                     Host Aliases
                                   </span>
                                 </VStack>
                                 <div className="grid grid-cols-2 gap-3 w-full pl-3">
                                   <VStack gap={1}>
-                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                    <span className="text-label-sm text-[var(--color-text-default)]">
                                       IP Address
                                     </span>
-                                    <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                    <span className="text-body-md text-[var(--color-text-subtle)]">
                                       Specify the IP address used for the host alias.
                                     </span>
                                     <Input placeholder="e.g. 127.0.0.1" fullWidth />
                                   </VStack>
                                   <VStack gap={1}>
-                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                    <span className="text-label-sm text-[var(--color-text-default)]">
                                       Hostnames
                                     </span>
-                                    <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                    <span className="text-body-md text-[var(--color-text-subtle)]">
                                       Specify the hostnames mapped to the IP address.
                                     </span>
                                     <Input placeholder="e.g. foo.company.com" fullWidth />
@@ -2647,7 +2647,7 @@ export function CreateJobPage() {
                             <VStack gap={4}>
                               {/* Tolerations */}
                               <VStack gap={2}>
-                                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                <span className="text-label-lg text-[var(--color-text-default)]">
                                   Tolerations
                                 </span>
                                 <Button variant="secondary" size="sm">
@@ -2658,24 +2658,24 @@ export function CreateJobPage() {
 
                               {/* Priority */}
                               <VStack gap={2}>
-                                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                <span className="text-label-lg text-[var(--color-text-default)]">
                                   Priority
                                 </span>
                                 <div className="grid grid-cols-2 gap-3 w-full pl-3">
                                   <VStack gap={1}>
-                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                    <span className="text-label-sm text-[var(--color-text-default)]">
                                       Priority
                                     </span>
-                                    <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                    <span className="text-body-md text-[var(--color-text-subtle)]">
                                       Specify the DNS nameserver addresses used by the pod.
                                     </span>
                                     <Input placeholder="" fullWidth />
                                   </VStack>
                                   <VStack gap={1}>
-                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                    <span className="text-label-sm text-[var(--color-text-default)]">
                                       Priority Class Name
                                     </span>
-                                    <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                    <span className="text-body-md text-[var(--color-text-subtle)]">
                                       Specify the DNS nameserver addresses used by the pod.
                                     </span>
                                     <Input placeholder="" fullWidth />
@@ -2752,10 +2752,10 @@ export function CreateJobPage() {
                           <SectionCard.Content>
                             <VStack gap={4}>
                               <VStack gap={1} className="max-w-[578px]">
-                                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                <span className="text-label-sm text-[var(--color-text-default)]">
                                   Pod Filesystem Group
                                 </span>
-                                <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                <span className="text-body-md text-[var(--color-text-subtle)]">
                                   Specify the filesystem group used by the pod.
                                 </span>
                                 <Select
@@ -2918,11 +2918,11 @@ export function CreateJobPage() {
                                 <VStack gap={4}>
                                   <div className="grid grid-cols-2 gap-4 w-full">
                                     <VStack gap={1}>
-                                      <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                      <span className="text-label-sm text-[var(--color-text-default)]">
                                         Container Name{' '}
                                         <span className="text-[var(--color-state-danger)]">*</span>
                                       </span>
-                                      <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                      <span className="text-body-md text-[var(--color-text-subtle)]">
                                         Enter a name for this container.
                                       </span>
                                       <Input
@@ -2937,11 +2937,11 @@ export function CreateJobPage() {
                                       />
                                     </VStack>
                                     <VStack gap={1}>
-                                      <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                      <span className="text-label-sm text-[var(--color-text-default)]">
                                         Image{' '}
                                         <span className="text-[var(--color-state-danger)]">*</span>
                                       </span>
-                                      <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                      <span className="text-body-md text-[var(--color-text-subtle)]">
                                         Container image to use.
                                       </span>
                                       <Input
@@ -2956,10 +2956,10 @@ export function CreateJobPage() {
                                       />
                                     </VStack>
                                     <VStack gap={1}>
-                                      <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                      <span className="text-label-sm text-[var(--color-text-default)]">
                                         Image Pull Policy
                                       </span>
-                                      <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                      <span className="text-body-md text-[var(--color-text-subtle)]">
                                         When to pull the container image.
                                       </span>
                                       <Select
@@ -2978,10 +2978,10 @@ export function CreateJobPage() {
                                       />
                                     </VStack>
                                     <VStack gap={1}>
-                                      <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                      <span className="text-label-sm text-[var(--color-text-default)]">
                                         Working Directory
                                       </span>
-                                      <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                      <span className="text-body-md text-[var(--color-text-subtle)]">
                                         Working directory for the container.
                                       </span>
                                       <Input
@@ -2998,10 +2998,10 @@ export function CreateJobPage() {
                                   </div>
 
                                   <VStack gap={1} className="w-full">
-                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                    <span className="text-label-sm text-[var(--color-text-default)]">
                                       Command
                                     </span>
-                                    <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                    <span className="text-body-md text-[var(--color-text-subtle)]">
                                       Override the container entrypoint command.
                                     </span>
                                     <Input
@@ -3017,10 +3017,10 @@ export function CreateJobPage() {
                                   </VStack>
 
                                   <VStack gap={1} className="w-full">
-                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                    <span className="text-label-sm text-[var(--color-text-default)]">
                                       Arguments
                                     </span>
-                                    <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                    <span className="text-body-md text-[var(--color-text-subtle)]">
                                       Arguments to pass to the container command.
                                     </span>
                                     <Input
@@ -3116,7 +3116,7 @@ export function CreateJobPage() {
                               />
                               <SectionCard.Content>
                                 <VStack gap={4}>
-                                  <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                  <span className="text-body-md text-[var(--color-text-subtle)]">
                                     Define the ports that the container exposes.
                                   </span>
 
@@ -3126,7 +3126,7 @@ export function CreateJobPage() {
                                       className="grid grid-cols-[1fr_1fr_1fr_auto] gap-3 w-full items-end"
                                     >
                                       <VStack gap={1}>
-                                        <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                        <span className="text-label-sm text-[var(--color-text-default)]">
                                           Name
                                         </span>
                                         <Input
@@ -3144,7 +3144,7 @@ export function CreateJobPage() {
                                         />
                                       </VStack>
                                       <VStack gap={1}>
-                                        <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                        <span className="text-label-sm text-[var(--color-text-default)]">
                                           Container Port
                                         </span>
                                         <Input
@@ -3162,7 +3162,7 @@ export function CreateJobPage() {
                                         />
                                       </VStack>
                                       <VStack gap={1}>
-                                        <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                        <span className="text-label-sm text-[var(--color-text-default)]">
                                           Protocol
                                         </span>
                                         <Select
@@ -3287,7 +3287,7 @@ export function CreateJobPage() {
                               />
                               <SectionCard.Content>
                                 <VStack gap={4}>
-                                  <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                  <span className="text-body-md text-[var(--color-text-subtle)]">
                                     Set environment variables for the container.
                                   </span>
 
@@ -3297,7 +3297,7 @@ export function CreateJobPage() {
                                       className="grid grid-cols-[1fr_1fr_auto] gap-3 w-full items-end"
                                     >
                                       <VStack gap={1}>
-                                        <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                        <span className="text-label-sm text-[var(--color-text-default)]">
                                           Name
                                         </span>
                                         <Input
@@ -3317,7 +3317,7 @@ export function CreateJobPage() {
                                         />
                                       </VStack>
                                       <VStack gap={1}>
-                                        <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                        <span className="text-label-sm text-[var(--color-text-default)]">
                                           Value
                                         </span>
                                         <Input
@@ -3446,15 +3446,15 @@ export function CreateJobPage() {
                               />
                               <SectionCard.Content>
                                 <VStack gap={4}>
-                                  <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                  <span className="text-label-lg text-[var(--color-text-default)]">
                                     Requests
                                   </span>
                                   <div className="grid grid-cols-2 gap-4 w-full">
                                     <VStack gap={1}>
-                                      <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                      <span className="text-label-sm text-[var(--color-text-default)]">
                                         CPU Request
                                       </span>
-                                      <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                      <span className="text-body-md text-[var(--color-text-subtle)]">
                                         Minimum CPU required.
                                       </span>
                                       <Input
@@ -3469,10 +3469,10 @@ export function CreateJobPage() {
                                       />
                                     </VStack>
                                     <VStack gap={1}>
-                                      <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                      <span className="text-label-sm text-[var(--color-text-default)]">
                                         Memory Request
                                       </span>
-                                      <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                      <span className="text-body-md text-[var(--color-text-subtle)]">
                                         Minimum memory required.
                                       </span>
                                       <Input
@@ -3488,15 +3488,15 @@ export function CreateJobPage() {
                                     </VStack>
                                   </div>
 
-                                  <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                  <span className="text-label-lg text-[var(--color-text-default)]">
                                     Limits
                                   </span>
                                   <div className="grid grid-cols-2 gap-4 w-full">
                                     <VStack gap={1}>
-                                      <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                      <span className="text-label-sm text-[var(--color-text-default)]">
                                         CPU Limit
                                       </span>
-                                      <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                      <span className="text-body-md text-[var(--color-text-subtle)]">
                                         Maximum CPU allowed.
                                       </span>
                                       <Input
@@ -3511,10 +3511,10 @@ export function CreateJobPage() {
                                       />
                                     </VStack>
                                     <VStack gap={1}>
-                                      <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                      <span className="text-label-sm text-[var(--color-text-default)]">
                                         Memory Limit
                                       </span>
-                                      <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                      <span className="text-body-md text-[var(--color-text-subtle)]">
                                         Maximum memory allowed.
                                       </span>
                                       <Input
@@ -3636,11 +3636,11 @@ export function CreateJobPage() {
                                           })
                                         }
                                       />
-                                      <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                      <span className="text-label-lg text-[var(--color-text-default)]">
                                         Liveness Probe
                                       </span>
                                     </HStack>
-                                    <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                    <span className="text-body-md text-[var(--color-text-subtle)]">
                                       Indicates whether the container is running. If failed, the
                                       container will be restarted.
                                     </span>
@@ -3659,11 +3659,11 @@ export function CreateJobPage() {
                                           })
                                         }
                                       />
-                                      <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                      <span className="text-label-lg text-[var(--color-text-default)]">
                                         Readiness Probe
                                       </span>
                                     </HStack>
-                                    <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                    <span className="text-body-md text-[var(--color-text-subtle)]">
                                       Indicates whether the container is ready to receive traffic.
                                     </span>
                                   </VStack>
@@ -3750,7 +3750,7 @@ export function CreateJobPage() {
                               />
                               <SectionCard.Content>
                                 <VStack gap={4}>
-                                  <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                  <span className="text-body-md text-[var(--color-text-subtle)]">
                                     Mount volumes into the container filesystem.
                                   </span>
 
@@ -3760,7 +3760,7 @@ export function CreateJobPage() {
                                       className="grid grid-cols-[1fr_1fr_1fr_auto] gap-3 w-full items-end"
                                     >
                                       <VStack gap={1}>
-                                        <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                        <span className="text-label-sm text-[var(--color-text-default)]">
                                           Volume Name
                                         </span>
                                         <Input
@@ -3780,7 +3780,7 @@ export function CreateJobPage() {
                                         />
                                       </VStack>
                                       <VStack gap={1}>
-                                        <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                        <span className="text-label-sm text-[var(--color-text-default)]">
                                           Mount Path
                                         </span>
                                         <Input
@@ -3800,7 +3800,7 @@ export function CreateJobPage() {
                                         />
                                       </VStack>
                                       <VStack gap={1}>
-                                        <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                        <span className="text-label-sm text-[var(--color-text-default)]">
                                           Sub Path
                                         </span>
                                         <Input
@@ -3936,10 +3936,10 @@ export function CreateJobPage() {
                                 <VStack gap={4}>
                                   <div className="grid grid-cols-2 gap-4 w-full">
                                     <VStack gap={1}>
-                                      <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                      <span className="text-label-sm text-[var(--color-text-default)]">
                                         Run As User
                                       </span>
-                                      <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                      <span className="text-body-md text-[var(--color-text-subtle)]">
                                         User ID to run the container.
                                       </span>
                                       <Input
@@ -3954,10 +3954,10 @@ export function CreateJobPage() {
                                       />
                                     </VStack>
                                     <VStack gap={1}>
-                                      <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                      <span className="text-label-sm text-[var(--color-text-default)]">
                                         Run As Group
                                       </span>
-                                      <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                      <span className="text-body-md text-[var(--color-text-subtle)]">
                                         Group ID to run the container.
                                       </span>
                                       <Input
@@ -3983,7 +3983,7 @@ export function CreateJobPage() {
                                           })
                                         }
                                       />
-                                      <span className="text-[12px] text-[var(--color-text-default)]">
+                                      <span className="text-body-md text-[var(--color-text-default)]">
                                         Run as privileged container
                                       </span>
                                     </HStack>
@@ -3996,7 +3996,7 @@ export function CreateJobPage() {
                                           })
                                         }
                                       />
-                                      <span className="text-[12px] text-[var(--color-text-default)]">
+                                      <span className="text-body-md text-[var(--color-text-default)]">
                                         Read-only root filesystem
                                       </span>
                                     </HStack>

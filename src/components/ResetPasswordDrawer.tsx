@@ -126,20 +126,20 @@ export function ResetPasswordDrawer({
       <VStack gap={6} className="pb-6">
         {/* Header */}
         <VStack gap={3}>
-          <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
             Reset password
           </h2>
-          <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+          <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
             Resets the user's login password. The new password takes effect immediately.
           </p>
 
           {/* User Info Box */}
           <div className="w-full bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
             <VStack gap={1.5}>
-              <span className="text-[11px] font-medium text-[var(--color-text-subtle)] leading-4">
+              <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
                 User
               </span>
-              <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              <span className="text-body-md text-[var(--color-text-default)] leading-4">
                 {userName}
               </span>
             </VStack>
@@ -151,14 +151,14 @@ export function ResetPasswordDrawer({
           {/* Section Header */}
           <VStack gap={2}>
             <div className="flex items-start gap-[3px]">
-              <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+              <span className="text-label-lg text-[var(--color-text-default)] leading-5">
                 Password
               </span>
-              <span className="text-[14px] font-medium text-[var(--color-state-danger)] leading-5">
+              <span className="text-label-lg text-[var(--color-state-danger)] leading-5">
                 *
               </span>
             </div>
-            <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
               Choose how to set a password for the user account.
             </p>
           </VStack>
@@ -170,13 +170,13 @@ export function ResetPasswordDrawer({
                 checked={resetOption === 'temporary'}
                 onChange={() => setResetOption('temporary')}
               />
-              <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              <span className="text-body-md text-[var(--color-text-default)] leading-4">
                 Issue a temporary password (email sent automatically)
               </span>
             </label>
             <label className="flex items-center gap-1.5 cursor-pointer">
               <Radio checked={resetOption === 'manual'} onChange={() => setResetOption('manual')} />
-              <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              <span className="text-body-md text-[var(--color-text-default)] leading-4">
                 Set password manually (no email sent)
               </span>
             </label>
@@ -187,7 +187,7 @@ export function ResetPasswordDrawer({
             <VStack gap={4} className="mt-2">
               {/* New Password Field */}
               <VStack gap={2}>
-                <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                <span className="text-label-md text-[var(--color-text-default)] leading-4">
                   New Password
                 </span>
                 <div className="relative w-full">
@@ -214,7 +214,7 @@ export function ResetPasswordDrawer({
 
               {/* Confirm New Password Field */}
               <VStack gap={2}>
-                <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                <span className="text-label-md text-[var(--color-text-default)] leading-4">
                   Confirm New Password
                 </span>
                 <div className="relative w-full">
@@ -238,7 +238,7 @@ export function ResetPasswordDrawer({
                   </button>
                 </div>
                 {confirmPassword && !doPasswordsMatch && (
-                  <span className="text-[11px] text-[var(--color-state-danger)] leading-4">
+                  <span className="text-body-sm text-[var(--color-state-danger)] leading-4">
                     Passwords do not match
                   </span>
                 )}
@@ -246,7 +246,7 @@ export function ResetPasswordDrawer({
 
               {/* Password Requirements */}
               <VStack gap={1.5} className="mt-1 p-3 bg-[var(--color-surface-subtle)] rounded-lg">
-                <span className="text-[11px] font-medium text-[var(--color-text-subtle)] leading-4 mb-1">
+                <span className="text-label-sm text-[var(--color-text-subtle)] leading-4 mb-1">
                   Password Requirements
                 </span>
                 {passwordRequirements.map((req, index) => {
@@ -263,7 +263,7 @@ export function ResetPasswordDrawer({
                         <IconX size={12} stroke={2} className="text-[var(--color-text-muted)]" />
                       )}
                       <span
-                        className={`text-[11px] leading-4 ${isMet ? 'text-[var(--color-state-success)]' : 'text-[var(--color-text-muted)]'}`}
+                        className={`text-body-sm leading-4 ${isMet ? 'text-[var(--color-state-success)]' : 'text-[var(--color-text-muted)]'}`}
                       >
                         {req.label}
                       </span>

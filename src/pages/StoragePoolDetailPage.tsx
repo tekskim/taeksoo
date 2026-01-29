@@ -499,11 +499,11 @@ function CapacityGauge({ percentage, used, total, unit = 'TiB' }: CapacityGaugeP
     >
       <ReactECharts option={option} style={{ height: '180px', width: '220px' }} />
       <div className="absolute inset-0 flex flex-col items-center justify-center pt-6 pointer-events-none">
-        <span className="text-[24px] leading-[32px] font-semibold" style={{ color }}>
+        <span className="text-heading-h3" style={{ color }}>
           {percentage.toFixed(1)}%
         </span>
         {used !== undefined && total !== undefined && (
-          <span className="text-[12px] text-[var(--color-text-subtle)]">
+          <span className="text-body-md text-[var(--color-text-subtle)]">
             {used}
             {unit}/{total}
             {unit}
@@ -519,14 +519,14 @@ function CapacityGauge({ percentage, used, total, unit = 'TiB' }: CapacityGaugeP
         >
           <div className="flex items-center gap-1.5">
             <div className="w-[5px] h-[5px] rounded-[1px]" style={{ backgroundColor: color }} />
-            <span className="text-[11px] leading-[14px] text-[var(--color-text-default)] whitespace-nowrap">
+            <span className="text-body-sm leading-[14px] text-[var(--color-text-default)] whitespace-nowrap">
               Used: {used}
               {unit} ({Math.round(percentage)}%)
             </span>
           </div>
           <div className="flex items-center gap-1.5">
             <div className="w-[5px] h-[5px] rounded-[1px] bg-[var(--color-border-subtle)]" />
-            <span className="text-[11px] leading-[14px] text-[var(--color-text-default)] whitespace-nowrap">
+            <span className="text-body-sm leading-[14px] text-[var(--color-text-default)] whitespace-nowrap">
               Available: {available.toFixed(1)}
               {unit} ({availablePercent}%)
             </span>
@@ -550,10 +550,10 @@ function TimeTillFull({ value, unit }: TimeTillFullProps) {
   return (
     <div className="h-[200px] flex items-center justify-center">
       <div className="flex items-baseline gap-1">
-        <span className="text-[24px] font-semibold" style={{ color: chartColors.green500 }}>
+        <span className="text-heading-h3" style={{ color: chartColors.green500 }}>
           {value}
         </span>
-        <span className="text-[14px] font-medium" style={{ color: chartColors.green500 }}>
+        <span className="text-label-lg" style={{ color: chartColors.green500 }}>
           {unit}
         </span>
       </div>
@@ -1235,14 +1235,14 @@ export function StoragePoolDetailPage() {
                       <div className="grid grid-cols-2 gap-4">
                         {/* Capacity Used */}
                         <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
-                          <h4 className="text-[14px] font-medium text-[var(--color-text-default)] mb-4">
+                          <h4 className="text-label-lg text-[var(--color-text-default)] mb-4">
                             Capacity used
                           </h4>
                           <CapacityGauge percentage={88.2} used={167.6} total={190.0} unit="TiB" />
                         </div>
                         {/* Time Till Full */}
                         <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
-                          <h4 className="text-[14px] font-medium text-[var(--color-text-default)] mb-4">
+                          <h4 className="text-label-lg text-[var(--color-text-default)] mb-4">
                             Time till full
                           </h4>
                           <TimeTillFull value={12.3} unit="weeks" />

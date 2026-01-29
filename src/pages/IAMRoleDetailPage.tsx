@@ -266,10 +266,10 @@ function InfoCard({ label, value }: InfoCardProps) {
   return (
     <div className="basis-0 grow bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3 flex items-center justify-between min-w-0">
       <div className="flex flex-col gap-1.5">
-        <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)]">
+        <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
           {label}
         </span>
-        <span className="text-[12px] leading-4 text-[var(--color-text-default)]">{value}</span>
+        <span className="text-body-md leading-4 text-[var(--color-text-default)]">{value}</span>
       </div>
     </div>
   );
@@ -634,7 +634,7 @@ export default function IAMRoleDetailPage() {
               <div className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
                 <VStack gap={3}>
                   {/* Title */}
-                  <h1 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+                  <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
                     {role.name}
                   </h1>
 
@@ -685,7 +685,7 @@ export default function IAMRoleDetailPage() {
                     <VStack gap={4} className="pt-4">
                       {/* Section Header */}
                       <HStack justify="between" align="center" className="w-full">
-                        <h2 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+                        <h2 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
                           Policies
                         </h2>
                         <Button variant="secondary" size="sm">
@@ -713,22 +713,22 @@ export default function IAMRoleDetailPage() {
                       <div className="w-full flex flex-col gap-1">
                         {/* Table Header */}
                         <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md">
-                          <div className="flex-1 flex items-center px-3 py-2 text-[11px] font-medium text-[var(--color-text-default)]">
+                          <div className="flex-1 flex items-center px-3 py-2 text-label-sm text-[var(--color-text-default)]">
                             Status
                           </div>
-                          <div className="flex-1 flex items-center px-3 py-2 text-[11px] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
+                          <div className="flex-1 flex items-center px-3 py-2 text-label-sm text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
                             Type
                           </div>
-                          <div className="flex-1 flex items-center px-3 py-2 text-[11px] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
+                          <div className="flex-1 flex items-center px-3 py-2 text-label-sm text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
                             Apps
                           </div>
-                          <div className="flex-1 flex items-center px-3 py-2 text-[11px] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
+                          <div className="flex-1 flex items-center px-3 py-2 text-label-sm text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
                             Description
                           </div>
-                          <div className="flex-1 flex items-center px-3 py-2 text-[11px] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
+                          <div className="flex-1 flex items-center px-3 py-2 text-label-sm text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
                             Edited at
                           </div>
-                          <div className="w-[72px] flex items-center justify-center px-3 py-2 text-[11px] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
+                          <div className="w-[72px] flex items-center justify-center px-3 py-2 text-label-sm text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
                             Action
                           </div>
                         </div>
@@ -741,7 +741,7 @@ export default function IAMRoleDetailPage() {
                           >
                             {/* Main Row */}
                             <div className="flex items-center min-h-[var(--table-row-height)] hover:bg-[var(--table-row-hover-bg)] transition-colors">
-                              <div className="flex-1 flex items-center gap-2 px-3 py-2 text-[12px] text-[var(--color-text-default)]">
+                              <div className="flex-1 flex items-center gap-2 px-3 py-2 text-body-md text-[var(--color-text-default)]">
                                 <button
                                   onClick={() =>
                                     policy.permissions && togglePolicyExpansion(policy.id)
@@ -761,16 +761,16 @@ export default function IAMRoleDetailPage() {
                                   {policy.name}
                                 </Link>
                               </div>
-                              <div className="flex-1 flex items-center px-3 py-2 text-[12px] text-[var(--color-text-default)] border-l border-transparent">
+                              <div className="flex-1 flex items-center px-3 py-2 text-body-md text-[var(--color-text-default)] border-l border-transparent">
                                 {policy.type}
                               </div>
-                              <div className="flex-1 flex items-center px-3 py-2 text-[12px] text-[var(--color-text-default)] border-l border-transparent">
+                              <div className="flex-1 flex items-center px-3 py-2 text-body-md text-[var(--color-text-default)] border-l border-transparent">
                                 {policy.apps}
                               </div>
-                              <div className="flex-1 flex items-center px-3 py-2 text-[12px] text-[var(--color-text-default)] border-l border-transparent">
+                              <div className="flex-1 flex items-center px-3 py-2 text-body-md text-[var(--color-text-default)] border-l border-transparent">
                                 {policy.description}
                               </div>
-                              <div className="flex-1 flex items-center px-3 py-2 text-[12px] text-[var(--color-text-default)] border-l border-transparent">
+                              <div className="flex-1 flex items-center px-3 py-2 text-body-md text-[var(--color-text-default)] border-l border-transparent">
                                 {policy.editedAt}
                               </div>
                               <div className="w-[72px] flex items-center justify-center px-3 py-2 border-l border-transparent">
@@ -809,7 +809,7 @@ export default function IAMRoleDetailPage() {
                   <TabPanel value="entities" className="pt-0">
                     <VStack gap={4} className="pt-4">
                       {/* Section Header */}
-                      <h2 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+                      <h2 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
                         Entities attached
                       </h2>
 
@@ -823,7 +823,7 @@ export default function IAMRoleDetailPage() {
                               setEntitiesCurrentPage(1);
                               setEntitiesSearchQuery('');
                             }}
-                            className={`flex-1 min-w-[80px] py-2.5 px-2.5 rounded-md text-[14px] font-medium text-center transition-colors ${
+                            className={`flex-1 min-w-[80px] py-2.5 px-2.5 rounded-md text-label-lg text-center transition-colors ${
                               entitiesSubTab === 'user-groups'
                                 ? 'bg-[var(--color-surface-default)] border border-[var(--color-border-default)] text-[var(--color-action-primary)]'
                                 : 'text-[var(--color-text-default)]'
@@ -838,7 +838,7 @@ export default function IAMRoleDetailPage() {
                               setEntitiesCurrentPage(1);
                               setEntitiesSearchQuery('');
                             }}
-                            className={`flex-1 min-w-[80px] py-2.5 px-2.5 rounded-md text-[14px] font-medium text-center transition-colors ${
+                            className={`flex-1 min-w-[80px] py-2.5 px-2.5 rounded-md text-label-lg text-center transition-colors ${
                               entitiesSubTab === 'users'
                                 ? 'bg-[var(--color-surface-default)] border border-[var(--color-border-default)] text-[var(--color-action-primary)]'
                                 : 'text-[var(--color-text-default)]'

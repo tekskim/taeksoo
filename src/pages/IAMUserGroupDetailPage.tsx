@@ -344,10 +344,10 @@ function InfoCard({ label, value, rightElement }: InfoCardProps) {
   return (
     <div className="basis-0 grow bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3 flex items-center justify-between min-w-0">
       <div className="flex flex-col gap-1.5">
-        <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)]">
+        <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
           {label}
         </span>
-        <span className="text-[12px] leading-4 text-[var(--color-text-default)]">{value}</span>
+        <span className="text-body-md leading-4 text-[var(--color-text-default)]">{value}</span>
       </div>
       {rightElement}
     </div>
@@ -599,7 +599,7 @@ export default function IAMUserGroupDetailPage() {
           <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
             <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
               <VStack gap={3}>
-                <h1 className="text-[24px] font-semibold text-[var(--color-text-default)]">
+                <h1 className="text-heading-h3 text-[var(--color-text-default)]">
                   User group not found
                 </h1>
                 <p className="text-[var(--color-text-muted)]">
@@ -646,7 +646,7 @@ export default function IAMUserGroupDetailPage() {
               <div className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
                 <VStack gap={3}>
                   {/* Title */}
-                  <h1 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+                  <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
                     {userGroup.name}
                   </h1>
 
@@ -697,7 +697,7 @@ export default function IAMUserGroupDetailPage() {
                     <VStack gap={4} className="pt-4">
                       {/* Section Header */}
                       <HStack justify="between" align="center" className="w-full">
-                        <h2 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+                        <h2 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
                           Users
                         </h2>
                         <Button variant="secondary" size="sm">
@@ -731,7 +731,7 @@ export default function IAMUserGroupDetailPage() {
                     <VStack gap={4} className="pt-4">
                       {/* Section Header */}
                       <HStack justify="between" align="center" className="w-full">
-                        <h2 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+                        <h2 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
                           Roles
                         </h2>
                         <Button variant="secondary" size="sm">

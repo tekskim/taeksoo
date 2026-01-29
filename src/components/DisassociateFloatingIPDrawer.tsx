@@ -121,15 +121,15 @@ export function DisassociateFloatingIPDrawer({
       <VStack gap={6} className="h-full">
         {/* Instance Info */}
         <div className="w-full bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-          <p className="text-[11px] text-[var(--color-text-subtle)] mb-1.5">Instance</p>
-          <p className="text-[12px] text-[var(--color-text-default)]">{instance.name}</p>
+          <p className="text-body-sm text-[var(--color-text-subtle)] mb-1.5">Instance</p>
+          <p className="text-body-md text-[var(--color-text-default)]">{instance.name}</p>
         </div>
 
         {/* Floating IPs Section */}
         <VStack gap={3}>
           {/* Header */}
           <div className="flex items-center gap-1 h-7">
-            <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+            <span className="text-label-lg text-[var(--color-text-default)]">
               Floating IPs
             </span>
           </div>
@@ -165,7 +165,7 @@ export function DisassociateFloatingIPDrawer({
                 style={{ width: '59px', flexShrink: 0 }}
                 className="flex items-center justify-center px-3 border-l border-[var(--color-border-default)]"
               >
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                <span className="text-label-sm text-[var(--color-text-default)]">
                   Status
                 </span>
               </div>
@@ -173,7 +173,7 @@ export function DisassociateFloatingIPDrawer({
                 style={{ width: '183px', flexShrink: 0 }}
                 className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
               >
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                <span className="text-label-sm text-[var(--color-text-default)]">
                   Floating IP
                 </span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
@@ -182,7 +182,7 @@ export function DisassociateFloatingIPDrawer({
                 style={{ width: '183px', flexShrink: 0 }}
                 className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
               >
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                <span className="text-label-sm text-[var(--color-text-default)]">
                   Fixed IP
                 </span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
@@ -191,7 +191,7 @@ export function DisassociateFloatingIPDrawer({
                 style={{ width: '183px', flexShrink: 0 }}
                 className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
               >
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                <span className="text-label-sm text-[var(--color-text-default)]">
                   Created At
                 </span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
@@ -242,7 +242,7 @@ export function DisassociateFloatingIPDrawer({
                     className="flex flex-col gap-0.5 justify-center px-3 py-2 overflow-hidden"
                   >
                     <div className="flex items-center gap-1.5">
-                      <span className="text-[12px] font-medium text-[var(--color-action-primary)] truncate">
+                      <span className="text-label-md text-[var(--color-action-primary)] truncate">
                         {fip.floatingIp}
                       </span>
                       <IconExternalLink
@@ -250,7 +250,7 @@ export function DisassociateFloatingIPDrawer({
                         className="shrink-0 text-[var(--color-action-primary)]"
                       />
                     </div>
-                    <span className="text-[11px] text-[var(--color-text-subtle)] truncate">
+                    <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
                       ID : 17kfj123
                     </span>
                   </div>
@@ -258,7 +258,7 @@ export function DisassociateFloatingIPDrawer({
                     style={{ width: '183px', flexShrink: 0 }}
                     className="flex items-center px-3 py-2 overflow-hidden"
                   >
-                    <span className="text-[12px] text-[var(--color-text-default)] truncate">
+                    <span className="text-body-md text-[var(--color-text-default)] truncate">
                       {fip.fixedIp}
                     </span>
                   </div>
@@ -266,7 +266,7 @@ export function DisassociateFloatingIPDrawer({
                     style={{ width: '183px', flexShrink: 0 }}
                     className="flex items-center px-3 py-2 overflow-hidden"
                   >
-                    <span className="text-[12px] text-[var(--color-text-default)] truncate">
+                    <span className="text-body-md text-[var(--color-text-default)] truncate">
                       {fip.createdAt}
                     </span>
                   </div>

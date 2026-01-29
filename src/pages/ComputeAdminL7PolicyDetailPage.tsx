@@ -323,7 +323,7 @@ export default function L7PolicyDetailPage() {
               {/* Detail header */}
               <DetailHeader>
                 <DetailHeader.Title>
-                  <h1 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6 mb-3">
+                  <h1 className="text-heading-h5 text-[var(--color-text-default)] leading-6 mb-3">
                     {l7Policy.name}
                   </h1>
                   <DetailHeader.Actions>
@@ -393,7 +393,7 @@ export default function L7PolicyDetailPage() {
                     <VStack gap={4} className="pt-4">
                       {/* Header */}
                       <div className="flex items-center justify-between">
-                        <h3 className="text-[16px] font-semibold text-[var(--color-text-default)]">
+                        <h3 className="text-heading-h5 text-[var(--color-text-default)]">
                           L7 Rules
                         </h3>
                       </div>

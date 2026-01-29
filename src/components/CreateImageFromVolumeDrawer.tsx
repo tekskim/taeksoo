@@ -100,10 +100,10 @@ export function CreateImageFromVolumeDrawer({
         <VStack gap={3}>
           {/* Header */}
           <VStack gap={2}>
-            <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
               Create Image from Volume
             </h2>
-            <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
               Create a new image using this volume as the source. The image will contain all data
               currently stored on the volume and can be used to launch new instances.
             </p>
@@ -111,8 +111,8 @@ export function CreateImageFromVolumeDrawer({
 
           {/* Volume Info Box */}
           <div className="w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg">
-            <p className="text-[11px] font-medium text-[var(--color-text-subtle)] mb-1.5">Volume</p>
-            <p className="text-[12px] text-[var(--color-text-default)]">
+            <p className="text-label-sm text-[var(--color-text-subtle)] mb-1.5">Volume</p>
+            <p className="text-body-md text-[var(--color-text-default)]">
               {volume ? `${volume.name} (${volume.size}GiB)` : '-'}
             </p>
           </div>
@@ -120,7 +120,7 @@ export function CreateImageFromVolumeDrawer({
 
         {/* Image Name Input */}
         <VStack gap={2} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             Image name
           </label>
           <Input
@@ -131,11 +131,11 @@ export function CreateImageFromVolumeDrawer({
             error={hasAttemptedSubmit && !imageName.trim()}
           />
           {hasAttemptedSubmit && !imageName.trim() ? (
-            <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+            <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
               Image name is required
             </p>
           ) : (
-            <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
               Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
             </p>
           )}
@@ -143,7 +143,7 @@ export function CreateImageFromVolumeDrawer({
 
         {/* Disk Format Select */}
         <VStack gap={2} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             Disk Format
           </label>
           <Select options={diskFormats} value={diskFormat} onChange={setDiskFormat} fullWidth />

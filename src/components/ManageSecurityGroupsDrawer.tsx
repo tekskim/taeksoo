@@ -178,10 +178,10 @@ export function ManageSecurityGroupsDrawer({
         {/* Header Section */}
         <VStack gap={3}>
           <VStack gap={2}>
-            <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
               Manage Security Groups
             </h2>
-            <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
               You can attach or detach security groups for the selected interface. These rules
               control inbound and outbound traffic for the instance.
             </p>
@@ -189,14 +189,14 @@ export function ManageSecurityGroupsDrawer({
 
           {/* Instance Info Box */}
           <div className="w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg">
-            <div className="text-[11px] text-[var(--color-text-subtle)] mb-1.5">Instance</div>
-            <div className="text-[12px] text-[var(--color-text-default)]">{instance.name}</div>
+            <div className="text-body-sm text-[var(--color-text-subtle)] mb-1.5">Instance</div>
+            <div className="text-body-md text-[var(--color-text-default)]">{instance.name}</div>
           </div>
         </VStack>
 
         {/* Interfaces Section */}
         <VStack gap={3}>
-          <h3 className="text-[14px] font-medium text-[var(--color-text-default)]">Interfaces</h3>
+          <h3 className="text-label-lg text-[var(--color-text-default)]">Interfaces</h3>
 
           {/* Search */}
           <div className="w-[280px]">
@@ -233,7 +233,7 @@ export function ManageSecurityGroupsDrawer({
                 style={{ width: '59px', flexShrink: 0 }}
                 className="flex items-center justify-center px-3 border-l border-[var(--color-border-default)]"
               >
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                <span className="text-label-sm text-[var(--color-text-default)]">
                   Status
                 </span>
               </div>
@@ -241,7 +241,7 @@ export function ManageSecurityGroupsDrawer({
                 style={{ width: '137px', flexShrink: 0 }}
                 className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
               >
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                <span className="text-label-sm text-[var(--color-text-default)]">
                   Network
                 </span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
@@ -250,7 +250,7 @@ export function ManageSecurityGroupsDrawer({
                 style={{ width: '137px', flexShrink: 0 }}
                 className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
               >
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                <span className="text-label-sm text-[var(--color-text-default)]">
                   Port ID
                 </span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
@@ -259,7 +259,7 @@ export function ManageSecurityGroupsDrawer({
                 style={{ width: '137px', flexShrink: 0 }}
                 className="flex items-center px-3 border-l border-[var(--color-border-default)]"
               >
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                <span className="text-label-sm text-[var(--color-text-default)]">
                   IP Address
                 </span>
               </div>
@@ -267,7 +267,7 @@ export function ManageSecurityGroupsDrawer({
                 style={{ width: '138px', flexShrink: 0 }}
                 className="flex items-center px-3 border-l border-[var(--color-border-default)]"
               >
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                <span className="text-label-sm text-[var(--color-text-default)]">
                   Mac Address
                 </span>
               </div>
@@ -321,7 +321,7 @@ export function ManageSecurityGroupsDrawer({
                     className="flex flex-col gap-0.5 justify-center px-3 py-2 overflow-hidden"
                   >
                     <div className="flex items-center gap-1.5">
-                      <span className="text-[12px] font-medium text-[var(--color-action-primary)] truncate">
+                      <span className="text-label-md text-[var(--color-action-primary)] truncate">
                         {iface.portName}
                       </span>
                       <IconExternalLink
@@ -329,7 +329,7 @@ export function ManageSecurityGroupsDrawer({
                         className="shrink-0 text-[var(--color-action-primary)]"
                       />
                     </div>
-                    <span className="text-[11px] text-[var(--color-text-subtle)] truncate">
+                    <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
                       ID : 17kfj123
                     </span>
                   </div>
@@ -339,7 +339,7 @@ export function ManageSecurityGroupsDrawer({
                     className="flex flex-col gap-0.5 justify-center px-3 py-2 overflow-hidden"
                   >
                     <div className="flex items-center gap-1.5">
-                      <span className="text-[12px] font-medium text-[var(--color-action-primary)] truncate">
+                      <span className="text-label-md text-[var(--color-action-primary)] truncate">
                         {iface.networkName}
                       </span>
                       <IconExternalLink
@@ -347,7 +347,7 @@ export function ManageSecurityGroupsDrawer({
                         className="shrink-0 text-[var(--color-action-primary)]"
                       />
                     </div>
-                    <span className="text-[11px] text-[var(--color-text-subtle)] truncate">
+                    <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
                       ID : 17kfj123
                     </span>
                   </div>
@@ -356,7 +356,7 @@ export function ManageSecurityGroupsDrawer({
                     style={{ width: '137px', flexShrink: 0 }}
                     className="flex items-center px-3 py-2 overflow-hidden"
                   >
-                    <span className="text-[12px] text-[var(--color-text-default)] truncate">
+                    <span className="text-body-md text-[var(--color-text-default)] truncate">
                       {iface.ipAddress}
                     </span>
                   </div>
@@ -365,7 +365,7 @@ export function ManageSecurityGroupsDrawer({
                     style={{ width: '138px', flexShrink: 0 }}
                     className="flex items-center px-3 py-2 overflow-hidden"
                   >
-                    <span className="text-[12px] text-[var(--color-text-default)] truncate">
+                    <span className="text-body-md text-[var(--color-text-default)] truncate">
                       {iface.macAddress}
                     </span>
                   </div>
@@ -397,7 +397,7 @@ export function ManageSecurityGroupsDrawer({
 
         {/* Security Groups Section */}
         <VStack gap={3} className="pb-5">
-          <h3 className="text-[14px] font-medium text-[var(--color-text-default)]">
+          <h3 className="text-label-lg text-[var(--color-text-default)]">
             Security Groups
           </h3>
 
@@ -436,7 +436,7 @@ export function ManageSecurityGroupsDrawer({
                 style={{ width: '203px', flexShrink: 0 }}
                 className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
               >
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                <span className="text-label-sm text-[var(--color-text-default)]">
                   Name
                 </span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
@@ -445,7 +445,7 @@ export function ManageSecurityGroupsDrawer({
                 style={{ width: '203px', flexShrink: 0 }}
                 className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
               >
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                <span className="text-label-sm text-[var(--color-text-default)]">
                   Description
                 </span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
@@ -454,7 +454,7 @@ export function ManageSecurityGroupsDrawer({
                 style={{ width: '202px', flexShrink: 0 }}
                 className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
               >
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                <span className="text-label-sm text-[var(--color-text-default)]">
                   Created At
                 </span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
@@ -500,7 +500,7 @@ export function ManageSecurityGroupsDrawer({
                     className="flex flex-col gap-0.5 justify-center px-3 py-2 overflow-hidden"
                   >
                     <div className="flex items-center gap-1.5">
-                      <span className="text-[12px] font-medium text-[var(--color-action-primary)] truncate">
+                      <span className="text-label-md text-[var(--color-action-primary)] truncate">
                         {sg.name}
                       </span>
                       <IconExternalLink
@@ -508,7 +508,7 @@ export function ManageSecurityGroupsDrawer({
                         className="shrink-0 text-[var(--color-action-primary)]"
                       />
                     </div>
-                    <span className="text-[11px] text-[var(--color-text-subtle)] truncate">
+                    <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
                       ID : 21stu345
                     </span>
                   </div>
@@ -517,7 +517,7 @@ export function ManageSecurityGroupsDrawer({
                     style={{ width: '203px', flexShrink: 0 }}
                     className="flex items-center px-3 py-2 overflow-hidden"
                   >
-                    <span className="text-[12px] text-[var(--color-text-default)] truncate">
+                    <span className="text-body-md text-[var(--color-text-default)] truncate">
                       {sg.description}
                     </span>
                   </div>
@@ -526,7 +526,7 @@ export function ManageSecurityGroupsDrawer({
                     style={{ width: '202px', flexShrink: 0 }}
                     className="flex items-center px-3 py-2 overflow-hidden"
                   >
-                    <span className="text-[12px] text-[var(--color-text-default)] truncate">
+                    <span className="text-body-md text-[var(--color-text-default)] truncate">
                       {sg.createdAt}
                     </span>
                   </div>

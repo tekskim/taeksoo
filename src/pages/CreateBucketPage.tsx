@@ -59,7 +59,7 @@ function PreSection({ title }: PreSectionProps) {
   return (
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
       <div className="h-8 flex items-center">
-        <h5 className="text-[length:var(--font-size-16)] font-semibold leading-[var(--line-height-24)] text-[var(--color-text-default)]">
+        <h5 className="text-heading-h5 text-[var(--color-text-default)]">
           {title}
         </h5>
       </div>
@@ -79,10 +79,10 @@ function WritingSection({ title }: WritingSectionProps) {
   return (
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
       <div className="h-8 flex items-center justify-between">
-        <h5 className="text-[length:var(--font-size-16)] font-semibold leading-[var(--line-height-24)] text-[var(--color-text-default)]">
+        <h5 className="text-heading-h5 text-[var(--color-text-default)]">
           {title}
         </h5>
-        <span className="text-[11px] text-[var(--color-text-subtle)]">Writing...</span>
+        <span className="text-body-sm text-[var(--color-text-subtle)]">Writing...</span>
       </div>
     </div>
   );
@@ -176,7 +176,7 @@ function SummarySidebar({
         {/* Summary Card */}
         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
           <VStack gap={3}>
-            <h5 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+            <h5 className="text-heading-h5 text-[var(--color-text-default)]">
               Summary
             </h5>
             <div className="flex flex-col">
@@ -185,11 +185,11 @@ function SummarySidebar({
 
                 return (
                   <div key={sectionKey} className="flex items-center justify-between py-1">
-                    <span className="text-[12px] leading-5 text-[var(--color-text-default)]">
+                    <span className="text-body-md text-[var(--color-text-default)]">
                       {SECTION_LABELS[sectionKey]}
                     </span>
                     {isWriting ? (
-                      <span className="text-[11px] text-[var(--color-text-subtle)]">
+                      <span className="text-body-sm text-[var(--color-text-subtle)]">
                         Writing...
                       </span>
                     ) : (
@@ -316,7 +316,7 @@ function BasicInformationSection({
         <VStack gap={0}>
           {/* Bucket Name */}
           <div className="flex flex-col pt-2 pb-6">
-            <label className="text-[14px] font-medium text-[var(--color-text-default)] mb-2">
+            <label className="text-label-lg text-[var(--color-text-default)] mb-2">
               Bucket Name <span className="text-[var(--color-state-danger)]">*</span>
             </label>
             <Input
@@ -331,11 +331,11 @@ function BasicInformationSection({
             />
             <div className="flex flex-col gap-1 mt-1">
               {bucketNameError && (
-                <span className="text-[11px] text-[var(--color-state-danger)] leading-[16px]">
+                <span className="text-body-sm text-[var(--color-state-danger)]">
                   {bucketNameError}
                 </span>
               )}
-              <span className="text-[11px] text-[var(--color-text-subtle)] leading-[16px]">
+              <span className="text-body-sm text-[var(--color-text-subtle)]">
                 The name should start with upper letter, lower letter or chinese, and be a string of
                 1 to 128, characters can only contain "0-9, a-z, A-Z, "-'_.".
               </span>
@@ -347,7 +347,7 @@ function BasicInformationSection({
 
           {/* Region */}
           <div className="flex flex-col py-6">
-            <label className="text-[14px] font-medium text-[var(--color-text-default)] mb-2">
+            <label className="text-label-lg text-[var(--color-text-default)] mb-2">
               Region <span className="text-[var(--color-state-danger)]">*</span>
             </label>
             <Select
@@ -363,7 +363,7 @@ function BasicInformationSection({
 
           {/* Owner */}
           <div className="flex flex-col py-6">
-            <label className="text-[14px] font-medium text-[var(--color-text-default)] mb-2">
+            <label className="text-label-lg text-[var(--color-text-default)] mb-2">
               Owner <span className="text-[var(--color-state-danger)]">*</span>
             </label>
             <Select
@@ -381,7 +381,7 @@ function BasicInformationSection({
               fullWidth
             />
             {ownerError && (
-              <span className="text-[11px] text-[var(--color-state-danger)] leading-[16px] mt-1">
+              <span className="text-body-sm text-[var(--color-state-danger)] mt-1">
                 {ownerError}
               </span>
             )}
@@ -468,7 +468,7 @@ function SettingsSection({
         <VStack gap={0}>
           {/* Object Locking */}
           <div className="flex flex-col pt-2 pb-6">
-            <span className="text-[14px] font-medium text-[var(--color-text-default)] mb-2">
+            <span className="text-label-lg text-[var(--color-text-default)] mb-2">
               Object Locking
             </span>
             <HStack gap={6}>
@@ -478,7 +478,7 @@ function SettingsSection({
                   checked={objectLocking === 'disabled'}
                   onChange={() => onObjectLockingChange('disabled')}
                 />
-                <span className="text-[12px] text-[var(--color-text-default)]">Disabled</span>
+                <span className="text-body-md text-[var(--color-text-default)]">Disabled</span>
               </label>
               <label className="flex items-center gap-1.5 cursor-pointer">
                 <Radio
@@ -486,10 +486,10 @@ function SettingsSection({
                   checked={objectLocking === 'enabled'}
                   onChange={() => onObjectLockingChange('enabled')}
                 />
-                <span className="text-[12px] text-[var(--color-text-default)]">Enabled</span>
+                <span className="text-body-md text-[var(--color-text-default)]">Enabled</span>
               </label>
             </HStack>
-            <span className="text-[11px] text-[var(--color-text-subtle)] leading-[16px] mt-1">
+            <span className="text-body-sm text-[var(--color-text-subtle)] mt-1">
               Store objects using a write-once-read-many (WORM) model to prevent objects from being
               deleted or overwritten for a fixed amount of time or indefinitely. Object Locking
               works only in versioned buckets.
@@ -500,7 +500,7 @@ function SettingsSection({
               <div className="flex flex-col gap-3 mt-3">
                 {/* Mode */}
                 <div className="flex flex-col">
-                  <label className="text-[14px] font-medium text-[var(--color-text-default)] mb-2">
+                  <label className="text-label-lg text-[var(--color-text-default)] mb-2">
                     Mode
                   </label>
                   <Select
@@ -514,11 +514,11 @@ function SettingsSection({
                     fullWidth
                   />
                   <div className="flex flex-col gap-1 mt-1">
-                    <span className="text-[11px] text-[var(--color-text-subtle)] leading-[16px]">
+                    <span className="text-body-sm text-[var(--color-text-subtle)]">
                       In COMPLIANCE an object version cannot be overwritten or deleted for the
                       duration of the period.
                     </span>
-                    <span className="text-[11px] text-[var(--color-text-subtle)] leading-[16px]">
+                    <span className="text-body-sm text-[var(--color-text-subtle)]">
                       In GOVERNANCE mode, users cannot overwrite or delete an object version or
                       alter its lock settings unless they have special permissions.
                     </span>
@@ -527,7 +527,7 @@ function SettingsSection({
 
                 {/* Days */}
                 <div className="flex flex-col">
-                  <label className="text-[14px] font-medium text-[var(--color-text-default)] mb-2">
+                  <label className="text-label-lg text-[var(--color-text-default)] mb-2">
                     Days
                   </label>
                   <Input
@@ -536,7 +536,7 @@ function SettingsSection({
                     onChange={(e) => onRetentionDaysChange(e.target.value)}
                     fullWidth
                   />
-                  <span className="text-[11px] text-[var(--color-text-subtle)] leading-[16px] mt-1">
+                  <span className="text-body-sm text-[var(--color-text-subtle)] mt-1">
                     The number of days that you want to specify for the default retention period
                     that will be applied to new objects placed in this bucket.
                   </span>
@@ -551,7 +551,7 @@ function SettingsSection({
           {/* Tags */}
           <VStack gap={4} className="py-6">
             <HStack justify="between" align="center">
-              <span className="text-[14px] font-medium text-[var(--color-text-default)]">Tags</span>
+              <span className="text-label-lg text-[var(--color-text-default)]">Tags</span>
               <Button variant="secondary" size="sm" onClick={onAddTag}>
                 Add
               </Button>
@@ -563,7 +563,7 @@ function SettingsSection({
                   className="flex items-center gap-6 px-4 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px]"
                 >
                   <HStack gap={1.5} align="center">
-                    <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                    <span className="text-label-lg text-[var(--color-text-default)]">
                       Key <span className="text-[var(--color-state-danger)]">*</span>
                     </span>
                     <Input
@@ -573,7 +573,7 @@ function SettingsSection({
                     />
                   </HStack>
                   <HStack gap={1.5} align="center">
-                    <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                    <span className="text-label-lg text-[var(--color-text-default)]">
                       Value <span className="text-[var(--color-state-danger)]">*</span>
                     </span>
                     <Input
@@ -600,7 +600,7 @@ function SettingsSection({
 
           {/* Placement target */}
           <div className="flex flex-col py-6">
-            <label className="text-[14px] font-medium text-[var(--color-text-default)] mb-2">
+            <label className="text-label-lg text-[var(--color-text-default)] mb-2">
               Placement target
             </label>
             <Select
@@ -613,7 +613,7 @@ function SettingsSection({
               onChange={onPlacementTargetChange}
               fullWidth
             />
-            <span className="text-[11px] text-[var(--color-text-subtle)] leading-[16px] mt-1">
+            <span className="text-body-sm text-[var(--color-text-subtle)] mt-1">
               When creating a bucket, a placement target can be provided as part of the
               LocationConstraint to override the default placement targets from the user and
               zonegroup.
@@ -696,7 +696,7 @@ function PolicySection({
           {/* Bucket policy */}
           <div className="flex flex-col pt-2 pb-6">
             <HStack justify="between" align="center" className="mb-2">
-              <label className="text-[14px] font-medium text-[var(--color-text-default)]">
+              <label className="text-label-lg text-[var(--color-text-default)]">
                 Bucket policy
               </label>
               <Button variant="secondary" size="sm" onClick={onClearPolicy}>
@@ -715,11 +715,11 @@ function PolicySection({
               }}
             />
             {policyValid ? (
-              <span className="text-[11px] text-[var(--color-state-success)] leading-[16px] mt-1">
+              <span className="text-body-sm text-[var(--color-state-success)] mt-1">
                 valid json text.
               </span>
             ) : (
-              <span className="text-[11px] text-[var(--color-state-danger)] leading-[16px] mt-1">
+              <span className="text-body-sm text-[var(--color-state-danger)] mt-1">
                 {policyError}
               </span>
             )}
@@ -730,12 +730,12 @@ function PolicySection({
 
           {/* ACL */}
           <div className="flex flex-col py-6">
-            <label className="text-[14px] font-medium text-[var(--color-text-default)] mb-2">
+            <label className="text-label-lg text-[var(--color-text-default)] mb-2">
               ACL
             </label>
             <div className="flex items-center gap-6 px-4 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px]">
               <HStack gap={1.5} align="center">
-                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                <span className="text-label-lg text-[var(--color-text-default)]">
                   Grantee
                 </span>
                 <Select
@@ -750,7 +750,7 @@ function PolicySection({
                 />
               </HStack>
               <HStack gap={1.5} align="center">
-                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                <span className="text-label-lg text-[var(--color-text-default)]">
                   Permissions
                 </span>
                 <Select
@@ -770,7 +770,7 @@ function PolicySection({
                 />
               </HStack>
             </div>
-            <span className="text-[11px] text-[var(--color-text-subtle)] leading-[16px] mt-1">
+            <span className="text-body-sm text-[var(--color-text-subtle)] mt-1">
               Any changes to the ACL will overwrite previous one. You can choose any of the
               available options to modify the specified user group.
             </span>
@@ -1099,7 +1099,7 @@ export default function CreateBucketPage() {
             <VStack gap={3} className="min-w-[1176px]">
               {/* Page Title */}
               <div className="flex items-center justify-between h-8">
-                <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
                   Create Bucket
                 </h1>
               </div>

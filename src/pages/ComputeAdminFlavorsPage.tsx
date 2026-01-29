@@ -348,7 +348,7 @@ export function ComputeAdminFlavorsPage() {
             >
               {row.name}
             </Link>
-            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+            <span className="text-body-sm text-[var(--color-text-subtle)]">
               ID : {row.id}
             </span>
           </div>
@@ -542,7 +542,7 @@ export function ComputeAdminFlavorsPage() {
             <VStack gap={3}>
               {/* Page Header */}
               <div className="flex items-center justify-between h-8">
-                <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
                   Flavors
                 </h1>
                 <Link to="/compute-admin/flavors/create">

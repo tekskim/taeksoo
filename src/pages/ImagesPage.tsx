@@ -180,7 +180,7 @@ function UsageCell({ usage }: UsageCellProps) {
 
   return (
     <div className="flex flex-col gap-1 w-[110px]">
-      <span className="text-[length:var(--font-size-12)] text-[var(--color-text-default)]">
+      <span className="text-body-md text-[var(--color-text-default)]">
         {usage.toFixed(2)}%
       </span>
       <ProgressBar value={usage} max={100} size="sm" status={getStatus()} />
@@ -358,7 +358,7 @@ export function ImagesPage() {
             <VStack gap={3}>
               {/* Page Header */}
               <div className="flex items-center justify-between h-8">
-                <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
                   Images
                 </h1>
               </div>

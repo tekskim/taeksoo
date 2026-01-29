@@ -467,7 +467,7 @@ export default function SecurityGroupDetailPage() {
               {/* Header Card */}
               <div className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 pt-3 pb-4">
                 {/* Title */}
-                <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)] mb-3">
+                <h1 className="text-heading-h5 text-[var(--color-text-default)] mb-3">
                   {securityGroup.name}
                 </h1>
 
@@ -488,11 +488,11 @@ export default function SecurityGroupDetailPage() {
                 <div className="flex items-center gap-2">
                   {/* ID */}
                   <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-                    <span className="text-[length:var(--font-size-11)] font-medium text-[var(--color-text-subtle)]">
+                    <span className="text-label-sm text-[var(--color-text-subtle)]">
                       ID
                     </span>
                     <div className="flex items-center gap-1 mt-1.5">
-                      <p className="text-[length:var(--font-size-12)] text-[var(--color-text-default)]">
+                      <p className="text-body-md text-[var(--color-text-default)]">
                         {securityGroup.id}
                       </p>
                       <button
@@ -506,20 +506,20 @@ export default function SecurityGroupDetailPage() {
 
                   {/* Description */}
                   <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-                    <span className="text-[length:var(--font-size-11)] font-medium text-[var(--color-text-subtle)]">
+                    <span className="text-label-sm text-[var(--color-text-subtle)]">
                       Description
                     </span>
-                    <p className="text-[length:var(--font-size-12)] text-[var(--color-text-default)] mt-1.5">
+                    <p className="text-body-md text-[var(--color-text-default)] mt-1.5">
                       {securityGroup.description}
                     </p>
                   </div>
 
                   {/* Created at */}
                   <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-                    <span className="text-[length:var(--font-size-11)] font-medium text-[var(--color-text-subtle)]">
+                    <span className="text-label-sm text-[var(--color-text-subtle)]">
                       Created at
                     </span>
-                    <p className="text-[length:var(--font-size-12)] text-[var(--color-text-default)] mt-1.5">
+                    <p className="text-body-md text-[var(--color-text-default)] mt-1.5">
                       {securityGroup.createdAt}
                     </p>
                   </div>
@@ -537,7 +537,7 @@ export default function SecurityGroupDetailPage() {
                     <VStack gap={4} className="pt-4">
                       {/* Header */}
                       <div className="flex items-center justify-between">
-                        <h3 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+                        <h3 className="text-heading-h5 text-[var(--color-text-default)]">
                           Rules
                         </h3>
                         <Button

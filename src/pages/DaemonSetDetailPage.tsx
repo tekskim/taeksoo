@@ -360,7 +360,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
 
   return (
     <VStack gap={3}>
-      <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
+      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
         Pods
       </h3>
       <HStack gap={2} align="center">
@@ -523,7 +523,7 @@ function ServicesTab({ services }: ServicesTabProps) {
 
   return (
     <VStack gap={3}>
-      <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
+      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
         Services
       </h3>
       <Pagination
@@ -590,7 +590,7 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
 
   return (
     <VStack gap={3}>
-      <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
+      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
         Conditions
       </h3>
       <Pagination
@@ -696,7 +696,7 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
 
   return (
     <VStack gap={3}>
-      <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
+      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
         Recent Events
       </h3>
       <HStack gap={2} align="center">
@@ -931,27 +931,27 @@ export function DaemonSetDetailPage() {
                 <HStack gap={3} className="w-full mt-3">
                   <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
                     <VStack gap={1}>
-                      <span className="text-[11px] font-medium text-[var(--color-text-subtle)] leading-4">
+                      <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
                         Pod Restarts
                       </span>
-                      <span className="text-[12px] text-[var(--color-text-default)] font-medium">
+                      <span className="text-label-md text-[var(--color-text-default)]">
                         {daemonset.podRestarts}
                       </span>
                     </VStack>
                   </div>
                   <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
                     <VStack gap={1}>
-                      <span className="text-[11px] font-medium text-[var(--color-text-subtle)] leading-4">
+                      <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
                         Ready
                       </span>
-                      <span className="text-[12px] text-[var(--color-text-default)] font-medium">
+                      <span className="text-label-md text-[var(--color-text-default)]">
                         {daemonset.ready.current}/{daemonset.ready.desired}
                       </span>
                     </VStack>
                   </div>
                   <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
                     <VStack gap={2}>
-                      <span className="text-[11px] font-medium text-[var(--color-text-subtle)] leading-4">
+                      <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
                         Labels ({Object.keys(daemonset.labels).length})
                       </span>
                       <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
@@ -961,7 +961,7 @@ export function DaemonSetDetailPage() {
                             <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
                           ))}
                         {Object.keys(daemonset.labels).length > 1 && (
-                          <span className="text-[11px] text-[var(--color-text-default)] cursor-pointer hover:underline">
+                          <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
                             (+{Object.keys(daemonset.labels).length - 1})
                           </span>
                         )}
@@ -970,7 +970,7 @@ export function DaemonSetDetailPage() {
                   </div>
                   <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
                     <VStack gap={2}>
-                      <span className="text-[11px] font-medium text-[var(--color-text-subtle)] leading-4">
+                      <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
                         Annotations ({Object.keys(daemonset.annotations).length})
                       </span>
                       <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
@@ -980,7 +980,7 @@ export function DaemonSetDetailPage() {
                             <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
                           ))}
                         {Object.keys(daemonset.annotations).length > 1 && (
-                          <span className="text-[11px] text-[var(--color-text-default)] cursor-pointer hover:underline">
+                          <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
                             (+{Object.keys(daemonset.annotations).length - 1})
                           </span>
                         )}

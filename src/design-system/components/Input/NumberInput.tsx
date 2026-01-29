@@ -175,7 +175,7 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
         {label && (
           <label
             htmlFor={inputId}
-            className="font-medium text-[var(--color-text-default)] text-[length:var(--font-size-11)]"
+            className="text-label-sm text-[var(--color-text-default)]"
           >
             {label}
           </label>
@@ -237,7 +237,7 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
         {error && (
           <p
             id={`${inputId}-error`}
-            className="text-[length:var(--font-size-11)] text-[var(--color-state-danger)]"
+            className="text-body-sm text-[var(--color-state-danger)]"
           >
             {error}
           </p>
@@ -246,7 +246,7 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
         {helperText && !error && (
           <p
             id={`${inputId}-helper`}
-            className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]"
+            className="text-body-sm text-[var(--color-text-subtle)]"
           >
             {helperText}
           </p>

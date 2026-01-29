@@ -91,17 +91,17 @@ function SummarySidebar({
 
         {/* Quota Section */}
         <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-lg p-4 flex flex-col gap-4">
-          <h5 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+          <h5 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
             Quota
           </h5>
 
           {/* Firewall Rules Quota */}
           <div className="flex flex-col gap-2 w-full">
             <div className="flex items-center justify-between w-full">
-              <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
+              <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
                 Firewall rules
               </span>
-              <span className="text-[12px] leading-4 text-[var(--color-text-default)]">2/10</span>
+              <span className="text-body-md leading-4 text-[var(--color-text-default)]">2/10</span>
             </div>
             <div className="flex h-1 w-full items-start isolate pr-1">
               <div
@@ -230,13 +230,13 @@ export default function ComputeAdminCreateFirewallRulePage() {
         <div className="flex flex-col gap-0.5">
           <Link
             to={`/compute-admin/tenants/${row.id}`}
-            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 text-[12px] leading-4"
+            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 text-body-md leading-4"
             onClick={(e) => e.stopPropagation()}
             target="_blank"
           >
             {row.name}
           </Link>
-          <span className="text-[11px] leading-4 text-[var(--color-text-muted)]">ID: {row.id}</span>
+          <span className="text-body-sm leading-4 text-[var(--color-text-muted)]">ID: {row.id}</span>
         </div>
       ),
     },
@@ -356,7 +356,7 @@ export default function ComputeAdminCreateFirewallRulePage() {
             <VStack gap={3} className="min-w-[1176px]">
               {/* Page Title */}
               <div className="flex items-center justify-between h-8">
-                <h1 className="text-[length:var(--font-size-18)] font-semibold leading-7 text-[var(--color-text-default)]">
+                <h1 className="text-heading-h4 text-[var(--color-text-default)]">
                   Create rule
                 </h1>
               </div>
@@ -388,10 +388,10 @@ export default function ComputeAdminCreateFirewallRulePage() {
                         {/* Rule name */}
                         <VStack gap={2} align="stretch">
                           <div className="flex gap-[3px]">
-                            <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
+                            <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
                               Rule name
                             </span>
-                            <span className="text-[14px] font-medium text-[var(--color-state-danger)] leading-[20px]">
+                            <span className="text-label-lg text-[var(--color-state-danger)] leading-[20px]">
                               *
                             </span>
                           </div>
@@ -406,11 +406,11 @@ export default function ComputeAdminCreateFirewallRulePage() {
                             error={!!ruleNameError}
                           />
                           {ruleNameError && (
-                            <span className="text-[11px] leading-[var(--line-height-16)] text-[var(--color-state-danger)]">
+                            <span className="text-body-sm leading-[var(--line-height-16)] text-[var(--color-state-danger)]">
                               {ruleNameError}
                             </span>
                           )}
-                          <span className="text-[11px] text-[var(--color-text-subtle)] leading-[16px]">
+                          <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
                             You can use letters, numbers, and special characters (+=,.@-_), and the
                             length must be between 2-128 characters.
                           </span>
@@ -418,7 +418,7 @@ export default function ComputeAdminCreateFirewallRulePage() {
 
                         {/* Description */}
                         <VStack gap={2} align="stretch">
-                          <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
+                          <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
                             Description
                           </span>
                           <Input
@@ -427,7 +427,7 @@ export default function ComputeAdminCreateFirewallRulePage() {
                             onChange={(e) => setDescription(e.target.value)}
                             fullWidth
                           />
-                          <span className="text-[11px] text-[var(--color-text-subtle)] leading-[16px]">
+                          <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
                             You can use letters, numbers, and special characters (+=,.@-_()[]), and
                             maximum 255 characters.
                           </span>
@@ -437,14 +437,14 @@ export default function ComputeAdminCreateFirewallRulePage() {
                         <VStack gap={4} align="stretch">
                           <VStack gap={2} align="start">
                             <div className="flex gap-[3px]">
-                              <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
+                              <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
                                 Owned tenant
                               </span>
-                              <span className="text-[14px] font-medium text-[var(--color-state-danger)] leading-[20px]">
+                              <span className="text-label-lg text-[var(--color-state-danger)] leading-[20px]">
                                 *
                               </span>
                             </div>
-                            <span className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
+                            <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
                               Select the tenant that will own the rule.
                             </span>
                           </VStack>
@@ -475,7 +475,7 @@ export default function ComputeAdminCreateFirewallRulePage() {
                             ).map((page) => (
                               <button
                                 key={page}
-                                className={`size-6 flex items-center justify-center rounded-md text-[11px] font-medium ${
+                                className={`size-6 flex items-center justify-center rounded-md text-label-sm ${
                                   page === tenantPage
                                     ? 'bg-[var(--color-action-primary)] text-white'
                                     : 'text-[var(--color-text-subtle)] hover:bg-[var(--color-surface-subtle)]'
@@ -495,7 +495,7 @@ export default function ComputeAdminCreateFirewallRulePage() {
                               <IconChevronRight size={16} stroke={1.5} />
                             </button>
                             <div className="w-px h-4 bg-[var(--color-border-default)]" />
-                            <span className="text-[11px] text-[var(--color-text-subtle)]">
+                            <span className="text-body-sm text-[var(--color-text-subtle)]">
                               {filteredTenants.length} items
                             </span>
                           </div>
@@ -528,10 +528,10 @@ export default function ComputeAdminCreateFirewallRulePage() {
 
                         {/* Enabled */}
                         <VStack gap={2} align="start">
-                          <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
+                          <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
                             Enabled
                           </span>
-                          <span className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
+                          <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
                             Indicates whether the rule is enabled.
                           </span>
                           <Toggle
@@ -543,10 +543,10 @@ export default function ComputeAdminCreateFirewallRulePage() {
 
                         {/* Shared */}
                         <VStack gap={2} align="start">
-                          <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
+                          <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
                             Shared
                           </span>
-                          <span className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
+                          <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
                             Indicates whether the rule is shared with other tenants.
                           </span>
                           <Toggle
@@ -629,14 +629,14 @@ export default function ComputeAdminCreateFirewallRulePage() {
                         {/* Protocol */}
                         <VStack gap={2} align="stretch">
                           <div className="flex gap-[3px]">
-                            <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
+                            <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
                               Protocol
                             </span>
-                            <span className="text-[14px] font-medium text-[var(--color-state-danger)] leading-[20px]">
+                            <span className="text-label-lg text-[var(--color-state-danger)] leading-[20px]">
                               *
                             </span>
                           </div>
-                          <span className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
+                          <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
                             Select the protocol to which the rule applies.
                           </span>
                           <div className="w-[200px]">
@@ -658,14 +658,14 @@ export default function ComputeAdminCreateFirewallRulePage() {
                         {/* Action */}
                         <VStack gap={2} align="stretch">
                           <div className="flex gap-[6px] items-center">
-                            <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
+                            <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
                               Action
                             </span>
-                            <span className="text-[14px] font-medium text-[var(--color-state-danger)] leading-[20px]">
+                            <span className="text-label-lg text-[var(--color-state-danger)] leading-[20px]">
                               *
                             </span>
                           </div>
-                          <span className="text-[11px] text-[var(--color-text-subtle)] leading-[16px]">
+                          <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
                             Choose whether to allow or deny the traffic.
                           </span>
                           <RadioGroup value={action} onChange={setAction} orientation="vertical">
@@ -677,10 +677,10 @@ export default function ComputeAdminCreateFirewallRulePage() {
 
                         {/* Source CIDR */}
                         <VStack gap={2} align="stretch">
-                          <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
+                          <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
                             Source CIDR
                           </span>
-                          <span className="text-[11px] text-[var(--color-text-subtle)] leading-[16px]">
+                          <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
                             Specifies the source network or IP address in CIDR format.
                           </span>
                           <Input
@@ -689,17 +689,17 @@ export default function ComputeAdminCreateFirewallRulePage() {
                             onChange={(e) => setSourceIp(e.target.value)}
                             fullWidth
                           />
-                          <span className="text-[11px] text-[var(--color-text-subtle)] leading-[16px]">
+                          <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
                             Must be entered in CIDR format (IP/prefix).
                           </span>
                         </VStack>
 
                         {/* Source Port */}
                         <VStack gap={2} align="stretch">
-                          <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
+                          <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
                             Source Port
                           </span>
-                          <span className="text-[11px] text-[var(--color-text-subtle)] leading-[16px]">
+                          <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
                             Specifies the port range to which the rule applies.
                           </span>
                           <Input
@@ -708,17 +708,17 @@ export default function ComputeAdminCreateFirewallRulePage() {
                             onChange={(e) => setSourcePort(e.target.value)}
                             fullWidth
                           />
-                          <span className="text-[11px] text-[var(--color-text-subtle)] leading-[16px]">
+                          <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
                             Must be a number between 1–65535 or a "start–end" range.
                           </span>
                         </VStack>
 
                         {/* Destination CIDR */}
                         <VStack gap={2} align="stretch">
-                          <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
+                          <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
                             Destination CIDR
                           </span>
-                          <span className="text-[11px] text-[var(--color-text-subtle)] leading-[16px]">
+                          <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
                             Specifies the destination network or IP address in CIDR format.
                           </span>
                           <Input
@@ -727,17 +727,17 @@ export default function ComputeAdminCreateFirewallRulePage() {
                             onChange={(e) => setDestinationIp(e.target.value)}
                             fullWidth
                           />
-                          <span className="text-[11px] text-[var(--color-text-subtle)] leading-[16px]">
+                          <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
                             Must be entered in CIDR format (IP/prefix).
                           </span>
                         </VStack>
 
                         {/* Destination Port */}
                         <VStack gap={2} align="stretch">
-                          <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
+                          <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
                             Destination Port
                           </span>
-                          <span className="text-[11px] text-[var(--color-text-subtle)] leading-[16px]">
+                          <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
                             Defines the network address (CIDR) for the subnet.
                           </span>
                           <Input
@@ -746,7 +746,7 @@ export default function ComputeAdminCreateFirewallRulePage() {
                             onChange={(e) => setDestinationPort(e.target.value)}
                             fullWidth
                           />
-                          <span className="text-[11px] text-[var(--color-text-subtle)] leading-[16px]">
+                          <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
                             Must be a number between 1–65535 or a "start–end" range.
                           </span>
                         </VStack>

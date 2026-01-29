@@ -263,7 +263,7 @@ export function Select({
 
   // Size-based styles (height) - aligned with Input component
   const sizeStyles = {
-    sm: 'h-[var(--input-height-sm)] px-2 text-[11px] leading-4',
+    sm: 'h-[var(--input-height-sm)] px-2 text-body-sm leading-4',
     md: 'h-[var(--input-height-md)] px-[var(--select-padding-x)] text-[length:var(--select-font-size)] leading-[var(--select-line-height)]',
   };
 
@@ -303,7 +303,7 @@ export function Select({
       {label && (
         <label
           htmlFor={triggerId}
-          className="font-medium text-[var(--color-text-default)] text-[14px] leading-5"
+          className="text-label-lg text-[var(--color-text-default)]"
         >
           {label}
           {required && <span className="text-[var(--color-state-danger)] ml-0.5">*</span>}
@@ -312,7 +312,7 @@ export function Select({
 
       {/* Helper Text - below label */}
       {helperText && !error && (
-        <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+        <p className="text-body-sm text-[var(--color-text-subtle)]">
           {helperText}
         </p>
       )}
@@ -334,7 +334,7 @@ export function Select({
       >
         <span
           className={twMerge(
-            'text-[length:var(--font-size-12)] leading-[var(--line-height-18)]',
+            'text-body-md',
             selectedOption ? 'text-[var(--color-text-default)]' : 'text-[var(--color-text-muted)]',
             disabled && 'text-[var(--color-text-subtle)]'
           )}
@@ -368,7 +368,7 @@ export function Select({
 
       {/* Error */}
       {error && (
-        <p className="text-[length:var(--font-size-11)] text-[var(--color-state-danger)]">
+        <p className="text-body-sm text-[var(--color-state-danger)]">
           {error}
         </p>
       )}

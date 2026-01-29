@@ -45,10 +45,10 @@ function InfoBox({ label, value }: { label: string; value: string }) {
   return (
     <div className="w-full bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
       <VStack gap={2}>
-        <span className="text-[11px] font-medium text-[var(--color-text-subtle)] leading-4">
+        <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
           {label}
         </span>
-        <span className="text-[12px] text-[var(--color-text-default)] leading-4">{value}</span>
+        <span className="text-body-md text-[var(--color-text-default)] leading-4">{value}</span>
       </VStack>
     </div>
   );
@@ -73,15 +73,15 @@ function QuotaProgressBar({ label, used, total, adding = 1 }: QuotaProgressBarPr
   return (
     <VStack gap={2} className="w-full">
       <HStack className="justify-between w-full">
-        <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+        <span className="text-label-lg text-[var(--color-text-default)] leading-5">
           {label}
         </span>
         <HStack gap={0} className="items-center">
-          <span className="text-[12px] text-[var(--color-text-default)] leading-4">{used}/</span>
+          <span className="text-body-md text-[var(--color-text-default)] leading-4">{used}/</span>
           {isInfinity ? (
             <IconInfinity size={16} className="text-[var(--color-text-default)]" stroke={1} />
           ) : (
-            <span className="text-[12px] text-[var(--color-text-default)] leading-4">{total}</span>
+            <span className="text-body-md text-[var(--color-text-default)] leading-4">{total}</span>
           )}
         </HStack>
       </HStack>
@@ -215,7 +215,7 @@ export function CreateVolumeFromVolumeSnapshotDrawer({
       <VStack gap={6}>
         {/* Header */}
         <VStack gap={3}>
-          <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
             Create Volume from Snapshot
           </h2>
 
@@ -228,7 +228,7 @@ export function CreateVolumeFromVolumeSnapshotDrawer({
 
         {/* Volume Name Input */}
         <VStack gap={2} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             Volume name
           </label>
           <Input
@@ -239,11 +239,11 @@ export function CreateVolumeFromVolumeSnapshotDrawer({
             error={hasAttemptedSubmit && !volumeName.trim()}
           />
           {hasAttemptedSubmit && !volumeName.trim() ? (
-            <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+            <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
               Volume name is required
             </p>
           ) : (
-            <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
               Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
             </p>
           )}
@@ -252,10 +252,10 @@ export function CreateVolumeFromVolumeSnapshotDrawer({
         {/* Description Input */}
         <VStack gap={2} className="w-full">
           <HStack gap={1} className="items-center">
-            <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+            <label className="text-label-lg text-[var(--color-text-default)] leading-5">
               Description
             </label>
-            <span className="text-[12px] text-[var(--color-text-subtle)]">(optional)</span>
+            <span className="text-body-md text-[var(--color-text-subtle)]">(optional)</span>
           </HStack>
           <Input
             value={description}
@@ -268,10 +268,10 @@ export function CreateVolumeFromVolumeSnapshotDrawer({
         {/* Capacity Slider */}
         <VStack gap={5} className="w-full">
           <HStack className="justify-between w-full">
-            <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+            <label className="text-label-lg text-[var(--color-text-default)] leading-5">
               Capacity (GiB)
             </label>
-            <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+            <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
               {minCapacity} - {maxCapacity} GiB
             </span>
           </HStack>
@@ -294,10 +294,10 @@ export function CreateVolumeFromVolumeSnapshotDrawer({
         {/* Volume Type Select */}
         <VStack gap={2} className="w-full">
           <HStack gap={1} className="items-center">
-            <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+            <label className="text-label-lg text-[var(--color-text-default)] leading-5">
               Volume type
             </label>
-            <span className="text-[12px] text-[var(--color-text-subtle)]">(optional)</span>
+            <span className="text-body-md text-[var(--color-text-subtle)]">(optional)</span>
           </HStack>
           <Select
             value={volumeType}

@@ -253,21 +253,21 @@ export function AssociateFloatingIPToPortDrawer({
     >
       <VStack gap={6} className="h-full">
         {/* Description */}
-        <p className="text-[12px] leading-4 text-[var(--color-text-subtle)]">
+        <p className="text-body-md leading-4 text-[var(--color-text-subtle)]">
           Associate a floating IP with this port to enable external network access.
         </p>
 
         {/* Port Info */}
         <div className="w-full bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-          <p className="text-[11px] font-medium text-[var(--color-text-subtle)] leading-4 mb-1.5">
+          <p className="text-label-sm text-[var(--color-text-subtle)] leading-4 mb-1.5">
             Port
           </p>
-          <p className="text-[12px] text-[var(--color-text-default)] leading-4">{port.name}</p>
+          <p className="text-body-md text-[var(--color-text-default)] leading-4">{port.name}</p>
         </div>
 
         {/* Fixed IP Section */}
         <VStack gap={3} className="w-full">
-          <h3 className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">
             Fixed IP
           </h3>
 
@@ -298,7 +298,7 @@ export function AssociateFloatingIPToPortDrawer({
                 className="flex-1 px-3 py-2 h-[40px] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
                 onClick={() => handleFixedIpSort('fixedIp')}
               >
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                <span className="text-label-sm text-[var(--color-text-default)]">
                   Fixed IP
                 </span>
                 <IconChevronDown
@@ -307,12 +307,12 @@ export function AssociateFloatingIPToPortDrawer({
                 />
               </div>
               <div className="flex-1 px-3 py-2 h-[40px] flex items-center border-l border-[var(--color-border-default)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                <span className="text-label-sm text-[var(--color-text-default)]">
                   MAC Address
                 </span>
               </div>
               <div className="flex-1 px-3 py-2 h-[40px] flex items-center border-l border-[var(--color-border-default)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                <span className="text-label-sm text-[var(--color-text-default)]">
                   Subnet CIDR
                 </span>
               </div>
@@ -334,17 +334,17 @@ export function AssociateFloatingIPToPortDrawer({
                   />
                 </div>
                 <div className="flex-1 px-3 py-2 min-h-[40px] flex flex-col justify-center">
-                  <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+                  <span className="text-body-md text-[var(--color-text-default)] leading-4">
                     {item.fixedIp}
                   </span>
                 </div>
                 <div className="flex-1 px-3 py-2 min-h-[40px] flex flex-col justify-center">
-                  <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+                  <span className="text-body-md text-[var(--color-text-default)] leading-4">
                     {item.macAddress}
                   </span>
                 </div>
                 <div className="flex-1 px-3 py-2 min-h-[40px] flex flex-col justify-center">
-                  <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+                  <span className="text-body-md text-[var(--color-text-default)] leading-4">
                     {item.subnetCidr}
                   </span>
                 </div>
@@ -367,7 +367,7 @@ export function AssociateFloatingIPToPortDrawer({
 
         {/* Floating IP Section */}
         <VStack gap={3} className="w-full pb-5">
-          <h3 className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">
             Floating IP
           </h3>
 
@@ -395,7 +395,7 @@ export function AssociateFloatingIPToPortDrawer({
             <div className="flex items-center bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md">
               <div className="w-[40px] p-3" />
               <div className="w-[59px] px-3 py-2 h-[40px] flex items-center justify-center border-l border-[var(--color-border-default)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                <span className="text-label-sm text-[var(--color-text-default)]">
                   Status
                 </span>
               </div>
@@ -403,7 +403,7 @@ export function AssociateFloatingIPToPortDrawer({
                 className="flex-1 px-3 py-2 h-[40px] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
                 onClick={() => handleFloatingIpSort('floatingIp')}
               >
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                <span className="text-label-sm text-[var(--color-text-default)]">
                   Floating IP
                 </span>
                 <IconChevronDown
@@ -415,7 +415,7 @@ export function AssociateFloatingIPToPortDrawer({
                 className="flex-1 px-3 py-2 h-[40px] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
                 onClick={() => handleFloatingIpSort('networkName')}
               >
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                <span className="text-label-sm text-[var(--color-text-default)]">
                   Network
                 </span>
                 <IconChevronDown
@@ -427,7 +427,7 @@ export function AssociateFloatingIPToPortDrawer({
                 className="flex-1 px-3 py-2 h-[40px] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
                 onClick={() => handleFloatingIpSort('description')}
               >
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                <span className="text-label-sm text-[var(--color-text-default)]">
                   Description
                 </span>
                 <IconChevronDown
@@ -457,28 +457,28 @@ export function AssociateFloatingIPToPortDrawer({
                 </div>
                 <div className="flex-1 px-3 py-2 min-h-[40px] flex flex-col justify-center gap-0.5">
                   <HStack gap={1.5} align="center">
-                    <span className="text-[12px] font-medium text-[var(--color-action-primary)] leading-4">
+                    <span className="text-label-md text-[var(--color-action-primary)] leading-4">
                       {item.floatingIp}
                     </span>
                     <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
                   </HStack>
-                  <span className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+                  <span className="text-body-sm text-[var(--color-text-subtle)] leading-4">
                     ID : {item.id}
                   </span>
                 </div>
                 <div className="flex-1 px-3 py-2 min-h-[40px] flex flex-col justify-center gap-0.5">
                   <HStack gap={1.5} align="center">
-                    <span className="text-[12px] font-medium text-[var(--color-action-primary)] leading-4">
+                    <span className="text-label-md text-[var(--color-action-primary)] leading-4">
                       {item.networkName}
                     </span>
                     <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
                   </HStack>
-                  <span className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+                  <span className="text-body-sm text-[var(--color-text-subtle)] leading-4">
                     ID : {item.networkId}
                   </span>
                 </div>
                 <div className="flex-1 px-3 py-2 min-h-[40px] flex flex-col justify-center">
-                  <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+                  <span className="text-body-md text-[var(--color-text-default)] leading-4">
                     {item.description}
                   </span>
                 </div>

@@ -182,11 +182,11 @@ export const SettingsExample: Story = {
 
     return (
       <div className="w-[320px] flex flex-col gap-4 p-4 bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)]">
-        <h3 className="text-[14px] font-semibold">Settings</h3>
+        <h3 className="text-body-lg font-semibold">Settings</h3>
 
         <div className="flex flex-col gap-3">
           <div className="flex items-center justify-between">
-            <span className="text-[12px]">Push notifications</span>
+            <span className="text-body-md">Push notifications</span>
             <Toggle
               checked={settings.notifications}
               onChange={() => handleChange('notifications')}
@@ -194,17 +194,17 @@ export const SettingsExample: Story = {
           </div>
 
           <div className="flex items-center justify-between">
-            <span className="text-[12px]">Dark mode</span>
+            <span className="text-body-md">Dark mode</span>
             <Toggle checked={settings.darkMode} onChange={() => handleChange('darkMode')} />
           </div>
 
           <div className="flex items-center justify-between">
-            <span className="text-[12px]">Auto-save</span>
+            <span className="text-body-md">Auto-save</span>
             <Toggle checked={settings.autoSave} onChange={() => handleChange('autoSave')} />
           </div>
 
           <div className="flex items-center justify-between">
-            <span className="text-[12px]">Analytics</span>
+            <span className="text-body-md">Analytics</span>
             <Toggle checked={settings.analytics} onChange={() => handleChange('analytics')} />
           </div>
         </div>

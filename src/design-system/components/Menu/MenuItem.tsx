@@ -43,7 +43,7 @@ export function MenuItem({
     'rounded-[var(--menu-item-radius)]',
     'flex items-center',
     'gap-[var(--menu-item-gap)]',
-    'text-[length:var(--font-size-11)]',
+    'text-body-sm',
     'transition-colors duration-[var(--duration-fast)]',
     'focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)]',
   ].join(' ');
@@ -65,7 +65,7 @@ export function MenuItem({
       )}
       <span className="text-left truncate">{label}</span>
       {badge && (
-        <span className="px-1.5 py-0.5 text-[10px] font-medium bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] rounded">
+        <span className="px-1.5 py-0.5 text-body-xs font-medium bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] rounded">
           {badge}
         </span>
       )}

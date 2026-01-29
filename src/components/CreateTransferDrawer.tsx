@@ -27,10 +27,10 @@ function InfoBox({ label, value }: { label: string; value: string }) {
   return (
     <div className="w-full bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
       <VStack gap={2}>
-        <span className="text-[11px] font-medium text-[var(--color-text-subtle)] leading-4">
+        <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
           {label}
         </span>
-        <span className="text-[12px] text-[var(--color-text-default)] leading-4">{value}</span>
+        <span className="text-body-md text-[var(--color-text-default)] leading-4">{value}</span>
       </VStack>
     </div>
   );
@@ -103,10 +103,10 @@ export function CreateTransferDrawer({
         {/* Header */}
         <VStack gap={3}>
           <VStack gap={2}>
-            <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
               Create Transfer
             </h2>
-            <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
               Create a transfer request to share this volume with another project. The recipient
               will need the generated Transfer ID and Auth Key to accept it.
             </p>
@@ -118,7 +118,7 @@ export function CreateTransferDrawer({
 
         {/* Transfer Name Input */}
         <VStack gap={2} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             Transfer name
           </label>
           <Input
@@ -129,11 +129,11 @@ export function CreateTransferDrawer({
             error={hasAttemptedSubmit && !transferName.trim()}
           />
           {hasAttemptedSubmit && !transferName.trim() ? (
-            <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+            <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
               Transfer name is required
             </p>
           ) : (
-            <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
               Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
             </p>
           )}

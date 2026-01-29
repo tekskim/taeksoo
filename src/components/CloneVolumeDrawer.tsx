@@ -50,15 +50,15 @@ function QuotaProgressBar({ label, used, total }: QuotaProgressBarProps) {
   return (
     <VStack gap={2} className="w-full">
       <HStack className="w-full justify-between items-center">
-        <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+        <span className="text-label-lg text-[var(--color-text-default)] leading-5">
           {label}
         </span>
         <HStack gap={0} className="items-center">
-          <span className="text-[12px] text-[var(--color-text-default)] leading-4">{used}/</span>
+          <span className="text-body-md text-[var(--color-text-default)] leading-4">{used}/</span>
           {isUnlimited ? (
             <IconInfinity size={16} className="text-[var(--color-text-default)]" stroke={1} />
           ) : (
-            <span className="text-[12px] text-[var(--color-text-default)] leading-4">{total}</span>
+            <span className="text-body-md text-[var(--color-text-default)] leading-4">{total}</span>
           )}
         </HStack>
       </HStack>
@@ -199,10 +199,10 @@ export function CloneVolumeDrawer({
         <VStack gap={3}>
           {/* Header */}
           <VStack gap={2}>
-            <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
               Clone Volume
             </h2>
-            <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
               Create a new volume that is an exact copy of this volume's current data. The cloned
               volume can be used independently for testing, backup, or new instance creation.
             </p>
@@ -210,10 +210,10 @@ export function CloneVolumeDrawer({
 
           {/* Source Volume Info Box */}
           <div className="w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg">
-            <p className="text-[11px] font-medium text-[var(--color-text-subtle)] mb-1.5">
+            <p className="text-label-sm text-[var(--color-text-subtle)] mb-1.5">
               Source Volume
             </p>
-            <p className="text-[12px] text-[var(--color-text-default)]">
+            <p className="text-body-md text-[var(--color-text-default)]">
               {volume ? `${volume.name} (${volume.size}GiB)` : '-'}
             </p>
           </div>
@@ -225,7 +225,7 @@ export function CloneVolumeDrawer({
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1}
             />
-            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+            <p className="text-body-sm text-[var(--color-text-default)] leading-4">
               For data consistency, stop all write operations on the instance before creating a
               backup.
             </p>
@@ -234,7 +234,7 @@ export function CloneVolumeDrawer({
 
         {/* New Volume Name Input */}
         <VStack gap={2} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             New Volume name
           </label>
           <Input
@@ -245,11 +245,11 @@ export function CloneVolumeDrawer({
             error={hasAttemptedSubmit && !volumeName.trim()}
           />
           {hasAttemptedSubmit && !volumeName.trim() ? (
-            <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+            <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
               Volume name is required
             </p>
           ) : (
-            <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
               Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
             </p>
           )}
@@ -258,10 +258,10 @@ export function CloneVolumeDrawer({
         {/* Capacity Slider */}
         <VStack gap={5} className="w-full">
           <HStack className="w-full justify-between items-center">
-            <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+            <label className="text-label-lg text-[var(--color-text-default)] leading-5">
               Capacity (GiB)
             </label>
-            <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+            <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
               {minCapacity} - {maxCapacity} GiB
             </span>
           </HStack>
@@ -290,10 +290,10 @@ export function CloneVolumeDrawer({
         {/* Volume Type Select */}
         <VStack gap={2} className="w-full">
           <HStack gap={1} className="items-center">
-            <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+            <label className="text-label-lg text-[var(--color-text-default)] leading-5">
               Volume type
             </label>
-            <span className="text-[12px] text-[var(--color-text-subtle)]">(optional)</span>
+            <span className="text-body-md text-[var(--color-text-subtle)]">(optional)</span>
           </HStack>
           <Select options={volumeTypes} value={volumeType} onChange={setVolumeType} fullWidth />
         </VStack>

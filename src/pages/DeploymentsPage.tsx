@@ -35,8 +35,7 @@ import {
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
-   Types
-   ---------------------------------------- */
+   Types ---------------------------------------- */
 
 interface DeploymentRow {
   id: string;
@@ -51,8 +50,7 @@ interface DeploymentRow {
 }
 
 /* ----------------------------------------
-   Mock Data
-   ---------------------------------------- */
+   Mock Data ---------------------------------------- */
 
 const deploymentsData: DeploymentRow[] = [
   {
@@ -146,8 +144,7 @@ const deploymentsData: DeploymentRow[] = [
 ];
 
 /* ----------------------------------------
-   Component
-   ---------------------------------------- */
+   Component ---------------------------------------- */
 
 export function DeploymentsPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -193,8 +190,7 @@ export function DeploymentsPage() {
   const totalPages = Math.ceil(deploymentsData.length / rowsPerPage);
   const paginatedData = deploymentsData.slice(
     (currentPage - 1) * rowsPerPage,
-    currentPage * rowsPerPage
-  );
+    currentPage * rowsPerPage );
 
   // Sidebar width calculation: 40px icon sidebar + 200px menu sidebar when open
   const sidebarWidth = sidebarOpen ? 240 : 40;
@@ -208,8 +204,7 @@ export function DeploymentsPage() {
       sortable: true,
       align: 'center',
       render: (value: string) => (
-        <StatusIndicator
-          status={
+        <StatusIndicator status={
             value === 'Running'
               ? 'active'
               : value === 'Pending'
@@ -228,8 +223,7 @@ export function DeploymentsPage() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row) => (
-        <span
-          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline line-clamp-2"
+        <span className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline line-clamp-2"
           title={value}
           onClick={(e) => {
             e.stopPropagation();
@@ -331,8 +325,7 @@ export function DeploymentsPage() {
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={menuItems} trigger="click">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                <IconDotsCircleHorizontal
-                  size={16}
+                <IconDotsCircleHorizontal size={16}
                   stroke={1.5}
                   className="text-[var(--action-icon-color)]"
                 />
@@ -372,13 +365,11 @@ export function DeploymentsPage() {
       <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
 
       {/* Main Content */}
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
+      <main className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
         style={{ left: `${sidebarWidth}px` }}
       >
         {/* Tab Bar */}
-        <TabBar
-          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+        <TabBar tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
@@ -387,21 +378,18 @@ export function DeploymentsPage() {
         />
 
         {/* Top Bar */}
-        <TopBar
-          showSidebarToggle={!sidebarOpen}
+        <TopBar showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
           breadcrumb={
-            <Breadcrumb
-              items={[{ label: 'clusterName', href: '/container' }, { label: 'Deployments' }]}
+            <Breadcrumb items={[{ label: 'clusterName', href: '/container' }, { label: 'Deployments' }]}
             />
           }
           actions={
             <>
-              <button
-                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                 onClick={() => {
                   if (shellPanel.isExpanded) {
                     shellPanel.setIsExpanded(false);
@@ -410,11 +398,9 @@ export function DeploymentsPage() {
                   }
                 }}
               >
-                <IconTerminal2
-                  size={16}
+                <IconTerminal2 size={16}
                   className={
-                    shellPanel.isExpanded
-                      ? 'text-[var(--color-action-primary)]'
+                    shellPanel.isExpanded ? 'text-[var(--color-action-primary)]'
                       : 'text-[var(--color-text-muted)]'
                   }
                   stroke={1.5}
@@ -437,8 +423,7 @@ export function DeploymentsPage() {
         />
 
         {/* Content Area */}
-        <div
-          className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll"
+        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll"
           style={{ paddingBottom: shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0' }}
         >
           <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
@@ -446,20 +431,17 @@ export function DeploymentsPage() {
               {/* Header */}
               <HStack justify="between" align="center" className="w-full min-h-8">
                 <HStack gap={2} align="center">
-                  <h1 className="text-[16px] leading-6 font-semibold text-[var(--color-text-default)]">
-                    Deployments
-                  </h1>
+                  <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
+                    Deployments </h1>
                 </HStack>
 
                 {/* Create Deployment Button with Dropdown */}
                 <ContextMenu items={createMenuItems} trigger="click" align="right">
-                  <Button
-                    variant="primary"
+                  <Button variant="primary"
                     size="md"
                     rightIcon={<IconChevronDown size={14} stroke={1.5} />}
                   >
-                    Create Deployment
-                  </Button>
+                    Create Deployment </Button>
                 </ContextMenu>
               </HStack>
 
@@ -467,13 +449,11 @@ export function DeploymentsPage() {
               <HStack gap={2} align="center" className="w-full min-h-7">
                 {/* Search */}
                 <HStack gap={1} align="center">
-                  <SearchInput
-                    placeholder="Search Deployments by attributes"
+                  <SearchInput placeholder="Search Deployments by attributes"
                     size="sm"
                     className="w-[var(--search-input-width)]"
                   />
-                  <Button
-                    variant="secondary"
+                  <Button variant="secondary"
                     size="sm"
                     aria-label="Download"
                     className="!p-0 !w-7 !h-7 !min-w-7"
@@ -487,68 +467,56 @@ export function DeploymentsPage() {
 
                 {/* Actions */}
                 <HStack gap={1} align="center">
-                  <Button
-                    variant="secondary"
+                  <Button variant="secondary"
                     size="sm"
                     leftIcon={<IconRefresh size={12} stroke={1.5} />}
                     disabled={selectedRows.length === 0}
                   >
-                    Redeploy
-                  </Button>
-                  <Button
-                    variant="secondary"
+                    Redeploy </Button>
+                  <Button variant="secondary"
                     size="sm"
                     leftIcon={<IconDownload size={12} stroke={1.5} />}
                     disabled={selectedRows.length === 0}
                   >
-                    Download YAML
-                  </Button>
-                  <Button
-                    variant="secondary"
+                    Download YAML </Button>
+                  <Button variant="secondary"
                     size="sm"
                     leftIcon={<IconTrash size={12} stroke={1.5} />}
                     disabled={selectedRows.length === 0}
                   >
-                    Delete
-                  </Button>
+                    Delete </Button>
                 </HStack>
               </HStack>
 
               {/* Filter Bar */}
               {filters.length > 0 && (
-                <HStack
-                  justify="between"
+                <HStack justify="between"
                   align="center"
                   className="w-full pl-2 pr-4 py-2 bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)]"
                 >
                   <HStack gap={1} align="center">
                     {filters.map((filter, index) => (
-                      <Chip
-                        key={index}
+                      <Chip key={index}
                         label={filter.key}
                         value={filter.value}
                         onRemove={() => handleRemoveFilter(index)}
                       />
                     ))}
                   </HStack>
-                  <button
-                    onClick={handleClearFilters}
-                    className="text-[11px] font-medium text-[var(--color-action-primary)] hover:underline"
+                  <button onClick={handleClearFilters}
+                    className="text-label-sm text-[var(--color-action-primary)] hover:underline"
                   >
-                    Clear Filters
-                  </button>
+                    Clear Filters </button>
                 </HStack>
               )}
 
               {/* Pagination */}
-              <Pagination
-                currentPage={currentPage}
+              <Pagination currentPage={currentPage}
                 totalPages={totalPages}
                 onPageChange={setCurrentPage}
                 totalItems={deploymentsData.length}
                 selectedCount={selectedRows.length}
-                showSettings
-                onSettingsClick={() => {}}
+                showSettings onSettingsClick={() => {}}
               />
 
               {/* Table */}
@@ -556,8 +524,7 @@ export function DeploymentsPage() {
                 columns={columns}
                 data={paginatedData}
                 rowKey="id"
-                selectable
-                selectedKeys={selectedRows}
+                selectable selectedKeys={selectedRows}
                 onSelectionChange={setSelectedRows}
               />
             </VStack>
@@ -566,8 +533,7 @@ export function DeploymentsPage() {
       </main>
 
       {/* Shell Panel */}
-      <ShellPanel
-        isExpanded={shellPanel.isExpanded}
+      <ShellPanel isExpanded={shellPanel.isExpanded}
         onExpandedChange={shellPanel.setIsExpanded}
         tabs={shellPanel.tabs}
         activeTabId={shellPanel.activeTabId}

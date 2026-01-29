@@ -245,7 +245,7 @@ export function CreateImagePage() {
             <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)] min-h-full">
               {/* Page Title */}
               <div className="flex items-center justify-between h-8 max-w-[1320px] mx-auto mb-3">
-                <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
                   Create image
                 </h1>
               </div>
@@ -308,16 +308,16 @@ export function CreateImagePage() {
 
                           <div className="flex flex-col gap-3">
                             <div className="flex flex-col gap-2">
-                              <span className="text-[14px] font-medium leading-[var(--line-height-20)] text-[var(--color-text-default)]">
+                              <span className="text-label-lg text-[var(--color-text-default)]">
                                 Protected
                               </span>
-                              <span className="text-[12px] font-normal leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                              <span className="text-body-md font-normal text-[var(--color-text-subtle)]">
                                 Protected images cannot be deleted, preventing accidental removal.
                               </span>
                             </div>
                             <HStack gap={2} align="center">
                               <Toggle checked={isProtected} onChange={setIsProtected} />
-                              <span className="text-[12px] text-[var(--color-text-default)]">
+                              <span className="text-body-md text-[var(--color-text-default)]">
                                 {isProtected ? 'Yes' : 'No'}
                               </span>
                             </HStack>
@@ -378,12 +378,12 @@ export function CreateImagePage() {
                           {/* Upload type Label */}
                           <div className="flex flex-col gap-2 w-full">
                             <div className="flex items-center gap-1.5">
-                              <span className="text-[14px] font-medium leading-[var(--line-height-20)] text-[var(--color-text-default)]">
+                              <span className="text-label-lg text-[var(--color-text-default)]">
                                 Upload type
                               </span>
                               <span className="text-[var(--color-state-danger)]">*</span>
                             </div>
-                            <span className="text-[11px] font-normal leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                            <span className="text-body-sm font-normal text-[var(--color-text-subtle)]">
                               Registers an image by uploading a file or entering a file URL.
                             </span>
                           </div>
@@ -412,7 +412,7 @@ export function CreateImagePage() {
                                 >
                                   Choose File
                                 </Button>
-                                <span className="text-[11px] font-normal leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                                <span className="text-body-sm font-normal text-[var(--color-text-subtle)]">
                                   Only RAW, QCOW2, ISO, AKI, and ARI file formats are allowed.
                                 </span>
                               </VStack>
@@ -427,7 +427,7 @@ export function CreateImagePage() {
                                   placeholder="e.g. https://example.com/image.qcow2"
                                   fullWidth
                                 />
-                                <span className="text-[11px] font-normal leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                                <span className="text-body-sm font-normal text-[var(--color-text-subtle)]">
                                   The URL must start with http:// or https://.
                                 </span>
                               </VStack>
@@ -470,7 +470,7 @@ export function CreateImagePage() {
                         actions={
                           sectionStatus['specification'] === 'done' && (
                             <HStack gap={3} align="center">
-                              <span className="text-[12px] text-[var(--color-text-subtle)]">
+                              <span className="text-body-md text-[var(--color-text-subtle)]">
                                 Auto-filled
                               </span>
                               <Button
@@ -577,10 +577,10 @@ export function CreateImagePage() {
                               <VStack gap={4} align="stretch" className="pt-3">
                                 {/* Min system Disk */}
                                 <div className="flex flex-col gap-2">
-                                  <span className="text-[14px] font-medium leading-[var(--line-height-20)] text-[var(--color-text-default)]">
+                                  <span className="text-label-lg text-[var(--color-text-default)]">
                                     Min system disk
                                   </span>
-                                  <span className="text-[12px] font-normal leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                                  <span className="text-body-md font-normal text-[var(--color-text-subtle)]">
                                     Defines the minimum disk size required to boot an instance from
                                     this image.
                                   </span>
@@ -592,21 +592,21 @@ export function CreateImagePage() {
                                       max={500}
                                       className="w-[80px]"
                                     />
-                                    <span className="text-[12px] text-[var(--color-text-default)]">
+                                    <span className="text-body-md text-[var(--color-text-default)]">
                                       GiB
                                     </span>
                                   </HStack>
-                                  <span className="text-[11px] font-normal leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                                  <span className="text-body-sm font-normal text-[var(--color-text-subtle)]">
                                     0-500 GiB
                                   </span>
                                 </div>
 
                                 {/* Min RAM */}
                                 <div className="flex flex-col gap-2">
-                                  <span className="text-[14px] font-medium leading-[var(--line-height-20)] text-[var(--color-text-default)]">
+                                  <span className="text-label-lg text-[var(--color-text-default)]">
                                     Min RAM
                                   </span>
-                                  <span className="text-[12px] font-normal leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                                  <span className="text-body-md font-normal text-[var(--color-text-subtle)]">
                                     Defines the minimum amount of RAM required to boot an instance
                                     from this image.
                                   </span>
@@ -618,11 +618,11 @@ export function CreateImagePage() {
                                       max={500}
                                       className="w-[80px]"
                                     />
-                                    <span className="text-[12px] text-[var(--color-text-default)]">
+                                    <span className="text-body-md text-[var(--color-text-default)]">
                                       GiB
                                     </span>
                                   </HStack>
-                                  <span className="text-[11px] font-normal leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                                  <span className="text-body-sm font-normal text-[var(--color-text-subtle)]">
                                     0-500 GiB
                                   </span>
                                 </div>
@@ -681,7 +681,7 @@ export function CreateImagePage() {
                         actions={
                           sectionStatus['advanced'] === 'done' && (
                             <HStack gap={3} align="center">
-                              <span className="text-[12px] text-[var(--color-text-subtle)]">
+                              <span className="text-body-md text-[var(--color-text-subtle)]">
                                 Auto-filled
                               </span>
                               <Button
@@ -701,17 +701,17 @@ export function CreateImagePage() {
                           {/* QEMU Guest Agent */}
                           <div className="flex flex-col gap-3">
                             <div className="flex flex-col gap-2">
-                              <span className="text-[14px] font-medium leading-[var(--line-height-20)] text-[var(--color-text-default)]">
+                              <span className="text-label-lg text-[var(--color-text-default)]">
                                 QEMU guest agent
                               </span>
-                              <span className="text-[12px] font-normal leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                              <span className="text-body-md font-normal text-[var(--color-text-subtle)]">
                                 Enables communication and status retrieval between the hypervisor
                                 and the instance.
                               </span>
                             </div>
                             <HStack gap={2} align="center">
                               <Toggle checked={qemuGuestAgent} onChange={setQemuGuestAgent} />
-                              <span className="text-[12px] text-[var(--color-text-default)]">
+                              <span className="text-body-md text-[var(--color-text-default)]">
                                 {qemuGuestAgent ? 'On' : 'Off'}
                               </span>
                             </HStack>

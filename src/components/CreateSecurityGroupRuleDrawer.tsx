@@ -63,10 +63,10 @@ function QuotaProgressBar({ label, used, total }: QuotaProgressBarProps) {
   return (
     <VStack gap={2} className="w-full">
       <HStack justify="between" className="w-full">
-        <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+        <span className="text-label-lg text-[var(--color-text-default)] leading-5">
           {label}
         </span>
-        <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+        <span className="text-body-md text-[var(--color-text-default)] leading-4">
           {used}/{total}
         </span>
       </HStack>
@@ -216,17 +216,17 @@ export function CreateSecurityGroupRuleDrawer({
       <VStack gap={6}>
         {/* Header */}
         <VStack gap={2}>
-          <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
             Create Rule
           </h2>
-          <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+          <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
             A security group rule defines allowed inbound or outbound network traffic.
           </p>
         </VStack>
 
         {/* Direction Radio */}
         <VStack gap={3} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             Direction
           </label>
           <RadioGroup value={direction} onChange={(value) => setDirection(value as RuleDirection)}>
@@ -239,11 +239,11 @@ export function CreateSecurityGroupRuleDrawer({
 
         {/* Protocol Select */}
         <VStack gap={2} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             Protocol
           </label>
           {!isAllProto && (
-            <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
               Select a protocol type to define the rule's traffic. 'Custom' allows specifying
               specific port numbers.
             </p>
@@ -259,7 +259,7 @@ export function CreateSecurityGroupRuleDrawer({
         {/* Port Range (only for Custom TCP/UDP, not for All Proto) */}
         {!isAllProto && ['custom_tcp', 'custom_udp'].includes(protocol) && (
           <VStack gap={2} className="w-full">
-            <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+            <label className="text-label-lg text-[var(--color-text-default)] leading-5">
               Port Range
             </label>
             <Select
@@ -278,11 +278,11 @@ export function CreateSecurityGroupRuleDrawer({
                   error={hasAttemptedSubmit && !portRange.trim()}
                 />
                 {hasAttemptedSubmit && !portRange.trim() ? (
-                  <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+                  <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
                     Port range is required
                   </p>
                 ) : (
-                  <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+                  <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
                     e.g. single port '8080', port range '7000-7005'
                   </p>
                 )}
@@ -295,7 +295,7 @@ export function CreateSecurityGroupRuleDrawer({
         {protocol === 'custom_icmp' && (
           <>
             <VStack gap={2} className="w-full">
-              <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+              <label className="text-label-lg text-[var(--color-text-default)] leading-5">
                 ICMP Type(optional)
               </label>
               <Input
@@ -306,11 +306,11 @@ export function CreateSecurityGroupRuleDrawer({
                 max={255}
                 fullWidth
               />
-              <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">0-255</p>
+              <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">0-255</p>
             </VStack>
 
             <VStack gap={2} className="w-full">
-              <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+              <label className="text-label-lg text-[var(--color-text-default)] leading-5">
                 ICMP Code(optional)
               </label>
               <Input
@@ -321,7 +321,7 @@ export function CreateSecurityGroupRuleDrawer({
                 max={255}
                 fullWidth
               />
-              <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">0-255</p>
+              <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">0-255</p>
             </VStack>
           </>
         )}
@@ -329,7 +329,7 @@ export function CreateSecurityGroupRuleDrawer({
         {/* IP Protocol (only for Other Protocol) */}
         {protocol === 'other_protocol' && (
           <VStack gap={2} className="w-full">
-            <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+            <label className="text-label-lg text-[var(--color-text-default)] leading-5">
               IP Protocol
             </label>
             <Input
@@ -338,7 +338,7 @@ export function CreateSecurityGroupRuleDrawer({
               placeholder=""
               fullWidth
             />
-            <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
               0–255. (e.g., 6=TCP, 17=UDP, 1=ICMP)
             </p>
           </VStack>
@@ -347,10 +347,10 @@ export function CreateSecurityGroupRuleDrawer({
         {/* Remote (not shown for All Proto) */}
         {!isAllProto && (
           <VStack gap={2} className="w-full">
-            <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+            <label className="text-label-lg text-[var(--color-text-default)] leading-5">
               Remote
             </label>
-            <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
               Define the source or destination of traffic.
             </p>
             <Select
@@ -369,7 +369,7 @@ export function CreateSecurityGroupRuleDrawer({
                   error={hasAttemptedSubmit && !remoteValue.trim()}
                 />
                 {hasAttemptedSubmit && !remoteValue.trim() && (
-                  <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+                  <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
                     CIDR is required
                   </p>
                 )}
@@ -385,7 +385,7 @@ export function CreateSecurityGroupRuleDrawer({
                   error={hasAttemptedSubmit && !remoteValue.trim()}
                 />
                 {hasAttemptedSubmit && !remoteValue.trim() && (
-                  <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+                  <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
                     Security group is required
                   </p>
                 )}

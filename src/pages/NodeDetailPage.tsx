@@ -321,10 +321,10 @@ function ConditionCard({ title, status, tooltip }: ConditionCardProps) {
             <IconCheck size={12} className="text-white" stroke={2} />
           </div>
           <VStack gap={0.5}>
-            <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-[16px]">
+            <span className="text-label-sm text-[var(--color-text-default)] leading-[16px]">
               {title}
             </span>
-            <span className="text-[11px] text-[var(--color-text-subtle)] leading-[16px]">
+            <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
               {status}
             </span>
           </VStack>
@@ -356,8 +356,8 @@ function ResourceUsage({ label, used, total, unit = '' }: ResourceUsageProps) {
   return (
     <div className="flex-1 border border-[var(--color-border-default)] rounded-lg px-4 py-3">
       <HStack justify="between" align="center" className="mb-1">
-        <span className="text-[11px] font-medium text-[var(--color-text-default)]">{label}</span>
-        <span className="text-[11px] text-[var(--color-text-subtle)]">
+        <span className="text-label-sm text-[var(--color-text-default)]">{label}</span>
+        <span className="text-body-sm text-[var(--color-text-subtle)]">
           {used} of {total} {unit} / {percentage}% Used
         </span>
       </HStack>
@@ -418,7 +418,7 @@ function PodsTab({ pods }: PodsTabProps) {
 
   return (
     <VStack gap={3}>
-      <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
+      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
         Pods
       </h3>
       <HStack gap={2} align="center">
@@ -564,7 +564,7 @@ function ImagesTab({ images }: ImagesTabProps) {
 
   return (
     <VStack gap={3}>
-      <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
+      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
         Images
       </h3>
       <HStack gap={2} align="center">
@@ -607,7 +607,7 @@ function TaintsTab({ taints }: TaintsTabProps) {
 
   return (
     <VStack gap={3}>
-      <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
+      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
         Taints
       </h3>
       <Pagination
@@ -659,7 +659,7 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
 
   return (
     <VStack gap={3}>
-      <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
+      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
         Conditions
       </h3>
       <Pagination
@@ -749,7 +749,7 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
 
   return (
     <VStack gap={3}>
-      <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
+      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
         Recent Events
       </h3>
       <HStack gap={2} align="center">

@@ -114,7 +114,7 @@ export default function IAMSessionPoliciesPage() {
             <VStack gap={6}>
               {/* Header */}
               <HStack justify="between" align="center" className="w-full min-h-[28px]">
-                <h1 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+                <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
                   Session policies
                 </h1>
               </HStack>
@@ -136,12 +136,12 @@ export default function IAMSessionPoliciesPage() {
                           <VStack gap={4}>
                             <VStack gap={2}>
                               <HStack className="gap-[3px]">
-                                <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
+                                <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
                                   Session idle timeout
                                 </span>
                                 <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                               </HStack>
-                              <p className="text-[12px] leading-4 text-[var(--color-text-subtle)]">
+                              <p className="text-body-md leading-4 text-[var(--color-text-subtle)]">
                                 Defines how long a user session can remain idle before expiring.
                               </p>
                             </VStack>
@@ -155,11 +155,11 @@ export default function IAMSessionPoliciesPage() {
                                   step={1}
                                   className="w-[200px]"
                                 />
-                                <span className="text-[12px] leading-4 text-[var(--color-text-default)]">
+                                <span className="text-body-md leading-4 text-[var(--color-text-default)]">
                                   Minutes
                                 </span>
                               </HStack>
-                              <p className="text-[11px] leading-4 text-[var(--color-text-subtle)]">
+                              <p className="text-body-sm leading-4 text-[var(--color-text-subtle)]">
                                 15 - 60 Minutes
                               </p>
                             </VStack>
@@ -169,12 +169,12 @@ export default function IAMSessionPoliciesPage() {
                           <VStack gap={4}>
                             <VStack gap={2}>
                               <HStack className="gap-[3px]">
-                                <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
+                                <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
                                   Session max lifespan
                                 </span>
                                 <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                               </HStack>
-                              <p className="text-[12px] leading-4 text-[var(--color-text-subtle)]">
+                              <p className="text-body-md leading-4 text-[var(--color-text-subtle)]">
                                 Defines the absolute maximum duration a session can remain active,
                                 regardless of user activity.
                               </p>
@@ -189,11 +189,11 @@ export default function IAMSessionPoliciesPage() {
                                   step={1}
                                   className="w-[200px]"
                                 />
-                                <span className="text-[12px] leading-4 text-[var(--color-text-default)]">
+                                <span className="text-body-md leading-4 text-[var(--color-text-default)]">
                                   Hours
                                 </span>
                               </HStack>
-                              <p className="text-[11px] leading-4 text-[var(--color-text-subtle)]">
+                              <p className="text-body-sm leading-4 text-[var(--color-text-subtle)]">
                                 1-24 Hours
                               </p>
                             </VStack>
@@ -203,12 +203,12 @@ export default function IAMSessionPoliciesPage() {
                           <VStack gap={4}>
                             <VStack gap={2}>
                               <HStack className="gap-[3px]">
-                                <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
+                                <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
                                   Login timeout
                                 </span>
                                 <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                               </HStack>
-                              <p className="text-[12px] leading-4 text-[var(--color-text-subtle)]">
+                              <p className="text-body-md leading-4 text-[var(--color-text-subtle)]">
                                 Defines the maximum time allowed for a login request to complete.
                               </p>
                             </VStack>
@@ -222,11 +222,11 @@ export default function IAMSessionPoliciesPage() {
                                   step={1}
                                   className="w-[200px]"
                                 />
-                                <span className="text-[12px] leading-4 text-[var(--color-text-default)]">
+                                <span className="text-body-md leading-4 text-[var(--color-text-default)]">
                                   Minutes
                                 </span>
                               </HStack>
-                              <p className="text-[11px] leading-4 text-[var(--color-text-subtle)]">
+                              <p className="text-body-sm leading-4 text-[var(--color-text-subtle)]">
                                 1 - 60 Minutes
                               </p>
                             </VStack>
@@ -236,12 +236,12 @@ export default function IAMSessionPoliciesPage() {
                           <VStack gap={4}>
                             <VStack gap={2}>
                               <HStack className="gap-[3px]">
-                                <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
+                                <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
                                   Login action timeout
                                 </span>
                                 <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                               </HStack>
-                              <p className="text-[12px] leading-4 text-[var(--color-text-subtle)]">
+                              <p className="text-body-md leading-4 text-[var(--color-text-subtle)]">
                                 Defines how long additional authentication steps during login remain
                                 valid.
                               </p>
@@ -256,11 +256,11 @@ export default function IAMSessionPoliciesPage() {
                                   step={1}
                                   className="w-[200px]"
                                 />
-                                <span className="text-[12px] leading-4 text-[var(--color-text-default)]">
+                                <span className="text-body-md leading-4 text-[var(--color-text-default)]">
                                   Minutes
                                 </span>
                               </HStack>
-                              <p className="text-[11px] leading-4 text-[var(--color-text-subtle)]">
+                              <p className="text-body-sm leading-4 text-[var(--color-text-subtle)]">
                                 1 - 10 Minutes
                               </p>
                             </VStack>
@@ -271,7 +271,7 @@ export default function IAMSessionPoliciesPage() {
                             <button
                               type="button"
                               onClick={handleResetToDefault}
-                              className="flex items-center gap-1.5 text-[12px] font-medium text-[var(--color-action-primary)] hover:underline"
+                              className="flex items-center gap-1.5 text-label-md text-[var(--color-action-primary)] hover:underline"
                             >
                               <IconRefresh size={12} stroke={1.5} />
                               Reset to default

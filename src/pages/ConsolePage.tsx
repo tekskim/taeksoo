@@ -7,14 +7,12 @@ import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
 
 /* ----------------------------------------
-   Types
-   ---------------------------------------- */
+   Types ---------------------------------------- */
 
 type ConnectionStatus = 'connected' | 'connecting' | 'disconnected';
 
 /* ----------------------------------------
-   Connection Status indicator
-   ---------------------------------------- */
+   Connection Status indicator ---------------------------------------- */
 
 function ConnectionStatusIndicator({ status }: { status: ConnectionStatus }) {
   const statusConfig = {
@@ -37,14 +35,13 @@ function ConnectionStatusIndicator({ status }: { status: ConnectionStatus }) {
   return (
     <div className="flex items-center gap-1.5 ml-3">
       <span className={`size-2 rounded-full ${config.color}`} />
-      <span className="text-[12px] text-[var(--color-text-default)]">{config.label}</span>
+      <span className="text-body-md text-[var(--color-text-default)]">{config.label}</span>
     </div>
   );
 }
 
 /* ----------------------------------------
-   Console Page Component
-   ---------------------------------------- */
+   Console Page Component ---------------------------------------- */
 
 export function ConsolePage() {
   const { instanceId } = useParams<{ instanceId: string }>();
@@ -154,16 +151,14 @@ export function ConsolePage() {
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
 
-      <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
+      <main className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
           sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'
         }`}
       >
         {/* Fixed Header Area */}
         <div className="shrink-0 bg-[var(--color-surface-default)]">
           {/* Tab Bar */}
-          <TabBar
-            tabs={tabBarTabs}
+          <TabBar tabs={tabBarTabs}
             activeTab={activeTabId || ''}
             onTabChange={handleTabChange}
             onTabClose={handleTabClose}
@@ -173,15 +168,13 @@ export function ConsolePage() {
           />
 
           {/* Top Bar with Breadcrumb Navigation */}
-          <TopBar
-            showSidebarToggle={!sidebarOpen}
+          <TopBar showSidebarToggle={!sidebarOpen}
             onSidebarToggle={toggleSidebar}
             showNavigation={true}
             onBack={() => navigate(-1)}
             onForward={() => navigate(1)}
             breadcrumb={
-              <Breadcrumb
-                items={[
+              <Breadcrumb items={[
                   { label: 'Proj-1', href: '/compute' },
                   { label: 'Instances', href: '/compute/instances' },
                   { label: instanceName },
@@ -202,9 +195,8 @@ export function ConsolePage() {
           </div>
 
           {/* Log Content - Dark background */}
-          <div
-            ref={contentRef}
-            className="flex-1 overflow-auto p-4 font-mono text-[12px] leading-5 bg-[#0d1117] text-slate-300 shell-scroll"
+          <div ref={contentRef}
+            className="flex-1 overflow-auto p-4 font-mono text-body-md leading-5 bg-[#0d1117] text-slate-300 shell-scroll"
           >
             {content ? (
               <pre className="whitespace-pre-wrap break-all m-0">{content}</pre>
@@ -219,8 +211,7 @@ export function ConsolePage() {
           <div className="flex items-center justify-between px-3 py-2 border-t border-[var(--color-border-default)] bg-[var(--color-surface-subtle)]">
             <div className="flex items-center gap-1">
               {/* Container Select */}
-              <Select
-                value={selectedContainer}
+              <Select value={selectedContainer}
                 onChange={setSelectedContainer}
                 options={containerOptions}
                 placeholder="Container"
@@ -228,12 +219,10 @@ export function ConsolePage() {
 
               {/* Clear Button */}
               <Button size="sm" variant="secondary" onClick={handleClear}>
-                Clear
-              </Button>
+                Clear </Button>
 
               {/* Download Button - Custom style for 28x28 */}
-              <button
-                onClick={handleDownload}
+              <button onClick={handleDownload}
                 aria-label="Download"
                 className="inline-flex items-center justify-center size-[28px] rounded-[var(--button-radius)] bg-[var(--color-surface-default)] text-[var(--color-text-default)] border border-[var(--color-border-strong)] hover:bg-[var(--button-secondary-hover-bg)] transition-colors"
               >
@@ -246,8 +235,7 @@ export function ConsolePage() {
 
             <div className="flex items-center gap-3">
               {/* View Time Select */}
-              <Select
-                value={viewTime}
+              <Select value={viewTime}
                 onChange={setViewTime}
                 options={viewTimeOptions}
                 placeholder="View"
@@ -281,16 +269,16 @@ function generateSampleLogs(_instanceName: string): string {
   };
 
   const logs = [
-    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:11.570725    1 main.go:152] "Version" version="v"`,
-    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:11.570824    1 main.go:153] "Running node-driver-registrar" mode=""`,
-    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:11.570828    1 main.go:174] "Attempting to open a gRPC connection" csiAddress="/csi/csi.sock"`,
-    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:17.836012    1 main.go:182] "Calling CSI driver to discover driver name"`,
-    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:17.837013    1 main.go:191] "CSI driver name" csiDriverName="driver.csi.io"`,
-    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:17.837042    1 node_register.go:56] "Starting Registration Server" socketPath="/registration/driver.csi.io-reg.sock"`,
-    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:17.837176    1 node_register.go:66] "Registration Server started" socketPath="/registration/driver.csi.io-reg.sock"`,
-    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:17.837245    1 node_register.go:96] "Skipping HTTP server"`,
-    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:18.515514    1 main.go:97] "Received GetInfo call" request="&InfoRequest{}"`,
-    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:18.529723    1 main.go:109] "Received NotifyRegistrationStatus call" status="&RegistrationStatus{PluginRegistered:true,Error:,}"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:11.570725 1 main.go:152] "Version" version="v"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:11.570824 1 main.go:153] "Running node-driver-registrar" mode=""`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:11.570828 1 main.go:174] "Attempting to open a gRPC connection" csiAddress="/csi/csi.sock"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:17.836012 1 main.go:182] "Calling CSI driver to discover driver name"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:17.837013 1 main.go:191] "CSI driver name" csiDriverName="driver.csi.io"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:17.837042 1 node_register.go:56] "Starting Registration Server" socketPath="/registration/driver.csi.io-reg.sock"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:17.837176 1 node_register.go:66] "Registration Server started" socketPath="/registration/driver.csi.io-reg.sock"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:17.837245 1 node_register.go:96] "Skipping HTTP server"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:18.515514 1 main.go:97] "Received GetInfo call" request="&InfoRequest{}"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:18.529723 1 main.go:109] "Received NotifyRegistrationStatus call" status="&RegistrationStatus{PluginRegistered:true,Error:,}"`,
   ];
 
   return logs.join('\n');

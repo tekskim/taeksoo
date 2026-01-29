@@ -141,7 +141,7 @@ export function Drawer({
             {title && (
               <h2
                 id="drawer-title"
-                className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)] leading-[var(--line-height-24)]"
+                className="text-heading-h5 text-[var(--color-text-default)]"
               >
                 {title}
               </h2>

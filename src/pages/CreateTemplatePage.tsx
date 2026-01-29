@@ -478,7 +478,7 @@ function TemplateSidebar({ onCancel, sectionStatus }: TemplateSidebarProps) {
         {/* Summary Card */}
         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
           <VStack gap={3}>
-            <h5 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+            <h5 className="text-heading-h5 text-[var(--color-text-default)]">
               Summary
             </h5>
             <div className="flex flex-col">
@@ -487,11 +487,11 @@ function TemplateSidebar({ onCancel, sectionStatus }: TemplateSidebarProps) {
 
                 return (
                   <div key={sectionKey} className="flex items-center justify-between py-1">
-                    <span className="text-[12px] leading-5 text-[var(--color-text-default)]">
+                    <span className="text-body-md text-[var(--color-text-default)]">
                       {SECTION_LABELS[sectionKey]}
                     </span>
                     {isWriting ? (
-                      <span className="text-[11px] text-[var(--color-text-subtle)]">
+                      <span className="text-body-sm text-[var(--color-text-subtle)]">
                         Writing...
                       </span>
                     ) : (
@@ -530,7 +530,7 @@ function PreSection({ title }: PreSectionProps) {
   return (
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
       <div className="h-8 flex items-center">
-        <h5 className="text-[length:var(--font-size-16)] font-semibold leading-[var(--line-height-24)] text-[var(--color-text-default)]">
+        <h5 className="text-heading-h5 text-[var(--color-text-default)]">
           {title}
         </h5>
       </div>
@@ -550,10 +550,10 @@ function WritingSection({ title }: WritingSectionProps) {
   return (
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
       <div className="h-8 flex items-center justify-between">
-        <h5 className="text-[length:var(--font-size-16)] font-semibold leading-[var(--line-height-24)] text-[var(--color-text-default)]">
+        <h5 className="text-heading-h5 text-[var(--color-text-default)]">
           {title}
         </h5>
-        <span className="text-[11px] text-[var(--color-text-subtle)]">Writing...</span>
+        <span className="text-body-sm text-[var(--color-text-subtle)]">Writing...</span>
       </div>
     </div>
   );
@@ -572,11 +572,11 @@ function SkippedSection({ title, onEdit }: SkippedSectionProps) {
   return (
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
       <div className="flex items-center justify-between h-8">
-        <h5 className="text-[length:var(--font-size-16)] font-semibold leading-[var(--line-height-24)] text-[var(--color-text-default)]">
+        <h5 className="text-heading-h5 text-[var(--color-text-default)]">
           {title}
         </h5>
         <div className="flex items-center gap-3">
-          <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-muted)]">
+          <span className="text-body-md text-[var(--color-text-muted)]">
             Not configured
           </span>
           <Button variant="outline" size="sm" leftIcon={<IconEdit size={12} />} onClick={onEdit}>
@@ -692,7 +692,7 @@ function TemplateInformationSection({
       <SectionCard.Content gap={6} className="pt-2">
         {/* Template name */}
         <VStack gap={2}>
-          <span className="text-[length:var(--font-size-14)] font-medium leading-[var(--line-height-20)] text-[var(--color-text-default)]">
+          <span className="text-label-lg text-[var(--color-text-default)]">
             Template name <span className="text-[var(--color-state-danger)]">*</span>
           </span>
           <VStack gap={1}>
@@ -704,12 +704,12 @@ function TemplateInformationSection({
               error={!!templateNameError}
             />
             {templateNameError && (
-              <span className="text-[11px] leading-[var(--line-height-16)] text-[var(--color-state-danger)]">
+              <span className="text-body-sm text-[var(--color-state-danger)]">
                 {templateNameError}
               </span>
             )}
           </VStack>
-          <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+          <span className="text-body-md text-[var(--color-text-subtle)]">
             You can use letters, numbers, and special characters (+=,.@-_), and the length must be
             between 2-128 characters.
           </span>
@@ -717,7 +717,7 @@ function TemplateInformationSection({
 
         {/* Description */}
         <VStack gap={2}>
-          <span className="text-[length:var(--font-size-14)] font-medium leading-[var(--line-height-20)] text-[var(--color-text-default)]">
+          <span className="text-label-lg text-[var(--color-text-default)]">
             Description
           </span>
           <Input
@@ -726,7 +726,7 @@ function TemplateInformationSection({
             onChange={(e) => onDescriptionChange(e.target.value)}
             fullWidth
           />
-          <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+          <span className="text-body-md text-[var(--color-text-subtle)]">
             You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255
             characters.
           </span>
@@ -734,7 +734,7 @@ function TemplateInformationSection({
 
         {/* Favorite */}
         <VStack gap={2}>
-          <span className="text-[length:var(--font-size-14)] font-medium leading-[var(--line-height-20)] text-[var(--color-text-default)]">
+          <span className="text-label-lg text-[var(--color-text-default)]">
             Favorite
           </span>
           <Checkbox
@@ -806,10 +806,10 @@ function BasicInformationSection({
       <SectionCard.Content gap={6} className="pt-2">
         {/* AZ (Availability zone) */}
         <VStack gap={2}>
-          <span className="text-[length:var(--font-size-14)] font-medium leading-[var(--line-height-20)] text-[var(--color-text-default)]">
+          <span className="text-label-lg text-[var(--color-text-default)]">
             AZ (Availability zone)
           </span>
-          <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+          <span className="text-body-md text-[var(--color-text-subtle)]">
             Select the availability zone for the instance.
           </span>
           <Select
@@ -955,13 +955,13 @@ function ImageSection({
           <HStack gap={1} align="center">
             <a
               href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-[length:var(--font-size-12)] leading-[var(--line-height-18)] font-medium"
+              className="text-[var(--color-action-primary)] hover:underline text-body-md font-medium"
             >
               {value}
             </a>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </HStack>
-          <span className="text-[11px] text-[var(--color-text-subtle)]">ID: {row.id}</span>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
         </VStack>
       ),
     },
@@ -992,7 +992,7 @@ function ImageSection({
 
   // OS filter chip style - matches Figma design with container
   const osChipStyle = (active: boolean) => `
-    inline-flex items-center gap-1.5 px-3 py-2 rounded-[4px] cursor-pointer text-[12px] font-medium transition-colors
+    inline-flex items-center gap-1.5 px-3 py-2 rounded-[4px] cursor-pointer text-label-md transition-colors
     ${
       active
         ? 'bg-[var(--color-surface-default)] text-[var(--color-text-default)] shadow-sm'
@@ -1022,10 +1022,10 @@ function ImageSection({
         <VStack gap={4} className="pt-2">
           {/* Start Source */}
           <VStack gap={3}>
-            <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+            <span className="text-label-lg text-[var(--color-text-default)]">
               Start source
             </span>
-            <span className="text-[12px] text-[var(--color-text-subtle)]">
+            <span className="text-body-md text-[var(--color-text-subtle)]">
               Select a template to launch the instance. You can start from an OS image, a snapshot,
               or an existing volume.
             </span>
@@ -1132,10 +1132,10 @@ function ImageSection({
 
           {/* System disk Section */}
           <VStack gap={3}>
-            <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+            <span className="text-label-lg text-[var(--color-text-default)]">
               System disk
             </span>
-            <span className="text-[12px] text-[var(--color-text-subtle)]">
+            <span className="text-body-md text-[var(--color-text-subtle)]">
               Configure whether to create a system disk for booting.
             </span>
 
@@ -1151,7 +1151,7 @@ function ImageSection({
               <div className="w-full bg-white border border-[var(--color-border-default)] rounded-[6px] px-4 py-2">
                 <HStack gap={6} align="center">
                   <HStack gap={1.5} align="center">
-                    <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                    <span className="text-label-lg text-[var(--color-text-default)]">
                       Type
                     </span>
                     <Select
@@ -1162,7 +1162,7 @@ function ImageSection({
                     />
                   </HStack>
                   <HStack gap={1.5} align="center">
-                    <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                    <span className="text-label-lg text-[var(--color-text-default)]">
                       Size
                     </span>
                     <NumberInput
@@ -1172,7 +1172,7 @@ function ImageSection({
                       max={1000}
                       className="w-[80px]"
                     />
-                    <span className="text-[12px] text-[var(--color-text-default)]">GiB</span>
+                    <span className="text-body-md text-[var(--color-text-default)]">GiB</span>
                   </HStack>
                   <Checkbox
                     label="Deleted with the instance"
@@ -1186,10 +1186,10 @@ function ImageSection({
 
           {/* Data disk Section */}
           <VStack gap={3} align="start">
-            <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+            <span className="text-label-lg text-[var(--color-text-default)]">
               Data disk
             </span>
-            <span className="text-[12px] text-[var(--color-text-subtle)]">
+            <span className="text-body-md text-[var(--color-text-subtle)]">
               Attach additional volumes for data storage.
             </span>
 
@@ -1323,7 +1323,7 @@ function FlavorSection({
           <HStack gap={1.5} align="center">
             <a
               href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-[12px] leading-[16px] font-medium"
+              className="text-[var(--color-action-primary)] hover:underline text-body-md font-medium"
               onClick={(e) => e.preventDefault()}
             >
               {value}
@@ -1333,7 +1333,7 @@ function FlavorSection({
               <IconAlertCircle size={16} className="text-[var(--color-state-danger)]" />
             )}
           </HStack>
-          <span className="text-[11px] text-[var(--color-text-muted)] leading-[16px]">
+          <span className="text-body-sm text-[var(--color-text-muted)]">
             ID: {row.id}
           </span>
         </VStack>
@@ -1371,10 +1371,10 @@ function FlavorSection({
         <VStack gap={6} className="pt-2">
           {/* Flavors Label & Description */}
           <VStack gap={2} align="start">
-            <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
+            <span className="text-label-lg text-[var(--color-text-default)]">
               Flavors<span className="ml-[3px] text-[var(--color-state-danger)]">*</span>
             </span>
-            <span className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
+            <span className="text-body-md text-[var(--color-text-subtle)]">
               Select a flavor from the list to use for the instance.
             </span>
           </VStack>
@@ -1666,14 +1666,14 @@ function NetworkSection({
           <HStack gap={1.5} align="center">
             <a
               href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-[12px] leading-[16px] font-medium"
+              className="text-[var(--color-action-primary)] hover:underline text-body-md font-medium"
               onClick={(e) => e.preventDefault()}
             >
               {value}
             </a>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </HStack>
-          <span className="text-[11px] text-[var(--color-text-muted)] leading-[16px]">
+          <span className="text-body-sm text-[var(--color-text-muted)]">
             ID: {row.id}
           </span>
         </VStack>
@@ -1712,14 +1712,14 @@ function NetworkSection({
           <HStack gap={1.5} align="center">
             <a
               href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-[12px] leading-[16px] font-medium"
+              className="text-[var(--color-action-primary)] hover:underline text-body-md font-medium"
               onClick={(e) => e.preventDefault()}
             >
               {value}
             </a>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </HStack>
-          <span className="text-[11px] text-[var(--color-text-muted)] leading-[16px]">
+          <span className="text-body-sm text-[var(--color-text-muted)]">
             ID: {row.id}
           </span>
         </VStack>
@@ -1759,7 +1759,7 @@ function NetworkSection({
           <HStack gap={1.5} align="center">
             <a
               href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-[12px] leading-[16px] font-medium"
+              className="text-[var(--color-action-primary)] hover:underline text-body-md font-medium"
               onClick={(e) => e.preventDefault()}
             >
               {value}
@@ -1769,7 +1769,7 @@ function NetworkSection({
               <IconAlertCircle size={12} className="text-[var(--color-state-danger)]" />
             )}
           </HStack>
-          <span className="text-[11px] text-[var(--color-text-muted)] leading-[16px]">
+          <span className="text-body-sm text-[var(--color-text-muted)]">
             ID: {row.id}
           </span>
         </VStack>
@@ -1784,14 +1784,14 @@ function NetworkSection({
           <HStack gap={1.5} align="center">
             <a
               href="#"
-              className="text-[var(--color-action-primary)] hover:underline text-[12px] leading-[16px] font-medium"
+              className="text-[var(--color-action-primary)] hover:underline text-body-md font-medium"
               onClick={(e) => e.preventDefault()}
             >
               {value}
             </a>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </HStack>
-          <span className="text-[11px] text-[var(--color-text-muted)] leading-[16px]">
+          <span className="text-body-sm text-[var(--color-text-muted)]">
             ID: {row.ownedNetworkId}
           </span>
         </VStack>
@@ -1824,10 +1824,10 @@ function NetworkSection({
           {/* Networks Section */}
           <VStack gap={4} align="stretch">
             <VStack gap={2} align="start">
-              <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
+              <span className="text-label-lg text-[var(--color-text-default)]">
                 Network<span className="ml-[3px] text-[var(--color-state-danger)]">*</span>
               </span>
-              <span className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
+              <span className="text-body-md text-[var(--color-text-subtle)]">
                 If you select a port, selecting a network is optional. You may still add another
                 network if required.
               </span>
@@ -1904,10 +1904,10 @@ function NetworkSection({
           {/* Virtual LAN Section */}
           <VStack gap={4} align="stretch">
             <VStack gap={2} align="start">
-              <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
+              <span className="text-label-lg text-[var(--color-text-default)]">
                 Virtual LAN
               </span>
-              <span className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
+              <span className="text-body-md text-[var(--color-text-subtle)]">
                 Each selected network requires at least one Virtual LAN configuration. Each VLAN
                 represents a virtual network card (NIC) attached to the selected network.
               </span>
@@ -1921,7 +1921,7 @@ function NetworkSection({
               >
                 <HStack gap={4} align="center">
                   <HStack gap={1.5} align="center">
-                    <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                    <span className="text-label-lg text-[var(--color-text-default)]">
                       Network
                     </span>
                     <Select
@@ -1932,7 +1932,7 @@ function NetworkSection({
                     />
                   </HStack>
                   <HStack gap={1.5} align="center">
-                    <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                    <span className="text-label-lg text-[var(--color-text-default)]">
                       Subnet
                     </span>
                     <Select
@@ -1960,7 +1960,7 @@ function NetworkSection({
 
             {/* Add Virtual LAN Button */}
             <button
-              className="flex items-center gap-1.5 h-8 px-3 text-[12px] font-medium text-[var(--color-text-default)] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md hover:bg-[var(--color-surface-subtle)] w-fit"
+              className="flex items-center gap-1.5 h-8 px-3 text-label-md text-[var(--color-text-default)] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md hover:bg-[var(--color-surface-subtle)] w-fit"
               onClick={addVirtualLAN}
             >
               <IconPlus size={12} />
@@ -1971,10 +1971,10 @@ function NetworkSection({
           {/* Security groups Section */}
           <VStack gap={4} align="stretch">
             <VStack gap={2} align="start">
-              <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
+              <span className="text-label-lg text-[var(--color-text-default)]">
                 Security groups<span className="ml-[3px] text-[var(--color-state-danger)]">*</span>
               </span>
-              <span className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
+              <span className="text-body-md text-[var(--color-text-subtle)]">
                 Security groups apply to all networks except ports with security disabled.
               </span>
             </VStack>
@@ -2033,7 +2033,7 @@ function NetworkSection({
           {/* Port Section (Collapsible) */}
           <VStack gap={3} align="stretch">
             <button
-              className="flex items-center gap-1 text-[14px] font-medium text-[var(--color-text-default)]"
+              className="flex items-center gap-1 text-label-lg text-[var(--color-text-default)]"
               onClick={() => setPortExpanded(!portExpanded)}
             >
               {portExpanded ? (
@@ -2202,7 +2202,7 @@ function AuthenticationSection({
       <SectionCard.Content>
         <VStack gap={0}>
           <VStack gap={2} className="pt-2">
-            <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+            <span className="text-label-lg text-[var(--color-text-default)]">
               Login type<span className="ml-1 text-[var(--color-state-danger)]">*</span>
             </span>
             <HStack gap={4} className="mt-2">
@@ -2225,10 +2225,10 @@ function AuthenticationSection({
             <>
               <div className="w-full h-px bg-[var(--color-border-subtle)] my-6" />
               <VStack gap={2}>
-                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                <span className="text-label-lg text-[var(--color-text-default)]">
                   Key pair<span className="ml-1 text-[var(--color-state-danger)]">*</span>
                 </span>
-                <span className="text-[12px] text-[var(--color-text-muted)] mb-4">
+                <span className="text-body-md text-[var(--color-text-muted)] mb-4">
                   Select the key pair for SSH access.
                 </span>
                 <Table
@@ -2377,8 +2377,8 @@ function AdvancedSection({
           {/* Tags Section */}
           <VStack gap={3} align="stretch">
             <VStack gap={2} align="stretch">
-              <span className="text-[14px] font-medium text-[var(--color-text-default)]">Tags</span>
-              <span className="text-[12px] text-[var(--color-text-subtle)]">
+              <span className="text-label-lg text-[var(--color-text-default)]">Tags</span>
+              <span className="text-body-md text-[var(--color-text-subtle)]">
                 A tag consists of a Key that defines the resource category and a Value that
                 describes it. Each resource can have up to 50 tags.
               </span>
@@ -2416,12 +2416,12 @@ function AdvancedSection({
               <button
                 onClick={handleAddTag}
                 disabled={tags.length >= MAX_TAGS}
-                className="flex items-center gap-1.5 h-8 px-3 text-[12px] font-medium text-[var(--color-text-default)] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md hover:bg-[var(--color-surface-subtle)] disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center gap-1.5 h-8 px-3 text-label-md text-[var(--color-text-default)] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md hover:bg-[var(--color-surface-subtle)] disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <IconPlus size={12} />
                 Add tag
               </button>
-              <span className="text-[12px] text-[var(--color-text-subtle)]">
+              <span className="text-body-md text-[var(--color-text-subtle)]">
                 {tags.length} / {MAX_TAGS} tags
               </span>
             </HStack>
@@ -2430,10 +2430,10 @@ function AdvancedSection({
           {/* User data Section */}
           <VStack gap={3} align="stretch">
             <VStack gap={2} align="stretch">
-              <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+              <span className="text-label-lg text-[var(--color-text-default)]">
                 User data
               </span>
-              <span className="text-[12px] text-[var(--color-text-subtle)]">
+              <span className="text-body-md text-[var(--color-text-subtle)]">
                 Enter a script or cloud-init configuration to run when the instance first boots.
               </span>
             </VStack>
@@ -2441,7 +2441,7 @@ function AdvancedSection({
             <VStack gap={3} align="stretch">
               <button
                 onClick={handleFileUpload}
-                className="flex items-center gap-1.5 h-8 px-3 text-[12px] font-medium text-[var(--color-text-default)] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md hover:bg-[var(--color-surface-subtle)] w-fit"
+                className="flex items-center gap-1.5 h-8 px-3 text-label-md text-[var(--color-text-default)] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md hover:bg-[var(--color-surface-subtle)] w-fit"
               >
                 <IconUpload size={12} />
                 Upload a file
@@ -2455,7 +2455,7 @@ function AdvancedSection({
                   fullWidth
                   rows={4}
                 />
-                <span className="text-[12px] text-[var(--color-text-subtle)]">
+                <span className="text-body-md text-[var(--color-text-subtle)]">
                   {userDataSizeDisplay} / {MAX_USER_DATA_KB} KB
                 </span>
               </VStack>
@@ -2761,7 +2761,7 @@ export function CreateTemplatePage() {
             <VStack gap={3} className="min-w-[1176px]">
               {/* Page Title */}
               <div className="flex items-center justify-between h-8">
-                <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
                   Create template
                 </h1>
               </div>

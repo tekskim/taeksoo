@@ -112,18 +112,18 @@ export function ManageTagsDrawer({
         {/* Header Section */}
         <VStack gap={3}>
           <VStack gap={2}>
-            <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
               Manage Tags
             </h2>
-            <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
               Tags are used to categorize and manage resources.
             </p>
           </VStack>
 
           {/* Instance Info Box */}
           <div className="w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg">
-            <div className="text-[11px] text-[var(--color-text-subtle)] mb-1.5">Instance Name</div>
-            <div className="text-[12px] text-[var(--color-text-default)]">{instance.name}</div>
+            <div className="text-body-sm text-[var(--color-text-subtle)] mb-1.5">Instance Name</div>
+            <div className="text-body-md text-[var(--color-text-default)]">{instance.name}</div>
           </div>
         </VStack>
 
@@ -132,10 +132,10 @@ export function ManageTagsDrawer({
           {/* Tags Header */}
           <VStack gap={2}>
             <HStack gap={1.5} align="center">
-              <span className="text-[14px] font-medium text-[var(--color-text-default)]">Tags</span>
-              <span className="text-[12px] text-[var(--color-text-subtle)]">(Optional)</span>
+              <span className="text-label-lg text-[var(--color-text-default)]">Tags</span>
+              <span className="text-body-md text-[var(--color-text-subtle)]">(Optional)</span>
             </HStack>
-            <div className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+            <div className="text-body-md text-[var(--color-text-subtle)] leading-4">
               <p className="mb-0">
                 A tag consists of a Key that defines the resource category and a Value that
                 describes it.
@@ -169,7 +169,7 @@ export function ManageTagsDrawer({
               >
                 {/* Key Field */}
                 <HStack gap={3} align="center" className="flex-1 min-w-0">
-                  <span className="text-[14px] font-medium text-[var(--color-text-default)] shrink-0">
+                  <span className="text-label-lg text-[var(--color-text-default)] shrink-0">
                     Key
                   </span>
                   <Input
@@ -182,7 +182,7 @@ export function ManageTagsDrawer({
 
                 {/* Value Field */}
                 <HStack gap={3} align="center" className="flex-1 min-w-0">
-                  <span className="text-[14px] font-medium text-[var(--color-text-default)] shrink-0">
+                  <span className="text-label-lg text-[var(--color-text-default)] shrink-0">
                     Value
                   </span>
                   <Input

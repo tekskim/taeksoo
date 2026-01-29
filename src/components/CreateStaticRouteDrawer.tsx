@@ -26,10 +26,10 @@ function RouterInfoBox({ router }: { router: RouterInfo }) {
   return (
     <div className="w-full bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
       <VStack gap={2}>
-        <span className="text-[11px] font-medium text-[var(--color-text-subtle)] leading-4">
+        <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
           Router name
         </span>
-        <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+        <span className="text-body-md text-[var(--color-text-default)] leading-4">
           {router.name}
         </span>
       </VStack>
@@ -105,10 +105,10 @@ export function CreateStaticRouteDrawer({
       <VStack gap={6}>
         {/* Header */}
         <VStack gap={2}>
-          <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
             Create Static Route
           </h2>
-          <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+          <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
             Add a static route to manually define traffic paths beyond connected subnets.
           </p>
         </VStack>
@@ -118,7 +118,7 @@ export function CreateStaticRouteDrawer({
 
         {/* Destination CIDR Input */}
         <VStack gap={2} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             Destination CIDR
           </label>
           <Input
@@ -129,7 +129,7 @@ export function CreateStaticRouteDrawer({
             error={hasAttemptedSubmit && !destinationCidr.trim()}
           />
           {hasAttemptedSubmit && !destinationCidr.trim() && (
-            <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+            <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
               Destination CIDR is required
             </p>
           )}
@@ -137,7 +137,7 @@ export function CreateStaticRouteDrawer({
 
         {/* Next hop Input */}
         <VStack gap={2} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             Next hop
           </label>
           <Input
@@ -148,7 +148,7 @@ export function CreateStaticRouteDrawer({
             error={hasAttemptedSubmit && !nextHop.trim()}
           />
           {hasAttemptedSubmit && !nextHop.trim() && (
-            <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+            <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
               Next hop is required
             </p>
           )}

@@ -95,17 +95,17 @@ function SummarySidebar({
 
         {/* Quota Section */}
         <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-lg p-4 flex flex-col gap-4">
-          <h5 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+          <h5 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
             Quota
           </h5>
 
           {/* Network Quota */}
           <div className="flex flex-col gap-2 w-full">
             <div className="flex items-center justify-between w-full">
-              <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
+              <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
                 Network
               </span>
-              <span className="text-[12px] leading-4 text-[var(--color-text-default)]">2/10</span>
+              <span className="text-body-md leading-4 text-[var(--color-text-default)]">2/10</span>
             </div>
             <div className="flex h-1 w-full items-start isolate pr-1">
               <div
@@ -123,10 +123,10 @@ function SummarySidebar({
           {/* Subnet Quota */}
           <div className="flex flex-col gap-2 w-full">
             <div className="flex items-center justify-between w-full">
-              <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
+              <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
                 Subnet
               </span>
-              <span className="text-[12px] leading-4 text-[var(--color-text-default)]">5/20</span>
+              <span className="text-body-md leading-4 text-[var(--color-text-default)]">5/20</span>
             </div>
             <div className="flex h-1 w-full items-start isolate pr-1">
               <div
@@ -234,13 +234,13 @@ export default function CreateNetworkPage() {
         <div className="flex flex-col gap-0.5">
           <Link
             to={`/compute-admin/tenants/${row.id}`}
-            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 text-[12px] leading-4"
+            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 text-body-md leading-4"
             onClick={(e) => e.stopPropagation()}
             target="_blank"
           >
             {row.name}
           </Link>
-          <span className="text-[11px] leading-4 text-[var(--color-text-muted)]">ID: {row.id}</span>
+          <span className="text-body-sm leading-4 text-[var(--color-text-muted)]">ID: {row.id}</span>
         </div>
       ),
     },
@@ -382,7 +382,7 @@ export default function CreateNetworkPage() {
             <VStack gap={3} className="min-w-[1176px]">
               {/* Page Title */}
               <div className="flex items-center justify-between h-8">
-                <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
                   Create network
                 </h1>
               </div>
@@ -435,7 +435,7 @@ export default function CreateNetworkPage() {
 
                         {/* Description */}
                         <VStack gap={2} align="stretch">
-                          <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
+                          <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
                             Description
                           </span>
                           <Input
@@ -444,7 +444,7 @@ export default function CreateNetworkPage() {
                             onChange={(e) => setDescription(e.target.value)}
                             fullWidth
                           />
-                          <span className="text-[11px] text-[var(--color-text-subtle)] leading-[16px]">
+                          <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
                             You can use letters, numbers, and special characters (+=,.@-_()[]), and
                             maximum 255 characters.
                           </span>
@@ -454,14 +454,14 @@ export default function CreateNetworkPage() {
                         <VStack gap={4} align="stretch">
                           <VStack gap={2} align="start">
                             <div className="flex gap-[3px]">
-                              <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
+                              <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
                                 Owned tenant
                               </span>
-                              <span className="text-[14px] font-medium text-[var(--color-state-danger)] leading-[20px]">
+                              <span className="text-label-lg text-[var(--color-state-danger)] leading-[20px]">
                                 *
                               </span>
                             </div>
-                            <span className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
+                            <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
                               Select the tenant that will own the network.
                             </span>
                           </VStack>
@@ -492,7 +492,7 @@ export default function CreateNetworkPage() {
                             ).map((page) => (
                               <button
                                 key={page}
-                                className={`size-6 flex items-center justify-center rounded-md text-[11px] font-medium ${
+                                className={`size-6 flex items-center justify-center rounded-md text-label-sm ${
                                   page === tenantPage
                                     ? 'bg-[var(--color-action-primary)] text-white'
                                     : 'text-[var(--color-text-subtle)] hover:bg-[var(--color-surface-subtle)]'
@@ -512,7 +512,7 @@ export default function CreateNetworkPage() {
                               <IconChevronRight size={16} stroke={1.5} />
                             </button>
                             <div className="w-px h-4 bg-[var(--color-border-default)]" />
-                            <span className="text-[11px] text-[var(--color-text-subtle)]">
+                            <span className="text-body-sm text-[var(--color-text-subtle)]">
                               {selectedTenants.length > 0
                                 ? `${selectedTenants.length} selected`
                                 : `${filteredTenants.length} items`}
@@ -547,10 +547,10 @@ export default function CreateNetworkPage() {
 
                         {/* External Network */}
                         <VStack gap={2} align="start">
-                          <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
+                          <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
                             External Network
                           </span>
-                          <span className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
+                          <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
                             Indicates whether the network is used as an external network.
                           </span>
                           <Toggle
@@ -564,14 +564,14 @@ export default function CreateNetworkPage() {
                         {externalNetwork && (
                           <VStack gap={2} align="start">
                             <div className="flex gap-[3px]">
-                              <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
+                              <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
                                 Provider Network Type
                               </span>
-                              <span className="text-[14px] font-medium text-[var(--color-state-danger)] leading-[20px]">
+                              <span className="text-label-lg text-[var(--color-state-danger)] leading-[20px]">
                                 *
                               </span>
                             </div>
-                            <span className="text-[11px] text-[var(--color-text-subtle)] leading-[16px]">
+                            <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
                               Select the provider network type to use for the network.
                             </span>
                             <RadioGroup
@@ -589,14 +589,14 @@ export default function CreateNetworkPage() {
                         {externalNetwork && (
                           <VStack gap={2} align="start">
                             <div className="flex gap-[3px]">
-                              <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
+                              <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
                                 Segmentation ID
                               </span>
-                              <span className="text-[14px] font-medium text-[var(--color-state-danger)] leading-[20px]">
+                              <span className="text-label-lg text-[var(--color-state-danger)] leading-[20px]">
                                 *
                               </span>
                             </div>
-                            <span className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
+                            <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
                               Select the segmentation ID used by the provider network.
                             </span>
                             <Select
@@ -617,10 +617,10 @@ export default function CreateNetworkPage() {
 
                         {/* MTU */}
                         <VStack gap={2} align="start">
-                          <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
+                          <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
                             MTU
                           </span>
-                          <span className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
+                          <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
                             Specifies the MTU value used by the network.
                           </span>
                           <div className="flex items-center gap-2">
@@ -633,21 +633,21 @@ export default function CreateNetworkPage() {
                                 placeholder=""
                               />
                             </div>
-                            <span className="text-[12px] text-[var(--color-text-default)]">
+                            <span className="text-body-md text-[var(--color-text-default)]">
                               bytes
                             </span>
                           </div>
-                          <span className="text-[11px] text-[var(--color-text-subtle)]">
+                          <span className="text-body-sm text-[var(--color-text-subtle)]">
                             68-65535 bytes
                           </span>
                         </VStack>
 
                         {/* Admin State */}
                         <VStack gap={2} align="start">
-                          <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
+                          <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
                             Admin State
                           </span>
-                          <span className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
+                          <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
                             Indicates whether the load balancer's administrative state is Up or
                             Down.
                           </span>
@@ -660,10 +660,10 @@ export default function CreateNetworkPage() {
 
                         {/* Port Security */}
                         <VStack gap={2} align="start">
-                          <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
+                          <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
                             Port Security
                           </span>
-                          <span className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
+                          <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
                             Enhances security by allowing only permitted devices to access this
                             network. It is recommended to keep this enabled in most cases.
                           </span>
@@ -676,10 +676,10 @@ export default function CreateNetworkPage() {
 
                         {/* Shared */}
                         <VStack gap={2} align="start">
-                          <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
+                          <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
                             Shared
                           </span>
-                          <span className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
+                          <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
                             Indicates whether the network is available to other tenants.
                           </span>
                           <Toggle
@@ -786,7 +786,7 @@ export default function CreateNetworkPage() {
                       <SectionCard.Content gap={6}>
                         {/* Create subnet Toggle */}
                         <VStack gap={2} align="start">
-                          <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
+                          <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
                             Create subnet
                           </span>
                           <Toggle
@@ -836,7 +836,7 @@ export default function CreateNetworkPage() {
 
                             {/* Gateway */}
                             <VStack gap={2} align="start">
-                              <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
+                              <span className="text-label-lg text-[var(--color-text-default)]">
                                 Gateway
                               </span>
                               <Toggle
@@ -870,7 +870,7 @@ export default function CreateNetworkPage() {
                                 <VStack gap={6} align="stretch" className="mt-4">
                                   {/* DHCP */}
                                   <VStack gap={2} align="start">
-                                    <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
+                                    <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
                                       DHCP
                                     </span>
                                     <Toggle
@@ -883,7 +883,7 @@ export default function CreateNetworkPage() {
                                   {/* Allocation pools */}
                                   <FormField>
                                     <FormField.Label>Allocation pools</FormField.Label>
-                                    <span className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
+                                    <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
                                       Manually define the range of IP addresses to be automatically
                                       allocated by DHCP. IPs outside this range will not be
                                       allocated, which is useful for reserving static IPs.
@@ -905,7 +905,7 @@ export default function CreateNetworkPage() {
                                   {/* Host routes */}
                                   <FormField>
                                     <FormField.Label>Host routes</FormField.Label>
-                                    <span className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
+                                    <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
                                       An advanced feature for manually specifying a route to a
                                       specific network destination.
                                     </span>

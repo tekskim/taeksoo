@@ -329,7 +329,7 @@ export function LimitRangesPage() {
               {/* Header */}
               <HStack justify="between" align="center" className="w-full min-h-8">
                 <HStack gap={2} align="center">
-                  <h1 className="text-[16px] leading-6 font-semibold text-[var(--color-text-default)]">
+                  <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
                     Limit Ranges
                   </h1>
                 </HStack>
@@ -408,7 +408,7 @@ export function LimitRangesPage() {
                   </HStack>
                   <button
                     onClick={handleClearFilters}
-                    className="text-[11px] font-medium text-[var(--color-action-primary)] hover:underline"
+                    className="text-label-sm text-[var(--color-action-primary)] hover:underline"
                   >
                     Clear Filters
                   </button>

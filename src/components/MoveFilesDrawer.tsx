@@ -95,9 +95,9 @@ function FolderTreeItem({
 
         {/* Folder Name */}
         <span
-          className={`text-[11px] leading-4 truncate ${
+          className={`text-label-sm leading-4 truncate ${
             isSelected
-              ? 'font-medium text-[var(--color-action-primary)]'
+              ? ' text-[var(--color-action-primary)]'
               : 'text-[var(--color-text-default)]'
           }`}
         >
@@ -262,7 +262,7 @@ export function MoveFilesDrawer({
     >
       <VStack gap={6}>
         {/* Header */}
-        <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+        <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
           Move Files
         </h2>
 
@@ -270,11 +270,11 @@ export function MoveFilesDrawer({
         <VStack gap={3} className="w-full">
           {/* Folder Path (read-only) */}
           <VStack gap={2} className="w-full">
-            <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+            <label className="text-label-lg text-[var(--color-text-default)] leading-5">
               Folder path
             </label>
             <div className="w-full px-[10px] py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md">
-              <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+              <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
                 {currentPath}
               </span>
             </div>
@@ -283,7 +283,7 @@ export function MoveFilesDrawer({
           {/* Folder Location Tree */}
           <div className="w-full p-[13px] bg-white border border-[var(--color-border-default)] rounded-[10px]">
             <VStack gap={3}>
-              <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+              <span className="text-label-lg text-[var(--color-text-default)] leading-5">
                 Folder location
               </span>
               <div className="w-full">
@@ -302,7 +302,7 @@ export function MoveFilesDrawer({
             </VStack>
           </div>
 
-          <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+          <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
             Choose a parent folder to create this folder in.
           </p>
         </VStack>

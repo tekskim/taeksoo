@@ -522,10 +522,10 @@ export function ComputeAdminInstanceTemplateDetailPage() {
               {/* Page Title with ID */}
               <div className="flex items-center h-8">
                 <HStack gap={1} align="center">
-                  <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
+                  <h1 className="text-heading-h5 text-[var(--color-text-default)]">
                     Edit template
                   </h1>
-                  <span className="text-[length:var(--font-size-14)] font-medium leading-[var(--line-height-20)] text-[var(--color-text-subtle)]">
+                  <span className="text-label-lg text-[var(--color-text-subtle)]">
                     (ID: {formData.id})
                   </span>
                 </HStack>

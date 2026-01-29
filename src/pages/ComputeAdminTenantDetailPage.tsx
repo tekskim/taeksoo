@@ -121,8 +121,8 @@ function QuotaCard({ label, used, limit, unit }: QuotaItem) {
     <div className="bg-[#fafafa] rounded-lg p-5 flex-1 min-w-0">
       {/* Header with label and percentage badge */}
       <div className="flex items-center justify-between mb-3">
-        <span className="text-[12px] font-medium text-[var(--color-text-default)]">{label}</span>
-        <span className={`px-1.5 py-0.5 rounded-md text-[11px] font-medium ${getBadgeClasses()}`}>
+        <span className="text-label-md text-[var(--color-text-default)]">{label}</span>
+        <span className={`px-1.5 py-0.5 rounded-md text-label-sm ${getBadgeClasses()}`}>
           {percentage}%
         </span>
       </div>
@@ -130,7 +130,7 @@ function QuotaCard({ label, used, limit, unit }: QuotaItem) {
       {/* Value display */}
       <div className="flex items-baseline mb-4">
         <span className="text-[24px] text-[var(--color-text-default)]">{used}</span>
-        <span className="text-[14px] text-[var(--color-text-subtle)]">
+        <span className="text-body-lg text-[var(--color-text-subtle)]">
           /{limit}
           {unit ? ` ${unit}` : ''}
         </span>
@@ -161,7 +161,7 @@ function QuotaSection({ title, quotas }: { title: string; quotas: QuotaItem[] })
   return (
     <div className="bg-white border border-[var(--color-border-default)] rounded-2xl p-6">
       {/* Section Title */}
-      <h4 className="text-[16px] font-medium text-[var(--color-text-muted)] mb-6">{title}</h4>
+      <h4 className="text-heading-h5 text-[var(--color-text-muted)] mb-6">{title}</h4>
 
       {/* Quota Cards Grid */}
       <div className="flex flex-col gap-4">

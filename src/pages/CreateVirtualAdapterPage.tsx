@@ -136,7 +136,7 @@ function SummarySidebar({
         {/* Quota Card */}
         <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
           <VStack gap={3}>
-            <h5 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+            <h5 className="text-heading-h5 text-[var(--color-text-default)]">
               Quota
             </h5>
             <VStack gap={3}>
@@ -316,12 +316,12 @@ export default function CreateVirtualAdapterPage() {
         render: (_value, row) => (
           <VStack gap={0.5} align="start">
             <HStack gap={1.5} align="center">
-              <span className="text-[var(--color-action-primary)] text-[12px] font-medium">
+              <span className="text-[var(--color-action-primary)] text-label-md">
                 {row.name}
               </span>
               <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
             </HStack>
-            <span className="text-[11px] text-[var(--color-text-subtle)]">ID: {row.id}</span>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
           </VStack>
         ),
       },
@@ -376,12 +376,12 @@ export default function CreateVirtualAdapterPage() {
         render: (_value, row) => (
           <VStack gap={0.5} align="start">
             <HStack gap={1.5} align="center">
-              <span className="text-[var(--color-action-primary)] text-[12px] font-medium">
+              <span className="text-[var(--color-action-primary)] text-label-md">
                 {row.name}
               </span>
               <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
             </HStack>
-            <span className="text-[11px] text-[var(--color-text-subtle)]">{row.subtitle}</span>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">{row.subtitle}</span>
           </VStack>
         ),
       },
@@ -507,7 +507,7 @@ export default function CreateVirtualAdapterPage() {
             <VStack gap={3} className="min-w-[1176px]">
               {/* Page Title */}
               <div className="flex items-center justify-between h-8">
-                <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
                   Create virtual adapter
                 </h1>
               </div>
@@ -552,7 +552,7 @@ export default function CreateVirtualAdapterPage() {
                                 error={!!adapterNameError}
                               />
                               {adapterNameError && (
-                                <span className="text-[11px] leading-[var(--line-height-16)] text-[var(--color-state-danger)]">
+                                <span className="text-body-sm text-[var(--color-state-danger)]">
                                   {adapterNameError}
                                 </span>
                               )}
@@ -679,7 +679,7 @@ export default function CreateVirtualAdapterPage() {
                                 onPageChange={setNetworkPage}
                               />
                               <div className="h-4 w-px bg-[var(--color-border-default)]" />
-                              <span className="text-[11px] text-[var(--color-text-subtle)]">
+                              <span className="text-body-sm text-[var(--color-text-subtle)]">
                                 115 items
                               </span>
                             </HStack>
@@ -728,7 +728,7 @@ export default function CreateVirtualAdapterPage() {
                                   <div className="flex items-center gap-2">
                                     {/* Subnet Label + Dropdown */}
                                     <div className="flex items-center gap-1.5">
-                                      <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                      <span className="text-label-lg text-[var(--color-text-default)]">
                                         Subnet
                                       </span>
                                       <Select
@@ -759,7 +759,7 @@ export default function CreateVirtualAdapterPage() {
 
                                     {/* IP Range Info or Manual Input */}
                                     {entry.ipMode === 'auto' ? (
-                                      <span className="text-[11px] text-[var(--color-text-subtle)]">
+                                      <span className="text-body-sm text-[var(--color-text-subtle)]">
                                         192.168.1.100 - 192.168.1.200
                                       </span>
                                     ) : (
@@ -907,7 +907,7 @@ export default function CreateVirtualAdapterPage() {
                               checked={portSecurityEnabled}
                               onChange={(e) => setPortSecurityEnabled(e.target.checked)}
                             />
-                            <span className="text-[12px] text-[var(--color-text-default)]">
+                            <span className="text-body-md text-[var(--color-text-default)]">
                               {portSecurityEnabled ? 'On' : 'Off'}
                             </span>
                           </HStack>
@@ -917,10 +917,10 @@ export default function CreateVirtualAdapterPage() {
                         {portSecurityEnabled && (
                           <VStack gap={3} align="stretch">
                             <VStack gap={1.5} align="stretch">
-                              <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                              <span className="text-label-lg text-[var(--color-text-default)]">
                                 Security groups
                               </span>
-                              <span className="text-[12px] text-[var(--color-text-subtle)]">
+                              <span className="text-body-md text-[var(--color-text-subtle)]">
                                 Select the security groups to apply to the port.
                               </span>
                             </VStack>
