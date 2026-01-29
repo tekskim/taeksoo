@@ -11,6 +11,7 @@ import {
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
+  columnMinWidths,
 } from '@/design-system';
 import { AgentPageLayout } from '@/layouts';
 import {
@@ -396,18 +397,21 @@ export function StoragePage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
     },
     {
       key: 'type',
       label: 'Type',
       flex: 1,
+      minWidth: columnMinWidths.type,
       sortable: true,
     },
     {
       key: 'documents',
       label: 'Documents',
       flex: 1,
+      minWidth: columnMinWidths.documents,
       sortable: false,
       render: (_, row) => {
         if (row.documentsProgress) {
@@ -438,12 +442,14 @@ export function StoragePage() {
       key: 'size',
       label: 'Size',
       flex: 1,
+      minWidth: columnMinWidths.size,
       sortable: true,
     },
     {
       key: 'createdAt',
       label: 'Created at',
       flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
     },
     {

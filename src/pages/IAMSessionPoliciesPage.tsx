@@ -127,8 +127,8 @@ export default function IAMSessionPoliciesPage() {
                   </TabList>
 
                   {/* General Policy Tab */}
-                  <TabPanel value="general">
-                    <VStack gap={4} className="pt-4">
+                  <TabPanel value="general" className="pt-4">
+                    <VStack gap={4}>
                       <SectionCard>
                         <SectionCard.Header title="General Policy" />
                         <SectionCard.Content gap={6}>
@@ -165,9 +165,6 @@ export default function IAMSessionPoliciesPage() {
                             </VStack>
                           </VStack>
 
-                          {/* Divider */}
-                          <div className="h-px w-full bg-[var(--color-border-subtle)]" />
-
                           {/* Session Max Lifespan */}
                           <VStack gap={4}>
                             <VStack gap={2}>
@@ -202,9 +199,6 @@ export default function IAMSessionPoliciesPage() {
                             </VStack>
                           </VStack>
 
-                          {/* Divider */}
-                          <div className="h-px w-full bg-[var(--color-border-subtle)]" />
-
                           {/* Login Timeout */}
                           <VStack gap={4}>
                             <VStack gap={2}>
@@ -237,9 +231,6 @@ export default function IAMSessionPoliciesPage() {
                               </p>
                             </VStack>
                           </VStack>
-
-                          {/* Divider */}
-                          <div className="h-px w-full bg-[var(--color-border-subtle)]" />
 
                           {/* Login Action Timeout */}
                           <VStack gap={4}>
@@ -274,9 +265,6 @@ export default function IAMSessionPoliciesPage() {
                               </p>
                             </VStack>
                           </VStack>
-
-                          {/* Divider */}
-                          <div className="h-px w-full bg-[var(--color-border-subtle)]" />
 
                           {/* Action Buttons */}
                           <HStack gap={2} justify="end" className="w-full">

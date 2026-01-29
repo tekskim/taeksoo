@@ -201,15 +201,14 @@ interface ModelCellProps {
 }
 
 function ModelCell({ model, modelDetail }: ModelCellProps) {
+  const fullText = `${model} (${modelDetail})`;
   return (
-    <div className="flex flex-col">
-      <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-        {model}
-      </span>
-      <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-        ({modelDetail})
-      </span>
-    </div>
+    <span
+      className="truncate text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]"
+      title={fullText}
+    >
+      {fullText}
+    </span>
   );
 }
 
@@ -268,13 +267,14 @@ export function HostsPage() {
     {
       key: 'hostname',
       label: 'Hostname',
-      flex: 2,
+      flex: 1,
       minWidth: columnMinWidths.hostname,
       sortable: true,
       render: (_, row) => (
         <Link
           to={`/storage/hosts/${row.id}`}
-          className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+          className="block truncate font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+          title={row.hostname}
           onClick={(e) => e.stopPropagation()}
         >
           {row.hostname}
@@ -292,7 +292,7 @@ export function HostsPage() {
     {
       key: 'model',
       label: 'Model',
-      flex: 1.5,
+      flex: 1,
       minWidth: columnMinWidths.model,
       sortable: true,
       render: (_, row) => <ModelCell model={row.model} modelDetail={row.modelDetail} />,

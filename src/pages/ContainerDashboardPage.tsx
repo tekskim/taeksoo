@@ -296,12 +296,12 @@ const eventsData: EventRow[] = [
 ];
 
 const eventsColumns: TableColumn<EventRow>[] = [
-  { key: 'reason', label: 'Reason', flex: 1, minWidth: '80px', sortable: true },
+  { key: 'reason', label: 'Reason', flex: 1, minWidth: columnMinWidths.reason, sortable: true },
   {
     key: 'object',
     label: 'Object',
     flex: 1,
-    minWidth: '80px',
+    minWidth: columnMinWidths.object,
     sortable: true,
     render: (value: string) => (
       <span
@@ -312,12 +312,12 @@ const eventsColumns: TableColumn<EventRow>[] = [
       </span>
     ),
   },
-  { key: 'message', label: 'Message', flex: 2, minWidth: '100px', sortable: true },
+  { key: 'message', label: 'Message', flex: 1, minWidth: columnMinWidths.message, sortable: true },
   {
     key: 'name',
     label: 'Name',
     flex: 1,
-    minWidth: '100px',
+    minWidth: columnMinWidths.name,
     sortable: true,
     render: (value: string) => (
       <span

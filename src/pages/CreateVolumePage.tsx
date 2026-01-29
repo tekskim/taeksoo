@@ -465,6 +465,7 @@ export function CreateVolumePage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row: ImageRow) => (
         <div className="flex flex-col gap-0.5">
@@ -517,7 +518,8 @@ export function CreateVolumePage() {
     {
       key: 'name',
       label: 'Name',
-      flex: 2,
+      flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row: SnapshotRow) => (
         <div className="flex flex-col gap-0.5">
@@ -536,16 +538,16 @@ export function CreateVolumePage() {
         </div>
       ),
     },
-    { key: 'volumeType', label: 'Volume type', flex: 1, sortable: true },
-    { key: 'size', label: 'Size', flex: 1, sortable: true },
-    { key: 'createdAt', label: 'Created at', flex: 1, sortable: true },
+    { key: 'volumeType', label: 'Volume type', flex: 1, minWidth: columnMinWidths.type, sortable: true },
+    { key: 'size', label: 'Size', flex: 1, minWidth: columnMinWidths.size, sortable: true },
+    { key: 'createdAt', label: 'Created at', flex: 1, minWidth: columnMinWidths.createdAt, sortable: true },
   ];
 
   // Volume type table columns
   const volumeTypeColumns: TableColumn<VolumeTypeRow>[] = [
-    { key: 'name', label: 'Name', flex: 2, sortable: true },
-    { key: 'description', label: 'Description', flex: 2, sortable: true },
-    { key: 'isPublic', label: 'Public', flex: 1 },
+    { key: 'name', label: 'Name', flex: 1, minWidth: columnMinWidths.name, sortable: true },
+    { key: 'description', label: 'Description', flex: 1, minWidth: columnMinWidths.description, sortable: true },
+    { key: 'isPublic', label: 'Public', flex: 1, minWidth: columnMinWidths.type },
   ];
 
   return (

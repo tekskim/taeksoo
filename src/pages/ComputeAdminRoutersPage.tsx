@@ -18,6 +18,7 @@ import {
   type FilterField,
   type AppliedFilter,
   fixedColumns,
+  columnMinWidths,
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -317,6 +318,7 @@ export function ComputeAdminRoutersPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -337,6 +339,7 @@ export function ComputeAdminRoutersPage() {
       key: 'tenant',
       label: 'Tenant',
       flex: 1,
+      minWidth: columnMinWidths.user,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -357,17 +360,20 @@ export function ComputeAdminRoutersPage() {
       key: 'externalGateway',
       label: 'External Gateway',
       flex: 1,
+      minWidth: columnMinWidths.externalGateway,
       render: (value: boolean) => (value ? 'Open' : 'Closed'),
     },
     {
       key: 'externalFixedIp',
       label: 'External Fixed IP',
       flex: 1,
+      minWidth: columnMinWidths.externalFixedIp,
     },
     {
       key: 'externalNetwork',
       label: 'External Network',
       flex: 1,
+      minWidth: columnMinWidths.externalNetwork,
       sortable: true,
       render: (_, row) =>
         row.externalNetworkId ? (
@@ -391,6 +397,7 @@ export function ComputeAdminRoutersPage() {
       key: 'adminState',
       label: 'Admin State',
       flex: 1,
+      minWidth: columnMinWidths.adminState,
       render: (value: 'Up' | 'Down') => (
         <Badge variant={value === 'Up' ? 'success' : 'error'} size="sm">
           {value}
@@ -401,6 +408,7 @@ export function ComputeAdminRoutersPage() {
       key: 'createdAt',
       label: 'Created At',
       flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
     },
     {

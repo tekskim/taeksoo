@@ -324,6 +324,7 @@ export function ServerGroupDetailPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5 min-w-0">
           <div className="flex items-center gap-1">
@@ -361,12 +362,14 @@ export function ServerGroupDetailPage() {
       key: 'image',
       label: 'Image',
       flex: 1,
+      minWidth: columnMinWidths.image,
       render: (value) => <span>{value}</span>,
     },
     {
       key: 'fixedIP',
       label: 'Fixed IP',
       flex: 1,
+      minWidth: columnMinWidths.fixedIp,
       sortable: true,
       render: (value) => <span>{value}</span>,
     },
@@ -374,6 +377,7 @@ export function ServerGroupDetailPage() {
       key: 'az',
       label: 'AZ',
       flex: 1,
+      minWidth: columnMinWidths.az,
       render: (value) => <span>{value}</span>,
     },
     {

@@ -183,7 +183,8 @@ export function LimitRangesPage() {
     {
       key: 'name',
       label: 'Name',
-      flex: 2,
+      flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string) => (
         <span className="text-[var(--color-text-default)] font-medium truncate" title={value}>
@@ -194,7 +195,8 @@ export function LimitRangesPage() {
     {
       key: 'namespace',
       label: 'Namespace',
-      flex: 2,
+      flex: 1,
+      minWidth: columnMinWidths.namespace,
       sortable: true,
       render: (value: string) => <span className="text-[var(--color-text-default)]">{value}</span>,
     },

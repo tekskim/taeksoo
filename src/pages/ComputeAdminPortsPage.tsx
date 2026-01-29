@@ -19,6 +19,7 @@ import {
   type FilterField,
   type AppliedFilter,
   fixedColumns,
+  columnMinWidths,
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -414,6 +415,7 @@ export function ComputeAdminPortsPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -434,6 +436,7 @@ export function ComputeAdminPortsPage() {
       key: 'tenant',
       label: 'Tenant',
       flex: 1,
+      minWidth: columnMinWidths.user,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -454,6 +457,7 @@ export function ComputeAdminPortsPage() {
       key: 'attachedTo',
       label: 'Attached To',
       flex: 1,
+      minWidth: columnMinWidths.attachedTo,
       render: (_, row) =>
         row.attachedTo ? (
           <div className="flex items-center justify-between w-full gap-2">
@@ -491,6 +495,7 @@ export function ComputeAdminPortsPage() {
       key: 'ownedNetwork',
       label: 'Owned Network',
       flex: 1,
+      minWidth: columnMinWidths.ownedNetwork,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -511,6 +516,7 @@ export function ComputeAdminPortsPage() {
       key: 'securityGroups',
       label: 'SG',
       flex: 1,
+      minWidth: columnMinWidths.securityGroups,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <span className="text-[12px] text-[var(--color-text-default)]">{row.securityGroups}</span>
@@ -526,26 +532,31 @@ export function ComputeAdminPortsPage() {
       key: 'fixedIp',
       label: 'Fixed IP',
       flex: 1,
+      minWidth: columnMinWidths.fixedIp,
     },
     {
       key: 'floatingIp',
       label: 'Floating IP',
       flex: 1,
+      minWidth: columnMinWidths.floatingIp,
     },
     {
       key: 'description',
       label: 'Description',
       flex: 1,
+      minWidth: columnMinWidths.description,
     },
     {
       key: 'macAddress',
       label: 'MAC Address',
       flex: 1,
+      minWidth: columnMinWidths.macAddress,
     },
     {
       key: 'adminState',
       label: 'Admin State',
       flex: 1,
+      minWidth: columnMinWidths.adminState,
       render: (_, row) => (
         <Badge variant={row.adminState === 'Up' ? 'success' : 'error'} size="sm">
           {row.adminState}
@@ -556,6 +567,7 @@ export function ComputeAdminPortsPage() {
       key: 'createdAt',
       label: 'Created At',
       flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
     },
     {

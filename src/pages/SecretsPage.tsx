@@ -211,7 +211,8 @@ export function SecretsPage() {
     {
       key: 'data',
       label: 'Data',
-      flex: 2,
+      flex: 1,
+      minWidth: columnMinWidths.data,
       render: (value: string) => <span className="text-[var(--color-text-default)]">{value}</span>,
     },
     {

@@ -233,6 +233,7 @@ export function ContainerHPAPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (value, row) => (
         <TableLink onClick={() => navigate(`/container/hpa/${row.id}`)}>{value}</TableLink>
@@ -242,29 +243,34 @@ export function ContainerHPAPage() {
       key: 'namespace',
       label: 'Namespace',
       flex: 1,
+      minWidth: columnMinWidths.namespace,
       sortable: true,
     },
     {
       key: 'workload',
       label: 'Workload',
       flex: 1,
+      minWidth: columnMinWidths.workload,
     },
     {
       key: 'minReplicas',
       label: 'Minimum Replicas',
       flex: 1,
+      minWidth: columnMinWidths.minReplicas,
       sortable: true,
     },
     {
       key: 'maxReplicas',
       label: 'Maximum Replicas',
       flex: 1,
+      minWidth: columnMinWidths.maxReplicas,
       sortable: true,
     },
     {
       key: 'currentReplicas',
       label: 'Current Replicas',
       flex: 1,
+      minWidth: columnMinWidths.currentReplicas,
       sortable: true,
     },
     {

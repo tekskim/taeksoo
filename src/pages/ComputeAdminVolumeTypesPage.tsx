@@ -20,6 +20,7 @@ import {
   type FilterField,
   type AppliedFilter,
   fixedColumns,
+  columnMinWidths,
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -278,6 +279,7 @@ export function ComputeAdminVolumeTypesPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row) => (
         <div className="flex flex-col gap-0.5">
@@ -296,12 +298,14 @@ export function ComputeAdminVolumeTypesPage() {
       key: 'description',
       label: 'Description',
       flex: 1,
+      minWidth: columnMinWidths.description,
       sortable: true,
     },
     {
       key: 'qosSpec',
       label: 'Associated QoS Spec',
       flex: 1,
+      minWidth: columnMinWidths.type,
       sortable: false,
       render: (_, row) =>
         row.qosSpec ? (
@@ -323,12 +327,14 @@ export function ComputeAdminVolumeTypesPage() {
       key: 'encryption',
       label: 'Encryption',
       flex: 1,
+      minWidth: columnMinWidths.type,
       sortable: true,
     },
     {
       key: 'isPublic',
       label: 'Public',
       flex: 1,
+      minWidth: columnMinWidths.access,
       sortable: false,
       render: (value: boolean) => <span>{value ? 'On' : 'Off'}</span>,
     },
@@ -418,7 +424,8 @@ export function ComputeAdminVolumeTypesPage() {
     {
       key: 'specs',
       label: 'Specs',
-      flex: 2,
+      flex: 1,
+      minWidth: columnMinWidths.description,
       sortable: false,
     },
     {

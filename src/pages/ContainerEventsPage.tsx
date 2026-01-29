@@ -250,6 +250,7 @@ export function ContainerEventsPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string) => (
         <span className="text-[12px] text-[var(--color-text-default)] truncate block" title={value}>
@@ -316,6 +317,7 @@ export function ContainerEventsPage() {
       key: 'message',
       label: 'Message',
       flex: 1,
+      minWidth: columnMinWidths.message,
       sortable: true,
       render: (value: string) => (
         <span className="text-[12px] text-[var(--color-text-default)] truncate block" title={value}>

@@ -339,6 +339,7 @@ export function ComputeAdminFloatingIPsPage() {
       key: 'floatingIp',
       label: 'Floating IP',
       flex: 1,
+      minWidth: columnMinWidths.floatingIp,
       sortable: true,
       render: (_, row) => (
         <Link
@@ -354,6 +355,7 @@ export function ComputeAdminFloatingIPsPage() {
       key: 'tenant',
       label: 'Tenant',
       flex: 1,
+      minWidth: columnMinWidths.user,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -374,6 +376,7 @@ export function ComputeAdminFloatingIPsPage() {
       key: 'description',
       label: 'Description',
       flex: 1,
+      minWidth: columnMinWidths.description,
       sortable: true,
     },
     {
@@ -413,6 +416,7 @@ export function ComputeAdminFloatingIPsPage() {
       key: 'fixedIp',
       label: 'Fixed IP',
       flex: 1,
+      minWidth: columnMinWidths.fixedIp,
       sortable: true,
     },
     {
@@ -442,6 +446,7 @@ export function ComputeAdminFloatingIPsPage() {
       key: 'createdAt',
       label: 'Created at',
       flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
     },
     {

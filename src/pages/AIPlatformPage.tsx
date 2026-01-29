@@ -20,6 +20,7 @@ import {
   type ContextMenuItem,
   StatusIndicator,
   fixedColumns,
+  columnMinWidths,
 } from '@/design-system';
 import { useTabs } from '@/contexts/TabContext';
 import { useProject } from '@/contexts/ProjectContext';
@@ -1208,7 +1209,8 @@ function WorkloadsContent() {
     {
       key: 'name',
       label: 'Name',
-      flex: 2,
+      flex: 1,
+      minWidth: columnMinWidths.name,
       render: (_, row) => (
         <div className="flex flex-col">
           <Link
@@ -1226,6 +1228,7 @@ function WorkloadsContent() {
       key: 'utilization',
       label: 'Utilization',
       flex: 1,
+      minWidth: columnMinWidths.usagePercent,
       render: (_, row) =>
         row.utilization !== null ? (
           <UsageCell percent={row.utilization} />
@@ -1237,6 +1240,7 @@ function WorkloadsContent() {
       key: 'memory',
       label: 'Memory',
       flex: 1,
+      minWidth: columnMinWidths.memory,
       render: (_, row) =>
         row.memoryPercent !== null ? (
           <UsageCell percent={row.memoryPercent} />
@@ -1248,6 +1252,7 @@ function WorkloadsContent() {
       key: 'disk',
       label: 'Disk',
       flex: 1,
+      minWidth: columnMinWidths.disk,
       render: (_, row) =>
         row.diskPercent !== null ? (
           <UsageCell percent={row.diskPercent} />
@@ -1259,6 +1264,7 @@ function WorkloadsContent() {
       key: 'computeType',
       label: 'Compute type',
       flex: 1,
+      minWidth: columnMinWidths.type,
       render: (_, row) => (
         <span
           className={
@@ -1275,6 +1281,7 @@ function WorkloadsContent() {
       key: 'cost',
       label: 'Cost',
       flex: 1,
+      minWidth: columnMinWidths.type,
       render: (_, row) => <span className="text-[var(--color-text-default)]">{row.cost}</span>,
     },
     {

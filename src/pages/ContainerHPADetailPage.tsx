@@ -19,6 +19,7 @@ import {
   SectionCard,
   type TableColumn,
   type ContextMenuItem,
+  columnMinWidths,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';
@@ -258,12 +259,13 @@ function ConditionsTab() {
   const conditions = mockConditionsData;
 
   const columns: TableColumn<ConditionRow>[] = [
-    { key: 'condition', label: 'Condition', flex: 1, sortable: true },
-    { key: 'status', label: 'Status', flex: 1, sortable: true },
+    { key: 'condition', label: 'Condition', flex: 1, minWidth: columnMinWidths.condition, sortable: true },
+    { key: 'status', label: 'Status', flex: 1, minWidth: columnMinWidths.conditionStatus, sortable: true },
     {
       key: 'message',
       label: 'Message',
       flex: 1,
+      minWidth: columnMinWidths.message,
       sortable: true,
       render: (value) => (
         <span className="truncate" title={value}>
@@ -271,7 +273,7 @@ function ConditionsTab() {
         </span>
       ),
     },
-    { key: 'updated', label: 'Updated', flex: 1, sortable: true },
+    { key: 'updated', label: 'Updated', flex: 1, minWidth: columnMinWidths.updatedAt, sortable: true },
   ];
 
   return (

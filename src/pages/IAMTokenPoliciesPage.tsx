@@ -160,9 +160,6 @@ export default function IAMTokenPoliciesPage() {
                             </VStack>
                           </VStack>
 
-                          {/* Divider */}
-                          <div className="h-px w-full bg-[var(--color-border-subtle)]" />
-
                           {/* Refresh Token Lifespan */}
                           <VStack gap={4}>
                             <VStack gap={2}>
@@ -195,9 +192,6 @@ export default function IAMTokenPoliciesPage() {
                               </p>
                             </VStack>
                           </VStack>
-
-                          {/* Divider */}
-                          <div className="h-px w-full bg-[var(--color-border-subtle)]" />
 
                           {/* Action Buttons */}
                           <HStack gap={2} justify="end" className="w-full">

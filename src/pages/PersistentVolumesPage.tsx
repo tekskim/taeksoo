@@ -233,7 +233,8 @@ export function PersistentVolumesPage() {
     {
       key: 'name',
       label: 'Name',
-      flex: 2,
+      flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row) => (
         <span
@@ -257,7 +258,8 @@ export function PersistentVolumesPage() {
     {
       key: 'persistentVolumeClaim',
       label: 'Persistent Volume Claim',
-      flex: 1.5,
+      flex: 1,
+      minWidth: columnMinWidths.persistentVolumeClaim,
       sortable: true,
       render: (value: string) =>
         value ? (

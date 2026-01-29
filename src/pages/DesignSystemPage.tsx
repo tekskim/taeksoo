@@ -2567,8 +2567,8 @@ function TableDemo() {
             <tbody>
               <tr className="border-b border-[var(--color-border-subtle)]">
                 <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">name</td>
-                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">150px</td>
-                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">300px</td>
+                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">180px</td>
+                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">-</td>
                 <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">1</td>
                 <td className="py-2 text-[var(--color-text-subtle)]">리소스 이름</td>
               </tr>
@@ -2641,6 +2641,258 @@ function TableDemo() {
             src/design-system/presets/columnMinWidths.ts
           </code>
         </p>
+      </VStack>
+
+      {/* Column Width Strategy Guide */}
+      <VStack gap={3}>
+        <Label>Column Width Strategy Guide</Label>
+        <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+          컬럼 너비 설정 시 다음 전략을 따르면 일관되고 반응형 테이블을 구현할 수 있습니다.
+        </p>
+
+        {/* Strategy 1: Fixed vs Flex */}
+        <div className="p-4 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+          <VStack gap={4}>
+            <div>
+              <span className="text-[length:var(--font-size-12)] font-semibold text-[var(--color-text-default)]">
+                1. 고정 너비 vs 가변 너비 분류
+              </span>
+              <div className="mt-3 overflow-x-auto">
+                <table className="w-full text-[length:var(--font-size-11)] border-collapse">
+                  <thead>
+                    <tr className="border-b border-[var(--color-border-default)]">
+                      <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                        분류
+                      </th>
+                      <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                        설정
+                      </th>
+                      <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
+                        대상 컬럼
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="border-b border-[var(--color-border-subtle)]">
+                      <td className="py-2 pr-4 font-medium text-[var(--color-state-success)]">
+                        고정 (Fixed)
+                      </td>
+                      <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">
+                        width: 'XXpx'
+                      </td>
+                      <td className="py-2 text-[var(--color-text-subtle)]">
+                        status, actions, createdAt, IP, MAC, 숫자 (cpu, ram, size)
+                      </td>
+                    </tr>
+                    <tr className="border-b border-[var(--color-border-subtle)]">
+                      <td className="py-2 pr-4 font-medium text-[var(--color-action-primary)]">
+                        가변 (Flex)
+                      </td>
+                      <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">
+                        flex: 1, minWidth
+                      </td>
+                      <td className="py-2 text-[var(--color-text-subtle)]">
+                        name, description, attachedTo, sourceVolume 등 이름/텍스트
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div>
+              <span className="text-[length:var(--font-size-12)] font-semibold text-[var(--color-text-default)]">
+                2. Flex 컬럼 분배 원칙
+              </span>
+              <div className="mt-2 text-[length:var(--font-size-11)] text-[var(--color-text-muted)] space-y-2">
+                <div className="flex items-start gap-2">
+                  <span className="text-[var(--color-state-danger)]">✗</span>
+                  <div>
+                    <span className="font-medium text-[var(--color-text-default)]">
+                      Flex 컬럼이 1개만 있는 경우
+                    </span>
+                    <br />
+                    <span className="text-[var(--color-text-subtle)]">
+                      넓은 화면에서 해당 컬럼만 과도하게 넓어짐
+                    </span>
+                  </div>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-[var(--color-state-success)]">✓</span>
+                  <div>
+                    <span className="font-medium text-[var(--color-text-default)]">
+                      Flex 컬럼을 2개 이상으로 분배
+                    </span>
+                    <br />
+                    <span className="text-[var(--color-text-subtle)]">
+                      name + sourceVolume, name + attachedTo 등 "이름" 컬럼들을 함께 flex 처리
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <span className="text-[length:var(--font-size-12)] font-semibold text-[var(--color-text-default)]">
+                3. minWidth 필수 사용
+              </span>
+              <div className="mt-2 text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
+                <span className="text-[var(--color-text-subtle)]">
+                  flex 컬럼에는 반드시 minWidth를 지정하여 화면이 좁아질 때 텍스트 잘림을 방지
+                </span>
+              </div>
+            </div>
+          </VStack>
+        </div>
+
+        {/* Example: Good vs Bad */}
+        <Label>Example: Before & After</Label>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Bad Example */}
+          <div className="p-3 bg-[var(--color-state-danger-bg)] border border-[var(--color-state-danger)] rounded-[var(--radius-md)]">
+            <div className="text-[length:var(--font-size-11)] font-medium text-[var(--color-state-danger)] mb-2">
+              ✗ 문제 패턴
+            </div>
+            <div className="font-mono text-[length:var(--font-size-10)] text-[var(--color-text-muted)] space-y-1">
+              <div>
+                {'{'} key: 'status', width: '64px' {'}'}
+              </div>
+              <div className="text-[var(--color-state-danger)]">
+                {'{'} key: 'name', <span className="font-bold">flex: 1</span> {'}'}{' '}
+                <span className="text-[var(--color-text-subtle)]">← minWidth 누락!</span>
+              </div>
+              <div className="text-[var(--color-state-danger)]">
+                {'{'} key: 'type', <span className="font-bold">flex: 2</span> {'}'}{' '}
+                <span className="text-[var(--color-text-subtle)]">← 비표준 flex 값</span>
+              </div>
+              <div>
+                {'{'} key: 'size', width: '100px' {'}'}
+              </div>
+              <div>
+                {'{'} key: 'created', width: '140px' {'}'}
+              </div>
+            </div>
+            <div className="mt-2 text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+              → minWidth 없으면 라벨 잘림, flex: 1 외 값은 비표준
+            </div>
+          </div>
+
+          {/* Good Example */}
+          <div className="p-3 bg-[var(--color-state-success-bg)] border border-[var(--color-state-success)] rounded-[var(--radius-md)]">
+            <div className="text-[length:var(--font-size-11)] font-medium text-[var(--color-state-success)] mb-2">
+              ✓ 권장 패턴
+            </div>
+            <div className="font-mono text-[length:var(--font-size-10)] text-[var(--color-text-muted)] space-y-1">
+              <div>
+                {'{'} key: 'status', width: fixedColumns.status {'}'}
+              </div>
+              <div className="text-[var(--color-state-success)]">
+                {'{'} key: 'name', <span className="font-bold">flex: 1, minWidth: columnMinWidths.name</span>{' '}
+                {'}'}
+              </div>
+              <div>
+                {'{'} key: 'size', width: columnMinWidths.size {'}'}
+              </div>
+              <div className="text-[var(--color-state-success)]">
+                {'{'} key: 'source', <span className="font-bold">flex: 1, minWidth: columnMinWidths.name</span>{' '}
+                {'}'}
+              </div>
+              <div>
+                {'{'} key: 'created', width: columnMinWidths.createdAt {'}'}
+              </div>
+            </div>
+            <div className="mt-2 text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+              → 모든 flex 컬럼에 minWidth 필수, flex: 1 사용
+            </div>
+          </div>
+        </div>
+
+        {/* Quick Reference */}
+        <Label>Quick Reference: 컬럼별 권장 설정</Label>
+        <div className="overflow-x-auto">
+          <table className="w-full text-[length:var(--font-size-11)] border-collapse">
+            <thead>
+              <tr className="border-b border-[var(--color-border-default)]">
+                <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                  컬럼 타입
+                </th>
+                <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                  권장 설정
+                </th>
+                <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">이유</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-b border-[var(--color-border-subtle)]">
+                <td className="py-2 pr-4 text-[var(--color-text-default)]">status, actions</td>
+                <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">
+                  width: 64px
+                </td>
+                <td className="py-2 text-[var(--color-text-subtle)]">아이콘/버튼 크기 고정</td>
+              </tr>
+              <tr className="border-b border-[var(--color-border-subtle)]">
+                <td className="py-2 pr-4 text-[var(--color-text-default)]">createdAt</td>
+                <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">
+                  width: 140px
+                </td>
+                <td className="py-2 text-[var(--color-text-subtle)]">날짜 포맷 예측 가능</td>
+              </tr>
+              <tr className="border-b border-[var(--color-border-subtle)]">
+                <td className="py-2 pr-4 text-[var(--color-text-default)]">
+                  IP (fixed, floating)
+                </td>
+                <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">
+                  width: 130px
+                </td>
+                <td className="py-2 text-[var(--color-text-subtle)]">최대 15자 고정</td>
+              </tr>
+              <tr className="border-b border-[var(--color-border-subtle)]">
+                <td className="py-2 pr-4 text-[var(--color-text-default)]">macAddress</td>
+                <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">
+                  width: 150px
+                </td>
+                <td className="py-2 text-[var(--color-text-subtle)]">17자 고정 포맷</td>
+              </tr>
+              <tr className="border-b border-[var(--color-border-subtle)]">
+                <td className="py-2 pr-4 text-[var(--color-text-default)]">cpu, ram, disk</td>
+                <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">
+                  width: 80px
+                </td>
+                <td className="py-2 text-[var(--color-text-subtle)]">짧은 숫자값</td>
+              </tr>
+              <tr className="border-b border-[var(--color-border-subtle)]">
+                <td className="py-2 pr-4 text-[var(--color-text-default)]">name, hostname</td>
+                <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">
+                  flex: 1, minWidth: 180px
+                </td>
+                <td className="py-2 text-[var(--color-text-subtle)]">주요 식별자</td>
+              </tr>
+              <tr className="border-b border-[var(--color-border-subtle)]">
+                <td className="py-2 pr-4 text-[var(--color-text-default)]">
+                  labels, attachedTo
+                </td>
+                <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">
+                  flex: 1, minWidth: 180px
+                </td>
+                <td className="py-2 text-[var(--color-text-subtle)]">참조/태그 컬럼</td>
+              </tr>
+              <tr className="border-b border-[var(--color-border-subtle)]">
+                <td className="py-2 pr-4 text-[var(--color-text-default)]">model</td>
+                <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">
+                  flex: 1, minWidth: 250px
+                </td>
+                <td className="py-2 text-[var(--color-text-subtle)]">모델명 (긴 텍스트)</td>
+              </tr>
+              <tr className="border-b border-[var(--color-border-subtle)]">
+                <td className="py-2 pr-4 text-[var(--color-text-default)]">description</td>
+                <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">
+                  flex: 1, minWidth: 200px
+                </td>
+                <td className="py-2 text-[var(--color-text-subtle)]">설명 텍스트</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </VStack>
     </VStack>
   );
@@ -3761,6 +4013,166 @@ export function DesignSystemPage() {
                                   >
                                     {desc}
                                   </span>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </VStack>
+
+                    {/* Button */}
+                    <VStack gap={4}>
+                      <Label>Button</Label>
+                      <div className="overflow-x-auto">
+                        <table className="w-full text-[length:var(--font-size-11)]">
+                          <thead>
+                            <tr className="border-b border-[var(--color-border-default)]">
+                              <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                                Token
+                              </th>
+                              <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                                Size
+                              </th>
+                              <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                                Line Height
+                              </th>
+                              <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                                Weight
+                              </th>
+                              <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
+                                Preview
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {[
+                              {
+                                token: 'lg',
+                                size: '14px',
+                                lh: '20px',
+                                weight: '500',
+                                desc: 'Large button',
+                              },
+                              {
+                                token: 'md',
+                                size: '12px',
+                                lh: '16px',
+                                weight: '500',
+                                desc: 'Default button',
+                              },
+                              {
+                                token: 'sm',
+                                size: '11px',
+                                lh: '16px',
+                                weight: '500',
+                                desc: 'Small button',
+                              },
+                            ].map(({ token, size, lh, weight, desc }) => (
+                              <tr
+                                key={token}
+                                className="border-b border-[var(--color-border-subtle)]"
+                              >
+                                <td className="py-2 pr-4">
+                                  <code className="text-[var(--color-action-primary)] font-mono text-[10px]">
+                                    button.{token}
+                                  </code>
+                                </td>
+                                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">
+                                  {size}
+                                </td>
+                                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">
+                                  {lh}
+                                </td>
+                                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">
+                                  {weight}
+                                </td>
+                                <td className="py-2">
+                                  <span
+                                    style={{
+                                      fontSize: size,
+                                      lineHeight: lh,
+                                      fontWeight: Number(weight),
+                                    }}
+                                  >
+                                    {desc}
+                                  </span>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </VStack>
+
+                    {/* Code */}
+                    <VStack gap={4}>
+                      <Label>Code</Label>
+                      <div className="overflow-x-auto">
+                        <table className="w-full text-[length:var(--font-size-11)]">
+                          <thead>
+                            <tr className="border-b border-[var(--color-border-default)]">
+                              <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                                Token
+                              </th>
+                              <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                                Size
+                              </th>
+                              <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                                Line Height
+                              </th>
+                              <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                                Font
+                              </th>
+                              <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
+                                Preview
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {[
+                              {
+                                token: 'md',
+                                size: '12px',
+                                lh: '18px',
+                                desc: 'const value = 42;',
+                              },
+                              {
+                                token: 'sm',
+                                size: '11px',
+                                lh: '16px',
+                                desc: 'const value = 42;',
+                              },
+                            ].map(({ token, size, lh, desc }) => (
+                              <tr
+                                key={token}
+                                className="border-b border-[var(--color-border-subtle)]"
+                              >
+                                <td className="py-2 pr-4">
+                                  <code className="text-[var(--color-action-primary)] font-mono text-[10px]">
+                                    code.{token}
+                                  </code>
+                                </td>
+                                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">
+                                  {size}
+                                </td>
+                                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">
+                                  {lh}
+                                </td>
+                                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">
+                                  mono
+                                </td>
+                                <td className="py-2">
+                                  <code
+                                    style={{
+                                      fontSize: size,
+                                      lineHeight: lh,
+                                      fontFamily:
+                                        "Menlo, 'Fira Code', Consolas, monospace",
+                                    }}
+                                  >
+                                    {desc}
+                                  </code>
                                 </td>
                               </tr>
                             ))}

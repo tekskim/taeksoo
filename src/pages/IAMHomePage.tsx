@@ -9,6 +9,7 @@ import {
   Table,
   type TableColumn,
 } from '@/design-system';
+import { columnMinWidths } from '@/design-system/presets/columnWidths';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { IconBell, IconSearch } from '@tabler/icons-react';

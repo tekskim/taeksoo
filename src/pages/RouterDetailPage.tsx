@@ -21,6 +21,7 @@ import {
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
+  columnMinWidths,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -430,6 +431,7 @@ export default function RouterDetailPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5 min-w-0">
           <div className="flex items-center gap-1">
@@ -455,16 +457,19 @@ export default function RouterDetailPage() {
       key: 'fixedIp',
       label: 'Fixed IP',
       flex: 1,
+      minWidth: columnMinWidths.fixedIp,
     },
     {
       key: 'macAddress',
       label: 'MAC Address',
       flex: 1,
+      minWidth: columnMinWidths.macAddress,
     },
     {
       key: 'type',
       label: 'Type',
       flex: 1,
+      minWidth: columnMinWidths.type,
     },
     {
       key: 'actions',
@@ -503,11 +508,13 @@ export default function RouterDetailPage() {
       key: 'destination',
       label: 'Destination CIDR',
       flex: 1,
+      minWidth: columnMinWidths.destination,
     },
     {
       key: 'nextHop',
       label: 'Next hop',
       flex: 1,
+      minWidth: columnMinWidths.nextHop,
       sortable: true,
     },
     {

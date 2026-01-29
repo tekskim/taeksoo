@@ -73,7 +73,7 @@ export const columnMinWidths = {
   nameWide: '220px',
   nameXl: '300px',
   nameXxl: '250px',
-  hostname: '150px',
+  hostname: '180px',
   node: '150px',
 
   // 상태 (텍스트 포함) ---------------------------------------------------------
@@ -117,7 +117,7 @@ export const columnMinWidths = {
 
   // 텍스트 --------------------------------------------------------------------
   description: '200px',
-  labels: '300px',
+  labels: '180px',
   annotations: '300px',
   key: '300px',
   value: '300px',
@@ -171,7 +171,7 @@ export const columnMinWidths = {
   cpuThreadPolicy: '140px',
 
   // 호스트 하드웨어 ------------------------------------------------------------
-  model: '120px',
+  model: '250px',
   cpus: '80px',
   cores: '80px',
   totalMemory: '120px',

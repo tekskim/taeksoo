@@ -275,6 +275,7 @@ export function ComputeAdminSecurityGroupsPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -295,6 +296,7 @@ export function ComputeAdminSecurityGroupsPage() {
       key: 'tenant',
       label: 'Tenant',
       flex: 1,
+      minWidth: columnMinWidths.user,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -315,24 +317,28 @@ export function ComputeAdminSecurityGroupsPage() {
       key: 'description',
       label: 'Description',
       flex: 1,
+      minWidth: columnMinWidths.description,
       sortable: true,
     },
     {
       key: 'ingressRules',
       label: 'Ingress rules',
       flex: 1,
+      minWidth: columnMinWidths.ingressRules,
       sortable: true,
     },
     {
       key: 'egressRules',
       label: 'Egress rules',
       flex: 1,
+      minWidth: columnMinWidths.egressRules,
       sortable: true,
     },
     {
       key: 'createdAt',
       label: 'Created at',
       flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
     },
     {

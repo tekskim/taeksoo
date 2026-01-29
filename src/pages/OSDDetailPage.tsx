@@ -24,6 +24,7 @@ import {
   Pagination,
   Table,
   DatePicker,
+  columnMinWidths,
   type TableColumn,
 } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
@@ -931,18 +932,21 @@ export function OSDDetailPage() {
       key: 'deviceId',
       label: 'Device ID',
       flex: 1,
+      minWidth: columnMinWidths.deviceId,
       sortable: true,
     },
     {
       key: 'deviceName',
       label: 'Device name',
       flex: 1,
+      minWidth: columnMinWidths.deviceName,
       sortable: true,
     },
     {
       key: 'daemons',
       label: 'Daemons',
       flex: 1,
+      minWidth: columnMinWidths.daemons,
       sortable: false,
       render: (_, row) => <DaemonsCell daemons={row.daemons} />,
     },

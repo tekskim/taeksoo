@@ -19,6 +19,7 @@ import {
   StatusIndicator,
   ContextMenu,
   fixedColumns,
+  columnMinWidths,
 } from '@/design-system';
 import type { TableColumn, ContextMenuItem } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
@@ -30,6 +31,8 @@ import {
   IconChevronDown,
   IconDotsCircleHorizontal,
   IconUsers,
+  IconCopy,
+  IconExternalLink,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -272,6 +275,7 @@ export default function PoolDetailPage() {
       key: 'id',
       label: 'ID',
       flex: 1,
+      minWidth: columnMinWidths.id,
       sortable: true,
       render: (_, row) => (
         <div className="flex items-center gap-1.5">
@@ -292,6 +296,7 @@ export default function PoolDetailPage() {
       key: 'source',
       label: 'Source',
       flex: 1,
+      minWidth: columnMinWidths.name,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
           <Link
@@ -312,29 +317,34 @@ export default function PoolDetailPage() {
       key: 'ipAddress',
       label: 'IP Address',
       flex: 1,
+      minWidth: columnMinWidths.ipAddress,
     },
     {
       key: 'port',
       label: 'Port',
       flex: 1,
+      minWidth: columnMinWidths.port,
       sortable: true,
     },
     {
       key: 'weight',
       label: 'Weight',
       flex: 1,
+      minWidth: columnMinWidths.weight,
       sortable: true,
     },
     {
       key: 'backup',
       label: 'Backup',
       flex: 1,
+      minWidth: columnMinWidths.backup,
       render: (_, row) => (row.backup ? 'Yes' : 'No'),
     },
     {
       key: 'adminState',
       label: 'Admin state',
       flex: 1,
+      minWidth: columnMinWidths.adminState,
     },
     {
       key: 'actions',

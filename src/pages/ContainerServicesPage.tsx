@@ -239,6 +239,7 @@ export function ContainerServicesPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row: ServiceRow) => (
         <TableLink title={value} onClick={() => navigate(`/container/services/${row.id}`)}>

@@ -1288,6 +1288,7 @@ export default function HostDetailPage() {
       key: 'cpuUsage',
       label: 'CPU Usage',
       flex: 1,
+      minWidth: columnMinWidths.cpuUsage,
       render: (_, row) => (
         <div className="flex flex-col gap-[var(--spacing-1)] w-full">
           <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">

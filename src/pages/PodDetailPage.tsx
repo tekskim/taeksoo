@@ -271,12 +271,14 @@ function ContainersTab({ containers, onExecuteShell, onViewLogs }: ContainersTab
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
     },
     {
       key: 'image',
       label: 'Image',
-      flex: 1.5,
+      flex: 1,
+      minWidth: columnMinWidths.containerImage,
       sortable: true,
     },
     {
@@ -366,18 +368,21 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
       key: 'type',
       label: 'Condition',
       flex: 1,
+      minWidth: columnMinWidths.condition,
       sortable: true,
     },
     {
       key: 'status',
       label: 'Size',
       flex: 1,
+      minWidth: columnMinWidths.size,
       sortable: true,
     },
     {
       key: 'message',
       label: 'Message',
       flex: 1,
+      minWidth: columnMinWidths.message,
       sortable: true,
       render: (value: string, row: ConditionRow) => (
         <span className="line-clamp-2" title={`[${row.reason}] ${value}`}>
@@ -389,6 +394,7 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
       key: 'lastUpdate',
       label: 'Updated',
       flex: 1,
+      minWidth: columnMinWidths.updatedAt,
       sortable: true,
     },
   ];
@@ -447,10 +453,10 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
       sortable: true,
     },
     { key: 'type', label: 'Type', flex: 1, minWidth: columnMinWidths.type, sortable: true },
-    { key: 'reason', label: 'Reason', flex: 1, sortable: true },
-    { key: 'subobject', label: 'Subobject', flex: 1, sortable: true },
-    { key: 'source', label: 'Source', flex: 1, sortable: true },
-    { key: 'message', label: 'Message', flex: 1.5, sortable: true },
+    { key: 'reason', label: 'Reason', flex: 1, minWidth: columnMinWidths.reason, sortable: true },
+    { key: 'subobject', label: 'Subobject', flex: 1, minWidth: columnMinWidths.subobject, sortable: true },
+    { key: 'source', label: 'Source', flex: 1, minWidth: columnMinWidths.source, sortable: true },
+    { key: 'message', label: 'Message', flex: 1, minWidth: columnMinWidths.message, sortable: true },
     {
       key: 'firstSeen',
       label: 'First Seen',
@@ -463,6 +469,7 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string) => (
         <span

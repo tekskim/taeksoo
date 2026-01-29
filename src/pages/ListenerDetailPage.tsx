@@ -19,6 +19,7 @@ import {
   StatusIndicator,
   ContextMenu,
   fixedColumns,
+  columnMinWidths,
 } from '@/design-system';
 import type { TableColumn, ContextMenuItem } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
@@ -383,6 +384,7 @@ export default function ListenerDetailPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -403,24 +405,28 @@ export default function ListenerDetailPage() {
       key: 'protocol',
       label: 'Protocol',
       flex: 1,
+      minWidth: columnMinWidths.protocol,
       sortable: true,
     },
     {
       key: 'algorithm',
       label: 'Algorithm',
       flex: 1,
+      minWidth: columnMinWidths.algorithm,
       sortable: true,
     },
     {
       key: 'members',
       label: 'Members',
       flex: 1,
+      minWidth: columnMinWidths.members,
       sortable: true,
     },
     {
       key: 'adminState',
       label: 'Admin state',
       flex: 1,
+      minWidth: columnMinWidths.adminState,
     },
     {
       key: 'actions',
@@ -468,6 +474,7 @@ export default function ListenerDetailPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -488,11 +495,13 @@ export default function ListenerDetailPage() {
       key: 'behavior',
       label: 'Behavior',
       flex: 1,
+      minWidth: columnMinWidths.behavior,
     },
     {
       key: 'position',
       label: 'Position',
       flex: 1,
+      minWidth: columnMinWidths.position,
       sortable: true,
       render: (_, row) => (row.position !== null ? row.position : '-'),
     },
@@ -500,6 +509,7 @@ export default function ListenerDetailPage() {
       key: 'adminState',
       label: 'Admin state',
       flex: 1,
+      minWidth: columnMinWidths.adminState,
     },
     {
       key: 'actions',
@@ -553,6 +563,7 @@ export default function ListenerDetailPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -573,23 +584,27 @@ export default function ListenerDetailPage() {
       key: 'type',
       label: 'Type',
       flex: 1,
+      minWidth: columnMinWidths.type,
       sortable: true,
     },
     {
       key: 'domain',
       label: 'SAN',
       flex: 1,
+      minWidth: columnMinWidths.domain,
     },
     {
       key: 'issuer',
       label: 'Issuer',
       flex: 1,
+      minWidth: columnMinWidths.issuer,
       sortable: true,
     },
     {
       key: 'expiresAt',
       label: 'Expires at',
       flex: 1,
+      minWidth: columnMinWidths.expiresAt,
       sortable: true,
     },
     {

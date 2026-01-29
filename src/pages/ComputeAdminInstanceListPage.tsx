@@ -1127,7 +1127,7 @@ export function ComputeAdminInstanceListPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
-      minWidth: '140px',
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5 min-w-0">
@@ -1159,7 +1159,7 @@ export function ComputeAdminInstanceListPage() {
       key: 'tenant',
       label: 'Tenant',
       flex: 1,
-      minWidth: '100px',
+      minWidth: columnMinWidths.user,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -1180,28 +1180,28 @@ export function ComputeAdminInstanceListPage() {
       key: 'host',
       label: 'Host',
       flex: 1,
-      minWidth: '100px',
+      minWidth: columnMinWidths.hostname,
       sortable: true,
     },
     {
       key: 'fixedIp',
       label: 'Fixed IP',
       flex: 1,
-      minWidth: '100px',
+      minWidth: columnMinWidths.fixedIp,
       sortable: false,
     },
     {
       key: 'floatingIp',
       label: 'Floating IP',
       flex: 1,
-      minWidth: '100px',
+      minWidth: columnMinWidths.floatingIp,
       sortable: false,
     },
     {
       key: 'image',
       label: 'OS',
       flex: 1,
-      minWidth: '120px',
+      minWidth: columnMinWidths.image,
       sortable: true,
       render: (_, row) => <span className="font-medium">{row.image}</span>,
     },
@@ -1209,7 +1209,7 @@ export function ComputeAdminInstanceListPage() {
       key: 'flavor',
       label: 'Flavor',
       flex: 1,
-      minWidth: '100px',
+      minWidth: columnMinWidths.flavor,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -1319,7 +1319,7 @@ export function ComputeAdminInstanceListPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
-      minWidth: '140px',
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -1340,14 +1340,14 @@ export function ComputeAdminInstanceListPage() {
       key: 'ip',
       label: 'Fixed IP',
       flex: 1,
-      minWidth: '100px',
+      minWidth: columnMinWidths.fixedIp,
       sortable: false,
     },
     {
       key: 'image',
       label: 'Image',
       flex: 1,
-      minWidth: '120px',
+      minWidth: columnMinWidths.image,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">
@@ -1368,7 +1368,7 @@ export function ComputeAdminInstanceListPage() {
       key: 'flavor',
       label: 'Flavor',
       flex: 1,
-      minWidth: '100px',
+      minWidth: columnMinWidths.flavor,
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5">

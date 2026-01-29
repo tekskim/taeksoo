@@ -229,7 +229,7 @@ export function ContainerIngressesPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
-      minWidth: '120px',
+      minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row: IngressRow) => (
         <TableLink title={value} onClick={() => navigate(`/container/ingresses/${row.id}`)}>
@@ -241,14 +241,14 @@ export function ContainerIngressesPage() {
       key: 'namespace',
       label: 'Namespace',
       flex: 1,
-      minWidth: '100px',
+      minWidth: columnMinWidths.namespace,
       sortable: true,
     },
     {
       key: 'target',
       label: 'Target',
       flex: 1,
-      minWidth: '140px',
+      minWidth: columnMinWidths.target,
       sortable: false,
       render: (value: string[]) => (
         <div className="flex flex-col gap-0.5">
@@ -264,14 +264,14 @@ export function ContainerIngressesPage() {
       key: 'default',
       label: 'Default',
       flex: 1,
-      minWidth: '80px',
+      minWidth: columnMinWidths.default,
       sortable: false,
     },
     {
       key: 'ingressClass',
       label: 'Ingress Class',
       flex: 1,
-      minWidth: '100px',
+      minWidth: columnMinWidths.ingressClass,
       sortable: true,
     },
     {

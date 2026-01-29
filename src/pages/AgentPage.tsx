@@ -13,6 +13,7 @@ import {
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
+  columnMinWidths,
 } from '@/design-system';
 import { AgentPageLayout } from '@/layouts';
 import {
@@ -305,36 +306,42 @@ export function AgentPage() {
       key: 'name',
       label: 'Name',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
     },
     {
       key: 'model',
       label: 'Model',
       flex: 1,
+      minWidth: columnMinWidths.model,
       sortable: true,
     },
     {
       key: 'modelProvider',
       label: 'Model provider',
       flex: 1,
+      minWidth: columnMinWidths.name,
       sortable: true,
     },
     {
       key: 'chats',
       label: 'Chats',
       flex: 1,
+      minWidth: columnMinWidths.count,
       sortable: true,
     },
     {
       key: 'updatedAt',
       label: 'Updated at',
       flex: 1,
+      minWidth: columnMinWidths.updatedAt,
       sortable: true,
     },
     {
       key: 'createdAt',
       label: 'Created at',
       flex: 1,
+      minWidth: columnMinWidths.createdAt,
       sortable: true,
     },
     {
