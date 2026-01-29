@@ -409,9 +409,13 @@ html.theme-transition *::after {
 
   --button-radius: var(--radius-button);
 
-  --button-font-size-sm: var(--font-size-12);
+  --button-font-size-sm: var(--font-size-11);
   --button-font-size-md: var(--font-size-11);
   --button-font-size-lg: var(--font-size-12);
+
+  --button-line-height-sm: var(--line-height-16);
+  --button-line-height-md: var(--line-height-16);
+  --button-line-height-lg: var(--line-height-18);
 
   /* Button - Hover Colors */
   --button-secondary-hover-bg: var(--color-slate-100);
@@ -720,7 +724,7 @@ html.theme-transition *::after {
   --tabs-padding-x: var(--spacing-3);
   --tabs-indicator-gap: var(--spacing-2-5);
   --tabs-indicator-height: 2px;
-  --tabs-panel-padding: var(--spacing-4);
+  --tabs-panel-padding: var(--spacing-6);
 
   /* Tabs - Size SM */
   --tabs-font-size-sm: var(--font-size-12);

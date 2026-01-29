@@ -9,12 +9,10 @@ import {
   TopBar,
   Input,
   Select,
-  Disclosure,
   SectionCard,
   Radio,
   RadioGroup,
 } from '@/design-system';
-import type { WizardSectionState } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
@@ -24,43 +22,13 @@ import {
   IconCopy,
   IconSearch,
   IconPlus,
+  IconCirclePlus,
   IconX,
-  IconCheck,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
    ---------------------------------------- */
-
-type ServiceSectionStep =
-  | 'basic-info'
-  | 'service-ports'
-  | 'ip-addresses'
-  | 'selectors'
-  | 'session-affinity'
-  | 'labels-annotations';
-
-type SectionState = 'pre' | 'active' | 'done' | 'writing';
-
-// Section labels for display
-const SERVICE_SECTION_LABELS: Record<ServiceSectionStep, string> = {
-  'basic-info': 'Basic Information',
-  'service-ports': 'Service Ports',
-  'ip-addresses': 'IP Addresses',
-  selectors: 'Selectors',
-  'session-affinity': 'Session Affinity',
-  'labels-annotations': 'Labels & Annotations',
-};
-
-// Section order for navigation
-const SERVICE_SECTION_ORDER: ServiceSectionStep[] = [
-  'basic-info',
-  'service-ports',
-  'ip-addresses',
-  'selectors',
-  'session-affinity',
-  'labels-annotations',
-];
 
 // Service Type options
 const SERVICE_TYPE_OPTIONS = [
@@ -128,108 +96,41 @@ interface ExternalIP {
 }
 
 /* ----------------------------------------
-   Summary Status Icon Component
+   Summary Item Component
    ---------------------------------------- */
 
-function SummaryStatusIcon({ status }: { status: WizardSectionState }) {
-  // done → success (green check)
-  if (status === 'done') {
-    return (
-      <div className="size-4 rounded-full border border-[var(--color-state-success)] bg-[var(--color-state-success)] shrink-0 flex items-center justify-center">
-        <IconCheck size={10} stroke={2} className="text-white" />
-      </div>
-    );
-  }
-  // active → dashed circle with spinning animation
-  if (status === 'active') {
-    return (
-      <div
-        className="size-4 rounded-full border border-[var(--color-text-muted)] shrink-0 animate-spin"
-        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
-      />
-    );
-  }
-  // pre/default → empty dashed circle
-  return (
-    <div
-      className="size-4 rounded-full border border-[var(--color-border-default)] shrink-0"
-      style={{ borderStyle: 'dashed' }}
-    />
-  );
+interface SummaryItemProps {
+  label: string;
+  status: 'complete' | 'in-progress';
 }
 
-/* ----------------------------------------
-   Summary Sidebar Component
-   ---------------------------------------- */
-
-interface SummarySidebarProps {
-  sectionStatus: Record<ServiceSectionStep, SectionState>;
-  onCancel: () => void;
-  onCreate: () => void;
-  isCreateDisabled: boolean;
-}
-
-function SummarySidebar({
-  sectionStatus,
-  onCancel,
-  onCreate,
-  isCreateDisabled,
-}: SummarySidebarProps) {
-  // Map SectionState to WizardSectionState
-  const mapState = (state: SectionState): WizardSectionState => {
-    if (state === 'pre') return 'pre';
-    if (state === 'active') return 'active';
-    if (state === 'writing') return 'writing';
-    return 'done';
-  };
-
+function SummaryItem({ label, status }: SummaryItemProps) {
   return (
-    <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
-      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
-        {/* Summary Content */}
-        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
-          <VStack gap={3}>
-            {/* Title */}
-            <span className="text-[length:var(--font-size-16)] font-semibold leading-[var(--line-height-24)] text-[var(--color-text-default)]">
-              Summary
-            </span>
-
-            <VStack gap={0}>
-              {SERVICE_SECTION_ORDER.map((key) => {
-                const status = mapState(sectionStatus[key]);
-                return (
-                  <HStack key={key} justify="between" align="center" className="py-1">
-                    <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">
-                      {SERVICE_SECTION_LABELS[key]}
-                    </span>
-                    {status === 'writing' ? (
-                      <span className="text-[11px] text-[var(--color-text-subtle)]">
-                        Writing...
-                      </span>
-                    ) : (
-                      <SummaryStatusIcon status={status} />
-                    )}
-                  </HStack>
-                );
-              })}
-            </VStack>
-          </VStack>
-        </div>
-
-        {/* Action Buttons */}
-        <HStack gap={2}>
-          <Button variant="secondary" onClick={onCancel} className="w-[80px]">
-            Cancel
-          </Button>
-          <Button
-            variant="primary"
-            onClick={onCreate}
-            disabled={isCreateDisabled}
-            className="flex-1"
-          >
-            Create Service
-          </Button>
-        </HStack>
+    <div className="flex items-center justify-between px-2 py-1 w-full">
+      <span className="text-[12px] leading-5 text-[var(--color-text-default)]">{label}</span>
+      <div className="w-4 h-4 flex items-center justify-center">
+        {status === 'complete' ? (
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <circle cx="8" cy="8" r="7" fill="var(--color-state-success)" />
+            <path
+              d="M5 8L7 10L11 6"
+              stroke="white"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        ) : (
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <circle
+              cx="8"
+              cy="8"
+              r="6.5"
+              stroke="var(--color-border-default)"
+              strokeDasharray="3 3"
+            />
+          </svg>
+        )}
       </div>
     </div>
   );
@@ -269,16 +170,6 @@ export function CreateServicePage() {
   // Labels & Annotations state
   const [labels, setLabels] = useState<Label[]>([]);
   const [annotations, setAnnotations] = useState<Annotation[]>([]);
-
-  // Section states
-  const [sectionStatus, setSectionStatus] = useState<Record<ServiceSectionStep, SectionState>>({
-    'basic-info': 'active',
-    'service-ports': 'done',
-    'ip-addresses': 'done',
-    selectors: 'done',
-    'session-affinity': 'done',
-    'labels-annotations': 'done',
-  });
 
   // Validation errors
   const [nameError, setNameError] = useState<string | null>(null);
@@ -457,6 +348,14 @@ export function CreateServicePage() {
   // Determine which port columns to show based on service type
   const showNodePort = serviceType === 'NodePort' || serviceType === 'LoadBalancer';
 
+  // Compute section statuses for summary
+  const basicInfoComplete = name.trim().length > 0;
+  const servicePortsComplete = ports.some((p) => p.name && p.listeningPort && p.targetPort);
+  const ipAddressesComplete = true; // Optional section, always considered complete
+  const selectorsComplete = true; // Optional section, always considered complete
+  const sessionAffinityComplete = true; // Optional section, always considered complete
+  const labelsAnnotationsComplete = true; // Optional section, always considered complete
+
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       {/* Sidebar */}
@@ -532,9 +431,9 @@ export function CreateServicePage() {
               {/* Main Content with Sidebar */}
               <HStack gap={6} align="start" className="w-full">
                 {/* Form Content */}
-                <VStack gap={3} className="flex-1">
+                <VStack gap={4} className="flex-1">
                   {/* Basic Information Section */}
-                  <SectionCard isActive={sectionStatus['basic-info'] === 'active'}>
+                  <SectionCard>
                     <SectionCard.Header title="Basic Information" showDivider />
                     <SectionCard.Content>
                       <VStack gap={4}>
@@ -591,23 +490,27 @@ export function CreateServicePage() {
                           )}
                         </VStack>
 
-                        {/* Description (Collapsible) */}
-                        <Disclosure title="Description" defaultOpen={false}>
+                        {/* Description */}
+                        <VStack gap={2}>
+                          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
+                            Description
+                          </label>
                           <Input
-                            placeholder="Description"
+                            placeholder="Enter a description (optional)"
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
                             fullWidth
                           />
-                        </Disclosure>
+                        </VStack>
                       </VStack>
                     </SectionCard.Content>
                   </SectionCard>
 
                   {/* Service Ports Section */}
                   <SectionCard>
-                    <Disclosure title="Service Ports" defaultOpen={true}>
-                      <VStack gap={4} className="py-3">
+                    <SectionCard.Header title="Service Ports" showDivider />
+                    <SectionCard.Content>
+                      <VStack gap={4}>
                         {/* Port Fields */}
                         {ports.map((port, index) => (
                           <div
@@ -712,7 +615,7 @@ export function CreateServicePage() {
 
                         {/* Add Port Button */}
                         <Button
-                          variant="outline"
+                          variant="secondary"
                           size="sm"
                           leftIcon={<IconPlus size={12} stroke={1.5} />}
                           onClick={addPort}
@@ -720,13 +623,14 @@ export function CreateServicePage() {
                           Add Port
                         </Button>
                       </VStack>
-                    </Disclosure>
+                    </SectionCard.Content>
                   </SectionCard>
 
                   {/* IP Addresses Section */}
                   <SectionCard>
-                    <Disclosure title="IP Addresses" defaultOpen={true}>
-                      <VStack gap={4} className="py-3">
+                    <SectionCard.Header title="IP Addresses" showDivider />
+                    <SectionCard.Content>
+                      <VStack gap={4}>
                         {/* Cluster IP */}
                         <VStack gap={2} className="max-w-[50%]">
                           <label className="text-[11px] font-medium text-[var(--color-text-default)]">
@@ -781,7 +685,7 @@ export function CreateServicePage() {
                             </div>
                           ))}
                           <Button
-                            variant="outline"
+                            variant="secondary"
                             size="sm"
                             leftIcon={<IconPlus size={12} stroke={1.5} />}
                             onClick={addExternalIP}
@@ -790,13 +694,14 @@ export function CreateServicePage() {
                           </Button>
                         </VStack>
                       </VStack>
-                    </Disclosure>
+                    </SectionCard.Content>
                   </SectionCard>
 
                   {/* Selectors Section */}
                   <SectionCard>
-                    <Disclosure title="Selectors" defaultOpen={true}>
-                      <VStack gap={4} className="py-3">
+                    <SectionCard.Header title="Selectors" showDivider />
+                    <SectionCard.Content>
+                      <VStack gap={4}>
                         {selectors.length > 0 && (
                           <>
                             {/* Selector Header */}
@@ -844,25 +749,26 @@ export function CreateServicePage() {
 
                         <HStack gap={2}>
                           <Button
-                            variant="outline"
+                            variant="secondary"
                             size="sm"
                             leftIcon={<IconPlus size={12} stroke={1.5} />}
                             onClick={addSelector}
                           >
                             Add Rule
                           </Button>
-                          <Button variant="outline" size="sm">
+                          <Button variant="secondary" size="sm">
                             Read from File
                           </Button>
                         </HStack>
                       </VStack>
-                    </Disclosure>
+                    </SectionCard.Content>
                   </SectionCard>
 
                   {/* Session Affinity Section */}
                   <SectionCard>
-                    <Disclosure title="Session Affinity" defaultOpen={true}>
-                      <VStack gap={3} className="py-3">
+                    <SectionCard.Header title="Session Affinity" showDivider />
+                    <SectionCard.Content>
+                      <VStack gap={3}>
                         <RadioGroup
                           value={sessionAffinity}
                           onChange={(value) => setSessionAffinity(value as 'None' | 'ClientIP')}
@@ -889,18 +795,24 @@ export function CreateServicePage() {
                           </VStack>
                         )}
                       </VStack>
-                    </Disclosure>
+                    </SectionCard.Content>
                   </SectionCard>
 
                   {/* Labels & Annotations Section */}
                   <SectionCard>
-                    <Disclosure title="Labels & Annotations" defaultOpen={true}>
-                      <VStack gap={6} className="py-3">
+                    <SectionCard.Header title="Labels & Annotations" showDivider />
+                    <SectionCard.Content>
+                      <VStack gap={6}>
                         {/* Labels */}
                         <VStack gap={3}>
-                          <span className="text-[14px] font-medium text-[var(--color-text-default)]">
-                            Labels
-                          </span>
+                          <VStack gap={1}>
+                            <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                              Labels
+                            </span>
+                            <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+                              Specify the labels used to identify and categorize the resource.
+                            </p>
+                          </VStack>
 
                           {labels.length > 0 && (
                             <>
@@ -916,25 +828,22 @@ export function CreateServicePage() {
                               </div>
 
                               {labels.map((label, index) => (
-                                <div
-                                  key={index}
-                                  className="grid grid-cols-[1fr_1fr_32px] gap-4 w-full items-center"
-                                >
+                                <HStack gap={2} key={index} className="w-full">
                                   <Input
                                     placeholder="Key"
                                     value={label.key}
                                     onChange={(e) => updateLabel(index, 'key', e.target.value)}
-                                    fullWidth
+                                    className="flex-1"
                                   />
                                   <Input
                                     placeholder="Value"
                                     value={label.value}
                                     onChange={(e) => updateLabel(index, 'value', e.target.value)}
-                                    fullWidth
+                                    className="flex-1"
                                   />
                                   <button
                                     onClick={() => removeLabel(index)}
-                                    className="w-8 h-8 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                    className="p-2 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                   >
                                     <IconX
                                       size={14}
@@ -942,26 +851,34 @@ export function CreateServicePage() {
                                       stroke={1.5}
                                     />
                                   </button>
-                                </div>
+                                </HStack>
                               ))}
                             </>
                           )}
 
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            leftIcon={<IconPlus size={12} stroke={1.5} />}
-                            onClick={addLabel}
-                          >
-                            Add Label
-                          </Button>
+                          <div className="w-fit">
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                              onClick={addLabel}
+                            >
+                              Add Label
+                            </Button>
+                          </div>
                         </VStack>
 
                         {/* Annotations */}
                         <VStack gap={3}>
-                          <span className="text-[14px] font-medium text-[var(--color-text-default)]">
-                            Annotations
-                          </span>
+                          <VStack gap={1}>
+                            <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                              Annotations
+                            </span>
+                            <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+                              Specify the annotations used to provide additional metadata for the
+                              resource.
+                            </p>
+                          </VStack>
 
                           {annotations.length > 0 && (
                             <>
@@ -977,15 +894,12 @@ export function CreateServicePage() {
                               </div>
 
                               {annotations.map((annotation, index) => (
-                                <div
-                                  key={index}
-                                  className="grid grid-cols-[1fr_1fr_32px] gap-4 w-full items-center"
-                                >
+                                <HStack gap={2} key={index} className="w-full">
                                   <Input
                                     placeholder="Key"
                                     value={annotation.key}
                                     onChange={(e) => updateAnnotation(index, 'key', e.target.value)}
-                                    fullWidth
+                                    className="flex-1"
                                   />
                                   <Input
                                     placeholder="Value"
@@ -993,11 +907,11 @@ export function CreateServicePage() {
                                     onChange={(e) =>
                                       updateAnnotation(index, 'value', e.target.value)
                                     }
-                                    fullWidth
+                                    className="flex-1"
                                   />
                                   <button
                                     onClick={() => removeAnnotation(index)}
-                                    className="w-8 h-8 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                    className="p-2 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                   >
                                     <IconX
                                       size={14}
@@ -1005,32 +919,86 @@ export function CreateServicePage() {
                                       stroke={1.5}
                                     />
                                   </button>
-                                </div>
+                                </HStack>
                               ))}
                             </>
                           )}
 
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            leftIcon={<IconPlus size={12} stroke={1.5} />}
-                            onClick={addAnnotation}
-                          >
-                            Add Annotation
-                          </Button>
+                          <div className="w-fit">
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                              onClick={addAnnotation}
+                            >
+                              Add Annotation
+                            </Button>
+                          </div>
                         </VStack>
                       </VStack>
-                    </Disclosure>
+                    </SectionCard.Content>
                   </SectionCard>
                 </VStack>
 
                 {/* Summary Sidebar */}
-                <SummarySidebar
-                  sectionStatus={sectionStatus}
-                  onCancel={handleCancel}
-                  onCreate={handleCreate}
-                  isCreateDisabled={isCreateDisabled}
-                />
+                <div className="w-[280px] shrink-0">
+                  <div className="sticky top-4">
+                    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[8px] shadow-[var(--shadow-md)] overflow-hidden flex flex-col gap-6 pt-3 pb-4 px-3">
+                      <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[8px] px-4 py-4">
+                        <VStack gap={4}>
+                          <h5 className="text-[16px] leading-6 font-semibold text-[var(--color-text-default)]">
+                            Summary
+                          </h5>
+                          <VStack gap={0}>
+                            <SummaryItem
+                              label="Basic Information"
+                              status={basicInfoComplete ? 'complete' : 'in-progress'}
+                            />
+                            <SummaryItem
+                              label="Service Ports"
+                              status={servicePortsComplete ? 'complete' : 'in-progress'}
+                            />
+                            <SummaryItem
+                              label="IP Addresses"
+                              status={ipAddressesComplete ? 'complete' : 'in-progress'}
+                            />
+                            <SummaryItem
+                              label="Selectors"
+                              status={selectorsComplete ? 'complete' : 'in-progress'}
+                            />
+                            <SummaryItem
+                              label="Session Affinity"
+                              status={sessionAffinityComplete ? 'complete' : 'in-progress'}
+                            />
+                            <SummaryItem
+                              label="Labels & Annotations"
+                              status={labelsAnnotationsComplete ? 'complete' : 'in-progress'}
+                            />
+                          </VStack>
+                        </VStack>
+                      </div>
+                      <HStack gap={2} className="w-full justify-end">
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          onClick={handleCancel}
+                          className="w-[80px]"
+                        >
+                          Cancel
+                        </Button>
+                        <Button
+                          variant="primary"
+                          size="sm"
+                          onClick={handleCreate}
+                          className="flex-1 min-w-[80px]"
+                          disabled={isCreateDisabled}
+                        >
+                          Create Service
+                        </Button>
+                      </HStack>
+                    </div>
+                  </div>
+                </div>
               </HStack>
             </VStack>
           </div>

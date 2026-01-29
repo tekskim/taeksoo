@@ -247,6 +247,9 @@ import { NetworkPolicyDetailPage } from '@/pages/NetworkPolicyDetailPage';
 import { PodDisruptionBudgetsPage } from '@/pages/PodDisruptionBudgetsPage';
 import { CreatePodDisruptionBudgetPage } from '@/pages/CreatePodDisruptionBudgetPage';
 import { PodDisruptionBudgetDetailPage } from '@/pages/PodDisruptionBudgetDetailPage';
+import { ClusterManagementPage } from '@/pages/ClusterManagementPage';
+import { ClusterDetailPage } from '@/pages/ClusterDetailPage';
+import { CreateClusterPage } from '@/pages/CreateClusterPage';
 
 // Pages - IAM
 import { IAMHomePage } from '@/pages/IAMHomePage';
@@ -696,6 +699,9 @@ function AppRoutes() {
         element={<EditPodDisruptionBudgetYamlPage />}
       />
       <Route path="/container/pdb/:pdbId" element={<PodDisruptionBudgetDetailPage />} />
+      <Route path="/container/cluster-management" element={<ClusterManagementPage />} />
+      <Route path="/container/cluster-management/create" element={<CreateClusterPage />} />
+      <Route path="/container/cluster-management/:clusterId" element={<ClusterDetailPage />} />
       <Route path="/container/*" element={<ContainerDashboardPage />} />
 
       {/* IAM Routes */}

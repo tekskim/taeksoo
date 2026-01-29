@@ -472,7 +472,13 @@ function BasicInfoSection({
             <p className="text-[11px] text-[var(--color-text-subtle)] leading-[16px]">
               Select the number of pod replicas to create.
             </p>
-            <NumberInput value={replicas} onChange={onReplicasChange} min={1} max={100} fullWidth />
+            <NumberInput
+              value={replicas}
+              onChange={onReplicasChange}
+              min={1}
+              max={100}
+              className="w-[320px]"
+            />
           </VStack>
 
           {/* Description (Collapsible) */}
