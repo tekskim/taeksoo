@@ -512,7 +512,7 @@ export function ComputeAdminCertificatesPage() {
           setCertToDelete(null);
         }}
         title="Delete Certificate"
-        description={`Are you sure you want to delete "${certToDelete?.name}"? This action cannot be undone.`}
+        description="Removing the selected instances is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"
         confirmVariant="danger"

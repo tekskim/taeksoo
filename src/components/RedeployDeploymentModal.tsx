@@ -38,7 +38,7 @@ export function RedeployDeploymentModal({
       isOpen={isOpen}
       onClose={onClose}
       title="Redeploy Deployment"
-      description="Are you sure you want to redeploy this deployment? This action cannot be undone."
+      description="This action redeploys the deployment."
       size="sm"
     >
       {/* Info Box */}

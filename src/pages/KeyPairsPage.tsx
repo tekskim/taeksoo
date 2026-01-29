@@ -446,7 +446,7 @@ export function KeyPairsPage() {
         onClose={handleDeleteCancel}
         onConfirm={handleDeleteConfirm}
         title="Delete Key pair"
-        description="Are you sure you want to delete this key pair? This action cannot be undone."
+        description="Removing the selected instances is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"
         confirmVariant="danger"

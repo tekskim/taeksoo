@@ -534,7 +534,7 @@ function DesktopTopBar({
         <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)] mb-6">
           {pendingLanguage && (
             <>
-              Are you sure you want to change the language to{' '}
+              This action changes the language to{' '}
               <strong>{pendingLanguage === 'en' ? 'English' : 'Korean'}</strong>?
             </>
           )}
