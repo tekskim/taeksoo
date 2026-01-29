@@ -89,6 +89,7 @@ const buttonVariants = cva(
           'gap-[var(--button-gap-sm)]',
           'min-w-[var(--button-min-width-sm)]',
           'text-[length:var(--button-font-size-sm)]',
+          'leading-[var(--button-line-height-sm)]',
         ],
         md: [
           'h-[var(--button-height-md)]',
@@ -97,6 +98,7 @@ const buttonVariants = cva(
           'gap-[var(--button-gap-md)]',
           'min-w-[var(--button-min-width-md)]',
           'text-[length:var(--button-font-size-md)]',
+          'leading-[var(--button-line-height-md)]',
         ],
         lg: [
           'h-[var(--button-height-lg)]',
@@ -105,6 +107,7 @@ const buttonVariants = cva(
           'gap-[var(--button-gap-lg)]',
           'min-w-[var(--button-min-width-lg)]',
           'text-[length:var(--button-font-size-lg)]',
+          'leading-[var(--button-line-height-lg)]',
         ],
       },
       fullWidth: {
