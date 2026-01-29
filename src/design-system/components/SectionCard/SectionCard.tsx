@@ -18,7 +18,7 @@ export function SectionCard({ children, isActive = false, className, ...props }:
     <div
       className={twMerge(
         'flex flex-col items-start',
-        'gap-3',
+        'gap-6',
         'bg-[var(--color-surface-default)]',
         'rounded-[var(--radius-md)]',
         isActive
@@ -50,7 +50,7 @@ export interface SectionCardHeaderProps extends HTMLAttributes<HTMLDivElement> {
 function SectionCardHeader({
   title,
   actions,
-  showDivider = true,
+  showDivider = false,
   className,
   ...props
 }: SectionCardHeaderProps) {

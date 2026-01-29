@@ -2787,15 +2787,15 @@ function TableDemo() {
                 {'{'} key: 'status', width: fixedColumns.status {'}'}
               </div>
               <div className="text-[var(--color-state-success)]">
-                {'{'} key: 'name', <span className="font-bold">flex: 1, minWidth: columnMinWidths.name</span>{' '}
-                {'}'}
+                {'{'} key: 'name',{' '}
+                <span className="font-bold">flex: 1, minWidth: columnMinWidths.name</span> {'}'}
               </div>
               <div>
                 {'{'} key: 'size', width: columnMinWidths.size {'}'}
               </div>
               <div className="text-[var(--color-state-success)]">
-                {'{'} key: 'source', <span className="font-bold">flex: 1, minWidth: columnMinWidths.name</span>{' '}
-                {'}'}
+                {'{'} key: 'source',{' '}
+                <span className="font-bold">flex: 1, minWidth: columnMinWidths.name</span> {'}'}
               </div>
               <div>
                 {'{'} key: 'created', width: columnMinWidths.createdAt {'}'}
@@ -2838,9 +2838,7 @@ function TableDemo() {
                 <td className="py-2 text-[var(--color-text-subtle)]">날짜 포맷 예측 가능</td>
               </tr>
               <tr className="border-b border-[var(--color-border-subtle)]">
-                <td className="py-2 pr-4 text-[var(--color-text-default)]">
-                  IP (fixed, floating)
-                </td>
+                <td className="py-2 pr-4 text-[var(--color-text-default)]">IP (fixed, floating)</td>
                 <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">
                   width: 130px
                 </td>
@@ -2868,9 +2866,7 @@ function TableDemo() {
                 <td className="py-2 text-[var(--color-text-subtle)]">주요 식별자</td>
               </tr>
               <tr className="border-b border-[var(--color-border-subtle)]">
-                <td className="py-2 pr-4 text-[var(--color-text-default)]">
-                  labels, attachedTo
-                </td>
+                <td className="py-2 pr-4 text-[var(--color-text-default)]">labels, attachedTo</td>
                 <td className="py-2 pr-4 font-mono text-[var(--color-action-primary)]">
                   flex: 1, minWidth: 180px
                 </td>
@@ -4167,8 +4163,7 @@ export function DesignSystemPage() {
                                     style={{
                                       fontSize: size,
                                       lineHeight: lh,
-                                      fontFamily:
-                                        "Menlo, 'Fira Code', Consolas, monospace",
+                                      fontFamily: "Menlo, 'Fira Code', Consolas, monospace",
                                     }}
                                   >
                                     {desc}

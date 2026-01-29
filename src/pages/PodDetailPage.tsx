@@ -454,9 +454,21 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
     },
     { key: 'type', label: 'Type', flex: 1, minWidth: columnMinWidths.type, sortable: true },
     { key: 'reason', label: 'Reason', flex: 1, minWidth: columnMinWidths.reason, sortable: true },
-    { key: 'subobject', label: 'Subobject', flex: 1, minWidth: columnMinWidths.subobject, sortable: true },
+    {
+      key: 'subobject',
+      label: 'Subobject',
+      flex: 1,
+      minWidth: columnMinWidths.subobject,
+      sortable: true,
+    },
     { key: 'source', label: 'Source', flex: 1, minWidth: columnMinWidths.source, sortable: true },
-    { key: 'message', label: 'Message', flex: 1, minWidth: columnMinWidths.message, sortable: true },
+    {
+      key: 'message',
+      label: 'Message',
+      flex: 1,
+      minWidth: columnMinWidths.message,
+      sortable: true,
+    },
     {
       key: 'firstSeen',
       label: 'First Seen',

@@ -538,15 +538,33 @@ export function CreateVolumePage() {
         </div>
       ),
     },
-    { key: 'volumeType', label: 'Volume type', flex: 1, minWidth: columnMinWidths.type, sortable: true },
+    {
+      key: 'volumeType',
+      label: 'Volume type',
+      flex: 1,
+      minWidth: columnMinWidths.type,
+      sortable: true,
+    },
     { key: 'size', label: 'Size', flex: 1, minWidth: columnMinWidths.size, sortable: true },
-    { key: 'createdAt', label: 'Created at', flex: 1, minWidth: columnMinWidths.createdAt, sortable: true },
+    {
+      key: 'createdAt',
+      label: 'Created at',
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
+      sortable: true,
+    },
   ];
 
   // Volume type table columns
   const volumeTypeColumns: TableColumn<VolumeTypeRow>[] = [
     { key: 'name', label: 'Name', flex: 1, minWidth: columnMinWidths.name, sortable: true },
-    { key: 'description', label: 'Description', flex: 1, minWidth: columnMinWidths.description, sortable: true },
+    {
+      key: 'description',
+      label: 'Description',
+      flex: 1,
+      minWidth: columnMinWidths.description,
+      sortable: true,
+    },
     { key: 'isPublic', label: 'Public', flex: 1, minWidth: columnMinWidths.type },
   ];
 
