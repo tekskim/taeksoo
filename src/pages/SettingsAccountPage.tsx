@@ -24,26 +24,31 @@ export default function SettingsAccountPage() {
   const navigate = useNavigate();
   const { isDark } = useDarkMode();
 
-  // Account State const [name, setName] = useState('John Doe');
+  // Account State
+  const [name, setName] = useState('John Doe');
   const [email] = useState('john.doe@thakicloud.co.kr');
   const [isEditingPassword, setIsEditingPassword] = useState(false);
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordLastUpdated, setPasswordLastUpdated] = useState('2024-01-10 09:30');
 
-  // 2-Step Verification State const [twoStepEnabled, setTwoStepEnabled] = useState(false);
+  // 2-Step Verification State
+  const [twoStepEnabled, setTwoStepEnabled] = useState(false);
   const [authenticatorSetup, setAuthenticatorSetup] = useState<{
     configured: boolean;
     addedAt?: string;
   }>({ configured: false });
 
-  // Modal State const [showLogoutModal, setShowLogoutModal] = useState(false);
+  // Modal State
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
-  // Handle window close const handleWindowClose = () => {
+  // Handle window close
+  const handleWindowClose = () => {
     navigate('/');
   };
 
-  // Session data const sessions = [
+  // Session data
+  const sessions = [
     {
       id: '1',
       location: 'Gangnam-gu, Seoul, South Korea',
@@ -81,7 +86,8 @@ export default function SettingsAccountPage() {
     },
   ];
 
-  // Session table columns const sessionColumns: TableColumn[] = [
+  // Session table columns
+  const sessionColumns: TableColumn[] = [
     { key: 'location', label: 'Location', minWidth: '180px' },
     { key: 'ip', label: 'IP Address', flex: 1, minWidth: columnMinWidths.ip },
     { key: 'device', label: 'Device', minWidth: '140px' },

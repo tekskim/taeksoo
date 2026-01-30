@@ -82,7 +82,8 @@ export function ModalsPage() {
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
-  // Modal states const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
+  // Modal states
+  const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
   const [isDeleteSecurityGroupOpen, setIsDeleteSecurityGroupOpen] = useState(false);
   const [isDeleteSecurityGroupsMultipleOpen, setIsDeleteSecurityGroupsMultipleOpen] =
     useState(false);
@@ -99,7 +100,8 @@ export function ModalsPage() {
   const [isDeleteLoadBalancerOpen, setIsDeleteLoadBalancerOpen] = useState(false);
   const [isDeleteLoadBalancersMultipleOpen, setIsDeleteLoadBalancersMultipleOpen] = useState(false);
 
-  // IAM Modal states const [isDeleteUserOpen, setIsDeleteUserOpen] = useState(false);
+  // IAM Modal states
+  const [isDeleteUserOpen, setIsDeleteUserOpen] = useState(false);
   const [isDeleteUsersMultipleOpen, setIsDeleteUsersMultipleOpen] = useState(false);
   const [isConfirmUserPasswordOpen, setIsConfirmUserPasswordOpen] = useState(false);
   const [isUnsavedChangesOpen, setIsUnsavedChangesOpen] = useState(false);
@@ -131,9 +133,11 @@ export function ModalsPage() {
   const [usernameCopied, setUsernameCopied] = useState(false);
   const [passwordCopied, setPasswordCopied] = useState(false);
 
-  // Storage Modal states const [isDeleteBucketOpen, setIsDeleteBucketOpen] = useState(false);
+  // Storage Modal states
+  const [isDeleteBucketOpen, setIsDeleteBucketOpen] = useState(false);
 
-  // Container Modal states const [isDeleteClusterOpen, setIsDeleteClusterOpen] = useState(false);
+  // Container Modal states
+  const [isDeleteClusterOpen, setIsDeleteClusterOpen] = useState(false);
   const [isDeleteNamespaceOpen, setIsDeleteNamespaceOpen] = useState(false);
   const [isDeletePodOpen, setIsDeletePodOpen] = useState(false);
   const [isDeleteJobOpen, setIsDeleteJobOpen] = useState(false);
@@ -146,7 +150,8 @@ export function ModalsPage() {
   const [isRedeployDaemonSetOpen, setIsRedeployDaemonSetOpen] = useState(false);
   const [isRollBackDeploymentOpen, setIsRollBackDeploymentOpen] = useState(false);
 
-  // Compute Admin Modal states const [isStopInstanceOpen, setIsStopInstanceOpen] = useState(false);
+  // Compute Admin Modal states
+  const [isStopInstanceOpen, setIsStopInstanceOpen] = useState(false);
   const [isRebootInstanceOpen, setIsRebootInstanceOpen] = useState(false);
   const [isSoftRebootInstanceOpen, setIsSoftRebootInstanceOpen] = useState(false);
   const [isConfirmResizeOpen, setIsConfirmResizeOpen] = useState(false);
@@ -218,7 +223,8 @@ export function ModalsPage() {
   const [isDeleteMetadatasOpen, setIsDeleteMetadatasOpen] = useState(false);
   const [isManageMemberOpen, setIsManageMemberOpen] = useState(false);
 
-  // Disclosure states const [isComputeOpen, setIsComputeOpen] = useState(false);
+  // Disclosure states
+  const [isComputeOpen, setIsComputeOpen] = useState(false);
   const [isIAMOpen, setIsIAMOpen] = useState(false);
   const [isContainerOpen, setIsContainerOpen] = useState(false);
   const [isStorageOpen, setIsStorageOpen] = useState(false);

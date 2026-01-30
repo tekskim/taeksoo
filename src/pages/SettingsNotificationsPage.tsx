@@ -22,11 +22,13 @@ export default function SettingsNotificationsPage() {
   const navigate = useNavigate();
   const { isDark } = useDarkMode();
 
-  // Global Notifications State const [globalWhatToNotify, setGlobalWhatToNotify] = useState('all');
+  // Global Notifications State
+  const [globalWhatToNotify, setGlobalWhatToNotify] = useState('all');
   const [globalSound, setGlobalSound] = useState(true);
   const [globalDuration, setGlobalDuration] = useState('3s');
 
-  // Per Service Notifications State const [serviceNotifications, setServiceNotifications] = useState<
+  // Per Service Notifications State
+  const [serviceNotifications, setServiceNotifications] = useState<
     Record<string, { whatToNotify: string; duration: string; sound: boolean }>
   >({
     compute: { whatToNotify: 'all', duration: '3s', sound: true },
@@ -47,11 +49,13 @@ export default function SettingsNotificationsPage() {
     }));
   };
 
-  // Handle window close const handleWindowClose = () => {
+  // Handle window close
+  const handleWindowClose = () => {
     navigate('/');
   };
 
-  // Duration options const durationOptions = [
+  // Duration options
+  const durationOptions = [
     { value: '1s', label: '1s' },
     { value: '2s', label: '2s' },
     { value: '3s', label: '3s' },
@@ -59,7 +63,8 @@ export default function SettingsNotificationsPage() {
     { value: 'keep', label: 'Keep visible' },
   ];
 
-  // Service list const services = [
+  // Service list
+  const services = [
     { key: 'compute', label: 'Compute' },
     { key: 'iam', label: 'IAM' },
     { key: 'storage', label: 'Storage' },

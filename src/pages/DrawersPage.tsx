@@ -447,12 +447,14 @@ export function DrawersPage() {
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
-  // App section disclosure states const [isComputeOpen, setIsComputeOpen] = useState(false);
+  // App section disclosure states
+  const [isComputeOpen, setIsComputeOpen] = useState(false);
   const [isIAMOpen, setIsIAMOpen] = useState(false);
   const [isStorageOpen, setIsStorageOpen] = useState(false);
   const [isContainerOpen, setIsContainerOpen] = useState(false);
 
-  // Drawer states const [isCreateSnapshotOpen, setIsCreateSnapshotOpen] = useState(false);
+  // Drawer states
+  const [isCreateSnapshotOpen, setIsCreateSnapshotOpen] = useState(false);
   const [isEditInstanceOpen, setIsEditInstanceOpen] = useState(false);
   const [isLockSettingOpen, setIsLockSettingOpen] = useState(false);
   const [isViewPreferencesOpen, setIsViewPreferencesOpen] = useState(false);
@@ -526,13 +528,15 @@ export function DrawersPage() {
   const [isManageMembersOpen, setIsManageMembersOpen] = useState(false);
   const [isAllocateFloatingIPOpen, setIsAllocateFloatingIPOpen] = useState(false);
 
-  // Storage Drawer states const [isIdentifyDeviceOpen, setIsIdentifyDeviceOpen] = useState(false);
+  // Storage Drawer states
+  const [isIdentifyDeviceOpen, setIsIdentifyDeviceOpen] = useState(false);
   const [isCreateFolderOpen, setIsCreateFolderOpen] = useState(false);
   const [isCreateObjectOpen, setIsCreateObjectOpen] = useState(false);
   const [isMoveFilesOpen, setIsMoveFilesOpen] = useState(false);
   const [isEditObjectOpen, setIsEditObjectOpen] = useState(false);
 
-  // IAM drawer states const [isManageUserGroupsOpen, setIsManageUserGroupsOpen] = useState(false);
+  // IAM drawer states
+  const [isManageUserGroupsOpen, setIsManageUserGroupsOpen] = useState(false);
   const [isManageUsersOpen, setIsManageUsersOpen] = useState(false);
   const [isManageRolesOpen, setIsManageRolesOpen] = useState(false);
   const [isResetPasswordOpen, setIsResetPasswordOpen] = useState(false);
@@ -546,9 +550,11 @@ export function DrawersPage() {
   const [isAdminLockSettingOpen, setIsAdminLockSettingOpen] = useState(false);
   const [isEditSystemAdminOpen, setIsEditSystemAdminOpen] = useState(false);
 
-  // Container drawer states const [isResourceTypeSearchOpen, setIsResourceTypeSearchOpen] = useState(false);
+  // Container drawer states
+  const [isResourceTypeSearchOpen, setIsResourceTypeSearchOpen] = useState(false);
 
-  // ViewPreferences state const [rowsPerPage, setRowsPerPage] = useState(10);
+  // ViewPreferences state
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [columns, setColumns] = useState<ColumnConfig[]>(mockViewPreferencesColumns);
 
   return (

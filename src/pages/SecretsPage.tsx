@@ -131,7 +131,8 @@ export function SecretsPage() {
     navigate(`/container/console/${tab.instanceId}?name=${encodeURIComponent(tab.title)}`);
   };
 
-  // Pagination const rowsPerPage = 10;
+  // Pagination
+  const rowsPerPage = 10;
   const totalPages = Math.ceil(secretsData.length / rowsPerPage);
   const paginatedData = secretsData.slice(
     (currentPage - 1) * rowsPerPage,
