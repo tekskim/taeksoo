@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import {
   Button,
@@ -108,16 +108,36 @@ function AgentHeader({
 
         {/* Action Buttons */}
         <div className="flex gap-1 items-center">
-          <Button variant="secondary" size="sm" leftIcon={<IconPlayerPause size={12} />} onClick={onDeactivate}>
+          <Button
+            variant="secondary"
+            size="sm"
+            leftIcon={<IconPlayerPause size={12} />}
+            onClick={onDeactivate}
+          >
             Deactive
           </Button>
-          <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />} onClick={onConnectDataSource}>
+          <Button
+            variant="secondary"
+            size="sm"
+            leftIcon={<IconCirclePlus size={12} />}
+            onClick={onConnectDataSource}
+          >
             Connect data source
           </Button>
-          <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />} onClick={onConnectMCPServer}>
+          <Button
+            variant="secondary"
+            size="sm"
+            leftIcon={<IconCirclePlus size={12} />}
+            onClick={onConnectMCPServer}
+          >
             Connect MCP server
           </Button>
-          <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />} onClick={onDelete}>
+          <Button
+            variant="secondary"
+            size="sm"
+            leftIcon={<IconTrash size={12} />}
+            onClick={onDelete}
+          >
             Delete
           </Button>
         </div>
@@ -181,7 +201,12 @@ function InformationTab({
         <SectionCard.Header
           title="Basic Information"
           actions={
-            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />} onClick={onEditBasicInfo}>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconEdit size={12} />}
+              onClick={onEditBasicInfo}
+            >
               Edit
             </Button>
           }
@@ -210,7 +235,12 @@ function InformationTab({
         <SectionCard.Header
           title="Model settings"
           actions={
-            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />} onClick={onEditModelSettings}>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconEdit size={12} />}
+              onClick={onEditModelSettings}
+            >
               Edit
             </Button>
           }
@@ -227,7 +257,12 @@ function InformationTab({
         <SectionCard.Header
           title="Prompt settings"
           actions={
-            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />} onClick={onEditPromptSettings}>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconEdit size={12} />}
+              onClick={onEditPromptSettings}
+            >
               Edit
             </Button>
           }
@@ -263,8 +298,24 @@ function DataSourcesTab() {
 
   // Mock data
   const dataSources: DataSourceRow[] = [
-    { id: '1', status: 'active', name: 'lable', type: 'File', documents: 7, size: '60 MB', createdAt: 'Nov 11, 2025, 2:51 PM' },
-    { id: '2', status: 'active', name: 'lable', type: 'File', documents: 7, size: '60 MB', createdAt: 'Nov 11, 2025, 2:51 PM' },
+    {
+      id: '1',
+      status: 'active',
+      name: 'lable',
+      type: 'File',
+      documents: 7,
+      size: '60 MB',
+      createdAt: 'Nov 11, 2025, 2:51 PM',
+    },
+    {
+      id: '2',
+      status: 'active',
+      name: 'lable',
+      type: 'File',
+      documents: 7,
+      size: '60 MB',
+      createdAt: 'Nov 11, 2025, 2:51 PM',
+    },
   ];
 
   const totalPages = 99;
@@ -276,7 +327,12 @@ function DataSourcesTab() {
       label: 'Status',
       width: fixedColumns.status,
       align: 'center',
-      render: (_, row) => <StatusIndicator status={row.status === 'active' ? 'active' : 'shutoff'} layout="icon-only" />,
+      render: (_, row) => (
+        <StatusIndicator
+          status={row.status === 'active' ? 'active' : 'shutoff'}
+          layout="icon-only"
+        />
+      ),
     },
     {
       key: 'name',
@@ -285,7 +341,12 @@ function DataSourcesTab() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string) => (
-        <span className="text-[var(--color-action-primary)] font-medium hover:underline cursor-pointer truncate block" title={value}>{value}</span>
+        <span
+          className="text-[var(--color-action-primary)] font-medium hover:underline cursor-pointer truncate block"
+          title={value}
+        >
+          {value}
+        </span>
       ),
     },
     { key: 'type', label: 'Type', flex: 1, minWidth: columnMinWidths.type },
@@ -322,7 +383,9 @@ function DataSourcesTab() {
       {/* Header */}
       <div className="flex items-center justify-between w-full">
         <h2 className="text-heading-h5 text-[var(--color-text-default)]">Data sources</h2>
-        <Button variant="primary" size="sm">Connect data source</Button>
+        <Button variant="primary" size="sm">
+          Connect data source
+        </Button>
       </div>
 
       {/* Search & Actions */}
@@ -338,7 +401,12 @@ function DataSourcesTab() {
           />
         </div>
         <div className="h-4 w-px bg-[var(--color-border-default)]" />
-        <Button variant="muted" size="sm" leftIcon={<IconTrash size={12} />} disabled={selectedRows.length === 0}>
+        <Button
+          variant="muted"
+          size="sm"
+          leftIcon={<IconTrash size={12} />}
+          disabled={selectedRows.length === 0}
+        >
           Delete
         </Button>
       </div>
@@ -385,9 +453,33 @@ function MCPServersTab() {
 
   // Mock data
   const mcpServers: MCPServerRow[] = [
-    { id: '1', status: 'active', title: 'Lable', mcpServer: 'lable', category: 'Communication', tags: ['Tag', 'Tag', 'Tag', 'Tag', 'Tag', 'Tag', 'Tag', 'Tag'], createdAt: 'Nov 11, 2025, 2:51 PM' },
-    { id: '2', status: 'warning', title: 'Lable', mcpServer: 'lable', category: 'Communication', tags: ['Tag', 'Tag', 'Tag', 'Tag', 'Tag', 'Tag', 'Tag', 'Tag'], createdAt: 'Nov 11, 2025, 2:51 PM' },
-    { id: '3', status: 'error', title: 'Lable', mcpServer: 'lable', category: 'Communication', tags: ['Tag', 'Tag', 'Tag'], createdAt: 'Nov 11, 2025, 2:51 PM' },
+    {
+      id: '1',
+      status: 'active',
+      title: 'Lable',
+      mcpServer: 'lable',
+      category: 'Communication',
+      tags: ['Tag', 'Tag', 'Tag', 'Tag', 'Tag', 'Tag', 'Tag', 'Tag'],
+      createdAt: 'Nov 11, 2025, 2:51 PM',
+    },
+    {
+      id: '2',
+      status: 'warning',
+      title: 'Lable',
+      mcpServer: 'lable',
+      category: 'Communication',
+      tags: ['Tag', 'Tag', 'Tag', 'Tag', 'Tag', 'Tag', 'Tag', 'Tag'],
+      createdAt: 'Nov 11, 2025, 2:51 PM',
+    },
+    {
+      id: '3',
+      status: 'error',
+      title: 'Lable',
+      mcpServer: 'lable',
+      category: 'Communication',
+      tags: ['Tag', 'Tag', 'Tag'],
+      createdAt: 'Nov 11, 2025, 2:51 PM',
+    },
   ];
 
   const totalPages = 99;
@@ -413,7 +505,12 @@ function MCPServersTab() {
       flex: 1,
       minWidth: columnMinWidths.name,
       render: (value: string) => (
-        <span className="text-[var(--color-action-primary)] font-medium hover:underline cursor-pointer truncate block" title={value}>{value}</span>
+        <span
+          className="text-[var(--color-action-primary)] font-medium hover:underline cursor-pointer truncate block"
+          title={value}
+        >
+          {value}
+        </span>
       ),
     },
     {
@@ -426,7 +523,9 @@ function MCPServersTab() {
           <div className="size-5 rounded bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center shrink-0">
             <span className="text-white text-[10px] font-bold">S</span>
           </div>
-          <span className="truncate" title={value}>{value}</span>
+          <span className="truncate" title={value}>
+            {value}
+          </span>
         </div>
       ),
     },
@@ -444,10 +543,14 @@ function MCPServersTab() {
         return (
           <div className="flex gap-1 items-center overflow-hidden">
             {visibleTags.map((tag, index) => (
-              <Badge key={index} theme="gray" type="subtle" size="sm">{tag}</Badge>
+              <Badge key={index} theme="gray" type="subtle" size="sm">
+                {tag}
+              </Badge>
             ))}
             {remainingCount > 0 && (
-              <Badge theme="gray" type="subtle" size="sm">+{remainingCount}</Badge>
+              <Badge theme="gray" type="subtle" size="sm">
+                +{remainingCount}
+              </Badge>
             )}
           </div>
         );
@@ -478,7 +581,9 @@ function MCPServersTab() {
       {/* Header */}
       <div className="flex items-center justify-between w-full">
         <h2 className="text-heading-h5 text-[var(--color-text-default)]">MCP servers</h2>
-        <Button variant="primary" size="sm">Connect MCP server</Button>
+        <Button variant="primary" size="sm">
+          Connect MCP server
+        </Button>
       </div>
 
       {/* Search & Actions */}
@@ -494,7 +599,12 @@ function MCPServersTab() {
           />
         </div>
         <div className="h-4 w-px bg-[var(--color-border-default)]" />
-        <Button variant="muted" size="sm" leftIcon={<IconTrash size={12} />} disabled={selectedRows.length === 0}>
+        <Button
+          variant="muted"
+          size="sm"
+          leftIcon={<IconTrash size={12} />}
+          disabled={selectedRows.length === 0}
+        >
           Delete
         </Button>
       </div>
@@ -541,13 +651,17 @@ function ExecutionLogCard({ log }: { log: ExecutionLogItem }) {
       <div className="flex flex-col gap-3">
         {/* Question */}
         <div className="flex flex-col gap-1">
-          <span className="text-label-sm text-[var(--color-text-subtle)]">질문: {log.question}</span>
+          <span className="text-label-sm text-[var(--color-text-subtle)]">
+            질문: {log.question}
+          </span>
         </div>
 
         {/* Response Header */}
         <div className="flex items-start gap-2">
           <IconMessage size={16} className="text-[var(--color-action-primary)] mt-0.5 shrink-0" />
-          <span className="text-body-md text-[var(--color-text-default)]">{log.response.split('\n')[0]}</span>
+          <span className="text-body-md text-[var(--color-text-default)]">
+            {log.response.split('\n')[0]}
+          </span>
         </div>
 
         {/* Response Content */}
@@ -564,11 +678,21 @@ function ExecutionLogCard({ log }: { log: ExecutionLogItem }) {
         {/* Footer */}
         <div className="flex items-center gap-4 pt-2">
           <Badge theme="green" type="subtle" size="sm">
-            {log.status === 'completed' ? 'Completed' : log.status === 'failed' ? 'Failed' : 'Running'}
+            {log.status === 'completed'
+              ? 'Completed'
+              : log.status === 'failed'
+                ? 'Failed'
+                : 'Running'}
           </Badge>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">Created at: {log.createdAt}</span>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">Response Time: {log.responseTime}</span>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">Steps: {log.stepsCount}</span>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">
+            Created at: {log.createdAt}
+          </span>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">
+            Response Time: {log.responseTime}
+          </span>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">
+            Steps: {log.stepsCount}
+          </span>
         </div>
       </div>
     </div>
@@ -650,10 +774,30 @@ function StatusHistoryTab() {
 
   // Mock data
   const statusHistory: StatusHistoryRow[] = [
-    { id: '1', status: 'inactive', changedAt: 'Nov 11, 2025, 2:51 PM', changedBy: 'test@example.com' },
-    { id: '2', status: 'active', changedAt: 'Nov 11, 2025, 2:51 PM', changedBy: 'test@example.com' },
-    { id: '3', status: 'inactive', changedAt: 'Nov 11, 2025, 2:51 PM', changedBy: 'test@example.com' },
-    { id: '4', status: 'active', changedAt: 'Nov 11, 2025, 2:51 PM', changedBy: 'test@example.com' },
+    {
+      id: '1',
+      status: 'inactive',
+      changedAt: 'Nov 11, 2025, 2:51 PM',
+      changedBy: 'test@example.com',
+    },
+    {
+      id: '2',
+      status: 'active',
+      changedAt: 'Nov 11, 2025, 2:51 PM',
+      changedBy: 'test@example.com',
+    },
+    {
+      id: '3',
+      status: 'inactive',
+      changedAt: 'Nov 11, 2025, 2:51 PM',
+      changedBy: 'test@example.com',
+    },
+    {
+      id: '4',
+      status: 'active',
+      changedAt: 'Nov 11, 2025, 2:51 PM',
+      changedBy: 'test@example.com',
+    },
     { id: '5', status: 'draft', changedAt: 'Nov 11, 2025, 2:51 PM', changedBy: 'test@example.com' },
   ];
 
@@ -672,7 +816,11 @@ function StatusHistoryTab() {
           inactive: 'Inactive',
           draft: 'Draft',
         };
-        return <span className="text-body-md text-[var(--color-text-default)]">{statusLabels[value]}</span>;
+        return (
+          <span className="text-body-md text-[var(--color-text-default)]">
+            {statusLabels[value]}
+          </span>
+        );
       },
     },
     {
@@ -762,10 +910,7 @@ export function AgentDetailPage() {
   return (
     <AgentPageLayout
       title={agent.name}
-      breadcrumbItems={[
-        { label: 'Agent', href: '/agent/list' },
-        { label: agent.name },
-      ]}
+      breadcrumbItems={[{ label: 'Agent', href: '/agent/list' }, { label: agent.name }]}
     >
       {/* Agent Header Card */}
       <AgentHeader
