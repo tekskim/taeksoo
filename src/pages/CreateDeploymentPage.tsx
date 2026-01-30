@@ -2592,7 +2592,7 @@ export function CreateDeploymentPage() {
                                     <VStack gap={3}>
                                       {/* Search Input */}
                                       <SearchInput
-                                        placeholder="Find Namespaces with filters"
+                                        placeholder="Search namespaces by attributes"
                                         className="w-[312px]"
                                       />
 
@@ -2616,7 +2616,7 @@ export function CreateDeploymentPage() {
                                           {
                                             key: 'status',
                                             label: 'Status',
-                                            width: '80px',
+                                            width: '64px',
                                             align: 'center',
                                             render: (_, row: NamespaceData) => (
                                               <StatusIndicator status={row.status} />
@@ -2658,9 +2658,9 @@ export function CreateDeploymentPage() {
                                       />
 
                                       {/* Selected Namespace Chips */}
-                                      {term.selectedNamespaces.length > 0 && (
-                                        <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-2 py-2 flex flex-wrap gap-1">
-                                          {term.selectedNamespaces.map((nsId) => {
+                                      <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-2 py-2 flex flex-wrap gap-1 min-h-[42px] items-center">
+                                        {term.selectedNamespaces.length > 0 ? (
+                                          term.selectedNamespaces.map((nsId) => {
                                             const ns = MOCK_NAMESPACES.find((n) => n.id === nsId);
                                             return ns ? (
                                               <Chip
@@ -2680,9 +2680,13 @@ export function CreateDeploymentPage() {
                                                 }}
                                               />
                                             ) : null;
-                                          })}
-                                        </div>
-                                      )}
+                                          })
+                                        ) : (
+                                          <span className="text-[var(--color-text-subtle)] text-[12px]">
+                                            No item selected
+                                          </span>
+                                        )}
+                                      </div>
                                     </VStack>
                                   )}
 
@@ -2988,21 +2992,9 @@ export function CreateDeploymentPage() {
                                               }
                                               fullWidth
                                             />
-                                            <Select
-                                              options={[
-                                                { value: 'sec', label: 'sec' },
-                                                { value: 'min', label: 'min' },
-                                              ]}
-                                              value={toleration.tolerationSecondsUnit}
-                                              onChange={(val) =>
-                                                updateToleration(
-                                                  index,
-                                                  'tolerationSecondsUnit',
-                                                  val
-                                                )
-                                              }
-                                              className="w-[80px] shrink-0"
-                                            />
+                                            <span className="text-[var(--color-text-default)] text-[12px] w-[80px] shrink-0">
+                                              Seconds
+                                            </span>
                                           </HStack>
                                         </VStack>
                                         <button
@@ -3073,20 +3065,17 @@ export function CreateDeploymentPage() {
                         <SectionCard.Header title="Security Context" />
                         <SectionCard.Content>
                           <VStack gap={4}>
-                            <VStack gap={1} className="max-w-[578px]">
+                            <VStack gap={1} className="max-w-[320px]">
                               <span className="text-[11px] font-medium text-[var(--color-text-default)]">
                                 Pod Filesystem Group
                               </span>
                               <span className="text-[12px] text-[var(--color-text-subtle)]">
                                 Specify the filesystem group used by the pod.
                               </span>
-                              <Select
-                                options={[
-                                  { value: '1', label: '1' },
-                                  { value: '1000', label: '1000' },
-                                ]}
-                                value={podFilesystemGroup}
-                                onChange={setPodFilesystemGroup}
+                              <NumberInput
+                                value={Number(podFilesystemGroup) || 0}
+                                onChange={(val) => setPodFilesystemGroup(String(val))}
+                                min={0}
                                 fullWidth
                               />
                             </VStack>
@@ -3166,32 +3155,35 @@ export function CreateDeploymentPage() {
                                             fullWidth
                                           />
                                         </VStack>
-                                        <VStack gap={2}>
-                                          <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                            Optional
-                                          </span>
-                                          <Checkbox
-                                            checked={(volume as ConfigMapVolume).optional}
-                                            onChange={(e) =>
-                                              updateVolume(index, { optional: e.target.checked })
-                                            }
-                                          />
-                                        </VStack>
                                       </div>
-                                      <Disclosure title="Advanced" defaultOpen={false}>
-                                        <VStack gap={2} className="pt-2">
-                                          <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
-                                            Default Mode
-                                          </span>
-                                          <Input
-                                            placeholder=""
-                                            value={(volume as ConfigMapVolume).defaultMode || ''}
-                                            onChange={(e) =>
-                                              updateVolume(index, { defaultMode: e.target.value })
-                                            }
-                                            fullWidth
-                                          />
-                                        </VStack>
+                                      <HStack gap={2} align="center">
+                                        <Checkbox
+                                          checked={(volume as ConfigMapVolume).optional}
+                                          onChange={(e) =>
+                                            updateVolume(index, { optional: e.target.checked })
+                                          }
+                                        />
+                                        <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                                          Optional
+                                        </span>
+                                      </HStack>
+                                      <Disclosure defaultOpen={false}>
+                                        <Disclosure.Trigger>Advanced</Disclosure.Trigger>
+                                        <Disclosure.Panel>
+                                          <VStack gap={2} className="pt-2">
+                                            <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                                              Default Mode
+                                            </span>
+                                            <Input
+                                              placeholder=""
+                                              value={(volume as ConfigMapVolume).defaultMode || ''}
+                                              onChange={(e) =>
+                                                updateVolume(index, { defaultMode: e.target.value })
+                                              }
+                                              fullWidth
+                                            />
+                                          </VStack>
+                                        </Disclosure.Panel>
                                       </Disclosure>
                                     </>
                                   )}
@@ -3236,91 +3228,98 @@ export function CreateDeploymentPage() {
                                             fullWidth
                                           />
                                         </VStack>
-                                        <VStack gap={2}>
-                                          <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                            Optional
-                                          </span>
-                                          <Checkbox
-                                            checked={(volume as SecretVolume).optional}
-                                            onChange={(e) =>
-                                              updateVolume(index, { optional: e.target.checked })
-                                            }
-                                          />
-                                        </VStack>
                                       </div>
-                                      <Disclosure title="Advanced" defaultOpen={false}>
-                                        <VStack gap={2} className="pt-2">
-                                          <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
-                                            Default Mode
-                                          </span>
-                                          <Input
-                                            placeholder=""
-                                            value={(volume as SecretVolume).defaultMode}
-                                            onChange={(e) =>
-                                              updateVolume(index, { defaultMode: e.target.value })
-                                            }
-                                            fullWidth
-                                          />
-                                        </VStack>
+                                      <HStack gap={2} align="center">
+                                        <Checkbox
+                                          checked={(volume as SecretVolume).optional}
+                                          onChange={(e) =>
+                                            updateVolume(index, { optional: e.target.checked })
+                                          }
+                                        />
+                                        <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                                          Optional
+                                        </span>
+                                      </HStack>
+                                      <Disclosure defaultOpen={false}>
+                                        <Disclosure.Trigger>Advanced</Disclosure.Trigger>
+                                        <Disclosure.Panel>
+                                          <VStack gap={2} className="pt-2">
+                                            <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                                              Default Mode
+                                            </span>
+                                            <Input
+                                              placeholder=""
+                                              value={(volume as SecretVolume).defaultMode}
+                                              onChange={(e) =>
+                                                updateVolume(index, { defaultMode: e.target.value })
+                                              }
+                                              fullWidth
+                                            />
+                                          </VStack>
+                                        </Disclosure.Panel>
                                       </Disclosure>
                                     </>
                                   )}
 
                                   {/* PVC content */}
                                   {volume.type === 'pvc' && (
-                                    <div className="flex gap-2 items-start py-3 w-full">
-                                      <VStack gap={2} className="flex-1">
-                                        <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
-                                          Volume Name{' '}
-                                          <span className="text-[var(--color-state-danger)]">
-                                            *
+                                    <>
+                                      <div className="flex gap-2 items-start py-3 w-full">
+                                        <VStack gap={2} className="flex-1">
+                                          <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                                            Volume Name{' '}
+                                            <span className="text-[var(--color-state-danger)]">
+                                              *
+                                            </span>
                                           </span>
-                                        </span>
-                                        <Input
-                                          placeholder="Input name"
-                                          value={volume.volumeName}
-                                          onChange={(e) =>
-                                            updateVolume(index, { volumeName: e.target.value })
-                                          }
-                                          fullWidth
-                                        />
-                                      </VStack>
-                                      <VStack gap={2} className="flex-1">
-                                        <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
-                                          Persistent Volume Claim{' '}
-                                          <span className="text-[var(--color-state-danger)]">
-                                            *
+                                          <Input
+                                            placeholder="Input name"
+                                            value={volume.volumeName}
+                                            onChange={(e) =>
+                                              updateVolume(index, { volumeName: e.target.value })
+                                            }
+                                            fullWidth
+                                          />
+                                        </VStack>
+                                        <VStack gap={2} className="flex-1">
+                                          <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                                            Persistent Volume Claim{' '}
+                                            <span className="text-[var(--color-state-danger)]">
+                                              *
+                                            </span>
                                           </span>
-                                        </span>
-                                        <Select
-                                          options={[
-                                            { value: 'pvc-1', label: 'pvc-1' },
-                                            { value: 'pvc-2', label: 'pvc-2' },
-                                          ]}
-                                          value={(volume as PVCVolume).pvcName}
-                                          onChange={(val) => updateVolume(index, { pvcName: val })}
-                                          placeholder="Select PVC"
-                                          fullWidth
-                                        />
-                                      </VStack>
-                                      <VStack gap={2}>
-                                        <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                          Read Only
-                                        </span>
+                                          <Select
+                                            options={[
+                                              { value: 'pvc-1', label: 'pvc-1' },
+                                              { value: 'pvc-2', label: 'pvc-2' },
+                                            ]}
+                                            value={(volume as PVCVolume).pvcName}
+                                            onChange={(val) =>
+                                              updateVolume(index, { pvcName: val })
+                                            }
+                                            placeholder="Select PVC"
+                                            fullWidth
+                                          />
+                                        </VStack>
+                                      </div>
+                                      <HStack gap={2} align="center">
                                         <Checkbox
                                           checked={(volume as PVCVolume).readOnly}
                                           onChange={(e) =>
                                             updateVolume(index, { readOnly: e.target.checked })
                                           }
                                         />
-                                      </VStack>
-                                    </div>
+                                        <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                                          Read Only
+                                        </span>
+                                      </HStack>
+                                    </>
                                   )}
 
                                   {/* Create PVC content */}
                                   {volume.type === 'create-pvc' && (
                                     <>
-                                      <div className="p-3 w-full">
+                                      <div className="w-full">
                                         <VStack gap={6}>
                                           <VStack gap={3}>
                                             <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
@@ -3492,7 +3491,7 @@ export function CreateDeploymentPage() {
                                         </VStack>
                                       </div>
                                       <div className="flex gap-2 items-start py-3 w-full">
-                                        <VStack gap={2} className="w-[560px]">
+                                        <VStack gap={2} className="w-[393px]">
                                           <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
                                             Volume Name{' '}
                                             <span className="text-[var(--color-state-danger)]">
@@ -3508,18 +3507,18 @@ export function CreateDeploymentPage() {
                                             fullWidth
                                           />
                                         </VStack>
-                                        <VStack gap={2}>
-                                          <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                            Read Only
-                                          </span>
-                                          <Checkbox
-                                            checked={(volume as CreatePVCVolume).readOnly}
-                                            onChange={(e) =>
-                                              updateVolume(index, { readOnly: e.target.checked })
-                                            }
-                                          />
-                                        </VStack>
                                       </div>
+                                      <HStack gap={2} align="center">
+                                        <Checkbox
+                                          checked={(volume as CreatePVCVolume).readOnly}
+                                          onChange={(e) =>
+                                            updateVolume(index, { readOnly: e.target.checked })
+                                          }
+                                        />
+                                        <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                                          Read Only
+                                        </span>
+                                      </HStack>
                                     </>
                                   )}
                                 </VStack>
@@ -3546,7 +3545,7 @@ export function CreateDeploymentPage() {
                       <SectionCard>
                         <SectionCard.Header title="Volume Claim Templates" />
                         <SectionCard.Content>
-                          <div className="border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                          <div className="w-full">
                             <VStack gap={3}>
                               {volumeClaimTemplates.map((template, index) => (
                                 <div
@@ -3672,14 +3671,14 @@ export function CreateDeploymentPage() {
                                       </VStack>
                                     )}
 
-                                    <VStack gap={1}>
-                                      <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                    <VStack gap={1.5}>
+                                      <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-[21px]">
                                         Access Modes{' '}
                                         <span className="text-[var(--color-state-danger)]">*</span>
                                       </span>
-                                      <VStack gap={1}>
+                                      <VStack gap={1.5}>
                                         <Checkbox
-                                          label="ReadWriteOnce"
+                                          label="Single Node Read-Write"
                                           checked={template.accessModes.readWriteOnce}
                                           onChange={(e) =>
                                             updateVolumeClaimTemplate(index, {
@@ -3691,7 +3690,7 @@ export function CreateDeploymentPage() {
                                           }
                                         />
                                         <Checkbox
-                                          label="ReadOnlyMany"
+                                          label="Many Nodes Read-Only"
                                           checked={template.accessModes.readOnlyMany}
                                           onChange={(e) =>
                                             updateVolumeClaimTemplate(index, {
@@ -3703,7 +3702,7 @@ export function CreateDeploymentPage() {
                                           }
                                         />
                                         <Checkbox
-                                          label="ReadWriteMany"
+                                          label="Many Nodes Read-Write"
                                           checked={template.accessModes.readWriteMany}
                                           onChange={(e) =>
                                             updateVolumeClaimTemplate(index, {
