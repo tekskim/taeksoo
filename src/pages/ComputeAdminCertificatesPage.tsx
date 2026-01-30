@@ -312,9 +312,7 @@ export function ComputeAdminCertificatesPage() {
           >
             {row.name}
           </Link>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-            ID : {row.id}
-          </span>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
         </div>
       ),
     },
@@ -330,16 +328,14 @@ export function ComputeAdminCertificatesPage() {
         ) : (
           <div className="flex flex-col gap-0.5">
             <div className="flex items-center gap-1">
-              <span className="text-[length:var(--font-size-12)] text-[var(--color-text-default)]">
-                {row.listener}
-              </span>
+              <span className="text-body-md text-[var(--color-text-default)]">{row.listener}</span>
               {row.listenerCount > 0 && (
-                <span className="text-[length:var(--font-size-12)] text-[var(--color-text-subtle)]">
+                <span className="text-body-md text-[var(--color-text-subtle)]">
                   (+{row.listenerCount})
                 </span>
               )}
             </div>
-            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+            <span className="text-body-sm text-[var(--color-text-subtle)]">
               ID : {row.listenerId}
             </span>
           </div>
@@ -437,9 +433,7 @@ export function ComputeAdminCertificatesPage() {
           <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
             <VStack gap={3}>
               <div className="flex justify-between items-center h-8 w-full">
-                <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
-                  Certificates
-                </h1>
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Certificates</h1>
                 <Button variant="primary" size="md">
                   Register certificate
                 </Button>

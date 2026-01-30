@@ -47,15 +47,13 @@ function QuotaProgressBar({ label, used, total }: QuotaProgressBarProps) {
   return (
     <VStack gap={2} className="w-full">
       <HStack className="w-full justify-between items-center">
-        <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
-          {label}
-        </span>
+        <span className="text-label-lg text-[var(--color-text-default)] leading-5">{label}</span>
         <HStack gap={0} className="items-center">
-          <span className="text-[12px] text-[var(--color-text-default)] leading-4">{used}/</span>
+          <span className="text-body-md text-[var(--color-text-default)] leading-4">{used}/</span>
           {isUnlimited ? (
             <IconInfinity size={16} className="text-[var(--color-text-default)]" stroke={1} />
           ) : (
-            <span className="text-[12px] text-[var(--color-text-default)] leading-4">{total}</span>
+            <span className="text-body-md text-[var(--color-text-default)] leading-4">{total}</span>
           )}
         </HStack>
       </HStack>
@@ -168,10 +166,10 @@ export function ExtendVolumeDrawer({
         <VStack gap={3}>
           {/* Header */}
           <VStack gap={2}>
-            <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
               Extend Volume
             </h2>
-            <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
               Increase the size of this volume to expand its storage capacity. The volume size can
               only be increased and cannot be reduced once extended.
             </p>
@@ -179,8 +177,8 @@ export function ExtendVolumeDrawer({
 
           {/* Volume Info Box */}
           <div className="w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg">
-            <p className="text-[11px] font-medium text-[var(--color-text-subtle)] mb-1.5">Volume</p>
-            <p className="text-[12px] text-[var(--color-text-default)]">
+            <p className="text-label-sm text-[var(--color-text-subtle)] mb-1.5">Volume</p>
+            <p className="text-body-md text-[var(--color-text-default)]">
               {volume ? `${volume.name} (${volume.size}GiB)` : '-'}
             </p>
           </div>
@@ -189,10 +187,10 @@ export function ExtendVolumeDrawer({
         {/* Capacity Slider */}
         <VStack gap={5} className="w-full">
           <HStack className="w-full justify-between items-center">
-            <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+            <label className="text-label-lg text-[var(--color-text-default)] leading-5">
               Capacity (GiB)
             </label>
-            <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+            <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
               {minCapacity} - {maxCapacity} GiB
             </span>
           </HStack>

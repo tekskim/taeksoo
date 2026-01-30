@@ -150,14 +150,12 @@ export function EditPoolDrawer({ isOpen, onClose, pool, onSubmit }: EditPoolDraw
       <VStack gap={6} className="pb-6">
         {/* Header */}
         <VStack gap={2}>
-          <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
-            Edit Pool
-          </h2>
+          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">Edit Pool</h2>
         </VStack>
 
         {/* Pool Name Input */}
         <VStack gap={2} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             Pool name
           </label>
           <Input
@@ -166,14 +164,14 @@ export function EditPoolDrawer({ isOpen, onClose, pool, onSubmit }: EditPoolDraw
             placeholder="e.g. pool-http"
             fullWidth
           />
-          <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+          <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
             Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
           </p>
         </VStack>
 
         {/* Description Input */}
         <VStack gap={2} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             Description (optional)
           </label>
           <Input
@@ -186,7 +184,7 @@ export function EditPoolDrawer({ isOpen, onClose, pool, onSubmit }: EditPoolDraw
 
         {/* Algorithm Select */}
         <VStack gap={2} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             Algorithm
           </label>
           <Select
@@ -195,18 +193,18 @@ export function EditPoolDrawer({ isOpen, onClose, pool, onSubmit }: EditPoolDraw
             options={algorithmOptions}
             fullWidth
           />
-          <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+          <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
             {algorithmDescriptions[algorithm]}
           </p>
         </VStack>
 
         {/* Protocol (Read-only) */}
         <VStack gap={2} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             Protocol
           </label>
           <div className="w-full px-[10px] py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-md">
-            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+            <span className="text-body-md text-[var(--color-text-default)] leading-4">
               {pool.protocol}
             </span>
           </div>
@@ -217,7 +215,7 @@ export function EditPoolDrawer({ isOpen, onClose, pool, onSubmit }: EditPoolDraw
           <button
             type="button"
             onClick={() => setIsSessionPersistenceExpanded(!isSessionPersistenceExpanded)}
-            className="flex items-center gap-1.5 text-[14px] font-medium text-[var(--color-text-default)] leading-5"
+            className="flex items-center gap-1.5 text-label-lg text-[var(--color-text-default)] leading-5"
           >
             {isSessionPersistenceExpanded ? (
               <IconChevronDown size={12} stroke={1} />
@@ -244,7 +242,7 @@ export function EditPoolDrawer({ isOpen, onClose, pool, onSubmit }: EditPoolDraw
                     placeholder="Input Cookie Name"
                     fullWidth
                   />
-                  <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+                  <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
                     Allowed: 1–64 characters; letters, numbers, "-", "_", "."; No spaces
                   </p>
                 </>
@@ -255,12 +253,12 @@ export function EditPoolDrawer({ isOpen, onClose, pool, onSubmit }: EditPoolDraw
 
         {/* Backend TLS */}
         <VStack gap={2} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             Backend TLS
           </label>
           <HStack gap={2} className="items-center">
             <Toggle checked={tlsEnabled} onChange={(e) => setTlsEnabled(e.target.checked)} />
-            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+            <span className="text-body-md text-[var(--color-text-default)] leading-4">
               {tlsEnabled ? 'On' : 'Off'}
             </span>
           </HStack>
@@ -274,7 +272,7 @@ export function EditPoolDrawer({ isOpen, onClose, pool, onSubmit }: EditPoolDraw
                 rows={3}
                 fullWidth
               />
-              <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+              <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
                 Use a colon-separated list of cipher names (e.g., CIPHER1:CIPHER2). Spaces and
                 special characters are not allowed.
               </p>
@@ -284,12 +282,12 @@ export function EditPoolDrawer({ isOpen, onClose, pool, onSubmit }: EditPoolDraw
 
         {/* Admin State */}
         <VStack gap={3} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             Admin State
           </label>
           <HStack gap={2} className="items-center">
             <Toggle checked={adminStateUp} onChange={(e) => setAdminStateUp(e.target.checked)} />
-            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+            <span className="text-body-md text-[var(--color-text-default)] leading-4">
               {adminStateUp ? 'Up' : 'Down'}
             </span>
           </HStack>

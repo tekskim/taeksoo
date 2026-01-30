@@ -53,19 +53,19 @@ function ModelCard({
       <HStack justify="between" align="center">
         <HStack gap={2} align="center">
           <IconCube size={18} className="text-[var(--color-text-muted)]" stroke={1.5} />
-          <span className="text-[12px] text-[var(--color-text-muted)]">
+          <span className="text-body-md text-[var(--color-text-muted)]">
             {type === 'base' ? 'Base Model' : 'Fine-tuned Model'}
           </span>
         </HStack>
-        <span className={`px-2 py-0.5 text-[11px] font-medium rounded ${statusColors[status]}`}>
+        <span className={`px-2 py-0.5 text-label-sm rounded ${statusColors[status]}`}>
           {statusLabels[status]}
         </span>
       </HStack>
 
       {/* Model Info */}
       <VStack gap={1}>
-        <span className="text-[16px] font-semibold text-[var(--color-text-default)]">{name}</span>
-        <span className="text-[13px] text-[var(--color-text-subtle)] line-clamp-2">
+        <span className="text-heading-h5 text-[var(--color-text-default)]">{name}</span>
+        <span className="text-body-md text-[var(--color-text-subtle)] line-clamp-2">
           {description}
         </span>
       </VStack>
@@ -235,10 +235,8 @@ export function ModelsPage() {
               {/* Header */}
               <HStack justify="between" align="start">
                 <VStack gap={1}>
-                  <h1 className="text-[24px] font-semibold text-[var(--color-text-default)]">
-                    Models
-                  </h1>
-                  <p className="text-[14px] text-[var(--color-text-subtle)]">
+                  <h1 className="text-heading-h3 text-[var(--color-text-default)]">Models</h1>
+                  <p className="text-body-lg text-[var(--color-text-subtle)]">
                     Manage and deploy base and fine-tuned models.
                   </p>
                 </VStack>
@@ -259,7 +257,7 @@ export function ModelsPage() {
                   placeholder="Search by model name..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg text-[14px] text-[var(--color-text-default)] placeholder:text-[var(--color-text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--color-action-primary)] focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-2.5 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg text-body-lg text-[var(--color-text-default)] placeholder:text-[var(--color-text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--color-action-primary)] focus:border-transparent"
                 />
               </div>
 
@@ -289,10 +287,10 @@ export function ModelsPage() {
                 <div className="bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-subtle)] p-16 text-center">
                   <VStack gap={2} align="center">
                     <IconCube size={48} className="text-[var(--color-text-disabled)]" stroke={1} />
-                    <span className="text-[16px] font-semibold text-[var(--color-text-default)]">
+                    <span className="text-heading-h5 text-[var(--color-text-default)]">
                       No models found
                     </span>
-                    <span className="text-[14px] text-[var(--color-text-subtle)]">
+                    <span className="text-body-lg text-[var(--color-text-subtle)]">
                       {activeTab === 'fine-tuned'
                         ? 'No fine-tuned models available. Train a model to get started.'
                         : 'No models match your search criteria.'}

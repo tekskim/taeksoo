@@ -44,10 +44,8 @@ export function RedeployDaemonSetModal({
       {/* Info Box */}
       <div className="flex flex-col gap-2">
         <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] font-medium leading-4">
-            DaemonSet name
-          </span>
-          <span className="text-[length:var(--font-size-12)] text-[var(--color-text-default)] leading-4">
+          <span className="text-label-sm text-[var(--color-text-subtle)]">DaemonSet name</span>
+          <span className="text-body-md text-[var(--color-text-default)]">
             {daemonSet?.name ?? ''}
           </span>
         </div>
@@ -59,7 +57,7 @@ export function RedeployDaemonSetModal({
             className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
             stroke={1.5}
           />
-          <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+          <p className="text-body-sm text-[var(--color-text-default)] leading-4">
             Redeploying will restart the selected workloads and may cause temporary downtime.
           </p>
         </div>

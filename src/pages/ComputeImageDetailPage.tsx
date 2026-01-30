@@ -376,7 +376,7 @@ function CopyableValue({ value }: CopyableValueProps) {
 
   return (
     <div className="flex items-center gap-2">
-      <span className="text-[12px] leading-4 text-[var(--color-text-default)]">{value}</span>
+      <span className="text-body-md leading-4 text-[var(--color-text-default)]">{value}</span>
       <button
         onClick={handleCopy}
         className="p-1 rounded hover:bg-[var(--color-surface-muted)] transition-colors"

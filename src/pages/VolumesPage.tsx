@@ -443,7 +443,7 @@ export function VolumesPage() {
               {row.attachedTo}
               <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
             </button>
-            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+            <span className="text-body-sm text-[var(--color-text-subtle)]">
               ID : {row.attachedToId}
             </span>
           </div>
@@ -628,9 +628,7 @@ export function VolumesPage() {
             <VStack gap={3}>
               {/* Page Header */}
               <div className="flex items-center justify-between h-8">
-                <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
-                  Volumes
-                </h1>
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Volumes</h1>
                 <Button size="md" as={Link} to="/compute/volumes/create">
                   Create volume
                 </Button>

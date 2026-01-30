@@ -116,13 +116,13 @@ export function AddL7PolicyDrawer({
     >
       <VStack gap={6}>
         {/* Header */}
-        <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+        <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
           Add L7 Policy
         </h2>
 
         {/* L7 Policy Name Input */}
         <VStack gap={2} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             L7 Policy Name
           </label>
           <Input
@@ -133,11 +133,11 @@ export function AddL7PolicyDrawer({
             error={hasAttemptedSubmit && !policyName.trim()}
           />
           {hasAttemptedSubmit && !policyName.trim() ? (
-            <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+            <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
               Policy name is required
             </p>
           ) : (
-            <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
               Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
             </p>
           )}
@@ -145,7 +145,7 @@ export function AddL7PolicyDrawer({
 
         {/* Description Input */}
         <VStack gap={2} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             Description (optional)
           </label>
           <Input
@@ -158,9 +158,7 @@ export function AddL7PolicyDrawer({
 
         {/* Action Select */}
         <VStack gap={2} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
-            Action
-          </label>
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">Action</label>
           <Select
             value={action}
             onChange={(value) => setAction(value)}
@@ -180,7 +178,7 @@ export function AddL7PolicyDrawer({
                 error={hasAttemptedSubmit && !targetPool}
               />
               {hasAttemptedSubmit && !targetPool && (
-                <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+                <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
                   Target pool is required
                 </p>
               )}
@@ -191,10 +189,10 @@ export function AddL7PolicyDrawer({
         {/* Position Input */}
         <VStack gap={2} className="w-full">
           <HStack gap={2} className="items-center">
-            <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+            <label className="text-label-lg text-[var(--color-text-default)] leading-5">
               Position
             </label>
-            <span className="text-[12px] text-[var(--color-text-subtle)]">(Optional)</span>
+            <span className="text-body-md text-[var(--color-text-subtle)]">(Optional)</span>
           </HStack>
           <Input
             type="number"
@@ -207,12 +205,12 @@ export function AddL7PolicyDrawer({
 
         {/* Admin State Toggle */}
         <VStack gap={3} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             Admin State
           </label>
           <HStack gap={2} className="items-center">
             <Toggle checked={adminStateUp} onChange={(e) => setAdminStateUp(e.target.checked)} />
-            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+            <span className="text-body-md text-[var(--color-text-default)] leading-4">
               {adminStateUp ? 'Up' : 'Down'}
             </span>
           </HStack>

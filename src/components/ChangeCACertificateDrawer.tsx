@@ -142,17 +142,17 @@ export function ChangeCACertificateDrawer({
       <VStack gap={6} className="h-full">
         {/* Header Section */}
         <VStack gap={3}>
-          <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
             Change CA Certificate
           </h2>
 
           {/* Current Certificate Info Box */}
           <div className="w-full bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
             <VStack gap={1.5}>
-              <span className="text-[11px] font-medium text-[var(--color-text-subtle)] leading-4">
+              <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
                 Current CA Certificate
               </span>
-              <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              <span className="text-body-md text-[var(--color-text-default)] leading-4">
                 {currentCertificate.name} (expired on {currentCertificate.expiredOn})
               </span>
             </VStack>
@@ -161,7 +161,7 @@ export function ChangeCACertificateDrawer({
 
         {/* New Certificate Section */}
         <VStack gap={3} className="w-full pb-5">
-          <h3 className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">
             New CA Certificate
           </h3>
 
@@ -249,7 +249,7 @@ export function ChangeCACertificateDrawer({
                       className="shrink-0 text-[var(--color-action-primary)]"
                     />
                   </HStack>
-                  <span className="text-[11px] text-[var(--color-text-subtle)] truncate">
+                  <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
                     ID : {cert.id}
                   </span>
                 </div>

@@ -330,7 +330,7 @@ export function RoutersPage() {
               {row.externalNetwork}
               <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
             </Link>
-            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+            <span className="text-body-sm text-[var(--color-text-subtle)]">
               ID : {row.externalNetworkId}
             </span>
           </div>
@@ -444,9 +444,7 @@ export function RoutersPage() {
             <VStack gap={3}>
               {/* Page Header */}
               <div className="flex justify-between items-center h-8 w-full">
-                <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
-                  Routers
-                </h1>
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Routers</h1>
                 <Button variant="primary" size="md">
                   Create Router
                 </Button>

@@ -182,35 +182,35 @@ function ConnectionCard({
     switch (status) {
       case 'available':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-[var(--color-state-success-bg)] text-[var(--color-state-success)] border border-[var(--color-state-success)]">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-label-sm bg-[var(--color-state-success-bg)] text-[var(--color-state-success)] border border-[var(--color-state-success)]">
             <IconCircleCheck size={12} />
             Available
           </span>
         );
       case 'ready':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-[var(--color-state-success-bg)] text-[var(--color-state-success)] border border-[var(--color-state-success)]">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-label-sm bg-[var(--color-state-success-bg)] text-[var(--color-state-success)] border border-[var(--color-state-success)]">
             <IconCircleCheck size={12} />
             Ready
           </span>
         );
       case 'error':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-[var(--color-state-danger-bg)] text-[var(--color-state-danger)] border border-[var(--color-state-danger)]">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-label-sm bg-[var(--color-state-danger-bg)] text-[var(--color-state-danger)] border border-[var(--color-state-danger)]">
             <IconAlertCircle size={12} />
             Error
           </span>
         );
       case 'setup-required':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-[var(--color-surface-subtle)] text-[var(--color-text-muted)] border border-[var(--color-border-default)]">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-label-sm bg-[var(--color-surface-subtle)] text-[var(--color-text-muted)] border border-[var(--color-border-default)]">
             <IconCircleCheck size={12} />
             Available
           </span>
         );
       default:
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-[var(--color-surface-subtle)] text-[var(--color-text-muted)] border border-[var(--color-border-default)]">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-label-sm bg-[var(--color-surface-subtle)] text-[var(--color-text-muted)] border border-[var(--color-border-default)]">
             Unavailable
           </span>
         );
@@ -226,12 +226,12 @@ function ConnectionCard({
           <div className="text-[var(--color-text-muted)] mt-0.5">{icon}</div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-medium text-[14px] text-[var(--color-text-default)]">
+              <span className="font-medium text-body-lg text-[var(--color-text-default)]">
                 {title}
               </span>
               {badge}
             </div>
-            <p className="text-[12px] text-[var(--color-text-subtle)] mt-0.5">{description}</p>
+            <p className="text-body-md text-[var(--color-text-subtle)] mt-0.5">{description}</p>
           </div>
         </div>
         {getStatusBadge()}
@@ -444,7 +444,7 @@ export function WorkloadDetailPage() {
                       {/* Quick Access Section */}
                       <div>
                         <div className="flex items-center gap-2 mb-4">
-                          <h3 className="text-[14px] font-semibold text-[var(--color-text-default)]">
+                          <h3 className="text-body-lg font-semibold text-[var(--color-text-default)]">
                             Quick Access
                           </h3>
                           <Badge variant="default" size="sm">
@@ -484,7 +484,7 @@ export function WorkloadDetailPage() {
                       {/* Advanced Connection Options */}
                       <Disclosure defaultOpen={true}>
                         <Disclosure.Trigger>
-                          <span className="text-[14px] text-[var(--color-text-default)]">
+                          <span className="text-body-lg text-[var(--color-text-default)]">
                             Advanced Connection Options
                           </span>
                         </Disclosure.Trigger>
@@ -613,7 +613,7 @@ export function WorkloadDetailPage() {
                   {/* Logs Tab Panel */}
                   <TabPanel value="logs" className="pt-0">
                     <div className="pt-6">
-                      <div className="bg-[var(--color-surface-subtle)] rounded-lg p-4 font-mono text-[12px] text-[var(--color-text-default)] h-[400px] overflow-auto">
+                      <div className="bg-[var(--color-surface-subtle)] rounded-lg p-4 font-mono text-body-md text-[var(--color-text-default)] h-[400px] overflow-auto">
                         <pre className="whitespace-pre-wrap">
                           {`[2025-01-08 14:30:00] Starting container...
 [2025-01-08 14:30:02] Pulling image presidio-pii-deid:latest
@@ -632,7 +632,7 @@ export function WorkloadDetailPage() {
                   {/* Terminal Tab Panel */}
                   <TabPanel value="terminal" className="pt-0">
                     <div className="pt-6">
-                      <div className="bg-[#1e1e1e] rounded-lg p-4 font-mono text-[12px] text-[#d4d4d4] h-[400px] overflow-auto">
+                      <div className="bg-[#1e1e1e] rounded-lg p-4 font-mono text-body-md text-[#d4d4d4] h-[400px] overflow-auto">
                         <div className="flex items-center gap-2 mb-2">
                           <span className="text-[#4ec9b0]">root</span>
                           <span className="text-[#d4d4d4]">@</span>

@@ -98,11 +98,9 @@ function MemberCard({ member, onPortChange, onWeightChange, onRemove }: MemberCa
     <div className="w-[200px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md px-4 pt-3 pb-4 flex flex-col gap-3">
       {/* IP Address */}
       <VStack gap={2} className="w-full">
-        <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-          IP Address
-        </span>
+        <span className="text-label-md text-[var(--color-text-default)] leading-4">IP Address</span>
         <div className="w-full bg-[var(--color-surface-muted)] rounded-md px-2.5 py-2">
-          <span className="text-[12px] text-[var(--color-text-muted)] leading-4">
+          <span className="text-body-md text-[var(--color-text-muted)] leading-4">
             {member.ipAddress}
           </span>
         </div>
@@ -110,9 +108,7 @@ function MemberCard({ member, onPortChange, onWeightChange, onRemove }: MemberCa
 
       {/* Port */}
       <VStack gap={2} className="w-full">
-        <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-          Port
-        </span>
+        <span className="text-label-md text-[var(--color-text-default)] leading-4">Port</span>
         <NumberInput
           value={member.port}
           onChange={(value) => onPortChange(value ?? 80)}
@@ -124,9 +120,7 @@ function MemberCard({ member, onPortChange, onWeightChange, onRemove }: MemberCa
 
       {/* Weight */}
       <VStack gap={2} className="w-full">
-        <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-          Weight
-        </span>
+        <span className="text-label-md text-[var(--color-text-default)] leading-4">Weight</span>
         <NumberInput
           value={member.weight}
           onChange={(value) => onWeightChange(value ?? 1)}
@@ -258,15 +252,15 @@ export function ManageMembersDrawer({
       <VStack gap={6} className="h-full">
         {/* Pool Info */}
         <div className="w-full bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-          <p className="text-[11px] font-medium text-[var(--color-text-subtle)] leading-4 mb-1.5">
+          <p className="text-label-sm text-[var(--color-text-subtle)] leading-4 mb-1.5">
             Pool name
           </p>
-          <p className="text-[12px] text-[var(--color-text-default)] leading-4">{pool.name}</p>
+          <p className="text-body-md text-[var(--color-text-default)] leading-4">{pool.name}</p>
         </div>
 
         {/* Available Instances Section */}
         <VStack gap={3} className="w-full">
-          <h3 className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">
             Available Instances
           </h3>
 
@@ -339,7 +333,7 @@ export function ManageMembersDrawer({
                       </span>
                       <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
                     </HStack>
-                    <span className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+                    <span className="text-body-sm text-[var(--color-text-subtle)] leading-4">
                       ID : {item.id}
                     </span>
                   </div>
@@ -372,7 +366,7 @@ export function ManageMembersDrawer({
 
         {/* Allocated Members Section */}
         <VStack gap={3} className="w-full pb-5">
-          <h3 className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">
             Allocated Members
           </h3>
 
@@ -392,7 +386,7 @@ export function ManageMembersDrawer({
                   >
                     {/* IP Address Input */}
                     <VStack gap={2} className="w-full">
-                      <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                      <span className="text-label-md text-[var(--color-text-default)] leading-4">
                         IP Address
                       </span>
                       <Input
@@ -405,7 +399,7 @@ export function ManageMembersDrawer({
 
                     {/* Port */}
                     <VStack gap={2} className="w-full">
-                      <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                      <span className="text-label-md text-[var(--color-text-default)] leading-4">
                         Port
                       </span>
                       <NumberInput
@@ -419,7 +413,7 @@ export function ManageMembersDrawer({
 
                     {/* Weight */}
                     <VStack gap={2} className="w-full">
-                      <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                      <span className="text-label-md text-[var(--color-text-default)] leading-4">
                         Weight
                       </span>
                       <NumberInput

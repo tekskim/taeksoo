@@ -363,12 +363,12 @@ export function ComputeAdminVolumeBackupDetailPage() {
                           <div className="flex flex-col gap-3 w-full">
                             <div className="h-px w-full bg-[var(--color-border-subtle)]" />
                             <div className="flex flex-col gap-1.5">
-                              <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)]">
+                              <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
                                 Volume
                               </span>
                               <Link
                                 to={`/compute-admin/volumes/${backup.sourceVolumeId}`}
-                                className="inline-flex items-center gap-1.5 text-[12px] font-medium leading-4 text-[var(--color-action-primary)] hover:underline"
+                                className="inline-flex items-center gap-1.5 text-label-md leading-4 text-[var(--color-action-primary)] hover:underline"
                               >
                                 {backup.sourceVolume}
                               </Link>

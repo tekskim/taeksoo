@@ -82,20 +82,20 @@ function DatasetCard({
         <HStack justify="between" align="start">
           <VStack gap={2} align="start" className="flex-1 min-w-0">
             <HStack gap={3} align="center" className="flex-wrap">
-              <h3 className="text-[16px] font-semibold text-[var(--color-action-primary)] truncate">
+              <h3 className="text-heading-h5 text-[var(--color-action-primary)] truncate">
                 {name}
               </h3>
               <Badge variant={statusColors[status]} size="sm">
                 {statusLabels[status]}
               </Badge>
-              <span className="text-[12px] text-[var(--color-text-muted)]">{source}</span>
+              <span className="text-body-md text-[var(--color-text-muted)]">{source}</span>
               <HStack gap={1} align="center">
                 <IconFile size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
-                <span className="text-[12px] text-[var(--color-text-muted)]">{size}</span>
+                <span className="text-body-md text-[var(--color-text-muted)]">{size}</span>
               </HStack>
               <HStack gap={1} align="center">
                 <IconHash size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
-                <span className="text-[12px] text-[var(--color-text-muted)]">{rows}</span>
+                <span className="text-body-md text-[var(--color-text-muted)]">{rows}</span>
               </HStack>
             </HStack>
           </VStack>
@@ -120,27 +120,27 @@ function DatasetCard({
         </HStack>
 
         {/* Description */}
-        <p className="text-[13px] text-[var(--color-text-muted)] leading-relaxed">{description}</p>
+        <p className="text-body-md text-[var(--color-text-muted)] leading-relaxed">{description}</p>
 
         {/* Meta Info */}
         <HStack gap={4} align="center" className="flex-wrap">
           {license && (
             <HStack gap={1} align="center">
               <IconTag size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
-              <span className="text-[12px] text-[var(--color-text-muted)]">{license}</span>
+              <span className="text-body-md text-[var(--color-text-muted)]">{license}</span>
             </HStack>
           )}
           {language && (
             <HStack gap={1} align="center">
               <IconWorld size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
-              <span className="text-[12px] text-[var(--color-text-muted)]">{language}</span>
+              <span className="text-body-md text-[var(--color-text-muted)]">{language}</span>
             </HStack>
           )}
           <HStack gap={1} className="flex-wrap">
             {tags.map((tag) => (
               <span
                 key={tag}
-                className="px-2 py-0.5 bg-[var(--color-action-primary)]/10 text-[var(--color-action-primary)] text-[11px] rounded"
+                className="px-2 py-0.5 bg-[var(--color-action-primary)]/10 text-[var(--color-action-primary)] text-body-sm rounded"
               >
                 {tag}
               </span>
@@ -148,7 +148,7 @@ function DatasetCard({
           </HStack>
           <HStack gap={1} align="center">
             <IconDownload size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
-            <span className="text-[12px] text-[var(--color-text-muted)]">{downloads}</span>
+            <span className="text-body-md text-[var(--color-text-muted)]">{downloads}</span>
           </HStack>
         </HStack>
 
@@ -179,8 +179,8 @@ function EmptyState({ icon, title, description }: EmptyStateProps) {
   return (
     <div className="flex flex-col items-center justify-center py-20 text-center">
       <div className="text-[var(--color-text-subtle)] mb-4">{icon}</div>
-      <h3 className="text-[16px] font-medium text-[var(--color-text-default)] mb-2">{title}</h3>
-      <p className="text-[13px] text-[var(--color-text-muted)] max-w-md">{description}</p>
+      <h3 className="text-heading-h5 text-[var(--color-text-default)] mb-2">{title}</h3>
+      <p className="text-body-md text-[var(--color-text-muted)] max-w-md">{description}</p>
     </div>
   );
 }
@@ -338,10 +338,8 @@ export function DatasetsPage() {
               {/* Header */}
               <HStack justify="between" align="start">
                 <VStack gap={1} align="start">
-                  <h1 className="text-[24px] font-semibold text-[var(--color-text-default)]">
-                    Datasets
-                  </h1>
-                  <p className="text-[14px] text-[var(--color-text-subtle)]">
+                  <h1 className="text-heading-h3 text-[var(--color-text-default)]">Datasets</h1>
+                  <p className="text-body-lg text-[var(--color-text-subtle)]">
                     High-quality datasets for training AI models
                   </p>
                 </VStack>
@@ -376,7 +374,7 @@ export function DatasetsPage() {
                     placeholder="Search datasets..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full h-10 pl-10 pr-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md text-[13px] text-[var(--color-text-default)] placeholder:text-[var(--color-text-subtle)] focus:outline-none focus:ring-2 focus:ring-[var(--color-border-focus)]"
+                    className="w-full h-10 pl-10 pr-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md text-body-md text-[var(--color-text-default)] placeholder:text-[var(--color-text-subtle)] focus:outline-none focus:ring-2 focus:ring-[var(--color-border-focus)]"
                   />
                 </div>
                 <Button

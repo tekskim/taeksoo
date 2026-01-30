@@ -283,9 +283,7 @@ export function ComputeAdminLoadBalancerDetailPage() {
           >
             {row.name}
           </Link>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-            ID : {row.id}
-          </span>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
         </div>
       ),
     },
@@ -372,9 +370,7 @@ export function ComputeAdminLoadBalancerDetailPage() {
           >
             {row.name}
           </Link>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-            ID : {row.id}
-          </span>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
         </div>
       ),
     },
@@ -407,7 +403,7 @@ export function ComputeAdminLoadBalancerDetailPage() {
           >
             {row.listener.name}
           </Link>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+          <span className="text-body-sm text-[var(--color-text-subtle)]">
             ID : {row.listener.id}
           </span>
         </div>
@@ -582,18 +578,18 @@ export function ComputeAdminLoadBalancerDetailPage() {
                             <div className="flex flex-col gap-3 w-full">
                               <div className="h-px w-full bg-[var(--color-border-subtle)]" />
                               <div className="flex flex-col gap-1.5">
-                                <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)]">
+                                <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
                                   Owned network
                                 </span>
                                 {loadBalancer.ownedNetwork ? (
                                   <Link
                                     to={`/compute-admin/networks/${loadBalancer.ownedNetwork.id}`}
-                                    className="flex items-center gap-1.5 text-[12px] font-medium leading-4 text-[var(--color-action-primary)] hover:underline"
+                                    className="flex items-center gap-1.5 text-label-md leading-4 text-[var(--color-action-primary)] hover:underline"
                                   >
                                     {loadBalancer.ownedNetwork.name}
                                   </Link>
                                 ) : (
-                                  <span className="text-[12px] leading-4 text-[var(--color-text-default)]">
+                                  <span className="text-body-md leading-4 text-[var(--color-text-default)]">
                                     -
                                   </span>
                                 )}
@@ -602,18 +598,18 @@ export function ComputeAdminLoadBalancerDetailPage() {
                             <div className="flex flex-col gap-3 w-full">
                               <div className="h-px w-full bg-[var(--color-border-subtle)]" />
                               <div className="flex flex-col gap-1.5">
-                                <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)]">
+                                <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
                                   Subnet
                                 </span>
                                 {loadBalancer.subnet ? (
                                   <Link
                                     to={`/compute-admin/subnets/${loadBalancer.subnet.id}`}
-                                    className="flex items-center gap-1.5 text-[12px] font-medium leading-4 text-[var(--color-action-primary)] hover:underline"
+                                    className="flex items-center gap-1.5 text-label-md leading-4 text-[var(--color-action-primary)] hover:underline"
                                   >
                                     {loadBalancer.subnet.name}
                                   </Link>
                                 ) : (
-                                  <span className="text-[12px] leading-4 text-[var(--color-text-default)]">
+                                  <span className="text-body-md leading-4 text-[var(--color-text-default)]">
                                     -
                                   </span>
                                 )}
@@ -622,18 +618,18 @@ export function ComputeAdminLoadBalancerDetailPage() {
                             <div className="flex flex-col gap-3 w-full">
                               <div className="h-px w-full bg-[var(--color-border-subtle)]" />
                               <div className="flex flex-col gap-1.5">
-                                <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)]">
+                                <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
                                   Floating IP
                                 </span>
                                 {loadBalancer.floatingIp ? (
                                   <Link
                                     to={`/compute-admin/floating-ips/${loadBalancer.floatingIp.id}`}
-                                    className="flex items-center gap-1.5 text-[12px] font-medium leading-4 text-[var(--color-action-primary)] hover:underline"
+                                    className="flex items-center gap-1.5 text-label-md leading-4 text-[var(--color-action-primary)] hover:underline"
                                   >
                                     {loadBalancer.floatingIp.name}
                                   </Link>
                                 ) : (
-                                  <span className="text-[12px] leading-4 text-[var(--color-text-default)]">
+                                  <span className="text-body-md leading-4 text-[var(--color-text-default)]">
                                     -
                                   </span>
                                 )}
@@ -649,7 +645,7 @@ export function ComputeAdminLoadBalancerDetailPage() {
                       <VStack gap={4} className="pt-4">
                         {/* Header */}
                         <div className="flex items-center justify-between">
-                          <h3 className="text-[16px] font-semibold text-[var(--color-text-default)]">
+                          <h3 className="text-heading-h5 text-[var(--color-text-default)]">
                             Listener
                           </h3>
                         </div>
@@ -710,7 +706,7 @@ export function ComputeAdminLoadBalancerDetailPage() {
                       <VStack gap={4} className="pt-4">
                         {/* Header */}
                         <div className="flex items-center justify-between">
-                          <h3 className="text-[16px] font-semibold text-[var(--color-text-default)]">
+                          <h3 className="text-heading-h5 text-[var(--color-text-default)]">
                             Pools
                           </h3>
                         </div>

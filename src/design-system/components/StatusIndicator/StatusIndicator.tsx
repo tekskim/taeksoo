@@ -275,7 +275,7 @@ export const StatusIndicator = memo(function StatusIndicator({
       'rounded-md',
       'px-2 py-0.5',
       'text-[var(--status-text)]',
-      'text-[11px]',
+      'text-body-sm',
       'leading-4',
     ].join(' ');
 

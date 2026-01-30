@@ -162,9 +162,7 @@ function RulesTab({ rules }: RulesTabProps) {
 
   return (
     <VStack gap={3}>
-      <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
-        Rules
-      </h3>
+      <h3 className="text-heading-h5 text-[var(--color-text-default)]">Rules</h3>
       <Pagination
         currentPage={currentPage}
         totalPages={1}
@@ -349,7 +347,7 @@ export function ContainerIngressDetailPage() {
                 <HStack gap={3} className="w-full mt-3">
                   <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
                     <VStack gap={2}>
-                      <span className="text-[11px] font-medium text-[var(--color-text-subtle)] leading-4">
+                      <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
                         Labels ({Object.keys(ingress.labels).length})
                       </span>
                       <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
@@ -359,7 +357,7 @@ export function ContainerIngressDetailPage() {
                             <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
                           ))}
                         {Object.keys(ingress.labels).length > 1 && (
-                          <span className="text-[11px] text-[var(--color-text-default)] cursor-pointer hover:underline">
+                          <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
                             (+{Object.keys(ingress.labels).length - 1})
                           </span>
                         )}
@@ -368,7 +366,7 @@ export function ContainerIngressDetailPage() {
                   </div>
                   <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
                     <VStack gap={2}>
-                      <span className="text-[11px] font-medium text-[var(--color-text-subtle)] leading-4">
+                      <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
                         Annotations ({Object.keys(ingress.annotations).length})
                       </span>
                       <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
@@ -378,7 +376,7 @@ export function ContainerIngressDetailPage() {
                             <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
                           ))}
                         {Object.keys(ingress.annotations).length > 1 && (
-                          <span className="text-[11px] text-[var(--color-text-default)] cursor-pointer hover:underline">
+                          <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
                             (+{Object.keys(ingress.annotations).length - 1})
                           </span>
                         )}

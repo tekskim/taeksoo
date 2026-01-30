@@ -322,10 +322,8 @@ function StatCard({ label, value, color }: StatCardProps) {
   return (
     <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
       <VStack gap={1.5}>
-        <span className={`text-[11px] font-medium ${colorStyles[color].text}`}>{label}</span>
-        <span className={`text-[24px] font-semibold leading-[36px] ${colorStyles[color].text}`}>
-          {value}
-        </span>
+        <span className={`text-label-sm ${colorStyles[color].text}`}>{label}</span>
+        <span className={`text-heading-h3 ${colorStyles[color].text}`}>{value}</span>
       </VStack>
     </div>
   );
@@ -391,9 +389,7 @@ function ResourcesTab({ resources }: ResourcesTabProps) {
 
   return (
     <VStack gap={3}>
-      <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
-        Resources
-      </h3>
+      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">Resources</h3>
       <Pagination
         currentPage={currentPage}
         totalPages={1}
@@ -609,9 +605,7 @@ function WorkloadsTab({ workloads }: WorkloadsTabProps) {
 
   return (
     <VStack gap={3}>
-      <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
-        Workloads
-      </h3>
+      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">Workloads</h3>
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
@@ -676,7 +670,7 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
 
   return (
     <VStack gap={3}>
-      <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
+      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
         Conditions
       </h3>
       <Pagination
@@ -867,7 +861,7 @@ export function NamespaceDetailPage() {
 
               {/* Resources Section */}
               <VStack gap={3}>
-                <h2 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
+                <h2 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
                   Resources
                 </h2>
 

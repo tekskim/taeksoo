@@ -49,7 +49,7 @@ export function MenuSection({
           onClick={handleTitleClick}
           className="flex items-center gap-1 w-[175px] group focus:outline-none px-[var(--menu-section-padding-x)] py-[var(--menu-section-padding-y)]"
         >
-          <span className="text-[length:var(--font-size-11)] font-medium text-[var(--color-text-subtle)] group-hover:text-[var(--color-text-muted)] transition-colors duration-[var(--duration-fast)]">
+          <span className="text-label-sm text-[var(--color-text-subtle)] group-hover:text-[var(--color-text-muted)] transition-colors duration-[var(--duration-fast)]">
             {title}
           </span>
           {isOpen ? (
@@ -59,7 +59,7 @@ export function MenuSection({
           )}
         </button>
       ) : (
-        <span className="w-[175px] text-[length:var(--font-size-11)] font-medium text-[var(--color-text-subtle)] px-[var(--menu-section-padding-x)] py-[var(--menu-section-padding-y)]">
+        <span className="w-[175px] text-label-sm text-[var(--color-text-subtle)] px-[var(--menu-section-padding-x)] py-[var(--menu-section-padding-y)]">
           {title}
         </span>
       )}

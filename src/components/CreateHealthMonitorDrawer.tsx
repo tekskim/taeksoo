@@ -130,14 +130,14 @@ export function CreateHealthMonitorDrawer({
       <VStack gap={6} className="pb-6">
         {/* Header */}
         <VStack gap={2}>
-          <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
             Create Health Monitor
           </h2>
         </VStack>
 
         {/* Pool Name (Read-only) */}
         <VStack gap={2} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             Pool name
           </label>
           <Input value={pool.name} readOnly disabled fullWidth />
@@ -146,10 +146,10 @@ export function CreateHealthMonitorDrawer({
         {/* Health Monitor Name */}
         <VStack gap={2} className="w-full">
           <HStack gap={2} className="items-center">
-            <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+            <label className="text-label-lg text-[var(--color-text-default)] leading-5">
               Health Monitor Name
             </label>
-            <span className="text-[12px] text-[var(--color-text-subtle)]">(Optional)</span>
+            <span className="text-body-md text-[var(--color-text-subtle)]">(Optional)</span>
           </HStack>
           <Input
             value={healthMonitorName}
@@ -157,16 +157,14 @@ export function CreateHealthMonitorDrawer({
             placeholder="e.g. hm-pool-http"
             fullWidth
           />
-          <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+          <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
             Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
           </p>
         </VStack>
 
         {/* Type */}
         <VStack gap={2} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
-            Type
-          </label>
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">Type</label>
           <Select
             value={monitorType}
             onChange={(value) => setMonitorType(value as HealthMonitorType)}
@@ -177,10 +175,10 @@ export function CreateHealthMonitorDrawer({
 
         {/* Interval (sec) */}
         <VStack gap={2} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             Interval (sec)
           </label>
-          <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+          <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
             Time between consecutive health checks.
           </p>
           <Input
@@ -193,11 +191,11 @@ export function CreateHealthMonitorDrawer({
             error={hasAttemptedSubmit && !isIntervalValid}
           />
           {hasAttemptedSubmit && !isIntervalValid ? (
-            <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+            <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
               Interval must be between 1-3600
             </p>
           ) : (
-            <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
               1 ~ 3600; Timeout &lt; Delay
             </p>
           )}
@@ -205,10 +203,10 @@ export function CreateHealthMonitorDrawer({
 
         {/* Timeout (sec) */}
         <VStack gap={2} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             Timeout (sec)
           </label>
-          <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+          <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
             Maximum time to wait for response
           </p>
           <Input
@@ -221,11 +219,11 @@ export function CreateHealthMonitorDrawer({
             error={hasAttemptedSubmit && !isTimeoutValid}
           />
           {hasAttemptedSubmit && !isTimeoutValid ? (
-            <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+            <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
               Timeout must be between 1-3599 and less than Interval
             </p>
           ) : (
-            <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
               1 ~ 3599; Timeout &lt; Delay
             </p>
           )}
@@ -233,10 +231,10 @@ export function CreateHealthMonitorDrawer({
 
         {/* Max Retries */}
         <VStack gap={2} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             Max Retries
           </label>
-          <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+          <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
             Number of failed attempts before marking member OFFLINE.
           </p>
           <Input
@@ -249,22 +247,22 @@ export function CreateHealthMonitorDrawer({
             error={hasAttemptedSubmit && !isMaxRetriesValid}
           />
           {hasAttemptedSubmit && !isMaxRetriesValid ? (
-            <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+            <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
               Max Retries must be between 1-10
             </p>
           ) : (
-            <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">1 ~ 10</p>
+            <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">1 ~ 10</p>
           )}
         </VStack>
 
         {/* Admin State */}
         <VStack gap={3} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             Admin State
           </label>
           <HStack gap={2} className="items-center">
             <Toggle checked={adminStateUp} onChange={(e) => setAdminStateUp(e.target.checked)} />
-            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+            <span className="text-body-md text-[var(--color-text-default)] leading-4">
               {adminStateUp ? 'Up' : 'Down'}
             </span>
           </HStack>

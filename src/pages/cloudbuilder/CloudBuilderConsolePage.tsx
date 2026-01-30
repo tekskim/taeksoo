@@ -78,7 +78,7 @@ function buildTableColumns(
         return (
           <div className="flex flex-col gap-2 w-full">
             <ProgressBar value={safeUsed} max={safeTotal} showValue={false} />
-            <div className="text-[12px] text-[var(--color-text-default)]">
+            <div className="text-body-md text-[var(--color-text-default)]">
               {safeUsed.toFixed(2)} / {safeTotal.toFixed(2)}
             </div>
           </div>
@@ -94,7 +94,7 @@ function buildTableColumns(
         // Only apply for typical state words; fall back to raw text otherwise.
         const isKnown = v === 'Enabled' || v === 'Disabled' || v === 'Up' || v === 'Down';
         if (!isKnown) {
-          return <span className="text-[12px] text-[var(--color-text-default)]">{v}</span>;
+          return <span className="text-body-md text-[var(--color-text-default)]">{v}</span>;
         }
         const isGood = v === 'Enabled' || v === 'Up';
         return (
@@ -105,7 +105,7 @@ function buildTableColumns(
               }`}
               aria-hidden="true"
             />
-            <span className="text-[12px] text-[var(--color-text-default)]">{v}</span>
+            <span className="text-body-md text-[var(--color-text-default)]">{v}</span>
           </div>
         );
       };
@@ -114,9 +114,7 @@ function buildTableColumns(
 
     if (c.kind === 'mono') {
       column.render = (value) => (
-        <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">
-          {value ?? '-'}
-        </span>
+        <span className="text-body-md text-[var(--color-text-default)]">{value ?? '-'}</span>
       );
       return column;
     }
@@ -403,9 +401,7 @@ export function CloudBuilderConsolePage() {
       <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)] w-full">
         <VStack gap={3} className="w-full">
           <div className="flex items-center justify-between h-8">
-            <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
-              {pageTitle}
-            </h1>
+            <h1 className="text-heading-h5 text-[var(--color-text-default)]">{pageTitle}</h1>
             {config.createLabel && (
               <Button leftIcon={<IconPlus size={12} />} onClick={handleCreate}>
                 {config.createLabel}
@@ -534,7 +530,7 @@ export function CloudBuilderConsolePage() {
             {statusModal.nextStatus === 'Disabled' && !!statusAction?.requireDisableReason ? (
               <div className="py-4">
                 <div className="grid grid-cols-12 gap-6 items-start">
-                  <div className="col-span-12 md:col-span-4 text-[14px] text-[var(--color-text-default)]">
+                  <div className="col-span-12 md:col-span-4 text-label-lg text-[var(--color-text-default)]">
                     <span>Reason</span>{' '}
                     <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                   </div>

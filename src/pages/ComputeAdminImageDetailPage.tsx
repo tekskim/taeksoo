@@ -410,7 +410,7 @@ function CopyableValue({ value }: CopyableValueProps) {
 
   return (
     <div className="flex items-center gap-2">
-      <span className="text-[12px] leading-4 text-[var(--color-text-default)]">{value}</span>
+      <span className="text-body-md leading-4 text-[var(--color-text-default)]">{value}</span>
       <button
         onClick={handleCopy}
         className="p-1 rounded hover:bg-[var(--color-surface-muted)] transition-colors"
@@ -601,7 +601,7 @@ export function ComputeAdminImageDetailPage() {
                           <div className="flex flex-col gap-3 w-full">
                             <div className="h-px w-full bg-[var(--color-border-subtle)]" />
                             <div className="flex flex-col gap-1.5">
-                              <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)]">
+                              <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
                                 Filename
                               </span>
                               <CopyableValue value={image.filename} />
@@ -611,7 +611,7 @@ export function ComputeAdminImageDetailPage() {
                           <div className="flex flex-col gap-3 w-full">
                             <div className="h-px w-full bg-[var(--color-border-subtle)]" />
                             <div className="flex flex-col gap-1.5">
-                              <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)]">
+                              <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
                                 Checksum
                               </span>
                               <CopyableValue value={image.checksum} />
@@ -645,7 +645,7 @@ export function ComputeAdminImageDetailPage() {
                       <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 pt-3 pb-4 w-full flex flex-col gap-3">
                         {/* Title */}
                         <div className="h-8 flex items-center">
-                          <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
+                          <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
                             Metadata
                           </span>
                         </div>
@@ -658,10 +658,10 @@ export function ComputeAdminImageDetailPage() {
                               <div className="h-px w-full bg-[var(--color-border-subtle)]" />
                               {/* Row Content */}
                               <div className="flex flex-col gap-1.5">
-                                <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)]">
+                                <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
                                   {key}
                                 </span>
-                                <span className="text-[12px] leading-4 text-[var(--color-text-default)]">
+                                <span className="text-body-md leading-4 text-[var(--color-text-default)]">
                                   {value || '-'}
                                 </span>
                               </div>

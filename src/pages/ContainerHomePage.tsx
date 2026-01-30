@@ -243,10 +243,10 @@ export function ContainerHomePage() {
               <SectionCard className="bg-[var(--color-surface-subtle)]">
                 <SectionCard.Content>
                   <VStack gap={2}>
-                    <h1 className="text-[24px] font-semibold text-[var(--color-text-default)]">
+                    <h1 className="text-heading-h3 text-[var(--color-text-default)]">
                       Welcome to Thaki Cloud Container
                     </h1>
-                    <p className="text-[14px] text-[var(--color-text-muted)]">
+                    <p className="text-body-lg text-[var(--color-text-muted)]">
                       Manage effortlessly, scale and optimize your Kubernetes clusters, workloads,
                       and resources from a single platform.
                     </p>
@@ -286,10 +286,10 @@ export function ContainerHomePage() {
                 <SectionCard className="w-[var(--search-input-width)] shrink-0">
                   <SectionCard.Content>
                     <VStack gap={4}>
-                      <h3 className="text-[14px] font-semibold text-[var(--color-text-default)]">
+                      <h3 className="text-body-lg font-semibold text-[var(--color-text-default)]">
                         Create a Cluster
                       </h3>
-                      <p className="text-[12px] text-[var(--color-text-muted)] leading-relaxed">
+                      <p className="text-body-md text-[var(--color-text-muted)] leading-relaxed">
                         Create a Kubernetes cluster to start running and managing your containerized
                         workloads.
                       </p>

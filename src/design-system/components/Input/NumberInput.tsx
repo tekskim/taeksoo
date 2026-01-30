@@ -173,10 +173,7 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
     return (
       <div className={wrapperClasses}>
         {label && (
-          <label
-            htmlFor={inputId}
-            className="font-medium text-[var(--color-text-default)] text-[length:var(--font-size-11)]"
-          >
+          <label htmlFor={inputId} className="text-label-sm text-[var(--color-text-default)]">
             {label}
           </label>
         )}
@@ -235,19 +232,13 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
         </div>
 
         {error && (
-          <p
-            id={`${inputId}-error`}
-            className="text-[length:var(--font-size-11)] text-[var(--color-state-danger)]"
-          >
+          <p id={`${inputId}-error`} className="text-body-sm text-[var(--color-state-danger)]">
             {error}
           </p>
         )}
 
         {helperText && !error && (
-          <p
-            id={`${inputId}-helper`}
-            className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]"
-          >
+          <p id={`${inputId}-helper`} className="text-body-sm text-[var(--color-text-subtle)]">
             {helperText}
           </p>
         )}

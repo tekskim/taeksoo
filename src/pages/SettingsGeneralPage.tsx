@@ -37,8 +37,7 @@ const timezoneOptions = [
 ];
 
 /* ----------------------------------------
-   Settings General Page
-   ---------------------------------------- */
+   Settings General Page ---------------------------------------- */
 
 export default function SettingsGeneralPage() {
   const navigate = useNavigate();
@@ -95,10 +94,10 @@ export default function SettingsGeneralPage() {
               <VStack gap={6}>
                 {/* Header */}
                 <div>
-                  <h1 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
-                    General
+                  <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
+                    General{' '}
                   </h1>
-                  <p className="text-[12px] leading-[18px] text-[var(--color-text-muted)] mt-1">
+                  <p className="text-body-md leading-[18px] text-[var(--color-text-muted)] mt-1">
                     Configure your display and localization preferences.
                   </p>
                 </div>
@@ -110,10 +109,10 @@ export default function SettingsGeneralPage() {
                     {/* Theme */}
                     <VStack gap={4}>
                       <VStack gap={2}>
-                        <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
-                          Theme
+                        <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
+                          Theme{' '}
                         </span>
-                        <p className="text-[12px] leading-4 text-[var(--color-text-subtle)]">
+                        <p className="text-body-md leading-4 text-[var(--color-text-subtle)]">
                           Choose your preferred color theme.
                         </p>
                       </VStack>
@@ -131,10 +130,10 @@ export default function SettingsGeneralPage() {
                     {/* Language */}
                     <VStack gap={4}>
                       <VStack gap={2}>
-                        <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
-                          Language
+                        <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
+                          Language{' '}
                         </span>
-                        <p className="text-[12px] leading-4 text-[var(--color-text-subtle)]">
+                        <p className="text-body-md leading-4 text-[var(--color-text-subtle)]">
                           Select your preferred language for the interface.
                         </p>
                       </VStack>
@@ -152,10 +151,10 @@ export default function SettingsGeneralPage() {
                     {/* Time Zone */}
                     <VStack gap={4}>
                       <VStack gap={2}>
-                        <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
-                          Time Zone
+                        <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
+                          Time Zone{' '}
                         </span>
-                        <p className="text-[12px] leading-4 text-[var(--color-text-subtle)]">
+                        <p className="text-body-md leading-4 text-[var(--color-text-subtle)]">
                           Select your time zone. This affects timestamps globally.
                         </p>
                       </VStack>
@@ -186,8 +185,8 @@ export default function SettingsGeneralPage() {
                           label="Set current time zone"
                         />
                       </HStack>
-                      <p className="text-[11px] leading-4 text-[var(--color-text-subtle)]">
-                        Automatically set time zone based on your location
+                      <p className="text-body-sm leading-4 text-[var(--color-text-subtle)]">
+                        Automatically set time zone based on your location{' '}
                       </p>
                     </VStack>
                   </SectionCard.Content>

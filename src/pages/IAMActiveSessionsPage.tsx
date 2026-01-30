@@ -265,7 +265,7 @@ export default function IAMActiveSessionsPage() {
             <VStack gap={3}>
               {/* Header */}
               <HStack justify="between" align="center" className="w-full min-h-[28px]">
-                <h1 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+                <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
                   Active sessions
                 </h1>
               </HStack>

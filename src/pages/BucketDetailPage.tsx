@@ -164,7 +164,7 @@ function TreeItem({ item, level, selectedId, onSelect, onToggle }: TreeItemProps
     <div>
       <div
         className={`
-          group flex items-center gap-1 h-[28px] px-2 rounded cursor-pointer text-[11px]
+          group flex items-center gap-1 h-[28px] px-2 rounded cursor-pointer text-body-sm
           ${isSelected ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] font-medium' : 'hover:bg-[var(--color-surface-subtle)] text-[var(--color-text-default)]'}
         `}
         style={{ paddingLeft: `${8 + level * 20}px` }}
@@ -363,7 +363,7 @@ function ObjectRow({
             {/* S3 URI Box */}
             <div className="flex-1 p-4 border border-[var(--color-border-default)] rounded-lg bg-[var(--color-surface-default)]">
               <div className="flex items-start justify-between mb-2">
-                <span className="text-[11px] text-[var(--color-text-muted)]">S3 URI</span>
+                <span className="text-body-sm text-[var(--color-text-muted)]">S3 URI</span>
                 <button
                   className="p-1 hover:bg-[var(--color-surface-subtle)] rounded"
                   onClick={() => object.s3Uri && handleCopy(object.s3Uri, 's3Uri')}
@@ -379,14 +379,14 @@ function ObjectRow({
                   )}
                 </button>
               </div>
-              <div className="text-[12px] text-[var(--color-text-default)] break-all">
+              <div className="text-body-md text-[var(--color-text-default)] break-all">
                 {object.s3Uri || '-'}
               </div>
             </div>
             {/* Object URL Box */}
             <div className="flex-1 p-4 border border-[var(--color-border-default)] rounded-lg bg-[var(--color-surface-default)]">
               <div className="flex items-start justify-between mb-2">
-                <span className="text-[11px] text-[var(--color-text-muted)]">Object URL</span>
+                <span className="text-body-sm text-[var(--color-text-muted)]">Object URL</span>
                 <button
                   className="p-1 hover:bg-[var(--color-surface-subtle)] rounded"
                   onClick={() => object.objectUrl && handleCopy(object.objectUrl, 'objectUrl')}
@@ -402,7 +402,7 @@ function ObjectRow({
                   )}
                 </button>
               </div>
-              <div className="text-[12px] text-[var(--color-text-default)] break-all">
+              <div className="text-body-md text-[var(--color-text-default)] break-all">
                 {object.objectUrl || '-'}
               </div>
             </div>
@@ -704,7 +704,7 @@ export function BucketDetailPage() {
                         <SectionCard.DataRow label="Bucket policy" value="null" showDivider />
                         <SectionCard.DataRow label="Lifecycle" value="{}" />
                         <SectionCard.DataRow label="Replication policy">
-                          <pre className="text-[12px] text-[var(--color-text-default)] whitespace-pre-wrap">
+                          <pre className="text-body-md text-[var(--color-text-default)] whitespace-pre-wrap">
                             {`{
       "Role": ""
 }`}
@@ -728,7 +728,7 @@ export function BucketDetailPage() {
                       {treeSidebarOpen && (
                         <div className="w-[224px] shrink-0 border border-[var(--color-border-default)] rounded-lg bg-[var(--color-surface-default)]">
                           <div className="flex items-center justify-between px-3 py-2 border-b border-[var(--color-border-subtle)]">
-                            <span className="text-[12px] font-medium text-[var(--color-text-default)]">
+                            <span className="text-label-md text-[var(--color-text-default)]">
                               Objects
                             </span>
                             <button
@@ -774,7 +774,7 @@ export function BucketDetailPage() {
                                 />
                               </button>
                             )}
-                            <h2 className="text-[16px] font-semibold text-[var(--color-text-default)]">
+                            <h2 className="text-heading-h5 text-[var(--color-text-default)]">
                               Objects
                             </h2>
                           </div>

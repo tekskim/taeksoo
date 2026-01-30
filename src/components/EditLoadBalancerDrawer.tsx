@@ -89,14 +89,14 @@ export function EditLoadBalancerDrawer({
       <VStack gap={6}>
         {/* Header */}
         <VStack gap={2}>
-          <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
             Edit Load Balancer
           </h2>
         </VStack>
 
         {/* Load Balancer Name Input */}
         <VStack gap={2} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             Load balancer name
           </label>
           <Input
@@ -105,7 +105,7 @@ export function EditLoadBalancerDrawer({
             placeholder="e.g. web-lb-01"
             fullWidth
           />
-          <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+          <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
             Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
           </p>
         </VStack>
@@ -113,10 +113,10 @@ export function EditLoadBalancerDrawer({
         {/* Description Input */}
         <VStack gap={2} className="w-full">
           <HStack gap={1} className="items-center">
-            <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+            <label className="text-label-lg text-[var(--color-text-default)] leading-5">
               Description
             </label>
-            <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+            <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
               (optional)
             </span>
           </HStack>
@@ -133,7 +133,7 @@ export function EditLoadBalancerDrawer({
           <button
             type="button"
             onClick={() => setIsAdvancedExpanded(!isAdvancedExpanded)}
-            className="flex items-center gap-1.5 text-[14px] font-medium text-[var(--color-text-default)] leading-5"
+            className="flex items-center gap-1.5 text-label-lg text-[var(--color-text-default)] leading-5"
           >
             {isAdvancedExpanded ? (
               <IconChevronDown size={12} stroke={1} />
@@ -147,7 +147,7 @@ export function EditLoadBalancerDrawer({
           {isAdvancedExpanded && (
             <HStack gap={2} className="items-center">
               <Toggle checked={adminStateUp} onChange={(e) => setAdminStateUp(e.target.checked)} />
-              <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              <span className="text-body-md text-[var(--color-text-default)] leading-4">
                 {adminStateUp ? 'Up' : 'Down'}
               </span>
             </HStack>

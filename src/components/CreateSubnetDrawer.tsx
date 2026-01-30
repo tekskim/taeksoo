@@ -50,15 +50,13 @@ function QuotaProgressBar({ label, used, total }: QuotaProgressBarProps) {
   return (
     <VStack gap={2} className="w-full">
       <HStack className="w-full justify-between items-center">
-        <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
-          {label}
-        </span>
+        <span className="text-label-lg text-[var(--color-text-default)] leading-5">{label}</span>
         <HStack gap={0} align="center">
-          <span className="text-[12px] text-[var(--color-text-default)] leading-4">{used}/</span>
+          <span className="text-body-md text-[var(--color-text-default)] leading-4">{used}/</span>
           {isUnlimited ? (
             <IconInfinity size={16} className="text-[var(--color-text-default)]" />
           ) : (
-            <span className="text-[12px] text-[var(--color-text-default)] leading-4">{total}</span>
+            <span className="text-body-md text-[var(--color-text-default)] leading-4">{total}</span>
           )}
         </HStack>
       </HStack>
@@ -193,31 +191,29 @@ export function CreateSubnetDrawer({
     >
       <VStack gap={6} className="h-full">
         {/* Header */}
-        <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+        <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
           Create Subnet
         </h2>
 
         {/* Subnet Name */}
         <VStack gap={2}>
           <HStack gap={1.5} align="center">
-            <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+            <span className="text-label-lg text-[var(--color-text-default)] leading-5">
               Subnet Name
             </span>
-            <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+            <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
               (Optional)
             </span>
           </HStack>
           <Input value={subnetName} onChange={(e) => setSubnetName(e.target.value)} fullWidth />
-          <span className="text-[11px] text-[var(--color-text-subtle)]">
+          <span className="text-body-sm text-[var(--color-text-subtle)]">
             Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
           </span>
         </VStack>
 
         {/* CIDR */}
         <VStack gap={2}>
-          <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
-            CIDR
-          </span>
+          <span className="text-label-lg text-[var(--color-text-default)] leading-5">CIDR</span>
           <Input
             value={cidr}
             onChange={(e) => setCidr(e.target.value)}
@@ -225,9 +221,9 @@ export function CreateSubnetDrawer({
             error={hasAttemptedSubmit && !cidr.trim()}
           />
           {hasAttemptedSubmit && !cidr.trim() ? (
-            <span className="text-[11px] text-[var(--color-state-danger)]">CIDR is required</span>
+            <span className="text-body-sm text-[var(--color-state-danger)]">CIDR is required</span>
           ) : (
-            <span className="text-[11px] text-[var(--color-text-subtle)]">
+            <span className="text-body-sm text-[var(--color-text-subtle)]">
               It is recommended that you use the private network address 10.0.0.0/8, 172.16.0.0/12,
               192.168.0.0/16
             </span>
@@ -236,9 +232,7 @@ export function CreateSubnetDrawer({
 
         {/* Gateway */}
         <VStack gap={3}>
-          <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
-            Gateway
-          </span>
+          <span className="text-label-lg text-[var(--color-text-default)] leading-5">Gateway</span>
           <VStack gap={2}>
             <Toggle
               checked={gatewayEnabled}
@@ -248,7 +242,7 @@ export function CreateSubnetDrawer({
             {gatewayEnabled && (
               <>
                 <Input value={gatewayIp} onChange={(e) => setGatewayIp(e.target.value)} fullWidth />
-                <span className="text-[11px] text-[var(--color-text-subtle)]">
+                <span className="text-body-sm text-[var(--color-text-subtle)]">
                   Gateway must be an IP address within the subnet range, excluding the network and
                   broadcast addresses.
                 </span>
@@ -264,7 +258,7 @@ export function CreateSubnetDrawer({
             <VStack gap={6} className="mt-6">
               {/* DHCP */}
               <VStack gap={3}>
-                <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                <span className="text-label-lg text-[var(--color-text-default)] leading-5">
                   DHCP
                 </span>
                 <Toggle
@@ -277,14 +271,14 @@ export function CreateSubnetDrawer({
               {/* Allocation Pools */}
               <VStack gap={2}>
                 <HStack gap={1.5} align="center">
-                  <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                  <span className="text-label-lg text-[var(--color-text-default)] leading-5">
                     Allocation Pools
                   </span>
-                  <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+                  <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
                     (Optional)
                   </span>
                 </HStack>
-                <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+                <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
                   Manually define the range of IP addresses to be automatically allocated by DHCP.
                   IPs outside this range will not be allocated, which is useful for reserving static
                   IPs.
@@ -296,7 +290,7 @@ export function CreateSubnetDrawer({
                   fullWidth
                   rows={3}
                 />
-                <span className="text-[11px] text-[var(--color-text-subtle)]">
+                <span className="text-body-sm text-[var(--color-text-subtle)]">
                   Enter one IP address allocation range per line.
                 </span>
               </VStack>
@@ -304,14 +298,14 @@ export function CreateSubnetDrawer({
               {/* DNS */}
               <VStack gap={2}>
                 <HStack gap={1.5} align="center">
-                  <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                  <span className="text-label-lg text-[var(--color-text-default)] leading-5">
                     DNS
                   </span>
-                  <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+                  <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
                     (Optional)
                   </span>
                 </HStack>
-                <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+                <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
                   The address of the server that acts like a phonebook for the internet, translating
                   domain names into IP addresses for your instances.
                 </span>
@@ -322,7 +316,7 @@ export function CreateSubnetDrawer({
                   fullWidth
                   rows={3}
                 />
-                <span className="text-[11px] text-[var(--color-text-subtle)]">
+                <span className="text-body-sm text-[var(--color-text-subtle)]">
                   Enter one DNS server address per line.
                 </span>
               </VStack>
@@ -330,14 +324,14 @@ export function CreateSubnetDrawer({
               {/* Host Routes */}
               <VStack gap={2} className="pb-5">
                 <HStack gap={1.5} align="center">
-                  <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                  <span className="text-label-lg text-[var(--color-text-default)] leading-5">
                     Host Routes
                   </span>
-                  <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+                  <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
                     (Optional)
                   </span>
                 </HStack>
-                <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+                <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
                   An advanced feature for manually specifying a route to a specific network
                   destination.
                 </span>
@@ -348,7 +342,7 @@ export function CreateSubnetDrawer({
                   fullWidth
                   rows={3}
                 />
-                <span className="text-[11px] text-[var(--color-text-subtle)]">
+                <span className="text-body-sm text-[var(--color-text-subtle)]">
                   Enter the destination CIDR and the next hop IP address.
                 </span>
               </VStack>

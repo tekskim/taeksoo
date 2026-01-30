@@ -66,7 +66,7 @@ type ImageTab = 'image' | 'snapshot' | 'bootable';
 type OSFilter = 'ubuntu' | 'windows' | 'rocky' | 'other';
 
 const osChipStyle = (active: boolean) => `
-  inline-flex items-center gap-1 px-2 py-1.5 rounded-[4px] cursor-pointer text-[12px] font-medium transition-colors
+  inline-flex items-center gap-1 px-2 py-1.5 rounded-[4px] cursor-pointer text-label-md  transition-colors
   ${
     active
       ? 'bg-[var(--color-surface-default)] text-[var(--color-text-default)] shadow-sm'
@@ -154,10 +154,10 @@ export function RescueInstanceDrawer({
         {/* Header Section */}
         <VStack gap={3}>
           <VStack gap={2}>
-            <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
               Rescue Instance
             </h2>
-            <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
               Create a temporary recovery server using your instance's root disk.
             </p>
           </VStack>
@@ -168,7 +168,7 @@ export function RescueInstanceDrawer({
               size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
             />
-            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+            <p className="text-body-sm text-[var(--color-text-default)] leading-4">
               Rescue mode will stop your instance and attach its root disk to a temporary server.
               <br />
               You can log in to that server to recover data or fix configurations.
@@ -178,19 +178,17 @@ export function RescueInstanceDrawer({
 
         {/* Instance Field */}
         <VStack gap={2}>
-          <span className="text-[14px] font-medium text-[var(--color-text-default)]">Instance</span>
+          <span className="text-label-lg text-[var(--color-text-default)]">Instance</span>
           <div className="w-full px-2.5 py-2 border border-[var(--color-border-subtle)] rounded-md bg-white">
-            <span className="text-[12px] text-[var(--color-text-default)]">{instance.name}</span>
+            <span className="text-body-md text-[var(--color-text-default)]">{instance.name}</span>
           </div>
         </VStack>
 
         {/* Current Image Field */}
         <VStack gap={2}>
-          <span className="text-[14px] font-medium text-[var(--color-text-default)]">
-            Current Image
-          </span>
+          <span className="text-label-lg text-[var(--color-text-default)]">Current Image</span>
           <div className="w-full px-2.5 py-2 border border-[var(--color-border-subtle)] rounded-md bg-white">
-            <span className="text-[12px] text-[var(--color-text-default)]">
+            <span className="text-body-md text-[var(--color-text-default)]">
               {instance.currentImage}
             </span>
           </div>
@@ -198,9 +196,9 @@ export function RescueInstanceDrawer({
 
         {/* Protocol Field */}
         <VStack gap={2}>
-          <span className="text-[14px] font-medium text-[var(--color-text-default)]">Protocol</span>
+          <span className="text-label-lg text-[var(--color-text-default)]">Protocol</span>
           <div className="w-full px-2.5 py-2 border border-[var(--color-border-subtle)] rounded-md bg-white">
-            <span className="text-[12px] text-[var(--color-text-default)]">
+            <span className="text-body-md text-[var(--color-text-default)]">
               {instance.protocol}
             </span>
           </div>
@@ -208,7 +206,7 @@ export function RescueInstanceDrawer({
 
         {/* Image Selection */}
         <VStack gap={3}>
-          <span className="text-[14px] font-medium text-[var(--color-text-default)]">Image</span>
+          <span className="text-label-lg text-[var(--color-text-default)]">Image</span>
           <VStack gap={3}>
             {/* Current Image Option */}
             <Radio
@@ -322,62 +320,48 @@ export function RescueInstanceDrawer({
                   style={{ width: '59px', flexShrink: 0 }}
                   className="flex items-center justify-center px-3 border-l border-[var(--color-border-default)]"
                 >
-                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                    Status
-                  </span>
+                  <span className="text-label-sm text-[var(--color-text-default)]">Status</span>
                 </div>
                 <div
                   style={{ width: '149px', flexShrink: 0 }}
                   className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
                 >
-                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                    Name
-                  </span>
+                  <span className="text-label-sm text-[var(--color-text-default)]">Name</span>
                   <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
                 </div>
                 <div
                   style={{ width: '80px', flexShrink: 0 }}
                   className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
                 >
-                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                    Version
-                  </span>
+                  <span className="text-label-sm text-[var(--color-text-default)]">Version</span>
                   <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
                 </div>
                 <div
                   style={{ width: '80px', flexShrink: 0 }}
                   className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
                 >
-                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                    Size
-                  </span>
+                  <span className="text-label-sm text-[var(--color-text-default)]">Size</span>
                   <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
                 </div>
                 <div
                   style={{ width: '80px', flexShrink: 0 }}
                   className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
                 >
-                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                    Min Disk
-                  </span>
+                  <span className="text-label-sm text-[var(--color-text-default)]">Min Disk</span>
                   <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
                 </div>
                 <div
                   style={{ width: '80px', flexShrink: 0 }}
                   className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
                 >
-                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                    Min RAM
-                  </span>
+                  <span className="text-label-sm text-[var(--color-text-default)]">Min RAM</span>
                   <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
                 </div>
                 <div
                   style={{ width: '80px', flexShrink: 0 }}
                   className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
                 >
-                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                    Visibility
-                  </span>
+                  <span className="text-label-sm text-[var(--color-text-default)]">Visibility</span>
                   <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
                 </div>
               </div>
@@ -426,7 +410,7 @@ export function RescueInstanceDrawer({
                       className="flex flex-col justify-center px-3 py-2 overflow-hidden"
                     >
                       <div className="flex items-center gap-1.5">
-                        <span className="text-[12px] font-medium text-[var(--color-action-primary)] truncate">
+                        <span className="text-label-md text-[var(--color-action-primary)] truncate">
                           {img.name}
                         </span>
                         <IconExternalLink
@@ -434,7 +418,7 @@ export function RescueInstanceDrawer({
                           className="shrink-0 text-[var(--color-action-primary)]"
                         />
                       </div>
-                      <span className="text-[11px] text-[var(--color-text-subtle)] truncate">
+                      <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
                         {img.bootable}
                       </span>
                     </div>
@@ -442,7 +426,7 @@ export function RescueInstanceDrawer({
                       style={{ width: '80px', flexShrink: 0 }}
                       className="flex items-center px-3 py-2 overflow-hidden"
                     >
-                      <span className="text-[12px] text-[var(--color-text-default)] truncate">
+                      <span className="text-body-md text-[var(--color-text-default)] truncate">
                         {img.version}
                       </span>
                     </div>
@@ -450,7 +434,7 @@ export function RescueInstanceDrawer({
                       style={{ width: '80px', flexShrink: 0 }}
                       className="flex items-center px-3 py-2 overflow-hidden"
                     >
-                      <span className="text-[12px] text-[var(--color-text-default)] truncate">
+                      <span className="text-body-md text-[var(--color-text-default)] truncate">
                         {img.size}
                       </span>
                     </div>
@@ -458,7 +442,7 @@ export function RescueInstanceDrawer({
                       style={{ width: '80px', flexShrink: 0 }}
                       className="flex items-center px-3 py-2 overflow-hidden"
                     >
-                      <span className="text-[12px] text-[var(--color-text-default)] truncate">
+                      <span className="text-body-md text-[var(--color-text-default)] truncate">
                         {img.minDisk}
                       </span>
                     </div>
@@ -466,7 +450,7 @@ export function RescueInstanceDrawer({
                       style={{ width: '80px', flexShrink: 0 }}
                       className="flex items-center px-3 py-2 overflow-hidden"
                     >
-                      <span className="text-[12px] text-[var(--color-text-default)] truncate">
+                      <span className="text-body-md text-[var(--color-text-default)] truncate">
                         {img.minRam}
                       </span>
                     </div>
@@ -474,7 +458,7 @@ export function RescueInstanceDrawer({
                       style={{ width: '80px', flexShrink: 0 }}
                       className="flex items-center px-3 py-2 overflow-hidden"
                     >
-                      <span className="text-[12px] text-[var(--color-text-default)] truncate">
+                      <span className="text-body-md text-[var(--color-text-default)] truncate">
                         {img.visibility}
                       </span>
                     </div>

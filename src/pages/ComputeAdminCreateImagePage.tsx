@@ -255,9 +255,7 @@ export function ComputeAdminCreateImagePage() {
             </Link>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </div>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-            ID: {row.id}
-          </span>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
         </div>
       ),
     },
@@ -395,9 +393,7 @@ export function ComputeAdminCreateImagePage() {
               <VStack gap={3} className="min-w-[1176px]">
                 {/* Page Title */}
                 <div className="flex items-center justify-between h-8">
-                  <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
-                    Create image
-                  </h1>
+                  <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create image</h1>
                 </div>
 
                 {/* Content Area */}
@@ -471,12 +467,12 @@ export function ComputeAdminCreateImagePage() {
                           <div className="flex flex-col gap-4">
                             <div className="flex flex-col gap-2">
                               <div className="flex items-center gap-1.5">
-                                <span className="text-[14px] font-medium leading-[var(--line-height-20)] text-[var(--color-text-default)]">
+                                <span className="text-label-lg leading-[var(--line-height-20)] text-[var(--color-text-default)]">
                                   Owned tenant
                                 </span>
                                 <span className="text-[var(--color-state-danger)]">*</span>
                               </div>
-                              <span className="text-[11px] font-normal leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                              <span className="text-body-sm leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
                                 Select the tenant that will own the image.
                               </span>
                             </div>
@@ -531,12 +527,12 @@ export function ComputeAdminCreateImagePage() {
                           {/* Visibility section */}
                           <div className="flex flex-col gap-2">
                             <div className="flex items-center gap-1.5">
-                              <span className="text-[14px] font-medium leading-[var(--line-height-20)] text-[var(--color-text-default)]">
+                              <span className="text-label-lg leading-[var(--line-height-20)] text-[var(--color-text-default)]">
                                 Visibility
                               </span>
                               <span className="text-[var(--color-state-danger)]">*</span>
                             </div>
-                            <span className="text-[12px] font-normal leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                            <span className="text-body-md leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
                               Specifies the availability scope of the image based on its visibility
                               setting.
                             </span>
@@ -555,10 +551,10 @@ export function ComputeAdminCreateImagePage() {
                             {visibility === 'shared' && (
                               <div className="flex flex-col gap-4 mt-2">
                                 <div className="flex flex-col gap-2">
-                                  <span className="text-[14px] font-medium leading-[var(--line-height-20)] text-[var(--color-text-default)]">
+                                  <span className="text-label-lg leading-[var(--line-height-20)] text-[var(--color-text-default)]">
                                     Tenants
                                   </span>
-                                  <span className="text-[12px] font-normal leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                                  <span className="text-body-md leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
                                     Select the tenants to share the image with.
                                   </span>
                                 </div>
@@ -609,16 +605,16 @@ export function ComputeAdminCreateImagePage() {
 
                           <div className="flex flex-col gap-3">
                             <div className="flex flex-col gap-2">
-                              <span className="text-[14px] font-medium leading-[var(--line-height-20)] text-[var(--color-text-default)]">
+                              <span className="text-label-lg leading-[var(--line-height-20)] text-[var(--color-text-default)]">
                                 Protected
                               </span>
-                              <span className="text-[12px] font-normal leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                              <span className="text-body-md leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
                                 Protected images cannot be deleted, preventing accidental removal.
                               </span>
                             </div>
                             <HStack gap={2} align="center">
                               <Toggle checked={isProtected} onChange={setIsProtected} />
-                              <span className="text-[12px] text-[var(--color-text-default)]">
+                              <span className="text-body-md text-[var(--color-text-default)]">
                                 {isProtected ? 'Yes' : 'No'}
                               </span>
                             </HStack>
@@ -702,12 +698,12 @@ export function ComputeAdminCreateImagePage() {
                           {/* Upload type Label */}
                           <div className="flex flex-col gap-2 w-full">
                             <div className="flex items-center gap-1.5">
-                              <span className="text-[14px] font-medium leading-[var(--line-height-20)] text-[var(--color-text-default)]">
+                              <span className="text-label-lg leading-[var(--line-height-20)] text-[var(--color-text-default)]">
                                 Upload type
                               </span>
                               <span className="text-[var(--color-state-danger)]">*</span>
                             </div>
-                            <span className="text-[11px] font-normal leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                            <span className="text-body-sm leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
                               Registers an image by uploading a file or entering a file URL.
                             </span>
                           </div>
@@ -736,7 +732,7 @@ export function ComputeAdminCreateImagePage() {
                                 >
                                   Choose File
                                 </Button>
-                                <span className="text-[11px] font-normal leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                                <span className="text-body-sm text-[var(--color-text-subtle)]">
                                   Only RAW, QCOW2, ISO, AKI, and ARI file formats are allowed.
                                 </span>
                               </VStack>
@@ -751,7 +747,7 @@ export function ComputeAdminCreateImagePage() {
                                   placeholder="e.g. https://example.com/image.qcow2"
                                   fullWidth
                                 />
-                                <span className="text-[11px] font-normal leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                                <span className="text-body-sm text-[var(--color-text-subtle)]">
                                   The URL must start with http:// or https://.
                                 </span>
                               </VStack>
@@ -794,7 +790,7 @@ export function ComputeAdminCreateImagePage() {
                         actions={
                           sectionStatus['specification'] === 'done' && (
                             <HStack gap={3} align="center">
-                              <span className="text-[12px] text-[var(--color-text-subtle)]">
+                              <span className="text-body-md text-[var(--color-text-subtle)]">
                                 Auto-filled
                               </span>
                               <Button
@@ -901,10 +897,10 @@ export function ComputeAdminCreateImagePage() {
                               <VStack gap={4} align="stretch" className="pt-3">
                                 {/* Min system Disk */}
                                 <div className="flex flex-col gap-2">
-                                  <span className="text-[14px] font-medium leading-[var(--line-height-20)] text-[var(--color-text-default)]">
+                                  <span className="text-label-lg text-[var(--color-text-default)]">
                                     Min system disk
                                   </span>
-                                  <span className="text-[12px] font-normal leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                                  <span className="text-body-md text-[var(--color-text-subtle)]">
                                     Defines the minimum disk size required to boot an instance from
                                     this image.
                                   </span>
@@ -916,21 +912,21 @@ export function ComputeAdminCreateImagePage() {
                                       max={500}
                                       className="w-[80px]"
                                     />
-                                    <span className="text-[12px] text-[var(--color-text-default)]">
+                                    <span className="text-body-md text-[var(--color-text-default)]">
                                       GiB
                                     </span>
                                   </HStack>
-                                  <span className="text-[11px] font-normal leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                                  <span className="text-body-sm text-[var(--color-text-subtle)]">
                                     0-500 GiB
                                   </span>
                                 </div>
 
                                 {/* Min RAM */}
                                 <div className="flex flex-col gap-2">
-                                  <span className="text-[14px] font-medium leading-[var(--line-height-20)] text-[var(--color-text-default)]">
+                                  <span className="text-label-lg text-[var(--color-text-default)]">
                                     Min RAM
                                   </span>
-                                  <span className="text-[12px] font-normal leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                                  <span className="text-body-md text-[var(--color-text-subtle)]">
                                     Defines the minimum amount of RAM required to boot an instance
                                     from this image.
                                   </span>
@@ -942,11 +938,11 @@ export function ComputeAdminCreateImagePage() {
                                       max={500}
                                       className="w-[80px]"
                                     />
-                                    <span className="text-[12px] text-[var(--color-text-default)]">
+                                    <span className="text-body-md text-[var(--color-text-default)]">
                                       GiB
                                     </span>
                                   </HStack>
-                                  <span className="text-[11px] font-normal leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                                  <span className="text-body-sm text-[var(--color-text-subtle)]">
                                     0-500 GiB
                                   </span>
                                 </div>
@@ -1005,7 +1001,7 @@ export function ComputeAdminCreateImagePage() {
                         actions={
                           sectionStatus['advanced'] === 'done' && (
                             <HStack gap={3} align="center">
-                              <span className="text-[12px] text-[var(--color-text-subtle)]">
+                              <span className="text-body-md text-[var(--color-text-subtle)]">
                                 Auto-filled
                               </span>
                               <Button
@@ -1025,17 +1021,17 @@ export function ComputeAdminCreateImagePage() {
                           {/* QEMU Guest Agent */}
                           <div className="flex flex-col gap-3">
                             <div className="flex flex-col gap-2">
-                              <span className="text-[14px] font-medium leading-[var(--line-height-20)] text-[var(--color-text-default)]">
+                              <span className="text-label-lg text-[var(--color-text-default)]">
                                 QEMU guest agent
                               </span>
-                              <span className="text-[12px] font-normal leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                              <span className="text-body-md text-[var(--color-text-subtle)]">
                                 Enables communication and status retrieval between the hypervisor
                                 and the instance.
                               </span>
                             </div>
                             <HStack gap={2} align="center">
                               <Toggle checked={qemuGuestAgent} onChange={setQemuGuestAgent} />
-                              <span className="text-[12px] text-[var(--color-text-default)]">
+                              <span className="text-body-md text-[var(--color-text-default)]">
                                 {qemuGuestAgent ? 'On' : 'Off'}
                               </span>
                             </HStack>

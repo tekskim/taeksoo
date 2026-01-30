@@ -148,11 +148,11 @@ export function AttachVolumeDrawer({
         {/* Header Section */}
         <VStack gap={2}>
           <VStack gap={0}>
-            <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
               Attach Volume
             </h2>
           </VStack>
-          <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+          <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
             Attach one or more available volumes to this instance. Once attached, the volumes will
             appear as additional storage devices inside the instance.
           </p>
@@ -161,10 +161,8 @@ export function AttachVolumeDrawer({
         {/* Volume Info Box */}
         <div className="w-full bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
           <VStack gap={1.5}>
-            <span className="text-[11px] font-medium text-[var(--color-text-subtle)] leading-4">
-              Volume
-            </span>
-            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+            <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">Volume</span>
+            <span className="text-body-md text-[var(--color-text-default)] leading-4">
               {volume?.name || '-'}
             </span>
           </VStack>
@@ -172,9 +170,7 @@ export function AttachVolumeDrawer({
 
         {/* Instances Section */}
         <VStack gap={3} className="mt-3 pb-5">
-          <h3 className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
-            Instances
-          </h3>
+          <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">Instances</h3>
 
           {/* Search */}
           <div className="w-[280px]">
@@ -264,7 +260,7 @@ export function AttachVolumeDrawer({
                       className="shrink-0 text-[var(--color-action-primary)]"
                     />
                   </HStack>
-                  <span className="text-[11px] text-[var(--color-text-subtle)] truncate">
+                  <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
                     ID : {inst.id}
                   </span>
                 </div>

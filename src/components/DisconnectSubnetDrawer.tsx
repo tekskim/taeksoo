@@ -217,7 +217,7 @@ export function DisconnectSubnetDrawer({
       <VStack gap={6} className="h-full">
         {/* Description */}
         <VStack gap={3} className="w-full">
-          <p className="text-[12px] leading-4 text-[var(--color-text-subtle)]">
+          <p className="text-body-md leading-4 text-[var(--color-text-subtle)]">
             Disconnect a subnet from this router to remove its routing path.
           </p>
 
@@ -229,18 +229,14 @@ export function DisconnectSubnetDrawer({
 
           {/* Router Info */}
           <div className="w-full bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-            <p className="text-[11px] font-medium text-[var(--color-text-subtle)] leading-4 mb-1.5">
-              Router
-            </p>
-            <p className="text-[12px] text-[var(--color-text-default)] leading-4">{router.name}</p>
+            <p className="text-label-sm text-[var(--color-text-subtle)] leading-4 mb-1.5">Router</p>
+            <p className="text-body-md text-[var(--color-text-default)] leading-4">{router.name}</p>
           </div>
         </VStack>
 
         {/* Subnet Section */}
         <VStack gap={3} className="w-full pb-5">
-          <h3 className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
-            Subnet
-          </h3>
+          <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">Subnet</h3>
 
           <div className="w-[280px]">
             <SearchInput
@@ -269,21 +265,17 @@ export function DisconnectSubnetDrawer({
                 className="flex-1 px-3 py-2 h-[40px] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
                 onClick={() => handleSort('name')}
               >
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                  Name
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Name</span>
                 <IconChevronDown
                   size={12}
                   className={`transition-transform ${sortField === 'name' && sortDirection === 'desc' ? 'rotate-180' : ''}`}
                 />
               </div>
               <div className="flex-1 px-3 py-2 h-[40px] flex items-center border-l border-[var(--color-border-default)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                  Subnet CIDR
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Subnet CIDR</span>
               </div>
               <div className="flex-1 px-3 py-2 h-[40px] flex items-center border-l border-[var(--color-border-default)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                <span className="text-label-sm text-[var(--color-text-default)]">
                   Allocation Pools
                 </span>
               </div>
@@ -291,9 +283,7 @@ export function DisconnectSubnetDrawer({
                 className="flex-1 px-3 py-2 h-[40px] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
                 onClick={() => handleSort('networkName')}
               >
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                  Network
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Network</span>
                 <IconChevronDown
                   size={12}
                   className={`transition-transform ${sortField === 'networkName' && sortDirection === 'desc' ? 'rotate-180' : ''}`}
@@ -318,33 +308,33 @@ export function DisconnectSubnetDrawer({
                 </div>
                 <div className="flex-1 px-3 py-2 min-h-[40px] flex flex-col justify-center gap-0.5">
                   <HStack gap={1.5} align="center">
-                    <span className="text-[12px] font-medium text-[var(--color-action-primary)] leading-4">
+                    <span className="text-label-md text-[var(--color-action-primary)] leading-4">
                       {item.name}
                     </span>
                     <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
                   </HStack>
-                  <span className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+                  <span className="text-body-sm text-[var(--color-text-subtle)] leading-4">
                     ID : {item.id}
                   </span>
                 </div>
                 <div className="flex-1 px-3 py-2 min-h-[40px] flex flex-col justify-center">
-                  <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+                  <span className="text-body-md text-[var(--color-text-default)] leading-4">
                     {item.subnetCidr}
                   </span>
                 </div>
                 <div className="flex-1 px-3 py-2 min-h-[40px] flex flex-col justify-center">
-                  <span className="text-[12px] text-[var(--color-text-default)] leading-4 whitespace-pre-line">
+                  <span className="text-body-md text-[var(--color-text-default)] leading-4 whitespace-pre-line">
                     {item.allocationPools.replace(' - ', ' -\n')}
                   </span>
                 </div>
                 <div className="flex-1 px-3 py-2 min-h-[40px] flex flex-col justify-center gap-0.5">
                   <HStack gap={1.5} align="center">
-                    <span className="text-[12px] font-medium text-[var(--color-action-primary)] leading-4">
+                    <span className="text-label-md text-[var(--color-action-primary)] leading-4">
                       {item.networkName}
                     </span>
                     <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
                   </HStack>
-                  <span className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+                  <span className="text-body-sm text-[var(--color-text-subtle)] leading-4">
                     ID : {item.networkId}
                   </span>
                 </div>

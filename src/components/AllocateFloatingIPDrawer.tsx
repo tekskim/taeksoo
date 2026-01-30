@@ -210,10 +210,10 @@ export function AllocateFloatingIPDrawer({
           <VStack gap={4} className="w-full">
             <VStack gap={2} className="w-full">
               <HStack justify="space-between" className="w-full">
-                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                <span className="text-label-lg text-[var(--color-text-default)]">
                   Floating IP Quota
                 </span>
-                <span className="text-[12px] text-[var(--color-text-default)]">
+                <span className="text-body-md text-[var(--color-text-default)]">
                   {floatingIPQuota.used}/{floatingIPQuota.total}
                 </span>
               </HStack>
@@ -248,10 +248,8 @@ export function AllocateFloatingIPDrawer({
         {/* Description Field */}
         <VStack gap={2} className="w-full">
           <HStack gap={1.5} align="center">
-            <span className="text-[14px] font-medium text-[var(--color-text-default)]">
-              Description
-            </span>
-            <span className="text-[12px] text-[var(--color-text-subtle)]">(Optional)</span>
+            <span className="text-label-lg text-[var(--color-text-default)]">Description</span>
+            <span className="text-body-md text-[var(--color-text-subtle)]">(Optional)</span>
           </HStack>
           <Input
             value={description}
@@ -263,7 +261,7 @@ export function AllocateFloatingIPDrawer({
 
         {/* External Network Section */}
         <VStack gap={3} className="w-full">
-          <h3 className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">
             External Network
           </h3>
 
@@ -364,7 +362,7 @@ export function AllocateFloatingIPDrawer({
                       className="shrink-0 text-[var(--color-action-primary)]"
                     />
                   </HStack>
-                  <span className="text-[11px] text-[var(--color-text-subtle)] truncate">
+                  <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
                     ID : {network.id}
                   </span>
                 </div>
@@ -430,7 +428,7 @@ export function AllocateFloatingIPDrawer({
               {/* Manual IP Address Input */}
               {allocationMode === 'manual-single' && (
                 <VStack gap={2} className="w-[328px]">
-                  <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                  <span className="text-label-lg text-[var(--color-text-default)]">
                     Manual floating IP address
                   </span>
                   <Input
@@ -445,9 +443,7 @@ export function AllocateFloatingIPDrawer({
               {/* Count Input for Batch */}
               {allocationMode === 'automatic-batch' && (
                 <VStack gap={2} className="w-[328px]">
-                  <span className="text-[14px] font-medium text-[var(--color-text-default)]">
-                    Count
-                  </span>
+                  <span className="text-label-lg text-[var(--color-text-default)]">Count</span>
                   <NumberInput
                     value={count}
                     onChange={(value) => setCount(value ?? 1)}
@@ -468,9 +464,7 @@ export function AllocateFloatingIPDrawer({
             <VStack gap={4} className="pt-3 w-[328px]">
               {/* DNS Domain */}
               <VStack gap={2}>
-                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
-                  DNS Domain
-                </span>
+                <span className="text-label-lg text-[var(--color-text-default)]">DNS Domain</span>
                 <Select
                   value={dnsDomain}
                   onChange={setDnsDomain}
@@ -482,9 +476,7 @@ export function AllocateFloatingIPDrawer({
 
               {/* DNS Name */}
               <VStack gap={2}>
-                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
-                  DNS Name
-                </span>
+                <span className="text-label-lg text-[var(--color-text-default)]">DNS Name</span>
                 <Input
                   value={dnsName}
                   onChange={(e) => setDnsName(e.target.value)}
@@ -493,11 +485,11 @@ export function AllocateFloatingIPDrawer({
                   fullWidth
                 />
                 {fqdn && (
-                  <span className="text-[12px] text-[var(--color-text-default)]">
+                  <span className="text-body-md text-[var(--color-text-default)]">
                     FQDN : {fqdn}
                   </span>
                 )}
-                <span className="text-[11px] text-[var(--color-text-subtle)]">
+                <span className="text-body-sm text-[var(--color-text-subtle)]">
                   Allowed: 1–63 characters; lowercase letters, numbers, "-"; no leading/trailing
                   hyphens.
                 </span>

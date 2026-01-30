@@ -85,19 +85,17 @@ export function CreateAllowedAddressPairDrawer({
       <VStack gap={6}>
         {/* Header */}
         <VStack gap={2}>
-          <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
             Create Allowed Address Pair
           </h2>
-          <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+          <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
             Specify additional IP or MAC addresses that are allowed to pass through this port.
           </p>
         </VStack>
 
         {/* CIDR Input */}
         <VStack gap={2} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
-            CIDR
-          </label>
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">CIDR</label>
           <Input
             value={cidr}
             onChange={(e) => setCidr(e.target.value)}
@@ -106,11 +104,11 @@ export function CreateAllowedAddressPairDrawer({
             error={hasAttemptedSubmit && !cidr.trim()}
           />
           {hasAttemptedSubmit && !cidr.trim() ? (
-            <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+            <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
               CIDR is required
             </p>
           ) : (
-            <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
               Prefix (/): 24~28
             </p>
           )}
@@ -118,7 +116,7 @@ export function CreateAllowedAddressPairDrawer({
 
         {/* MAC Address Radio Group */}
         <VStack gap={3} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             MAC Address
           </label>
           <RadioGroup
@@ -151,7 +149,7 @@ export function CreateAllowedAddressPairDrawer({
                 error={hasAttemptedSubmit && !macAddress.trim()}
               />
               {hasAttemptedSubmit && !macAddress.trim() && (
-                <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+                <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
                   MAC address is required
                 </p>
               )}

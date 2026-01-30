@@ -35,8 +35,7 @@ import {
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
-   Types
-   ---------------------------------------- */
+   Types ---------------------------------------- */
 
 interface StatefulSetRow {
   id: string;
@@ -49,8 +48,7 @@ interface StatefulSetRow {
 }
 
 /* ----------------------------------------
-   Mock Data
-   ---------------------------------------- */
+   Mock Data ---------------------------------------- */
 
 const statefulSetsData: StatefulSetRow[] = [
   {
@@ -128,8 +126,7 @@ const statefulSetsData: StatefulSetRow[] = [
 ];
 
 /* ----------------------------------------
-   Component
-   ---------------------------------------- */
+   Component ---------------------------------------- */
 
 export function StatefulSetsPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -407,8 +404,8 @@ export function StatefulSetsPage() {
               {/* Header */}
               <HStack justify="between" align="center" className="w-full min-h-8">
                 <HStack gap={2} align="center">
-                  <h1 className="text-[16px] leading-6 font-semibold text-[var(--color-text-default)]">
-                    StatefulSets
+                  <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
+                    StatefulSets{' '}
                   </h1>
                 </HStack>
 
@@ -419,7 +416,7 @@ export function StatefulSetsPage() {
                     size="md"
                     rightIcon={<IconChevronDown size={14} stroke={1.5} />}
                   >
-                    Create StatefulSet
+                    Create StatefulSet{' '}
                   </Button>
                 </ContextMenu>
               </HStack>
@@ -454,7 +451,7 @@ export function StatefulSetsPage() {
                     leftIcon={<IconRefresh size={12} stroke={1.5} />}
                     disabled={selectedRows.length === 0}
                   >
-                    Redeploy
+                    Redeploy{' '}
                   </Button>
                   <Button
                     variant="secondary"
@@ -462,7 +459,7 @@ export function StatefulSetsPage() {
                     leftIcon={<IconDownload size={12} stroke={1.5} />}
                     disabled={selectedRows.length === 0}
                   >
-                    Download YAML
+                    Download YAML{' '}
                   </Button>
                   <Button
                     variant="secondary"
@@ -470,7 +467,7 @@ export function StatefulSetsPage() {
                     leftIcon={<IconTrash size={12} stroke={1.5} />}
                     disabled={selectedRows.length === 0}
                   >
-                    Delete
+                    Delete{' '}
                   </Button>
                 </HStack>
               </HStack>
@@ -494,9 +491,9 @@ export function StatefulSetsPage() {
                   </HStack>
                   <button
                     onClick={handleClearFilters}
-                    className="text-[11px] font-medium text-[var(--color-action-primary)] hover:underline"
+                    className="text-label-sm text-[var(--color-action-primary)] hover:underline"
                   >
-                    Clear Filters
+                    Clear Filters{' '}
                   </button>
                 </HStack>
               )}

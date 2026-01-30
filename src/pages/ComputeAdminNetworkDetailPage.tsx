@@ -493,9 +493,7 @@ export default function NetworkDetailPage() {
           >
             {row.name}
           </Link>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-            ID:{row.id}
-          </span>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">ID:{row.id}</span>
         </div>
       ),
     },
@@ -591,9 +589,7 @@ export default function NetworkDetailPage() {
           >
             {row.name}
           </Link>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-            ID: {row.id}
-          </span>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
         </div>
       ),
     },
@@ -616,7 +612,7 @@ export default function NetworkDetailPage() {
               >
                 {row.attachedTo.name}
               </Link>
-              <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] truncate">
+              <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
                 ID : {row.attachedTo.id}
               </span>
             </div>
@@ -915,7 +911,7 @@ export default function NetworkDetailPage() {
                     <VStack gap={3} className="pt-6">
                       {/* Header */}
                       <div className="flex items-center justify-between">
-                        <h3 className="text-[16px] leading-[24px] font-semibold text-[var(--color-text-default)]">
+                        <h3 className="text-heading-h5 text-[var(--color-text-default)]">
                           Subnets
                         </h3>
                         <Button
@@ -990,9 +986,7 @@ export default function NetworkDetailPage() {
                     <VStack gap={3} className="pt-6">
                       {/* Header */}
                       <div className="flex items-center justify-between">
-                        <h3 className="text-[16px] leading-[24px] font-semibold text-[var(--color-text-default)]">
-                          Ports
-                        </h3>
+                        <h3 className="text-heading-h5 text-[var(--color-text-default)]">Ports</h3>
                         <Button
                           variant="secondary"
                           size="sm"
@@ -1065,7 +1059,7 @@ export default function NetworkDetailPage() {
                     <VStack gap={3} className="pt-6">
                       {/* Header */}
                       <div className="flex items-center justify-between">
-                        <h3 className="text-[16px] leading-[24px] font-semibold text-[var(--color-text-default)]">
+                        <h3 className="text-heading-h5 text-[var(--color-text-default)]">
                           DHCP Agents
                         </h3>
                         <Button

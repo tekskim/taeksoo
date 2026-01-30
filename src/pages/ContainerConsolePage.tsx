@@ -39,7 +39,7 @@ function ConnectionStatusIndicator({ status }: { status: ConnectionStatus }) {
   return (
     <div className="flex items-center gap-2.5 px-3">
       <IconCircleFilled size={16} className={config.color} />
-      <span className={`text-[12px] font-medium ${config.color}`}>{config.label}</span>
+      <span className={`text-label-md ${config.color}`}>{config.label}</span>
     </div>
   );
 }
@@ -197,7 +197,7 @@ export function ContainerConsolePage() {
           <div
             ref={contentRef}
             onClick={handleConsoleClick}
-            className="flex-1 overflow-auto p-4 font-mono text-[12px] leading-[18px] bg-[var(--color-surface-contrast)] text-white cursor-text shell-scroll"
+            className="flex-1 overflow-auto p-4 font-mono text-body-md leading-[18px] bg-[var(--color-surface-contrast)] text-white cursor-text shell-scroll"
           >
             {/* Command History */}
             {commandHistory.map((line, index) => (
@@ -215,7 +215,7 @@ export function ContainerConsolePage() {
                 value={currentInput}
                 onChange={(e) => setCurrentInput(e.target.value)}
                 onKeyDown={handleKeyDown}
-                className="flex-1 bg-transparent border-none outline-none text-white font-mono text-[12px] leading-[18px]"
+                className="flex-1 bg-transparent border-none outline-none text-white font-mono text-body-md leading-[18px]"
                 autoFocus
                 spellCheck={false}
               />

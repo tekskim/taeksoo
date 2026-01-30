@@ -73,17 +73,17 @@ export function IdentifyDeviceDrawer({ isOpen, onClose, onSubmit }: IdentifyDevi
       <VStack gap={6}>
         {/* Header */}
         <VStack gap={2}>
-          <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
             Identify device
           </h2>
-          <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+          <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
             Please enter the duration how long to indicate the LED.
           </p>
         </VStack>
 
         {/* Duration Select */}
         <VStack gap={2} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             Duration
           </label>
           <Select

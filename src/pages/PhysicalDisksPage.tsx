@@ -272,7 +272,7 @@ function OSDsCell({ osds, maxVisible = 2 }: OSDsCellProps) {
         <>
           <span
             ref={triggerRef}
-            className="inline-flex items-center justify-center px-1.5 py-0.5 rounded text-[10px] font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] cursor-pointer hover:bg-[var(--color-surface-muted)] transition-colors"
+            className="inline-flex items-center justify-center px-1.5 py-0.5 rounded text-body-xs font-medium text-[var(--color-text-muted)] bg-[var(--color-surface-subtle)] cursor-pointer hover:bg-[var(--color-surface-muted)] transition-colors"
             onMouseEnter={() => setIsPopoverOpen(true)}
             onMouseLeave={() => setIsPopoverOpen(false)}
           >
@@ -292,7 +292,7 @@ function OSDsCell({ osds, maxVisible = 2 }: OSDsCellProps) {
                 onMouseLeave={() => setIsPopoverOpen(false)}
               >
                 <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg shadow-lg p-3 min-w-[120px] max-w-[240px]">
-                  <div className="text-[10px] font-medium text-[var(--color-text-muted)] mb-2">
+                  <div className="text-body-xs font-medium text-[var(--color-text-muted)] mb-2">
                     All OSDs ({osds.length})
                   </div>
                   <div className="flex flex-wrap gap-1">
@@ -341,9 +341,7 @@ function IdentifyCell({ timer, onIdentify }: IdentifyCellProps) {
 
   if (timer && timer > 0) {
     return (
-      <span className="text-[11px] font-medium text-[var(--color-state-warning)]">
-        {formatTime(timer)}
-      </span>
+      <span className="text-label-sm text-[var(--color-state-warning)]">{formatTime(timer)}</span>
     );
   }
 
@@ -592,7 +590,7 @@ export function PhysicalDisksPage() {
             <VStack gap={3}>
               {/* Page Header */}
               <div className="flex items-center justify-between h-8">
-                <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
+                <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
                   Physical disks
                 </h1>
               </div>
@@ -677,7 +675,7 @@ export function PhysicalDisksPage() {
         }
       >
         <div className="flex flex-col gap-6">
-          <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+          <p className="text-body-md leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
             Please enter the duration how long to indicate the LED.
           </p>
           <FormField>

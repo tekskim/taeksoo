@@ -63,10 +63,8 @@ function FileUploadSection({
 
   return (
     <VStack gap={2} className="w-full">
-      <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
-        {label}
-      </label>
-      <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">{description}</p>
+      <label className="text-label-lg text-[var(--color-text-default)] leading-5">{label}</label>
+      <p className="text-body-md text-[var(--color-text-subtle)] leading-4">{description}</p>
       <input
         type="file"
         ref={fileInputRef}
@@ -85,9 +83,9 @@ function FileUploadSection({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="w-full min-h-[80px] px-[10px] py-2 text-[12px] leading-4 text-[var(--color-text-default)] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[var(--color-action-primary)] focus:border-transparent"
+        className="w-full min-h-[80px] px-[10px] py-2 text-body-md leading-4 text-[var(--color-text-default)] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[var(--color-action-primary)] focus:border-transparent"
       />
-      <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+      <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
         ({sizeKB.toFixed(1)}/{maxSizeKB} KB)
       </p>
     </VStack>
@@ -137,7 +135,7 @@ function CollapsibleSection({
       <button
         type="button"
         onClick={() => setIsExpanded(!isExpanded)}
-        className="flex items-center gap-1.5 text-[14px] font-medium text-[var(--color-text-default)] leading-5"
+        className="flex items-center gap-1.5 text-label-lg text-[var(--color-text-default)] leading-5"
       >
         {isExpanded ? (
           <IconChevronDown size={12} stroke={1} />
@@ -149,7 +147,7 @@ function CollapsibleSection({
 
       {isExpanded && (
         <>
-          <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">{description}</p>
+          <p className="text-body-md text-[var(--color-text-subtle)] leading-4">{description}</p>
           <input
             type="file"
             ref={fileInputRef}
@@ -168,9 +166,9 @@ function CollapsibleSection({
             value={value}
             onChange={(e) => onChange(e.target.value)}
             placeholder="e.g. -----BEGIN CERTIFICATE----- ..."
-            className="w-full min-h-[80px] px-[10px] py-2 text-[12px] leading-4 text-[var(--color-text-default)] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[var(--color-action-primary)] focus:border-transparent"
+            className="w-full min-h-[80px] px-[10px] py-2 text-body-md leading-4 text-[var(--color-text-default)] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[var(--color-action-primary)] focus:border-transparent"
           />
-          <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+          <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
             ({sizeKB.toFixed(1)}/64 KB)
           </p>
         </>
@@ -262,19 +260,17 @@ export function RegisterCertificateDrawer({
       <VStack gap={6}>
         {/* Header */}
         <VStack gap={2}>
-          <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
             Register Certificate
           </h2>
-          <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+          <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
             Register a certificate issued by an external CA for use within Compute resources.
           </p>
         </VStack>
 
         {/* Type Radio */}
         <VStack gap={3} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
-            Type
-          </label>
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">Type</label>
           <RadioGroup
             value={certificateType}
             onChange={(value) => setCertificateType(value as CertificateType)}
@@ -288,7 +284,7 @@ export function RegisterCertificateDrawer({
 
         {/* Certificate Name Input */}
         <VStack gap={2} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             Certificate Name
           </label>
           <Input
@@ -301,11 +297,11 @@ export function RegisterCertificateDrawer({
             error={hasAttemptedSubmit && !certificateName.trim()}
           />
           {hasAttemptedSubmit && !certificateName.trim() ? (
-            <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+            <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
               Certificate name is required
             </p>
           ) : (
-            <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
               Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
             </p>
           )}
@@ -313,7 +309,7 @@ export function RegisterCertificateDrawer({
 
         {/* Description Input */}
         <VStack gap={2} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             Description (optional)
           </label>
           <Input

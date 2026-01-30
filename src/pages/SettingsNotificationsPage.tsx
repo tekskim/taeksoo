@@ -16,8 +16,7 @@ import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
 import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
 
 /* ----------------------------------------
-   Settings Notifications Page
-   ---------------------------------------- */
+   Settings Notifications Page ---------------------------------------- */
 
 export default function SettingsNotificationsPage() {
   const navigate = useNavigate();
@@ -111,10 +110,10 @@ export default function SettingsNotificationsPage() {
               <VStack gap={6}>
                 {/* Header */}
                 <div>
-                  <h1 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
-                    Notifications
+                  <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
+                    Notifications{' '}
                   </h1>
-                  <p className="text-[12px] leading-[18px] text-[var(--color-text-muted)] mt-1">
+                  <p className="text-body-md leading-[18px] text-[var(--color-text-muted)] mt-1">
                     Configure how you receive notifications.
                   </p>
                 </div>
@@ -125,14 +124,14 @@ export default function SettingsNotificationsPage() {
                   <SectionCard.Content gap={6}>
                     {/* Global Notification Setting */}
                     <VStack gap={4}>
-                      <span className="text-[14px] font-semibold leading-5 text-[var(--color-text-default)]">
-                        Global Notification Setting
+                      <span className="text-body-lg font-semibold leading-5 text-[var(--color-text-default)]">
+                        Global Notification Setting{' '}
                       </span>
 
                       {/* What to Notify */}
                       <VStack gap={2} className="pl-2">
-                        <span className="text-[12px] font-medium text-[var(--color-text-default)]">
-                          What to Notify
+                        <span className="text-label-md text-[var(--color-text-default)]">
+                          What to Notify{' '}
                         </span>
                         <RadioGroup
                           value={globalWhatToNotify}
@@ -150,8 +149,8 @@ export default function SettingsNotificationsPage() {
                         gap={2}
                         className={`pl-2 ${globalWhatToNotify === 'off' ? 'opacity-50' : ''}`}
                       >
-                        <span className="text-[12px] font-medium text-[var(--color-text-default)]">
-                          Duration
+                        <span className="text-label-md text-[var(--color-text-default)]">
+                          Duration{' '}
                         </span>
                         <Select
                           value={globalDuration}
@@ -167,8 +166,8 @@ export default function SettingsNotificationsPage() {
                         gap={2}
                         className={`pl-2 ${globalWhatToNotify === 'off' ? 'opacity-50' : ''}`}
                       >
-                        <span className="text-[12px] font-medium text-[var(--color-text-default)]">
-                          Sound
+                        <span className="text-label-md text-[var(--color-text-default)]">
+                          Sound{' '}
                         </span>
                         <Toggle
                           checked={globalSound}
@@ -183,8 +182,8 @@ export default function SettingsNotificationsPage() {
 
                     {/* In-app Notification Setting */}
                     <VStack gap={4}>
-                      <span className="text-[14px] font-semibold leading-5 text-[var(--color-text-default)]">
-                        In-app Notification Setting
+                      <span className="text-body-lg font-semibold leading-5 text-[var(--color-text-default)]">
+                        In-app Notification Setting{' '}
                       </span>
 
                       {/* Service-specific settings */}
@@ -194,15 +193,15 @@ export default function SettingsNotificationsPage() {
                           className="border border-[var(--color-border-default)] rounded-lg overflow-hidden"
                         >
                           <Disclosure.Trigger className="w-full py-3 px-4 bg-[var(--color-surface-subtle)]">
-                            <span className="text-[12px] font-medium text-[var(--color-text-default)]">
+                            <span className="text-label-md text-[var(--color-text-default)]">
                               {label}
                             </span>
                           </Disclosure.Trigger>
                           <Disclosure.Panel className="space-y-3 px-4 py-3 border-t border-[var(--color-border-default)]">
                             {/* What to Notify */}
                             <div>
-                              <span className="text-[12px] font-medium text-[var(--color-text-default)] block mb-2">
-                                What to Notify
+                              <span className="text-label-md text-[var(--color-text-default)] block mb-2">
+                                What to Notify{' '}
                               </span>
                               <RadioGroup
                                 value={serviceNotifications[key].whatToNotify}
@@ -223,8 +222,8 @@ export default function SettingsNotificationsPage() {
                                 serviceNotifications[key].whatToNotify === 'off' ? 'opacity-50' : ''
                               }
                             >
-                              <span className="text-[12px] font-medium text-[var(--color-text-default)] block mb-2">
-                                Duration
+                              <span className="text-label-md text-[var(--color-text-default)] block mb-2">
+                                Duration{' '}
                               </span>
                               <Select
                                 value={serviceNotifications[key].duration}
@@ -243,8 +242,8 @@ export default function SettingsNotificationsPage() {
                                 serviceNotifications[key].whatToNotify === 'off' ? 'opacity-50' : ''
                               }
                             >
-                              <span className="text-[12px] font-medium text-[var(--color-text-default)] block mb-2">
-                                Sound
+                              <span className="text-label-md text-[var(--color-text-default)] block mb-2">
+                                Sound{' '}
                               </span>
                               <Toggle
                                 checked={serviceNotifications[key].sound}

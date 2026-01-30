@@ -147,10 +147,10 @@ export function ChangeServerCertificateDrawer({
         {/* Current Certificate Info Box */}
         <div className="w-full px-4 py-3 bg-[var(--color-surface-muted)] rounded-lg">
           <VStack gap={1.5}>
-            <span className="text-[11px] font-medium text-[var(--color-text-subtle)] leading-4">
+            <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
               Current Server Certificate
             </span>
-            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+            <span className="text-body-md text-[var(--color-text-default)] leading-4">
               {currentCertificate.name} (expired on {currentCertificate.expiresAt})
             </span>
           </VStack>
@@ -158,7 +158,7 @@ export function ChangeServerCertificateDrawer({
 
         {/* New Server Certificate Section */}
         <VStack gap={3} className="pb-5">
-          <h3 className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">
             New Server Certificate
           </h3>
 
@@ -188,30 +188,30 @@ export function ChangeServerCertificateDrawer({
             <div className="flex items-stretch min-h-[40px] bg-[var(--color-border-subtle)] border border-[var(--color-border-default)] rounded-md">
               <div className="w-[40px] flex items-center justify-center shrink-0" />
               <div className="w-[59px] flex items-center justify-center px-3 border-l border-[var(--color-border-default)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-4">
+                <span className="text-label-sm text-[var(--color-text-default)] leading-4">
                   Status
                 </span>
               </div>
               <div className="flex-1 flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-4">
+                <span className="text-label-sm text-[var(--color-text-default)] leading-4">
                   Name
                 </span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
               </div>
               <div className="flex-1 flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-4">
+                <span className="text-label-sm text-[var(--color-text-default)] leading-4">
                   Domain
                 </span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
               </div>
               <div className="flex-1 flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-4">
+                <span className="text-label-sm text-[var(--color-text-default)] leading-4">
                   Listeners
                 </span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
               </div>
               <div className="flex-1 flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-4">
+                <span className="text-label-sm text-[var(--color-text-default)] leading-4">
                   Expires At
                 </span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
@@ -248,7 +248,7 @@ export function ChangeServerCertificateDrawer({
                 {/* Name */}
                 <div className="flex-1 flex flex-col gap-0.5 justify-center px-3 py-2 overflow-hidden min-w-0">
                   <div className="flex items-center gap-1.5">
-                    <span className="text-[12px] font-medium text-[var(--color-action-primary)] leading-4 truncate">
+                    <span className="text-label-md text-[var(--color-action-primary)] leading-4 truncate">
                       {cert.name}
                     </span>
                     <IconExternalLink
@@ -256,19 +256,19 @@ export function ChangeServerCertificateDrawer({
                       className="shrink-0 text-[var(--color-action-primary)]"
                     />
                   </div>
-                  <span className="text-[11px] text-[var(--color-text-subtle)] leading-4 truncate">
+                  <span className="text-body-sm text-[var(--color-text-subtle)] leading-4 truncate">
                     ID : {cert.id}
                   </span>
                 </div>
                 {/* Domain */}
                 <div className="flex-1 flex items-center px-3 py-2 overflow-hidden min-w-0">
-                  <span className="text-[12px] text-[var(--color-text-default)] leading-4 truncate">
+                  <span className="text-body-md text-[var(--color-text-default)] leading-4 truncate">
                     {cert.domain}
                   </span>
                 </div>
                 {/* Listeners */}
                 <div className="flex-1 flex items-center px-3 py-2 overflow-hidden min-w-0">
-                  <span className="text-[12px] text-[var(--color-text-default)] leading-4 truncate">
+                  <span className="text-body-md text-[var(--color-text-default)] leading-4 truncate">
                     {cert.listeners}
                     {cert.listenersCount && cert.listenersCount > 0
                       ? ` (+${cert.listenersCount})`
@@ -277,7 +277,7 @@ export function ChangeServerCertificateDrawer({
                 </div>
                 {/* Expires At */}
                 <div className="flex-1 flex items-center px-3 py-2 overflow-hidden min-w-0">
-                  <span className="text-[12px] text-[var(--color-text-default)] leading-4 truncate">
+                  <span className="text-body-md text-[var(--color-text-default)] leading-4 truncate">
                     {cert.expiresAt}
                   </span>
                 </div>

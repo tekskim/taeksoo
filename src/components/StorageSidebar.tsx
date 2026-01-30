@@ -64,7 +64,7 @@ export function StorageSidebar({ isOpen = true, onToggle }: StorageSidebarProps)
           {/* Back to Entry */}
           <Link
             to="/"
-            className="flex items-center gap-2 px-2 py-1.5 rounded-md text-[11px] font-medium transition-colors text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)]"
+            className="flex items-center gap-2 px-2 py-1.5 rounded-md text-label-sm transition-colors text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)]"
           >
             <IconArrowLeft size={14} stroke={1.5} />
             <span>All Services</span>

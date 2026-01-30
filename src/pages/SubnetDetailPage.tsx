@@ -237,9 +237,7 @@ export default function SubnetDetailPage() {
             {row.name}
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </Link>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-            Action
-          </span>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">Action</span>
         </div>
       ),
     },
@@ -263,7 +261,7 @@ export default function SubnetDetailPage() {
                 {row.attachedTo.name}
                 <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
               </Link>
-              <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+              <span className="text-body-sm text-[var(--color-text-subtle)]">
                 ID : {row.attachedTo.id}
               </span>
             </div>
@@ -300,7 +298,7 @@ export default function SubnetDetailPage() {
             {row.ownedNetwork.name}
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </Link>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+          <span className="text-body-sm text-[var(--color-text-subtle)]">
             ID : {row.ownedNetwork.id}
           </span>
         </div>
@@ -485,9 +483,7 @@ export default function SubnetDetailPage() {
                     <VStack gap={4} className="pt-4">
                       {/* Header */}
                       <div className="flex items-center justify-between">
-                        <h3 className="text-[16px] leading-[24px] font-semibold text-[var(--color-text-default)]">
-                          Ports
-                        </h3>
+                        <h3 className="text-heading-h5 text-[var(--color-text-default)]">Ports</h3>
                       </div>
 
                       {/* Search */}

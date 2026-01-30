@@ -235,10 +235,10 @@ function GaugeCard({
             opts={{ devicePixelRatio: window.devicePixelRatio }}
           />
           <div className="absolute inset-0 flex flex-col items-center justify-center pt-8 pointer-events-none">
-            <span className="text-[24px] leading-[28px] font-semibold text-[var(--color-text-default)]">
+            <span className="text-heading-h3 leading-[28px] text-[var(--color-text-default)]">
               {value}%
             </span>
-            <span className="text-[12px] text-[var(--color-text-subtle)]">
+            <span className="text-body-md text-[var(--color-text-subtle)]">
               {used}
               {unit ? ` ${unit}` : ''}/{total}
               {unit ? ` ${unit}` : ''}
@@ -255,14 +255,14 @@ function GaugeCard({
         >
           <div className="flex items-center gap-1.5">
             <div className="w-[5px] h-[5px] rounded-[1px]" style={{ backgroundColor: color }} />
-            <span className="text-[11px] leading-[14px] text-[var(--color-text-default)] whitespace-nowrap">
+            <span className="text-body-sm leading-[14px] text-[var(--color-text-default)] whitespace-nowrap">
               Used: {used}
               {unit} ({value}%)
             </span>
           </div>
           <div className="flex items-center gap-1.5">
             <div className="w-[5px] h-[5px] rounded-[1px] bg-[var(--color-border-subtle)]" />
-            <span className="text-[11px] leading-[14px] text-[var(--color-text-default)] whitespace-nowrap">
+            <span className="text-body-sm leading-[14px] text-[var(--color-text-default)] whitespace-nowrap">
               Available: {available.toFixed(1)}
               {unit} ({availablePercent}%)
             </span>
@@ -368,9 +368,7 @@ function PieChartCard({
               className="w-2.5 h-2.5 rounded-sm shrink-0"
               style={{ backgroundColor: item.color }}
             />
-            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
-              {item.label}
-            </span>
+            <span className="text-body-sm text-[var(--color-text-muted)]">{item.label}</span>
           </div>
         ))}
       </div>
@@ -416,19 +414,13 @@ function HostUsageCard({
           return (
             <div key={node.name} className="flex flex-col gap-1.5">
               <div className="flex items-center justify-between">
-                <span className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)]">
-                  {node.name}
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">{node.name}</span>
                 <div className="flex items-center gap-2">
-                  <span className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-muted)]">
+                  <span className="text-body-sm text-[var(--color-text-muted)]">
                     {used}/{total} GiB
                   </span>
                   <div className={`flex items-center px-1.5 py-0.5 rounded-md ${colors.bg}`}>
-                    <span
-                      className={`text-[length:var(--font-size-11)] leading-[var(--line-height-16)] font-medium ${colors.text}`}
-                    >
-                      {percent}%
-                    </span>
+                    <span className={`text-label-sm ${colors.text}`}>{percent}%</span>
                   </div>
                 </div>
               </div>
@@ -968,7 +960,7 @@ export default function ComputeAdminMonitorOverviewPage() {
             <VStack gap={6}>
               {/* Page Header */}
               <div className="flex items-center justify-between">
-                <h1 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+                <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
                   Monitor Overview
                 </h1>
               </div>

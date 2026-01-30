@@ -208,9 +208,7 @@ export function ComputeAdminServerGroupDetailPage() {
           >
             {row.name}
           </Link>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] truncate">
-            ID: {row.id}
-          </span>
+          <span className="text-body-sm text-[var(--color-text-muted)] truncate">ID: {row.id}</span>
         </div>
       ),
     },
@@ -340,7 +338,7 @@ export function ComputeAdminServerGroupDetailPage() {
 
                   <TabPanel value="instances" className="pt-0">
                     <VStack gap={4} className="pt-4">
-                      <h2 className="text-[length:var(--font-size-16)] leading-[var(--line-height-24)] font-semibold text-[var(--color-text-default)]">
+                      <h2 className="text-heading-h5 text-[var(--color-text-default)]">
                         Instances
                       </h2>
 

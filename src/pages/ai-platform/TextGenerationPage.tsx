@@ -20,10 +20,8 @@ function EmptyState({ icon, title, description }: EmptyStateProps) {
       <VStack gap={4} align="center">
         <div className="text-[var(--color-text-disabled)]">{icon}</div>
         <VStack gap={2} align="center">
-          <span className="text-[16px] font-semibold text-[var(--color-text-default)]">
-            {title}
-          </span>
-          <span className="text-[14px] text-[var(--color-text-subtle)]">{description}</span>
+          <span className="text-heading-h5 text-[var(--color-text-default)]">{title}</span>
+          <span className="text-body-lg text-[var(--color-text-subtle)]">{description}</span>
         </VStack>
       </VStack>
     </div>
@@ -105,10 +103,10 @@ export function TextGenerationPage() {
             <VStack gap={6}>
               {/* Header */}
               <VStack gap={1}>
-                <h1 className="text-[24px] font-semibold text-[var(--color-text-default)]">
+                <h1 className="text-heading-h3 text-[var(--color-text-default)]">
                   Text generation experiments
                 </h1>
-                <p className="text-[14px] text-[var(--color-text-subtle)]">
+                <p className="text-body-lg text-[var(--color-text-subtle)]">
                   Customize text generation models through LLM fine-tuning.
                 </p>
               </VStack>

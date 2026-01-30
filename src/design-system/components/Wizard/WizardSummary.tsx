@@ -41,9 +41,7 @@ export function WizardSummary({ title = 'Summary', items, onItemClick }: WizardS
     <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
       <VStack gap={3}>
         {/* Title */}
-        <span className="text-[length:var(--font-size-16)] font-semibold leading-[var(--line-height-24)] text-[var(--color-text-default)]">
-          {title}
-        </span>
+        <span className="text-heading-h5 text-[var(--color-text-default)]">{title}</span>
 
         {/* Section List */}
         <VStack gap={0}>
@@ -55,12 +53,10 @@ export function WizardSummary({ title = 'Summary', items, onItemClick }: WizardS
               className={`py-1 ${onItemClick ? 'cursor-pointer hover:bg-[var(--color-surface-muted)] rounded px-1 -mx-1' : ''}`}
               onClick={() => onItemClick?.(item.key)}
             >
-              <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">
-                {item.label}
-              </span>
+              <span className="text-body-md text-[var(--color-text-default)]">{item.label}</span>
 
               {item.status === 'writing' ? (
-                <span className="text-[11px] text-[var(--color-text-subtle)]">Writing...</span>
+                <span className="text-body-sm text-[var(--color-text-subtle)]">Writing...</span>
               ) : (
                 <WizardSectionStatusIcon status={item.status} />
               )}

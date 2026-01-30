@@ -139,10 +139,7 @@ export function Drawer({
         {(title || showCloseButton) && (
           <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--color-border-subtle)]">
             {title && (
-              <h2
-                id="drawer-title"
-                className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)] leading-[var(--line-height-24)]"
-              >
+              <h2 id="drawer-title" className="text-heading-h5 text-[var(--color-text-default)]">
                 {title}
               </h2>
             )}

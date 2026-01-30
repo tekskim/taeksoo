@@ -18,8 +18,7 @@ import DesktopIcon from '@/assets/settings.png';
 import SettingsIcon from '@/assets/appIcon/settings.png';
 
 /* ----------------------------------------
-   Types
-   ---------------------------------------- */
+   Types ---------------------------------------- */
 
 interface AppCard {
   id: string;
@@ -32,8 +31,7 @@ interface AppCard {
 }
 
 /* ----------------------------------------
-   App Cards Data
-   ---------------------------------------- */
+   App Cards Data ---------------------------------------- */
 
 const appCards: AppCard[] = [
   {
@@ -142,8 +140,7 @@ const appCards: AppCard[] = [
 ];
 
 /* ----------------------------------------
-   AppCardComponent
-   ---------------------------------------- */
+   AppCardComponent ---------------------------------------- */
 
 interface AppCardComponentProps {
   card: AppCard;
@@ -159,13 +156,9 @@ function AppCardComponent({ card, onClick }: AppCardComponentProps) {
       onClick={onClick}
       disabled={!isAvailable}
       className={`
-        group relative overflow-hidden
-        w-full min-h-[200px] rounded-2xl
-        bg-[var(--color-surface-default)]
+        group relative overflow-hidden w-full min-h-[200px] rounded-2xl bg-[var(--color-surface-default)]
         border border-[var(--color-border-default)]
-        transition-all duration-300 ease-out
-        text-left
-        ${
+        transition-all duration-300 ease-out text-left ${
           isAvailable
             ? 'hover:border-[var(--color-border-strong)] hover:shadow-xl hover:-translate-y-1 cursor-pointer'
             : 'opacity-60 cursor-not-allowed'
@@ -175,9 +168,7 @@ function AppCardComponent({ card, onClick }: AppCardComponentProps) {
       {/* Gradient Background */}
       <div
         className={`
-          absolute inset-0 bg-gradient-to-br ${card.color} opacity-0
-          transition-opacity duration-300
-          ${isAvailable ? 'group-hover:opacity-10' : ''}
+          absolute inset-0 bg-gradient-to-br ${card.color} opacity-0 transition-opacity duration-300 ${isAvailable ? 'group-hover:opacity-10' : ''}
         `}
       />
 
@@ -186,9 +177,7 @@ function AppCardComponent({ card, onClick }: AppCardComponentProps) {
         {/* Icon */}
         <div
           className={`
-            w-16 h-16
-            transition-transform duration-300 origin-center
-            ${isAvailable ? 'group-hover:scale-110' : ''}
+            w-16 h-16 transition-transform duration-300 origin-center ${isAvailable ? 'group-hover:scale-110' : ''}
           `}
         >
           {card.icon}
@@ -196,10 +185,8 @@ function AppCardComponent({ card, onClick }: AppCardComponentProps) {
 
         {/* Title & Description */}
         <div className="mt-auto">
-          <h3 className="text-[16px] font-semibold text-[var(--color-text-default)] mb-1">
-            {card.title}
-          </h3>
-          <p className="text-[12px] text-[var(--color-text-subtle)] line-clamp-2">
+          <h3 className="text-heading-h5 text-[var(--color-text-default)] mb-1">{card.title}</h3>
+          <p className="text-body-md text-[var(--color-text-subtle)] line-clamp-2">
             {card.description}
           </p>
         </div>
@@ -207,8 +194,8 @@ function AppCardComponent({ card, onClick }: AppCardComponentProps) {
         {/* Coming Soon Badge */}
         {!isAvailable && (
           <div className="absolute top-4 right-4">
-            <span className="px-2 py-1 text-[10px] font-medium bg-[var(--color-surface-subtle)] text-[var(--color-text-subtle)] rounded-full">
-              Coming Soon
+            <span className="px-2 py-1 text-body-xs font-medium bg-[var(--color-surface-subtle)] text-[var(--color-text-subtle)] rounded-full">
+              Coming Soon{' '}
             </span>
           </div>
         )}
@@ -218,8 +205,7 @@ function AppCardComponent({ card, onClick }: AppCardComponentProps) {
 }
 
 /* ----------------------------------------
-   EntryPage
-   ---------------------------------------- */
+   EntryPage ---------------------------------------- */
 
 export function EntryPage() {
   const navigate = useNavigate();
@@ -244,7 +230,7 @@ export function EntryPage() {
           {/* Actions */}
           <div className="flex items-center gap-3">
             <Button variant="secondary" size="sm" onClick={() => navigate('/design')}>
-              Design system
+              Design system{' '}
             </Button>
             <Button
               variant="secondary"
@@ -259,7 +245,7 @@ export function EntryPage() {
                 )
               }
             >
-              Storybook
+              Storybook{' '}
             </Button>
             <Button
               variant="secondary"
@@ -281,9 +267,9 @@ export function EntryPage() {
           {/* Hero Section */}
           <div className="text-center mb-12">
             <h1 className="text-[32px] font-bold text-[var(--color-text-default)] mb-3">
-              Thaki Design system SSoT
+              Thaki Design system SSoT{' '}
             </h1>
-            <p className="text-[14px] text-[var(--color-text-subtle)] mx-auto leading-relaxed">
+            <p className="text-body-lg text-[var(--color-text-subtle)] mx-auto leading-relaxed">
               Thaki Design system SSoT는 디자인 원칙, 컴포넌트, 토큰, 가이드라인을 한 곳에 모은
               '단일 기준'입니다.
             </p>
@@ -299,28 +285,31 @@ export function EntryPage() {
           {/* Developer Resources */}
           <div className="mt-12 pt-8 border-t border-[var(--color-border-default)]">
             <div className="text-center mb-6">
-              <p className="text-[12px] text-[var(--color-text-subtle)] mb-4">
-                Developer Resources
+              <p className="text-body-md text-[var(--color-text-subtle)] mb-4">
+                Developer Resources{' '}
               </p>
               <div className="flex items-center justify-center gap-4 mt-4 flex-wrap">
                 <Button variant="muted" size="md" onClick={() => navigate('/design/drawers')}>
-                  Drawers
+                  Drawers{' '}
                 </Button>
                 <Button variant="muted" size="md" onClick={() => navigate('/design/modals')}>
-                  Modals
+                  Modals{' '}
                 </Button>
                 <Button variant="muted" size="md" onClick={() => navigate('/sidebar-icons')}>
-                  Sidebar Icons
+                  Sidebar Icons{' '}
                 </Button>
                 <Button
                   variant="muted"
                   size="md"
                   onClick={() => window.open('https://thakicloud.github.io/404page', '_blank')}
                 >
-                  404 page
+                  404 page{' '}
                 </Button>
                 <Button variant="muted" size="md" onClick={() => navigate('/table-style-guide')}>
-                  Table Style Guide
+                  Table Style Guide{' '}
+                </Button>
+                <Button variant="muted" size="md" onClick={() => navigate('/topology-popovers')}>
+                  Topology Popovers{' '}
                 </Button>
               </div>
             </div>
@@ -331,7 +320,7 @@ export function EntryPage() {
       {/* Footer */}
       <footer className="border-t border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
         <div className="max-w-7xl mx-auto px-8 py-6">
-          <p className="text-[12px] text-[var(--color-text-subtle)] text-center">
+          <p className="text-body-md text-[var(--color-text-subtle)] text-center">
             © 2025 THAKI Cloud. All rights reserved.
           </p>
         </div>

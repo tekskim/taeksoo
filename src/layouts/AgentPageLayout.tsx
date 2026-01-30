@@ -93,9 +93,7 @@ export function AgentPageLayout({
           <div className="flex items-center justify-between w-full">
             <div className="flex flex-col items-start justify-center">
               <div className="flex items-center">
-                <h4 className="font-semibold text-[length:var(--font-size-18)] leading-[var(--line-height-28)] text-[var(--color-text-default)]">
-                  {title}
-                </h4>
+                <h4 className="text-heading-h4 text-[var(--color-text-default)]">{title}</h4>
               </div>
             </div>
             {headerActions && <div className="flex items-center gap-2">{headerActions}</div>}

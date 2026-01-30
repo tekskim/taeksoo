@@ -122,7 +122,7 @@ export function ProjectSelector({
       ) : (
         <>
           <span
-            className={`font-medium text-[var(--color-text-default)] ${variant === 'compact' ? 'text-[12px]' : 'text-[11px]'}`}
+            className={`font-medium text-[var(--color-text-default)] ${variant === 'compact' ? 'text-label-md' : 'text-label-sm'}`}
           >
             {selectedProject?.name || 'Select Project'}
           </span>
@@ -181,7 +181,7 @@ export function ProjectSelector({
                 placeholder="Search projects"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="flex-1 bg-transparent text-[11px] text-[var(--color-text-default)] placeholder:text-[var(--color-text-muted)] outline-none"
+                className="flex-1 bg-transparent text-body-sm text-[var(--color-text-default)] placeholder:text-[var(--color-text-muted)] outline-none"
                 autoFocus
               />
               <IconSearch size={12} className="text-[var(--color-text-muted)]" />
@@ -212,7 +212,7 @@ export function ProjectSelector({
                       {/* Header */}
                       <div className="flex items-center justify-between">
                         <span
-                          className={`text-[12px] font-medium ${
+                          className={`text-label-md ${
                             isDisabled
                               ? 'text-[var(--color-text-muted)]'
                               : 'text-[var(--color-text-default)]'
@@ -228,7 +228,7 @@ export function ProjectSelector({
                           />
                         )}
                         {isDisabled && (
-                          <span className="text-[11px] text-[var(--color-status-error)]">
+                          <span className="text-body-sm text-[var(--color-status-error)]">
                             Disabled
                           </span>
                         )}
@@ -236,7 +236,7 @@ export function ProjectSelector({
 
                       {/* Description */}
                       <p
-                        className={`text-[11px] leading-4 ${
+                        className={`text-body-sm leading-4 ${
                           isDisabled
                             ? 'text-[var(--color-text-muted)]'
                             : 'text-[var(--color-text-subtle)]'
@@ -247,7 +247,7 @@ export function ProjectSelector({
 
                       {/* Footer */}
                       <div
-                        className={`flex items-center justify-between text-[10px] ${
+                        className={`flex items-center justify-between text-body-xs ${
                           isDisabled
                             ? 'text-[var(--color-text-muted)]'
                             : 'text-[var(--color-text-subtle)]'
@@ -262,7 +262,7 @@ export function ProjectSelector({
               })}
 
               {filteredProjects.length === 0 && (
-                <div className="text-center py-4 text-[11px] text-[var(--color-text-muted)]">
+                <div className="text-center py-4 text-body-sm text-[var(--color-text-muted)]">
                   No projects found
                 </div>
               )}

@@ -307,7 +307,7 @@ export const ComplexExample: Story = {
         render: (value, row) => (
           <div className="flex flex-col">
             <span className="font-medium">{value}</span>
-            <span className="text-[11px] text-[var(--color-text-muted)]">{row.email}</span>
+            <span className="text-body-sm text-[var(--color-text-muted)]">{row.email}</span>
           </div>
         ),
       },

@@ -194,7 +194,7 @@ function MetricsTab() {
         <SectionCard className="flex-1">
           <SectionCard.Header title="Current Metrics" />
           <SectionCard.Content>
-            <span className="text-[12px] font-normal leading-[16px] text-[var(--color-text-default)]">
+            <span className="text-body-md font-normal leading-[16px] text-[var(--color-text-default)]">
               No Current Metrics
             </span>
           </SectionCard.Content>
@@ -296,9 +296,7 @@ function ConditionsTab() {
 
   return (
     <VStack gap={3}>
-      <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
-        Conditions
-      </h3>
+      <h3 className="text-heading-h5 text-[var(--color-text-default)]">Conditions</h3>
       <Pagination
         currentPage={currentPage}
         totalPages={1}
@@ -476,7 +474,7 @@ export function ContainerHPADetailPage() {
                 <HStack gap={3} className="w-full mt-3">
                   <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
                     <VStack gap={2}>
-                      <span className="text-[11px] font-medium text-[var(--color-text-subtle)] leading-4">
+                      <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
                         Labels ({Object.keys(hpa.labels).length})
                       </span>
                       <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
@@ -486,7 +484,7 @@ export function ContainerHPADetailPage() {
                             <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
                           ))}
                         {Object.keys(hpa.labels).length > 1 && (
-                          <span className="text-[11px] text-[var(--color-text-default)] cursor-pointer hover:underline">
+                          <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
                             (+{Object.keys(hpa.labels).length - 1})
                           </span>
                         )}
@@ -495,7 +493,7 @@ export function ContainerHPADetailPage() {
                   </div>
                   <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
                     <VStack gap={2}>
-                      <span className="text-[11px] font-medium text-[var(--color-text-subtle)] leading-4">
+                      <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
                         Annotations ({Object.keys(hpa.annotations).length})
                       </span>
                       <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
@@ -505,7 +503,7 @@ export function ContainerHPADetailPage() {
                             <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
                           ))}
                         {Object.keys(hpa.annotations).length > 1 && (
-                          <span className="text-[11px] text-[var(--color-text-default)] cursor-pointer hover:underline">
+                          <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
                             (+{Object.keys(hpa.annotations).length - 1})
                           </span>
                         )}

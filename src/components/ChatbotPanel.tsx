@@ -55,9 +55,7 @@ export function ChatbotPanel({ isOpen, onClose }: ChatbotPanelProps) {
     >
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-2.5 border-b border-[var(--color-border-default)] shrink-0 bg-[var(--color-surface-default)]">
-        <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] font-medium text-[var(--color-text-default)]">
-          AI Assistant
-        </span>
+        <span className="text-label-md text-[var(--color-text-default)]">AI Assistant</span>
         <button
           className="w-7 h-7 flex items-center justify-center text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] rounded transition-colors cursor-pointer"
           onClick={onClose}

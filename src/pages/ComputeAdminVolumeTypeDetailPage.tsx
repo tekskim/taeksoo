@@ -435,7 +435,7 @@ export default function ComputeAdminVolumeTypeDetailPage() {
                   <VStack gap={3} className="pt-6">
                     {/* Header with title and create button */}
                     <div className="flex items-center justify-between w-full">
-                      <h2 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+                      <h2 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
                         Extra Specs
                       </h2>
                       <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>

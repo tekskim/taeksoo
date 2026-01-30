@@ -379,9 +379,7 @@ export function ComputeAdminInstanceSnapshotsPage() {
           >
             {row.name}
           </Link>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-            ID : {row.id}
-          </span>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
         </div>
       ),
     },
@@ -400,9 +398,7 @@ export function ComputeAdminInstanceSnapshotsPage() {
           >
             {row.tenant}
           </Link>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-            ID : {row.tenantId}
-          </span>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.tenantId}</span>
         </div>
       ),
     },
@@ -435,7 +431,7 @@ export function ComputeAdminInstanceSnapshotsPage() {
           >
             {row.sourceInstance}
           </Link>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+          <span className="text-body-sm text-[var(--color-text-subtle)]">
             ID : {row.sourceInstanceId}
           </span>
         </div>
@@ -553,7 +549,7 @@ export function ComputeAdminInstanceSnapshotsPage() {
             <VStack gap={3}>
               {/* Page Header */}
               <div className="flex items-center justify-between h-8">
-                <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
                   Instance snapshots
                 </h1>
               </div>

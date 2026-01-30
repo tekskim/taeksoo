@@ -450,7 +450,7 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
           className="h-12 bg-[var(--color-surface-subtle)] border-b border-[var(--color-border-default)] flex items-center justify-between px-4 cursor-move select-none shrink-0"
           onMouseDown={handleMouseDown}
         >
-          <div className="flex items-center gap-2 text-[length:var(--font-size-14)] leading-[var(--line-height-20)] font-medium text-[var(--color-text-default)]">
+          <div className="flex items-center gap-2 text-label-lg text-[var(--color-text-default)]">
             <span>Settings</span>
           </div>
           <div className="window-controls">
@@ -581,7 +581,7 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
                     {isEditingPassword ? (
                       <>
                         {/* Password change description */}
-                        <p className="text-[12px] leading-4 text-[var(--color-text-subtle)]">
+                        <p className="text-body-md text-[var(--color-text-subtle)]">
                           Enter your new password below.
                         </p>
                         {/* New Password Field */}
@@ -646,10 +646,10 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
                     )}
                     {/* MFA Setting */}
                     <div className="flex flex-col gap-1.5 w-full">
-                      <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)]">
+                      <span className="text-label-sm text-[var(--color-text-subtle)]">
                         MFA Setting
                       </span>
-                      <p className="text-[12px] leading-4 text-[var(--color-text-subtle)]">
+                      <p className="text-body-md text-[var(--color-text-subtle)]">
                         Add an extra layer of security to your account.
                       </p>
                     </div>
@@ -660,16 +660,16 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
                           <IconLock size={16} className="text-[var(--color-text-subtle)]" />
                         </div>
                         <div className="flex flex-col gap-1">
-                          <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)]">
+                          <span className="text-label-sm text-[var(--color-text-subtle)]">
                             Authenticator App
                           </span>
                           {authenticatorSetup.configured ? (
-                            <div className="flex items-center gap-1.5 text-[11px] leading-4 text-[var(--color-state-success)]">
+                            <div className="flex items-center gap-1.5 text-body-sm text-[var(--color-state-success)]">
                               <IconCheck size={12} />
                               <span>Added {authenticatorSetup.addedAt}</span>
                             </div>
                           ) : (
-                            <span className="text-[11px] leading-4 text-[var(--color-text-subtle)]">
+                            <span className="text-body-sm text-[var(--color-text-subtle)]">
                               Use Google Authenticator, Authy, etc.
                             </span>
                           )}
@@ -699,7 +699,7 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
                   <SectionCard.Header title="Activity" showDivider={false} />
                   <SectionCard.Content>
                     <div>
-                      <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-muted)] mb-4">
+                      <p className="text-body-md text-[var(--color-text-muted)] mb-4">
                         Displaying your latest account activity.
                       </p>
 
@@ -774,13 +774,13 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
       >
         <div className="space-y-4">
           {/* Current email display */}
-          <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">
+          <p className="text-body-md text-[var(--color-text-default)]">
             Your current email is <span className="font-semibold">{email}</span>.
           </p>
 
           {/* Step 1: Password verification */}
           <div>
-            <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)] mb-2">
+            <p className="text-body-md text-[var(--color-text-default)] mb-2">
               Please enter your password.
             </p>
             <Input
@@ -805,7 +805,7 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
           {/* Step 2+: New email input (visible after password verified) */}
           {emailChangeStep >= 2 && (
             <div>
-              <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)] mb-2">
+              <p className="text-body-md text-[var(--color-text-default)] mb-2">
                 Please enter a new email and we will send you a verification code.
               </p>
               <Input
@@ -822,7 +822,7 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
           {/* Step 3: Verification code (visible after code sent) */}
           {emailChangeStep >= 3 && emailVerificationSent && (
             <div>
-              <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)] mb-2">
+              <p className="text-body-md text-[var(--color-text-default)] mb-2">
                 We just sent you a temporary verification code to{' '}
                 <span className="font-semibold text-[var(--color-action-primary)]">{newEmail}</span>
                 .
@@ -897,13 +897,13 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
         title="Verify Your Identity"
       >
         <div className="space-y-4">
-          <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">
+          <p className="text-body-md text-[var(--color-text-default)]">
             Please enter your current password to verify your identity before modifying security
             settings.
           </p>
 
           <div className="space-y-2">
-            <label className="block text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)]">
+            <label className="block text-label-md text-[var(--color-text-default)]">
               Current Password
             </label>
             <Input
@@ -918,9 +918,7 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
               className={passwordError ? 'border-[var(--color-state-danger)]' : ''}
             />
             {passwordError && (
-              <p className="text-[length:var(--font-size-12)] text-[var(--color-state-danger)]">
-                {passwordError}
-              </p>
+              <p className="text-body-md text-[var(--color-state-danger)]">{passwordError}</p>
             )}
           </div>
 
@@ -1066,10 +1064,8 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
 
           {/* Title & Description */}
           <div className="space-y-2">
-            <h2 className="text-[length:var(--font-size-18)] font-bold text-[var(--color-text-default)] leading-[26px]">
-              Set up the OTP App
-            </h2>
-            <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-muted)]">
+            <h2 className="text-heading-h4 text-[var(--color-text-default)]">Set up the OTP App</h2>
+            <p className="text-body-md text-[var(--color-text-muted)]">
               For security, you must set up OTP verification.
             </p>
           </div>
@@ -1077,9 +1073,9 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
           {/* Step 1 */}
           <div className="flex gap-3">
             <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[var(--color-action-primary)] flex items-center justify-center">
-              <span className="text-white text-[length:var(--font-size-12)] font-medium">1</span>
+              <span className="text-white text-label-md">1</span>
             </div>
-            <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)] pt-0.5">
+            <p className="text-body-md text-[var(--color-text-default)] pt-0.5">
               Install a compatible application such as Google or Microsoft Authenticator app on your
               mobile device or computer.
             </p>
@@ -1088,10 +1084,10 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
           {/* Step 2 */}
           <div className="flex gap-3">
             <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[var(--color-action-primary)] flex items-center justify-center">
-              <span className="text-white text-[length:var(--font-size-12)] font-medium">2</span>
+              <span className="text-white text-label-md">2</span>
             </div>
             <div className="space-y-3 flex-1">
-              <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)] pt-0.5">
+              <p className="text-body-md text-[var(--color-text-default)] pt-0.5">
                 Open your authenticator app and scan the QR code below.
                 <br />
                 <span className="text-[var(--color-text-muted)]">
@@ -1101,7 +1097,7 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
 
               {/* Secret Key */}
               <div className="px-3 py-2 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md">
-                <code className="font-mono text-[length:var(--font-size-11)] tracking-wider text-[var(--color-text-default)] break-all">
+                <code className="font-mono text-body-sm tracking-wider text-[var(--color-text-default)] break-all">
                   {demoSecretKey}
                 </code>
               </div>
@@ -1129,17 +1125,17 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
           {/* Step 3 */}
           <div className="flex gap-3">
             <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[var(--color-action-primary)] flex items-center justify-center">
-              <span className="text-white text-[length:var(--font-size-12)] font-medium">3</span>
+              <span className="text-white text-label-md">3</span>
             </div>
             <div className="space-y-3 flex-1">
-              <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)] pt-0.5">
+              <p className="text-body-md text-[var(--color-text-default)] pt-0.5">
                 Enter the 6-digit verification code generated by your authenticator app to complete
                 the setup.
               </p>
 
               {/* Verification Code Input */}
               <div className="space-y-2">
-                <label className="block text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)]">
+                <label className="block text-label-md text-[var(--color-text-default)]">
                   Verification Code
                 </label>
                 <Input
@@ -1154,9 +1150,7 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
                   error={!!otpError}
                 />
                 {otpError && (
-                  <p className="text-[length:var(--font-size-11)] text-[var(--color-state-danger)]">
-                    {otpError}
-                  </p>
+                  <p className="text-body-sm text-[var(--color-state-danger)]">{otpError}</p>
                 )}
               </div>
             </div>
@@ -1224,7 +1218,7 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
         <div className="space-y-5">
           {/* New Password Field */}
           <div className="space-y-2">
-            <label className="block text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)]">
+            <label className="block text-label-md text-[var(--color-text-default)]">
               New Password
             </label>
             <div className="relative">
@@ -1252,15 +1246,13 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
               </button>
             </div>
             {newPasswordError && (
-              <p className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-state-danger)]">
-                {newPasswordError}
-              </p>
+              <p className="text-body-sm text-[var(--color-state-danger)]">{newPasswordError}</p>
             )}
           </div>
 
           {/* Confirm New Password Field */}
           <div className="space-y-2">
-            <label className="block text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)]">
+            <label className="block text-label-md text-[var(--color-text-default)]">
               Confirm New Password
             </label>
             <div className="relative">
@@ -1288,7 +1280,7 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
               </button>
             </div>
             {confirmPasswordError && (
-              <p className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-state-danger)]">
+              <p className="text-body-sm text-[var(--color-state-danger)]">
                 {confirmPasswordError}
               </p>
             )}

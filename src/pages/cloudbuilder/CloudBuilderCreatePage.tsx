@@ -57,17 +57,17 @@ export function CloudBuilderCreatePage() {
       <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
         <VStack gap={6} className="min-w-[1176px]">
           <DetailHeader>
-            <div className="text-[12px] text-[var(--color-text-subtle)]">
+            <div className="text-body-md text-[var(--color-text-subtle)]">
               <span className="text-[var(--color-text-subtle)]">Discovery</span>
               <span className="mx-1">{'>'}</span>
               <span className="text-[var(--color-text-subtle)]">Register discovery</span>
             </div>
             <DetailHeader.Title>{pageTitle}</DetailHeader.Title>
             <Button as={Link} to={`/cloudbuilder/${slug}`} variant="link">
-              Back
+              Back{' '}
             </Button>
             {isDiscovery && (
-              <div className="text-[12px] text-[var(--color-text-subtle)]">
+              <div className="text-body-md text-[var(--color-text-subtle)]">
                 입력값은 저장되지 않으며, UI/필드 구성만 반영합니다.
               </div>
             )}
@@ -77,10 +77,10 @@ export function CloudBuilderCreatePage() {
             <>
               <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg">
                 <div className="px-6 py-5">
-                  <div className="text-[14px] font-semibold text-[var(--color-text-default)]">
-                    Endpoint
+                  <div className="text-body-lg font-semibold text-[var(--color-text-default)]">
+                    Endpoint{' '}
                   </div>
-                  <div className="mt-1 text-[12px] text-[var(--color-text-subtle)]">
+                  <div className="mt-1 text-body-md text-[var(--color-text-subtle)]">
                     엔드포인트를 입력하고 불러오기를 누르면 Serial/MAC/IP/Location을 채웁니다.
                     (데모)
                   </div>
@@ -98,14 +98,13 @@ export function CloudBuilderCreatePage() {
                       <Button
                         fullWidth
                         onClick={() => {
-                          // UI only: simulate fetching discovered values
-                          setDiscoverySerial('SN2001');
+                          // UI only: simulate fetching discovered values setDiscoverySerial('SN2001');
                           setDiscoveryMacPrimary('00:1A:2B:3C:4D:5E');
                           setDiscoveryLocation('R1-U18');
                           setDiscoveryMgmtIp('10.0.0.12');
                         }}
                       >
-                        Fetch
+                        Fetch{' '}
                       </Button>
                     </div>
                   </div>
@@ -114,17 +113,17 @@ export function CloudBuilderCreatePage() {
                 <div className="h-px bg-[var(--color-border-subtle)]" />
 
                 <div className="px-6 py-5">
-                  <div className="text-[14px] font-semibold text-[var(--color-text-default)]">
-                    Basic
+                  <div className="text-body-lg font-semibold text-[var(--color-text-default)]">
+                    Basic{' '}
                   </div>
 
                   <div className="mt-4 grid grid-cols-12 gap-y-5 gap-x-6">
                     <div className="col-span-4">
-                      <div className="text-[12px] font-medium text-[var(--color-text-default)]">
+                      <div className="text-label-md text-[var(--color-text-default)]">
                         Serial <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                       </div>
-                      <div className="mt-1 text-[11px] text-[var(--color-text-subtle)]">
-                        현장 휴면 식별용 시리얼
+                      <div className="mt-1 text-body-sm text-[var(--color-text-subtle)]">
+                        현장 휴면 식별용 시리얼{' '}
                       </div>
                     </div>
                     <div className="col-span-8">
@@ -136,11 +135,11 @@ export function CloudBuilderCreatePage() {
                     </div>
 
                     <div className="col-span-4">
-                      <div className="text-[12px] font-medium text-[var(--color-text-default)]">
+                      <div className="text-label-md text-[var(--color-text-default)]">
                         MAC (Primary){' '}
                         <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                       </div>
-                      <div className="mt-1 text-[11px] text-[var(--color-text-subtle)]">
+                      <div className="mt-1 text-body-sm text-[var(--color-text-subtle)]">
                         대표 MAC(자산 식별 키)
                       </div>
                     </div>
@@ -153,11 +152,11 @@ export function CloudBuilderCreatePage() {
                     </div>
 
                     <div className="col-span-4">
-                      <div className="text-[12px] font-medium text-[var(--color-text-default)]">
+                      <div className="text-label-md text-[var(--color-text-default)]">
                         Location <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                       </div>
-                      <div className="mt-1 text-[11px] text-[var(--color-text-subtle)]">
-                        랙/유닛 등 물리 위치
+                      <div className="mt-1 text-body-sm text-[var(--color-text-subtle)]">
+                        랙/유닛 등 물리 위치{' '}
                       </div>
                     </div>
                     <div className="col-span-8">
@@ -169,10 +168,10 @@ export function CloudBuilderCreatePage() {
                     </div>
 
                     <div className="col-span-4">
-                      <div className="text-[12px] font-medium text-[var(--color-text-default)]">
+                      <div className="text-label-md text-[var(--color-text-default)]">
                         Mgmt IP (Optional)
                       </div>
-                      <div className="mt-1 text-[11px] text-[var(--color-text-subtle)]">
+                      <div className="mt-1 text-body-sm text-[var(--color-text-subtle)]">
                         관리 IP(있으면 입력)
                       </div>
                     </div>
@@ -186,10 +185,8 @@ export function CloudBuilderCreatePage() {
                     </div>
 
                     <div className="col-span-4">
-                      <div className="text-[12px] font-medium text-[var(--color-text-default)]">
-                        Notes
-                      </div>
-                      <div className="mt-1 text-[11px] text-[var(--color-text-subtle)]">
+                      <div className="text-label-md text-[var(--color-text-default)]">Notes </div>
+                      <div className="mt-1 text-body-sm text-[var(--color-text-subtle)]">
                         메모(선택)
                       </div>
                     </div>
@@ -205,7 +202,7 @@ export function CloudBuilderCreatePage() {
 
                   <div className="mt-6 flex items-center justify-end gap-2">
                     <Button variant="secondary" onClick={() => navigate(`/cloudbuilder/${slug}`)}>
-                      Cancel
+                      Cancel{' '}
                     </Button>
                     <Button onClick={() => setConfirmOpen(true)}>Create</Button>
                   </div>
@@ -323,7 +320,7 @@ export function CloudBuilderCreatePage() {
 
               <div className="flex items-center justify-end gap-2">
                 <Button variant="secondary" onClick={() => navigate(`/cloudbuilder/${slug}`)}>
-                  Cancel
+                  Cancel{' '}
                 </Button>
                 <Button onClick={() => setConfirmOpen(true)}>Create</Button>
               </div>
@@ -345,8 +342,7 @@ export function CloudBuilderCreatePage() {
         onCancel={() => setConfirmOpen(false)}
         onConfirm={() => {
           setConfirmOpen(false);
-          // UI-only: go back to list
-          navigate(`/cloudbuilder/${slug}`);
+          // UI-only: go back to list navigate(`/cloudbuilder/${slug}`);
         }}
       />
     </AppLayout>

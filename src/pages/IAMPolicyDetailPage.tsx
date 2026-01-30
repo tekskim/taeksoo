@@ -274,8 +274,8 @@ interface InfoCardProps {
 function InfoCard({ label, value }: InfoCardProps) {
   return (
     <div className="basis-0 grow bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3 flex flex-col gap-1.5">
-      <span className="text-[11px] font-medium text-[var(--color-text-subtle)]">{label}</span>
-      <span className="text-[12px] text-[var(--color-text-default)]">{value}</span>
+      <span className="text-label-sm text-[var(--color-text-subtle)]">{label}</span>
+      <span className="text-body-md text-[var(--color-text-default)]">{value}</span>
     </div>
   );
 }
@@ -627,7 +627,7 @@ export default function IAMPolicyDetailPage() {
               <div className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
                 <VStack gap={3}>
                   {/* Title */}
-                  <h1 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+                  <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
                     {policy.name}
                   </h1>
 
@@ -675,7 +675,7 @@ export default function IAMPolicyDetailPage() {
                     <VStack gap={4} className="pt-4">
                       {/* Section Header */}
                       <HStack justify="between" align="center" className="w-full">
-                        <h2 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+                        <h2 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
                           Permissions
                         </h2>
                         <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
@@ -796,7 +796,7 @@ export default function IAMPolicyDetailPage() {
                     <VStack gap={4} className="pt-4">
                       {/* Section Header */}
                       <HStack justify="between" align="center" className="w-full">
-                        <h2 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+                        <h2 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
                           Roles
                         </h2>
                         <Button variant="secondary" size="sm">
@@ -834,7 +834,7 @@ export default function IAMPolicyDetailPage() {
                     <VStack gap={4} className="pt-4">
                       {/* Section Header */}
                       <div className="h-7 flex items-center">
-                        <h2 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+                        <h2 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
                           Version history
                         </h2>
                       </div>
@@ -900,13 +900,13 @@ export default function IAMPolicyDetailPage() {
                               {/* Active Badge */}
                               <div className="w-[70px] flex items-center justify-center px-3 py-2">
                                 {version.isActive && (
-                                  <span className="px-1.5 py-0.5 bg-[var(--color-action-primary)] text-white text-[11px] font-medium rounded-md">
+                                  <span className="px-1.5 py-0.5 bg-[var(--color-action-primary)] text-white text-label-sm rounded-md">
                                     Active
                                   </span>
                                 )}
                               </div>
                               {/* Version */}
-                              <div className="flex-1 flex items-center gap-2 px-3 py-2 text-[12px] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                              <div className="flex-1 flex items-center gap-2 px-3 py-2 text-body-md leading-[var(--table-line-height)] text-[var(--color-text-default)]">
                                 <button
                                   onClick={() => toggleVersionExpansion(version.id)}
                                   className="p-0.5 hover:bg-[var(--color-surface-subtle)] rounded"
@@ -920,15 +920,15 @@ export default function IAMPolicyDetailPage() {
                                 <span className="font-medium">Version {version.version}</span>
                               </div>
                               {/* Conditions */}
-                              <div className="flex-1 flex items-center px-3 py-2 text-[12px] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                              <div className="flex-1 flex items-center px-3 py-2 text-body-md leading-[var(--table-line-height)] text-[var(--color-text-default)]">
                                 {version.conditions}
                               </div>
                               {/* Edited by */}
-                              <div className="flex-1 flex items-center px-3 py-2 text-[12px] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                              <div className="flex-1 flex items-center px-3 py-2 text-body-md leading-[var(--table-line-height)] text-[var(--color-text-default)]">
                                 {version.editedBy}
                               </div>
                               {/* Edited at */}
-                              <div className="flex-1 flex items-center px-3 py-2 text-[12px] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                              <div className="flex-1 flex items-center px-3 py-2 text-body-md leading-[var(--table-line-height)] text-[var(--color-text-default)]">
                                 {version.editedAt}
                               </div>
                               {/* Action */}

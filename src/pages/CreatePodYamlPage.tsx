@@ -55,7 +55,7 @@ function YamlEditor({ value, onChange, onCopy }: YamlEditorProps) {
         ref={lineNumbersRef}
         className="w-[44px] flex-shrink-0 overflow-y-scroll py-2 pr-2 select-none text-right bg-[var(--color-surface-default)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
-        <div className="font-mono text-[12px] leading-[18px] text-[var(--color-text-subtle)]">
+        <div className="font-mono text-body-md text-[var(--color-text-subtle)]">
           {Array.from({ length: lineCount }, (_, i) => (
             <div key={i + 1}>{i + 1}</div>
           ))}
@@ -69,7 +69,7 @@ function YamlEditor({ value, onChange, onCopy }: YamlEditorProps) {
           value={value}
           onChange={(e) => onChange(e.target.value)}
           onScroll={handleScroll}
-          className="w-full h-full py-2 px-2.5 pr-12 font-mono text-[12px] leading-[18px] text-[var(--color-text-default)] bg-transparent border-none outline-none resize-none overflow-auto yaml-editor-scroll"
+          className="w-full h-full py-2 px-2.5 pr-12 font-mono text-body-md text-[var(--color-text-default)] bg-transparent border-none outline-none resize-none overflow-auto yaml-editor-scroll"
           spellCheck={false}
           autoComplete="off"
           autoCorrect="off"
@@ -223,10 +223,8 @@ export function CreatePodYamlPage() {
             <VStack gap={6} className="flex-1 min-h-0">
               {/* Header */}
               <VStack gap={2} className="flex-shrink-0">
-                <h1 className="text-[16px] leading-[24px] font-semibold text-[var(--color-text-default)]">
-                  Create Pod
-                </h1>
-                <p className="text-[11px] leading-[16px] text-[var(--color-text-subtle)]">
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create Pod</h1>
+                <p className="text-body-sm text-[var(--color-text-subtle)]">
                   Create a Kubernetes Pod by defining its containers, configuration to run workloads
                   within your cluster.
                 </p>

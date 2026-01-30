@@ -286,7 +286,7 @@ export function ComputeAdminHostAggregatesPage() {
             <VStack gap={3}>
               {/* Page Header */}
               <div className="flex items-center justify-between h-8">
-                <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
                   {activeTab === 'host-aggregates' ? 'Host Aggregates' : 'Availability Zones'}
                 </h1>
                 {activeTab === 'host-aggregates' && (
@@ -388,21 +388,21 @@ export function ComputeAdminHostAggregatesPage() {
                                   />
                                 )}
                               </button>
-                              <span className="text-[12px] text-[var(--color-text-default)]">
+                              <span className="text-body-md text-[var(--color-text-default)]">
                                 {row.name}
                               </span>
                             </div>
 
                             {/* Availability Zone Cell */}
                             <div className="flex items-center px-3 py-2 min-w-0 flex-1">
-                              <span className="text-[12px] text-[var(--color-text-default)]">
+                              <span className="text-body-md text-[var(--color-text-default)]">
                                 {row.availabilityZone}
                               </span>
                             </div>
 
                             {/* Hosts Cell */}
                             <div className="flex items-center px-3 py-2 min-w-0 flex-1">
-                              <span className="text-[12px] text-[var(--color-text-default)]">
+                              <span className="text-body-md text-[var(--color-text-default)]">
                                 {firstHost}
                                 {additionalHosts > 0 && ` (+${additionalHosts})`}
                               </span>
@@ -410,7 +410,7 @@ export function ComputeAdminHostAggregatesPage() {
 
                             {/* Created at Cell */}
                             <div className="flex items-center px-3 py-2 min-w-0 flex-1">
-                              <span className="text-[12px] text-[var(--color-text-default)]">
+                              <span className="text-body-md text-[var(--color-text-default)]">
                                 {row.createdAt}
                               </span>
                             </div>
@@ -436,12 +436,12 @@ export function ComputeAdminHostAggregatesPage() {
                                 {/* Metadata Table Header */}
                                 <div className="flex items-center h-[40px] w-full bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
                                   <div className="flex items-center px-3 py-2 flex-1">
-                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                    <span className="text-label-sm text-[var(--color-text-default)]">
                                       Metadata
                                     </span>
                                   </div>
                                   <div className="flex items-center px-3 py-2 flex-1 border-l border-[var(--color-border-default)]">
-                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                    <span className="text-label-sm text-[var(--color-text-default)]">
                                       Value
                                     </span>
                                   </div>
@@ -453,12 +453,12 @@ export function ComputeAdminHostAggregatesPage() {
                                     className="flex items-center min-h-[40px] w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)]"
                                   >
                                     <div className="flex items-center px-3 py-2 flex-1">
-                                      <span className="text-[12px] text-[var(--color-text-default)]">
+                                      <span className="text-body-md text-[var(--color-text-default)]">
                                         {meta.key}
                                       </span>
                                     </div>
                                     <div className="flex items-center px-3 py-2 flex-1">
-                                      <span className="text-[12px] text-[var(--color-text-default)]">
+                                      <span className="text-body-md text-[var(--color-text-default)]">
                                         {meta.value}
                                       </span>
                                     </div>
@@ -542,14 +542,14 @@ export function ComputeAdminHostAggregatesPage() {
                         >
                           {/* Name Cell */}
                           <div className="flex items-center px-3 py-2 min-w-0 flex-1">
-                            <span className="text-[12px] text-[var(--color-text-default)]">
+                            <span className="text-body-md text-[var(--color-text-default)]">
                               {az.name}
                             </span>
                           </div>
 
                           {/* Hosts Cell */}
                           <div className="flex items-center px-3 py-2 min-w-0 flex-1">
-                            <span className="text-[12px] text-[var(--color-text-default)]">
+                            <span className="text-body-md text-[var(--color-text-default)]">
                               {firstHost}
                               {additionalHosts > 0 && ` (+${additionalHosts})`}
                             </span>
@@ -557,7 +557,7 @@ export function ComputeAdminHostAggregatesPage() {
 
                           {/* Available Cell */}
                           <div className="flex items-center px-3 py-2 min-w-0 flex-1">
-                            <span className="text-[12px] text-[var(--color-text-default)]">
+                            <span className="text-body-md text-[var(--color-text-default)]">
                               {az.available ? 'Yes' : 'No'}
                             </span>
                           </div>
