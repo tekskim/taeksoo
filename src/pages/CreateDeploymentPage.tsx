@@ -333,6 +333,7 @@ function SummarySubItem({ label, status }: SummarySubItemProps) {
 interface SummarySidebarProps {
   name: string;
   containerTabs: ContainerTab[];
+  activeTab: string;
   onCancel: () => void;
   onCreate: () => void;
   isCreateDisabled: boolean;
@@ -341,27 +342,55 @@ interface SummarySidebarProps {
 function SummarySidebar({
   name,
   containerTabs,
+  activeTab,
   onCancel,
   onCreate,
   isCreateDisabled,
 }: SummarySidebarProps) {
-  // Expanded state for collapsible sections
-  const [deploymentExpanded, setDeploymentExpanded] = useState(true);
-
   // Simple completion checks based on required fields
   const basicInfoComplete = name.trim().length > 0;
   const labelsComplete = true; // Labels are optional
-  const scalingComplete = true; // Scaling is optional
+  const scalingComplete = true; // Scaling are optional
   const deploymentComplete = basicInfoComplete && labelsComplete && scalingComplete;
   const podComplete = true; // All pod sections are optional
   const containersComplete = containerTabs.length > 0; // At least one container exists
 
+  // Determine which section to expand based on active tab
+  const isDeploymentTab = activeTab === 'deployment';
+  const isPodTab = activeTab === 'pod';
+  const activeContainerId = containerTabs.find((c) => c.id === activeTab)?.id;
+
+  // Pod section items matching Figma design
+  const podSections = [
+    'Labels & Annotations',
+    'Scaling and Upgrade Policy',
+    'Node Scheduling',
+    'Pod Scheduling',
+    'Resources',
+    'Security Context',
+    'Storage',
+  ];
+
+  // Container section items matching Figma design
+  const containerSections = [
+    'Basic Information',
+    'Image',
+    'Command',
+    'Environment Variables',
+    'Service Account Name',
+    'Lifecycle Hooks',
+    'Health Check',
+    'Resources',
+    'Security Context',
+    'Storage',
+  ];
+
   return (
-    <div className="w-[280px] shrink-0 mt-[45px]">
+    <div className="w-[280px] shrink-0 self-stretch pt-[45px]">
       <div className="sticky top-4">
         <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[8px] overflow-hidden flex flex-col gap-3 pt-3 pb-4 px-3">
           {/* Scrollable content area */}
-          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[8px] pl-4 pr-1 py-4 max-h-[340px] min-h-[160px] overflow-y-auto">
+          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[8px] pl-4 pr-1 py-4 max-h-[calc(100vh-200px)] overflow-y-auto">
             <VStack gap={4} className="pr-2">
               <h5 className="text-[16px] leading-6 font-semibold text-[var(--color-text-default)]">
                 Summary
@@ -372,11 +401,11 @@ function SummarySidebar({
                 <SummarySectionHeader
                   label="Deployment"
                   status={deploymentComplete ? 'complete' : 'in-progress'}
-                  expanded={deploymentExpanded}
-                  onToggle={() => setDeploymentExpanded(!deploymentExpanded)}
+                  expanded={isDeploymentTab}
+                  onToggle={() => {}}
                   hasChildren
                 />
-                {deploymentExpanded && (
+                {isDeploymentTab && (
                   <VStack gap={0} className="ml-3">
                     <SummarySubItem
                       label="Basic Information"
@@ -395,24 +424,41 @@ function SummarySidebar({
               </VStack>
 
               {/* Pod Section */}
-              <SummarySectionHeader
-                label="Pod"
-                status={podComplete ? 'complete' : 'in-progress'}
-                expanded={false}
-                onToggle={() => {}}
-                hasChildren
-              />
-
-              {/* Container Sections */}
-              {containerTabs.map((container) => (
+              <VStack gap={2}>
                 <SummarySectionHeader
-                  key={container.id}
-                  label={container.name}
-                  status={containersComplete ? 'complete' : 'in-progress'}
-                  expanded={false}
+                  label="Pod"
+                  status={podComplete ? 'complete' : 'in-progress'}
+                  expanded={isPodTab}
                   onToggle={() => {}}
                   hasChildren
                 />
+                {isPodTab && (
+                  <VStack gap={0} className="ml-3">
+                    {podSections.map((section) => (
+                      <SummarySubItem key={section} label={section} status="complete" />
+                    ))}
+                  </VStack>
+                )}
+              </VStack>
+
+              {/* Container Sections */}
+              {containerTabs.map((container) => (
+                <VStack key={container.id} gap={2}>
+                  <SummarySectionHeader
+                    label={container.name}
+                    status={containersComplete ? 'complete' : 'in-progress'}
+                    expanded={activeContainerId === container.id}
+                    onToggle={() => {}}
+                    hasChildren
+                  />
+                  {activeContainerId === container.id && (
+                    <VStack gap={0} className="ml-3">
+                      {containerSections.map((section) => (
+                        <SummarySubItem key={section} label={section} status="complete" />
+                      ))}
+                    </VStack>
+                  )}
+                </VStack>
               ))}
             </VStack>
           </div>
@@ -581,7 +627,7 @@ function LabelsAnnotationsSection({
             </VStack>
 
             {/* Bordered container for labels */}
-            <div className="border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
               <VStack gap={3}>
                 {labels.map((label, index) => (
                   <div
@@ -613,9 +659,9 @@ function LabelsAnnotationsSection({
                       </VStack>
                       <button
                         onClick={() => onRemoveLabel(index)}
-                        className="mt-6 p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                        className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                       >
-                        <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                        <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
                       </button>
                     </div>
                   </div>
@@ -647,7 +693,7 @@ function LabelsAnnotationsSection({
             </VStack>
 
             {/* Bordered container for annotations */}
-            <div className="border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
               <VStack gap={3}>
                 {annotations.map((annotation, index) => (
                   <div
@@ -679,9 +725,9 @@ function LabelsAnnotationsSection({
                       </VStack>
                       <button
                         onClick={() => onRemoveAnnotation(index)}
-                        className="mt-6 p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                        className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                       >
-                        <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                        <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
                       </button>
                     </div>
                   </div>
@@ -935,81 +981,198 @@ export function CreateDeploymentPage() {
 
   // No section status state needed - all sections are always visible
 
+  // HTTP Header type for probes and lifecycle hooks
+  type HttpHeader = { name: string; value: string };
+
+  // Lifecycle hook type
+  type LifecycleHookConfig = {
+    type: 'none' | 'exec' | 'httpGet';
+    command: string;
+    httpGet: {
+      host: string;
+      path: string;
+      port: string;
+      scheme: string;
+      httpHeaders: HttpHeader[];
+    };
+  };
+
+  // Probe configuration type
+  type ProbeConfig = {
+    enabled: boolean;
+    type: 'none' | 'httpGet' | 'tcpSocket' | 'exec';
+    httpGet: {
+      path: string;
+      port: string;
+      scheme: string;
+      host: string;
+      httpHeaders: HttpHeader[];
+    };
+    tcpSocket: {
+      port: string;
+    };
+    exec: {
+      command: string;
+    };
+    initialDelaySeconds: string;
+    periodSeconds: string;
+    timeoutSeconds: string;
+    failureThreshold: string;
+    successThreshold: string;
+  };
+
+  // Container config type
+  type ContainerConfig = {
+    // Basic Information
+    name: string;
+    containerType: 'init' | 'standard';
+    // Image
+    image: string;
+    imagePullPolicy: string;
+    pullSecrets: string;
+    // Commands
+    command: string;
+    args: string;
+    workingDir: string;
+    // Ports
+    ports: { name: string; containerPort: string; protocol: string }[];
+    // Environment Variables
+    envVars: {
+      name: string;
+      value: string;
+      type: 'value' | 'configmap' | 'secret';
+      configMapName?: string;
+      configMapKey?: string;
+      secretName?: string;
+      secretKey?: string;
+    }[];
+    // Service Account
+    serviceAccountName: string;
+    // Lifecycle Hooks
+    lifecycleHooks: {
+      postStart: LifecycleHookConfig;
+      preStop: LifecycleHookConfig;
+    };
+    // Health Checks
+    startupProbe: ProbeConfig;
+    livenessProbe: ProbeConfig;
+    readinessProbe: ProbeConfig;
+    // Resources
+    cpuRequest: string;
+    cpuRequestUnit: string;
+    cpuLimit: string;
+    cpuLimitUnit: string;
+    memoryRequest: string;
+    memoryRequestUnit: string;
+    memoryLimit: string;
+    memoryLimitUnit: string;
+    gpuLimit: string;
+    // Networking
+    stdin: boolean;
+    tty: boolean;
+    // Security Context
+    runAsUser: string;
+    runAsGroup: string;
+    runAsNonRoot: boolean;
+    privileged: boolean;
+    readOnlyRootFilesystem: boolean;
+    allowPrivilegeEscalation: boolean;
+    // Volume Mounts
+    volumeMounts: { name: string; mountPath: string; subPath: string; readOnly: boolean }[];
+    // Storage
+    selectedVolume: string;
+  };
+
+  // Default probe config
+  const defaultProbeConfig: ProbeConfig = {
+    enabled: false,
+    type: 'none',
+    httpGet: {
+      path: '/',
+      port: '8080',
+      scheme: 'HTTP',
+      host: '',
+      httpHeaders: [],
+    },
+    tcpSocket: {
+      port: '8080',
+    },
+    exec: {
+      command: '',
+    },
+    initialDelaySeconds: '0',
+    periodSeconds: '10',
+    timeoutSeconds: '1',
+    failureThreshold: '3',
+    successThreshold: '1',
+  };
+
+  // Default lifecycle hook config
+  const defaultLifecycleHookConfig: LifecycleHookConfig = {
+    type: 'none',
+    command: '',
+    httpGet: {
+      host: '',
+      path: '',
+      port: '',
+      scheme: 'HTTP',
+      httpHeaders: [],
+    },
+  };
+
   // Container-specific state
-  const [containerConfigs, setContainerConfigs] = useState<
-    Record<
-      string,
-      {
-        name: string;
-        image: string;
-        imagePullPolicy: string;
-        workingDir: string;
-        command: string;
-        args: string;
-        ports: { name: string; containerPort: string; protocol: string }[];
-        envVars: { name: string; value: string; type: 'value' | 'configmap' | 'secret' }[];
-        cpuRequest: string;
-        cpuLimit: string;
-        memoryRequest: string;
-        memoryLimit: string;
-        livenessProbe: {
-          enabled: boolean;
-          type: string;
-          path: string;
-          port: string;
-          initialDelay: string;
-          period: string;
-        };
-        readinessProbe: {
-          enabled: boolean;
-          type: string;
-          path: string;
-          port: string;
-          initialDelay: string;
-          period: string;
-        };
-        volumeMounts: { name: string; mountPath: string; subPath: string; readOnly: boolean }[];
-        runAsUser: string;
-        runAsGroup: string;
-        privileged: boolean;
-        readOnlyRootFilesystem: boolean;
-      }
-    >
-  >({
+  const [containerConfigs, setContainerConfigs] = useState<Record<string, ContainerConfig>>({
     'container-0': {
+      // Basic Information
       name: '',
+      containerType: 'standard',
+      // Image
       image: '',
       imagePullPolicy: 'IfNotPresent',
-      workingDir: '',
+      pullSecrets: '',
+      // Commands
       command: '',
       args: '',
+      workingDir: '',
+      // Ports
       ports: [],
+      // Environment Variables
       envVars: [],
+      // Service Account
+      serviceAccountName: '',
+      // Lifecycle Hooks
+      lifecycleHooks: {
+        postStart: { ...defaultLifecycleHookConfig },
+        preStop: { ...defaultLifecycleHookConfig },
+      },
+      // Health Checks
+      startupProbe: { ...defaultProbeConfig },
+      livenessProbe: { ...defaultProbeConfig },
+      readinessProbe: { ...defaultProbeConfig },
+      // Resources
       cpuRequest: '',
+      cpuRequestUnit: 'm',
       cpuLimit: '',
+      cpuLimitUnit: 'm',
       memoryRequest: '',
+      memoryRequestUnit: 'Mi',
       memoryLimit: '',
-      livenessProbe: {
-        enabled: false,
-        type: 'http',
-        path: '/',
-        port: '8080',
-        initialDelay: '0',
-        period: '10',
-      },
-      readinessProbe: {
-        enabled: false,
-        type: 'http',
-        path: '/',
-        port: '8080',
-        initialDelay: '0',
-        period: '10',
-      },
-      volumeMounts: [],
+      memoryLimitUnit: 'Mi',
+      gpuLimit: '',
+      // Networking
+      stdin: false,
+      tty: false,
+      // Security Context
       runAsUser: '',
       runAsGroup: '',
+      runAsNonRoot: false,
       privileged: false,
       readOnlyRootFilesystem: false,
+      allowPrivilegeEscalation: false,
+      // Volume Mounts
+      volumeMounts: [],
+      // Storage
+      selectedVolume: '',
     },
   });
 
@@ -1463,39 +1626,56 @@ export function CreateDeploymentPage() {
     setContainerConfigs((prev) => ({
       ...prev,
       [newContainer.id]: {
+        // Basic Information
         name: '',
+        containerType: 'standard',
+        // Image
         image: '',
         imagePullPolicy: 'IfNotPresent',
-        workingDir: '',
+        pullSecrets: '',
+        // Commands
         command: '',
         args: '',
+        workingDir: '',
+        // Ports
         ports: [],
+        // Environment Variables
         envVars: [],
+        // Service Account
+        serviceAccountName: '',
+        // Lifecycle Hooks
+        lifecycleHooks: {
+          postStart: { ...defaultLifecycleHookConfig },
+          preStop: { ...defaultLifecycleHookConfig },
+        },
+        // Health Checks
+        startupProbe: { ...defaultProbeConfig },
+        livenessProbe: { ...defaultProbeConfig },
+        readinessProbe: { ...defaultProbeConfig },
+        // Resources
         cpuRequest: '',
+        cpuRequestUnit: 'm',
         cpuLimit: '',
+        cpuLimitUnit: 'm',
         memoryRequest: '',
+        memoryRequestUnit: 'Mi',
         memoryLimit: '',
-        livenessProbe: {
-          enabled: false,
-          type: 'http',
-          path: '/',
-          port: '8080',
-          initialDelay: '0',
-          period: '10',
-        },
-        readinessProbe: {
-          enabled: false,
-          type: 'http',
-          path: '/',
-          port: '8080',
-          initialDelay: '0',
-          period: '10',
-        },
-        volumeMounts: [],
+        memoryLimitUnit: 'Mi',
+        gpuLimit: '',
+        // Networking
+        stdin: false,
+        tty: false,
+        // Security Context
         runAsUser: '',
         runAsGroup: '',
+        runAsNonRoot: false,
         privileged: false,
         readOnlyRootFilesystem: false,
+        allowPrivilegeEscalation: false,
+        // Volume Mounts
+        volumeMounts: [],
+        // Storage
+        selectedVolume: '',
       },
     }));
   }, [containerTabs]);
@@ -1591,7 +1771,7 @@ export function CreateDeploymentPage() {
               </VStack>
 
               {/* Main Content with Sidebar */}
-              <HStack gap={6} align="start" className="w-full">
+              <HStack gap={6} className="w-full items-start">
                 {/* Form Content */}
                 <VStack gap={4} className="flex-1">
                   {/* Form Tabs */}
@@ -1699,7 +1879,7 @@ export function CreateDeploymentPage() {
                               </VStack>
 
                               {/* Bordered container for labels */}
-                              <div className="border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
                                 <VStack gap={3}>
                                   {podLabels.map((label, index) => (
                                     <div
@@ -1735,10 +1915,10 @@ export function CreateDeploymentPage() {
                                         </VStack>
                                         <button
                                           onClick={() => removePodLabel(index)}
-                                          className="mt-6 p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                          className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                         >
                                           <IconX
-                                            size={16}
+                                            size={12}
                                             className="text-[var(--color-text-muted)]"
                                             stroke={1.5}
                                           />
@@ -1774,7 +1954,7 @@ export function CreateDeploymentPage() {
                               </VStack>
 
                               {/* Bordered container for annotations */}
-                              <div className="border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
                                 <VStack gap={3}>
                                   {podAnnotations.map((annotation, index) => (
                                     <div
@@ -1810,10 +1990,10 @@ export function CreateDeploymentPage() {
                                         </VStack>
                                         <button
                                           onClick={() => removePodAnnotation(index)}
-                                          className="mt-6 p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                          className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                         >
                                           <IconX
-                                            size={16}
+                                            size={12}
                                             className="text-[var(--color-text-muted)]"
                                             stroke={1.5}
                                           />
@@ -1965,7 +2145,7 @@ export function CreateDeploymentPage() {
                                 </p>
                               </VStack>
 
-                              <div className="border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
                                 <VStack gap={3}>
                                   {nameservers.map((ns, index) => (
                                     <div
@@ -1988,10 +2168,10 @@ export function CreateDeploymentPage() {
                                         </VStack>
                                         <button
                                           onClick={() => removeNameserver(index)}
-                                          className="mt-6 p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                          className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                         >
                                           <IconX
-                                            size={16}
+                                            size={12}
                                             className="text-[var(--color-text-muted)]"
                                             stroke={1.5}
                                           />
@@ -2025,7 +2205,7 @@ export function CreateDeploymentPage() {
                                 </p>
                               </VStack>
 
-                              <div className="border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
                                 <VStack gap={3}>
                                   {searchDomains.map((sd, index) => (
                                     <div
@@ -2048,10 +2228,10 @@ export function CreateDeploymentPage() {
                                         </VStack>
                                         <button
                                           onClick={() => removeSearchDomain(index)}
-                                          className="mt-6 p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                          className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                         >
                                           <IconX
-                                            size={16}
+                                            size={12}
                                             className="text-[var(--color-text-muted)]"
                                             stroke={1.5}
                                           />
@@ -2080,7 +2260,7 @@ export function CreateDeploymentPage() {
                                 Resolver Options
                               </span>
 
-                              <div className="border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
                                 <VStack gap={3}>
                                   {resolverOptions.map((opt, index) => (
                                     <div
@@ -2116,10 +2296,10 @@ export function CreateDeploymentPage() {
                                         </VStack>
                                         <button
                                           onClick={() => removeResolverOption(index)}
-                                          className="mt-6 p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                          className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                         >
                                           <IconX
-                                            size={16}
+                                            size={12}
                                             className="text-[var(--color-text-muted)]"
                                             stroke={1.5}
                                           />
@@ -2148,7 +2328,7 @@ export function CreateDeploymentPage() {
                                 Host Aliases
                               </span>
 
-                              <div className="border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
                                 <VStack gap={3}>
                                   {hostAliases.map((alias, index) => (
                                     <div
@@ -2184,10 +2364,10 @@ export function CreateDeploymentPage() {
                                         </VStack>
                                         <button
                                           onClick={() => removeHostAlias(index)}
-                                          className="mt-6 p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                          className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                         >
                                           <IconX
-                                            size={16}
+                                            size={12}
                                             className="text-[var(--color-text-muted)]"
                                             stroke={1.5}
                                           />
@@ -2256,7 +2436,7 @@ export function CreateDeploymentPage() {
                                   </p>
                                 </VStack>
 
-                                <div className="border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                                <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
                                   <VStack gap={3}>
                                     {nodeAffinityTerms.map((term, termIndex) => (
                                       <div
@@ -2419,10 +2599,10 @@ export function CreateDeploymentPage() {
                                                     );
                                                     setNodeAffinityTerms(newTerms);
                                                   }}
-                                                  className="mt-5 p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                                  className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                                 >
                                                   <IconX
-                                                    size={16}
+                                                    size={12}
                                                     className="text-[var(--color-text-muted)]"
                                                     stroke={1.5}
                                                   />
@@ -2691,7 +2871,7 @@ export function CreateDeploymentPage() {
                                   )}
 
                                   {/* Match Expressions / Rules Section */}
-                                  <div className="border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                                  <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
                                     <VStack gap={2}>
                                       {term.matchExpressions.map((expr, exprIndex) => (
                                         <div
@@ -2905,7 +3085,7 @@ export function CreateDeploymentPage() {
                                 Tolerations
                               </span>
 
-                              <div className="border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
                                 <VStack gap={3}>
                                   {tolerations.map((toleration, index) => (
                                     <div
@@ -2999,10 +3179,10 @@ export function CreateDeploymentPage() {
                                         </VStack>
                                         <button
                                           onClick={() => removeToleration(index)}
-                                          className="mt-6 p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                          className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                         >
                                           <IconX
-                                            size={16}
+                                            size={12}
                                             className="text-[var(--color-text-muted)]"
                                             stroke={1.5}
                                           />
@@ -3091,7 +3271,7 @@ export function CreateDeploymentPage() {
                             {volumes.map((volume, index) => (
                               <div
                                 key={index}
-                                className="border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
                               >
                                 <VStack gap={2}>
                                   {/* Header with type title and close button */}
@@ -3745,43 +3925,94 @@ export function CreateDeploymentPage() {
 
                       if (!container) return null;
 
+                      // Helper to update lifecycle hook
+                      const updateLifecycleHook = (
+                        hookType: 'postStart' | 'preStop',
+                        updates: Partial<LifecycleHookConfig>
+                      ) => {
+                        updateContainerConfig(containerId, {
+                          lifecycleHooks: {
+                            ...config.lifecycleHooks,
+                            [hookType]: {
+                              ...config.lifecycleHooks?.[hookType],
+                              ...updates,
+                            },
+                          },
+                        });
+                      };
+
+                      // Helper to update probe
+                      const updateProbe = (
+                        probeType: 'startupProbe' | 'livenessProbe' | 'readinessProbe',
+                        updates: Partial<ProbeConfig>
+                      ) => {
+                        updateContainerConfig(containerId, {
+                          [probeType]: {
+                            ...config[probeType],
+                            ...updates,
+                          },
+                        });
+                      };
+
                       return (
                         <>
-                          {/* General Section */}
+                          {/* 1. Basic Information Section */}
                           <SectionCard>
-                            <SectionCard.Header title="General" />
+                            <SectionCard.Header title="Basic Information" />
                             <SectionCard.Content>
-                              <VStack gap={4}>
+                              <VStack gap={6}>
+                                <VStack gap={2} className="w-full">
+                                  <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                    Container Name
+                                  </span>
+                                  <Input
+                                    placeholder="Container-0"
+                                    fullWidth
+                                    value={config.name || ''}
+                                    onChange={(e) =>
+                                      updateContainerConfig(containerId, {
+                                        name: e.target.value,
+                                      })
+                                    }
+                                  />
+                                </VStack>
+
+                                <VStack gap={3}>
+                                  <RadioGroup
+                                    value={config.containerType || 'standard'}
+                                    onChange={(val) =>
+                                      updateContainerConfig(containerId, {
+                                        containerType: val as 'init' | 'standard',
+                                      })
+                                    }
+                                  >
+                                    <Radio value="init" label="Init Container" />
+                                    <Radio value="standard" label="Standard Container" />
+                                  </RadioGroup>
+                                </VStack>
+                              </VStack>
+                            </SectionCard.Content>
+                          </SectionCard>
+
+                          {/* 2. Image Section */}
+                          <SectionCard>
+                            <SectionCard.Header title="Image" />
+                            <SectionCard.Content>
+                              <VStack gap={6}>
                                 <div className="grid grid-cols-2 gap-4 w-full">
-                                  <VStack gap={1}>
-                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                                      Container Name{' '}
-                                      <span className="text-[var(--color-state-danger)]">*</span>
-                                    </span>
-                                    <span className="text-[12px] text-[var(--color-text-subtle)]">
-                                      Enter a name for this container.
-                                    </span>
+                                  <VStack gap={3}>
+                                    <VStack gap={1}>
+                                      <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                        Container Image{' '}
+                                        <span className="text-[var(--color-state-danger)]">*</span>
+                                      </span>
+                                      <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                        The period allowed after receiving a termination request
+                                        before the pod is forcibly terminated.
+                                      </span>
+                                    </VStack>
                                     <Input
-                                      placeholder="e.g. nginx"
-                                      fullWidth
-                                      value={config.name || ''}
-                                      onChange={(e) =>
-                                        updateContainerConfig(containerId, {
-                                          name: e.target.value,
-                                        })
-                                      }
-                                    />
-                                  </VStack>
-                                  <VStack gap={1}>
-                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                                      Image{' '}
-                                      <span className="text-[var(--color-state-danger)]">*</span>
-                                    </span>
-                                    <span className="text-[12px] text-[var(--color-text-subtle)]">
-                                      Container image to use.
-                                    </span>
-                                    <Input
-                                      placeholder="e.g. nginx:latest"
+                                      placeholder="nginx:latest"
                                       fullWidth
                                       value={config.image || ''}
                                       onChange={(e) =>
@@ -3791,13 +4022,16 @@ export function CreateDeploymentPage() {
                                       }
                                     />
                                   </VStack>
-                                  <VStack gap={1}>
-                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                                      Image Pull Policy
-                                    </span>
-                                    <span className="text-[12px] text-[var(--color-text-subtle)]">
-                                      When to pull the container image.
-                                    </span>
+                                  <VStack gap={3}>
+                                    <VStack gap={1}>
+                                      <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                        Pull Policy
+                                      </span>
+                                      <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                        The period allowed after receiving a termination request
+                                        before the pod is forcibly terminated.
+                                      </span>
+                                    </VStack>
                                     <Select
                                       options={[
                                         { value: 'Always', label: 'Always' },
@@ -3813,583 +4047,2230 @@ export function CreateDeploymentPage() {
                                       fullWidth
                                     />
                                   </VStack>
-                                  <VStack gap={1}>
-                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                                      Working Directory
-                                    </span>
-                                    <span className="text-[12px] text-[var(--color-text-subtle)]">
-                                      Working directory for the container.
-                                    </span>
-                                    <Input
-                                      placeholder="e.g. /app"
-                                      fullWidth
-                                      value={config.workingDir || ''}
-                                      onChange={(e) =>
-                                        updateContainerConfig(containerId, {
-                                          workingDir: e.target.value,
-                                        })
-                                      }
-                                    />
-                                  </VStack>
                                 </div>
 
-                                <VStack gap={1} className="w-full">
-                                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                                    Command
+                                <VStack gap={3} className="w-[406px]">
+                                  <VStack gap={1}>
+                                    <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                      Pull Secrets
+                                    </span>
+                                    <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                      The period allowed after receiving a termination request
+                                      before the pod is forcibly terminated.
+                                    </span>
+                                  </VStack>
+                                  <Select
+                                    options={[
+                                      { value: '', label: 'Select a secret...' },
+                                      { value: 'docker-registry', label: 'docker-registry' },
+                                      { value: 'gcr-secret', label: 'gcr-secret' },
+                                    ]}
+                                    value={config.pullSecrets || ''}
+                                    onChange={(val) =>
+                                      updateContainerConfig(containerId, {
+                                        pullSecrets: val,
+                                      })
+                                    }
+                                    fullWidth
+                                  />
+                                </VStack>
+                              </VStack>
+                            </SectionCard.Content>
+                          </SectionCard>
+
+                          {/* 3. Environment Variables Section */}
+                          <SectionCard>
+                            <SectionCard.Header title="Environment Variables" />
+                            <SectionCard.Content>
+                              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                                <VStack gap={2}>
+                                  {(config.envVars || []).map((envVar, index) => (
+                                    <div
+                                      key={index}
+                                      className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                    >
+                                      <div className="grid grid-cols-[1fr_1fr_1fr_auto] gap-2 items-start">
+                                        <VStack gap={2}>
+                                          <span className="text-[12px] font-medium text-[var(--color-text-default)]">
+                                            Type
+                                          </span>
+                                          <Select
+                                            options={[
+                                              { value: 'value', label: 'Key/Value Pair' },
+                                              { value: 'configmap', label: 'ConfigMap' },
+                                              { value: 'secret', label: 'Secret' },
+                                            ]}
+                                            value={envVar.type || 'value'}
+                                            onChange={(val) => {
+                                              const newEnvVars = [...(config.envVars || [])];
+                                              newEnvVars[index] = {
+                                                ...newEnvVars[index],
+                                                type: val as 'value' | 'configmap' | 'secret',
+                                              };
+                                              updateContainerConfig(containerId, {
+                                                envVars: newEnvVars,
+                                              });
+                                            }}
+                                            fullWidth
+                                          />
+                                        </VStack>
+                                        <VStack gap={2}>
+                                          <span className="text-[12px] font-medium text-[var(--color-text-default)]">
+                                            Variable Name
+                                          </span>
+                                          <Input
+                                            placeholder="input variable name"
+                                            fullWidth
+                                            value={envVar.name}
+                                            onChange={(e) => {
+                                              const newEnvVars = [...(config.envVars || [])];
+                                              newEnvVars[index] = {
+                                                ...newEnvVars[index],
+                                                name: e.target.value,
+                                              };
+                                              updateContainerConfig(containerId, {
+                                                envVars: newEnvVars,
+                                              });
+                                            }}
+                                          />
+                                        </VStack>
+                                        <VStack gap={2}>
+                                          <span className="text-[12px] font-medium text-[var(--color-text-default)]">
+                                            Value
+                                          </span>
+                                          <Input
+                                            placeholder="input value"
+                                            fullWidth
+                                            value={envVar.value}
+                                            onChange={(e) => {
+                                              const newEnvVars = [...(config.envVars || [])];
+                                              newEnvVars[index] = {
+                                                ...newEnvVars[index],
+                                                value: e.target.value,
+                                              };
+                                              updateContainerConfig(containerId, {
+                                                envVars: newEnvVars,
+                                              });
+                                            }}
+                                          />
+                                        </VStack>
+                                        <button
+                                          className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                          onClick={() => {
+                                            const newEnvVars = (config.envVars || []).filter(
+                                              (_, i) => i !== index
+                                            );
+                                            updateContainerConfig(containerId, {
+                                              envVars: newEnvVars,
+                                            });
+                                          }}
+                                        >
+                                          <IconX
+                                            size={12}
+                                            className="text-[var(--color-text-muted)]"
+                                            stroke={1.5}
+                                          />
+                                        </button>
+                                      </div>
+                                    </div>
+                                  ))}
+
+                                  <div className="w-fit">
+                                    <Button
+                                      variant="secondary"
+                                      size="sm"
+                                      leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                      onClick={() => {
+                                        const newEnvVars = [
+                                          ...(config.envVars || []),
+                                          { name: '', value: '', type: 'value' as const },
+                                        ];
+                                        updateContainerConfig(containerId, { envVars: newEnvVars });
+                                      }}
+                                    >
+                                      Add Variable
+                                    </Button>
+                                  </div>
+                                </VStack>
+                              </div>
+                            </SectionCard.Content>
+                          </SectionCard>
+
+                          {/* 5. Service Account Name Section */}
+                          <SectionCard>
+                            <SectionCard.Header title="Service Account Name" />
+                            <SectionCard.Content>
+                              <VStack gap={3}>
+                                <VStack gap={1}>
+                                  <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                    Service Account Name
                                   </span>
                                   <span className="text-[12px] text-[var(--color-text-subtle)]">
-                                    Override the container entrypoint command.
+                                    The period allowed after receiving a termination request before
+                                    the pod is forcibly terminated.
+                                  </span>
+                                </VStack>
+                                <Input
+                                  placeholder="default"
+                                  fullWidth
+                                  value={config.serviceAccountName || ''}
+                                  onChange={(e) =>
+                                    updateContainerConfig(containerId, {
+                                      serviceAccountName: e.target.value,
+                                    })
+                                  }
+                                />
+                              </VStack>
+                            </SectionCard.Content>
+                          </SectionCard>
+
+                          {/* 7. Lifecycle Hooks Section */}
+                          <SectionCard>
+                            <SectionCard.Header title="Lifecycle Hooks" />
+                            <SectionCard.Content>
+                              <div className="grid grid-cols-2 gap-4">
+                                {/* Post Start */}
+                                <VStack gap={6}>
+                                  <VStack gap={2}>
+                                    <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                      Post Start
+                                    </span>
+                                    <RadioGroup
+                                      value={config.lifecycleHooks?.postStart?.type || 'none'}
+                                      onChange={(val) =>
+                                        updateLifecycleHook('postStart', {
+                                          type: val as 'none' | 'exec' | 'httpGet',
+                                        })
+                                      }
+                                    >
+                                      <Radio value="none" label="None" />
+                                      <Radio value="exec" label="Add command to execute" />
+                                      <Radio value="httpGet" label="Create HTTP request" />
+                                    </RadioGroup>
+                                  </VStack>
+
+                                  {config.lifecycleHooks?.postStart?.type === 'exec' && (
+                                    <VStack gap={2}>
+                                      <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                        Execute Command
+                                      </span>
+                                      <Input
+                                        placeholder='e.g. ["/bin/sh", "-c", "echo Hello"]'
+                                        fullWidth
+                                        value={config.lifecycleHooks?.postStart?.command || ''}
+                                        onChange={(e) =>
+                                          updateLifecycleHook('postStart', {
+                                            command: e.target.value,
+                                          })
+                                        }
+                                      />
+                                    </VStack>
+                                  )}
+
+                                  {config.lifecycleHooks?.postStart?.type === 'httpGet' && (
+                                    <VStack gap={3}>
+                                      <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                        HTTP Get
+                                      </span>
+                                      <VStack gap={2}>
+                                        <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                          Host IP
+                                        </span>
+                                        <Input
+                                          placeholder="e.g. 172.17.0.2"
+                                          fullWidth
+                                          value={
+                                            config.lifecycleHooks?.postStart?.httpGet?.host || ''
+                                          }
+                                          onChange={(e) =>
+                                            updateLifecycleHook('postStart', {
+                                              httpGet: {
+                                                ...config.lifecycleHooks?.postStart?.httpGet,
+                                                host: e.target.value,
+                                              },
+                                            })
+                                          }
+                                        />
+                                      </VStack>
+                                      <VStack gap={2}>
+                                        <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                          Path
+                                        </span>
+                                        <Input
+                                          placeholder="e.g. /health"
+                                          fullWidth
+                                          value={
+                                            config.lifecycleHooks?.postStart?.httpGet?.path || ''
+                                          }
+                                          onChange={(e) =>
+                                            updateLifecycleHook('postStart', {
+                                              httpGet: {
+                                                ...config.lifecycleHooks?.postStart?.httpGet,
+                                                path: e.target.value,
+                                              },
+                                            })
+                                          }
+                                        />
+                                      </VStack>
+                                      <VStack gap={2}>
+                                        <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                          Port{' '}
+                                          <span className="text-[var(--color-state-danger)]">
+                                            *
+                                          </span>
+                                        </span>
+                                        <Input
+                                          placeholder="e.g. 3000"
+                                          fullWidth
+                                          value={
+                                            config.lifecycleHooks?.postStart?.httpGet?.port || ''
+                                          }
+                                          onChange={(e) =>
+                                            updateLifecycleHook('postStart', {
+                                              httpGet: {
+                                                ...config.lifecycleHooks?.postStart?.httpGet,
+                                                port: e.target.value,
+                                              },
+                                            })
+                                          }
+                                        />
+                                      </VStack>
+                                      <VStack gap={2}>
+                                        <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                          Scheme
+                                        </span>
+                                        <Select
+                                          options={[
+                                            { value: 'HTTP', label: 'HTTP' },
+                                            { value: 'HTTPS', label: 'HTTPS' },
+                                          ]}
+                                          value={
+                                            config.lifecycleHooks?.postStart?.httpGet?.scheme ||
+                                            'HTTP'
+                                          }
+                                          onChange={(val) =>
+                                            updateLifecycleHook('postStart', {
+                                              httpGet: {
+                                                ...config.lifecycleHooks?.postStart?.httpGet,
+                                                scheme: val,
+                                              },
+                                            })
+                                          }
+                                          fullWidth
+                                        />
+                                      </VStack>
+                                      <VStack gap={3}>
+                                        <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                          HTTP Header
+                                        </span>
+                                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                                          <VStack gap={2}>
+                                            {(
+                                              config.lifecycleHooks?.postStart?.httpGet
+                                                ?.httpHeaders || []
+                                            ).map((header, index) => (
+                                              <div
+                                                key={index}
+                                                className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                              >
+                                                <div className="flex gap-2 items-start w-full">
+                                                  <VStack gap={2} className="flex-1">
+                                                    <span className="text-[12px] font-medium text-[var(--color-text-default)]">
+                                                      Name{' '}
+                                                      <span className="text-[var(--color-state-danger)]">
+                                                        *
+                                                      </span>
+                                                    </span>
+                                                    <Input
+                                                      placeholder="e.g. accept-ranges"
+                                                      fullWidth
+                                                      value={header.name}
+                                                      onChange={(e) => {
+                                                        const newHeaders = [
+                                                          ...(config.lifecycleHooks?.postStart
+                                                            ?.httpGet?.httpHeaders || []),
+                                                        ];
+                                                        newHeaders[index] = {
+                                                          ...newHeaders[index],
+                                                          name: e.target.value,
+                                                        };
+                                                        updateLifecycleHook('postStart', {
+                                                          httpGet: {
+                                                            ...config.lifecycleHooks?.postStart
+                                                              ?.httpGet,
+                                                            httpHeaders: newHeaders,
+                                                          },
+                                                        });
+                                                      }}
+                                                    />
+                                                  </VStack>
+                                                  <VStack gap={2} className="flex-1">
+                                                    <span className="text-[12px] font-medium text-[var(--color-text-default)]">
+                                                      Value
+                                                    </span>
+                                                    <Input
+                                                      placeholder="e.g. bytes"
+                                                      fullWidth
+                                                      value={header.value}
+                                                      onChange={(e) => {
+                                                        const newHeaders = [
+                                                          ...(config.lifecycleHooks?.postStart
+                                                            ?.httpGet?.httpHeaders || []),
+                                                        ];
+                                                        newHeaders[index] = {
+                                                          ...newHeaders[index],
+                                                          value: e.target.value,
+                                                        };
+                                                        updateLifecycleHook('postStart', {
+                                                          httpGet: {
+                                                            ...config.lifecycleHooks?.postStart
+                                                              ?.httpGet,
+                                                            httpHeaders: newHeaders,
+                                                          },
+                                                        });
+                                                      }}
+                                                    />
+                                                  </VStack>
+                                                  <div className="pt-5">
+                                                    <Button
+                                                      variant="ghost"
+                                                      size="sm"
+                                                      onClick={() => {
+                                                        const newHeaders = (
+                                                          config.lifecycleHooks?.postStart?.httpGet
+                                                            ?.httpHeaders || []
+                                                        ).filter((_, i) => i !== index);
+                                                        updateLifecycleHook('postStart', {
+                                                          httpGet: {
+                                                            ...config.lifecycleHooks?.postStart
+                                                              ?.httpGet,
+                                                            httpHeaders: newHeaders,
+                                                          },
+                                                        });
+                                                      }}
+                                                    >
+                                                      <IconX size={16} />
+                                                    </Button>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            ))}
+                                            <div className="w-fit">
+                                              <Button
+                                                variant="secondary"
+                                                size="sm"
+                                                leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                                onClick={() => {
+                                                  const newHeaders = [
+                                                    ...(config.lifecycleHooks?.postStart?.httpGet
+                                                      ?.httpHeaders || []),
+                                                    { name: '', value: '' },
+                                                  ];
+                                                  updateLifecycleHook('postStart', {
+                                                    httpGet: {
+                                                      ...config.lifecycleHooks?.postStart?.httpGet,
+                                                      httpHeaders: newHeaders,
+                                                    },
+                                                  });
+                                                }}
+                                              >
+                                                Add Header
+                                              </Button>
+                                            </div>
+                                          </VStack>
+                                        </div>
+                                      </VStack>
+                                    </VStack>
+                                  )}
+                                </VStack>
+
+                                {/* Pre Stop */}
+                                <VStack gap={6}>
+                                  <VStack gap={2}>
+                                    <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                      Pre Stop
+                                    </span>
+                                    <RadioGroup
+                                      value={config.lifecycleHooks?.preStop?.type || 'none'}
+                                      onChange={(val) =>
+                                        updateLifecycleHook('preStop', {
+                                          type: val as 'none' | 'exec' | 'httpGet',
+                                        })
+                                      }
+                                    >
+                                      <Radio value="none" label="None" />
+                                      <Radio value="exec" label="Add command to execute" />
+                                      <Radio value="httpGet" label="Create HTTP request" />
+                                    </RadioGroup>
+                                  </VStack>
+
+                                  {config.lifecycleHooks?.preStop?.type === 'exec' && (
+                                    <VStack gap={2}>
+                                      <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                        Execute Command
+                                      </span>
+                                      <Input
+                                        placeholder='e.g. ["/bin/sh", "-c", "nginx -s quit"]'
+                                        fullWidth
+                                        value={config.lifecycleHooks?.preStop?.command || ''}
+                                        onChange={(e) =>
+                                          updateLifecycleHook('preStop', {
+                                            command: e.target.value,
+                                          })
+                                        }
+                                      />
+                                    </VStack>
+                                  )}
+
+                                  {config.lifecycleHooks?.preStop?.type === 'httpGet' && (
+                                    <VStack gap={3}>
+                                      <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                        HTTP Get
+                                      </span>
+                                      <VStack gap={2}>
+                                        <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                          Host IP
+                                        </span>
+                                        <Input
+                                          placeholder="e.g. 172.17.0.2"
+                                          fullWidth
+                                          value={
+                                            config.lifecycleHooks?.preStop?.httpGet?.host || ''
+                                          }
+                                          onChange={(e) =>
+                                            updateLifecycleHook('preStop', {
+                                              httpGet: {
+                                                ...config.lifecycleHooks?.preStop?.httpGet,
+                                                host: e.target.value,
+                                              },
+                                            })
+                                          }
+                                        />
+                                      </VStack>
+                                      <VStack gap={2}>
+                                        <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                          Path
+                                        </span>
+                                        <Input
+                                          placeholder="e.g. /shutdown"
+                                          fullWidth
+                                          value={
+                                            config.lifecycleHooks?.preStop?.httpGet?.path || ''
+                                          }
+                                          onChange={(e) =>
+                                            updateLifecycleHook('preStop', {
+                                              httpGet: {
+                                                ...config.lifecycleHooks?.preStop?.httpGet,
+                                                path: e.target.value,
+                                              },
+                                            })
+                                          }
+                                        />
+                                      </VStack>
+                                      <VStack gap={2}>
+                                        <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                          Port{' '}
+                                          <span className="text-[var(--color-state-danger)]">
+                                            *
+                                          </span>
+                                        </span>
+                                        <Input
+                                          placeholder="e.g. 3000"
+                                          fullWidth
+                                          value={
+                                            config.lifecycleHooks?.preStop?.httpGet?.port || ''
+                                          }
+                                          onChange={(e) =>
+                                            updateLifecycleHook('preStop', {
+                                              httpGet: {
+                                                ...config.lifecycleHooks?.preStop?.httpGet,
+                                                port: e.target.value,
+                                              },
+                                            })
+                                          }
+                                        />
+                                      </VStack>
+                                      <VStack gap={2}>
+                                        <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                          Scheme
+                                        </span>
+                                        <Select
+                                          options={[
+                                            { value: 'HTTP', label: 'HTTP' },
+                                            { value: 'HTTPS', label: 'HTTPS' },
+                                          ]}
+                                          value={
+                                            config.lifecycleHooks?.preStop?.httpGet?.scheme ||
+                                            'HTTP'
+                                          }
+                                          onChange={(val) =>
+                                            updateLifecycleHook('preStop', {
+                                              httpGet: {
+                                                ...config.lifecycleHooks?.preStop?.httpGet,
+                                                scheme: val,
+                                              },
+                                            })
+                                          }
+                                          fullWidth
+                                        />
+                                      </VStack>
+                                      <VStack gap={3}>
+                                        <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                          HTTP Header
+                                        </span>
+                                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                                          <VStack gap={2}>
+                                            {(
+                                              config.lifecycleHooks?.preStop?.httpGet
+                                                ?.httpHeaders || []
+                                            ).map((header, index) => (
+                                              <div
+                                                key={index}
+                                                className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                              >
+                                                <div className="flex gap-2 items-start w-full">
+                                                  <VStack gap={2} className="flex-1">
+                                                    <span className="text-[12px] font-medium text-[var(--color-text-default)]">
+                                                      Name{' '}
+                                                      <span className="text-[var(--color-state-danger)]">
+                                                        *
+                                                      </span>
+                                                    </span>
+                                                    <Input
+                                                      placeholder="e.g. accept-ranges"
+                                                      fullWidth
+                                                      value={header.name}
+                                                      onChange={(e) => {
+                                                        const newHeaders = [
+                                                          ...(config.lifecycleHooks?.preStop
+                                                            ?.httpGet?.httpHeaders || []),
+                                                        ];
+                                                        newHeaders[index] = {
+                                                          ...newHeaders[index],
+                                                          name: e.target.value,
+                                                        };
+                                                        updateLifecycleHook('preStop', {
+                                                          httpGet: {
+                                                            ...config.lifecycleHooks?.preStop
+                                                              ?.httpGet,
+                                                            httpHeaders: newHeaders,
+                                                          },
+                                                        });
+                                                      }}
+                                                    />
+                                                  </VStack>
+                                                  <VStack gap={2} className="flex-1">
+                                                    <span className="text-[12px] font-medium text-[var(--color-text-default)]">
+                                                      Value
+                                                    </span>
+                                                    <Input
+                                                      placeholder="e.g. bytes"
+                                                      fullWidth
+                                                      value={header.value}
+                                                      onChange={(e) => {
+                                                        const newHeaders = [
+                                                          ...(config.lifecycleHooks?.preStop
+                                                            ?.httpGet?.httpHeaders || []),
+                                                        ];
+                                                        newHeaders[index] = {
+                                                          ...newHeaders[index],
+                                                          value: e.target.value,
+                                                        };
+                                                        updateLifecycleHook('preStop', {
+                                                          httpGet: {
+                                                            ...config.lifecycleHooks?.preStop
+                                                              ?.httpGet,
+                                                            httpHeaders: newHeaders,
+                                                          },
+                                                        });
+                                                      }}
+                                                    />
+                                                  </VStack>
+                                                  <div className="pt-5">
+                                                    <Button
+                                                      variant="ghost"
+                                                      size="sm"
+                                                      onClick={() => {
+                                                        const newHeaders = (
+                                                          config.lifecycleHooks?.preStop?.httpGet
+                                                            ?.httpHeaders || []
+                                                        ).filter((_, i) => i !== index);
+                                                        updateLifecycleHook('preStop', {
+                                                          httpGet: {
+                                                            ...config.lifecycleHooks?.preStop
+                                                              ?.httpGet,
+                                                            httpHeaders: newHeaders,
+                                                          },
+                                                        });
+                                                      }}
+                                                    >
+                                                      <IconX size={16} />
+                                                    </Button>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            ))}
+                                            <div className="w-fit">
+                                              <Button
+                                                variant="secondary"
+                                                size="sm"
+                                                leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                                onClick={() => {
+                                                  const newHeaders = [
+                                                    ...(config.lifecycleHooks?.preStop?.httpGet
+                                                      ?.httpHeaders || []),
+                                                    { name: '', value: '' },
+                                                  ];
+                                                  updateLifecycleHook('preStop', {
+                                                    httpGet: {
+                                                      ...config.lifecycleHooks?.preStop?.httpGet,
+                                                      httpHeaders: newHeaders,
+                                                    },
+                                                  });
+                                                }}
+                                              >
+                                                Add Header
+                                              </Button>
+                                            </div>
+                                          </VStack>
+                                        </div>
+                                      </VStack>
+                                    </VStack>
+                                  )}
+                                </VStack>
+                              </div>
+                            </SectionCard.Content>
+                          </SectionCard>
+
+                          {/* 8. Health Check Section */}
+                          <SectionCard>
+                            <SectionCard.Header title="Health Check" />
+                            <SectionCard.Content>
+                              <VStack gap={6}>
+                                {/* Readiness Check */}
+                                <VStack gap={6}>
+                                  <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                    Readiness Check
+                                  </span>
+                                  <VStack gap={3}>
+                                    <VStack gap={1}>
+                                      <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                        Type
+                                      </span>
+                                      <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                        Select the probe type used for the health check.
+                                      </span>
+                                    </VStack>
+                                    <Select
+                                      options={[
+                                        { value: 'none', label: 'None' },
+                                        {
+                                          value: 'httpGet',
+                                          label:
+                                            'HTTP request returns a successful status (200-399)',
+                                        },
+                                        {
+                                          value: 'tcpSocket',
+                                          label: 'TCP Connection opens successfully',
+                                        },
+                                        {
+                                          value: 'exec',
+                                          label:
+                                            'Command run inside the container exits with status 0',
+                                        },
+                                      ]}
+                                      value={config.readinessProbe?.type || 'none'}
+                                      onChange={(val) =>
+                                        updateProbe('readinessProbe', {
+                                          type: val as 'none' | 'httpGet' | 'tcpSocket' | 'exec',
+                                        })
+                                      }
+                                      fullWidth
+                                    />
+                                  </VStack>
+                                  {config.readinessProbe?.type !== 'none' && (
+                                    <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                                      <VStack gap={6}>
+                                        {/* Row 1: Check Port/Command + Check Interval */}
+                                        <div className="flex gap-6 w-full">
+                                          {(config.readinessProbe?.type === 'httpGet' ||
+                                            config.readinessProbe?.type === 'tcpSocket') && (
+                                            <VStack gap={3} className="flex-1">
+                                              <VStack gap={1}>
+                                                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                                  Check Port
+                                                </span>
+                                                <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                                  Specify the port used to send health check
+                                                  requests.
+                                                </span>
+                                              </VStack>
+                                              <Input
+                                                placeholder="e.g. 80"
+                                                fullWidth
+                                                value={
+                                                  config.readinessProbe?.type === 'httpGet'
+                                                    ? config.readinessProbe?.httpGet?.port || ''
+                                                    : config.readinessProbe?.tcpSocket?.port || ''
+                                                }
+                                                onChange={(e) =>
+                                                  config.readinessProbe?.type === 'httpGet'
+                                                    ? updateProbe('readinessProbe', {
+                                                        httpGet: {
+                                                          ...config.readinessProbe?.httpGet,
+                                                          port: e.target.value,
+                                                        },
+                                                      })
+                                                    : updateProbe('readinessProbe', {
+                                                        tcpSocket: {
+                                                          ...config.readinessProbe?.tcpSocket,
+                                                          port: e.target.value,
+                                                        },
+                                                      })
+                                                }
+                                              />
+                                            </VStack>
+                                          )}
+                                          {config.readinessProbe?.type === 'exec' && (
+                                            <VStack gap={3} className="flex-1">
+                                              <VStack gap={1}>
+                                                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                                  Command to run
+                                                </span>
+                                                <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                                  Specify the command to execute when the container
+                                                  starts.
+                                                </span>
+                                              </VStack>
+                                              <Input
+                                                placeholder="e.g. cat /tmp/health"
+                                                fullWidth
+                                                value={config.readinessProbe?.exec?.command || ''}
+                                                onChange={(e) =>
+                                                  updateProbe('readinessProbe', {
+                                                    exec: {
+                                                      ...config.readinessProbe?.exec,
+                                                      command: e.target.value,
+                                                    },
+                                                  })
+                                                }
+                                              />
+                                            </VStack>
+                                          )}
+                                          <VStack gap={3} className="flex-1">
+                                            <VStack gap={1}>
+                                              <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                                Check Interval
+                                              </span>
+                                              <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                                Specify the interval between health check requests.
+                                              </span>
+                                            </VStack>
+                                            <HStack gap={2}>
+                                              <NumberInput
+                                                value={
+                                                  parseInt(
+                                                    config.readinessProbe?.periodSeconds || '10'
+                                                  ) || 10
+                                                }
+                                                onChange={(val) =>
+                                                  updateProbe('readinessProbe', {
+                                                    periodSeconds: String(val),
+                                                  })
+                                                }
+                                                min={1}
+                                                fullWidth
+                                              />
+                                              <div className="px-3 py-2 text-[12px] text-[var(--color-text-default)]">
+                                                Seconds
+                                              </div>
+                                            </HStack>
+                                          </VStack>
+                                        </div>
+                                        {/* Row 2: Request Path (httpGet only) + Initial Delay */}
+                                        <div className="flex gap-6 w-full">
+                                          {config.readinessProbe?.type === 'httpGet' && (
+                                            <VStack gap={3} className="flex-1">
+                                              <VStack gap={1}>
+                                                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                                  Request Path
+                                                </span>
+                                                <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                                  Specify the request path used for HTTP health
+                                                  checks.
+                                                </span>
+                                              </VStack>
+                                              <Input
+                                                placeholder="e.g./healthz"
+                                                fullWidth
+                                                value={config.readinessProbe?.httpGet?.path || ''}
+                                                onChange={(e) =>
+                                                  updateProbe('readinessProbe', {
+                                                    httpGet: {
+                                                      ...config.readinessProbe?.httpGet,
+                                                      path: e.target.value,
+                                                    },
+                                                  })
+                                                }
+                                              />
+                                            </VStack>
+                                          )}
+                                          <VStack gap={3} className="flex-1">
+                                            <VStack gap={1}>
+                                              <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                                Initial Delay
+                                              </span>
+                                              <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                                Specify the delay before initiating the first health
+                                                check.
+                                              </span>
+                                            </VStack>
+                                            <HStack gap={2}>
+                                              <NumberInput
+                                                value={
+                                                  parseInt(
+                                                    config.readinessProbe?.initialDelaySeconds ||
+                                                      '0'
+                                                  ) || 0
+                                                }
+                                                onChange={(val) =>
+                                                  updateProbe('readinessProbe', {
+                                                    initialDelaySeconds: String(val),
+                                                  })
+                                                }
+                                                min={0}
+                                                fullWidth
+                                              />
+                                              <div className="px-3 py-2 text-[12px] text-[var(--color-text-default)]">
+                                                Seconds
+                                              </div>
+                                            </HStack>
+                                          </VStack>
+                                          {config.readinessProbe?.type !== 'httpGet' && (
+                                            <VStack gap={3} className="flex-1">
+                                              <VStack gap={1}>
+                                                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                                  Timeout
+                                                </span>
+                                                <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                                  Specify the maximum time to wait for a health
+                                                  check response.
+                                                </span>
+                                              </VStack>
+                                              <HStack gap={2}>
+                                                <NumberInput
+                                                  value={
+                                                    parseInt(
+                                                      config.readinessProbe?.timeoutSeconds || '1'
+                                                    ) || 1
+                                                  }
+                                                  onChange={(val) =>
+                                                    updateProbe('readinessProbe', {
+                                                      timeoutSeconds: String(val),
+                                                    })
+                                                  }
+                                                  min={1}
+                                                  fullWidth
+                                                />
+                                                <div className="px-3 py-2 text-[12px] text-[var(--color-text-default)]">
+                                                  Seconds
+                                                </div>
+                                              </HStack>
+                                            </VStack>
+                                          )}
+                                        </div>
+                                        {/* Row 3: Timeout + Success Threshold (httpGet) or Success + Failure (others) */}
+                                        <div className="flex gap-6 w-full">
+                                          {config.readinessProbe?.type === 'httpGet' && (
+                                            <VStack gap={3} className="flex-1">
+                                              <VStack gap={1}>
+                                                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                                  Timeout
+                                                </span>
+                                                <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                                  Specify the maximum time to wait for a health
+                                                  check response.
+                                                </span>
+                                              </VStack>
+                                              <HStack gap={2}>
+                                                <NumberInput
+                                                  value={
+                                                    parseInt(
+                                                      config.readinessProbe?.timeoutSeconds || '1'
+                                                    ) || 1
+                                                  }
+                                                  onChange={(val) =>
+                                                    updateProbe('readinessProbe', {
+                                                      timeoutSeconds: String(val),
+                                                    })
+                                                  }
+                                                  min={1}
+                                                  fullWidth
+                                                />
+                                                <div className="px-3 py-2 text-[12px] text-[var(--color-text-default)]">
+                                                  Seconds
+                                                </div>
+                                              </HStack>
+                                            </VStack>
+                                          )}
+                                          <VStack gap={3} className="flex-1">
+                                            <VStack gap={1}>
+                                              <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                                Success Threshold
+                                              </span>
+                                              <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                                Specify the minimum number of consecutive successful
+                                                checks to consider the status healthy.
+                                              </span>
+                                            </VStack>
+                                            <Input
+                                              placeholder="1"
+                                              fullWidth
+                                              value={config.readinessProbe?.successThreshold || ''}
+                                              onChange={(e) =>
+                                                updateProbe('readinessProbe', {
+                                                  successThreshold: e.target.value,
+                                                })
+                                              }
+                                            />
+                                          </VStack>
+                                          {config.readinessProbe?.type !== 'httpGet' && (
+                                            <VStack gap={3} className="flex-1">
+                                              <VStack gap={1}>
+                                                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                                  Failure Threshold
+                                                </span>
+                                                <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                                  Specify the minimum number of consecutive failed
+                                                  checks to consider the status unhealthy.
+                                                </span>
+                                              </VStack>
+                                              <Input
+                                                placeholder="3"
+                                                fullWidth
+                                                value={
+                                                  config.readinessProbe?.failureThreshold || ''
+                                                }
+                                                onChange={(e) =>
+                                                  updateProbe('readinessProbe', {
+                                                    failureThreshold: e.target.value,
+                                                  })
+                                                }
+                                              />
+                                            </VStack>
+                                          )}
+                                        </div>
+                                        {/* Row 4: Failure Threshold (httpGet only) */}
+                                        {config.readinessProbe?.type === 'httpGet' && (
+                                          <VStack gap={3}>
+                                            <VStack gap={1}>
+                                              <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                                Failure Threshold
+                                              </span>
+                                              <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                                Specify the minimum number of consecutive failed
+                                                checks to consider the status unhealthy.
+                                              </span>
+                                            </VStack>
+                                            <Input
+                                              placeholder="3"
+                                              fullWidth
+                                              value={config.readinessProbe?.failureThreshold || ''}
+                                              onChange={(e) =>
+                                                updateProbe('readinessProbe', {
+                                                  failureThreshold: e.target.value,
+                                                })
+                                              }
+                                            />
+                                          </VStack>
+                                        )}
+                                        {config.readinessProbe?.type === 'httpGet' && (
+                                          <VStack gap={3}>
+                                            <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                              Request Headers
+                                            </span>
+                                            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                                              <VStack gap={2}>
+                                                {(
+                                                  config.readinessProbe?.httpGet?.httpHeaders || []
+                                                ).map((header, index) => (
+                                                  <div
+                                                    key={index}
+                                                    className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                                  >
+                                                    <div className="flex gap-2 items-start w-full">
+                                                      <VStack gap={2} className="flex-1">
+                                                        <span className="text-[12px] font-medium text-[var(--color-text-default)]">
+                                                          Name
+                                                        </span>
+                                                        <Input
+                                                          placeholder="Input name"
+                                                          fullWidth
+                                                          value={header.name}
+                                                          onChange={(e) => {
+                                                            const newHeaders = [
+                                                              ...(config.readinessProbe?.httpGet
+                                                                ?.httpHeaders || []),
+                                                            ];
+                                                            newHeaders[index] = {
+                                                              ...newHeaders[index],
+                                                              name: e.target.value,
+                                                            };
+                                                            updateProbe('readinessProbe', {
+                                                              httpGet: {
+                                                                ...config.readinessProbe?.httpGet,
+                                                                httpHeaders: newHeaders,
+                                                              },
+                                                            });
+                                                          }}
+                                                        />
+                                                      </VStack>
+                                                      <VStack gap={2} className="flex-1">
+                                                        <span className="text-[12px] font-medium text-[var(--color-text-default)]">
+                                                          Value
+                                                        </span>
+                                                        <Input
+                                                          placeholder="Input value"
+                                                          fullWidth
+                                                          value={header.value}
+                                                          onChange={(e) => {
+                                                            const newHeaders = [
+                                                              ...(config.readinessProbe?.httpGet
+                                                                ?.httpHeaders || []),
+                                                            ];
+                                                            newHeaders[index] = {
+                                                              ...newHeaders[index],
+                                                              value: e.target.value,
+                                                            };
+                                                            updateProbe('readinessProbe', {
+                                                              httpGet: {
+                                                                ...config.readinessProbe?.httpGet,
+                                                                httpHeaders: newHeaders,
+                                                              },
+                                                            });
+                                                          }}
+                                                        />
+                                                      </VStack>
+                                                      <div className="pt-5">
+                                                        <Button
+                                                          variant="ghost"
+                                                          size="sm"
+                                                          onClick={() => {
+                                                            const newHeaders = (
+                                                              config.readinessProbe?.httpGet
+                                                                ?.httpHeaders || []
+                                                            ).filter((_, i) => i !== index);
+                                                            updateProbe('readinessProbe', {
+                                                              httpGet: {
+                                                                ...config.readinessProbe?.httpGet,
+                                                                httpHeaders: newHeaders,
+                                                              },
+                                                            });
+                                                          }}
+                                                        >
+                                                          <IconX size={16} />
+                                                        </Button>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                ))}
+                                                <div className="w-fit">
+                                                  <Button
+                                                    variant="secondary"
+                                                    size="sm"
+                                                    leftIcon={
+                                                      <IconCirclePlus size={12} stroke={1.5} />
+                                                    }
+                                                    onClick={() => {
+                                                      const newHeaders = [
+                                                        ...(config.readinessProbe?.httpGet
+                                                          ?.httpHeaders || []),
+                                                        { name: '', value: '' },
+                                                      ];
+                                                      updateProbe('readinessProbe', {
+                                                        httpGet: {
+                                                          ...config.readinessProbe?.httpGet,
+                                                          httpHeaders: newHeaders,
+                                                        },
+                                                      });
+                                                    }}
+                                                  >
+                                                    Add Header
+                                                  </Button>
+                                                </div>
+                                              </VStack>
+                                            </div>
+                                          </VStack>
+                                        )}
+                                      </VStack>
+                                    </div>
+                                  )}
+                                </VStack>
+
+                                {/* Liveness Check */}
+                                <VStack gap={6}>
+                                  <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                    Liveness Check
+                                  </span>
+                                  <VStack gap={3}>
+                                    <VStack gap={1}>
+                                      <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                        Type
+                                      </span>
+                                      <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                        Select the probe type used for the health check.
+                                      </span>
+                                    </VStack>
+                                    <Select
+                                      options={[
+                                        { value: 'none', label: 'None' },
+                                        {
+                                          value: 'httpGet',
+                                          label:
+                                            'HTTP request returns a successful status (200-399)',
+                                        },
+                                        {
+                                          value: 'tcpSocket',
+                                          label: 'TCP Connection opens successfully',
+                                        },
+                                        {
+                                          value: 'exec',
+                                          label:
+                                            'Command run inside the container exits with status 0',
+                                        },
+                                      ]}
+                                      value={config.livenessProbe?.type || 'none'}
+                                      onChange={(val) =>
+                                        updateProbe('livenessProbe', {
+                                          type: val as 'none' | 'httpGet' | 'tcpSocket' | 'exec',
+                                        })
+                                      }
+                                      fullWidth
+                                    />
+                                  </VStack>
+                                  {config.livenessProbe?.type !== 'none' &&
+                                    config.livenessProbe?.type && (
+                                      <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                                        <VStack gap={6}>
+                                          {/* Row 1: Check Port/Command + Check Interval */}
+                                          <div className="flex gap-6 w-full">
+                                            {(config.livenessProbe?.type === 'httpGet' ||
+                                              config.livenessProbe?.type === 'tcpSocket') && (
+                                              <VStack gap={3} className="flex-1">
+                                                <VStack gap={1}>
+                                                  <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                                    Check Port
+                                                  </span>
+                                                  <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                                    Specify the port used to send health check
+                                                    requests.
+                                                  </span>
+                                                </VStack>
+                                                <Input
+                                                  placeholder="e.g. 80"
+                                                  fullWidth
+                                                  value={
+                                                    config.livenessProbe?.type === 'httpGet'
+                                                      ? config.livenessProbe?.httpGet?.port || ''
+                                                      : config.livenessProbe?.tcpSocket?.port || ''
+                                                  }
+                                                  onChange={(e) =>
+                                                    config.livenessProbe?.type === 'httpGet'
+                                                      ? updateProbe('livenessProbe', {
+                                                          httpGet: {
+                                                            ...config.livenessProbe?.httpGet,
+                                                            port: e.target.value,
+                                                          },
+                                                        })
+                                                      : updateProbe('livenessProbe', {
+                                                          tcpSocket: {
+                                                            ...config.livenessProbe?.tcpSocket,
+                                                            port: e.target.value,
+                                                          },
+                                                        })
+                                                  }
+                                                />
+                                              </VStack>
+                                            )}
+                                            {config.livenessProbe?.type === 'exec' && (
+                                              <VStack gap={3} className="flex-1">
+                                                <VStack gap={1}>
+                                                  <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                                    Command to run
+                                                  </span>
+                                                  <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                                    Specify the command to execute when the
+                                                    container starts.
+                                                  </span>
+                                                </VStack>
+                                                <Input
+                                                  placeholder="e.g. cat /tmp/health"
+                                                  fullWidth
+                                                  value={config.livenessProbe?.exec?.command || ''}
+                                                  onChange={(e) =>
+                                                    updateProbe('livenessProbe', {
+                                                      exec: {
+                                                        ...config.livenessProbe?.exec,
+                                                        command: e.target.value,
+                                                      },
+                                                    })
+                                                  }
+                                                />
+                                              </VStack>
+                                            )}
+                                            <VStack gap={3} className="flex-1">
+                                              <VStack gap={1}>
+                                                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                                  Check Interval
+                                                </span>
+                                                <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                                  Specify the interval between health check
+                                                  requests.
+                                                </span>
+                                              </VStack>
+                                              <HStack gap={2}>
+                                                <NumberInput
+                                                  value={
+                                                    parseInt(
+                                                      config.livenessProbe?.periodSeconds || '10'
+                                                    ) || 10
+                                                  }
+                                                  onChange={(val) =>
+                                                    updateProbe('livenessProbe', {
+                                                      periodSeconds: String(val),
+                                                    })
+                                                  }
+                                                  min={1}
+                                                  fullWidth
+                                                />
+                                                <div className="px-3 py-2 text-[12px] text-[var(--color-text-default)]">
+                                                  Seconds
+                                                </div>
+                                              </HStack>
+                                            </VStack>
+                                          </div>
+                                          {/* Row 2: Initial Delay + Timeout */}
+                                          <div className="flex gap-6 w-full">
+                                            <VStack gap={3} className="flex-1">
+                                              <VStack gap={1}>
+                                                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                                  Initial Delay
+                                                </span>
+                                                <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                                  Specify the delay before initiating the first
+                                                  health check.
+                                                </span>
+                                              </VStack>
+                                              <HStack gap={2}>
+                                                <NumberInput
+                                                  value={
+                                                    parseInt(
+                                                      config.livenessProbe?.initialDelaySeconds ||
+                                                        '0'
+                                                    ) || 0
+                                                  }
+                                                  onChange={(val) =>
+                                                    updateProbe('livenessProbe', {
+                                                      initialDelaySeconds: String(val),
+                                                    })
+                                                  }
+                                                  min={0}
+                                                  fullWidth
+                                                />
+                                                <div className="px-3 py-2 text-[12px] text-[var(--color-text-default)]">
+                                                  Seconds
+                                                </div>
+                                              </HStack>
+                                            </VStack>
+                                            <VStack gap={3} className="flex-1">
+                                              <VStack gap={1}>
+                                                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                                  Timeout
+                                                </span>
+                                                <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                                  Specify the maximum time to wait for a health
+                                                  check response.
+                                                </span>
+                                              </VStack>
+                                              <HStack gap={2}>
+                                                <NumberInput
+                                                  value={
+                                                    parseInt(
+                                                      config.livenessProbe?.timeoutSeconds || '1'
+                                                    ) || 1
+                                                  }
+                                                  onChange={(val) =>
+                                                    updateProbe('livenessProbe', {
+                                                      timeoutSeconds: String(val),
+                                                    })
+                                                  }
+                                                  min={1}
+                                                  fullWidth
+                                                />
+                                                <div className="px-3 py-2 text-[12px] text-[var(--color-text-default)]">
+                                                  Seconds
+                                                </div>
+                                              </HStack>
+                                            </VStack>
+                                          </div>
+                                          {/* Row 3: Success Threshold + Failure Threshold */}
+                                          <div className="flex gap-6 w-full">
+                                            <VStack gap={3} className="flex-1">
+                                              <VStack gap={1}>
+                                                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                                  Success Threshold
+                                                </span>
+                                                <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                                  Specify the minimum number of consecutive
+                                                  successful checks to consider the status healthy.
+                                                </span>
+                                              </VStack>
+                                              <Input
+                                                placeholder="1"
+                                                fullWidth
+                                                value={config.livenessProbe?.successThreshold || ''}
+                                                onChange={(e) =>
+                                                  updateProbe('livenessProbe', {
+                                                    successThreshold: e.target.value,
+                                                  })
+                                                }
+                                              />
+                                            </VStack>
+                                            <VStack gap={3} className="flex-1">
+                                              <VStack gap={1}>
+                                                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                                  Failure Threshold
+                                                </span>
+                                                <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                                  Specify the minimum number of consecutive failed
+                                                  checks to consider the status unhealthy.
+                                                </span>
+                                              </VStack>
+                                              <Input
+                                                placeholder="3"
+                                                fullWidth
+                                                value={config.livenessProbe?.failureThreshold || ''}
+                                                onChange={(e) =>
+                                                  updateProbe('livenessProbe', {
+                                                    failureThreshold: e.target.value,
+                                                  })
+                                                }
+                                              />
+                                            </VStack>
+                                          </div>
+                                        </VStack>
+                                      </div>
+                                    )}
+                                </VStack>
+
+                                {/* Startup Check */}
+                                <VStack gap={6}>
+                                  <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                    Startup Check
+                                  </span>
+                                  <VStack gap={3}>
+                                    <VStack gap={1}>
+                                      <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                        Type
+                                      </span>
+                                      <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                        Select the probe type used for the health check.
+                                      </span>
+                                    </VStack>
+                                    <Select
+                                      options={[
+                                        { value: 'none', label: 'None' },
+                                        {
+                                          value: 'httpGet',
+                                          label:
+                                            'HTTP request returns a successful status (200-399)',
+                                        },
+                                        {
+                                          value: 'tcpSocket',
+                                          label: 'TCP Connection opens successfully',
+                                        },
+                                        {
+                                          value: 'exec',
+                                          label:
+                                            'Command run inside the container exits with status 0',
+                                        },
+                                      ]}
+                                      value={config.startupProbe?.type || 'none'}
+                                      onChange={(val) =>
+                                        updateProbe('startupProbe', {
+                                          type: val as 'none' | 'httpGet' | 'tcpSocket' | 'exec',
+                                        })
+                                      }
+                                      fullWidth
+                                    />
+                                  </VStack>
+                                  {config.startupProbe?.type !== 'none' &&
+                                    config.startupProbe?.type && (
+                                      <div className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full">
+                                        <VStack gap={6}>
+                                          {/* Row 1: Check Port/Command + Check Interval */}
+                                          <div className="flex gap-6 w-full">
+                                            {(config.startupProbe?.type === 'httpGet' ||
+                                              config.startupProbe?.type === 'tcpSocket') && (
+                                              <VStack gap={3} className="flex-1">
+                                                <VStack gap={1}>
+                                                  <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                                    Check Port
+                                                  </span>
+                                                  <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                                    Specify the port used to send health check
+                                                    requests.
+                                                  </span>
+                                                </VStack>
+                                                <Input
+                                                  placeholder="e.g. 80"
+                                                  fullWidth
+                                                  value={
+                                                    config.startupProbe?.type === 'httpGet'
+                                                      ? config.startupProbe?.httpGet?.port || ''
+                                                      : config.startupProbe?.tcpSocket?.port || ''
+                                                  }
+                                                  onChange={(e) =>
+                                                    config.startupProbe?.type === 'httpGet'
+                                                      ? updateProbe('startupProbe', {
+                                                          httpGet: {
+                                                            ...config.startupProbe?.httpGet,
+                                                            port: e.target.value,
+                                                          },
+                                                        })
+                                                      : updateProbe('startupProbe', {
+                                                          tcpSocket: {
+                                                            ...config.startupProbe?.tcpSocket,
+                                                            port: e.target.value,
+                                                          },
+                                                        })
+                                                  }
+                                                />
+                                              </VStack>
+                                            )}
+                                            {config.startupProbe?.type === 'exec' && (
+                                              <VStack gap={3} className="flex-1">
+                                                <VStack gap={1}>
+                                                  <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                                    Command to run
+                                                  </span>
+                                                  <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                                    Specify the command to execute when the
+                                                    container starts.
+                                                  </span>
+                                                </VStack>
+                                                <Input
+                                                  placeholder="e.g. cat /tmp/health"
+                                                  fullWidth
+                                                  value={config.startupProbe?.exec?.command || ''}
+                                                  onChange={(e) =>
+                                                    updateProbe('startupProbe', {
+                                                      exec: {
+                                                        ...config.startupProbe?.exec,
+                                                        command: e.target.value,
+                                                      },
+                                                    })
+                                                  }
+                                                />
+                                              </VStack>
+                                            )}
+                                            <VStack gap={3} className="flex-1">
+                                              <VStack gap={1}>
+                                                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                                  Check Interval
+                                                </span>
+                                                <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                                  Specify the interval between health check
+                                                  requests.
+                                                </span>
+                                              </VStack>
+                                              <HStack gap={2}>
+                                                <NumberInput
+                                                  value={
+                                                    parseInt(
+                                                      config.startupProbe?.periodSeconds || '10'
+                                                    ) || 10
+                                                  }
+                                                  onChange={(val) =>
+                                                    updateProbe('startupProbe', {
+                                                      periodSeconds: String(val),
+                                                    })
+                                                  }
+                                                  min={1}
+                                                  fullWidth
+                                                />
+                                                <div className="px-3 py-2 text-[12px] text-[var(--color-text-default)]">
+                                                  Seconds
+                                                </div>
+                                              </HStack>
+                                            </VStack>
+                                          </div>
+                                          {/* Row 2: Initial Delay + Timeout */}
+                                          <div className="flex gap-6 w-full">
+                                            <VStack gap={3} className="flex-1">
+                                              <VStack gap={1}>
+                                                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                                  Initial Delay
+                                                </span>
+                                                <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                                  Specify the delay before initiating the first
+                                                  health check.
+                                                </span>
+                                              </VStack>
+                                              <HStack gap={2}>
+                                                <NumberInput
+                                                  value={
+                                                    parseInt(
+                                                      config.startupProbe?.initialDelaySeconds ||
+                                                        '0'
+                                                    ) || 0
+                                                  }
+                                                  onChange={(val) =>
+                                                    updateProbe('startupProbe', {
+                                                      initialDelaySeconds: String(val),
+                                                    })
+                                                  }
+                                                  min={0}
+                                                  fullWidth
+                                                />
+                                                <div className="px-3 py-2 text-[12px] text-[var(--color-text-default)]">
+                                                  Seconds
+                                                </div>
+                                              </HStack>
+                                            </VStack>
+                                            <VStack gap={3} className="flex-1">
+                                              <VStack gap={1}>
+                                                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                                  Timeout
+                                                </span>
+                                                <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                                  Specify the maximum time to wait for a health
+                                                  check response.
+                                                </span>
+                                              </VStack>
+                                              <HStack gap={2}>
+                                                <NumberInput
+                                                  value={
+                                                    parseInt(
+                                                      config.startupProbe?.timeoutSeconds || '1'
+                                                    ) || 1
+                                                  }
+                                                  onChange={(val) =>
+                                                    updateProbe('startupProbe', {
+                                                      timeoutSeconds: String(val),
+                                                    })
+                                                  }
+                                                  min={1}
+                                                  fullWidth
+                                                />
+                                                <div className="px-3 py-2 text-[12px] text-[var(--color-text-default)]">
+                                                  Seconds
+                                                </div>
+                                              </HStack>
+                                            </VStack>
+                                          </div>
+                                          {/* Row 3: Success Threshold + Failure Threshold */}
+                                          <div className="flex gap-6 w-full">
+                                            <VStack gap={3} className="flex-1">
+                                              <VStack gap={1}>
+                                                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                                  Success Threshold
+                                                </span>
+                                                <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                                  Specify the minimum number of consecutive
+                                                  successful checks to consider the status healthy.
+                                                </span>
+                                              </VStack>
+                                              <Input
+                                                placeholder="1"
+                                                fullWidth
+                                                value={config.startupProbe?.successThreshold || ''}
+                                                onChange={(e) =>
+                                                  updateProbe('startupProbe', {
+                                                    successThreshold: e.target.value,
+                                                  })
+                                                }
+                                              />
+                                            </VStack>
+                                            <VStack gap={3} className="flex-1">
+                                              <VStack gap={1}>
+                                                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                                  Failure Threshold
+                                                </span>
+                                                <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                                  Specify the minimum number of consecutive failed
+                                                  checks to consider the status unhealthy.
+                                                </span>
+                                              </VStack>
+                                              <Input
+                                                placeholder="3"
+                                                fullWidth
+                                                value={config.startupProbe?.failureThreshold || ''}
+                                                onChange={(e) =>
+                                                  updateProbe('startupProbe', {
+                                                    failureThreshold: e.target.value,
+                                                  })
+                                                }
+                                              />
+                                            </VStack>
+                                          </div>
+                                        </VStack>
+                                      </div>
+                                    )}
+                                </VStack>
+                              </VStack>
+                            </SectionCard.Content>
+                          </SectionCard>
+
+                          {/* 9. Resources Section */}
+                          <SectionCard>
+                            <SectionCard.Header title="Resources" />
+                            <SectionCard.Content>
+                              <VStack gap={6}>
+                                {/* Row 1: CPU Reservation + CPU Limit */}
+                                <div className="flex gap-4 w-full">
+                                  <VStack gap={3} className="flex-1">
+                                    <VStack gap={1}>
+                                      <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                        CPU Reservation
+                                      </span>
+                                      <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                        Specify the minimum CPU amount reserved for the container.
+                                      </span>
+                                    </VStack>
+                                    <HStack gap={2} align="center">
+                                      <Input
+                                        placeholder="1000"
+                                        fullWidth
+                                        value={config.cpuRequest || ''}
+                                        onChange={(e) =>
+                                          updateContainerConfig(containerId, {
+                                            cpuRequest: e.target.value,
+                                          })
+                                        }
+                                      />
+                                      <span className="text-[12px] text-[var(--color-text-default)] whitespace-nowrap">
+                                        mCPUs
+                                      </span>
+                                    </HStack>
+                                  </VStack>
+                                  <VStack gap={3} className="flex-1">
+                                    <VStack gap={1}>
+                                      <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                        CPU Limit
+                                      </span>
+                                      <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                        Specify the maximum CPU amount allowed for the container.
+                                      </span>
+                                    </VStack>
+                                    <HStack gap={2} align="center">
+                                      <Input
+                                        placeholder="1000"
+                                        fullWidth
+                                        value={config.cpuLimit || ''}
+                                        onChange={(e) =>
+                                          updateContainerConfig(containerId, {
+                                            cpuLimit: e.target.value,
+                                          })
+                                        }
+                                      />
+                                      <span className="text-[12px] text-[var(--color-text-default)] whitespace-nowrap">
+                                        mCPUs
+                                      </span>
+                                    </HStack>
+                                  </VStack>
+                                </div>
+                                {/* Row 2: Memory Reservation + Memory Limit */}
+                                <div className="flex gap-4 w-full">
+                                  <VStack gap={3} className="flex-1">
+                                    <VStack gap={1}>
+                                      <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                        Memory Reservation
+                                      </span>
+                                      <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                        Specify the minimum memory amount reserved for the
+                                        container.
+                                      </span>
+                                    </VStack>
+                                    <HStack gap={2} align="center">
+                                      <Input
+                                        placeholder="128"
+                                        fullWidth
+                                        value={config.memoryRequest || ''}
+                                        onChange={(e) =>
+                                          updateContainerConfig(containerId, {
+                                            memoryRequest: e.target.value,
+                                          })
+                                        }
+                                      />
+                                      <span className="text-[12px] text-[var(--color-text-default)] whitespace-nowrap">
+                                        MiB
+                                      </span>
+                                    </HStack>
+                                  </VStack>
+                                  <VStack gap={3} className="flex-1">
+                                    <VStack gap={1}>
+                                      <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                        Memory Limit
+                                      </span>
+                                      <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                        Specify the maximum memory amount allowed for the container.
+                                      </span>
+                                    </VStack>
+                                    <HStack gap={2} align="center">
+                                      <Input
+                                        placeholder="128"
+                                        fullWidth
+                                        value={config.memoryLimit || ''}
+                                        onChange={(e) =>
+                                          updateContainerConfig(containerId, {
+                                            memoryLimit: e.target.value,
+                                          })
+                                        }
+                                      />
+                                      <span className="text-[12px] text-[var(--color-text-default)] whitespace-nowrap">
+                                        MiB
+                                      </span>
+                                    </HStack>
+                                  </VStack>
+                                </div>
+                              </VStack>
+                            </SectionCard.Content>
+                          </SectionCard>
+
+                          {/* 10. Security Context Section */}
+                          <SectionCard>
+                            <SectionCard.Header title="Security Context" />
+                            <SectionCard.Content>
+                              <VStack gap={6}>
+                                {/* Row 1: Privileged + Privilege Escalation */}
+                                <div className="flex gap-4 w-full">
+                                  <VStack gap={2} className="flex-1">
+                                    <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                      Privileged
+                                    </span>
+                                    <VStack gap={3}>
+                                      <HStack gap={2} align="center">
+                                        <Radio
+                                          checked={!config.privileged}
+                                          onChange={() =>
+                                            updateContainerConfig(containerId, {
+                                              privileged: false,
+                                            })
+                                          }
+                                        />
+                                        <span className="text-[12px] text-[var(--color-text-default)]">
+                                          No
+                                        </span>
+                                      </HStack>
+                                      <HStack gap={2} align="center">
+                                        <Radio
+                                          checked={config.privileged || false}
+                                          onChange={() =>
+                                            updateContainerConfig(containerId, {
+                                              privileged: true,
+                                            })
+                                          }
+                                        />
+                                        <span className="text-[12px] text-[var(--color-text-default)]">
+                                          Yes: container has full access to the host
+                                        </span>
+                                      </HStack>
+                                    </VStack>
+                                  </VStack>
+                                  <VStack gap={2} className="flex-1">
+                                    <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                      Privilege Escalation
+                                    </span>
+                                    <VStack gap={3}>
+                                      <HStack gap={2} align="center">
+                                        <Radio
+                                          checked={!config.allowPrivilegeEscalation}
+                                          onChange={() =>
+                                            updateContainerConfig(containerId, {
+                                              allowPrivilegeEscalation: false,
+                                            })
+                                          }
+                                        />
+                                        <span className="text-[12px] text-[var(--color-text-default)]">
+                                          No
+                                        </span>
+                                      </HStack>
+                                      <HStack gap={2} align="center">
+                                        <Radio
+                                          checked={config.allowPrivilegeEscalation || false}
+                                          onChange={() =>
+                                            updateContainerConfig(containerId, {
+                                              allowPrivilegeEscalation: true,
+                                            })
+                                          }
+                                        />
+                                        <span className="text-[12px] text-[var(--color-text-default)]">
+                                          Yes: container can gain more privileges than its parent
+                                          process
+                                        </span>
+                                      </HStack>
+                                    </VStack>
+                                  </VStack>
+                                </div>
+                                {/* Row 2: Run as Non-Root + Read-Only Root Filesystem */}
+                                <div className="flex gap-4 w-full">
+                                  <VStack gap={2} className="flex-1">
+                                    <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                      Run as Non-Root
+                                    </span>
+                                    <VStack gap={3}>
+                                      <HStack gap={2} align="center">
+                                        <Radio
+                                          checked={!config.runAsNonRoot}
+                                          onChange={() =>
+                                            updateContainerConfig(containerId, {
+                                              runAsNonRoot: false,
+                                            })
+                                          }
+                                        />
+                                        <span className="text-[12px] text-[var(--color-text-default)]">
+                                          No
+                                        </span>
+                                      </HStack>
+                                      <HStack gap={2} align="center">
+                                        <Radio
+                                          checked={config.runAsNonRoot || false}
+                                          onChange={() =>
+                                            updateContainerConfig(containerId, {
+                                              runAsNonRoot: true,
+                                            })
+                                          }
+                                        />
+                                        <span className="text-[12px] text-[var(--color-text-default)]">
+                                          Yes: container must run as a non-root user
+                                        </span>
+                                      </HStack>
+                                    </VStack>
+                                  </VStack>
+                                  <VStack gap={2} className="flex-1">
+                                    <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                      Read-Only Root Filesystem
+                                    </span>
+                                    <VStack gap={3}>
+                                      <HStack gap={2} align="center">
+                                        <Radio
+                                          checked={!config.readOnlyRootFilesystem}
+                                          onChange={() =>
+                                            updateContainerConfig(containerId, {
+                                              readOnlyRootFilesystem: false,
+                                            })
+                                          }
+                                        />
+                                        <span className="text-[12px] text-[var(--color-text-default)]">
+                                          No
+                                        </span>
+                                      </HStack>
+                                      <HStack gap={2} align="center">
+                                        <Radio
+                                          checked={config.readOnlyRootFilesystem || false}
+                                          onChange={() =>
+                                            updateContainerConfig(containerId, {
+                                              readOnlyRootFilesystem: true,
+                                            })
+                                          }
+                                        />
+                                        <span className="text-[12px] text-[var(--color-text-default)]">
+                                          Yes: container has a read-only root filesystem
+                                        </span>
+                                      </HStack>
+                                    </VStack>
+                                  </VStack>
+                                </div>
+                                {/* Row 3: Run as User ID (full width) */}
+                                <VStack gap={2}>
+                                  <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                    Run as User ID
                                   </span>
                                   <Input
-                                    placeholder='e.g. ["sh", "-c"]'
+                                    placeholder=""
                                     fullWidth
-                                    value={config.command || ''}
+                                    value={config.runAsUser || ''}
                                     onChange={(e) =>
                                       updateContainerConfig(containerId, {
-                                        command: e.target.value,
+                                        runAsUser: e.target.value,
                                       })
                                     }
                                   />
                                 </VStack>
+                                {/* Row 4: Add Capabilities + Drop Capabilities */}
+                                <div className="flex gap-4 w-full">
+                                  <VStack gap={2} className="flex-1">
+                                    <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                      Add Capabilities
+                                    </span>
+                                    <Select
+                                      options={[
+                                        { value: '', label: '' },
+                                        { value: 'NET_ADMIN', label: 'NET_ADMIN' },
+                                        { value: 'SYS_ADMIN', label: 'SYS_ADMIN' },
+                                        { value: 'SYS_PTRACE', label: 'SYS_PTRACE' },
+                                        { value: 'NET_RAW', label: 'NET_RAW' },
+                                        { value: 'SYS_TIME', label: 'SYS_TIME' },
+                                      ]}
+                                      value={config.addCapabilities || ''}
+                                      onChange={(val) =>
+                                        updateContainerConfig(containerId, {
+                                          addCapabilities: val,
+                                        })
+                                      }
+                                      fullWidth
+                                    />
+                                  </VStack>
+                                  <VStack gap={2} className="flex-1">
+                                    <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                      Drop Capabilities
+                                    </span>
+                                    <Select
+                                      options={[
+                                        { value: '', label: '' },
+                                        { value: 'ALL', label: 'ALL' },
+                                        { value: 'NET_ADMIN', label: 'NET_ADMIN' },
+                                        { value: 'SYS_ADMIN', label: 'SYS_ADMIN' },
+                                        { value: 'SETUID', label: 'SETUID' },
+                                        { value: 'SETGID', label: 'SETGID' },
+                                      ]}
+                                      value={config.dropCapabilities || ''}
+                                      onChange={(val) =>
+                                        updateContainerConfig(containerId, {
+                                          dropCapabilities: val,
+                                        })
+                                      }
+                                      fullWidth
+                                    />
+                                  </VStack>
+                                </div>
+                              </VStack>
+                            </SectionCard.Content>
+                          </SectionCard>
 
-                                <VStack gap={1} className="w-full">
-                                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                                    Arguments
-                                  </span>
-                                  <span className="text-[12px] text-[var(--color-text-subtle)]">
-                                    Arguments to pass to the container command.
-                                  </span>
-                                  <Input
-                                    placeholder='e.g. ["echo", "hello"]'
-                                    fullWidth
-                                    value={config.args || ''}
-                                    onChange={(e) =>
-                                      updateContainerConfig(containerId, { args: e.target.value })
-                                    }
+                          {/* 11. Storage Section */}
+                          <SectionCard>
+                            <SectionCard.Header title="Storage" />
+                            <SectionCard.Content>
+                              <VStack gap={6}>
+                                {/* Selected volumes with their mounts */}
+                                {config.selectedVolumes && config.selectedVolumes.length > 0 && (
+                                  <VStack gap={3}>
+                                    {config.selectedVolumes.map(
+                                      (
+                                        selectedVol: {
+                                          volumeName: string;
+                                          volumeType: string;
+                                          mounts: Array<{
+                                            mountPath: string;
+                                            subPath: string;
+                                            readOnly: boolean;
+                                          }>;
+                                        },
+                                        volIndex: number
+                                      ) => (
+                                        <div
+                                          key={volIndex}
+                                          className="border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                        >
+                                          <VStack gap={2}>
+                                            <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                              {selectedVol.volumeName} ({selectedVol.volumeType})
+                                            </span>
+                                            {/* Mount rows */}
+                                            {(selectedVol.mounts || []).map(
+                                              (
+                                                mount: {
+                                                  mountPath: string;
+                                                  subPath: string;
+                                                  readOnly: boolean;
+                                                },
+                                                mountIndex: number
+                                              ) => (
+                                                <div
+                                                  key={mountIndex}
+                                                  className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                                >
+                                                  <div className="flex gap-2 items-start">
+                                                    <VStack gap={2} className="flex-1">
+                                                      <span className="text-[12px] font-medium text-[var(--color-text-default)]">
+                                                        Mount Point{' '}
+                                                        <span className="text-[var(--color-state-danger)]">
+                                                          *
+                                                        </span>
+                                                      </span>
+                                                      <Input
+                                                        placeholder=""
+                                                        fullWidth
+                                                        value={mount.mountPath}
+                                                        onChange={(e) => {
+                                                          const newVolumes = [
+                                                            ...(config.selectedVolumes || []),
+                                                          ];
+                                                          newVolumes[volIndex].mounts[mountIndex] =
+                                                            {
+                                                              ...newVolumes[volIndex].mounts[
+                                                                mountIndex
+                                                              ],
+                                                              mountPath: e.target.value,
+                                                            };
+                                                          updateContainerConfig(containerId, {
+                                                            selectedVolumes: newVolumes,
+                                                          });
+                                                        }}
+                                                      />
+                                                    </VStack>
+                                                    <VStack gap={2} className="flex-1">
+                                                      <span className="text-[12px] font-medium text-[var(--color-text-default)]">
+                                                        Sub Path in Volume
+                                                      </span>
+                                                      <Input
+                                                        placeholder=""
+                                                        fullWidth
+                                                        value={mount.subPath}
+                                                        onChange={(e) => {
+                                                          const newVolumes = [
+                                                            ...(config.selectedVolumes || []),
+                                                          ];
+                                                          newVolumes[volIndex].mounts[mountIndex] =
+                                                            {
+                                                              ...newVolumes[volIndex].mounts[
+                                                                mountIndex
+                                                              ],
+                                                              subPath: e.target.value,
+                                                            };
+                                                          updateContainerConfig(containerId, {
+                                                            selectedVolumes: newVolumes,
+                                                          });
+                                                        }}
+                                                      />
+                                                    </VStack>
+                                                    <VStack gap={2}>
+                                                      <span className="text-[12px] font-medium text-[var(--color-text-default)]">
+                                                        Read Only
+                                                      </span>
+                                                      <div className="pt-2">
+                                                        <Checkbox
+                                                          checked={mount.readOnly || false}
+                                                          onChange={(e) => {
+                                                            const newVolumes = [
+                                                              ...(config.selectedVolumes || []),
+                                                            ];
+                                                            newVolumes[volIndex].mounts[
+                                                              mountIndex
+                                                            ] = {
+                                                              ...newVolumes[volIndex].mounts[
+                                                                mountIndex
+                                                              ],
+                                                              readOnly: e.target.checked,
+                                                            };
+                                                            updateContainerConfig(containerId, {
+                                                              selectedVolumes: newVolumes,
+                                                            });
+                                                          }}
+                                                        />
+                                                      </div>
+                                                    </VStack>
+                                                    <button
+                                                      className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                                      onClick={() => {
+                                                        const newVolumes = [
+                                                          ...(config.selectedVolumes || []),
+                                                        ];
+                                                        newVolumes[volIndex].mounts = newVolumes[
+                                                          volIndex
+                                                        ].mounts.filter(
+                                                          (
+                                                            _: {
+                                                              mountPath: string;
+                                                              subPath: string;
+                                                              readOnly: boolean;
+                                                            },
+                                                            i: number
+                                                          ) => i !== mountIndex
+                                                        );
+                                                        if (
+                                                          newVolumes[volIndex].mounts.length === 0
+                                                        ) {
+                                                          newVolumes.splice(volIndex, 1);
+                                                        }
+                                                        updateContainerConfig(containerId, {
+                                                          selectedVolumes: newVolumes,
+                                                        });
+                                                      }}
+                                                    >
+                                                      <IconX
+                                                        size={12}
+                                                        className="text-[var(--color-text-muted)]"
+                                                        stroke={1.5}
+                                                      />
+                                                    </button>
+                                                  </div>
+                                                </div>
+                                              )
+                                            )}
+                                            {/* Add Mount button inside volume container */}
+                                            <div className="w-fit">
+                                              <Button
+                                                variant="secondary"
+                                                size="sm"
+                                                leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                                onClick={() => {
+                                                  const newVolumes = [
+                                                    ...(config.selectedVolumes || []),
+                                                  ];
+                                                  newVolumes[volIndex].mounts = [
+                                                    ...newVolumes[volIndex].mounts,
+                                                    { mountPath: '', subPath: '', readOnly: false },
+                                                  ];
+                                                  updateContainerConfig(containerId, {
+                                                    selectedVolumes: newVolumes,
+                                                  });
+                                                }}
+                                              >
+                                                Add Mount
+                                              </Button>
+                                            </div>
+                                          </VStack>
+                                        </div>
+                                      )
+                                    )}
+                                  </VStack>
+                                )}
+                                {/* Select Volume dropdown */}
+                                <div className="w-fit">
+                                  <Select
+                                    options={[
+                                      { value: '', label: 'Select Volume' },
+                                      ...volumes.map((v) => ({
+                                        value: v.volumeName,
+                                        label: v.volumeName,
+                                      })),
+                                    ]}
+                                    value=""
+                                    onChange={(val) => {
+                                      if (val) {
+                                        const volume = volumes.find((v) => v.volumeName === val);
+                                        if (volume) {
+                                          const newVolumes = [
+                                            ...(config.selectedVolumes || []),
+                                            {
+                                              volumeName: volume.volumeName,
+                                              volumeType: volume.type,
+                                              mounts: [
+                                                { mountPath: '', subPath: '', readOnly: false },
+                                              ],
+                                            },
+                                          ];
+                                          updateContainerConfig(containerId, {
+                                            selectedVolumes: newVolumes,
+                                          });
+                                        }
+                                      }
+                                    }}
                                   />
-                                </VStack>
-                              </VStack>
-                            </SectionCard.Content>
-                          </SectionCard>
-
-                          {/* Ports Section */}
-                          <SectionCard>
-                            <SectionCard.Header title="Ports" />
-                            <SectionCard.Content>
-                              <VStack gap={4}>
-                                <span className="text-[12px] text-[var(--color-text-subtle)]">
-                                  Define the ports that the container exposes.
-                                </span>
-
-                                {(config.ports || []).map((port, index) => (
-                                  <div
-                                    key={index}
-                                    className="grid grid-cols-[1fr_1fr_1fr_auto] gap-3 w-full items-end"
-                                  >
-                                    <VStack gap={1}>
-                                      <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                                        Name
-                                      </span>
-                                      <Input
-                                        placeholder="http"
-                                        fullWidth
-                                        value={port.name}
-                                        onChange={(e) => {
-                                          const newPorts = [...(config.ports || [])];
-                                          newPorts[index] = {
-                                            ...newPorts[index],
-                                            name: e.target.value,
-                                          };
-                                          updateContainerConfig(containerId, { ports: newPorts });
-                                        }}
-                                      />
-                                    </VStack>
-                                    <VStack gap={1}>
-                                      <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                                        Container Port
-                                      </span>
-                                      <Input
-                                        placeholder="8080"
-                                        fullWidth
-                                        value={port.containerPort}
-                                        onChange={(e) => {
-                                          const newPorts = [...(config.ports || [])];
-                                          newPorts[index] = {
-                                            ...newPorts[index],
-                                            containerPort: e.target.value,
-                                          };
-                                          updateContainerConfig(containerId, { ports: newPorts });
-                                        }}
-                                      />
-                                    </VStack>
-                                    <VStack gap={1}>
-                                      <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                                        Protocol
-                                      </span>
-                                      <Select
-                                        options={[
-                                          { value: 'TCP', label: 'TCP' },
-                                          { value: 'UDP', label: 'UDP' },
-                                        ]}
-                                        value={port.protocol}
-                                        onChange={(val) => {
-                                          const newPorts = [...(config.ports || [])];
-                                          newPorts[index] = { ...newPorts[index], protocol: val };
-                                          updateContainerConfig(containerId, { ports: newPorts });
-                                        }}
-                                        fullWidth
-                                      />
-                                    </VStack>
-                                    <Button
-                                      variant="ghost"
-                                      size="sm"
-                                      onClick={() => {
-                                        const newPorts = (config.ports || []).filter(
-                                          (_, i) => i !== index
-                                        );
-                                        updateContainerConfig(containerId, { ports: newPorts });
-                                      }}
-                                    >
-                                      <IconX size={14} />
-                                    </Button>
-                                  </div>
-                                ))}
-
-                                <Button
-                                  variant="secondary"
-                                  size="sm"
-                                  onClick={() => {
-                                    const newPorts = [
-                                      ...(config.ports || []),
-                                      { name: '', containerPort: '', protocol: 'TCP' },
-                                    ];
-                                    updateContainerConfig(containerId, { ports: newPorts });
-                                  }}
-                                >
-                                  <IconPlus size={12} stroke={1.5} />
-                                  Add Port
-                                </Button>
-                              </VStack>
-                            </SectionCard.Content>
-                          </SectionCard>
-
-                          {/* Environment Variables Section */}
-                          <SectionCard>
-                            <SectionCard.Header title="Environment Variables" />
-                            <SectionCard.Content>
-                              <VStack gap={4}>
-                                <span className="text-[12px] text-[var(--color-text-subtle)]">
-                                  Set environment variables for the container.
-                                </span>
-
-                                {(config.envVars || []).map((envVar, index) => (
-                                  <div
-                                    key={index}
-                                    className="grid grid-cols-[1fr_1fr_auto] gap-3 w-full items-end"
-                                  >
-                                    <VStack gap={1}>
-                                      <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                                        Name
-                                      </span>
-                                      <Input
-                                        placeholder="MY_VAR"
-                                        fullWidth
-                                        value={envVar.name}
-                                        onChange={(e) => {
-                                          const newEnvVars = [...(config.envVars || [])];
-                                          newEnvVars[index] = {
-                                            ...newEnvVars[index],
-                                            name: e.target.value,
-                                          };
-                                          updateContainerConfig(containerId, {
-                                            envVars: newEnvVars,
-                                          });
-                                        }}
-                                      />
-                                    </VStack>
-                                    <VStack gap={1}>
-                                      <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                                        Value
-                                      </span>
-                                      <Input
-                                        placeholder="value"
-                                        fullWidth
-                                        value={envVar.value}
-                                        onChange={(e) => {
-                                          const newEnvVars = [...(config.envVars || [])];
-                                          newEnvVars[index] = {
-                                            ...newEnvVars[index],
-                                            value: e.target.value,
-                                          };
-                                          updateContainerConfig(containerId, {
-                                            envVars: newEnvVars,
-                                          });
-                                        }}
-                                      />
-                                    </VStack>
-                                    <Button
-                                      variant="ghost"
-                                      size="sm"
-                                      onClick={() => {
-                                        const newEnvVars = (config.envVars || []).filter(
-                                          (_, i) => i !== index
-                                        );
-                                        updateContainerConfig(containerId, {
-                                          envVars: newEnvVars,
-                                        });
-                                      }}
-                                    >
-                                      <IconX size={14} />
-                                    </Button>
-                                  </div>
-                                ))}
-
-                                <Button
-                                  variant="secondary"
-                                  size="sm"
-                                  onClick={() => {
-                                    const newEnvVars = [
-                                      ...(config.envVars || []),
-                                      { name: '', value: '', type: 'value' as const },
-                                    ];
-                                    updateContainerConfig(containerId, { envVars: newEnvVars });
-                                  }}
-                                >
-                                  <IconPlus size={12} stroke={1.5} />
-                                  Add Environment Variable
-                                </Button>
-                              </VStack>
-                            </SectionCard.Content>
-                          </SectionCard>
-
-                          {/* Resources Section */}
-                          <SectionCard>
-                            <SectionCard.Header title="Resources" />
-                            <SectionCard.Content>
-                              <VStack gap={4}>
-                                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
-                                  Requests
-                                </span>
-                                <div className="grid grid-cols-2 gap-4 w-full">
-                                  <VStack gap={1}>
-                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                                      CPU Request
-                                    </span>
-                                    <span className="text-[12px] text-[var(--color-text-subtle)]">
-                                      Minimum CPU required.
-                                    </span>
-                                    <Input
-                                      placeholder="e.g. 100m"
-                                      fullWidth
-                                      value={config.cpuRequest || ''}
-                                      onChange={(e) =>
-                                        updateContainerConfig(containerId, {
-                                          cpuRequest: e.target.value,
-                                        })
-                                      }
-                                    />
-                                  </VStack>
-                                  <VStack gap={1}>
-                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                                      Memory Request
-                                    </span>
-                                    <span className="text-[12px] text-[var(--color-text-subtle)]">
-                                      Minimum memory required.
-                                    </span>
-                                    <Input
-                                      placeholder="e.g. 128Mi"
-                                      fullWidth
-                                      value={config.memoryRequest || ''}
-                                      onChange={(e) =>
-                                        updateContainerConfig(containerId, {
-                                          memoryRequest: e.target.value,
-                                        })
-                                      }
-                                    />
-                                  </VStack>
                                 </div>
-
-                                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
-                                  Limits
-                                </span>
-                                <div className="grid grid-cols-2 gap-4 w-full">
-                                  <VStack gap={1}>
-                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                                      CPU Limit
-                                    </span>
-                                    <span className="text-[12px] text-[var(--color-text-subtle)]">
-                                      Maximum CPU allowed.
-                                    </span>
-                                    <Input
-                                      placeholder="e.g. 500m"
-                                      fullWidth
-                                      value={config.cpuLimit || ''}
-                                      onChange={(e) =>
-                                        updateContainerConfig(containerId, {
-                                          cpuLimit: e.target.value,
-                                        })
-                                      }
-                                    />
-                                  </VStack>
-                                  <VStack gap={1}>
-                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                                      Memory Limit
-                                    </span>
-                                    <span className="text-[12px] text-[var(--color-text-subtle)]">
-                                      Maximum memory allowed.
-                                    </span>
-                                    <Input
-                                      placeholder="e.g. 512Mi"
-                                      fullWidth
-                                      value={config.memoryLimit || ''}
-                                      onChange={(e) =>
-                                        updateContainerConfig(containerId, {
-                                          memoryLimit: e.target.value,
-                                        })
-                                      }
-                                    />
-                                  </VStack>
-                                </div>
-                              </VStack>
-                            </SectionCard.Content>
-                          </SectionCard>
-
-                          {/* Health Checks Section */}
-                          <SectionCard>
-                            <SectionCard.Header title="Health Checks" />
-                            <SectionCard.Content>
-                              <VStack gap={4}>
-                                <VStack gap={3}>
-                                  <HStack gap={2} align="center">
-                                    <Checkbox
-                                      checked={config.livenessProbe?.enabled || false}
-                                      onChange={(e) =>
-                                        updateContainerConfig(containerId, {
-                                          livenessProbe: {
-                                            ...config.livenessProbe,
-                                            enabled: e.target.checked,
-                                          },
-                                        })
-                                      }
-                                    />
-                                    <span className="text-[14px] font-medium text-[var(--color-text-default)]">
-                                      Liveness Probe
-                                    </span>
-                                  </HStack>
-                                  <span className="text-[12px] text-[var(--color-text-subtle)]">
-                                    Indicates whether the container is running. If failed, the
-                                    container will be restarted.
-                                  </span>
-                                </VStack>
-
-                                <VStack gap={3}>
-                                  <HStack gap={2} align="center">
-                                    <Checkbox
-                                      checked={config.readinessProbe?.enabled || false}
-                                      onChange={(e) =>
-                                        updateContainerConfig(containerId, {
-                                          readinessProbe: {
-                                            ...config.readinessProbe,
-                                            enabled: e.target.checked,
-                                          },
-                                        })
-                                      }
-                                    />
-                                    <span className="text-[14px] font-medium text-[var(--color-text-default)]">
-                                      Readiness Probe
-                                    </span>
-                                  </HStack>
-                                  <span className="text-[12px] text-[var(--color-text-subtle)]">
-                                    Indicates whether the container is ready to receive traffic.
-                                  </span>
-                                </VStack>
-                              </VStack>
-                            </SectionCard.Content>
-                          </SectionCard>
-
-                          {/* Volume Mounts Section */}
-                          <SectionCard>
-                            <SectionCard.Header title="Volume Mounts" />
-                            <SectionCard.Content>
-                              <VStack gap={4}>
-                                <span className="text-[12px] text-[var(--color-text-subtle)]">
-                                  Mount volumes into the container filesystem.
-                                </span>
-
-                                {(config.volumeMounts || []).map((mount, index) => (
-                                  <div
-                                    key={index}
-                                    className="grid grid-cols-[1fr_1fr_1fr_auto] gap-3 w-full items-end"
-                                  >
-                                    <VStack gap={1}>
-                                      <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                                        Volume Name
-                                      </span>
-                                      <Input
-                                        placeholder="volume-name"
-                                        fullWidth
-                                        value={mount.name}
-                                        onChange={(e) => {
-                                          const newMounts = [...(config.volumeMounts || [])];
-                                          newMounts[index] = {
-                                            ...newMounts[index],
-                                            name: e.target.value,
-                                          };
-                                          updateContainerConfig(containerId, {
-                                            volumeMounts: newMounts,
-                                          });
-                                        }}
-                                      />
-                                    </VStack>
-                                    <VStack gap={1}>
-                                      <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                                        Mount Path
-                                      </span>
-                                      <Input
-                                        placeholder="/data"
-                                        fullWidth
-                                        value={mount.mountPath}
-                                        onChange={(e) => {
-                                          const newMounts = [...(config.volumeMounts || [])];
-                                          newMounts[index] = {
-                                            ...newMounts[index],
-                                            mountPath: e.target.value,
-                                          };
-                                          updateContainerConfig(containerId, {
-                                            volumeMounts: newMounts,
-                                          });
-                                        }}
-                                      />
-                                    </VStack>
-                                    <VStack gap={1}>
-                                      <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                                        Sub Path
-                                      </span>
-                                      <Input
-                                        placeholder="optional"
-                                        fullWidth
-                                        value={mount.subPath}
-                                        onChange={(e) => {
-                                          const newMounts = [...(config.volumeMounts || [])];
-                                          newMounts[index] = {
-                                            ...newMounts[index],
-                                            subPath: e.target.value,
-                                          };
-                                          updateContainerConfig(containerId, {
-                                            volumeMounts: newMounts,
-                                          });
-                                        }}
-                                      />
-                                    </VStack>
-                                    <Button
-                                      variant="ghost"
-                                      size="sm"
-                                      onClick={() => {
-                                        const newMounts = (config.volumeMounts || []).filter(
-                                          (_, i) => i !== index
-                                        );
-                                        updateContainerConfig(containerId, {
-                                          volumeMounts: newMounts,
-                                        });
-                                      }}
-                                    >
-                                      <IconX size={14} />
-                                    </Button>
-                                  </div>
-                                ))}
-
-                                <Button
-                                  variant="secondary"
-                                  size="sm"
-                                  onClick={() => {
-                                    const newMounts = [
-                                      ...(config.volumeMounts || []),
-                                      { name: '', mountPath: '', subPath: '', readOnly: false },
-                                    ];
-                                    updateContainerConfig(containerId, {
-                                      volumeMounts: newMounts,
-                                    });
-                                  }}
-                                >
-                                  <IconPlus size={12} stroke={1.5} />
-                                  Add Volume Mount
-                                </Button>
-                              </VStack>
-                            </SectionCard.Content>
-                          </SectionCard>
-
-                          {/* Security Context Section */}
-                          <SectionCard>
-                            <SectionCard.Header title="Security Context" />
-                            <SectionCard.Content>
-                              <VStack gap={4}>
-                                <div className="grid grid-cols-2 gap-4 w-full">
-                                  <VStack gap={1}>
-                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                                      Run As User
-                                    </span>
-                                    <span className="text-[12px] text-[var(--color-text-subtle)]">
-                                      User ID to run the container.
-                                    </span>
-                                    <Input
-                                      placeholder="e.g. 1000"
-                                      fullWidth
-                                      value={config.runAsUser || ''}
-                                      onChange={(e) =>
-                                        updateContainerConfig(containerId, {
-                                          runAsUser: e.target.value,
-                                        })
-                                      }
-                                    />
-                                  </VStack>
-                                  <VStack gap={1}>
-                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                                      Run As Group
-                                    </span>
-                                    <span className="text-[12px] text-[var(--color-text-subtle)]">
-                                      Group ID to run the container.
-                                    </span>
-                                    <Input
-                                      placeholder="e.g. 1000"
-                                      fullWidth
-                                      value={config.runAsGroup || ''}
-                                      onChange={(e) =>
-                                        updateContainerConfig(containerId, {
-                                          runAsGroup: e.target.value,
-                                        })
-                                      }
-                                    />
-                                  </VStack>
-                                </div>
-
-                                <VStack gap={3}>
-                                  <HStack gap={2} align="center">
-                                    <Checkbox
-                                      checked={config.privileged || false}
-                                      onChange={(e) =>
-                                        updateContainerConfig(containerId, {
-                                          privileged: e.target.checked,
-                                        })
-                                      }
-                                    />
-                                    <span className="text-[12px] text-[var(--color-text-default)]">
-                                      Run as privileged container
-                                    </span>
-                                  </HStack>
-                                  <HStack gap={2} align="center">
-                                    <Checkbox
-                                      checked={config.readOnlyRootFilesystem || false}
-                                      onChange={(e) =>
-                                        updateContainerConfig(containerId, {
-                                          readOnlyRootFilesystem: e.target.checked,
-                                        })
-                                      }
-                                    />
-                                    <span className="text-[12px] text-[var(--color-text-default)]">
-                                      Read-only root filesystem
-                                    </span>
-                                  </HStack>
-                                </VStack>
                               </VStack>
                             </SectionCard.Content>
                           </SectionCard>
@@ -4402,6 +6283,7 @@ export function CreateDeploymentPage() {
                 <SummarySidebar
                   name={name}
                   containerTabs={containerTabs}
+                  activeTab={activeTab}
                   onCancel={handleCancel}
                   onCreate={handleCreate}
                   isCreateDisabled={isCreateDisabled}
