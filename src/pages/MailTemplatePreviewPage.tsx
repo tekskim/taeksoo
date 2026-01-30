@@ -508,16 +508,19 @@ export function MailTemplatePreviewPage() {
   const [copied, setCopied] = useState(false);
   const [viewMode, setViewMode] = useState<'preview' | 'code'>('preview');
 
-  // Account Invitation fields const [displayName, setDisplayName] = useState('{DISPLAY_NAME}');
+  // Account Invitation fields
+  const [displayName, setDisplayName] = useState('{DISPLAY_NAME}');
   const [domainName, setDomainName] = useState('{DOMAIN_NAME}');
   const [username, setUsername] = useState('{USERNAME}');
   const [expiryDays, setExpiryDays] = useState(7);
   const [actionUrl, setActionUrl] = useState('https://cloud.thaki.io/set-password?token=xxx');
 
-  // Reset Password fields const [expiryHours, setExpiryHours] = useState(1);
+  // Reset Password fields
+  const [expiryHours, setExpiryHours] = useState(1);
   const [resetUrl, setResetUrl] = useState('https://cloud.thaki.io/reset-password?token=xxx');
 
-  // Email MFA fields const [verificationCode, setVerificationCode] = useState('123456');
+  // Email MFA fields
+  const [verificationCode, setVerificationCode] = useState('123456');
   const [mfaExpirySeconds, setMfaExpirySeconds] = useState(30);
 
   const config = templateConfig[templateId as TemplateType] || templateConfig['account-invitation'];

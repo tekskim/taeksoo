@@ -13,7 +13,8 @@ export default function SettingsInformationPage() {
   const navigate = useNavigate();
   const { isDark } = useDarkMode();
 
-  // Handle window close const handleWindowClose = () => {
+  // Handle window close
+  const handleWindowClose = () => {
     navigate('/');
   };
 

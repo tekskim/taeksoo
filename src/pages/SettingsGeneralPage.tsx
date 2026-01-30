@@ -43,15 +43,18 @@ export default function SettingsGeneralPage() {
   const navigate = useNavigate();
   const { theme, setTheme, isDark } = useDarkMode();
 
-  // General settings state const [language, setLanguage] = useState('en');
+  // General settings state
+  const [language, setLanguage] = useState('en');
   const [timezone, setTimezone] = useState('Asia/Seoul');
   const [useLocationTimezone, setUseLocationTimezone] = useState(false);
 
-  // Handle theme change const handleThemeChange = (value: string) => {
+  // Handle theme change
+  const handleThemeChange = (value: string) => {
     setTheme(value as 'light' | 'dark' | 'system');
   };
 
-  // Handle window close const handleWindowClose = () => {
+  // Handle window close
+  const handleWindowClose = () => {
     navigate('/');
   };
 
