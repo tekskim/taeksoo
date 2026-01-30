@@ -16,7 +16,8 @@ import {
   DoughnutChartDemo,
   HalfDoughnutChartDemo,
 } from './design-system-sections/ChartComponents';
-import { ModalDemo, ModalUseCaseDemo, DrawerDemo } from './design-system-sections/OverlayDemos';
+import { ModalDemo, ModalUseCaseDemo, DrawerDemo, AIAgentModalDemo } from './design-system-sections/OverlayDemos';
+import { CommonPatternsSection } from './design-system-sections/CommonPatterns';
 
 // App icons
 import AppIconAdminCenter from '@/assets/appIcon/admincenter.png';
@@ -333,6 +334,7 @@ const navigationItems = [
 
 // Patterns - matches actual content order
 const patternItems = [
+  { id: 'common-patterns', label: 'Common patterns', icon: IconTemplate },
   { id: 'detail-header', label: 'Detail header', icon: IconLayoutNavbar },
   { id: 'section-card', label: 'Section card', icon: IconLayoutGrid },
   { id: 'wizard', label: 'Wizard (Create Flow)', icon: IconListNumbers },
@@ -452,6 +454,7 @@ function OpenSectionDemo() {
       <SectionCard.Header
         title="Basic information"
         statusIcon={<WizardSectionStatusIcon status="active" />}
+        showDivider={false}
       />
       <SectionCard.Content>
         <VStack gap={0}>
@@ -675,7 +678,7 @@ function OpenSectionTableDemo() {
         <SectionCard.Header
           title="Source"
           statusIcon={<WizardSectionStatusIcon status="active" />}
-          showDivider
+          showDivider={false}
         />
         <SectionCard.Content>
           <VStack gap={0}>
@@ -7446,6 +7449,15 @@ outline: 2px solid var(--color-border-focus);`}
                   </VStack>
                 </Section>
 
+                {/* Common Patterns */}
+                <Section
+                  id="common-patterns"
+                  title="Common patterns"
+                  description="애플리케이션 전체에서 공통으로 사용되는 UI 패턴 모음입니다. List Page, Detail Page, Drawer, Modal 등의 패턴을 확인할 수 있습니다."
+                >
+                  <CommonPatternsSection />
+                </Section>
+
                 {/* DetailHeader Component */}
                 <Section
                   id="detail-header"
@@ -7984,6 +7996,15 @@ outline: 2px solid var(--color-border-focus);`}
                         <code>infoValue</code>, <code>confirmVariant</code> props 지원.
                       </p>
                       <ModalDemo variant="delete" />
+                    </VStack>
+
+                    {/* AI Agent Modals */}
+                    <VStack gap={3}>
+                      <Label>AI Agent modals</Label>
+                      <p className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+                        AI Agent 관리를 위한 모달 컴포넌트. Agent source 삭제 등의 확인 모달을 포함.
+                      </p>
+                      <AIAgentModalDemo />
                     </VStack>
                   </VStack>
                 </Section>
