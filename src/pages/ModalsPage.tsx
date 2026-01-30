@@ -1,7 +1,5 @@
 import { useState } from 'react';
-import { Sidebar } from '@/components/Sidebar';
-import { useTabs } from '@/contexts/TabContext';
-import { TopBar, Breadcrumb, TabBar } from '@/design-system';
+import { useNavigate } from 'react-router-dom';
 import { Button, VStack, HStack, Badge, Modal, Disclosure } from '@/design-system';
 import {
   IconAlertCircle,
@@ -9,6 +7,7 @@ import {
   IconChevronDown,
   IconCopy,
   IconCheck,
+  IconArrowLeft,
 } from '@tabler/icons-react';
 import { DeleteClusterModal } from '@/components/DeleteClusterModal';
 import { DeleteNamespaceModal } from '@/components/DeleteNamespaceModal';
@@ -22,6 +21,7 @@ import { RedeployDeploymentModal } from '@/components/RedeployDeploymentModal';
 import { RedeployStatefulSetModal } from '@/components/RedeployStatefulSetModal';
 import { RedeployDaemonSetModal } from '@/components/RedeployDaemonSetModal';
 import { RollBackDeploymentModal } from '@/components/RollBackDeploymentModal';
+import { DeleteAgentSourceModal } from '@/pages/design-system-sections/OverlayDemos';
 
 /* ----------------------------------------
    Modal List Item Component ---------------------------------------- */
@@ -81,8 +81,7 @@ function ModalListItem({ title, description, category, size, onOpen }: ModalList
    ModalsPage Component ---------------------------------------- */
 
 export function ModalsPage() {
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const navigate = useNavigate();
 
   // Modal states
   const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
@@ -231,67 +230,43 @@ export function ModalsPage() {
   const [isContainerOpen, setIsContainerOpen] = useState(false);
   const [isStorageOpen, setIsStorageOpen] = useState(false);
   const [isComputeAdminOpen, setIsComputeAdminOpen] = useState(false);
+  const [isAIAgentOpen, setIsAIAgentOpen] = useState(false);
+
+  // AI Agent modal states
+  const [isDeleteAgentSourceOpen, setIsDeleteAgentSourceOpen] = useState(false);
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+    <div className="fixed inset-0 overflow-auto bg-[var(--color-surface-subtle)]">
+      {/* Header */}
+      <header className="sticky top-0 z-50 bg-[var(--color-surface-default)] border-b border-[var(--color-border-default)]">
+        <div className="max-w-7xl mx-auto px-8 h-14 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Button
+              variant="ghost"
+              size="sm"
+              leftIcon={<IconArrowLeft size={14} />}
+              onClick={() => navigate('/')}
+            >
+              Back
+            </Button>
+            <h1 className="text-heading-h5 text-[var(--color-text-default)]">
+              Modal Components
+            </h1>
+          </div>
+        </div>
+      </header>
 
       {/* Main Content */}
-      <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'}`}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* TabBar */}
-          <TabBar
-            tabs={tabs.map((tab) => ({
-              id: tab.id,
-              label: tab.label,
-              closable: tab.closable,
-            }))}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            onTabAdd={addNewTab}
-            onTabReorder={moveTab}
-            showAddButton={true}
-            showWindowControls={true}
-          />
+      <main>
+        <div className="max-w-7xl mx-auto px-8 py-8">
+          <VStack gap={8}>
+            {/* Page Description */}
+            <p className="text-body-lg text-[var(--color-text-subtle)]">
+              Collection of modal components used across the application. Click to preview each modal.
+            </p>
 
-          {/* TopBar */}
-          <TopBar
-            showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
-            showNavigation={true}
-            onBack={() => window.history.back()}
-            onForward={() => window.history.forward()}
-            breadcrumb={
-              <Breadcrumb
-                items={[{ label: 'Design system', href: '/design-system' }, { label: 'Modals' }]}
-              />
-            }
-          />
-        </div>
-
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
-          {/* Content */}
-          <div className="px-8 py-6">
-            <VStack gap={8}>
-              {/* Header */}
-              <VStack gap={2}>
-                <h1 className="text-heading-h3 text-[var(--color-text-default)]">
-                  Modal components{' '}
-                </h1>
-                <p className="text-body-lg text-[var(--color-text-subtle)]">
-                  Collection of modal components used across the application. Click to preview each
-                  modal.
-                </p>
-              </VStack>
-
-              {/* Modal Categories by App */}
-              <VStack gap={4}>
+            {/* Modal Categories by App */}
+            <VStack gap={4}>
                 {/* Compute App Modals */}
                 <Disclosure open={isComputeOpen} onChange={setIsComputeOpen}>
                   <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
@@ -1482,9 +1457,48 @@ export function ModalsPage() {
                     </VStack>
                   </Disclosure.Panel>
                 </Disclosure>
-              </VStack>
+
+                {/* AI Agent Modals */}
+                <Disclosure open={isAIAgentOpen} onChange={setIsAIAgentOpen}>
+                  <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
+                    <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
+                      <div className="flex items-center gap-3">
+                        {isAIAgentOpen ? (
+                          <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
+                        ) : (
+                          <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
+                        )}
+                        <Badge variant="info" size="sm" className="w-[70px] justify-center">
+                          AI Agent </Badge>
+                        <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
+                          Modals </span>
+                        <span className="text-body-md text-[var(--color-text-subtle)]">
+                          (1 modal)
+                        </span>
+                      </div>
+                    </div>
+                  </Disclosure.Trigger>
+                  <Disclosure.Panel>
+                    <VStack gap={4} className="pt-4">
+                      {/* Agent Actions */}
+                      <VStack gap={2}>
+                        <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                          Agent Actions </h2>
+                        <div className="flex flex-col gap-2">
+                          <ModalListItem
+                            title="Delete Agent Source"
+                            description="Confirm deletion of an agent source with warning."
+                            category="Agent"
+                            size="sm"
+                            onOpen={() => setIsDeleteAgentSourceOpen(true)}
+                          />
+                        </div>
+                      </VStack>
+                    </VStack>
+                  </Disclosure.Panel>
+              </Disclosure>
             </VStack>
-          </div>
+          </VStack>
         </div>
       </main>
 
@@ -7893,6 +7907,16 @@ export function ModalsPage() {
           </Button>
         </div>
       </Modal>
+
+      {/* ----------------------------------------
+         AI Agent Modals ---------------------------------------- */}
+
+      {/* Delete Agent Source Modal */}
+      <DeleteAgentSourceModal
+        isOpen={isDeleteAgentSourceOpen}
+        onClose={() => setIsDeleteAgentSourceOpen(false)}
+        agentName="my-research-agent"
+      />
     </div>
   );
 }

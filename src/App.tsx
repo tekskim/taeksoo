@@ -133,6 +133,7 @@ import ComputeAdminQoSSpecDetailPage from '@/pages/ComputeAdminQoSSpecDetailPage
 
 // Pages - Agent
 import { AgentPage } from '@/pages/AgentPage';
+import AgentDetailPage from '@/pages/AgentDetailPage';
 import { CreateAgentPage } from '@/pages/CreateAgentPage';
 import { ChatPage } from '@/pages/ChatPage';
 import { StoragePage } from '@/pages/StoragePage';
@@ -343,6 +344,7 @@ function AppRoutes() {
       <Route element={<AgentAppLayout />}>
         <Route path="/agent" element={<HomePage />} />
         <Route path="/agent/list" element={<AgentPage />} />
+        <Route path="/agent/list/:id" element={<AgentDetailPage />} />
         <Route path="/agent/create" element={<CreateAgentPage />} />
         <Route path="/chat" element={<ChatPage />} />
         <Route path="/agent/storage" element={<StoragePage />} />

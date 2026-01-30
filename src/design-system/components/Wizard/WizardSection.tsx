@@ -152,9 +152,9 @@ interface DoneSectionRowProps {
 
 export function DoneSectionRow({ label, value }: DoneSectionRowProps) {
   return (
-    <VStack gap={0} className="pt-3">
+    <VStack gap={0}>
       <div className="w-full h-px bg-[var(--color-border-subtle)]" />
-      <VStack gap={2} className="pt-3">
+      <VStack gap={1.5} className="pt-3">
         <span className="text-label-sm text-[var(--color-text-subtle)]">{label}</span>
         <span className="text-body-md text-[var(--color-text-default)]">{value || '-'}</span>
       </VStack>
@@ -186,7 +186,7 @@ export function DoneSection({ title, onEdit, children }: DoneSectionProps) {
         }
       />
       {/* DoneSectionRow already includes dividers, so we don't use SectionCard.Content */}
-      <div className="flex flex-col w-full">{children}</div>
+      <div className="flex flex-col w-full gap-3">{children}</div>
     </SectionCard>
   );
 }

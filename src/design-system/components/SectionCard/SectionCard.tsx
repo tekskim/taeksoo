@@ -18,7 +18,7 @@ export function SectionCard({ children, isActive = false, className, ...props }:
     <div
       className={twMerge(
         'flex flex-col items-start',
-        'gap-6',
+        'gap-3',
         'bg-[var(--color-surface-default)]',
         'rounded-[var(--radius-md)]',
         isActive
@@ -45,12 +45,15 @@ export interface SectionCardHeaderProps extends HTMLAttributes<HTMLDivElement> {
   actions?: ReactNode;
   /** Show divider below header (default: true) */
   showDivider?: boolean;
+  /** Optional status icon (e.g., for Wizard sections) */
+  statusIcon?: ReactNode;
 }
 
 function SectionCardHeader({
   title,
   actions,
-  showDivider = false,
+  showDivider = true,
+  statusIcon,
   className,
   ...props
 }: SectionCardHeaderProps) {
@@ -60,7 +63,12 @@ function SectionCardHeader({
         className={twMerge('flex items-center justify-between w-full h-7', className)}
         {...props}
       >
-        <h5 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h5>
+        <div className="flex items-center gap-2">
+          {statusIcon}
+          <h5 className="text-heading-h5 text-[var(--color-text-default)]">
+            {title}
+          </h5>
+        </div>
         {actions && <div className="flex items-center gap-2">{actions}</div>}
       </div>
       {showDivider && <div className="h-px w-full bg-[var(--color-border-subtle)]" />}
