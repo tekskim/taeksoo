@@ -115,9 +115,7 @@ export function EditDomainDrawer({
             <span className="text-label-lg text-[var(--color-text-default)] leading-5">
               Domain name
             </span>
-            <span className="text-label-lg text-[var(--color-state-danger)] leading-5">
-              *
-            </span>
+            <span className="text-label-lg text-[var(--color-state-danger)] leading-5">*</span>
           </div>
           <Input
             value={name}
@@ -150,9 +148,7 @@ export function EditDomainDrawer({
 
         {/* Status field */}
         <VStack gap={2}>
-          <span className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Status
-          </span>
+          <span className="text-label-lg text-[var(--color-text-default)] leading-5">Status</span>
           <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
             Select the domain's status. If 'disabled', users in this domain will not be able to sign
             in.

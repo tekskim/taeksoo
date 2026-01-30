@@ -465,9 +465,7 @@ export function NetworksPage() {
             <VStack gap={3}>
               {/* Page Header */}
               <div className="flex justify-between items-center h-8 w-full">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-                  Networks
-                </h1>
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Networks</h1>
                 <Button
                   variant="primary"
                   size="md"

@@ -344,9 +344,7 @@ function InfoCard({ label, value, rightElement }: InfoCardProps) {
   return (
     <div className="basis-0 grow bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3 flex items-center justify-between min-w-0">
       <div className="flex flex-col gap-1.5">
-        <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
-          {label}
-        </span>
+        <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">{label}</span>
         <span className="text-body-md leading-4 text-[var(--color-text-default)]">{value}</span>
       </div>
       {rightElement}

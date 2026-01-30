@@ -26,9 +26,7 @@ function RouterInfoBox({ router }: { router: RouterInfo }) {
   return (
     <div className="w-full bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
       <VStack gap={2}>
-        <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-          Router name
-        </span>
+        <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">Router name</span>
         <span className="text-body-md text-[var(--color-text-default)] leading-4">
           {router.name}
         </span>

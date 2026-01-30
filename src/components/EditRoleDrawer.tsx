@@ -95,9 +95,7 @@ export function EditRoleDrawer({
       <VStack gap={6} className="pb-6">
         {/* Header */}
         <VStack gap={2}>
-          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-            Edit role
-          </h2>
+          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">Edit role</h2>
           <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
             Edit basic information for this role.
           </p>
@@ -109,9 +107,7 @@ export function EditRoleDrawer({
             <span className="text-label-lg text-[var(--color-text-default)] leading-5">
               Role name
             </span>
-            <span className="text-label-lg text-[var(--color-state-danger)] leading-5">
-              *
-            </span>
+            <span className="text-label-lg text-[var(--color-state-danger)] leading-5">*</span>
           </div>
           <Input
             value={name}

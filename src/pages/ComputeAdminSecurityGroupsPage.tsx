@@ -286,9 +286,7 @@ export function ComputeAdminSecurityGroupsPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">
-            ID : {row.id}
-          </span>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
         </div>
       ),
     },
@@ -307,9 +305,7 @@ export function ComputeAdminSecurityGroupsPage() {
           >
             {row.tenant}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">
-            ID: {row.tenantId}
-          </span>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.tenantId}</span>
         </div>
       ),
     },

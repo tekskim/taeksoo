@@ -67,23 +67,17 @@ function PopoverCard({
 }) {
   return (
     <div className="flex flex-col gap-3 flex-shrink-0">
-      <div className="text-label-md text-[var(--color-text-muted)]">
-        {type}
-      </div>
+      <div className="text-label-md text-[var(--color-text-muted)]">{type}</div>
       <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[0px_0px_4px_0px_rgba(0,0,0,0.1)] w-[312px] p-4 flex flex-col gap-4">
         {/* Header */}
         <div className="flex items-center justify-between">
-          <span className="text-heading-h6 text-[var(--color-text-default)]">
-            {title}
-          </span>
+          <span className="text-heading-h6 text-[var(--color-text-default)]">{title}</span>
           <button className="flex items-center justify-center w-[var(--window-control-size)] h-[var(--window-control-size)] rounded-[var(--window-control-radius)] text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] transition-colors -mr-2 -mt-2">
             <IconX size={12} stroke={1} />
           </button>
         </div>
         {/* Content */}
-        <div className="text-body-sm text-[var(--color-text-default)] space-y-1.5">
-          {children}
-        </div>
+        <div className="text-body-sm text-[var(--color-text-default)] space-y-1.5">{children}</div>
       </div>
     </div>
   );
@@ -97,10 +91,7 @@ function SectionDivider({ title, count }: { title: string; count: number }) {
         <span className="text-[var(--color-text-muted)]">
           {title} ({count})
         </span>
-        <Link
-          to="#"
-          className="text-[var(--color-action-primary)] hover:underline text-label-sm"
-        >
+        <Link to="#" className="text-[var(--color-action-primary)] hover:underline text-label-sm">
           View detail
         </Link>
       </div>
@@ -170,9 +161,7 @@ function HealthMonitor({
         <div className="mt-3 pt-3 border-t border-[var(--color-border-subtle)] space-y-1.5">
           {pools.map((pool, idx) => (
             <div key={idx} className="flex items-center justify-between">
-              <span className={getStatusColor(pool.status)}>
-                {getStatusLabel(pool.status)}
-              </span>
+              <span className={getStatusColor(pool.status)}>{getStatusLabel(pool.status)}</span>
               <Link
                 to="#"
                 className="text-[var(--color-action-primary)] hover:underline inline-flex items-center gap-0.5"
@@ -238,29 +227,63 @@ export function TopologyPopoversPage() {
             <div>
               <h3 className="text-label-lg text-[var(--color-text-default)] mb-3">1. 컨테이너</h3>
               <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] p-4 font-mono text-body-sm space-y-1">
-                <div><span className="text-[var(--color-text-muted)]">width:</span> 312px</div>
-                <div><span className="text-[var(--color-text-muted)]">padding:</span> 16px</div>
-                <div><span className="text-[var(--color-text-muted)]">background:</span> var(--color-surface-default) <span className="text-[var(--color-text-subtle)]">// #FFFFFF</span></div>
-                <div><span className="text-[var(--color-text-muted)]">border:</span> 1px solid var(--color-border-default) <span className="text-[var(--color-text-subtle)]">// #E5E5E5</span></div>
-                <div><span className="text-[var(--color-text-muted)]">border-radius:</span> var(--radius-lg) <span className="text-[var(--color-text-subtle)]">// 8px</span></div>
-                <div><span className="text-[var(--color-text-muted)]">box-shadow:</span> 0px 0px 4px 0px rgba(0, 0, 0, 0.1)</div>
-                <div><span className="text-[var(--color-text-muted)]">z-index:</span> 50</div>
-                <div><span className="text-[var(--color-text-muted)]">position:</span> fixed</div>
+                <div>
+                  <span className="text-[var(--color-text-muted)]">width:</span> 312px
+                </div>
+                <div>
+                  <span className="text-[var(--color-text-muted)]">padding:</span> 16px
+                </div>
+                <div>
+                  <span className="text-[var(--color-text-muted)]">background:</span>{' '}
+                  var(--color-surface-default){' '}
+                  <span className="text-[var(--color-text-subtle)]">// #FFFFFF</span>
+                </div>
+                <div>
+                  <span className="text-[var(--color-text-muted)]">border:</span> 1px solid
+                  var(--color-border-default){' '}
+                  <span className="text-[var(--color-text-subtle)]">// #E5E5E5</span>
+                </div>
+                <div>
+                  <span className="text-[var(--color-text-muted)]">border-radius:</span>{' '}
+                  var(--radius-lg) <span className="text-[var(--color-text-subtle)]">// 8px</span>
+                </div>
+                <div>
+                  <span className="text-[var(--color-text-muted)]">box-shadow:</span> 0px 0px 4px
+                  0px rgba(0, 0, 0, 0.1)
+                </div>
+                <div>
+                  <span className="text-[var(--color-text-muted)]">z-index:</span> 50
+                </div>
+                <div>
+                  <span className="text-[var(--color-text-muted)]">position:</span> fixed
+                </div>
               </div>
             </div>
 
             {/* Typography */}
             <div>
-              <h3 className="text-label-lg text-[var(--color-text-default)] mb-3">2. 타이포그래피</h3>
+              <h3 className="text-label-lg text-[var(--color-text-default)] mb-3">
+                2. 타이포그래피
+              </h3>
               <div className="overflow-x-auto">
                 <table className="w-full text-body-sm">
                   <thead>
                     <tr className="border-b border-[var(--color-border-default)]">
-                      <th className="text-left py-2 pr-4 text-[var(--color-text-muted)] font-medium">요소</th>
-                      <th className="text-left py-2 pr-4 text-[var(--color-text-muted)] font-medium">Font Size</th>
-                      <th className="text-left py-2 pr-4 text-[var(--color-text-muted)] font-medium">Line Height</th>
-                      <th className="text-left py-2 pr-4 text-[var(--color-text-muted)] font-medium">Font Weight</th>
-                      <th className="text-left py-2 text-[var(--color-text-muted)] font-medium">Color</th>
+                      <th className="text-left py-2 pr-4 text-[var(--color-text-muted)] font-medium">
+                        요소
+                      </th>
+                      <th className="text-left py-2 pr-4 text-[var(--color-text-muted)] font-medium">
+                        Font Size
+                      </th>
+                      <th className="text-left py-2 pr-4 text-[var(--color-text-muted)] font-medium">
+                        Line Height
+                      </th>
+                      <th className="text-left py-2 pr-4 text-[var(--color-text-muted)] font-medium">
+                        Font Weight
+                      </th>
+                      <th className="text-left py-2 text-[var(--color-text-muted)] font-medium">
+                        Color
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="text-[var(--color-text-default)]">
@@ -316,27 +339,49 @@ export function TopologyPopoversPage() {
               <h3 className="text-label-lg text-[var(--color-text-default)] mb-3">3. 간격</h3>
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] p-4 font-mono text-body-sm space-y-1">
-                  <div className="text-label-sm text-[var(--color-text-default)] mb-2">컨테이너</div>
-                  <div><span className="text-[var(--color-text-muted)]">헤더-컨텐츠 간격:</span> 16px</div>
-                  <div><span className="text-[var(--color-text-muted)]">행 간격:</span> 6px</div>
+                  <div className="text-label-sm text-[var(--color-text-default)] mb-2">
+                    컨테이너
+                  </div>
+                  <div>
+                    <span className="text-[var(--color-text-muted)]">헤더-컨텐츠 간격:</span> 16px
+                  </div>
+                  <div>
+                    <span className="text-[var(--color-text-muted)]">행 간격:</span> 6px
+                  </div>
                 </div>
                 <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] p-4 font-mono text-body-sm space-y-1">
-                  <div className="text-label-sm text-[var(--color-text-default)] mb-2">섹션 구분선</div>
-                  <div><span className="text-[var(--color-text-muted)]">상단 마진:</span> 12px</div>
-                  <div><span className="text-[var(--color-text-muted)]">상단 패딩:</span> 12px</div>
-                  <div><span className="text-[var(--color-text-muted)]">border:</span> 1px solid --color-border-subtle</div>
+                  <div className="text-label-sm text-[var(--color-text-default)] mb-2">
+                    섹션 구분선
+                  </div>
+                  <div>
+                    <span className="text-[var(--color-text-muted)]">상단 마진:</span> 12px
+                  </div>
+                  <div>
+                    <span className="text-[var(--color-text-muted)]">상단 패딩:</span> 12px
+                  </div>
+                  <div>
+                    <span className="text-[var(--color-text-muted)]">border:</span> 1px solid
+                    --color-border-subtle
+                  </div>
                 </div>
               </div>
             </div>
 
             {/* Value Components */}
             <div>
-              <h3 className="text-label-lg text-[var(--color-text-default)] mb-3">4. 값 컴포넌트</h3>
+              <h3 className="text-label-lg text-[var(--color-text-default)] mb-3">
+                4. 값 컴포넌트
+              </h3>
               <div className="space-y-3">
                 <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] p-4">
-                  <div className="text-label-sm text-[var(--color-text-default)] mb-2">CopyableText (ID, IP 등)</div>
+                  <div className="text-label-sm text-[var(--color-text-default)] mb-2">
+                    CopyableText (ID, IP 등)
+                  </div>
                   <ul className="text-body-sm text-[var(--color-text-muted)] space-y-1">
-                    <li>• max-width: <code className="bg-[var(--color-surface-muted)] px-1 rounded">200px</code></li>
+                    <li>
+                      • max-width:{' '}
+                      <code className="bg-[var(--color-surface-muted)] px-1 rounded">200px</code>
+                    </li>
                     <li>• 텍스트 truncate (말줄임)</li>
                     <li>• 복사 아이콘: 12px, --color-text-subtle</li>
                     <li>• 복사 완료 시: IconCheck (green), 2초 후 원복</li>
@@ -344,9 +389,14 @@ export function TopologyPopoversPage() {
                   </ul>
                 </div>
                 <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] p-4">
-                  <div className="text-label-sm text-[var(--color-text-default)] mb-2">LinkText (Name, Gateway 등)</div>
+                  <div className="text-label-sm text-[var(--color-text-default)] mb-2">
+                    LinkText (Name, Gateway 등)
+                  </div>
                   <ul className="text-body-sm text-[var(--color-text-muted)] space-y-1">
-                    <li>• max-width: <code className="bg-[var(--color-surface-muted)] px-1 rounded">200px</code></li>
+                    <li>
+                      • max-width:{' '}
+                      <code className="bg-[var(--color-surface-muted)] px-1 rounded">200px</code>
+                    </li>
                     <li>• 텍스트 truncate (말줄임)</li>
                     <li>• 외부 링크 아이콘: 12px</li>
                     <li>• hover 시 underline + 툴팁</li>
@@ -357,19 +407,27 @@ export function TopologyPopoversPage() {
 
             {/* Status Colors */}
             <div>
-              <h3 className="text-label-lg text-[var(--color-text-default)] mb-3">5. 상태 색상 (Health Monitor)</h3>
+              <h3 className="text-label-lg text-[var(--color-text-default)] mb-3">
+                5. 상태 색상 (Health Monitor)
+              </h3>
               <div className="flex gap-6 text-body-sm">
                 <div className="flex items-center gap-2">
                   <span className="w-3 h-3 rounded-full bg-[var(--color-state-success)]"></span>
-                  <span>Healthy: <code className="font-mono">--color-state-success</code></span>
+                  <span>
+                    Healthy: <code className="font-mono">--color-state-success</code>
+                  </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="w-3 h-3 rounded-full bg-[#F59E0B]"></span>
-                  <span>Degraded: <code className="font-mono">#F59E0B</code></span>
+                  <span>
+                    Degraded: <code className="font-mono">#F59E0B</code>
+                  </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="w-3 h-3 rounded-full bg-[var(--color-state-danger)]"></span>
-                  <span>Error: <code className="font-mono">--color-state-danger</code></span>
+                  <span>
+                    Error: <code className="font-mono">--color-state-danger</code>
+                  </span>
                 </div>
               </div>
             </div>
@@ -378,11 +436,28 @@ export function TopologyPopoversPage() {
             <div>
               <h3 className="text-label-lg text-[var(--color-text-default)] mb-3">6. 닫기 버튼</h3>
               <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] p-4 font-mono text-body-sm space-y-1">
-                <div><span className="text-[var(--color-text-muted)]">size:</span> var(--window-control-size) <span className="text-[var(--color-text-subtle)]">// 24px</span></div>
-                <div><span className="text-[var(--color-text-muted)]">border-radius:</span> var(--window-control-radius) <span className="text-[var(--color-text-subtle)]">// 4px</span></div>
-                <div><span className="text-[var(--color-text-muted)]">icon:</span> IconX, 12px, stroke: 1</div>
-                <div><span className="text-[var(--color-text-muted)]">position offset:</span> margin-right: -8px, margin-top: -8px</div>
-                <div><span className="text-[var(--color-text-muted)]">hover:</span> background: --color-surface-subtle</div>
+                <div>
+                  <span className="text-[var(--color-text-muted)]">size:</span>{' '}
+                  var(--window-control-size){' '}
+                  <span className="text-[var(--color-text-subtle)]">// 24px</span>
+                </div>
+                <div>
+                  <span className="text-[var(--color-text-muted)]">border-radius:</span>{' '}
+                  var(--window-control-radius){' '}
+                  <span className="text-[var(--color-text-subtle)]">// 4px</span>
+                </div>
+                <div>
+                  <span className="text-[var(--color-text-muted)]">icon:</span> IconX, 12px, stroke:
+                  1
+                </div>
+                <div>
+                  <span className="text-[var(--color-text-muted)]">position offset:</span>{' '}
+                  margin-right: -8px, margin-top: -8px
+                </div>
+                <div>
+                  <span className="text-[var(--color-text-muted)]">hover:</span> background:
+                  --color-surface-subtle
+                </div>
               </div>
             </div>
           </div>
@@ -390,9 +465,7 @@ export function TopologyPopoversPage() {
 
         {/* Behavior Spec */}
         <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-6 max-w-5xl mx-auto">
-          <h2 className="text-heading-h6 text-[var(--color-text-default)] mb-4">
-            동작 스펙
-          </h2>
+          <h2 className="text-heading-h6 text-[var(--color-text-default)] mb-4">동작 스펙</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-body-md text-[var(--color-text-default)]">
             {/* Initial Position */}
             <div className="space-y-2">
@@ -410,8 +483,14 @@ export function TopologyPopoversPage() {
               <ul className="space-y-1 text-[var(--color-text-muted)]">
                 <li>• 헤더 영역을 드래그하여 이동 가능</li>
                 <li>• 버튼/링크 클릭 시 드래그 비활성화</li>
-                <li>• 드래그 중 커서: <code className="bg-[var(--color-surface-muted)] px-1 rounded">grabbing</code></li>
-                <li>• 대기 중 커서: <code className="bg-[var(--color-surface-muted)] px-1 rounded">grab</code></li>
+                <li>
+                  • 드래그 중 커서:{' '}
+                  <code className="bg-[var(--color-surface-muted)] px-1 rounded">grabbing</code>
+                </li>
+                <li>
+                  • 대기 중 커서:{' '}
+                  <code className="bg-[var(--color-surface-muted)] px-1 rounded">grab</code>
+                </li>
               </ul>
             </div>
 
@@ -449,12 +528,24 @@ export function TopologyPopoversPage() {
             <table className="w-full text-body-sm">
               <thead>
                 <tr className="border-b border-[var(--color-border-default)]">
-                  <th className="text-left py-2 pr-4 text-[var(--color-text-muted)] font-medium">필드</th>
-                  <th className="text-center py-2 px-2 text-[var(--color-text-muted)] font-medium">External Network</th>
-                  <th className="text-center py-2 px-2 text-[var(--color-text-muted)] font-medium">Router</th>
-                  <th className="text-center py-2 px-2 text-[var(--color-text-muted)] font-medium">VPC</th>
-                  <th className="text-center py-2 px-2 text-[var(--color-text-muted)] font-medium">Subnet</th>
-                  <th className="text-center py-2 px-2 text-[var(--color-text-muted)] font-medium">Load Balancer</th>
+                  <th className="text-left py-2 pr-4 text-[var(--color-text-muted)] font-medium">
+                    필드
+                  </th>
+                  <th className="text-center py-2 px-2 text-[var(--color-text-muted)] font-medium">
+                    External Network
+                  </th>
+                  <th className="text-center py-2 px-2 text-[var(--color-text-muted)] font-medium">
+                    Router
+                  </th>
+                  <th className="text-center py-2 px-2 text-[var(--color-text-muted)] font-medium">
+                    VPC
+                  </th>
+                  <th className="text-center py-2 px-2 text-[var(--color-text-muted)] font-medium">
+                    Subnet
+                  </th>
+                  <th className="text-center py-2 px-2 text-[var(--color-text-muted)] font-medium">
+                    Load Balancer
+                  </th>
                 </tr>
               </thead>
               <tbody className="text-[var(--color-text-default)]">

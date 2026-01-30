@@ -198,9 +198,7 @@ function SummarySidebar({
         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
           <VStack gap={3}>
             {/* Title */}
-            <span className="text-heading-h5 text-[var(--color-text-default)]">
-              Summary
-            </span>
+            <span className="text-heading-h5 text-[var(--color-text-default)]">Summary</span>
 
             <VStack gap={0}>
               {/* Job Section (Collapsible Parent) */}
@@ -454,9 +452,7 @@ function BasicInfoSection({
               fullWidth
             />
             {nameError && (
-              <span className="text-body-sm text-[var(--color-state-danger)]">
-                {nameError}
-              </span>
+              <span className="text-body-sm text-[var(--color-state-danger)]">{nameError}</span>
             )}
           </VStack>
 
@@ -556,20 +552,14 @@ function LabelsAnnotationsSection({
         <VStack gap={6}>
           {/* Labels */}
           <VStack gap={3}>
-            <span className="text-label-sm text-[var(--color-text-default)]">
-              Labels
-            </span>
+            <span className="text-label-sm text-[var(--color-text-default)]">Labels</span>
 
             {labels.length > 0 && (
               <>
                 {/* Label Header */}
                 <div className="grid grid-cols-[1fr_1fr_32px] gap-4 w-full">
-                  <span className="text-label-sm text-[var(--color-text-default)]">
-                    Key
-                  </span>
-                  <span className="text-label-sm text-[var(--color-text-default)]">
-                    Value
-                  </span>
+                  <span className="text-label-sm text-[var(--color-text-default)]">Key</span>
+                  <span className="text-label-sm text-[var(--color-text-default)]">Value</span>
                   <div />
                 </div>
 
@@ -613,20 +603,14 @@ function LabelsAnnotationsSection({
 
           {/* Annotations */}
           <VStack gap={3}>
-            <span className="text-label-sm text-[var(--color-text-default)]">
-              Annotations
-            </span>
+            <span className="text-label-sm text-[var(--color-text-default)]">Annotations</span>
 
             {annotations.length > 0 && (
               <>
                 {/* Annotation Header */}
                 <div className="grid grid-cols-[1fr_1fr_32px] gap-4 w-full">
-                  <span className="text-label-sm text-[var(--color-text-default)]">
-                    Key
-                  </span>
-                  <span className="text-label-sm text-[var(--color-text-default)]">
-                    Value
-                  </span>
+                  <span className="text-label-sm text-[var(--color-text-default)]">Key</span>
+                  <span className="text-label-sm text-[var(--color-text-default)]">Value</span>
                   <div />
                 </div>
 
@@ -1739,9 +1723,7 @@ export function CreateJobPage() {
             <VStack gap={6}>
               {/* Page Header */}
               <VStack gap={2}>
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-                  Create Job
-                </h1>
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create Job</h1>
                 <p className="text-body-sm text-[var(--color-text-subtle)]">
                   Jobs create one or more Pods and ensure that a specified number of them
                   successfully terminate.

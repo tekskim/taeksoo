@@ -161,9 +161,7 @@ export function AttachVolumeDrawer({
         {/* Volume Info Box */}
         <div className="w-full bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
           <VStack gap={1.5}>
-            <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-              Volume
-            </span>
+            <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">Volume</span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
               {volume?.name || '-'}
             </span>
@@ -172,9 +170,7 @@ export function AttachVolumeDrawer({
 
         {/* Instances Section */}
         <VStack gap={3} className="mt-3 pb-5">
-          <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Instances
-          </h3>
+          <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">Instances</h3>
 
           {/* Search */}
           <div className="w-[280px]">

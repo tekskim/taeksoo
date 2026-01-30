@@ -292,24 +292,79 @@ const standaloneRouters: Router[] = routers.filter((r) => !r.externalNetworkId);
 // VPCs/Networks - 네트워크 (환경별, 목적별)
 const networks: Network[] = [
   // Production - Korea (apne2)
-  { id: 'vpc-prod-apne2-web-001', name: 'prod-apne2-web', status: 'active', createdAt: '2024-01-22T09:00:00Z' },
-  { id: 'vpc-prod-apne2-app-001', name: 'prod-apne2-app', status: 'active', createdAt: '2024-01-23T10:00:00Z' },
-  { id: 'vpc-prod-apne2-data-001', name: 'prod-apne2-data', status: 'active', createdAt: '2024-01-24T11:00:00Z' },
+  {
+    id: 'vpc-prod-apne2-web-001',
+    name: 'prod-apne2-web',
+    status: 'active',
+    createdAt: '2024-01-22T09:00:00Z',
+  },
+  {
+    id: 'vpc-prod-apne2-app-001',
+    name: 'prod-apne2-app',
+    status: 'active',
+    createdAt: '2024-01-23T10:00:00Z',
+  },
+  {
+    id: 'vpc-prod-apne2-data-001',
+    name: 'prod-apne2-data',
+    status: 'active',
+    createdAt: '2024-01-24T11:00:00Z',
+  },
   // Production - US (usw2)
-  { id: 'vpc-prod-usw2-web-001', name: 'prod-usw2-web', status: 'active', createdAt: '2024-02-26T09:00:00Z' },
-  { id: 'vpc-prod-usw2-app-001', name: 'prod-usw2-app', status: 'active', createdAt: '2024-02-27T10:00:00Z' },
+  {
+    id: 'vpc-prod-usw2-web-001',
+    name: 'prod-usw2-web',
+    status: 'active',
+    createdAt: '2024-02-26T09:00:00Z',
+  },
+  {
+    id: 'vpc-prod-usw2-app-001',
+    name: 'prod-usw2-app',
+    status: 'active',
+    createdAt: '2024-02-27T10:00:00Z',
+  },
   // Non-Production
-  { id: 'vpc-stg-apne2-001', name: 'stg-apne2', status: 'active', createdAt: '2024-02-01T08:00:00Z' },
-  { id: 'vpc-dev-apne2-001', name: 'dev-apne2', status: 'active', createdAt: '2024-02-05T09:00:00Z' },
+  {
+    id: 'vpc-stg-apne2-001',
+    name: 'stg-apne2',
+    status: 'active',
+    createdAt: '2024-02-01T08:00:00Z',
+  },
+  {
+    id: 'vpc-dev-apne2-001',
+    name: 'dev-apne2',
+    status: 'active',
+    createdAt: '2024-02-05T09:00:00Z',
+  },
   { id: 'vpc-qa-apne2-001', name: 'qa-apne2', status: 'active', createdAt: '2024-02-10T10:00:00Z' },
   // Infrastructure
   { id: 'vpc-shrd-dc-001', name: 'shrd-dc', status: 'active', createdAt: '2024-03-18T08:00:00Z' },
-  { id: 'vpc-mgmt-apne2-001', name: 'mgmt-apne2', status: 'active', createdAt: '2024-03-16T09:00:00Z' },
-  { id: 'vpc-dmz-apne2-001', name: 'dmz-apne2', status: 'active', createdAt: '2024-03-17T10:00:00Z' },
+  {
+    id: 'vpc-mgmt-apne2-001',
+    name: 'mgmt-apne2',
+    status: 'active',
+    createdAt: '2024-03-16T09:00:00Z',
+  },
+  {
+    id: 'vpc-dmz-apne2-001',
+    name: 'dmz-apne2',
+    status: 'active',
+    createdAt: '2024-03-17T10:00:00Z',
+  },
   // Case 4: Router + VPC + LB만 (ExtNet 없음)
-  { id: 'vpc-internal-only-001', name: 'internal-only-vpc', status: 'active', createdAt: '2024-05-16T08:00:00Z' },
+  {
+    id: 'vpc-internal-only-001',
+    name: 'internal-only-vpc',
+    status: 'active',
+    createdAt: '2024-05-16T08:00:00Z',
+  },
   // Case 5: VPC + LB만 (Router 없음)
-  { id: 'vpc-standalone-001', name: 'standalone-vpc', status: 'active', createdAt: '2024-06-01T09:00:00Z' },
+  {
+    id: 'vpc-standalone-001',
+    name: 'standalone-vpc',
+    status: 'active',
+    createdAt: '2024-06-01T09:00:00Z',
+  },
 ];
 
 // Subnets - 서브넷 (AZ별, 티어별)
@@ -1163,13 +1218,8 @@ function ListenersSection({
   return (
     <div className="mt-3 pt-3 border-t border-[var(--color-border-subtle)]">
       <div className="flex items-center justify-between">
-        <span className="text-[var(--color-text-muted)]">
-          Listeners ({listeners.length})
-        </span>
-        <Link
-          to="#"
-          className="text-[var(--color-action-primary)] hover:underline text-label-sm"
-        >
+        <span className="text-[var(--color-text-muted)]">Listeners ({listeners.length})</span>
+        <Link to="#" className="text-[var(--color-action-primary)] hover:underline text-label-sm">
           View detail
         </Link>
       </div>
@@ -1182,13 +1232,8 @@ function RoutersSection({ routers }: { routers: RouterItem[] }) {
   return (
     <div className="mt-3 pt-3 border-t border-[var(--color-border-subtle)]">
       <div className="flex items-center justify-between">
-        <span className="text-[var(--color-text-muted)]">
-          Routers ({routers.length})
-        </span>
-        <Link
-          to="#"
-          className="text-[var(--color-action-primary)] hover:underline text-label-sm"
-        >
+        <span className="text-[var(--color-text-muted)]">Routers ({routers.length})</span>
+        <Link to="#" className="text-[var(--color-action-primary)] hover:underline text-label-sm">
           View detail
         </Link>
       </div>
@@ -1201,13 +1246,8 @@ function SubnetsSection({ subnets }: { subnets: SubnetItem[] }) {
   return (
     <div className="mt-3 pt-3 border-t border-[var(--color-border-subtle)]">
       <div className="flex items-center justify-between">
-        <span className="text-[var(--color-text-muted)]">
-          Subnets ({subnets.length})
-        </span>
-        <Link
-          to="#"
-          className="text-[var(--color-action-primary)] hover:underline text-label-sm"
-        >
+        <span className="text-[var(--color-text-muted)]">Subnets ({subnets.length})</span>
+        <Link to="#" className="text-[var(--color-action-primary)] hover:underline text-label-sm">
           View detail
         </Link>
       </div>
@@ -1300,9 +1340,7 @@ function Popover({ data, position, onClose }: PopoverProps) {
         className={`flex items-center justify-between ${!isDragging ? 'cursor-grab' : 'cursor-grabbing'}`}
         onMouseDown={handleMouseDown}
       >
-        <span className="text-heading-h6 text-[var(--color-text-default)]">
-          {getHeaderTitle()}
-        </span>
+        <span className="text-heading-h6 text-[var(--color-text-default)]">{getHeaderTitle()}</span>
         <button
           onClick={onClose}
           className="flex items-center justify-center w-[var(--window-control-size)] h-[var(--window-control-size)] rounded-[var(--window-control-radius)] text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] transition-colors -mr-2 -mt-2"
@@ -2225,11 +2263,12 @@ export function ComputeAdminTopologyD3Page() {
     const sortedStandaloneExtNets = sortByCreatedAt(standaloneExternalNetworks);
     if (sortedStandaloneExtNets.length > 0) {
       // Calculate separator line position: rightmost VPC edge + gap
-      const rightmostVpcEdge = vpcGroups.length > 0 
-        ? Math.max(...vpcGroups.map(vpc => vpc.x + vpc.width)) + nodeGap / 2
-        : currentX;
+      const rightmostVpcEdge =
+        vpcGroups.length > 0
+          ? Math.max(...vpcGroups.map((vpc) => vpc.x + vpc.width)) + nodeGap / 2
+          : currentX;
       const separatorX = Math.max(currentX, rightmostVpcEdge);
-      
+
       g.append('line')
         .attr('x1', separatorX)
         .attr('y1', startY - 20)
@@ -2238,7 +2277,7 @@ export function ComputeAdminTopologyD3Page() {
         .attr('stroke', '#e2e8f0')
         .attr('stroke-width', 1)
         .attr('stroke-dasharray', '4,4');
-      
+
       // Update currentX for standalone external networks positioning
       currentX = separatorX + nodeGap / 2;
 
@@ -2251,18 +2290,22 @@ export function ComputeAdminTopologyD3Page() {
           data: extNet,
         });
       });
-      
+
       // Update currentX after standalone external networks
       currentX = currentX + sortedStandaloneExtNets.length * nodeGap + nodeGap / 2;
     }
 
     // Standalone VPCs (VPCs with subnets that have no router connection) - sorted by createdAt
-    const allRoutedSubnetNetworkIds = new Set(subnets.filter(s => s.routerId).map(s => s.networkId));
-    const standaloneVpcs = sortByCreatedAt(networks.filter(vpc => {
-      const vpcSubnets = subnets.filter(s => s.networkId === vpc.id);
-      // VPC has subnets, but none of them are connected to a router
-      return vpcSubnets.length > 0 && !allRoutedSubnetNetworkIds.has(vpc.id);
-    }));
+    const allRoutedSubnetNetworkIds = new Set(
+      subnets.filter((s) => s.routerId).map((s) => s.networkId)
+    );
+    const standaloneVpcs = sortByCreatedAt(
+      networks.filter((vpc) => {
+        const vpcSubnets = subnets.filter((s) => s.networkId === vpc.id);
+        // VPC has subnets, but none of them are connected to a router
+        return vpcSubnets.length > 0 && !allRoutedSubnetNetworkIds.has(vpc.id);
+      })
+    );
 
     if (standaloneVpcs.length > 0) {
       // Add separator line before standalone VPCs
@@ -2275,12 +2318,12 @@ export function ComputeAdminTopologyD3Page() {
         .attr('stroke', '#e2e8f0')
         .attr('stroke-width', 1)
         .attr('stroke-dasharray', '4,4');
-      
+
       currentX = separatorX + nodeGap / 2;
 
       standaloneVpcs.forEach((vpc, vpcIdx) => {
         // Subnets within VPC sorted by createdAt
-        const vpcSubnets = sortByCreatedAt(subnets.filter(s => s.networkId === vpc.id));
+        const vpcSubnets = sortByCreatedAt(subnets.filter((s) => s.networkId === vpc.id));
         const vpcStartX = currentX;
         let vpcWidth = 0;
 
@@ -2298,7 +2341,9 @@ export function ComputeAdminTopologyD3Page() {
           });
 
           // Load balancers for this subnet (sorted by createdAt)
-          const subnetLbs = sortByCreatedAt(loadBalancers.filter(lb => lb.subnetId === subnet.id));
+          const subnetLbs = sortByCreatedAt(
+            loadBalancers.filter((lb) => lb.subnetId === subnet.id)
+          );
           subnetLbs.forEach((lb, lbIdx) => {
             const lx = sx + (lbIdx - (subnetLbs.length - 1) / 2) * 30;
             const ly = startY + layerGap * 3;
@@ -3034,9 +3079,7 @@ export function ComputeAdminTopologyD3Page() {
             <VStack gap={3} className="flex-1 min-h-0">
               {/* Page Header */}
               <div className="flex justify-between items-center h-8 w-full">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-                  Topology
-                </h1>
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Topology</h1>
               </div>
 
               {/* Filters */}

@@ -172,7 +172,8 @@ export function StatefulSetsPage() {
   const totalPages = Math.ceil(statefulSetsData.length / rowsPerPage);
   const paginatedData = statefulSetsData.slice(
     (currentPage - 1) * rowsPerPage,
-    currentPage * rowsPerPage );
+    currentPage * rowsPerPage
+  );
 
   // Sidebar width calculation: 40px icon sidebar + 200px menu sidebar when open
   const sidebarWidth = sidebarOpen ? 240 : 40;
@@ -186,7 +187,8 @@ export function StatefulSetsPage() {
       sortable: true,
       align: 'center',
       render: (value: string) => (
-        <StatusIndicator status={
+        <StatusIndicator
+          status={
             value === 'Running'
               ? 'active'
               : value === 'Pending'
@@ -205,7 +207,8 @@ export function StatefulSetsPage() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row) => (
-        <span className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
+        <span
+          className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline truncate"
           title={value}
           onClick={(e) => {
             e.stopPropagation();
@@ -286,7 +289,8 @@ export function StatefulSetsPage() {
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={menuItems} trigger="click">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                <IconDotsCircleHorizontal size={16}
+                <IconDotsCircleHorizontal
+                  size={16}
                   stroke={1.5}
                   className="text-[var(--action-icon-color)]"
                 />
@@ -326,11 +330,13 @@ export function StatefulSetsPage() {
       <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
 
       {/* Main Content */}
-      <main className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
+      <main
+        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
         style={{ left: `${sidebarWidth}px` }}
       >
         {/* Tab Bar */}
-        <TabBar tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+        <TabBar
+          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
@@ -339,18 +345,21 @@ export function StatefulSetsPage() {
         />
 
         {/* Top Bar */}
-        <TopBar showSidebarToggle={!sidebarOpen}
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           showNavigation={true}
           onBack={() => window.history.back()}
           onForward={() => window.history.forward()}
           breadcrumb={
-            <Breadcrumb items={[{ label: 'clusterName', href: '/container' }, { label: 'StatefulSets' }]}
+            <Breadcrumb
+              items={[{ label: 'clusterName', href: '/container' }, { label: 'StatefulSets' }]}
             />
           }
           actions={
             <>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+              <button
+                className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                 onClick={() => {
                   if (shellPanel.isExpanded) {
                     shellPanel.setIsExpanded(false);
@@ -359,9 +368,11 @@ export function StatefulSetsPage() {
                   }
                 }}
               >
-                <IconTerminal2 size={16}
+                <IconTerminal2
+                  size={16}
                   className={
-                    shellPanel.isExpanded ? 'text-[var(--color-action-primary)]'
+                    shellPanel.isExpanded
+                      ? 'text-[var(--color-action-primary)]'
                       : 'text-[var(--color-text-muted)]'
                   }
                   stroke={1.5}
@@ -384,7 +395,8 @@ export function StatefulSetsPage() {
         />
 
         {/* Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll"
+        <div
+          className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll"
           style={{ paddingBottom: shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0' }}
         >
           <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
@@ -393,16 +405,19 @@ export function StatefulSetsPage() {
               <HStack justify="between" align="center" className="w-full min-h-8">
                 <HStack gap={2} align="center">
                   <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
-                    StatefulSets </h1>
+                    StatefulSets{' '}
+                  </h1>
                 </HStack>
 
                 {/* Create StatefulSet Button with Dropdown */}
                 <ContextMenu items={createMenuItems} trigger="click" align="right">
-                  <Button variant="primary"
+                  <Button
+                    variant="primary"
                     size="md"
                     rightIcon={<IconChevronDown size={14} stroke={1.5} />}
                   >
-                    Create StatefulSet </Button>
+                    Create StatefulSet{' '}
+                  </Button>
                 </ContextMenu>
               </HStack>
 
@@ -410,11 +425,13 @@ export function StatefulSetsPage() {
               <HStack gap={2} align="center" className="w-full min-h-7">
                 {/* Search */}
                 <HStack gap={1} align="center">
-                  <SearchInput placeholder="Search StatefulSets by attributes"
+                  <SearchInput
+                    placeholder="Search StatefulSets by attributes"
                     size="sm"
                     className="w-[var(--search-input-width)]"
                   />
-                  <Button variant="secondary"
+                  <Button
+                    variant="secondary"
                     size="sm"
                     aria-label="Download"
                     className="!p-0 !w-7 !h-7 !min-w-7"
@@ -428,56 +445,68 @@ export function StatefulSetsPage() {
 
                 {/* Actions */}
                 <HStack gap={1} align="center">
-                  <Button variant="secondary"
+                  <Button
+                    variant="secondary"
                     size="sm"
                     leftIcon={<IconRefresh size={12} stroke={1.5} />}
                     disabled={selectedRows.length === 0}
                   >
-                    Redeploy </Button>
-                  <Button variant="secondary"
+                    Redeploy{' '}
+                  </Button>
+                  <Button
+                    variant="secondary"
                     size="sm"
                     leftIcon={<IconDownload size={12} stroke={1.5} />}
                     disabled={selectedRows.length === 0}
                   >
-                    Download YAML </Button>
-                  <Button variant="secondary"
+                    Download YAML{' '}
+                  </Button>
+                  <Button
+                    variant="secondary"
                     size="sm"
                     leftIcon={<IconTrash size={12} stroke={1.5} />}
                     disabled={selectedRows.length === 0}
                   >
-                    Delete </Button>
+                    Delete{' '}
+                  </Button>
                 </HStack>
               </HStack>
 
               {/* Filter Bar */}
               {filters.length > 0 && (
-                <HStack justify="between"
+                <HStack
+                  justify="between"
                   align="center"
                   className="w-full pl-2 pr-4 py-2 bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)]"
                 >
                   <HStack gap={1} align="center">
                     {filters.map((filter, index) => (
-                      <Chip key={index}
+                      <Chip
+                        key={index}
                         label={filter.key}
                         value={filter.value}
                         onRemove={() => handleRemoveFilter(index)}
                       />
                     ))}
                   </HStack>
-                  <button onClick={handleClearFilters}
+                  <button
+                    onClick={handleClearFilters}
                     className="text-label-sm text-[var(--color-action-primary)] hover:underline"
                   >
-                    Clear Filters </button>
+                    Clear Filters{' '}
+                  </button>
                 </HStack>
               )}
 
               {/* Pagination */}
-              <Pagination currentPage={currentPage}
+              <Pagination
+                currentPage={currentPage}
                 totalPages={totalPages}
                 onPageChange={setCurrentPage}
                 totalItems={statefulSetsData.length}
                 selectedCount={selectedRows.length}
-                showSettings onSettingsClick={() => {}}
+                showSettings
+                onSettingsClick={() => {}}
               />
 
               {/* Table */}
@@ -485,7 +514,8 @@ export function StatefulSetsPage() {
                 columns={columns}
                 data={paginatedData}
                 rowKey="id"
-                selectable selectedKeys={selectedRows}
+                selectable
+                selectedKeys={selectedRows}
                 onSelectionChange={setSelectedRows}
               />
             </VStack>
@@ -494,7 +524,8 @@ export function StatefulSetsPage() {
       </main>
 
       {/* Shell Panel */}
-      <ShellPanel isExpanded={shellPanel.isExpanded}
+      <ShellPanel
+        isExpanded={shellPanel.isExpanded}
         onExpandedChange={shellPanel.setIsExpanded}
         tabs={shellPanel.tabs}
         activeTabId={shellPanel.activeTabId}

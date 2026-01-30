@@ -341,9 +341,7 @@ function IdentifyCell({ timer, onIdentify }: IdentifyCellProps) {
 
   if (timer && timer > 0) {
     return (
-      <span className="text-label-sm text-[var(--color-state-warning)]">
-        {formatTime(timer)}
-      </span>
+      <span className="text-label-sm text-[var(--color-state-warning)]">{formatTime(timer)}</span>
     );
   }
 

@@ -213,11 +213,7 @@ function HalfDonutChart({
       />
       <div className="absolute inset-0 flex flex-col items-center justify-center pt-4 pointer-events-none">
         {label && <span className="text-body-xs text-[var(--color-text-subtle)]">{label}</span>}
-        {value && (
-          <span className="text-heading-h5 text-[var(--color-text-default)]">
-            {value}
-          </span>
-        )}
+        {value && <span className="text-heading-h5 text-[var(--color-text-default)]">{value}</span>}
       </div>
 
       {/* Tooltip */}
@@ -275,9 +271,7 @@ function StatCard({ label, value, variant = 'default' }: StatCardProps) {
 
   return (
     <div className={`flex-1 ${bgColors[variant]} rounded-lg px-4 py-3 flex flex-col gap-1.5`}>
-      <p className="text-label-sm leading-[16px] text-[var(--color-text-subtle)]">
-        {label}
-      </p>
+      <p className="text-label-sm leading-[16px] text-[var(--color-text-subtle)]">{label}</p>
       <p className="text-heading-h4 text-[var(--color-text-default)]">{value}</p>
     </div>
   );
@@ -295,9 +289,7 @@ interface ResourceCardProps {
 function ResourceCard({ label, value }: ResourceCardProps) {
   return (
     <div className="bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3 flex flex-col gap-1.5">
-      <p className="text-label-sm leading-[16px] text-[var(--color-text-subtle)]">
-        {label}
-      </p>
+      <p className="text-label-sm leading-[16px] text-[var(--color-text-subtle)]">{label}</p>
       <p className="text-heading-h4 text-[var(--color-text-default)]">{value}</p>
     </div>
   );
@@ -390,9 +382,7 @@ export function IAMHomePage() {
               <HStack gap={3} align="stretch">
                 {/* Domain Info Card */}
                 <div className="w-[var(--wizard-summary-width)] shrink-0 bg-[var(--color-surface-default)] rounded-lg p-4 flex flex-col gap-6">
-                  <h2 className="text-heading-h3 text-[var(--color-text-default)]">
-                    DomainA
-                  </h2>
+                  <h2 className="text-heading-h3 text-[var(--color-text-default)]">DomainA</h2>
                   <VStack gap={2}>
                     <HStack gap={2}>
                       <span className="text-label-md text-[var(--color-text-default)]">
@@ -486,9 +476,7 @@ export function IAMHomePage() {
 
               {/* Row 2: User Status */}
               <div className="bg-[var(--color-surface-default)] rounded-lg pt-3 pb-4 px-4 flex flex-col gap-3">
-                <h3 className="text-heading-h6 text-[var(--color-text-default)]">
-                  User status
-                </h3>
+                <h3 className="text-heading-h6 text-[var(--color-text-default)]">User status</h3>
                 <HStack gap={2}>
                   <StatCard label="Total" value="150" variant="default" />
                   <StatCard label="Online" value="50" variant="success" />

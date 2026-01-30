@@ -63,9 +63,7 @@ function FileUploadSection({
 
   return (
     <VStack gap={2} className="w-full">
-      <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-        {label}
-      </label>
+      <label className="text-label-lg text-[var(--color-text-default)] leading-5">{label}</label>
       <p className="text-body-md text-[var(--color-text-subtle)] leading-4">{description}</p>
       <input
         type="file"
@@ -272,9 +270,7 @@ export function RegisterCertificateDrawer({
 
         {/* Type Radio */}
         <VStack gap={3} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Type
-          </label>
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">Type</label>
           <RadioGroup
             value={certificateType}
             onChange={(value) => setCertificateType(value as CertificateType)}

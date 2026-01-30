@@ -220,18 +220,14 @@ export function BarChartDemo({ variant }: { variant: 'vertical' | 'horizontal' |
               className="w-2 h-2 rounded-sm"
               style={{ backgroundColor: primaryChartColors[0] }}
             />
-            <span className="text-body-sm text-[var(--color-text-muted)]">
-              Current
-            </span>
+            <span className="text-body-sm text-[var(--color-text-muted)]">Current</span>
           </div>
           <div className="flex items-center gap-1.5">
             <div
               className="w-2 h-2 rounded-sm"
               style={{ backgroundColor: primaryChartColors[1] }}
             />
-            <span className="text-body-sm text-[var(--color-text-muted)]">
-              Previous
-            </span>
+            <span className="text-body-sm text-[var(--color-text-muted)]">Previous</span>
           </div>
         </div>
       )}
@@ -922,9 +918,7 @@ export function QuotaBarDemo({
             {used}/{total} {unit}
           </span>
           <div className={`flex items-center px-1.5 py-0.5 rounded-md ${colors.bg}`}>
-            <span
-              className={`text-label-sm leading-[var(--line-height-16)] ${colors.text}`}
-            >
+            <span className={`text-label-sm leading-[var(--line-height-16)] ${colors.text}`}>
               {percentage}%
             </span>
           </div>
@@ -1114,9 +1108,7 @@ export function PieChartDemo({
 
   return (
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-5 flex flex-col gap-4 w-[var(--search-input-width)]">
-      <span className="text-label-md text-[var(--color-text-default)]">
-        {title}
-      </span>
+      <span className="text-label-md text-[var(--color-text-default)]">{title}</span>
       <div className="flex justify-center">
         <ReactECharts
           option={getOption()}
@@ -1131,9 +1123,7 @@ export function PieChartDemo({
               className="w-2.5 h-2.5 rounded-sm shrink-0"
               style={{ backgroundColor: item.color }}
             />
-            <span className="text-body-sm text-[var(--color-text-muted)]">
-              {item.label}
-            </span>
+            <span className="text-body-sm text-[var(--color-text-muted)]">{item.label}</span>
           </div>
         ))}
       </div>
@@ -1216,9 +1206,7 @@ export function DoughnutChartDemo({
 
   return (
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-5 flex flex-col gap-4 w-[var(--search-input-width)]">
-      <span className="text-label-md text-[var(--color-text-default)]">
-        {title}
-      </span>
+      <span className="text-label-md text-[var(--color-text-default)]">{title}</span>
       <div className="flex justify-center">
         <ReactECharts
           option={getOption()}

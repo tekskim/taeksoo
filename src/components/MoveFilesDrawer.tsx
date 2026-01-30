@@ -96,9 +96,7 @@ function FolderTreeItem({
         {/* Folder Name */}
         <span
           className={`text-label-sm leading-4 truncate ${
-            isSelected
-              ? ' text-[var(--color-action-primary)]'
-              : 'text-[var(--color-text-default)]'
+            isSelected ? ' text-[var(--color-action-primary)]' : 'text-[var(--color-text-default)]'
           }`}
         >
           {folder.name}
@@ -262,9 +260,7 @@ export function MoveFilesDrawer({
     >
       <VStack gap={6}>
         {/* Header */}
-        <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-          Move Files
-        </h2>
+        <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">Move Files</h2>
 
         {/* Folder Path and Location */}
         <VStack gap={3} className="w-full">

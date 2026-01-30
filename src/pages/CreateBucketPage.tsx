@@ -59,9 +59,7 @@ function PreSection({ title }: PreSectionProps) {
   return (
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
       <div className="h-8 flex items-center">
-        <h5 className="text-heading-h5 text-[var(--color-text-default)]">
-          {title}
-        </h5>
+        <h5 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h5>
       </div>
     </div>
   );
@@ -79,9 +77,7 @@ function WritingSection({ title }: WritingSectionProps) {
   return (
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
       <div className="h-8 flex items-center justify-between">
-        <h5 className="text-heading-h5 text-[var(--color-text-default)]">
-          {title}
-        </h5>
+        <h5 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h5>
         <span className="text-body-sm text-[var(--color-text-subtle)]">Writing...</span>
       </div>
     </div>
@@ -176,9 +172,7 @@ function SummarySidebar({
         {/* Summary Card */}
         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
           <VStack gap={3}>
-            <h5 className="text-heading-h5 text-[var(--color-text-default)]">
-              Summary
-            </h5>
+            <h5 className="text-heading-h5 text-[var(--color-text-default)]">Summary</h5>
             <div className="flex flex-col">
               {SECTION_ORDER.map((sectionKey) => {
                 const isWriting = sectionStatus[sectionKey] === 'writing';
@@ -730,14 +724,10 @@ function PolicySection({
 
           {/* ACL */}
           <div className="flex flex-col py-6">
-            <label className="text-label-lg text-[var(--color-text-default)] mb-2">
-              ACL
-            </label>
+            <label className="text-label-lg text-[var(--color-text-default)] mb-2">ACL</label>
             <div className="flex items-center gap-6 px-4 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px]">
               <HStack gap={1.5} align="center">
-                <span className="text-label-lg text-[var(--color-text-default)]">
-                  Grantee
-                </span>
+                <span className="text-label-lg text-[var(--color-text-default)]">Grantee</span>
                 <Select
                   options={[
                     { value: 'owner', label: 'Owner' },
@@ -750,9 +740,7 @@ function PolicySection({
                 />
               </HStack>
               <HStack gap={1.5} align="center">
-                <span className="text-label-lg text-[var(--color-text-default)]">
-                  Permissions
-                </span>
+                <span className="text-label-lg text-[var(--color-text-default)]">Permissions</span>
                 <Select
                   options={
                     grantee === 'owner'
@@ -1099,9 +1087,7 @@ export default function CreateBucketPage() {
             <VStack gap={3} className="min-w-[1176px]">
               {/* Page Title */}
               <div className="flex items-center justify-between h-8">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-                  Create Bucket
-                </h1>
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create Bucket</h1>
               </div>
 
               {/* Content Area */}

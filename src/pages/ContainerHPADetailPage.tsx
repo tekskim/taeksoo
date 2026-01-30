@@ -296,9 +296,7 @@ function ConditionsTab() {
 
   return (
     <VStack gap={3}>
-      <h3 className="text-heading-h5 text-[var(--color-text-default)]">
-        Conditions
-      </h3>
+      <h3 className="text-heading-h5 text-[var(--color-text-default)]">Conditions</h3>
       <Pagination
         currentPage={currentPage}
         totalPages={1}

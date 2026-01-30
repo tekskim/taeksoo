@@ -233,43 +233,33 @@ export function ManageSecurityGroupsDrawer({
                 style={{ width: '59px', flexShrink: 0 }}
                 className="flex items-center justify-center px-3 border-l border-[var(--color-border-default)]"
               >
-                <span className="text-label-sm text-[var(--color-text-default)]">
-                  Status
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Status</span>
               </div>
               <div
                 style={{ width: '137px', flexShrink: 0 }}
                 className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
               >
-                <span className="text-label-sm text-[var(--color-text-default)]">
-                  Network
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Network</span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
               </div>
               <div
                 style={{ width: '137px', flexShrink: 0 }}
                 className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
               >
-                <span className="text-label-sm text-[var(--color-text-default)]">
-                  Port ID
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Port ID</span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
               </div>
               <div
                 style={{ width: '137px', flexShrink: 0 }}
                 className="flex items-center px-3 border-l border-[var(--color-border-default)]"
               >
-                <span className="text-label-sm text-[var(--color-text-default)]">
-                  IP Address
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">IP Address</span>
               </div>
               <div
                 style={{ width: '138px', flexShrink: 0 }}
                 className="flex items-center px-3 border-l border-[var(--color-border-default)]"
               >
-                <span className="text-label-sm text-[var(--color-text-default)]">
-                  Mac Address
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Mac Address</span>
               </div>
             </div>
 
@@ -397,9 +387,7 @@ export function ManageSecurityGroupsDrawer({
 
         {/* Security Groups Section */}
         <VStack gap={3} className="pb-5">
-          <h3 className="text-label-lg text-[var(--color-text-default)]">
-            Security Groups
-          </h3>
+          <h3 className="text-label-lg text-[var(--color-text-default)]">Security Groups</h3>
 
           {/* Pagination */}
           <Pagination
@@ -436,27 +424,21 @@ export function ManageSecurityGroupsDrawer({
                 style={{ width: '203px', flexShrink: 0 }}
                 className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
               >
-                <span className="text-label-sm text-[var(--color-text-default)]">
-                  Name
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Name</span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
               </div>
               <div
                 style={{ width: '203px', flexShrink: 0 }}
                 className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
               >
-                <span className="text-label-sm text-[var(--color-text-default)]">
-                  Description
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Description</span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
               </div>
               <div
                 style={{ width: '202px', flexShrink: 0 }}
                 className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
               >
-                <span className="text-label-sm text-[var(--color-text-default)]">
-                  Created At
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Created At</span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
               </div>
             </div>

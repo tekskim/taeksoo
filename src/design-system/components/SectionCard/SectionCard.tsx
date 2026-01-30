@@ -60,9 +60,7 @@ function SectionCardHeader({
         className={twMerge('flex items-center justify-between w-full h-7', className)}
         {...props}
       >
-        <h5 className="text-heading-h5 text-[var(--color-text-default)]">
-          {title}
-        </h5>
+        <h5 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h5>
         {actions && <div className="flex items-center gap-2">{actions}</div>}
       </div>
       {showDivider && <div className="h-px w-full bg-[var(--color-border-subtle)]" />}
@@ -131,9 +129,7 @@ function SectionCardDataRow({
   // Determine what to render: children take precedence over value
   const renderValue = () => {
     if (children) {
-      return (
-        <div className="text-body-md text-[var(--color-text-default)]">{children}</div>
-      );
+      return <div className="text-body-md text-[var(--color-text-default)]">{children}</div>;
     }
 
     if (isLink) {
@@ -152,9 +148,7 @@ function SectionCardDataRow({
 
   return (
     <div className={twMerge('flex flex-col gap-1.5 w-full', className)} {...props}>
-      <span className="text-label-sm text-[var(--color-text-subtle)]">
-        {label}
-      </span>
+      <span className="text-label-sm text-[var(--color-text-subtle)]">{label}</span>
       {renderValue()}
     </div>
   );

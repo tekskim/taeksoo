@@ -136,9 +136,7 @@ function SummarySidebar({
         {/* Quota Card */}
         <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
           <VStack gap={3}>
-            <h5 className="text-heading-h5 text-[var(--color-text-default)]">
-              Quota
-            </h5>
+            <h5 className="text-heading-h5 text-[var(--color-text-default)]">Quota</h5>
             <VStack gap={3}>
               <ProgressBar variant="quota" label="Port" value={5} max={20} showValue />
             </VStack>
@@ -316,9 +314,7 @@ export default function CreateVirtualAdapterPage() {
         render: (_value, row) => (
           <VStack gap={0.5} align="start">
             <HStack gap={1.5} align="center">
-              <span className="text-[var(--color-action-primary)] text-label-md">
-                {row.name}
-              </span>
+              <span className="text-[var(--color-action-primary)] text-label-md">{row.name}</span>
               <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
             </HStack>
             <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
@@ -376,9 +372,7 @@ export default function CreateVirtualAdapterPage() {
         render: (_value, row) => (
           <VStack gap={0.5} align="start">
             <HStack gap={1.5} align="center">
-              <span className="text-[var(--color-action-primary)] text-label-md">
-                {row.name}
-              </span>
+              <span className="text-[var(--color-action-primary)] text-label-md">{row.name}</span>
               <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
             </HStack>
             <span className="text-body-sm text-[var(--color-text-subtle)]">{row.subtitle}</span>

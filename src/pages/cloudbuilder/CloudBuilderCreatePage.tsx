@@ -64,7 +64,8 @@ export function CloudBuilderCreatePage() {
             </div>
             <DetailHeader.Title>{pageTitle}</DetailHeader.Title>
             <Button as={Link} to={`/cloudbuilder/${slug}`} variant="link">
-              Back </Button>
+              Back{' '}
+            </Button>
             {isDiscovery && (
               <div className="text-body-md text-[var(--color-text-subtle)]">
                 입력값은 저장되지 않으며, UI/필드 구성만 반영합니다.
@@ -77,7 +78,8 @@ export function CloudBuilderCreatePage() {
               <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg">
                 <div className="px-6 py-5">
                   <div className="text-body-lg font-semibold text-[var(--color-text-default)]">
-                    Endpoint </div>
+                    Endpoint{' '}
+                  </div>
                   <div className="mt-1 text-body-md text-[var(--color-text-subtle)]">
                     엔드포인트를 입력하고 불러오기를 누르면 Serial/MAC/IP/Location을 채웁니다.
                     (데모)
@@ -85,20 +87,25 @@ export function CloudBuilderCreatePage() {
 
                   <div className="mt-4 grid grid-cols-12 gap-4 items-center">
                     <div className="col-span-9">
-                      <Input placeholder="e.g. http://discovery-agent.local:8080"
+                      <Input
+                        placeholder="e.g. http://discovery-agent.local:8080"
                         value={endpoint}
                         onChange={(e) => setEndpoint(e.target.value)}
-                        fullWidth />
+                        fullWidth
+                      />
                     </div>
                     <div className="col-span-3">
-                      <Button fullWidth onClick={() => {
+                      <Button
+                        fullWidth
+                        onClick={() => {
                           // UI only: simulate fetching discovered values setDiscoverySerial('SN2001');
                           setDiscoveryMacPrimary('00:1A:2B:3C:4D:5E');
                           setDiscoveryLocation('R1-U18');
                           setDiscoveryMgmtIp('10.0.0.12');
                         }}
                       >
-                        Fetch </Button>
+                        Fetch{' '}
+                      </Button>
                     </div>
                   </div>
                 </div>
@@ -107,7 +114,8 @@ export function CloudBuilderCreatePage() {
 
                 <div className="px-6 py-5">
                   <div className="text-body-lg font-semibold text-[var(--color-text-default)]">
-                    Basic </div>
+                    Basic{' '}
+                  </div>
 
                   <div className="mt-4 grid grid-cols-12 gap-y-5 gap-x-6">
                     <div className="col-span-4">
@@ -115,12 +123,15 @@ export function CloudBuilderCreatePage() {
                         Serial <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                       </div>
                       <div className="mt-1 text-body-sm text-[var(--color-text-subtle)]">
-                        현장 휴면 식별용 시리얼 </div>
+                        현장 휴면 식별용 시리얼{' '}
+                      </div>
                     </div>
                     <div className="col-span-8">
-                      <Input value={discoverySerial}
+                      <Input
+                        value={discoverySerial}
                         onChange={(e) => setDiscoverySerial(e.target.value)}
-                        fullWidth />
+                        fullWidth
+                      />
                     </div>
 
                     <div className="col-span-4">
@@ -133,9 +144,11 @@ export function CloudBuilderCreatePage() {
                       </div>
                     </div>
                     <div className="col-span-8">
-                      <Input value={discoveryMacPrimary}
+                      <Input
+                        value={discoveryMacPrimary}
                         onChange={(e) => setDiscoveryMacPrimary(e.target.value)}
-                        fullWidth />
+                        fullWidth
+                      />
                     </div>
 
                     <div className="col-span-4">
@@ -143,12 +156,15 @@ export function CloudBuilderCreatePage() {
                         Location <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                       </div>
                       <div className="mt-1 text-body-sm text-[var(--color-text-subtle)]">
-                        랙/유닛 등 물리 위치 </div>
+                        랙/유닛 등 물리 위치{' '}
+                      </div>
                     </div>
                     <div className="col-span-8">
-                      <Input value={discoveryLocation}
+                      <Input
+                        value={discoveryLocation}
                         onChange={(e) => setDiscoveryLocation(e.target.value)}
-                        fullWidth />
+                        fullWidth
+                      />
                     </div>
 
                     <div className="col-span-4">
@@ -160,30 +176,34 @@ export function CloudBuilderCreatePage() {
                       </div>
                     </div>
                     <div className="col-span-8">
-                      <Input value={discoveryMgmtIp}
+                      <Input
+                        value={discoveryMgmtIp}
                         onChange={(e) => setDiscoveryMgmtIp(e.target.value)}
                         helperText="IP 형식 점검만 수행"
-                        fullWidth />
+                        fullWidth
+                      />
                     </div>
 
                     <div className="col-span-4">
-                      <div className="text-label-md text-[var(--color-text-default)]">
-                        Notes </div>
+                      <div className="text-label-md text-[var(--color-text-default)]">Notes </div>
                       <div className="mt-1 text-body-sm text-[var(--color-text-subtle)]">
                         메모(선택)
                       </div>
                     </div>
                     <div className="col-span-8">
-                      <Textarea placeholder={'예: "탐지 출처: LLDP"'}
+                      <Textarea
+                        placeholder={'예: "탐지 출처: LLDP"'}
                         value={discoveryMemo}
                         onChange={(e) => setDiscoveryMemo(e.target.value)}
-                        fullWidth />
+                        fullWidth
+                      />
                     </div>
                   </div>
 
                   <div className="mt-6 flex items-center justify-end gap-2">
                     <Button variant="secondary" onClick={() => navigate(`/cloudbuilder/${slug}`)}>
-                      Cancel </Button>
+                      Cancel{' '}
+                    </Button>
                     <Button onClick={() => setConfirmOpen(true)}>Create</Button>
                   </div>
                 </div>
@@ -196,53 +216,67 @@ export function CloudBuilderCreatePage() {
                 <SectionCard.Content gap={4}>
                   <div className="grid grid-cols-12 gap-6">
                     <div className="col-span-6">
-                      <Input label="Serial"
+                      <Input
+                        label="Serial"
                         placeholder="e.g. SN1001"
                         value={serial}
                         onChange={(e) => setSerial(e.target.value)}
-                        fullWidth />
+                        fullWidth
+                      />
                     </div>
                     <div className="col-span-6">
-                      <Input label="MAC (Primary)"
+                      <Input
+                        label="MAC (Primary)"
                         placeholder="e.g. 00:11:22:33:44:55"
                         value={macPrimary}
                         onChange={(e) => setMacPrimary(e.target.value)}
-                        fullWidth />
+                        fullWidth
+                      />
                     </div>
                     <div className="col-span-6">
-                      <Input label="Location"
+                      <Input
+                        label="Location"
                         placeholder="e.g. R1-U10"
                         value={location}
                         onChange={(e) => setLocation(e.target.value)}
-                        fullWidth />
+                        fullWidth
+                      />
                     </div>
                     <div className="col-span-6">
-                      <Input label="Mgmt IP"
+                      <Input
+                        label="Mgmt IP"
                         placeholder="e.g. 10.0.1.10"
                         value={mgmtIp}
                         onChange={(e) => setMgmtIp(e.target.value)}
-                        fullWidth />
+                        fullWidth
+                      />
                     </div>
                     <div className="col-span-6">
-                      <Input label="NIC (Primary Name)"
+                      <Input
+                        label="NIC (Primary Name)"
                         placeholder="e.g. eno1"
                         value={nicPrimaryName}
                         onChange={(e) => setNicPrimaryName(e.target.value)}
-                        fullWidth />
+                        fullWidth
+                      />
                     </div>
                     <div className="col-span-6">
-                      <Input label="Purpose"
+                      <Input
+                        label="Purpose"
                         placeholder="e.g. Hypervisor"
                         value={purpose}
                         onChange={(e) => setPurpose(e.target.value)}
-                        fullWidth />
+                        fullWidth
+                      />
                     </div>
                     <div className="col-span-6">
-                      <Select label="Role"
+                      <Select
+                        label="Role"
                         placeholder="Select role"
                         value={role}
                         onChange={setRole}
-                        fullWidth options={[
+                        fullWidth
+                        options={[
                           { value: 'controller', label: 'controller' },
                           { value: 'compute', label: 'compute' },
                           { value: 'master', label: 'master' },
@@ -255,11 +289,13 @@ export function CloudBuilderCreatePage() {
                       />
                     </div>
                     <div className="col-span-6">
-                      <Select label="Frontier NET"
+                      <Select
+                        label="Frontier NET"
                         placeholder="Select status"
                         value={frontierNet}
                         onChange={setFrontierNet}
-                        fullWidth options={[
+                        fullWidth
+                        options={[
                           { value: 'OK', label: 'OK' },
                           { value: 'Missing', label: 'Missing' },
                           { value: 'Invalid', label: 'Invalid' },
@@ -273,7 +309,8 @@ export function CloudBuilderCreatePage() {
               <SectionCard>
                 <SectionCard.Header title="Notes" />
                 <SectionCard.Content gap={3}>
-                  <Textarea label="Description"
+                  <Textarea
+                    label="Description"
                     placeholder="Optional notes (UI only)"
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
@@ -283,7 +320,8 @@ export function CloudBuilderCreatePage() {
 
               <div className="flex items-center justify-end gap-2">
                 <Button variant="secondary" onClick={() => navigate(`/cloudbuilder/${slug}`)}>
-                  Cancel </Button>
+                  Cancel{' '}
+                </Button>
                 <Button onClick={() => setConfirmOpen(true)}>Create</Button>
               </div>
             </>
@@ -295,7 +333,8 @@ export function CloudBuilderCreatePage() {
         </VStack>
       </div>
 
-      <ConfirmModal open={confirmOpen}
+      <ConfirmModal
+        open={confirmOpen}
         title={`Create ${config.title}`}
         description="This is UI-only. No actual resource will be created."
         confirmText="OK"

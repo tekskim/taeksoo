@@ -504,9 +504,7 @@ export default function PortDetailPage() {
             {row.name}
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">
-            ID : {row.id}
-          </span>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
         </div>
       ),
     },
@@ -965,9 +963,7 @@ export default function PortDetailPage() {
         <div className="flex flex-col gap-2">
           {/* Port Info */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-            <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-              Port
-            </span>
+            <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">Port</span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
               {port.name}
             </span>

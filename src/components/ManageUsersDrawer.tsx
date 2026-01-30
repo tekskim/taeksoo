@@ -308,9 +308,7 @@ export function ManageUsersDrawer({
               <span className="text-label-lg text-[var(--color-text-default)] leading-5">
                 Users
               </span>
-              <span className="text-label-lg text-[var(--color-state-danger)] leading-5">
-                *
-              </span>
+              <span className="text-label-lg text-[var(--color-state-danger)] leading-5">*</span>
             </div>
             <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
               Select users to include in this group. All selected users will receive the group's

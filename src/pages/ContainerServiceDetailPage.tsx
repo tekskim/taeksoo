@@ -362,9 +362,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
 
   return (
     <VStack gap={3}>
-      <h3 className="text-heading-h5 text-[var(--color-text-default)]">
-        Pods
-      </h3>
+      <h3 className="text-heading-h5 text-[var(--color-text-default)]">Pods</h3>
       <Pagination
         currentPage={currentPage}
         totalPages={1}
@@ -447,9 +445,7 @@ function PortsTab({ ports }: PortsTabProps) {
 
   return (
     <VStack gap={3}>
-      <h3 className="text-heading-h5 text-[var(--color-text-default)]">
-        Ports
-      </h3>
+      <h3 className="text-heading-h5 text-[var(--color-text-default)]">Ports</h3>
       <Pagination
         currentPage={currentPage}
         totalPages={1}
@@ -491,9 +487,7 @@ function SelectorsTab({ selectors }: SelectorsTabProps) {
 
   return (
     <VStack gap={3}>
-      <h3 className="text-heading-h5 text-[var(--color-text-default)]">
-        Selectors
-      </h3>
+      <h3 className="text-heading-h5 text-[var(--color-text-default)]">Selectors</h3>
       <Pagination
         currentPage={currentPage}
         totalPages={1}
@@ -550,9 +544,7 @@ function ConditionsTab({ conditions }: ConditionsTabProps) {
 
   return (
     <VStack gap={3}>
-      <h3 className="text-heading-h5 text-[var(--color-text-default)]">
-        Conditions
-      </h3>
+      <h3 className="text-heading-h5 text-[var(--color-text-default)]">Conditions</h3>
       <Pagination
         currentPage={currentPage}
         totalPages={1}

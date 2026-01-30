@@ -291,9 +291,7 @@ export function EditHPAYamlPage() {
             <VStack gap={6} className="flex-1 min-h-0">
               {/* Header */}
               <VStack gap={2} className="flex-shrink-0">
-                <h1 className="text-heading-h4 text-[var(--color-text-default)]">
-                  HPA: {hpaName}
-                </h1>
+                <h1 className="text-heading-h4 text-[var(--color-text-default)]">HPA: {hpaName}</h1>
                 <InlineMessage variant="warning">
                   This HPA is managed by a Helm app; changes made here will likely be overwritten
                   the next time Helm runs.

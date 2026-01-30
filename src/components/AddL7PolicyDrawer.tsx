@@ -158,9 +158,7 @@ export function AddL7PolicyDrawer({
 
         {/* Action Select */}
         <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Action
-          </label>
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">Action</label>
           <Select
             value={action}
             onChange={(value) => setAction(value)}

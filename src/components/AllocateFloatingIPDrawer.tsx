@@ -248,9 +248,7 @@ export function AllocateFloatingIPDrawer({
         {/* Description Field */}
         <VStack gap={2} className="w-full">
           <HStack gap={1.5} align="center">
-            <span className="text-label-lg text-[var(--color-text-default)]">
-              Description
-            </span>
+            <span className="text-label-lg text-[var(--color-text-default)]">Description</span>
             <span className="text-body-md text-[var(--color-text-subtle)]">(Optional)</span>
           </HStack>
           <Input
@@ -445,9 +443,7 @@ export function AllocateFloatingIPDrawer({
               {/* Count Input for Batch */}
               {allocationMode === 'automatic-batch' && (
                 <VStack gap={2} className="w-[328px]">
-                  <span className="text-label-lg text-[var(--color-text-default)]">
-                    Count
-                  </span>
+                  <span className="text-label-lg text-[var(--color-text-default)]">Count</span>
                   <NumberInput
                     value={count}
                     onChange={(value) => setCount(value ?? 1)}
@@ -468,9 +464,7 @@ export function AllocateFloatingIPDrawer({
             <VStack gap={4} className="pt-3 w-[328px]">
               {/* DNS Domain */}
               <VStack gap={2}>
-                <span className="text-label-lg text-[var(--color-text-default)]">
-                  DNS Domain
-                </span>
+                <span className="text-label-lg text-[var(--color-text-default)]">DNS Domain</span>
                 <Select
                   value={dnsDomain}
                   onChange={setDnsDomain}
@@ -482,9 +476,7 @@ export function AllocateFloatingIPDrawer({
 
               {/* DNS Name */}
               <VStack gap={2}>
-                <span className="text-label-lg text-[var(--color-text-default)]">
-                  DNS Name
-                </span>
+                <span className="text-label-lg text-[var(--color-text-default)]">DNS Name</span>
                 <Input
                   value={dnsName}
                   onChange={(e) => setDnsName(e.target.value)}

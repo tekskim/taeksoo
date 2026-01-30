@@ -544,9 +544,7 @@ export function ComputeAdminVolumesPage() {
             <VStack gap={3}>
               {/* Page Header */}
               <div className="flex items-center justify-between h-8">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-                  Volumes
-                </h1>
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Volumes</h1>
               </div>
 
               {/* List Toolbar */}

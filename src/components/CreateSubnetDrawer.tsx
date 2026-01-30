@@ -50,9 +50,7 @@ function QuotaProgressBar({ label, used, total }: QuotaProgressBarProps) {
   return (
     <VStack gap={2} className="w-full">
       <HStack className="w-full justify-between items-center">
-        <span className="text-label-lg text-[var(--color-text-default)] leading-5">
-          {label}
-        </span>
+        <span className="text-label-lg text-[var(--color-text-default)] leading-5">{label}</span>
         <HStack gap={0} align="center">
           <span className="text-body-md text-[var(--color-text-default)] leading-4">{used}/</span>
           {isUnlimited ? (
@@ -215,9 +213,7 @@ export function CreateSubnetDrawer({
 
         {/* CIDR */}
         <VStack gap={2}>
-          <span className="text-label-lg text-[var(--color-text-default)] leading-5">
-            CIDR
-          </span>
+          <span className="text-label-lg text-[var(--color-text-default)] leading-5">CIDR</span>
           <Input
             value={cidr}
             onChange={(e) => setCidr(e.target.value)}
@@ -236,9 +232,7 @@ export function CreateSubnetDrawer({
 
         {/* Gateway */}
         <VStack gap={3}>
-          <span className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Gateway
-          </span>
+          <span className="text-label-lg text-[var(--color-text-default)] leading-5">Gateway</span>
           <VStack gap={2}>
             <Toggle
               checked={gatewayEnabled}

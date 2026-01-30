@@ -484,9 +484,7 @@ export function VolumeBackupsPage() {
             <VStack gap={3}>
               {/* Page Header */}
               <div className="flex items-center justify-between h-8">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-                  Volume backups
-                </h1>
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Volume backups</h1>
                 <Button>Create Backup</Button>
               </div>
 

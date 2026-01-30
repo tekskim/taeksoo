@@ -290,9 +290,7 @@ function JobsTab({ jobs }: JobsTabProps) {
 
   return (
     <VStack gap={3}>
-      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
-        Jobs
-      </h3>
+      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">Jobs</h3>
       <HStack gap={2} align="center">
         <SearchInput
           placeholder="Search Jobs by attributes"

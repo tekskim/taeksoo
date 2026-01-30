@@ -374,9 +374,7 @@ function QuotaSidebar({
         {/* Summary Card */}
         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
           <VStack gap={3}>
-            <h5 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
-              Summary
-            </h5>
+            <h5 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">Summary</h5>
             <div className="flex flex-col">
               {SECTION_ORDER.map((sectionKey) => {
                 // Show "Writing..." for sections in 'writing' state
@@ -404,9 +402,7 @@ function QuotaSidebar({
         {/* Quota Card */}
         <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
           <VStack gap={3}>
-            <h5 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
-              Quota
-            </h5>
+            <h5 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">Quota</h5>
             <VStack gap={3}>
               {quota.map((item) => (
                 <ProgressBar
@@ -463,9 +459,7 @@ function PreSection({ title }: PreSectionProps) {
   return (
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
       <div className="h-8 flex items-center">
-        <h5 className="text-heading-h5 text-[var(--color-text-default)]">
-          {title}
-        </h5>
+        <h5 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h5>
       </div>
     </div>
   );
@@ -483,9 +477,7 @@ function WritingSection({ title }: WritingSectionProps) {
   return (
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
       <div className="h-8 flex items-center justify-between">
-        <h5 className="text-heading-h5 text-[var(--color-text-default)]">
-          {title}
-        </h5>
+        <h5 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h5>
         <span className="text-body-sm text-[var(--color-text-subtle)]">Writing...</span>
       </div>
     </div>
@@ -505,13 +497,9 @@ function SkippedSection({ title, onEdit }: SkippedSectionProps) {
   return (
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
       <div className="flex items-center justify-between h-8">
-        <h5 className="text-heading-h5 text-[var(--color-text-default)]">
-          {title}
-        </h5>
+        <h5 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h5>
         <div className="flex items-center gap-3">
-          <span className="text-body-md text-[var(--color-text-muted)]">
-            Not configured
-          </span>
+          <span className="text-body-md text-[var(--color-text-muted)]">Not configured</span>
           <Button variant="outline" size="sm" leftIcon={<IconEdit size={12} />} onClick={onEdit}>
             Edit
           </Button>
@@ -689,9 +677,7 @@ function BasicInformationSection({
 
           {/* Description */}
           <VStack gap={2} className="py-6">
-            <label className="text-label-lg text-[var(--color-text-default)]">
-              Description
-            </label>
+            <label className="text-label-lg text-[var(--color-text-default)]">Description</label>
             <Input
               placeholder="Enter description"
               value={description}
@@ -1417,9 +1403,7 @@ function ImageSection({
             {createSystemDisk && (
               <HStack gap={4} align="end" className="flex-wrap">
                 <VStack gap={2}>
-                  <label className="text-label-md text-[var(--color-text-default)]">
-                    Type
-                  </label>
+                  <label className="text-label-md text-[var(--color-text-default)]">Type</label>
                   <Select
                     options={storageTypeOptions}
                     value={storageType}
@@ -1428,9 +1412,7 @@ function ImageSection({
                 </VStack>
                 <HStack gap={2} align="end">
                   <VStack gap={2}>
-                    <label className="text-label-md text-[var(--color-text-default)]">
-                      Size
-                    </label>
+                    <label className="text-label-md text-[var(--color-text-default)]">Size</label>
                     <NumberInput value={storageSize} onChange={setStorageSize} min={1} max={1000} />
                   </VStack>
                   <span className="text-body-md text-[var(--color-text-default)] pb-2">GiB</span>
@@ -1452,9 +1434,7 @@ function ImageSection({
           {/* Data disk Section */}
           <VStack gap={3} align="start" className="py-6">
             <VStack gap={1}>
-              <span className="text-label-lg text-[var(--color-text-default)]">
-                Data disk
-              </span>
+              <span className="text-label-lg text-[var(--color-text-default)]">Data disk</span>
               <span className="text-body-md text-[var(--color-text-muted)]">
                 Attach additional volumes for data storage.
               </span>
@@ -3343,9 +3323,7 @@ function TemplatesSection({
       render: (_, row) => (
         <VStack gap={0} align="start">
           <HStack gap={1} align="center">
-            <span className="text-label-md text-[var(--color-action-primary)]">
-              {row.name}
-            </span>
+            <span className="text-label-md text-[var(--color-action-primary)]">{row.name}</span>
             <IconExternalLink
               size={12}
               stroke={1.5}
@@ -3426,9 +3404,7 @@ function TemplatesSection({
 
         {/* Templates Sub-section */}
         <VStack gap={3} align="start" className="w-full">
-          <span className="text-label-lg text-[var(--color-text-default)]">
-            Templates
-          </span>
+          <span className="text-label-lg text-[var(--color-text-default)]">Templates</span>
           <span className="text-body-md text-[var(--color-text-subtle)]">
             Select the template to use for creating the instance. A template includes predefined
             settings such as the image, flavor, and network configuration required for the instance.

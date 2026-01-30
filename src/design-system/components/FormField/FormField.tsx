@@ -147,10 +147,7 @@ const FormFieldHelperText = forwardRef<HTMLParagraphElement, FormFieldHelperText
       <p
         ref={ref}
         id={id ? `${id}-helper` : undefined}
-        className={twMerge(
-          'text-body-sm text-[var(--color-text-subtle)]',
-          className
-        )}
+        className={twMerge('text-body-sm text-[var(--color-text-subtle)]', className)}
         {...props}
       >
         {children}
@@ -177,10 +174,7 @@ const FormFieldErrorMessage = forwardRef<HTMLParagraphElement, FormFieldErrorMes
         ref={ref}
         id={id ? `${id}-error` : undefined}
         role="alert"
-        className={twMerge(
-          'text-body-sm text-[var(--color-state-danger)]',
-          className
-        )}
+        className={twMerge('text-body-sm text-[var(--color-state-danger)]', className)}
         {...props}
       >
         {children}

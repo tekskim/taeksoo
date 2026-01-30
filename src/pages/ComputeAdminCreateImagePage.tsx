@@ -255,9 +255,7 @@ export function ComputeAdminCreateImagePage() {
             </Link>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </div>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">
-            ID: {row.id}
-          </span>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
         </div>
       ),
     },
@@ -395,9 +393,7 @@ export function ComputeAdminCreateImagePage() {
               <VStack gap={3} className="min-w-[1176px]">
                 {/* Page Title */}
                 <div className="flex items-center justify-between h-8">
-                  <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-                    Create image
-                  </h1>
+                  <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create image</h1>
                 </div>
 
                 {/* Content Area */}

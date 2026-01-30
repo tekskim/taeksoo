@@ -444,9 +444,7 @@ export function RoutersPage() {
             <VStack gap={3}>
               {/* Page Header */}
               <div className="flex justify-between items-center h-8 w-full">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-                  Routers
-                </h1>
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Routers</h1>
                 <Button variant="primary" size="md">
                   Create Router
                 </Button>

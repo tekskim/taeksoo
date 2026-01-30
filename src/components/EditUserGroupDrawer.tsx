@@ -109,9 +109,7 @@ export function EditUserGroupDrawer({
             <span className="text-label-lg text-[var(--color-text-default)] leading-5">
               User group name
             </span>
-            <span className="text-label-lg text-[var(--color-state-danger)] leading-5">
-              *
-            </span>
+            <span className="text-label-lg text-[var(--color-state-danger)] leading-5">*</span>
           </div>
           <Input
             value={name}

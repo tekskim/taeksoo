@@ -63,9 +63,7 @@ function QuotaProgressBar({ label, used, total }: QuotaProgressBarProps) {
   return (
     <VStack gap={2} className="w-full">
       <HStack justify="between" className="w-full">
-        <span className="text-label-lg text-[var(--color-text-default)] leading-5">
-          {label}
-        </span>
+        <span className="text-label-lg text-[var(--color-text-default)] leading-5">{label}</span>
         <span className="text-body-md text-[var(--color-text-default)] leading-4">
           {used}/{total}
         </span>

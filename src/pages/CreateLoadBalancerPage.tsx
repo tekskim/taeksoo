@@ -763,9 +763,7 @@ export default function CreateLoadBalancerPage() {
         render: (_value, row) => (
           <VStack gap={0.5} align="start">
             <HStack gap={1.5} align="center">
-              <span className="text-[var(--color-action-primary)] text-label-md">
-                {row.name}
-              </span>
+              <span className="text-[var(--color-action-primary)] text-label-md">{row.name}</span>
               <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
               {row.status === 'error' && (
                 <IconAlertCircle size={12} className="text-[var(--color-state-danger)]" />
@@ -831,9 +829,7 @@ export default function CreateLoadBalancerPage() {
         render: (_value, row) => (
           <VStack gap={0.5} align="start">
             <HStack gap={1.5} align="center">
-              <span className="text-[var(--color-action-primary)] text-label-md">
-                {row.name}
-              </span>
+              <span className="text-[var(--color-action-primary)] text-label-md">{row.name}</span>
               <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
               {row.status === 'paused' && (
                 <IconAlertCircle size={12} className="text-[var(--color-state-danger)]" />
@@ -864,7 +860,9 @@ export default function CreateLoadBalancerPage() {
                 (+{row.listenerCount})
               </span>
             </HStack>
-            <span className="text-body-sm text-[var(--color-text-subtle)]">ID:{row.listenerId}</span>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">
+              ID:{row.listenerId}
+            </span>
           </VStack>
         ),
       },
@@ -918,9 +916,7 @@ export default function CreateLoadBalancerPage() {
         render: (_value, row) => (
           <VStack gap={0.5} align="start">
             <HStack gap={1.5} align="center">
-              <span className="text-[var(--color-action-primary)] text-label-md">
-                {row.name}
-              </span>
+              <span className="text-[var(--color-action-primary)] text-label-md">{row.name}</span>
               <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
               {row.status === 'paused' && (
                 <IconAlertCircle size={12} className="text-[var(--color-state-danger)]" />
@@ -944,7 +940,9 @@ export default function CreateLoadBalancerPage() {
                 (+{row.listenerCount})
               </span>
             </HStack>
-            <span className="text-body-sm text-[var(--color-text-subtle)]">ID:{row.listenerId}</span>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">
+              ID:{row.listenerId}
+            </span>
           </VStack>
         ),
       },
@@ -1008,9 +1006,7 @@ export default function CreateLoadBalancerPage() {
         render: (_value, row) => (
           <VStack gap={0.5} align="start">
             <HStack gap={1.5} align="center">
-              <span className="text-[var(--color-action-primary)] text-label-md">
-                {row.name}
-              </span>
+              <span className="text-[var(--color-action-primary)] text-label-md">{row.name}</span>
               <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
               {row.status === 'paused' && (
                 <IconAlertCircle size={12} className="text-[var(--color-state-danger)]" />

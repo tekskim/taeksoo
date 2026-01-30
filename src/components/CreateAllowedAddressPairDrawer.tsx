@@ -95,9 +95,7 @@ export function CreateAllowedAddressPairDrawer({
 
         {/* CIDR Input */}
         <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            CIDR
-          </label>
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">CIDR</label>
           <Input
             value={cidr}
             onChange={(e) => setCidr(e.target.value)}

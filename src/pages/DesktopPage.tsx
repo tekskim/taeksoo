@@ -59,9 +59,7 @@ function DesktopIcon({ icon, label, onClick }: DesktopIconProps) {
       <div className="w-20 h-20 flex items-center justify-center rounded-lg">
         <img src={icon} alt={label} className="w-16 h-16 object-cover object-center" />
       </div>
-      <span className="text-label-md text-white text-center whitespace-nowrap">
-        {label}
-      </span>
+      <span className="text-label-md text-white text-center whitespace-nowrap">{label}</span>
     </button>
   );
 }
@@ -307,9 +305,7 @@ function AdminCenterIcon({ onClick, iconRef }: AdminCenterIconProps) {
           </div>
         </div>
       </div>
-          <span className="text-label-md text-white text-center w-16">
-        Admin center
-      </span>
+      <span className="text-label-md text-white text-center w-16">Admin center</span>
     </button>
   );
 }
@@ -576,27 +572,21 @@ function AdminCenterPanel({ isOpen, onClose }: AdminPanelProps) {
           onClick={() => console.log('Storage Admin clicked')}
         >
           <img src={imgStorageAdmin} alt="Storage Admin" className="w-16 h-16 object-cover" />
-            <span className="text-label-md text-white text-center">
-            Storage Admin
-          </span>
+          <span className="text-label-md text-white text-center">Storage Admin</span>
         </button>
         <button
           className="flex flex-col items-center gap-2 w-20 cursor-pointer transition-transform hover:-translate-y-0.5 bg-transparent border-none p-0"
           onClick={() => console.log('Compute Admin clicked')}
         >
           <img src={imgComputeAdmin} alt="Compute Admin" className="w-16 h-16 object-cover" />
-          <span className="text-label-md text-white text-center">
-            Compute Admin
-          </span>
+          <span className="text-label-md text-white text-center">Compute Admin</span>
         </button>
         <button
           className="flex flex-col items-center gap-2 w-20 cursor-pointer transition-transform hover:-translate-y-0.5 bg-transparent border-none p-0"
           onClick={() => console.log('Cloud Builder clicked')}
         >
           <img src={imgCloud} alt="Cloud Builder" className="w-16 h-16 object-cover" />
-          <span className="text-label-md text-white text-center">
-            Cloud Builder
-          </span>
+          <span className="text-label-md text-white text-center">Cloud Builder</span>
         </button>
       </div>
     </>
@@ -718,9 +708,7 @@ function PageWindow({
         {/* Window Header */}
         <div className="flex items-center justify-between px-4 py-2 bg-[var(--color-surface-subtle)] border-b border-[var(--color-border-default)] shrink-0">
           <div className="flex items-center gap-2 flex-1 min-w-0">
-            <span className="text-label-md text-[var(--color-text-default)] truncate">
-              {title}
-            </span>
+            <span className="text-label-md text-[var(--color-text-default)] truncate">{title}</span>
           </div>
           <div className="flex items-center gap-1">
             <WindowControls

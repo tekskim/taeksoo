@@ -45,9 +45,7 @@ function InfoBox({ label, value }: { label: string; value: string }) {
   return (
     <div className="w-full bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
       <VStack gap={2}>
-        <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-          {label}
-        </span>
+        <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">{label}</span>
         <span className="text-body-md text-[var(--color-text-default)] leading-4">{value}</span>
       </VStack>
     </div>
@@ -73,9 +71,7 @@ function QuotaProgressBar({ label, used, total, adding = 1 }: QuotaProgressBarPr
   return (
     <VStack gap={2} className="w-full">
       <HStack className="justify-between w-full">
-        <span className="text-label-lg text-[var(--color-text-default)] leading-5">
-          {label}
-        </span>
+        <span className="text-label-lg text-[var(--color-text-default)] leading-5">{label}</span>
         <HStack gap={0} className="items-center">
           <span className="text-body-md text-[var(--color-text-default)] leading-4">{used}/</span>
           {isInfinity ? (

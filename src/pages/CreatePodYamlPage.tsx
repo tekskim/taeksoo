@@ -223,9 +223,7 @@ export function CreatePodYamlPage() {
             <VStack gap={6} className="flex-1 min-h-0">
               {/* Header */}
               <VStack gap={2} className="flex-shrink-0">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-                  Create Pod
-                </h1>
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create Pod</h1>
                 <p className="text-body-sm text-[var(--color-text-subtle)]">
                   Create a Kubernetes Pod by defining its containers, configuration to run workloads
                   within your cluster.

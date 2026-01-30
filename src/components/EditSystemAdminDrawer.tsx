@@ -130,9 +130,7 @@ export function EditSystemAdminDrawer({
             <span className="text-label-lg text-[var(--color-text-default)] leading-5">
               Email address
             </span>
-            <span className="text-label-lg text-[var(--color-state-danger)] leading-5">
-              *
-            </span>
+            <span className="text-label-lg text-[var(--color-state-danger)] leading-5">*</span>
           </div>
           <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
             The email address used for password recovery.
@@ -166,9 +164,7 @@ export function EditSystemAdminDrawer({
 
         {/* Status */}
         <VStack gap={2}>
-          <span className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Status
-          </span>
+          <span className="text-label-lg text-[var(--color-text-default)] leading-5">Status</span>
           <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
             Select the account's status. If 'disabled', the system administrator will be prevented
             from signing in.

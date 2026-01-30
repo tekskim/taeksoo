@@ -129,9 +129,7 @@ export function DisassociateFloatingIPDrawer({
         <VStack gap={3}>
           {/* Header */}
           <div className="flex items-center gap-1 h-7">
-            <span className="text-label-lg text-[var(--color-text-default)]">
-              Floating IPs
-            </span>
+            <span className="text-label-lg text-[var(--color-text-default)]">Floating IPs</span>
           </div>
 
           {/* Search */}
@@ -165,35 +163,27 @@ export function DisassociateFloatingIPDrawer({
                 style={{ width: '59px', flexShrink: 0 }}
                 className="flex items-center justify-center px-3 border-l border-[var(--color-border-default)]"
               >
-                <span className="text-label-sm text-[var(--color-text-default)]">
-                  Status
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Status</span>
               </div>
               <div
                 style={{ width: '183px', flexShrink: 0 }}
                 className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
               >
-                <span className="text-label-sm text-[var(--color-text-default)]">
-                  Floating IP
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Floating IP</span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
               </div>
               <div
                 style={{ width: '183px', flexShrink: 0 }}
                 className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
               >
-                <span className="text-label-sm text-[var(--color-text-default)]">
-                  Fixed IP
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Fixed IP</span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
               </div>
               <div
                 style={{ width: '183px', flexShrink: 0 }}
                 className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
               >
-                <span className="text-label-sm text-[var(--color-text-default)]">
-                  Created At
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Created At</span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
               </div>
             </div>

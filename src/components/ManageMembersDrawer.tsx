@@ -98,9 +98,7 @@ function MemberCard({ member, onPortChange, onWeightChange, onRemove }: MemberCa
     <div className="w-[200px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md px-4 pt-3 pb-4 flex flex-col gap-3">
       {/* IP Address */}
       <VStack gap={2} className="w-full">
-        <span className="text-label-md text-[var(--color-text-default)] leading-4">
-          IP Address
-        </span>
+        <span className="text-label-md text-[var(--color-text-default)] leading-4">IP Address</span>
         <div className="w-full bg-[var(--color-surface-muted)] rounded-md px-2.5 py-2">
           <span className="text-body-md text-[var(--color-text-muted)] leading-4">
             {member.ipAddress}
@@ -110,9 +108,7 @@ function MemberCard({ member, onPortChange, onWeightChange, onRemove }: MemberCa
 
       {/* Port */}
       <VStack gap={2} className="w-full">
-        <span className="text-label-md text-[var(--color-text-default)] leading-4">
-          Port
-        </span>
+        <span className="text-label-md text-[var(--color-text-default)] leading-4">Port</span>
         <NumberInput
           value={member.port}
           onChange={(value) => onPortChange(value ?? 80)}
@@ -124,9 +120,7 @@ function MemberCard({ member, onPortChange, onWeightChange, onRemove }: MemberCa
 
       {/* Weight */}
       <VStack gap={2} className="w-full">
-        <span className="text-label-md text-[var(--color-text-default)] leading-4">
-          Weight
-        </span>
+        <span className="text-label-md text-[var(--color-text-default)] leading-4">Weight</span>
         <NumberInput
           value={member.weight}
           onChange={(value) => onWeightChange(value ?? 1)}

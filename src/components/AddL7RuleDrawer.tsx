@@ -207,9 +207,7 @@ export function AddL7RuleDrawer({ isOpen, onClose, onSubmit }: AddL7RuleDrawerPr
 
         {/* Value */}
         <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Value
-          </label>
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">Value</label>
           <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
             Enter the value or pattern to match.
           </p>
@@ -233,9 +231,7 @@ export function AddL7RuleDrawer({ isOpen, onClose, onSubmit }: AddL7RuleDrawerPr
 
         {/* Invert */}
         <VStack gap={3} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Invert
-          </label>
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">Invert</label>
           <HStack gap={2} className="items-center">
             <Toggle checked={invert} onChange={(e) => setInvert(e.target.checked)} />
             <span className="text-body-md text-[var(--color-text-default)] leading-4">

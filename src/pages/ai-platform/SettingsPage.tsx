@@ -18,9 +18,7 @@ function EmptyState({
       <VStack gap={4} align="center">
         <div className="text-[var(--color-text-disabled)]">{icon}</div>
         <VStack gap={2} align="center">
-          <span className="text-heading-h5 text-[var(--color-text-default)]">
-            {title}
-          </span>
+          <span className="text-heading-h5 text-[var(--color-text-default)]">{title}</span>
           <span className="text-body-lg text-[var(--color-text-subtle)]">{description}</span>
         </VStack>
       </VStack>
@@ -74,9 +72,7 @@ export function SettingsPage() {
             <VStack gap={6}>
               <HStack justify="between" align="center">
                 <VStack gap={1}>
-                  <h1 className="text-heading-h3 text-[var(--color-text-default)]">
-                    Settings
-                  </h1>
+                  <h1 className="text-heading-h3 text-[var(--color-text-default)]">Settings</h1>
                   <p className="text-body-lg text-[var(--color-text-subtle)]">
                     Configure AI Platform settings and preferences.
                   </p>

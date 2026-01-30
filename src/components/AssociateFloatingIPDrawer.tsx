@@ -752,9 +752,7 @@ export function AssociateFloatingIPDrawer({
         {/* Fixed IP Section - only show when Instance tab is active */}
         {activeTab === 'instance' && (
           <VStack gap={3} className="w-full pb-5">
-            <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">
-              Fixed IP
-            </h3>
+            <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">Fixed IP</h3>
 
             {/* Search */}
             <div className="w-[280px]">
@@ -854,9 +852,7 @@ export function AssociateFloatingIPDrawer({
         {/* Fixed IP Section - show when Virtual Adapter tab is active (different columns) */}
         {activeTab === 'virtualAdapter' && (
           <VStack gap={3} className="w-full pb-5">
-            <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">
-              Fixed IP
-            </h3>
+            <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">Fixed IP</h3>
 
             {/* Search */}
             <div className="w-[280px]">

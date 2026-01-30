@@ -262,9 +262,7 @@ function NamespaceSelector() {
         onClick={() => setIsOpen(!isOpen)}
         className="w-full px-2.5 py-1.5 rounded-md bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors flex items-center justify-between"
       >
-        <span className="text-label-sm text-[var(--color-text-default)]">
-          {getButtonText()}
-        </span>
+        <span className="text-label-sm text-[var(--color-text-default)]">{getButtonText()}</span>
         <ArrowRightLeft
           size={12}
           className="text-[var(--color-text-default)] shrink-0"

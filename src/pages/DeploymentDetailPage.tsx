@@ -259,9 +259,7 @@ function MetricCard({ title, value, tooltip }: MetricCardProps) {
     <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
       <VStack gap={1.5}>
         <HStack gap={1} align="center">
-          <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-            {title}
-          </span>
+          <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">{title}</span>
           <Tooltip content={tooltip} position="top">
             <button className="text-[var(--color-text-subtle)]">
               <IconInfoCircle size={14} stroke={1.5} />
@@ -432,9 +430,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
 
   return (
     <VStack gap={3}>
-      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
-        Pods
-      </h3>
+      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">Pods</h3>
       <HStack gap={2} align="center">
         <SearchInput
           placeholder="Search Pods by attributes"
@@ -597,9 +593,7 @@ function ServicesTab({ services }: ServicesTabProps) {
 
   return (
     <VStack gap={3}>
-      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
-        Services
-      </h3>
+      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">Services</h3>
       <Pagination
         currentPage={currentPage}
         totalPages={1}

@@ -226,9 +226,7 @@ export function SetDefaultDomainDrawer({
               <span className="text-label-lg text-[var(--color-text-default)] leading-5">
                 Domains
               </span>
-              <span className="text-label-lg text-[var(--color-state-danger)] leading-5">
-                *
-              </span>
+              <span className="text-label-lg text-[var(--color-state-danger)] leading-5">*</span>
             </div>
             <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
               Select one of the available domains to set as the default.

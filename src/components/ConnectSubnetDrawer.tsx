@@ -277,9 +277,7 @@ export function ConnectSubnetDrawer({
 
         {/* Network Section */}
         <VStack gap={3} className="w-full pb-5">
-          <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Network
-          </h3>
+          <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">Network</h3>
 
           {/* Search */}
           <div className="w-[280px]">
@@ -308,41 +306,31 @@ export function ConnectSubnetDrawer({
             <div className="flex items-center bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md">
               <div className="w-[40px] p-3" />
               <div className="w-[59px] px-3 py-2 border-l border-[var(--color-border-default)] flex items-center justify-center">
-                <span className="text-label-sm text-[var(--color-text-default)]">
-                  Status
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Status</span>
               </div>
               <div
                 className="flex-1 px-3 py-2 border-l border-[var(--color-border-default)] flex items-center gap-1.5 cursor-pointer hover:bg-[var(--color-surface-muted)]"
                 onClick={() => toggleNetworkSort('name')}
               >
-                <span className="text-label-sm text-[var(--color-text-default)]">
-                  Name
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Name</span>
                 <SortIcon active={networkSortKey === 'name'} direction={networkSortDir} />
               </div>
               <div
                 className="flex-1 px-3 py-2 border-l border-[var(--color-border-default)] flex items-center gap-1.5 cursor-pointer hover:bg-[var(--color-surface-muted)]"
                 onClick={() => toggleNetworkSort('size')}
               >
-                <span className="text-label-sm text-[var(--color-text-default)]">
-                  Size
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Size</span>
                 <SortIcon active={networkSortKey === 'size'} direction={networkSortDir} />
               </div>
               <div
                 className="flex-1 px-3 py-2 border-l border-[var(--color-border-default)] flex items-center gap-1.5 cursor-pointer hover:bg-[var(--color-surface-muted)]"
                 onClick={() => toggleNetworkSort('access')}
               >
-                <span className="text-label-sm text-[var(--color-text-default)]">
-                  Access
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Access</span>
                 <SortIcon active={networkSortKey === 'access'} direction={networkSortDir} />
               </div>
               <div className="flex-1 px-3 py-2 border-l border-[var(--color-border-default)] flex items-center">
-                <span className="text-label-sm text-[var(--color-text-default)]">
-                  Subnet CIDR
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Subnet CIDR</span>
               </div>
             </div>
 
@@ -417,9 +405,7 @@ export function ConnectSubnetDrawer({
 
         {/* Subnet Section */}
         <VStack gap={3} className="w-full pb-5">
-          <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Subnet
-          </h3>
+          <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">Subnet</h3>
 
           {/* Search */}
           <div className="w-[280px]">
@@ -451,9 +437,7 @@ export function ConnectSubnetDrawer({
                 className="flex-1 px-3 py-2 border-l border-[var(--color-border-default)] flex items-center gap-1.5 cursor-pointer hover:bg-[var(--color-surface-muted)]"
                 onClick={() => toggleSubnetSort('name')}
               >
-                <span className="text-label-sm text-[var(--color-text-default)]">
-                  Name
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Name</span>
                 <SortIcon active={subnetSortKey === 'name'} direction={subnetSortDir} />
               </div>
               <div className="flex-1 px-3 py-2 border-l border-[var(--color-border-default)] flex items-center">

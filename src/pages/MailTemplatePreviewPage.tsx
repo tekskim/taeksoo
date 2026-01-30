@@ -29,7 +29,8 @@ const templateConfig: Record<TemplateType, { title: string; description: string 
 
 function ThakiLogo() {
   return (
-    <img src={thakiLogoLight}
+    <img
+      src={thakiLogoLight}
       alt="THAKI Cloud"
       style={{ height: '20px', display: 'block', alignSelf: 'flex-start' }}
     />
@@ -76,21 +77,26 @@ function AccountInvitationTemplate({
             To get started, please set your password using the secure link below.
           </p>
         </div>
-        <div className="rounded-lg px-4 py-3 flex flex-col gap-1.5 w-full"
+        <div
+          className="rounded-lg px-4 py-3 flex flex-col gap-1.5 w-full"
           style={{ backgroundColor: '#f8fafc' }}
         >
           <span className="text-label-sm leading-4" style={{ color: '#64748b' }}>
-            Your username </span>
+            Your username{' '}
+          </span>
           <span className="text-label-lg leading-5" style={{ color: '#0f172a' }}>
             {username}
           </span>
         </div>
         <Button as="a" href={actionUrl} variant="primary" size="lg" className="self-start">
-          Get Started </Button>
-        <div className="flex items-start gap-2 p-3 rounded-md w-full"
+          Get Started{' '}
+        </Button>
+        <div
+          className="flex items-start gap-2 p-3 rounded-md w-full"
           style={{ backgroundColor: '#fff7ed' }}
         >
-          <svg xmlns="http://www.w3.org/2000/svg"
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
             width="16"
             height="16"
             viewBox="0 0 24 24"
@@ -157,24 +163,30 @@ function ResetPasswordTemplate({
             </span>{' '}
             in Thaki Cloud has reset your password.
             <br />
-            To regain access to your account, please create a new password using the secure link below.
+            To regain access to your account, please create a new password using the secure link
+            below.
           </p>
         </div>
-        <div className="rounded-lg px-4 py-3 flex flex-col gap-1.5 w-full"
+        <div
+          className="rounded-lg px-4 py-3 flex flex-col gap-1.5 w-full"
           style={{ backgroundColor: '#f8fafc' }}
         >
           <span className="text-label-sm leading-4" style={{ color: '#64748b' }}>
-            Your username </span>
+            Your username{' '}
+          </span>
           <span className="text-label-lg leading-5" style={{ color: '#0f172a' }}>
             {username}
           </span>
         </div>
         <Button as="a" href={actionUrl} variant="primary" size="lg" className="self-start">
-          Reset password </Button>
-        <div className="flex items-start gap-2 p-3 rounded-md w-full"
+          Reset password{' '}
+        </Button>
+        <div
+          className="flex items-start gap-2 p-3 rounded-md w-full"
           style={{ backgroundColor: '#fff7ed' }}
         >
-          <svg xmlns="http://www.w3.org/2000/svg"
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
             width="16"
             height="16"
             viewBox="0 0 24 24"
@@ -222,7 +234,8 @@ function EmailMFATemplate({
 }: EmailMFAProps) {
   // Format code as "123 456" (split in middle)
   const formattedCode =
-    verificationCode.length === 6 ? `${verificationCode.slice(0, 3)} ${verificationCode.slice(3)}`
+    verificationCode.length === 6
+      ? `${verificationCode.slice(0, 3)} ${verificationCode.slice(3)}`
       : verificationCode;
 
   return (
@@ -247,19 +260,23 @@ function EmailMFATemplate({
             Please enter the verification code below into the sign-in screen.
           </p>
         </div>
-        <div className="rounded-lg px-4 py-3 flex flex-col gap-1.5 w-full"
+        <div
+          className="rounded-lg px-4 py-3 flex flex-col gap-1.5 w-full"
           style={{ backgroundColor: '#f8fafc' }}
         >
           <span className="text-label-sm leading-4" style={{ color: '#64748b' }}>
-            Verification code </span>
+            Verification code{' '}
+          </span>
           <span className="text-label-lg leading-5" style={{ color: '#0f172a' }}>
             {formattedCode}
           </span>
         </div>
-        <div className="flex items-start gap-2 p-3 rounded-md w-full"
+        <div
+          className="flex items-start gap-2 p-3 rounded-md w-full"
           style={{ backgroundColor: '#fff7ed' }}
         >
-          <svg xmlns="http://www.w3.org/2000/svg"
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
             width="16"
             height="16"
             viewBox="0 0 24 24"
@@ -433,7 +450,8 @@ function generateResetPasswordHTML(props: ResetPasswordProps): string {
 function generateEmailMFAHTML(props: EmailMFAProps): string {
   // Format code as "123 456"
   const formattedCode =
-    props.verificationCode.length === 6 ? `${props.verificationCode.slice(0, 3)} ${props.verificationCode.slice(3)}`
+    props.verificationCode.length === 6
+      ? `${props.verificationCode.slice(0, 3)} ${props.verificationCode.slice(3)}`
       : props.verificationCode;
 
   return `<!DOCTYPE html>
@@ -569,34 +587,34 @@ export function MailTemplatePreviewPage() {
         return (
           <>
             <VStack gap={1}>
-              <label className="text-label-sm text-[var(--color-text-subtle)]">
-                Display Name </label>
-              <Input value={displayName}
+              <label className="text-label-sm text-[var(--color-text-subtle)]">Display Name </label>
+              <Input
+                value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
-                fullWidth />
+                fullWidth
+              />
             </VStack>
             <VStack gap={1}>
-              <label className="text-label-sm text-[var(--color-text-subtle)]">
-                Domain Name </label>
+              <label className="text-label-sm text-[var(--color-text-subtle)]">Domain Name </label>
               <Input value={domainName} onChange={(e) => setDomainName(e.target.value)} fullWidth />
             </VStack>
             <VStack gap={1}>
-              <label className="text-label-sm text-[var(--color-text-subtle)]">
-                Username </label>
+              <label className="text-label-sm text-[var(--color-text-subtle)]">Username </label>
               <Input value={username} onChange={(e) => setUsername(e.target.value)} fullWidth />
             </VStack>
             <VStack gap={1}>
               <label className="text-label-sm text-[var(--color-text-subtle)]">
                 Expiry (hours)
               </label>
-              <Input type="number"
+              <Input
+                type="number"
                 value={expiryHours}
                 onChange={(e) => setExpiryHours(Number(e.target.value))}
-                fullWidth />
+                fullWidth
+              />
             </VStack>
             <VStack gap={1}>
-              <label className="text-label-sm text-[var(--color-text-subtle)]">
-                Reset URL </label>
+              <label className="text-label-sm text-[var(--color-text-subtle)]">Reset URL </label>
               <Input value={resetUrl} onChange={(e) => setResetUrl(e.target.value)} fullWidth />
             </VStack>
           </>
@@ -605,32 +623,37 @@ export function MailTemplatePreviewPage() {
         return (
           <>
             <VStack gap={1}>
-              <label className="text-label-sm text-[var(--color-text-subtle)]">
-                Display Name </label>
-              <Input value={displayName}
+              <label className="text-label-sm text-[var(--color-text-subtle)]">Display Name </label>
+              <Input
+                value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
-                fullWidth />
+                fullWidth
+              />
             </VStack>
             <VStack gap={1}>
-              <label className="text-label-sm text-[var(--color-text-subtle)]">
-                Domain Name </label>
+              <label className="text-label-sm text-[var(--color-text-subtle)]">Domain Name </label>
               <Input value={domainName} onChange={(e) => setDomainName(e.target.value)} fullWidth />
             </VStack>
             <VStack gap={1}>
               <label className="text-label-sm text-[var(--color-text-subtle)]">
-                Verification Code </label>
-              <Input value={verificationCode}
+                Verification Code{' '}
+              </label>
+              <Input
+                value={verificationCode}
                 onChange={(e) => setVerificationCode(e.target.value)}
-                fullWidth />
+                fullWidth
+              />
             </VStack>
             <VStack gap={1}>
               <label className="text-label-sm text-[var(--color-text-subtle)]">
                 Expiry (seconds)
               </label>
-              <Input type="number"
+              <Input
+                type="number"
                 value={mfaExpirySeconds}
                 onChange={(e) => setMfaExpirySeconds(Number(e.target.value))}
-                fullWidth />
+                fullWidth
+              />
             </VStack>
           </>
         );
@@ -638,34 +661,32 @@ export function MailTemplatePreviewPage() {
         return (
           <>
             <VStack gap={1}>
-              <label className="text-label-sm text-[var(--color-text-subtle)]">
-                Display Name </label>
-              <Input value={displayName}
+              <label className="text-label-sm text-[var(--color-text-subtle)]">Display Name </label>
+              <Input
+                value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
-                fullWidth />
+                fullWidth
+              />
             </VStack>
             <VStack gap={1}>
-              <label className="text-label-sm text-[var(--color-text-subtle)]">
-                Domain Name </label>
+              <label className="text-label-sm text-[var(--color-text-subtle)]">Domain Name </label>
               <Input value={domainName} onChange={(e) => setDomainName(e.target.value)} fullWidth />
             </VStack>
             <VStack gap={1}>
-              <label className="text-label-sm text-[var(--color-text-subtle)]">
-                Username </label>
+              <label className="text-label-sm text-[var(--color-text-subtle)]">Username </label>
               <Input value={username} onChange={(e) => setUsername(e.target.value)} fullWidth />
             </VStack>
             <VStack gap={1}>
-              <label className="text-label-sm text-[var(--color-text-subtle)]">
-                Expiry (days)
-              </label>
-              <Input type="number"
+              <label className="text-label-sm text-[var(--color-text-subtle)]">Expiry (days)</label>
+              <Input
+                type="number"
                 value={expiryDays}
                 onChange={(e) => setExpiryDays(Number(e.target.value))}
-                fullWidth />
+                fullWidth
+              />
             </VStack>
             <VStack gap={1}>
-              <label className="text-label-sm text-[var(--color-text-subtle)]">
-                Action URL </label>
+              <label className="text-label-sm text-[var(--color-text-subtle)]">Action URL </label>
               <Input value={actionUrl} onChange={(e) => setActionUrl(e.target.value)} fullWidth />
             </VStack>
           </>
@@ -677,7 +698,8 @@ export function MailTemplatePreviewPage() {
     switch (templateId) {
       case 'reset-password':
         return (
-          <ResetPasswordTemplate displayName={displayName}
+          <ResetPasswordTemplate
+            displayName={displayName}
             domainName={domainName}
             username={username}
             expiryHours={expiryHours}
@@ -686,7 +708,8 @@ export function MailTemplatePreviewPage() {
         );
       case 'email-mfa':
         return (
-          <EmailMFATemplate displayName={displayName}
+          <EmailMFATemplate
+            displayName={displayName}
             domainName={domainName}
             verificationCode={verificationCode}
             expirySeconds={mfaExpirySeconds}
@@ -694,7 +717,8 @@ export function MailTemplatePreviewPage() {
         );
       default:
         return (
-          <AccountInvitationTemplate displayName={displayName}
+          <AccountInvitationTemplate
+            displayName={displayName}
             domainName={domainName}
             username={username}
             expiryDays={expiryDays}
@@ -709,29 +733,33 @@ export function MailTemplatePreviewPage() {
       <header className="sticky top-0 z-50 bg-[var(--color-surface-default)] border-b border-[var(--color-border-default)]">
         <div className="max-w-7xl mx-auto px-8 h-14 flex items-center justify-between">
           <HStack gap={3} align="center">
-            <Button variant="ghost"
+            <Button
+              variant="ghost"
               size="sm"
               icon={<IconArrowLeft size={16} stroke={1.5} />}
               onClick={() => navigate('/mail-template')}
             />
-            <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-              {config.title}
-            </h1>
+            <h1 className="text-heading-h5 text-[var(--color-text-default)]">{config.title}</h1>
           </HStack>
           <HStack gap={2}>
-            <Button variant={viewMode === 'preview' ? 'primary' : 'secondary'}
+            <Button
+              variant={viewMode === 'preview' ? 'primary' : 'secondary'}
               size="sm"
               icon={<IconEye size={14} stroke={1.5} />}
               onClick={() => setViewMode('preview')}
             >
-              Preview </Button>
-            <Button variant={viewMode === 'code' ? 'primary' : 'secondary'}
+              Preview{' '}
+            </Button>
+            <Button
+              variant={viewMode === 'code' ? 'primary' : 'secondary'}
               size="sm"
               icon={<IconCode size={14} stroke={1.5} />}
               onClick={() => setViewMode('code')}
             >
-              HTML </Button>
-            <Button variant="secondary"
+              HTML{' '}
+            </Button>
+            <Button
+              variant="secondary"
               size="sm"
               icon={
                 copied ? <IconCheck size={14} stroke={1.5} /> : <IconCopy size={14} stroke={1.5} />
@@ -749,14 +777,16 @@ export function MailTemplatePreviewPage() {
           <div className="w-[var(--search-input-width)] flex-shrink-0">
             <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
               <h2 className="text-body-lg font-semibold text-[var(--color-text-default)] mb-4">
-                Template Variables </h2>
+                Template Variables{' '}
+              </h2>
               <VStack gap={4}>{renderVariables()}</VStack>
             </div>
           </div>
 
           <div className="flex-1 min-w-[700px]" style={{ colorScheme: 'light' }}>
             {viewMode === 'preview' ? (
-              <div className="rounded-lg p-8 min-h-[600px] flex justify-center items-start pt-12"
+              <div
+                className="rounded-lg p-8 min-h-[600px] flex justify-center items-start pt-12"
                 style={{ backgroundColor: '#f8fafc' }}
               >
                 {renderPreview()}

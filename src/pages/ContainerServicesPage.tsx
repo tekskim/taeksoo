@@ -437,9 +437,7 @@ export function ContainerServicesPage() {
               {/* Header */}
               <HStack justify="between" align="center" className="w-full min-h-8">
                 <HStack gap={2} align="center">
-                  <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-                    Services
-                  </h1>
+                  <h1 className="text-heading-h5 text-[var(--color-text-default)]">Services</h1>
                   <button className="p-1 hover:bg-[var(--color-surface-subtle)] rounded transition-colors">
                     <IconStar size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
                   </button>

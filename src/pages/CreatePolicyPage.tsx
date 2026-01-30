@@ -58,9 +58,7 @@ function PreSection({ title }: PreSectionProps) {
   return (
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
       <div className="h-8 flex items-center">
-        <h5 className="text-heading-h5 text-[var(--color-text-default)]">
-          {title}
-        </h5>
+        <h5 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h5>
       </div>
     </div>
   );
@@ -78,9 +76,7 @@ function WritingSection({ title }: WritingSectionProps) {
   return (
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
       <div className="h-8 flex items-center justify-between">
-        <h5 className="text-heading-h5 text-[var(--color-text-default)]">
-          {title}
-        </h5>
+        <h5 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h5>
         <span className="text-body-sm text-[var(--color-text-subtle)]">Writing...</span>
       </div>
     </div>
@@ -172,9 +168,7 @@ function SummarySidebar({
         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
           <VStack gap={3}>
             {/* Header */}
-            <h4 className="text-heading-h5 text-[var(--color-text-default)]">
-              Create policy
-            </h4>
+            <h4 className="text-heading-h5 text-[var(--color-text-default)]">Create policy</h4>
 
             {/* Section Status List */}
             <div className="flex flex-col">
@@ -202,18 +196,12 @@ function SummarySidebar({
 
         {/* Quota Section */}
         <VStack gap={2}>
-          <span className="text-label-lg text-[var(--color-text-default)]">
-            Quota
-          </span>
+          <span className="text-label-lg text-[var(--color-text-default)]">Quota</span>
           <div className="bg-white border border-[var(--color-border-subtle)] rounded-lg p-4">
             <VStack gap={2}>
               <div className="flex items-center justify-between w-full">
-                <span className="text-label-lg text-[var(--color-text-default)]">
-                  Permissions
-                </span>
-                <span className="text-body-md text-[var(--color-text-default)]">
-                  20/50
-                </span>
+                <span className="text-label-lg text-[var(--color-text-default)]">Permissions</span>
+                <span className="text-body-md text-[var(--color-text-default)]">20/50</span>
               </div>
               <div className="w-full h-1 bg-[var(--color-border-subtle)] rounded-lg overflow-hidden">
                 <div
@@ -767,9 +755,7 @@ function PolicyEditorSection({
           {/* Permissions Label */}
           <div className="flex flex-col gap-2">
             <div className="flex gap-[3px]">
-              <span className="text-label-lg text-[var(--color-text-default)]">
-                Permissions
-              </span>
+              <span className="text-label-lg text-[var(--color-text-default)]">Permissions</span>
               <span className="text-[var(--color-state-danger)]">*</span>
             </div>
             <span className="text-body-md text-[var(--color-text-subtle)]">
@@ -798,9 +784,7 @@ function PolicyEditorSection({
               <VStack gap={6}>
                 {/* Target */}
                 <div className="flex flex-col gap-2 w-full">
-                  <span className="text-label-lg text-[var(--color-text-default)]">
-                    Target
-                  </span>
+                  <span className="text-label-lg text-[var(--color-text-default)]">Target</span>
                   <div
                     className={`flex items-center gap-1 ${
                       targetErrors[permission.id]
@@ -894,9 +878,7 @@ function PolicyEditorSection({
 
                 {/* Actions */}
                 <div className="flex flex-col gap-2 w-full">
-                  <span className="text-label-lg text-[var(--color-text-default)]">
-                    Actions
-                  </span>
+                  <span className="text-label-lg text-[var(--color-text-default)]">Actions</span>
 
                   {/* Search and All Actions */}
                   <div className="flex items-center gap-2">
@@ -1068,9 +1050,7 @@ function PolicyEditorSection({
                 ) : (
                   <IconChevronRight size={12} className="text-[var(--color-text-default)]" />
                 )}
-                <span className="text-label-lg text-[var(--color-text-default)]">
-                  Conditions
-                </span>
+                <span className="text-label-lg text-[var(--color-text-default)]">Conditions</span>
               </button>
               <span className="text-body-md text-[var(--color-text-subtle)]">
                 Select additional conditions required for this policy. All enabled conditions are
@@ -1330,9 +1310,7 @@ export default function CreatePolicyPage() {
             <VStack gap={3} className="min-w-[1176px]">
               {/* Page Title */}
               <div className="flex items-center justify-between h-8">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-                  Create policy
-                </h1>
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create policy</h1>
               </div>
               <HStack gap={6} align="start" className="w-full">
                 {/* Left Column - Form Sections */}

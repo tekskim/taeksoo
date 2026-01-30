@@ -97,9 +97,7 @@ function FolderTreeItem({
         {/* Folder Name */}
         <span
           className={`text-label-sm leading-4 truncate ${
-            isSelected
-              ? ' text-[var(--color-action-primary)]'
-              : 'text-[var(--color-text-default)]'
+            isSelected ? ' text-[var(--color-action-primary)]' : 'text-[var(--color-text-default)]'
           }`}
         >
           {folder.name}

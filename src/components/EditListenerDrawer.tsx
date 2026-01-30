@@ -211,9 +211,7 @@ export function EditListenerDrawer({
 
         {/* Port (Read-only) */}
         <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Port
-          </label>
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">Port</label>
           <Input value={String(listener.port)} readOnly disabled fullWidth />
         </VStack>
 
@@ -365,9 +363,7 @@ export function EditListenerDrawer({
                     gap={3}
                     className="w-full items-center bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md px-4 py-2"
                   >
-                    <span className="text-label-lg text-[var(--color-text-default)]">
-                      Key
-                    </span>
+                    <span className="text-label-lg text-[var(--color-text-default)]">Key</span>
                     <Input
                       value={newCidr}
                       onChange={(e) => setNewCidr(e.target.value)}
@@ -389,9 +385,7 @@ export function EditListenerDrawer({
                     gap={3}
                     className="w-full items-center bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md px-4 py-2"
                   >
-                    <span className="text-label-lg text-[var(--color-text-default)]">
-                      Key
-                    </span>
+                    <span className="text-label-lg text-[var(--color-text-default)]">Key</span>
                     <div className="flex-1 px-2.5 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md text-body-md text-[var(--color-text-default)]">
                       {cidr}
                     </div>
@@ -410,9 +404,7 @@ export function EditListenerDrawer({
                     gap={3}
                     className="w-full items-center bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md px-4 py-2"
                   >
-                    <span className="text-label-lg text-[var(--color-text-default)]">
-                      Key
-                    </span>
+                    <span className="text-label-lg text-[var(--color-text-default)]">Key</span>
                     <Input
                       value={newCidr}
                       onChange={(e) => setNewCidr(e.target.value)}

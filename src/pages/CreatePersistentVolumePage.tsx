@@ -94,9 +94,7 @@ function PreSection({ title }: PreSectionProps) {
   return (
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
       <div className="h-8 flex items-center">
-        <h5 className="text-heading-h5 text-[var(--color-text-default)]">
-          {title}
-        </h5>
+        <h5 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h5>
       </div>
     </div>
   );
@@ -114,9 +112,7 @@ function WritingSection({ title }: WritingSectionProps) {
   return (
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
       <div className="h-8 flex items-center justify-between">
-        <h5 className="text-heading-h5 text-[var(--color-text-default)]">
-          {title}
-        </h5>
+        <h5 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h5>
         <span className="text-body-sm text-[var(--color-text-subtle)]">Writing...</span>
       </div>
     </div>
@@ -288,17 +284,13 @@ function BasicInfoSection({
               fullWidth
             />
             {pvNameError && (
-              <span className="text-body-sm text-[var(--color-state-danger)]">
-                {pvNameError}
-              </span>
+              <span className="text-body-sm text-[var(--color-state-danger)]">{pvNameError}</span>
             )}
           </VStack>
 
           {/* Description */}
           <VStack gap={2}>
-            <label className="text-label-lg text-[var(--color-text-default)]">
-              Description
-            </label>
+            <label className="text-label-lg text-[var(--color-text-default)]">Description</label>
             <Input
               placeholder="Enter a description (optional)"
               value={description}
@@ -473,9 +465,7 @@ function StorageConfigSection({
         <VStack gap={3}>
           {/* Access Modes */}
           <VStack gap={1.5}>
-            <label className="text-label-lg text-[var(--color-text-default)]">
-              Access Modes
-            </label>
+            <label className="text-label-lg text-[var(--color-text-default)]">Access Modes</label>
             <VStack gap={1.5}>
               <Checkbox
                 checked={accessModes.singleNodeReadWrite}
@@ -516,9 +506,7 @@ function StorageConfigSection({
 
           {/* Mount Options */}
           <VStack gap={2}>
-            <label className="text-label-lg text-[var(--color-text-default)]">
-              Mount Options
-            </label>
+            <label className="text-label-lg text-[var(--color-text-default)]">Mount Options</label>
             {mountOptions.length > 0 && (
               <VStack gap={2} className="w-full">
                 <label className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
@@ -554,9 +542,7 @@ function StorageConfigSection({
 
           {/* Node Selectors */}
           <VStack gap={2}>
-            <label className="text-label-lg text-[var(--color-text-default)]">
-              Node Selectors
-            </label>
+            <label className="text-label-lg text-[var(--color-text-default)]">Node Selectors</label>
             {nodeSelectors.map((selector, selectorIndex) => (
               <HStack key={selectorIndex} gap={2} align="start" className="w-full">
                 <div className="flex-1 border border-[var(--color-border-default)] rounded-[6px] p-3">
@@ -720,9 +706,7 @@ function LabelsAnnotationsSection({
           {/* Labels */}
           <VStack gap={4}>
             <VStack gap={1}>
-              <span className="text-label-sm text-[var(--color-text-default)]">
-                Labels
-              </span>
+              <span className="text-label-sm text-[var(--color-text-default)]">Labels</span>
               <p className="text-body-md text-[var(--color-text-subtle)]">
                 Specify the labels used to identify and categorize the resource.
               </p>
@@ -764,9 +748,7 @@ function LabelsAnnotationsSection({
           {/* Annotations */}
           <VStack gap={4}>
             <VStack gap={1}>
-              <span className="text-label-sm text-[var(--color-text-default)]">
-                Annotations
-              </span>
+              <span className="text-label-sm text-[var(--color-text-default)]">Annotations</span>
               <p className="text-body-md text-[var(--color-text-subtle)]">
                 Specify the annotations used to provide additional metadata for the resource.
               </p>

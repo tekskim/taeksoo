@@ -148,19 +148,13 @@ function FileSystemCard() {
           return (
             <div key={fs.name} className="flex flex-col gap-1.5">
               <div className="flex items-center justify-between">
-                <span className="text-label-sm text-[var(--color-text-default)]">
-                  {fs.name}
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">{fs.name}</span>
                 <div className="flex items-center gap-2">
                   <span className="text-body-sm text-[var(--color-text-muted)]">
                     {fs.used}/{fs.total} GiB
                   </span>
                   <div className={`flex items-center px-1.5 py-0.5 rounded-md ${colors.bg}`}>
-                    <span
-                      className={`text-label-sm ${colors.text}`}
-                    >
-                      {fs.percent}%
-                    </span>
+                    <span className={`text-label-sm ${colors.text}`}>{fs.percent}%</span>
                   </div>
                 </div>
               </div>

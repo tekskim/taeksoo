@@ -74,9 +74,7 @@ function QuotaProgressBar({ label, used, total }: QuotaProgressBarProps) {
   return (
     <VStack gap={2} className="w-full">
       <HStack className="w-full justify-between items-center">
-        <span className="text-label-lg text-[var(--color-text-default)] leading-5">
-          {label}
-        </span>
+        <span className="text-label-lg text-[var(--color-text-default)] leading-5">{label}</span>
         <HStack gap={0} align="center">
           <span className="text-body-md text-[var(--color-text-default)] leading-4">{used}/</span>
           {isUnlimited ? (
@@ -365,9 +363,7 @@ export function CreateVolumeBackupWithSelectionDrawer({
 
         {/* Backup Mode */}
         <VStack gap={3}>
-          <span className="text-label-lg text-[var(--color-text-default)]">
-            Backup mode
-          </span>
+          <span className="text-label-lg text-[var(--color-text-default)]">Backup mode</span>
           <VStack gap={3}>
             <Radio
               name="backup-mode"
@@ -388,9 +384,7 @@ export function CreateVolumeBackupWithSelectionDrawer({
 
         {/* Volume Backup Name */}
         <VStack gap={2}>
-          <span className="text-label-lg text-[var(--color-text-default)]">
-            Volume Backup name
-          </span>
+          <span className="text-label-lg text-[var(--color-text-default)]">Volume Backup name</span>
           <Input
             value={backupName}
             onChange={(e) => setBackupName(e.target.value)}

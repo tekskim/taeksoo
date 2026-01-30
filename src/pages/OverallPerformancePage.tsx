@@ -467,9 +467,7 @@ function PieChartCard({
 
   return (
     <div className="flex-1 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-5 flex flex-col gap-4">
-      <span className="text-label-md text-[var(--color-text-default)]">
-        {title}
-      </span>
+      <span className="text-label-md text-[var(--color-text-default)]">{title}</span>
       <div className="flex justify-center">
         <ReactECharts option={getOption()} style={{ height: '180px', width: '180px' }} />
       </div>
@@ -480,9 +478,7 @@ function PieChartCard({
               className="w-2.5 h-2.5 rounded-sm shrink-0"
               style={{ backgroundColor: item.color }}
             />
-            <span className="text-body-sm text-[var(--color-text-muted)]">
-              {item.label}
-            </span>
+            <span className="text-body-sm text-[var(--color-text-muted)]">{item.label}</span>
           </div>
         ))}
       </div>
@@ -569,9 +565,7 @@ function SingleValueDoughnutCard({
     <div
       className={`bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-5 flex flex-col gap-4 ${className || 'flex-1'}`}
     >
-      <span className="text-label-md text-[var(--color-text-default)]">
-        {title}
-      </span>
+      <span className="text-label-md text-[var(--color-text-default)]">{title}</span>
       <div className="flex justify-center">
         <ReactECharts option={getOption()} style={{ height: '180px', width: '180px' }} />
       </div>

@@ -220,9 +220,7 @@ export default function ComputeAdminTenantsPage() {
             <VStack gap={3}>
               {/* Page Header */}
               <div className="flex items-center justify-between h-8">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-                  Tenants
-                </h1>
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Tenants</h1>
                 <Button variant="primary" size="md">
                   Create Tenant
                 </Button>

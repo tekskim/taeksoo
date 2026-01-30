@@ -202,9 +202,7 @@ function Card({
     <div
       className={`p-4 rounded-2xl border border-[var(--color-border-default)] ${bgColor} ${className}`}
     >
-      <h6 className="text-heading-h6 text-[var(--color-text-muted)] mb-4">
-        {title}
-      </h6>
+      <h6 className="text-heading-h6 text-[var(--color-text-muted)] mb-4">{title}</h6>
       {children}
     </div>
   );
@@ -285,9 +283,7 @@ export function ComputeHomePage() {
                 bgColor="bg-[var(--color-surface-subtle)]"
                 className="flex flex-col"
               >
-                <h3 className="text-heading-h2 text-[var(--color-text-default)]">
-                  proj-1
-                </h3>
+                <h3 className="text-heading-h2 text-[var(--color-text-default)]">proj-1</h3>
                 <div className="space-y-4 mt-auto">
                   <div>
                     <div className="text-body-xs text-[var(--color-text-muted)] mb-1">ID</div>
@@ -333,9 +329,7 @@ export function ComputeHomePage() {
               {/* INSTANCE SUMMARY */}
               <Card title="INSTANCE SUMMARY" className="flex flex-col">
                 <div className="mb-4">
-                  <div className="text-heading-h3 text-[var(--color-text-default)]">
-                    13
-                  </div>
+                  <div className="text-heading-h3 text-[var(--color-text-default)]">13</div>
                   <div className="text-body-md text-[var(--color-text-subtle)]">Total</div>
                 </div>
                 <div className="space-y-2 mt-auto">
@@ -353,9 +347,7 @@ export function ComputeHomePage() {
               {/* BARE METAL SUMMARY */}
               <Card title="BARE METAL SUMMARY" className="flex flex-col">
                 <div className="mb-4">
-                  <div className="text-heading-h3 text-[var(--color-text-default)]">
-                    8
-                  </div>
+                  <div className="text-heading-h3 text-[var(--color-text-default)]">8</div>
                   <div className="text-body-md text-[var(--color-text-subtle)]">Total</div>
                 </div>
                 <div className="space-y-2 mt-auto">

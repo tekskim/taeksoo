@@ -189,9 +189,7 @@ function UsageCell({ usage }: UsageCellProps) {
 
   return (
     <div className="flex flex-col gap-1.5 w-[105px]">
-      <span className="text-body-md text-[var(--color-text-default)]">
-        {usage.toFixed(2)}%
-      </span>
+      <span className="text-body-md text-[var(--color-text-default)]">{usage.toFixed(2)}%</span>
       <ProgressBar value={usage} max={100} status={getUsageStatus(usage)} />
     </div>
   );
@@ -361,9 +359,7 @@ export function OSDsPage() {
             <VStack gap={3}>
               {/* Page Header */}
               <div className="flex items-center justify-between h-8">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-                  OSDs
-                </h1>
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">OSDs</h1>
               </div>
 
               {/* Search and Actions */}

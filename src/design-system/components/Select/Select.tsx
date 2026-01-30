@@ -301,10 +301,7 @@ export function Select({
     <div className={wrapperClasses}>
       {/* Label */}
       {label && (
-        <label
-          htmlFor={triggerId}
-          className="text-label-lg text-[var(--color-text-default)]"
-        >
+        <label htmlFor={triggerId} className="text-label-lg text-[var(--color-text-default)]">
           {label}
           {required && <span className="text-[var(--color-state-danger)] ml-0.5">*</span>}
         </label>
@@ -312,9 +309,7 @@ export function Select({
 
       {/* Helper Text - below label */}
       {helperText && !error && (
-        <p className="text-body-sm text-[var(--color-text-subtle)]">
-          {helperText}
-        </p>
+        <p className="text-body-sm text-[var(--color-text-subtle)]">{helperText}</p>
       )}
 
       {/* Trigger */}
@@ -367,11 +362,7 @@ export function Select({
       </button>
 
       {/* Error */}
-      {error && (
-        <p className="text-body-sm text-[var(--color-state-danger)]">
-          {error}
-        </p>
-      )}
+      {error && <p className="text-body-sm text-[var(--color-state-danger)]">{error}</p>}
 
       {/* Dropdown Portal */}
       {isOpen &&

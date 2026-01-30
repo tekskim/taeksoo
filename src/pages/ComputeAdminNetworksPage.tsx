@@ -367,7 +367,9 @@ export function ComputeAdminNetworksPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm leading-4 text-[var(--color-text-muted)]">ID: {row.id}</span>
+          <span className="text-body-sm leading-4 text-[var(--color-text-muted)]">
+            ID: {row.id}
+          </span>
         </div>
       ),
     },
@@ -526,9 +528,7 @@ export function ComputeAdminNetworksPage() {
             <VStack gap={3}>
               {/* Page Header */}
               <div className="flex justify-between items-center h-8 w-full">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-                  Networks
-                </h1>
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Networks</h1>
                 <Button
                   variant="primary"
                   size="md"

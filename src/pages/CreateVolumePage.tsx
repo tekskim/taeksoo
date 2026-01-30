@@ -470,14 +470,10 @@ export function CreateVolumePage() {
       render: (value: string, row: ImageRow) => (
         <div className="flex flex-col gap-0.5">
           <div className="flex items-center gap-1.5">
-            <span className="text-body-md text-[var(--color-action-primary)]">
-              {value}
-            </span>
+            <span className="text-body-md text-[var(--color-action-primary)]">{value}</span>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </div>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">
-            ID: {row.id}
-          </span>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
         </div>
       ),
     },
@@ -524,17 +520,13 @@ export function CreateVolumePage() {
       render: (value: string, row: SnapshotRow) => (
         <div className="flex flex-col gap-0.5">
           <div className="flex items-center gap-1.5">
-            <span className="text-body-md text-[var(--color-action-primary)]">
-              {value}
-            </span>
+            <span className="text-body-md text-[var(--color-action-primary)]">{value}</span>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
             {row.status === 'error' && (
               <IconAlertCircle size={16} className="text-[var(--color-state-danger)]" />
             )}
           </div>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">
-            ID: {row.id}
-          </span>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
         </div>
       ),
     },
@@ -616,9 +608,7 @@ export function CreateVolumePage() {
           <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)] min-h-full">
             {/* Page Title */}
             <div className="flex items-center justify-between h-8 max-w-[1320px] mx-auto mb-3">
-              <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-                Create volume
-              </h1>
+              <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create volume</h1>
             </div>
 
             <div className="flex gap-6 max-w-[1320px] mx-auto items-start">

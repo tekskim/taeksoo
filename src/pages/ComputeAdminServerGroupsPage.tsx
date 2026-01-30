@@ -423,9 +423,7 @@ export function ComputeAdminServerGroupsPage() {
             <VStack gap={3}>
               {/* Page Header */}
               <div className="flex items-center justify-between h-8">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-                  Server Groups
-                </h1>
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Server Groups</h1>
               </div>
 
               {/* List Toolbar */}

@@ -34,9 +34,7 @@ function InfoBox({ label, value }: { label: string; value: string }) {
   return (
     <div className="w-full bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
       <VStack gap={2}>
-        <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-          {label}
-        </span>
+        <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">{label}</span>
         <span className="text-body-md text-[var(--color-text-default)] leading-4">{value}</span>
       </VStack>
     </div>
