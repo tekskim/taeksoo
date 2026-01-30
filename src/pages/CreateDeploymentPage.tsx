@@ -18,6 +18,11 @@ import {
   Tabs,
   TabList,
   Tab,
+  Table,
+  Pagination,
+  SearchInput,
+  Chip,
+  StatusIndicator,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -30,6 +35,7 @@ import {
   IconPlus,
   IconX,
   IconCirclePlus,
+  IconChevronRight,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -53,6 +59,96 @@ const UNIT_OPTIONS = [
   { value: 'pods', label: 'Pods' },
 ];
 
+// Mock namespace data for selection table
+interface NamespaceData {
+  id: string;
+  name: string;
+  status: 'active' | 'error' | 'building';
+  description: string;
+  createdAt: string;
+}
+
+const MOCK_NAMESPACES: NamespaceData[] = [
+  {
+    id: '1',
+    name: 'cattle-clusters-system',
+    status: 'active',
+    description: 'description text',
+    createdAt: '2025-11-10 12:57',
+  },
+  {
+    id: '2',
+    name: 'cattle-system',
+    status: 'active',
+    description: 'description text',
+    createdAt: '2025-11-10 12:57',
+  },
+  {
+    id: '3',
+    name: 'cattle-fleet-local-system',
+    status: 'active',
+    description: 'description text',
+    createdAt: '2025-11-10 12:57',
+  },
+  {
+    id: '4',
+    name: 'cattle-fleet-system',
+    status: 'active',
+    description: 'description text',
+    createdAt: '2025-11-10 12:57',
+  },
+  {
+    id: '5',
+    name: 'cattle-provisioning-capi-system',
+    status: 'active',
+    description: 'description text',
+    createdAt: '2025-11-10 12:57',
+  },
+  {
+    id: '6',
+    name: 'cert-manager',
+    status: 'active',
+    description: 'description text',
+    createdAt: '2025-11-10 12:57',
+  },
+  {
+    id: '7',
+    name: 'default',
+    status: 'active',
+    description: 'description text',
+    createdAt: '2025-11-10 12:57',
+  },
+  {
+    id: '8',
+    name: 'kube-node-lease',
+    status: 'active',
+    description: 'description text',
+    createdAt: '2025-11-10 12:57',
+  },
+  {
+    id: '9',
+    name: 'kube-public',
+    status: 'active',
+    description: 'description text',
+    createdAt: '2025-11-10 12:57',
+  },
+  {
+    id: '10',
+    name: 'kube-system',
+    status: 'active',
+    description: 'description text',
+    createdAt: '2025-11-10 12:57',
+  },
+];
+
+// Operator options for match expressions
+const OPERATOR_OPTIONS = [
+  { value: 'In', label: 'in list' },
+  { value: 'NotIn', label: 'not in list' },
+  { value: 'Exists', label: 'exists' },
+  { value: 'DoesNotExist', label: 'does not exist' },
+];
+
 interface Label {
   key: string;
   value: string;
@@ -68,43 +164,168 @@ interface ContainerTab {
   name: string;
 }
 
+// Pod Toleration
+interface Toleration {
+  key: string;
+  operator: string;
+  value: string;
+  effect: string;
+  tolerationSeconds: string;
+  tolerationSecondsUnit: string;
+}
+
+// Volume types
+interface ConfigMapVolume {
+  type: 'configmap';
+  volumeName: string;
+  configMapName: string;
+  optional: boolean;
+  defaultMode?: string;
+}
+
+interface SecretVolume {
+  type: 'secret';
+  volumeName: string;
+  secretName: string;
+  optional: boolean;
+  defaultMode: string;
+}
+
+interface PVCVolume {
+  type: 'pvc';
+  volumeName: string;
+  pvcName: string;
+  readOnly: boolean;
+}
+
+interface CreatePVCVolume {
+  type: 'create-pvc';
+  volumeName: string;
+  pvcName: string;
+  useExistingPV: boolean;
+  storageClass: string;
+  capacity: string;
+  persistentVolume: string;
+  accessModes: {
+    readWriteOnce: boolean;
+    readOnlyMany: boolean;
+    readWriteMany: boolean;
+  };
+  readOnly: boolean;
+}
+
+type Volume = ConfigMapVolume | SecretVolume | PVCVolume | CreatePVCVolume;
+
+// Volume Claim Template
+interface VolumeClaimTemplate {
+  name: string;
+  useExistingPV: boolean;
+  storageClass: string;
+  capacity: string;
+  persistentVolume: string;
+  accessModes: {
+    readWriteOnce: boolean;
+    readOnlyMany: boolean;
+    readWriteMany: boolean;
+  };
+}
+
+// Node Affinity Term
+interface NodeAffinityTerm {
+  priority: string;
+  weight: string;
+  matchExpressions: { key: string; operator: string; value: string }[];
+}
+
+// Pod Affinity Term
+interface PodAffinityTerm {
+  type: string;
+  priority: string;
+  namespaces: 'all' | 'selected';
+  selectedNamespaces: string[];
+  topologyKey: string;
+  weight: string;
+  matchExpressions: { key: string; operator: string; value: string }[];
+}
+
 /* ----------------------------------------
    Summary Sidebar Component
    ---------------------------------------- */
 
-interface SummaryItemProps {
+// Status icon component for summary items
+function StatusIcon({ status }: { status: 'complete' | 'in-progress' }) {
+  if (status === 'complete') {
+    return (
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <circle cx="8" cy="8" r="7" fill="var(--color-state-success)" />
+        <path
+          d="M5 8L7 10L11 6"
+          stroke="white"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    );
+  }
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <circle cx="8" cy="8" r="6.5" stroke="var(--color-border-default)" strokeDasharray="3 3" />
+    </svg>
+  );
+}
+
+// Summary section header with collapse/expand
+interface SummarySectionHeaderProps {
+  label: string;
+  status: 'complete' | 'in-progress';
+  expanded: boolean;
+  onToggle: () => void;
+  hasChildren?: boolean;
+}
+
+function SummarySectionHeader({
+  label,
+  status,
+  expanded,
+  onToggle,
+  hasChildren = false,
+}: SummarySectionHeaderProps) {
+  return (
+    <button
+      onClick={onToggle}
+      className="flex items-center justify-between pr-2 w-full hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+    >
+      <div className="flex items-center gap-1.5">
+        {hasChildren ? (
+          <IconChevronRight
+            size={12}
+            stroke={1.5}
+            className={`text-[var(--color-text-muted)] transition-transform ${expanded ? 'rotate-90' : ''}`}
+          />
+        ) : (
+          <div className="w-3" />
+        )}
+        <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
+          {label}
+        </span>
+      </div>
+      <StatusIcon status={status} />
+    </button>
+  );
+}
+
+// Summary sub-item (child of a section)
+interface SummarySubItemProps {
   label: string;
   status: 'complete' | 'in-progress';
 }
 
-function SummaryItem({ label, status }: SummaryItemProps) {
+function SummarySubItem({ label, status }: SummarySubItemProps) {
   return (
     <div className="flex items-center justify-between px-2 py-1 w-full">
       <span className="text-[12px] leading-5 text-[var(--color-text-default)]">{label}</span>
-      <div className="w-4 h-4 flex items-center justify-center">
-        {status === 'complete' ? (
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <circle cx="8" cy="8" r="7" fill="var(--color-state-success)" />
-            <path
-              d="M5 8L7 10L11 6"
-              stroke="white"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        ) : (
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <circle
-              cx="8"
-              cy="8"
-              r="6.5"
-              stroke="var(--color-border-default)"
-              strokeDasharray="3 3"
-            />
-          </svg>
-        )}
-      </div>
+      <StatusIcon status={status} />
     </div>
   );
 }
@@ -124,49 +345,80 @@ function SummarySidebar({
   onCreate,
   isCreateDisabled,
 }: SummarySidebarProps) {
+  // Expanded state for collapsible sections
+  const [deploymentExpanded, setDeploymentExpanded] = useState(true);
+
   // Simple completion checks based on required fields
   const basicInfoComplete = name.trim().length > 0;
-  const deploymentComplete = basicInfoComplete; // All deployment sections are optional except name
+  const labelsComplete = true; // Labels are optional
+  const scalingComplete = true; // Scaling is optional
+  const deploymentComplete = basicInfoComplete && labelsComplete && scalingComplete;
   const podComplete = true; // All pod sections are optional
   const containersComplete = containerTabs.length > 0; // At least one container exists
 
   return (
-    <div className="w-[280px] shrink-0 self-start">
+    <div className="w-[280px] shrink-0 mt-[45px]">
       <div className="sticky top-4">
-        <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[8px] shadow-[var(--shadow-md)] overflow-hidden flex flex-col gap-6 pt-3 pb-4 px-3">
-          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[8px] px-4 py-4">
-            <VStack gap={4}>
+        <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[8px] overflow-hidden flex flex-col gap-3 pt-3 pb-4 px-3">
+          {/* Scrollable content area */}
+          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[8px] pl-4 pr-1 py-4 max-h-[340px] min-h-[160px] overflow-y-auto">
+            <VStack gap={4} className="pr-2">
               <h5 className="text-[16px] leading-6 font-semibold text-[var(--color-text-default)]">
                 Summary
               </h5>
-              <VStack gap={0}>
-                <SummaryItem
-                  label="Basic Information"
-                  status={basicInfoComplete ? 'complete' : 'in-progress'}
-                />
-                <SummaryItem
-                  label="Labels & Annotations"
+
+              {/* Deployment Section */}
+              <VStack gap={2}>
+                <SummarySectionHeader
+                  label="Deployment"
                   status={deploymentComplete ? 'complete' : 'in-progress'}
+                  expanded={deploymentExpanded}
+                  onToggle={() => setDeploymentExpanded(!deploymentExpanded)}
+                  hasChildren
                 />
-                <SummaryItem
-                  label="Scaling Policy"
-                  status={deploymentComplete ? 'complete' : 'in-progress'}
-                />
-                <SummaryItem
-                  label="Pod Settings"
-                  status={podComplete ? 'complete' : 'in-progress'}
-                />
-                {containerTabs.map((container) => (
-                  <SummaryItem
-                    key={container.id}
-                    label={container.name}
-                    status={containersComplete ? 'complete' : 'in-progress'}
-                  />
-                ))}
+                {deploymentExpanded && (
+                  <VStack gap={0} className="ml-3">
+                    <SummarySubItem
+                      label="Basic Information"
+                      status={basicInfoComplete ? 'complete' : 'in-progress'}
+                    />
+                    <SummarySubItem
+                      label="Labels & Annotations"
+                      status={labelsComplete ? 'complete' : 'in-progress'}
+                    />
+                    <SummarySubItem
+                      label="Scaling and Upgrade Policy"
+                      status={scalingComplete ? 'complete' : 'in-progress'}
+                    />
+                  </VStack>
+                )}
               </VStack>
+
+              {/* Pod Section */}
+              <SummarySectionHeader
+                label="Pod"
+                status={podComplete ? 'complete' : 'in-progress'}
+                expanded={false}
+                onToggle={() => {}}
+                hasChildren
+              />
+
+              {/* Container Sections */}
+              {containerTabs.map((container) => (
+                <SummarySectionHeader
+                  key={container.id}
+                  label={container.name}
+                  status={containersComplete ? 'complete' : 'in-progress'}
+                  expanded={false}
+                  onToggle={() => {}}
+                  hasChildren
+                />
+              ))}
             </VStack>
           </div>
-          <HStack gap={2} className="w-full justify-end">
+
+          {/* Button Container */}
+          <HStack gap={2} className="w-full pt-3">
             <Button variant="secondary" size="sm" onClick={onCancel} className="w-[80px]">
               Cancel
             </Button>
@@ -314,7 +566,7 @@ function LabelsAnnotationsSection({
 }: LabelsAnnotationsSectionProps) {
   return (
     <SectionCard>
-      <SectionCard.Header title="Labels & Annotations" showDivider />
+      <SectionCard.Header title="Labels & Annotations" />
       <SectionCard.Content>
         <VStack gap={6}>
           {/* Labels */}
@@ -330,14 +582,14 @@ function LabelsAnnotationsSection({
 
             {/* Bordered container for labels */}
             <div className="border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-              <VStack gap={2}>
+              <VStack gap={3}>
                 {labels.map((label, index) => (
                   <div
                     key={index}
                     className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
                   >
                     <div className="flex gap-2 items-start w-full">
-                      <VStack gap={2} className="flex-1">
+                      <VStack gap={3} className="flex-1">
                         <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
                           Key
                         </span>
@@ -396,7 +648,7 @@ function LabelsAnnotationsSection({
 
             {/* Bordered container for annotations */}
             <div className="border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-              <VStack gap={2}>
+              <VStack gap={3}>
                 {annotations.map((annotation, index) => (
                   <div
                     key={index}
@@ -497,7 +749,7 @@ function ScalingPolicySection({
 }: ScalingPolicySectionProps) {
   return (
     <SectionCard>
-      <SectionCard.Header title="Scaling and Upgrade Policy" showDivider />
+      <SectionCard.Header title="Scaling and Upgrade Policy" />
       <SectionCard.Content>
         <VStack gap={6}>
           {/* Strategy Selection */}
@@ -778,6 +1030,42 @@ export function CreateDeploymentPage() {
   // Security Context state
   const [podFilesystemGroup, setPodFilesystemGroup] = useState<string>('1');
 
+  // Service Account state
+  const [serviceAccountOption, setServiceAccountOption] = useState<string>('any');
+  const [selectedNode, setSelectedNode] = useState<string>('');
+
+  // Tolerations state
+  const [tolerations, setTolerations] = useState<Toleration[]>([]);
+  const [priority, setPriority] = useState<string>('');
+  const [priorityClassName, setPriorityClassName] = useState<string>('');
+
+  // Volumes state
+  const [volumes, setVolumes] = useState<Volume[]>([]);
+  const [volumeType, setVolumeType] = useState<string>('configmap');
+
+  // Volume Claim Templates state
+  const [volumeClaimTemplates, setVolumeClaimTemplates] = useState<VolumeClaimTemplate[]>([]);
+
+  // Node Affinity state
+  const [nodeAffinityTerms, setNodeAffinityTerms] = useState<NodeAffinityTerm[]>([]);
+
+  // Pod Affinity state
+  const [podAffinityTerms, setPodAffinityTerms] = useState<PodAffinityTerm[]>([]);
+
+  // Hostname and Subdomain state
+  const [hostname, setHostname] = useState<string>('');
+  const [subdomain, setSubdomain] = useState<string>('');
+
+  // Nameservers and Search Domains state
+  const [nameservers, setNameservers] = useState<string[]>([]);
+  const [searchDomains, setSearchDomains] = useState<string[]>([]);
+
+  // Resolver Options state
+  const [resolverOptions, setResolverOptions] = useState<{ name: string; value: string }[]>([]);
+
+  // Host Aliases state
+  const [hostAliases, setHostAliases] = useState<{ ip: string; hostname: string }[]>([]);
+
   // Update container config helper
   const updateContainerConfig = useCallback(
     (containerId: string, updates: Partial<(typeof containerConfigs)[string]>) => {
@@ -966,6 +1254,203 @@ export function CreateDeploymentPage() {
     [podAnnotations]
   );
 
+  // Toleration management
+  const addToleration = useCallback(() => {
+    setTolerations([
+      ...tolerations,
+      {
+        key: '',
+        operator: 'Equal',
+        value: '',
+        effect: 'NoSchedule',
+        tolerationSeconds: '',
+        tolerationSecondsUnit: 'sec',
+      },
+    ]);
+  }, [tolerations]);
+
+  const removeToleration = useCallback(
+    (index: number) => {
+      setTolerations(tolerations.filter((_, i) => i !== index));
+    },
+    [tolerations]
+  );
+
+  const updateToleration = useCallback(
+    (index: number, field: keyof Toleration, value: string) => {
+      const newTolerations = [...tolerations];
+      newTolerations[index] = { ...newTolerations[index], [field]: value };
+      setTolerations(newTolerations);
+    },
+    [tolerations]
+  );
+
+  // Volume management
+  const addVolume = useCallback(
+    (type: string) => {
+      if (type === 'configmap') {
+        setVolumes([
+          ...volumes,
+          { type: 'configmap', volumeName: '', configMapName: '', optional: false },
+        ]);
+      } else if (type === 'secret') {
+        setVolumes([
+          ...volumes,
+          { type: 'secret', volumeName: '', secretName: '', optional: false, defaultMode: '' },
+        ]);
+      } else if (type === 'pvc') {
+        setVolumes([...volumes, { type: 'pvc', volumeName: '', pvcName: '', readOnly: false }]);
+      } else if (type === 'create-pvc') {
+        setVolumes([
+          ...volumes,
+          {
+            type: 'create-pvc',
+            volumeName: '',
+            pvcName: '',
+            useExistingPV: false,
+            storageClass: '',
+            capacity: '',
+            persistentVolume: '',
+            accessModes: { readWriteOnce: false, readOnlyMany: false, readWriteMany: false },
+            readOnly: false,
+          },
+        ]);
+      }
+    },
+    [volumes]
+  );
+
+  const removeVolume = useCallback(
+    (index: number) => {
+      setVolumes(volumes.filter((_, i) => i !== index));
+    },
+    [volumes]
+  );
+
+  const updateVolume = useCallback(
+    (index: number, updates: Partial<Volume>) => {
+      const newVolumes = [...volumes];
+      newVolumes[index] = { ...newVolumes[index], ...updates } as Volume;
+      setVolumes(newVolumes);
+    },
+    [volumes]
+  );
+
+  // Volume Claim Template management
+  const addVolumeClaimTemplate = useCallback(() => {
+    setVolumeClaimTemplates([
+      ...volumeClaimTemplates,
+      {
+        name: '',
+        useExistingPV: false,
+        storageClass: '',
+        capacity: '',
+        persistentVolume: '',
+        accessModes: { readWriteOnce: false, readOnlyMany: false, readWriteMany: false },
+      },
+    ]);
+  }, [volumeClaimTemplates]);
+
+  const removeVolumeClaimTemplate = useCallback(
+    (index: number) => {
+      setVolumeClaimTemplates(volumeClaimTemplates.filter((_, i) => i !== index));
+    },
+    [volumeClaimTemplates]
+  );
+
+  const updateVolumeClaimTemplate = useCallback(
+    (index: number, updates: Partial<VolumeClaimTemplate>) => {
+      const newTemplates = [...volumeClaimTemplates];
+      newTemplates[index] = { ...newTemplates[index], ...updates };
+      setVolumeClaimTemplates(newTemplates);
+    },
+    [volumeClaimTemplates]
+  );
+
+  // Nameserver management
+  const addNameserver = useCallback(() => {
+    setNameservers([...nameservers, '']);
+  }, [nameservers]);
+
+  const removeNameserver = useCallback(
+    (index: number) => {
+      setNameservers(nameservers.filter((_, i) => i !== index));
+    },
+    [nameservers]
+  );
+
+  const updateNameserver = useCallback(
+    (index: number, value: string) => {
+      const newNameservers = [...nameservers];
+      newNameservers[index] = value;
+      setNameservers(newNameservers);
+    },
+    [nameservers]
+  );
+
+  // Search Domain management
+  const addSearchDomain = useCallback(() => {
+    setSearchDomains([...searchDomains, '']);
+  }, [searchDomains]);
+
+  const removeSearchDomain = useCallback(
+    (index: number) => {
+      setSearchDomains(searchDomains.filter((_, i) => i !== index));
+    },
+    [searchDomains]
+  );
+
+  const updateSearchDomain = useCallback(
+    (index: number, value: string) => {
+      const newSearchDomains = [...searchDomains];
+      newSearchDomains[index] = value;
+      setSearchDomains(newSearchDomains);
+    },
+    [searchDomains]
+  );
+
+  // Resolver Options management
+  const addResolverOption = useCallback(() => {
+    setResolverOptions([...resolverOptions, { name: '', value: '' }]);
+  }, [resolverOptions]);
+
+  const removeResolverOption = useCallback(
+    (index: number) => {
+      setResolverOptions(resolverOptions.filter((_, i) => i !== index));
+    },
+    [resolverOptions]
+  );
+
+  const updateResolverOption = useCallback(
+    (index: number, field: 'name' | 'value', value: string) => {
+      const newOptions = [...resolverOptions];
+      newOptions[index] = { ...newOptions[index], [field]: value };
+      setResolverOptions(newOptions);
+    },
+    [resolverOptions]
+  );
+
+  // Host Alias management
+  const addHostAlias = useCallback(() => {
+    setHostAliases([...hostAliases, { ip: '', hostname: '' }]);
+  }, [hostAliases]);
+
+  const removeHostAlias = useCallback(
+    (index: number) => {
+      setHostAliases(hostAliases.filter((_, i) => i !== index));
+    },
+    [hostAliases]
+  );
+
+  const updateHostAlias = useCallback(
+    (index: number, field: 'ip' | 'hostname', value: string) => {
+      const newAliases = [...hostAliases];
+      newAliases[index] = { ...newAliases[index], [field]: value };
+      setHostAliases(newAliases);
+    },
+    [hostAliases]
+  );
+
   // Container tab management
   const addContainerTab = useCallback(() => {
     const newIndex = containerTabs.length;
@@ -1105,42 +1590,49 @@ export function CreateDeploymentPage() {
                 </p>
               </VStack>
 
-              {/* Form Tabs */}
-              <Tabs value={activeTab} onChange={setActiveTab} size="sm" variant="underline">
-                <HStack align="start" className="w-full">
-                  <TabList>
-                    {formTabs.map((tab) => (
-                      <Tab key={tab.id} value={tab.id}>
-                        <HStack gap={2} align="center">
-                          {tab.label}
-                          {tab.closable && (
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                removeContainerTab(tab.id);
-                              }}
-                              className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded"
-                            >
-                              <IconX size={12} stroke={1.5} />
-                            </button>
-                          )}
-                        </HStack>
-                      </Tab>
-                    ))}
-                  </TabList>
-                  <button
-                    onClick={addContainerTab}
-                    className="flex items-center justify-center h-[20px] px-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors text-[var(--color-text-muted)]"
-                  >
-                    <IconPlus size={16} stroke={1.5} />
-                  </button>
-                </HStack>
-              </Tabs>
-
               {/* Main Content with Sidebar */}
               <HStack gap={6} align="start" className="w-full">
                 {/* Form Content */}
                 <VStack gap={4} className="flex-1">
+                  {/* Form Tabs */}
+                  <div className="w-full border-b border-[var(--color-border-default)]">
+                    <Tabs
+                      value={activeTab}
+                      onChange={setActiveTab}
+                      size="sm"
+                      variant="underline"
+                      className="max-w-[861px]"
+                    >
+                      <div className="flex items-start">
+                        <TabList className="after:hidden min-w-0 overflow-hidden">
+                          {formTabs.map((tab) => (
+                            <Tab key={tab.id} value={tab.id} className="min-w-0 shrink">
+                              <HStack gap={2} align="center" className="min-w-0">
+                                <span className="truncate">{tab.label}</span>
+                                {tab.closable && (
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      removeContainerTab(tab.id);
+                                    }}
+                                    className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded shrink-0"
+                                  >
+                                    <IconX size={12} stroke={1.5} />
+                                  </button>
+                                )}
+                              </HStack>
+                            </Tab>
+                          ))}
+                        </TabList>
+                        <button
+                          onClick={addContainerTab}
+                          className="flex items-center justify-center h-[20px] px-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors text-[var(--color-text-muted)] shrink-0"
+                        >
+                          <IconPlus size={16} stroke={1.5} />
+                        </button>
+                      </div>
+                    </Tabs>
+                  </div>
                   {/* Deployment Tab */}
                   {activeTab === 'deployment' && (
                     <>
@@ -1192,131 +1684,156 @@ export function CreateDeploymentPage() {
                     <>
                       {/* Labels & Annotations */}
                       <SectionCard>
-                        <SectionCard.Header title="Labels & Annotations" showDivider />
+                        <SectionCard.Header title="Labels & Annotations" />
                         <SectionCard.Content>
                           <VStack gap={6}>
                             {/* Labels */}
                             <VStack gap={3}>
-                              <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-[16px]">
-                                Labels
-                              </span>
-                              {podLabels.length > 0 && (
-                                <>
-                                  <div className="grid grid-cols-[1fr_1fr_32px] gap-4 w-full">
-                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                                      Key
-                                    </span>
-                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                                      Value
-                                    </span>
-                                    <div />
-                                  </div>
+                              <VStack gap={1.5}>
+                                <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                                  Labels
+                                </span>
+                                <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+                                  Specify the labels used to identify and categorize the resource.
+                                </p>
+                              </VStack>
+
+                              {/* Bordered container for labels */}
+                              <div className="border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                                <VStack gap={3}>
                                   {podLabels.map((label, index) => (
                                     <div
                                       key={index}
-                                      className="grid grid-cols-[1fr_1fr_32px] gap-4 w-full items-center"
+                                      className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
                                     >
-                                      <Input
-                                        placeholder="Key"
-                                        value={label.key}
-                                        onChange={(e) =>
-                                          updatePodLabel(index, 'key', e.target.value)
-                                        }
-                                        fullWidth
-                                      />
-                                      <Input
-                                        placeholder="Value"
-                                        value={label.value}
-                                        onChange={(e) =>
-                                          updatePodLabel(index, 'value', e.target.value)
-                                        }
-                                        fullWidth
-                                      />
-                                      <button
-                                        onClick={() => removePodLabel(index)}
-                                        className="w-8 h-8 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                      >
-                                        <IconX
-                                          size={14}
-                                          className="text-[var(--color-text-muted)]"
-                                          stroke={1.5}
-                                        />
-                                      </button>
+                                      <div className="flex gap-2 items-start w-full">
+                                        <VStack gap={2} className="flex-1">
+                                          <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                            Key
+                                          </span>
+                                          <Input
+                                            placeholder="label key"
+                                            value={label.key}
+                                            onChange={(e) =>
+                                              updatePodLabel(index, 'key', e.target.value)
+                                            }
+                                            fullWidth
+                                          />
+                                        </VStack>
+                                        <VStack gap={2} className="flex-1">
+                                          <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                            Value
+                                          </span>
+                                          <Input
+                                            placeholder="label value"
+                                            value={label.value}
+                                            onChange={(e) =>
+                                              updatePodLabel(index, 'value', e.target.value)
+                                            }
+                                            fullWidth
+                                          />
+                                        </VStack>
+                                        <button
+                                          onClick={() => removePodLabel(index)}
+                                          className="mt-6 p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                        >
+                                          <IconX
+                                            size={16}
+                                            className="text-[var(--color-text-muted)]"
+                                            stroke={1.5}
+                                          />
+                                        </button>
+                                      </div>
                                     </div>
                                   ))}
-                                </>
-                              )}
-                              <Button
-                                variant="secondary"
-                                size="sm"
-                                onClick={addPodLabel}
-                                className="w-full"
-                              >
-                                <IconPlus size={12} stroke={1.5} />
-                                Add Label
-                              </Button>
+
+                                  <div className="w-fit">
+                                    <Button
+                                      variant="secondary"
+                                      size="sm"
+                                      leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                      onClick={addPodLabel}
+                                    >
+                                      Add Label
+                                    </Button>
+                                  </div>
+                                </VStack>
+                              </div>
                             </VStack>
 
                             {/* Annotations */}
                             <VStack gap={3}>
-                              <span className="text-[11px] font-medium text-[var(--color-text-default)] leading-[16px]">
-                                Annotations
-                              </span>
-                              {podAnnotations.length > 0 && (
-                                <>
-                                  <div className="grid grid-cols-[1fr_1fr_32px] gap-4 w-full">
-                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                                      Key
-                                    </span>
-                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                                      Value
-                                    </span>
-                                    <div />
-                                  </div>
+                              <VStack gap={1.5}>
+                                <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                                  Annotations
+                                </span>
+                                <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+                                  Specify the annotations used to provide additional metadata for
+                                  the resource.
+                                </p>
+                              </VStack>
+
+                              {/* Bordered container for annotations */}
+                              <div className="border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                                <VStack gap={3}>
                                   {podAnnotations.map((annotation, index) => (
                                     <div
                                       key={index}
-                                      className="grid grid-cols-[1fr_1fr_32px] gap-4 w-full items-center"
+                                      className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
                                     >
-                                      <Input
-                                        placeholder="Key"
-                                        value={annotation.key}
-                                        onChange={(e) =>
-                                          updatePodAnnotation(index, 'key', e.target.value)
-                                        }
-                                        fullWidth
-                                      />
-                                      <Input
-                                        placeholder="Value"
-                                        value={annotation.value}
-                                        onChange={(e) =>
-                                          updatePodAnnotation(index, 'value', e.target.value)
-                                        }
-                                        fullWidth
-                                      />
-                                      <button
-                                        onClick={() => removePodAnnotation(index)}
-                                        className="w-8 h-8 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                      >
-                                        <IconX
-                                          size={14}
-                                          className="text-[var(--color-text-muted)]"
-                                          stroke={1.5}
-                                        />
-                                      </button>
+                                      <div className="flex gap-2 items-start w-full">
+                                        <VStack gap={2} className="flex-1">
+                                          <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                            Key
+                                          </span>
+                                          <Input
+                                            placeholder="annotation key"
+                                            value={annotation.key}
+                                            onChange={(e) =>
+                                              updatePodAnnotation(index, 'key', e.target.value)
+                                            }
+                                            fullWidth
+                                          />
+                                        </VStack>
+                                        <VStack gap={2} className="flex-1">
+                                          <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                            Value
+                                          </span>
+                                          <Input
+                                            placeholder="annotation value"
+                                            value={annotation.value}
+                                            onChange={(e) =>
+                                              updatePodAnnotation(index, 'value', e.target.value)
+                                            }
+                                            fullWidth
+                                          />
+                                        </VStack>
+                                        <button
+                                          onClick={() => removePodAnnotation(index)}
+                                          className="mt-6 p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                        >
+                                          <IconX
+                                            size={16}
+                                            className="text-[var(--color-text-muted)]"
+                                            stroke={1.5}
+                                          />
+                                        </button>
+                                      </div>
                                     </div>
                                   ))}
-                                </>
-                              )}
-                              <Button
-                                variant="secondary"
-                                size="sm"
-                                onClick={addPodAnnotation}
-                                className="w-full"
-                              >
-                                <IconPlus size={12} stroke={1.5} />
-                                Add Annotation
-                              </Button>
+
+                                  <div className="w-fit">
+                                    <Button
+                                      variant="secondary"
+                                      size="sm"
+                                      leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                      onClick={addPodAnnotation}
+                                    >
+                                      Add Annotation
+                                    </Button>
+                                  </div>
+                                </VStack>
+                              </div>
                             </VStack>
                           </VStack>
                         </SectionCard.Content>
@@ -1324,13 +1841,13 @@ export function CreateDeploymentPage() {
 
                       {/* Scaling and Upgrade Policy */}
                       <SectionCard>
-                        <SectionCard.Header title="Scaling and Upgrade Policy" showDivider />
+                        <SectionCard.Header title="Scaling and Upgrade Policy" />
                         <SectionCard.Content>
                           <VStack gap={3}>
                             <span className="text-[14px] font-medium text-[var(--color-text-default)]">
                               Pod Policy
                             </span>
-                            <VStack gap={1} className="w-full max-w-[578px]">
+                            <VStack gap={1} className="w-full">
                               <span className="text-[11px] font-medium text-[var(--color-text-default)]">
                                 Termination Grace Period
                               </span>
@@ -1338,12 +1855,18 @@ export function CreateDeploymentPage() {
                                 The period allowed after receiving a termination request before the
                                 pod is forcibly terminated.
                               </span>
-                              <HStack gap={2} align="center" className="w-full">
-                                <Input
-                                  placeholder="30"
-                                  fullWidth
-                                  value={terminationGracePeriod}
-                                  onChange={(e) => setTerminationGracePeriod(e.target.value)}
+                              <HStack gap={2} align="center">
+                                <NumberInput
+                                  placeholder={30}
+                                  className="w-[320px]"
+                                  value={
+                                    terminationGracePeriod
+                                      ? parseInt(terminationGracePeriod)
+                                      : undefined
+                                  }
+                                  onChange={(val) =>
+                                    setTerminationGracePeriod(val?.toString() || '')
+                                  }
                                 />
                                 <span className="text-[12px] text-[var(--color-text-default)] whitespace-nowrap">
                                   Seconds
@@ -1356,7 +1879,7 @@ export function CreateDeploymentPage() {
 
                       {/* Networking */}
                       <SectionCard>
-                        <SectionCard.Header title="Networking" showDivider />
+                        <SectionCard.Header title="Networking" />
                         <SectionCard.Content>
                           <VStack gap={4}>
                             {/* Network Settings */}
@@ -1364,7 +1887,7 @@ export function CreateDeploymentPage() {
                               <span className="text-[14px] font-medium text-[var(--color-text-default)]">
                                 Network Settings
                               </span>
-                              <div className="grid grid-cols-2 gap-x-4 gap-y-4 w-full items-end">
+                              <div className="grid grid-cols-2 gap-x-6 gap-y-4 w-full items-end">
                                 <VStack gap={1}>
                                   <span className="text-[11px] font-medium text-[var(--color-text-default)]">
                                     Network Mode
@@ -1407,7 +1930,12 @@ export function CreateDeploymentPage() {
                                   <span className="text-[12px] text-[var(--color-text-subtle)]">
                                     Specify the hostname assigned to the pod.
                                   </span>
-                                  <Input placeholder="e.g. web" fullWidth />
+                                  <Input
+                                    placeholder="e.g. web"
+                                    fullWidth
+                                    value={hostname}
+                                    onChange={(e) => setHostname(e.target.value)}
+                                  />
                                 </VStack>
                                 <VStack gap={1}>
                                   <span className="text-[11px] font-medium text-[var(--color-text-default)]">
@@ -1416,107 +1944,270 @@ export function CreateDeploymentPage() {
                                   <span className="text-[12px] text-[var(--color-text-subtle)]">
                                     Specify the subdomain assigned to the pod.
                                   </span>
-                                  <Input placeholder="e.g. web" fullWidth />
+                                  <Input
+                                    placeholder="e.g. web"
+                                    fullWidth
+                                    value={subdomain}
+                                    onChange={(e) => setSubdomain(e.target.value)}
+                                  />
                                 </VStack>
                               </div>
                             </VStack>
 
-                            {/* Nameservers & Search Domains */}
-                            <div className="grid grid-cols-2 gap-3 w-full">
-                              <VStack gap={2}>
-                                <VStack gap={1}>
-                                  <span className="text-[14px] font-medium text-[var(--color-text-default)]">
-                                    Nameservers
-                                  </span>
-                                  <span className="text-[12px] text-[var(--color-text-subtle)]">
-                                    Specify the DNS nameserver addresses used by the pod.
-                                  </span>
-                                </VStack>
-                                <Button variant="secondary" size="sm">
-                                  <IconPlus size={12} stroke={1.5} />
-                                  Add Nameserver
-                                </Button>
-                              </VStack>
-                              <VStack gap={2}>
-                                <VStack gap={1}>
-                                  <span className="text-[14px] font-medium text-[var(--color-text-default)]">
-                                    Search Domains
-                                  </span>
-                                  <span className="text-[12px] text-[var(--color-text-subtle)]">
-                                    Specify the search domains used for DNS resolution.
-                                  </span>
-                                </VStack>
-                                <Button variant="secondary" size="sm">
-                                  <IconPlus size={12} stroke={1.5} />
-                                  Add Search Domain
-                                </Button>
-                              </VStack>
-                            </div>
-
-                            {/* Resolver Options */}
-                            <VStack gap={2}>
-                              <VStack gap={1}>
-                                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
-                                  Resolver Options
+                            {/* Nameservers */}
+                            <VStack gap={3}>
+                              <VStack gap={1.5}>
+                                <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                                  Nameservers
                                 </span>
+                                <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+                                  Specify the DNS nameserver addresses used by the pod.
+                                </p>
                               </VStack>
-                              <div className="grid grid-cols-2 gap-3 w-full pl-3">
-                                <VStack gap={1}>
-                                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                                    Name
-                                  </span>
-                                  <span className="text-[12px] text-[var(--color-text-subtle)]">
-                                    Specify the name of the DNS resolver option.
-                                  </span>
-                                  <Input placeholder="input name" fullWidth />
-                                </VStack>
-                                <VStack gap={1}>
-                                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                                    Value
-                                  </span>
-                                  <span className="text-[12px] text-[var(--color-text-subtle)]">
-                                    The value of the DNS resolver option.
-                                  </span>
-                                  <Input placeholder="input value" fullWidth />
+
+                              <div className="border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                                <VStack gap={3}>
+                                  {nameservers.map((ns, index) => (
+                                    <div
+                                      key={index}
+                                      className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                    >
+                                      <div className="flex gap-2 items-start w-full">
+                                        <VStack gap={2} className="flex-1">
+                                          <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                            Nameservers
+                                          </span>
+                                          <Input
+                                            placeholder="e.g. 8.8.8.8"
+                                            value={ns}
+                                            onChange={(e) =>
+                                              updateNameserver(index, e.target.value)
+                                            }
+                                            fullWidth
+                                          />
+                                        </VStack>
+                                        <button
+                                          onClick={() => removeNameserver(index)}
+                                          className="mt-6 p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                        >
+                                          <IconX
+                                            size={16}
+                                            className="text-[var(--color-text-muted)]"
+                                            stroke={1.5}
+                                          />
+                                        </button>
+                                      </div>
+                                    </div>
+                                  ))}
+
+                                  <div className="w-fit">
+                                    <Button
+                                      variant="secondary"
+                                      size="sm"
+                                      leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                      onClick={addNameserver}
+                                    >
+                                      Add Nameserver
+                                    </Button>
+                                  </div>
                                 </VStack>
                               </div>
-                              <Button variant="secondary" size="sm">
-                                <IconPlus size={12} stroke={1.5} />
-                                Add Option
-                              </Button>
+                            </VStack>
+
+                            {/* Search Domains */}
+                            <VStack gap={3}>
+                              <VStack gap={1.5}>
+                                <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                                  Search Domains
+                                </span>
+                                <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+                                  Specify the search domains used for DNS resolution.
+                                </p>
+                              </VStack>
+
+                              <div className="border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                                <VStack gap={3}>
+                                  {searchDomains.map((sd, index) => (
+                                    <div
+                                      key={index}
+                                      className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                    >
+                                      <div className="flex gap-2 items-start w-full">
+                                        <VStack gap={2} className="flex-1">
+                                          <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                            Search Domains
+                                          </span>
+                                          <Input
+                                            placeholder="e.g. example.com"
+                                            value={sd}
+                                            onChange={(e) =>
+                                              updateSearchDomain(index, e.target.value)
+                                            }
+                                            fullWidth
+                                          />
+                                        </VStack>
+                                        <button
+                                          onClick={() => removeSearchDomain(index)}
+                                          className="mt-6 p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                        >
+                                          <IconX
+                                            size={16}
+                                            className="text-[var(--color-text-muted)]"
+                                            stroke={1.5}
+                                          />
+                                        </button>
+                                      </div>
+                                    </div>
+                                  ))}
+
+                                  <div className="w-fit">
+                                    <Button
+                                      variant="secondary"
+                                      size="sm"
+                                      leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                      onClick={addSearchDomain}
+                                    >
+                                      Add Search Domain
+                                    </Button>
+                                  </div>
+                                </VStack>
+                              </div>
+                            </VStack>
+
+                            {/* Resolver Options */}
+                            <VStack gap={3}>
+                              <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                                Resolver Options
+                              </span>
+
+                              <div className="border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                                <VStack gap={3}>
+                                  {resolverOptions.map((opt, index) => (
+                                    <div
+                                      key={index}
+                                      className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                    >
+                                      <div className="flex gap-2 items-start w-full">
+                                        <VStack gap={2} className="flex-1">
+                                          <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                            Name
+                                          </span>
+                                          <Input
+                                            placeholder="input name"
+                                            value={opt.name}
+                                            onChange={(e) =>
+                                              updateResolverOption(index, 'name', e.target.value)
+                                            }
+                                            fullWidth
+                                          />
+                                        </VStack>
+                                        <VStack gap={2} className="flex-1">
+                                          <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                            Value
+                                          </span>
+                                          <Input
+                                            placeholder="input value"
+                                            value={opt.value}
+                                            onChange={(e) =>
+                                              updateResolverOption(index, 'value', e.target.value)
+                                            }
+                                            fullWidth
+                                          />
+                                        </VStack>
+                                        <button
+                                          onClick={() => removeResolverOption(index)}
+                                          className="mt-6 p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                        >
+                                          <IconX
+                                            size={16}
+                                            className="text-[var(--color-text-muted)]"
+                                            stroke={1.5}
+                                          />
+                                        </button>
+                                      </div>
+                                    </div>
+                                  ))}
+
+                                  <div className="w-fit">
+                                    <Button
+                                      variant="secondary"
+                                      size="sm"
+                                      leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                      onClick={addResolverOption}
+                                    >
+                                      Add Option
+                                    </Button>
+                                  </div>
+                                </VStack>
+                              </div>
                             </VStack>
 
                             {/* Host Aliases */}
-                            <VStack gap={2}>
-                              <VStack gap={1}>
-                                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
-                                  Host Aliases
-                                </span>
-                              </VStack>
-                              <div className="grid grid-cols-2 gap-3 w-full pl-3">
-                                <VStack gap={1}>
-                                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                                    IP Address
-                                  </span>
-                                  <span className="text-[12px] text-[var(--color-text-subtle)]">
-                                    Specify the IP address used for the host alias.
-                                  </span>
-                                  <Input placeholder="e.g. 127.0.0.1" fullWidth />
-                                </VStack>
-                                <VStack gap={1}>
-                                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                                    Hostnames
-                                  </span>
-                                  <span className="text-[12px] text-[var(--color-text-subtle)]">
-                                    Specify the hostnames mapped to the IP address.
-                                  </span>
-                                  <Input placeholder="e.g. foo.company.com" fullWidth />
+                            <VStack gap={3}>
+                              <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                                Host Aliases
+                              </span>
+
+                              <div className="border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                                <VStack gap={3}>
+                                  {hostAliases.map((alias, index) => (
+                                    <div
+                                      key={index}
+                                      className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                    >
+                                      <div className="flex gap-2 items-start w-full">
+                                        <VStack gap={2} className="flex-1">
+                                          <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                            IP Address
+                                          </span>
+                                          <Input
+                                            placeholder="e.g. 127.0.0.1"
+                                            value={alias.ip}
+                                            onChange={(e) =>
+                                              updateHostAlias(index, 'ip', e.target.value)
+                                            }
+                                            fullWidth
+                                          />
+                                        </VStack>
+                                        <VStack gap={2} className="flex-1">
+                                          <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                            Hostname
+                                          </span>
+                                          <Input
+                                            placeholder="e.g. foo.company.com"
+                                            value={alias.hostname}
+                                            onChange={(e) =>
+                                              updateHostAlias(index, 'hostname', e.target.value)
+                                            }
+                                            fullWidth
+                                          />
+                                        </VStack>
+                                        <button
+                                          onClick={() => removeHostAlias(index)}
+                                          className="mt-6 p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                        >
+                                          <IconX
+                                            size={16}
+                                            className="text-[var(--color-text-muted)]"
+                                            stroke={1.5}
+                                          />
+                                        </button>
+                                      </div>
+                                    </div>
+                                  ))}
+
+                                  <div className="w-fit">
+                                    <Button
+                                      variant="secondary"
+                                      size="sm"
+                                      leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                      onClick={addHostAlias}
+                                    >
+                                      Add Alias
+                                    </Button>
+                                  </div>
                                 </VStack>
                               </div>
-                              <Button variant="secondary" size="sm">
-                                <IconPlus size={12} stroke={1.5} />
-                                Add Alias
-                              </Button>
                             </VStack>
                           </VStack>
                         </SectionCard.Content>
@@ -1524,7 +2215,7 @@ export function CreateDeploymentPage() {
 
                       {/* Node Scheduling */}
                       <SectionCard>
-                        <SectionCard.Header title="Node Scheduling" showDivider />
+                        <SectionCard.Header title="Node Scheduling" />
                         <SectionCard.Content>
                           <VStack gap={4}>
                             <RadioGroup value={nodeScheduling} onChange={setNodeScheduling}>
@@ -1535,72 +2226,851 @@ export function CreateDeploymentPage() {
                                 label="Run pods on node(s) matching scheduling rules"
                               />
                             </RadioGroup>
+                            {nodeScheduling === 'specific' && (
+                              <VStack gap={1} className="w-full max-w-[606px]">
+                                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                  Node
+                                </span>
+                                <Select
+                                  options={[
+                                    { value: 'node-1', label: 'node-1' },
+                                    { value: 'node-2', label: 'node-2' },
+                                    { value: 'node-3', label: 'node-3' },
+                                  ]}
+                                  value={selectedNode}
+                                  onChange={setSelectedNode}
+                                  placeholder="Select a node"
+                                  fullWidth
+                                />
+                              </VStack>
+                            )}
+                            {nodeScheduling === 'matching' && (
+                              <VStack gap={3}>
+                                <VStack gap={1.5}>
+                                  <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                                    Node Affinity Rules
+                                  </span>
+                                  <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+                                    Define rules for scheduling pods on specific nodes based on node
+                                    labels.
+                                  </p>
+                                </VStack>
+
+                                <div className="border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                                  <VStack gap={3}>
+                                    {nodeAffinityTerms.map((term, termIndex) => (
+                                      <div
+                                        key={termIndex}
+                                        className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                      >
+                                        <VStack gap={6}>
+                                          <div className="flex items-start justify-between w-full">
+                                            <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                                              Rule {termIndex + 1}
+                                            </span>
+                                            <button
+                                              onClick={() => {
+                                                setNodeAffinityTerms(
+                                                  nodeAffinityTerms.filter(
+                                                    (_, i) => i !== termIndex
+                                                  )
+                                                );
+                                              }}
+                                              className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                            >
+                                              <IconX
+                                                size={16}
+                                                className="text-[var(--color-text-muted)]"
+                                                stroke={1.5}
+                                              />
+                                            </button>
+                                          </div>
+
+                                          <div className="grid grid-cols-2 gap-3">
+                                            <VStack gap={2}>
+                                              <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                                Priority
+                                              </span>
+                                              <Select
+                                                options={[
+                                                  { value: 'required', label: 'Required' },
+                                                  { value: 'preferred', label: 'Preferred' },
+                                                ]}
+                                                value={term.priority}
+                                                onChange={(val) => {
+                                                  const newTerms = [...nodeAffinityTerms];
+                                                  newTerms[termIndex] = {
+                                                    ...newTerms[termIndex],
+                                                    priority: val,
+                                                  };
+                                                  setNodeAffinityTerms(newTerms);
+                                                }}
+                                                fullWidth
+                                              />
+                                            </VStack>
+                                            {term.priority === 'preferred' && (
+                                              <VStack gap={2}>
+                                                <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                                  Weight
+                                                </span>
+                                                <Input
+                                                  placeholder="1-100"
+                                                  value={term.weight}
+                                                  onChange={(e) => {
+                                                    const newTerms = [...nodeAffinityTerms];
+                                                    newTerms[termIndex] = {
+                                                      ...newTerms[termIndex],
+                                                      weight: e.target.value,
+                                                    };
+                                                    setNodeAffinityTerms(newTerms);
+                                                  }}
+                                                  fullWidth
+                                                />
+                                              </VStack>
+                                            )}
+                                          </div>
+
+                                          <VStack gap={2}>
+                                            <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                              Match Expressions
+                                            </span>
+                                            {term.matchExpressions.map((expr, exprIndex) => (
+                                              <div
+                                                key={exprIndex}
+                                                className="flex gap-2 items-start w-full"
+                                              >
+                                                <VStack gap={1} className="flex-1">
+                                                  <span className="text-[11px] text-[var(--color-text-subtle)]">
+                                                    Key
+                                                  </span>
+                                                  <Input
+                                                    placeholder="e.g. kubernetes.io/os"
+                                                    value={expr.key}
+                                                    onChange={(e) => {
+                                                      const newTerms = [...nodeAffinityTerms];
+                                                      newTerms[termIndex].matchExpressions[
+                                                        exprIndex
+                                                      ] = {
+                                                        ...expr,
+                                                        key: e.target.value,
+                                                      };
+                                                      setNodeAffinityTerms(newTerms);
+                                                    }}
+                                                    fullWidth
+                                                  />
+                                                </VStack>
+                                                <VStack gap={1} className="w-[140px]">
+                                                  <span className="text-[11px] text-[var(--color-text-subtle)]">
+                                                    Operator
+                                                  </span>
+                                                  <Select
+                                                    options={[
+                                                      { value: 'In', label: 'In' },
+                                                      { value: 'NotIn', label: 'NotIn' },
+                                                      { value: 'Exists', label: 'Exists' },
+                                                      {
+                                                        value: 'DoesNotExist',
+                                                        label: 'DoesNotExist',
+                                                      },
+                                                      { value: 'Gt', label: 'Gt' },
+                                                      { value: 'Lt', label: 'Lt' },
+                                                    ]}
+                                                    value={expr.operator}
+                                                    onChange={(val) => {
+                                                      const newTerms = [...nodeAffinityTerms];
+                                                      newTerms[termIndex].matchExpressions[
+                                                        exprIndex
+                                                      ] = {
+                                                        ...expr,
+                                                        operator: val,
+                                                      };
+                                                      setNodeAffinityTerms(newTerms);
+                                                    }}
+                                                    fullWidth
+                                                  />
+                                                </VStack>
+                                                <VStack gap={1} className="flex-1">
+                                                  <span className="text-[11px] text-[var(--color-text-subtle)]">
+                                                    Value
+                                                  </span>
+                                                  <Input
+                                                    placeholder="e.g. linux"
+                                                    value={expr.value}
+                                                    onChange={(e) => {
+                                                      const newTerms = [...nodeAffinityTerms];
+                                                      newTerms[termIndex].matchExpressions[
+                                                        exprIndex
+                                                      ] = {
+                                                        ...expr,
+                                                        value: e.target.value,
+                                                      };
+                                                      setNodeAffinityTerms(newTerms);
+                                                    }}
+                                                    fullWidth
+                                                  />
+                                                </VStack>
+                                                <button
+                                                  onClick={() => {
+                                                    const newTerms = [...nodeAffinityTerms];
+                                                    newTerms[termIndex].matchExpressions = newTerms[
+                                                      termIndex
+                                                    ].matchExpressions.filter(
+                                                      (_, i) => i !== exprIndex
+                                                    );
+                                                    setNodeAffinityTerms(newTerms);
+                                                  }}
+                                                  className="mt-5 p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                                >
+                                                  <IconX
+                                                    size={16}
+                                                    className="text-[var(--color-text-muted)]"
+                                                    stroke={1.5}
+                                                  />
+                                                </button>
+                                              </div>
+                                            ))}
+                                            <div className="w-fit">
+                                              <Button
+                                                variant="secondary"
+                                                size="sm"
+                                                leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                                onClick={() => {
+                                                  const newTerms = [...nodeAffinityTerms];
+                                                  newTerms[termIndex].matchExpressions.push({
+                                                    key: '',
+                                                    operator: 'In',
+                                                    value: '',
+                                                  });
+                                                  setNodeAffinityTerms(newTerms);
+                                                }}
+                                              >
+                                                Add Expression
+                                              </Button>
+                                            </div>
+                                          </VStack>
+                                        </VStack>
+                                      </div>
+                                    ))}
+
+                                    <div className="w-fit">
+                                      <Button
+                                        variant="secondary"
+                                        size="sm"
+                                        leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                        onClick={() => {
+                                          setNodeAffinityTerms([
+                                            ...nodeAffinityTerms,
+                                            {
+                                              priority: 'required',
+                                              weight: '',
+                                              matchExpressions: [
+                                                { key: '', operator: 'In', value: '' },
+                                              ],
+                                            },
+                                          ]);
+                                        }}
+                                      >
+                                        Add Rule
+                                      </Button>
+                                    </div>
+                                  </VStack>
+                                </div>
+
+                                <div className="w-fit">
+                                  <Button
+                                    variant="secondary"
+                                    size="sm"
+                                    leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                  >
+                                    Add Node Selector
+                                  </Button>
+                                </div>
+                              </VStack>
+                            )}
                           </VStack>
                         </SectionCard.Content>
                       </SectionCard>
 
                       {/* Pod Scheduling */}
                       <SectionCard>
-                        <SectionCard.Header title="Pod Scheduling" showDivider />
+                        <SectionCard.Header title="Pod Scheduling" />
                         <SectionCard.Content>
-                          <VStack gap={4}>
-                            <Button variant="secondary" size="sm">
-                              <IconPlus size={12} stroke={1.5} />
-                              Add Pod Selector
-                            </Button>
+                          <VStack gap={6}>
+                            {podAffinityTerms.map((term, termIndex) => (
+                              <div
+                                key={termIndex}
+                                className="border border-[var(--color-border-default)] rounded-[6px] p-4 w-full"
+                              >
+                                <VStack gap={6}>
+                                  {/* Type Section */}
+                                  <VStack gap={3}>
+                                    <div className="flex items-start justify-between w-full">
+                                      <VStack gap={1}>
+                                        <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                                          Type
+                                        </span>
+                                        <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+                                          Select the scheduling type to apply to the pod.
+                                        </span>
+                                      </VStack>
+                                      <button
+                                        onClick={() => {
+                                          setPodAffinityTerms(
+                                            podAffinityTerms.filter((_, i) => i !== termIndex)
+                                          );
+                                        }}
+                                        className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                      >
+                                        <IconX
+                                          size={16}
+                                          className="text-[var(--color-text-muted)]"
+                                          stroke={1.5}
+                                        />
+                                      </button>
+                                    </div>
+                                    <Select
+                                      options={[
+                                        { value: 'affinity', label: 'Affinity' },
+                                        { value: 'anti-affinity', label: 'Anti-Affinity' },
+                                      ]}
+                                      value={term.type}
+                                      onChange={(val) => {
+                                        const newTerms = [...podAffinityTerms];
+                                        newTerms[termIndex] = { ...newTerms[termIndex], type: val };
+                                        setPodAffinityTerms(newTerms);
+                                      }}
+                                      fullWidth
+                                    />
+                                  </VStack>
+
+                                  {/* Priority Section */}
+                                  <VStack gap={3}>
+                                    <VStack gap={1}>
+                                      <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                                        Priority
+                                      </span>
+                                      <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+                                        Specify the priority value applied to pod scheduling.
+                                      </span>
+                                    </VStack>
+                                    <Select
+                                      options={[
+                                        { value: 'required', label: 'Required' },
+                                        { value: 'preferred', label: 'Preferred' },
+                                      ]}
+                                      value={term.priority}
+                                      onChange={(val) => {
+                                        const newTerms = [...podAffinityTerms];
+                                        newTerms[termIndex] = {
+                                          ...newTerms[termIndex],
+                                          priority: val,
+                                        };
+                                        setPodAffinityTerms(newTerms);
+                                      }}
+                                      fullWidth
+                                    />
+                                  </VStack>
+
+                                  {/* Namespace Selection */}
+                                  <RadioGroup
+                                    value={term.namespaces}
+                                    onChange={(val) => {
+                                      const newTerms = [...podAffinityTerms];
+                                      newTerms[termIndex] = {
+                                        ...newTerms[termIndex],
+                                        namespaces: val as 'all' | 'selected',
+                                      };
+                                      setPodAffinityTerms(newTerms);
+                                    }}
+                                  >
+                                    <Radio value="all" label="This pod's namespace" />
+                                    <Radio value="selected" label="Specific namespaces" />
+                                  </RadioGroup>
+
+                                  {/* Specific Namespaces Section - shown when 'selected' is chosen */}
+                                  {term.namespaces === 'selected' && (
+                                    <VStack gap={3}>
+                                      {/* Search Input */}
+                                      <SearchInput
+                                        placeholder="Find Namespaces with filters"
+                                        className="w-[312px]"
+                                      />
+
+                                      {/* Pagination */}
+                                      <Pagination
+                                        currentPage={1}
+                                        totalPages={Math.ceil(MOCK_NAMESPACES.length / 5)}
+                                        onPageChange={() => {}}
+                                        showSettings
+                                        totalItems={
+                                          MOCK_NAMESPACES.length > 100
+                                            ? 115
+                                            : MOCK_NAMESPACES.length
+                                        }
+                                        selectedCount={term.selectedNamespaces.length}
+                                      />
+
+                                      {/* Namespace Table */}
+                                      <Table
+                                        columns={[
+                                          {
+                                            key: 'status',
+                                            label: 'Status',
+                                            width: '80px',
+                                            align: 'center',
+                                            render: (_, row: NamespaceData) => (
+                                              <StatusIndicator status={row.status} />
+                                            ),
+                                          },
+                                          {
+                                            key: 'name',
+                                            label: 'Name',
+                                            sortable: true,
+                                            render: (value: string) => (
+                                              <span className="text-[var(--color-action-primary)] font-medium cursor-pointer hover:underline">
+                                                {value}
+                                              </span>
+                                            ),
+                                          },
+                                          {
+                                            key: 'description',
+                                            label: 'Description',
+                                            sortable: true,
+                                          },
+                                          {
+                                            key: 'createdAt',
+                                            label: 'Created At',
+                                            sortable: true,
+                                          },
+                                        ]}
+                                        data={MOCK_NAMESPACES.slice(0, 5)}
+                                        rowKey="id"
+                                        selectable
+                                        selectedKeys={term.selectedNamespaces}
+                                        onSelectionChange={(keys) => {
+                                          const newTerms = [...podAffinityTerms];
+                                          newTerms[termIndex] = {
+                                            ...newTerms[termIndex],
+                                            selectedNamespaces: keys,
+                                          };
+                                          setPodAffinityTerms(newTerms);
+                                        }}
+                                      />
+
+                                      {/* Selected Namespace Chips */}
+                                      {term.selectedNamespaces.length > 0 && (
+                                        <div className="bg-[var(--color-surface-subtle)] rounded-[6px] px-2 py-2 flex flex-wrap gap-1">
+                                          {term.selectedNamespaces.map((nsId) => {
+                                            const ns = MOCK_NAMESPACES.find((n) => n.id === nsId);
+                                            return ns ? (
+                                              <Chip
+                                                key={nsId}
+                                                value={ns.name}
+                                                variant="selected"
+                                                onRemove={() => {
+                                                  const newTerms = [...podAffinityTerms];
+                                                  newTerms[termIndex] = {
+                                                    ...newTerms[termIndex],
+                                                    selectedNamespaces:
+                                                      term.selectedNamespaces.filter(
+                                                        (id) => id !== nsId
+                                                      ),
+                                                  };
+                                                  setPodAffinityTerms(newTerms);
+                                                }}
+                                              />
+                                            ) : null;
+                                          })}
+                                        </div>
+                                      )}
+                                    </VStack>
+                                  )}
+
+                                  {/* Match Expressions / Rules Section */}
+                                  <div className="border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                                    <VStack gap={2}>
+                                      {term.matchExpressions.map((expr, exprIndex) => (
+                                        <div
+                                          key={exprIndex}
+                                          className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                        >
+                                          <div className="flex gap-2 items-start w-full">
+                                            <VStack gap={2} className="flex-1">
+                                              <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                                Key
+                                              </span>
+                                              <Input
+                                                placeholder="Input Key"
+                                                value={expr.key}
+                                                onChange={(e) => {
+                                                  const newTerms = [...podAffinityTerms];
+                                                  const newExpressions = [
+                                                    ...newTerms[termIndex].matchExpressions,
+                                                  ];
+                                                  newExpressions[exprIndex] = {
+                                                    ...newExpressions[exprIndex],
+                                                    key: e.target.value,
+                                                  };
+                                                  newTerms[termIndex] = {
+                                                    ...newTerms[termIndex],
+                                                    matchExpressions: newExpressions,
+                                                  };
+                                                  setPodAffinityTerms(newTerms);
+                                                }}
+                                                fullWidth
+                                              />
+                                            </VStack>
+                                            <VStack gap={2} className="flex-1">
+                                              <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                                Operator
+                                              </span>
+                                              <Select
+                                                options={OPERATOR_OPTIONS}
+                                                value={expr.operator}
+                                                onChange={(val) => {
+                                                  const newTerms = [...podAffinityTerms];
+                                                  const newExpressions = [
+                                                    ...newTerms[termIndex].matchExpressions,
+                                                  ];
+                                                  newExpressions[exprIndex] = {
+                                                    ...newExpressions[exprIndex],
+                                                    operator: val,
+                                                  };
+                                                  newTerms[termIndex] = {
+                                                    ...newTerms[termIndex],
+                                                    matchExpressions: newExpressions,
+                                                  };
+                                                  setPodAffinityTerms(newTerms);
+                                                }}
+                                                fullWidth
+                                              />
+                                            </VStack>
+                                            <VStack gap={2} className="flex-1">
+                                              <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                                Value
+                                              </span>
+                                              <Input
+                                                placeholder="input value"
+                                                value={expr.value}
+                                                onChange={(e) => {
+                                                  const newTerms = [...podAffinityTerms];
+                                                  const newExpressions = [
+                                                    ...newTerms[termIndex].matchExpressions,
+                                                  ];
+                                                  newExpressions[exprIndex] = {
+                                                    ...newExpressions[exprIndex],
+                                                    value: e.target.value,
+                                                  };
+                                                  newTerms[termIndex] = {
+                                                    ...newTerms[termIndex],
+                                                    matchExpressions: newExpressions,
+                                                  };
+                                                  setPodAffinityTerms(newTerms);
+                                                }}
+                                                fullWidth
+                                              />
+                                            </VStack>
+                                            <button
+                                              onClick={() => {
+                                                const newTerms = [...podAffinityTerms];
+                                                newTerms[termIndex] = {
+                                                  ...newTerms[termIndex],
+                                                  matchExpressions: newTerms[
+                                                    termIndex
+                                                  ].matchExpressions.filter(
+                                                    (_, i) => i !== exprIndex
+                                                  ),
+                                                };
+                                                setPodAffinityTerms(newTerms);
+                                              }}
+                                              className="mt-6 p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                            >
+                                              <IconX
+                                                size={16}
+                                                className="text-[var(--color-text-muted)]"
+                                                stroke={1.5}
+                                              />
+                                            </button>
+                                          </div>
+                                        </div>
+                                      ))}
+                                      <div className="w-fit">
+                                        <Button
+                                          variant="secondary"
+                                          size="sm"
+                                          leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                          onClick={() => {
+                                            const newTerms = [...podAffinityTerms];
+                                            newTerms[termIndex] = {
+                                              ...newTerms[termIndex],
+                                              matchExpressions: [
+                                                ...newTerms[termIndex].matchExpressions,
+                                                { key: '', operator: 'In', value: '' },
+                                              ],
+                                            };
+                                            setPodAffinityTerms(newTerms);
+                                          }}
+                                        >
+                                          Add Rule
+                                        </Button>
+                                      </div>
+                                    </VStack>
+                                  </div>
+
+                                  {/* Topology Key Section */}
+                                  <VStack gap={3}>
+                                    <VStack gap={1}>
+                                      <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                                        Topology Key
+                                      </span>
+                                      <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+                                        Select the scheduling type to apply to the pod.
+                                      </span>
+                                    </VStack>
+                                    <Select
+                                      options={[
+                                        {
+                                          value: 'kubernetes.io/hostname',
+                                          label: 'kubernetes.io/hostname',
+                                        },
+                                        {
+                                          value: 'topology.kubernetes.io/zone',
+                                          label: 'topology.kubernetes.io/zone',
+                                        },
+                                        {
+                                          value: 'topology.kubernetes.io/region',
+                                          label: 'topology.kubernetes.io/region',
+                                        },
+                                        {
+                                          value: 'failure-domain.beta.kubernetes.io/zone',
+                                          label: 'failure-domain.beta.kubernetes.io/zone',
+                                        },
+                                      ]}
+                                      value={term.topologyKey}
+                                      onChange={(val) => {
+                                        const newTerms = [...podAffinityTerms];
+                                        newTerms[termIndex] = {
+                                          ...newTerms[termIndex],
+                                          topologyKey: val,
+                                        };
+                                        setPodAffinityTerms(newTerms);
+                                      }}
+                                      placeholder="e.g. failure-domain.beta.kubernetes.io/zone"
+                                      fullWidth
+                                    />
+                                  </VStack>
+                                </VStack>
+                              </div>
+                            ))}
+
+                            <div className="w-fit">
+                              <Button
+                                variant="secondary"
+                                size="sm"
+                                leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                onClick={() => {
+                                  setPodAffinityTerms([
+                                    ...podAffinityTerms,
+                                    {
+                                      type: 'affinity',
+                                      priority: 'preferred',
+                                      namespaces: 'all',
+                                      selectedNamespaces: [],
+                                      topologyKey: '',
+                                      weight: '1',
+                                      matchExpressions: [],
+                                    },
+                                  ]);
+                                }}
+                              >
+                                Add Pod Selector
+                              </Button>
+                            </div>
                           </VStack>
                         </SectionCard.Content>
                       </SectionCard>
 
                       {/* Resources */}
                       <SectionCard>
-                        <SectionCard.Header title="Resources" showDivider />
+                        <SectionCard.Header title="Resources" />
                         <SectionCard.Content>
                           <VStack gap={4}>
                             {/* Tolerations */}
-                            <VStack gap={2}>
-                              <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                            <VStack gap={3}>
+                              <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
                                 Tolerations
                               </span>
-                              <Button variant="secondary" size="sm">
-                                <IconPlus size={12} stroke={1.5} />
-                                Add Toleration
-                              </Button>
-                            </VStack>
 
-                            {/* Priority */}
-                            <VStack gap={2}>
-                              <span className="text-[14px] font-medium text-[var(--color-text-default)]">
-                                Priority
-                              </span>
-                              <div className="grid grid-cols-2 gap-3 w-full pl-3">
-                                <VStack gap={1}>
-                                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                                    Priority
-                                  </span>
-                                  <span className="text-[12px] text-[var(--color-text-subtle)]">
-                                    Specify the DNS nameserver addresses used by the pod.
-                                  </span>
-                                  <Input placeholder="" fullWidth />
-                                </VStack>
-                                <VStack gap={1}>
-                                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                                    Priority Class Name
-                                  </span>
-                                  <span className="text-[12px] text-[var(--color-text-subtle)]">
-                                    Specify the DNS nameserver addresses used by the pod.
-                                  </span>
-                                  <Input placeholder="" fullWidth />
+                              <div className="border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                                <VStack gap={3}>
+                                  {tolerations.map((toleration, index) => (
+                                    <div
+                                      key={index}
+                                      className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                    >
+                                      <div className="flex gap-2 items-start w-full">
+                                        <VStack gap={2} className="flex-1">
+                                          <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                            Key
+                                          </span>
+                                          <Input
+                                            placeholder="Key"
+                                            value={toleration.key}
+                                            onChange={(e) =>
+                                              updateToleration(index, 'key', e.target.value)
+                                            }
+                                            fullWidth
+                                          />
+                                        </VStack>
+                                        <VStack gap={2} className="flex-1">
+                                          <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                            Operator
+                                          </span>
+                                          <Select
+                                            options={[
+                                              { value: 'Equal', label: 'Equal' },
+                                              { value: 'Exists', label: 'Exists' },
+                                            ]}
+                                            value={toleration.operator}
+                                            onChange={(val) =>
+                                              updateToleration(index, 'operator', val)
+                                            }
+                                            fullWidth
+                                          />
+                                        </VStack>
+                                        <VStack gap={2} className="flex-1">
+                                          <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                            Value
+                                          </span>
+                                          <Input
+                                            placeholder="Value"
+                                            value={toleration.value}
+                                            onChange={(e) =>
+                                              updateToleration(index, 'value', e.target.value)
+                                            }
+                                            fullWidth
+                                          />
+                                        </VStack>
+                                        <VStack gap={2} className="flex-1">
+                                          <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                            Effect
+                                          </span>
+                                          <Select
+                                            options={[
+                                              { value: 'NoSchedule', label: 'NoSchedule' },
+                                              {
+                                                value: 'PreferNoSchedule',
+                                                label: 'PreferNoSchedule',
+                                              },
+                                              { value: 'NoExecute', label: 'NoExecute' },
+                                            ]}
+                                            value={toleration.effect}
+                                            onChange={(val) =>
+                                              updateToleration(index, 'effect', val)
+                                            }
+                                            fullWidth
+                                          />
+                                        </VStack>
+                                        <VStack gap={2} className="flex-1">
+                                          <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                            Toleration Seconds
+                                          </span>
+                                          <HStack gap={2} align="center">
+                                            <Input
+                                              placeholder=""
+                                              value={toleration.tolerationSeconds}
+                                              onChange={(e) =>
+                                                updateToleration(
+                                                  index,
+                                                  'tolerationSeconds',
+                                                  e.target.value
+                                                )
+                                              }
+                                              fullWidth
+                                            />
+                                            <Select
+                                              options={[
+                                                { value: 'sec', label: 'sec' },
+                                                { value: 'min', label: 'min' },
+                                              ]}
+                                              value={toleration.tolerationSecondsUnit}
+                                              onChange={(val) =>
+                                                updateToleration(
+                                                  index,
+                                                  'tolerationSecondsUnit',
+                                                  val
+                                                )
+                                              }
+                                              className="w-[80px] shrink-0"
+                                            />
+                                          </HStack>
+                                        </VStack>
+                                        <button
+                                          onClick={() => removeToleration(index)}
+                                          className="mt-6 p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                        >
+                                          <IconX
+                                            size={16}
+                                            className="text-[var(--color-text-muted)]"
+                                            stroke={1.5}
+                                          />
+                                        </button>
+                                      </div>
+                                    </div>
+                                  ))}
+
+                                  <div className="w-fit">
+                                    <Button
+                                      variant="secondary"
+                                      size="sm"
+                                      leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                      onClick={addToleration}
+                                    >
+                                      Add Toleration
+                                    </Button>
+                                  </div>
                                 </VStack>
                               </div>
                             </VStack>
+
+                            {/* Priority */}
+                            <div className="grid grid-cols-2 gap-4 w-full">
+                              <VStack gap={1}>
+                                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                  Priority
+                                </span>
+                                <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                  Specify the priority value for the pod.
+                                </span>
+                                <Input
+                                  placeholder=""
+                                  fullWidth
+                                  value={priority}
+                                  onChange={(e) => setPriority(e.target.value)}
+                                />
+                              </VStack>
+                              <VStack gap={1}>
+                                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                  Priority Class Name
+                                </span>
+                                <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                  Specify the priority class name for the pod.
+                                </span>
+                                <Input
+                                  placeholder=""
+                                  fullWidth
+                                  value={priorityClassName}
+                                  onChange={(e) => setPriorityClassName(e.target.value)}
+                                />
+                              </VStack>
+                            </div>
                           </VStack>
                         </SectionCard.Content>
                       </SectionCard>
 
                       {/* Security Context */}
                       <SectionCard>
-                        <SectionCard.Header title="Security Context" showDivider />
+                        <SectionCard.Header title="Security Context" />
                         <SectionCard.Content>
                           <VStack gap={4}>
                             <VStack gap={1} className="max-w-[578px]">
@@ -1626,14 +3096,642 @@ export function CreateDeploymentPage() {
 
                       {/* Storage */}
                       <SectionCard>
-                        <SectionCard.Header title="Storage" showDivider />
+                        <SectionCard.Header title="Storage" />
                         <SectionCard.Content>
-                          <VStack gap={4}>
-                            <Button variant="secondary" size="sm">
-                              <IconPlus size={12} stroke={1.5} />
-                              Add Volume
-                            </Button>
+                          <VStack gap={2}>
+                            {volumes.map((volume, index) => (
+                              <div
+                                key={index}
+                                className="border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                              >
+                                <VStack gap={2}>
+                                  {/* Header with type title and close button */}
+                                  <div className="flex items-start justify-between w-full">
+                                    <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                                      {volume.type === 'configmap' && 'ConfigMap'}
+                                      {volume.type === 'secret' && 'Secret'}
+                                      {volume.type === 'pvc' && 'Persistent Volume Claim'}
+                                      {volume.type === 'create-pvc' &&
+                                        'Create Persistent Volume Claim'}
+                                    </span>
+                                    <button
+                                      onClick={() => removeVolume(index)}
+                                      className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                    >
+                                      <IconX
+                                        size={16}
+                                        className="text-[var(--color-text-muted)]"
+                                        stroke={1.5}
+                                      />
+                                    </button>
+                                  </div>
+
+                                  {/* ConfigMap content */}
+                                  {volume.type === 'configmap' && (
+                                    <>
+                                      <div className="flex gap-2 items-start py-3 w-full">
+                                        <VStack gap={2} className="flex-1">
+                                          <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                                            Volume Name{' '}
+                                            <span className="text-[var(--color-state-danger)]">
+                                              *
+                                            </span>
+                                          </span>
+                                          <Input
+                                            placeholder="Input name"
+                                            value={volume.volumeName}
+                                            onChange={(e) =>
+                                              updateVolume(index, { volumeName: e.target.value })
+                                            }
+                                            fullWidth
+                                          />
+                                        </VStack>
+                                        <VStack gap={2} className="flex-1">
+                                          <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                                            ConfigMap{' '}
+                                            <span className="text-[var(--color-state-danger)]">
+                                              *
+                                            </span>
+                                          </span>
+                                          <Select
+                                            options={[
+                                              { value: 'config-1', label: 'config-1' },
+                                              { value: 'config-2', label: 'config-2' },
+                                            ]}
+                                            value={(volume as ConfigMapVolume).configMapName}
+                                            onChange={(val) =>
+                                              updateVolume(index, { configMapName: val })
+                                            }
+                                            placeholder="Select ConfigMap"
+                                            fullWidth
+                                          />
+                                        </VStack>
+                                        <VStack gap={2}>
+                                          <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                            Optional
+                                          </span>
+                                          <Checkbox
+                                            checked={(volume as ConfigMapVolume).optional}
+                                            onChange={(e) =>
+                                              updateVolume(index, { optional: e.target.checked })
+                                            }
+                                          />
+                                        </VStack>
+                                      </div>
+                                      <Disclosure title="Advanced" defaultOpen={false}>
+                                        <VStack gap={2} className="pt-2">
+                                          <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                                            Default Mode
+                                          </span>
+                                          <Input
+                                            placeholder=""
+                                            value={(volume as ConfigMapVolume).defaultMode || ''}
+                                            onChange={(e) =>
+                                              updateVolume(index, { defaultMode: e.target.value })
+                                            }
+                                            fullWidth
+                                          />
+                                        </VStack>
+                                      </Disclosure>
+                                    </>
+                                  )}
+
+                                  {/* Secret content */}
+                                  {volume.type === 'secret' && (
+                                    <>
+                                      <div className="flex gap-2 items-start py-3 w-full">
+                                        <VStack gap={2} className="flex-1">
+                                          <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                                            Volume Name{' '}
+                                            <span className="text-[var(--color-state-danger)]">
+                                              *
+                                            </span>
+                                          </span>
+                                          <Input
+                                            placeholder="Input name"
+                                            value={volume.volumeName}
+                                            onChange={(e) =>
+                                              updateVolume(index, { volumeName: e.target.value })
+                                            }
+                                            fullWidth
+                                          />
+                                        </VStack>
+                                        <VStack gap={2} className="flex-1">
+                                          <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                                            Secret{' '}
+                                            <span className="text-[var(--color-state-danger)]">
+                                              *
+                                            </span>
+                                          </span>
+                                          <Select
+                                            options={[
+                                              { value: 'secret-1', label: 'secret-1' },
+                                              { value: 'secret-2', label: 'secret-2' },
+                                            ]}
+                                            value={(volume as SecretVolume).secretName}
+                                            onChange={(val) =>
+                                              updateVolume(index, { secretName: val })
+                                            }
+                                            placeholder="Select Secret"
+                                            fullWidth
+                                          />
+                                        </VStack>
+                                        <VStack gap={2}>
+                                          <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                            Optional
+                                          </span>
+                                          <Checkbox
+                                            checked={(volume as SecretVolume).optional}
+                                            onChange={(e) =>
+                                              updateVolume(index, { optional: e.target.checked })
+                                            }
+                                          />
+                                        </VStack>
+                                      </div>
+                                      <Disclosure title="Advanced" defaultOpen={false}>
+                                        <VStack gap={2} className="pt-2">
+                                          <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                                            Default Mode
+                                          </span>
+                                          <Input
+                                            placeholder=""
+                                            value={(volume as SecretVolume).defaultMode}
+                                            onChange={(e) =>
+                                              updateVolume(index, { defaultMode: e.target.value })
+                                            }
+                                            fullWidth
+                                          />
+                                        </VStack>
+                                      </Disclosure>
+                                    </>
+                                  )}
+
+                                  {/* PVC content */}
+                                  {volume.type === 'pvc' && (
+                                    <div className="flex gap-2 items-start py-3 w-full">
+                                      <VStack gap={2} className="flex-1">
+                                        <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                                          Volume Name{' '}
+                                          <span className="text-[var(--color-state-danger)]">
+                                            *
+                                          </span>
+                                        </span>
+                                        <Input
+                                          placeholder="Input name"
+                                          value={volume.volumeName}
+                                          onChange={(e) =>
+                                            updateVolume(index, { volumeName: e.target.value })
+                                          }
+                                          fullWidth
+                                        />
+                                      </VStack>
+                                      <VStack gap={2} className="flex-1">
+                                        <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                                          Persistent Volume Claim{' '}
+                                          <span className="text-[var(--color-state-danger)]">
+                                            *
+                                          </span>
+                                        </span>
+                                        <Select
+                                          options={[
+                                            { value: 'pvc-1', label: 'pvc-1' },
+                                            { value: 'pvc-2', label: 'pvc-2' },
+                                          ]}
+                                          value={(volume as PVCVolume).pvcName}
+                                          onChange={(val) => updateVolume(index, { pvcName: val })}
+                                          placeholder="Select PVC"
+                                          fullWidth
+                                        />
+                                      </VStack>
+                                      <VStack gap={2}>
+                                        <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                          Read Only
+                                        </span>
+                                        <Checkbox
+                                          checked={(volume as PVCVolume).readOnly}
+                                          onChange={(e) =>
+                                            updateVolume(index, { readOnly: e.target.checked })
+                                          }
+                                        />
+                                      </VStack>
+                                    </div>
+                                  )}
+
+                                  {/* Create PVC content */}
+                                  {volume.type === 'create-pvc' && (
+                                    <>
+                                      <div className="p-3 w-full">
+                                        <VStack gap={6}>
+                                          <VStack gap={3}>
+                                            <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                                              Persistent Volume Claim Name{' '}
+                                              <span className="text-[var(--color-state-danger)]">
+                                                *
+                                              </span>
+                                            </span>
+                                            <Input
+                                              placeholder=""
+                                              value={(volume as CreatePVCVolume).pvcName}
+                                              onChange={(e) =>
+                                                updateVolume(index, { pvcName: e.target.value })
+                                              }
+                                              fullWidth
+                                            />
+                                          </VStack>
+
+                                          <RadioGroup
+                                            value={
+                                              (volume as CreatePVCVolume).useExistingPV
+                                                ? 'existing'
+                                                : 'new'
+                                            }
+                                            onChange={(val) =>
+                                              updateVolume(index, {
+                                                useExistingPV: val === 'existing',
+                                              })
+                                            }
+                                          >
+                                            <Radio
+                                              value="new"
+                                              label="Use a Storage Class to provision a new Persistent Volume"
+                                            />
+                                            <Radio
+                                              value="existing"
+                                              label="Use an existing Persistent Volume"
+                                            />
+                                          </RadioGroup>
+
+                                          {!(volume as CreatePVCVolume).useExistingPV && (
+                                            <div className="grid grid-cols-2 gap-4">
+                                              <VStack gap={3}>
+                                                <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                                                  Storage Class{' '}
+                                                  <span className="text-[var(--color-state-danger)]">
+                                                    *
+                                                  </span>
+                                                </span>
+                                                <Select
+                                                  options={[
+                                                    { value: 'standard', label: 'standard' },
+                                                    { value: 'fast', label: 'fast' },
+                                                  ]}
+                                                  value={(volume as CreatePVCVolume).storageClass}
+                                                  onChange={(val) =>
+                                                    updateVolume(index, { storageClass: val })
+                                                  }
+                                                  placeholder=""
+                                                  fullWidth
+                                                />
+                                              </VStack>
+                                              <VStack gap={3}>
+                                                <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                                                  Capacity{' '}
+                                                  <span className="text-[var(--color-state-danger)]">
+                                                    *
+                                                  </span>
+                                                </span>
+                                                <NumberInput
+                                                  placeholder=""
+                                                  value={
+                                                    (volume as CreatePVCVolume).capacity
+                                                      ? parseInt(
+                                                          (volume as CreatePVCVolume).capacity
+                                                        )
+                                                      : undefined
+                                                  }
+                                                  onChange={(val) =>
+                                                    updateVolume(index, {
+                                                      capacity: val?.toString() || '',
+                                                    })
+                                                  }
+                                                  suffix="GiB"
+                                                  fullWidth
+                                                />
+                                              </VStack>
+                                            </div>
+                                          )}
+
+                                          {(volume as CreatePVCVolume).useExistingPV && (
+                                            <VStack gap={3}>
+                                              <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                                                Persistent Volume{' '}
+                                                <span className="text-[var(--color-state-danger)]">
+                                                  *
+                                                </span>
+                                              </span>
+                                              <Select
+                                                options={[
+                                                  { value: 'pv-1', label: 'pv-1' },
+                                                  { value: 'pv-2', label: 'pv-2' },
+                                                ]}
+                                                value={(volume as CreatePVCVolume).persistentVolume}
+                                                onChange={(val) =>
+                                                  updateVolume(index, { persistentVolume: val })
+                                                }
+                                                placeholder=""
+                                                fullWidth
+                                              />
+                                            </VStack>
+                                          )}
+
+                                          <VStack gap={1.5}>
+                                            <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                                              Access Modes{' '}
+                                              <span className="text-[var(--color-state-danger)]">
+                                                *
+                                              </span>
+                                            </span>
+                                            <VStack gap={1}>
+                                              <Checkbox
+                                                label="Single Node Read-Write"
+                                                checked={
+                                                  (volume as CreatePVCVolume).accessModes
+                                                    .readWriteOnce
+                                                }
+                                                onChange={(e) =>
+                                                  updateVolume(index, {
+                                                    accessModes: {
+                                                      ...(volume as CreatePVCVolume).accessModes,
+                                                      readWriteOnce: e.target.checked,
+                                                    },
+                                                  })
+                                                }
+                                              />
+                                              <Checkbox
+                                                label="Many Nodes Read-Only"
+                                                checked={
+                                                  (volume as CreatePVCVolume).accessModes
+                                                    .readOnlyMany
+                                                }
+                                                onChange={(e) =>
+                                                  updateVolume(index, {
+                                                    accessModes: {
+                                                      ...(volume as CreatePVCVolume).accessModes,
+                                                      readOnlyMany: e.target.checked,
+                                                    },
+                                                  })
+                                                }
+                                              />
+                                              <Checkbox
+                                                label="Many Nodes Read-Write"
+                                                checked={
+                                                  (volume as CreatePVCVolume).accessModes
+                                                    .readWriteMany
+                                                }
+                                                onChange={(e) =>
+                                                  updateVolume(index, {
+                                                    accessModes: {
+                                                      ...(volume as CreatePVCVolume).accessModes,
+                                                      readWriteMany: e.target.checked,
+                                                    },
+                                                  })
+                                                }
+                                              />
+                                            </VStack>
+                                          </VStack>
+                                        </VStack>
+                                      </div>
+                                      <div className="flex gap-2 items-start py-3 w-full">
+                                        <VStack gap={2} className="w-[560px]">
+                                          <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                                            Volume Name{' '}
+                                            <span className="text-[var(--color-state-danger)]">
+                                              *
+                                            </span>
+                                          </span>
+                                          <Input
+                                            placeholder="Input  name"
+                                            value={volume.volumeName}
+                                            onChange={(e) =>
+                                              updateVolume(index, { volumeName: e.target.value })
+                                            }
+                                            fullWidth
+                                          />
+                                        </VStack>
+                                        <VStack gap={2}>
+                                          <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                            Read Only
+                                          </span>
+                                          <Checkbox
+                                            checked={(volume as CreatePVCVolume).readOnly}
+                                            onChange={(e) =>
+                                              updateVolume(index, { readOnly: e.target.checked })
+                                            }
+                                          />
+                                        </VStack>
+                                      </div>
+                                    </>
+                                  )}
+                                </VStack>
+                              </div>
+                            ))}
+
+                            <Select
+                              options={[
+                                { value: 'configmap', label: 'ConfigMap' },
+                                { value: 'secret', label: 'Secret' },
+                                { value: 'pvc', label: 'Persistent Volume Claim' },
+                                { value: 'create-pvc', label: 'Create Persistent Volume Claim' },
+                              ]}
+                              value=""
+                              onChange={(val) => addVolume(val)}
+                              placeholder="Add Volume"
+                              className="w-fit"
+                            />
                           </VStack>
+                        </SectionCard.Content>
+                      </SectionCard>
+
+                      {/* Volume Claim Templates */}
+                      <SectionCard>
+                        <SectionCard.Header title="Volume Claim Templates" />
+                        <SectionCard.Content>
+                          <div className="border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                            <VStack gap={3}>
+                              {volumeClaimTemplates.map((template, index) => (
+                                <div
+                                  key={index}
+                                  className="relative bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                >
+                                  <button
+                                    onClick={() => removeVolumeClaimTemplate(index)}
+                                    className="absolute top-3 right-3 p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                  >
+                                    <IconX
+                                      size={16}
+                                      className="text-[var(--color-text-muted)]"
+                                      stroke={1.5}
+                                    />
+                                  </button>
+                                  <VStack gap={3}>
+                                    <VStack gap={1}>
+                                      <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                        Persistent Volume Claim Name{' '}
+                                        <span className="text-[var(--color-state-danger)]">*</span>
+                                      </span>
+                                      <Input
+                                        placeholder="pvc-name"
+                                        value={template.name}
+                                        onChange={(e) =>
+                                          updateVolumeClaimTemplate(index, { name: e.target.value })
+                                        }
+                                        fullWidth
+                                      />
+                                    </VStack>
+
+                                    <RadioGroup
+                                      value={template.useExistingPV ? 'existing' : 'new'}
+                                      onChange={(val) =>
+                                        updateVolumeClaimTemplate(index, {
+                                          useExistingPV: val === 'existing',
+                                        })
+                                      }
+                                    >
+                                      <Radio
+                                        value="new"
+                                        label="Use Storage Class and create a new Persistent Volume"
+                                      />
+                                      <Radio
+                                        value="existing"
+                                        label="Use existing Persistent Volume"
+                                      />
+                                    </RadioGroup>
+
+                                    {!template.useExistingPV && (
+                                      <div className="grid grid-cols-2 gap-3">
+                                        <VStack gap={1}>
+                                          <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                            Storage Class{' '}
+                                            <span className="text-[var(--color-state-danger)]">
+                                              *
+                                            </span>
+                                          </span>
+                                          <Select
+                                            options={[
+                                              { value: 'standard', label: 'standard' },
+                                              { value: 'fast', label: 'fast' },
+                                            ]}
+                                            value={template.storageClass}
+                                            onChange={(val) =>
+                                              updateVolumeClaimTemplate(index, {
+                                                storageClass: val,
+                                              })
+                                            }
+                                            placeholder="Select Storage Class"
+                                            fullWidth
+                                          />
+                                        </VStack>
+                                        <VStack gap={1}>
+                                          <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                            Capacity{' '}
+                                            <span className="text-[var(--color-state-danger)]">
+                                              *
+                                            </span>
+                                          </span>
+                                          <NumberInput
+                                            placeholder="10"
+                                            value={
+                                              template.capacity
+                                                ? parseInt(template.capacity)
+                                                : undefined
+                                            }
+                                            onChange={(val) =>
+                                              updateVolumeClaimTemplate(index, {
+                                                capacity: val?.toString() || '',
+                                              })
+                                            }
+                                            suffix="Gi"
+                                            fullWidth
+                                          />
+                                        </VStack>
+                                      </div>
+                                    )}
+
+                                    {template.useExistingPV && (
+                                      <VStack gap={1}>
+                                        <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                          Persistent Volume{' '}
+                                          <span className="text-[var(--color-state-danger)]">
+                                            *
+                                          </span>
+                                        </span>
+                                        <Select
+                                          options={[
+                                            { value: 'pv-1', label: 'pv-1' },
+                                            { value: 'pv-2', label: 'pv-2' },
+                                          ]}
+                                          value={template.persistentVolume}
+                                          onChange={(val) =>
+                                            updateVolumeClaimTemplate(index, {
+                                              persistentVolume: val,
+                                            })
+                                          }
+                                          placeholder="Select Persistent Volume"
+                                          fullWidth
+                                        />
+                                      </VStack>
+                                    )}
+
+                                    <VStack gap={1}>
+                                      <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                        Access Modes{' '}
+                                        <span className="text-[var(--color-state-danger)]">*</span>
+                                      </span>
+                                      <VStack gap={1}>
+                                        <Checkbox
+                                          label="ReadWriteOnce"
+                                          checked={template.accessModes.readWriteOnce}
+                                          onChange={(e) =>
+                                            updateVolumeClaimTemplate(index, {
+                                              accessModes: {
+                                                ...template.accessModes,
+                                                readWriteOnce: e.target.checked,
+                                              },
+                                            })
+                                          }
+                                        />
+                                        <Checkbox
+                                          label="ReadOnlyMany"
+                                          checked={template.accessModes.readOnlyMany}
+                                          onChange={(e) =>
+                                            updateVolumeClaimTemplate(index, {
+                                              accessModes: {
+                                                ...template.accessModes,
+                                                readOnlyMany: e.target.checked,
+                                              },
+                                            })
+                                          }
+                                        />
+                                        <Checkbox
+                                          label="ReadWriteMany"
+                                          checked={template.accessModes.readWriteMany}
+                                          onChange={(e) =>
+                                            updateVolumeClaimTemplate(index, {
+                                              accessModes: {
+                                                ...template.accessModes,
+                                                readWriteMany: e.target.checked,
+                                              },
+                                            })
+                                          }
+                                        />
+                                      </VStack>
+                                    </VStack>
+                                  </VStack>
+                                </div>
+                              ))}
+
+                              <div className="w-fit">
+                                <Button
+                                  variant="secondary"
+                                  size="sm"
+                                  leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                  onClick={addVolumeClaimTemplate}
+                                >
+                                  Add Volume Claim Template
+                                </Button>
+                              </div>
+                            </VStack>
+                          </div>
                         </SectionCard.Content>
                       </SectionCard>
                     </>
@@ -1652,7 +3750,7 @@ export function CreateDeploymentPage() {
                         <>
                           {/* General Section */}
                           <SectionCard>
-                            <SectionCard.Header title="General" showDivider />
+                            <SectionCard.Header title="General" />
                             <SectionCard.Content>
                               <VStack gap={4}>
                                 <div className="grid grid-cols-2 gap-4 w-full">
@@ -1777,7 +3875,7 @@ export function CreateDeploymentPage() {
 
                           {/* Ports Section */}
                           <SectionCard>
-                            <SectionCard.Header title="Ports" showDivider />
+                            <SectionCard.Header title="Ports" />
                             <SectionCard.Content>
                               <VStack gap={4}>
                                 <span className="text-[12px] text-[var(--color-text-subtle)]">
@@ -1878,7 +3976,7 @@ export function CreateDeploymentPage() {
 
                           {/* Environment Variables Section */}
                           <SectionCard>
-                            <SectionCard.Header title="Environment Variables" showDivider />
+                            <SectionCard.Header title="Environment Variables" />
                             <SectionCard.Content>
                               <VStack gap={4}>
                                 <span className="text-[12px] text-[var(--color-text-subtle)]">
@@ -1967,7 +4065,7 @@ export function CreateDeploymentPage() {
 
                           {/* Resources Section */}
                           <SectionCard>
-                            <SectionCard.Header title="Resources" showDivider />
+                            <SectionCard.Header title="Resources" />
                             <SectionCard.Content>
                               <VStack gap={4}>
                                 <span className="text-[14px] font-medium text-[var(--color-text-default)]">
@@ -2059,7 +4157,7 @@ export function CreateDeploymentPage() {
 
                           {/* Health Checks Section */}
                           <SectionCard>
-                            <SectionCard.Header title="Health Checks" showDivider />
+                            <SectionCard.Header title="Health Checks" />
                             <SectionCard.Content>
                               <VStack gap={4}>
                                 <VStack gap={3}>
@@ -2112,7 +4210,7 @@ export function CreateDeploymentPage() {
 
                           {/* Volume Mounts Section */}
                           <SectionCard>
-                            <SectionCard.Header title="Volume Mounts" showDivider />
+                            <SectionCard.Header title="Volume Mounts" />
                             <SectionCard.Content>
                               <VStack gap={4}>
                                 <span className="text-[12px] text-[var(--color-text-subtle)]">
@@ -2223,7 +4321,7 @@ export function CreateDeploymentPage() {
 
                           {/* Security Context Section */}
                           <SectionCard>
-                            <SectionCard.Header title="Security Context" showDivider />
+                            <SectionCard.Header title="Security Context" />
                             <SectionCard.Content>
                               <VStack gap={4}>
                                 <div className="grid grid-cols-2 gap-4 w-full">
