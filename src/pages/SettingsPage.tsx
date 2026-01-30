@@ -918,9 +918,7 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
               className={passwordError ? 'border-[var(--color-state-danger)]' : ''}
             />
             {passwordError && (
-              <p className="text-body-md text-[var(--color-state-danger)]">
-                {passwordError}
-              </p>
+              <p className="text-body-md text-[var(--color-state-danger)]">{passwordError}</p>
             )}
           </div>
 
@@ -1066,9 +1064,7 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
 
           {/* Title & Description */}
           <div className="space-y-2">
-            <h2 className="text-heading-h4 text-[var(--color-text-default)]">
-              Set up the OTP App
-            </h2>
+            <h2 className="text-heading-h4 text-[var(--color-text-default)]">Set up the OTP App</h2>
             <p className="text-body-md text-[var(--color-text-muted)]">
               For security, you must set up OTP verification.
             </p>
@@ -1154,9 +1150,7 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
                   error={!!otpError}
                 />
                 {otpError && (
-                  <p className="text-body-sm text-[var(--color-state-danger)]">
-                    {otpError}
-                  </p>
+                  <p className="text-body-sm text-[var(--color-state-danger)]">{otpError}</p>
                 )}
               </div>
             </div>
@@ -1252,9 +1246,7 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
               </button>
             </div>
             {newPasswordError && (
-              <p className="text-body-sm text-[var(--color-state-danger)]">
-                {newPasswordError}
-              </p>
+              <p className="text-body-sm text-[var(--color-state-danger)]">{newPasswordError}</p>
             )}
           </div>
 

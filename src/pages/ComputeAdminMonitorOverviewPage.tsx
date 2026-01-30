@@ -368,9 +368,7 @@ function PieChartCard({
               className="w-2.5 h-2.5 rounded-sm shrink-0"
               style={{ backgroundColor: item.color }}
             />
-            <span className="text-body-sm text-[var(--color-text-muted)]">
-              {item.label}
-            </span>
+            <span className="text-body-sm text-[var(--color-text-muted)]">{item.label}</span>
           </div>
         ))}
       </div>
@@ -416,19 +414,13 @@ function HostUsageCard({
           return (
             <div key={node.name} className="flex flex-col gap-1.5">
               <div className="flex items-center justify-between">
-                <span className="text-label-sm text-[var(--color-text-default)]">
-                  {node.name}
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">{node.name}</span>
                 <div className="flex items-center gap-2">
                   <span className="text-body-sm text-[var(--color-text-muted)]">
                     {used}/{total} GiB
                   </span>
                   <div className={`flex items-center px-1.5 py-0.5 rounded-md ${colors.bg}`}>
-                    <span
-                      className={`text-label-sm ${colors.text}`}
-                    >
-                      {percent}%
-                    </span>
+                    <span className={`text-label-sm ${colors.text}`}>{percent}%</span>
                   </div>
                 </div>
               </div>

@@ -363,9 +363,7 @@ export function LoadBalancersPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">
-            ID : {row.id}
-          </span>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
         </div>
       ),
     },
@@ -536,9 +534,7 @@ export function LoadBalancersPage() {
             <VStack gap={3}>
               {/* Page Header */}
               <div className="flex justify-between items-center h-8 w-full">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-                  Load balancers
-                </h1>
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Load balancers</h1>
                 <Button
                   variant="primary"
                   size="md"

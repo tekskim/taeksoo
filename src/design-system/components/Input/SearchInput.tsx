@@ -129,10 +129,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
     return (
       <div className={wrapperClasses}>
         {label && (
-          <label
-            htmlFor={inputId}
-            className="text-label-sm text-[var(--color-text-default)]"
-          >
+          <label htmlFor={inputId} className="text-label-sm text-[var(--color-text-default)]">
             {label}
           </label>
         )}

@@ -673,9 +673,7 @@ export default function ComputeAdminFirewallsPage() {
             <VStack gap={3}>
               {/* Page Header */}
               <div className="flex items-center justify-between h-8">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-                  Firewalls
-                </h1>
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Firewalls</h1>
                 <Button
                   variant="primary"
                   size="md"

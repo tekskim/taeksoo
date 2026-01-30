@@ -1170,9 +1170,7 @@ export function ComputeAdminInstanceListPage() {
           >
             {row.tenant}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">
-            ID: {row.tenantId}
-          </span>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.tenantId}</span>
         </div>
       ),
     },
@@ -1330,9 +1328,7 @@ export function ComputeAdminInstanceListPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">
-            ID : {row.id}
-          </span>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
         </div>
       ),
     },
@@ -1508,9 +1504,7 @@ export function ComputeAdminInstanceListPage() {
             <VStack gap={3}>
               {/* Page Header */}
               <div className="flex items-center justify-between h-8">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-                  Instances list
-                </h1>
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Instances list</h1>
               </div>
 
               {/* Type Tabs */}

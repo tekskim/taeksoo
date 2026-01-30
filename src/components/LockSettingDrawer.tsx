@@ -64,9 +64,7 @@ export function LockSettingDrawer({ isOpen, onClose, instance, onSubmit }: LockS
     >
       <VStack gap={6}>
         {/* Header */}
-        <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-          Lock Setting
-        </h2>
+        <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">Lock Setting</h2>
 
         {/* Instance Info */}
         {instance && (

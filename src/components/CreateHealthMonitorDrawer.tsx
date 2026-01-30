@@ -164,9 +164,7 @@ export function CreateHealthMonitorDrawer({
 
         {/* Type */}
         <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Type
-          </label>
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">Type</label>
           <Select
             value={monitorType}
             onChange={(value) => setMonitorType(value as HealthMonitorType)}

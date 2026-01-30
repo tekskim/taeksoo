@@ -307,9 +307,7 @@ export default function PoolDetailPage() {
             {row.source.name}
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">
-            ID : {row.source.id}
-          </span>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.source.id}</span>
         </div>
       ),
     },

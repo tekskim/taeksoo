@@ -182,27 +182,19 @@ export function CreateObjectDrawer({
               {/* Header */}
               <div className="flex items-center bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md">
                 <div className="flex-1 px-3 py-2 h-10 flex items-center">
-                  <span className="text-label-sm text-[var(--color-text-default)]">
-                    Name
-                  </span>
+                  <span className="text-label-sm text-[var(--color-text-default)]">Name</span>
                   <IconChevronDown size={12} className="ml-1.5 text-[var(--color-text-subtle)]" />
                 </div>
                 <div className="flex-1 px-3 py-2 h-10 flex items-center">
-                  <span className="text-label-sm text-[var(--color-text-default)]">
-                    Type
-                  </span>
+                  <span className="text-label-sm text-[var(--color-text-default)]">Type</span>
                   <IconChevronDown size={12} className="ml-1.5 text-[var(--color-text-subtle)]" />
                 </div>
                 <div className="flex-1 px-3 py-2 h-10 flex items-center">
-                  <span className="text-label-sm text-[var(--color-text-default)]">
-                    Size
-                  </span>
+                  <span className="text-label-sm text-[var(--color-text-default)]">Size</span>
                   <IconChevronDown size={12} className="ml-1.5 text-[var(--color-text-subtle)]" />
                 </div>
                 <div className="flex-1 px-3 py-2 h-10 flex items-center">
-                  <span className="text-label-sm text-[var(--color-text-default)]">
-                    Count
-                  </span>
+                  <span className="text-label-sm text-[var(--color-text-default)]">Count</span>
                   <IconChevronDown size={12} className="ml-1.5 text-[var(--color-text-subtle)]" />
                 </div>
                 <div className="w-10 p-3" />
@@ -251,9 +243,7 @@ export function CreateObjectDrawer({
 
         {/* ACL Section */}
         <VStack gap={4} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            ACL
-          </label>
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">ACL</label>
 
           {/* ACL Type Radio */}
           <HStack gap={6}>
@@ -308,9 +298,7 @@ export function CreateObjectDrawer({
         {/* Tags Section */}
         <VStack gap={4} className="w-full">
           <HStack justify="between" className="w-full">
-            <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-              Tags
-            </label>
+            <label className="text-label-lg text-[var(--color-text-default)] leading-5">Tags</label>
             <Button variant="primary" size="sm" onClick={handleAddTag}>
               Add
             </Button>
@@ -321,14 +309,10 @@ export function CreateObjectDrawer({
             {/* Header */}
             <div className="flex items-center bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md">
               <div className="flex-1 px-3 py-2 h-10 flex items-center">
-                <span className="text-label-sm text-[var(--color-text-default)]">
-                  Key
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Key</span>
               </div>
               <div className="flex-1 px-3 py-2 h-10 flex items-center">
-                <span className="text-label-sm text-[var(--color-text-default)]">
-                  Value
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Value</span>
               </div>
               <div className="w-10 p-3" />
             </div>

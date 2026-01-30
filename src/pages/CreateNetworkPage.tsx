@@ -224,9 +224,7 @@ export default function CreateNetworkPage() {
             <VStack gap={3} className="min-w-[1176px]">
               {/* Page Title */}
               <div className="flex items-center justify-between h-8">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-                  Create network
-                </h1>
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create network</h1>
               </div>
 
               {/* Content Area */}

@@ -186,9 +186,7 @@ export function RescueInstanceDrawer({
 
         {/* Current Image Field */}
         <VStack gap={2}>
-          <span className="text-label-lg text-[var(--color-text-default)]">
-            Current Image
-          </span>
+          <span className="text-label-lg text-[var(--color-text-default)]">Current Image</span>
           <div className="w-full px-2.5 py-2 border border-[var(--color-border-subtle)] rounded-md bg-white">
             <span className="text-body-md text-[var(--color-text-default)]">
               {instance.currentImage}
@@ -322,62 +320,48 @@ export function RescueInstanceDrawer({
                   style={{ width: '59px', flexShrink: 0 }}
                   className="flex items-center justify-center px-3 border-l border-[var(--color-border-default)]"
                 >
-                  <span className="text-label-sm text-[var(--color-text-default)]">
-                    Status
-                  </span>
+                  <span className="text-label-sm text-[var(--color-text-default)]">Status</span>
                 </div>
                 <div
                   style={{ width: '149px', flexShrink: 0 }}
                   className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
                 >
-                  <span className="text-label-sm text-[var(--color-text-default)]">
-                    Name
-                  </span>
+                  <span className="text-label-sm text-[var(--color-text-default)]">Name</span>
                   <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
                 </div>
                 <div
                   style={{ width: '80px', flexShrink: 0 }}
                   className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
                 >
-                  <span className="text-label-sm text-[var(--color-text-default)]">
-                    Version
-                  </span>
+                  <span className="text-label-sm text-[var(--color-text-default)]">Version</span>
                   <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
                 </div>
                 <div
                   style={{ width: '80px', flexShrink: 0 }}
                   className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
                 >
-                  <span className="text-label-sm text-[var(--color-text-default)]">
-                    Size
-                  </span>
+                  <span className="text-label-sm text-[var(--color-text-default)]">Size</span>
                   <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
                 </div>
                 <div
                   style={{ width: '80px', flexShrink: 0 }}
                   className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
                 >
-                  <span className="text-label-sm text-[var(--color-text-default)]">
-                    Min Disk
-                  </span>
+                  <span className="text-label-sm text-[var(--color-text-default)]">Min Disk</span>
                   <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
                 </div>
                 <div
                   style={{ width: '80px', flexShrink: 0 }}
                   className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
                 >
-                  <span className="text-label-sm text-[var(--color-text-default)]">
-                    Min RAM
-                  </span>
+                  <span className="text-label-sm text-[var(--color-text-default)]">Min RAM</span>
                   <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
                 </div>
                 <div
                   style={{ width: '80px', flexShrink: 0 }}
                   className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
                 >
-                  <span className="text-label-sm text-[var(--color-text-default)]">
-                    Visibility
-                  </span>
+                  <span className="text-label-sm text-[var(--color-text-default)]">Visibility</span>
                   <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
                 </div>
               </div>

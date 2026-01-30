@@ -628,9 +628,7 @@ export function VolumesPage() {
             <VStack gap={3}>
               {/* Page Header */}
               <div className="flex items-center justify-between h-8">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-                  Volumes
-                </h1>
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Volumes</h1>
                 <Button size="md" as={Link} to="/compute/volumes/create">
                   Create volume
                 </Button>

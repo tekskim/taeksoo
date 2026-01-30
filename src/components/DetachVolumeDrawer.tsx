@@ -210,44 +210,34 @@ export function DetachVolumeDrawer({
                 style={{ width: '59px', flexShrink: 0 }}
                 className="flex items-center justify-center px-3 border-l border-[var(--color-border-default)]"
               >
-                <span className="text-label-sm text-[var(--color-text-default)]">
-                  Status
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Status</span>
               </div>
               <div
                 style={{ width: '137px', flexShrink: 0 }}
                 className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
               >
-                <span className="text-label-sm text-[var(--color-text-default)]">
-                  Name
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Name</span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
               </div>
               <div
                 style={{ width: '137px', flexShrink: 0 }}
                 className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
               >
-                <span className="text-label-sm text-[var(--color-text-default)]">
-                  Type
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Type</span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
               </div>
               <div
                 style={{ width: '137px', flexShrink: 0 }}
                 className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
               >
-                <span className="text-label-sm text-[var(--color-text-default)]">
-                  Size
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Size</span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
               </div>
               <div
                 style={{ width: '138px', flexShrink: 0 }}
                 className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
               >
-                <span className="text-label-sm text-[var(--color-text-default)]">
-                  Disk Tag
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Disk Tag</span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
               </div>
             </div>

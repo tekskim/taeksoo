@@ -89,9 +89,7 @@ export function EditUserDrawer({
       <VStack gap={6} className="pb-6">
         {/* Header */}
         <VStack gap={3}>
-          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-            Edit user
-          </h2>
+          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">Edit user</h2>
           <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
             Edit the user's basic information.
           </p>
@@ -116,9 +114,7 @@ export function EditUserDrawer({
               <span className="text-label-lg text-[var(--color-text-default)] leading-5">
                 Email address
               </span>
-              <span className="text-label-lg text-[var(--color-state-danger)] leading-5">
-                *
-              </span>
+              <span className="text-label-lg text-[var(--color-state-danger)] leading-5">*</span>
             </div>
             <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
               The email address used for password recovery.
@@ -152,9 +148,7 @@ export function EditUserDrawer({
 
         {/* Status Section */}
         <VStack gap={2}>
-          <span className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Status
-          </span>
+          <span className="text-label-lg text-[var(--color-text-default)] leading-5">Status</span>
           <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
             Select the user's status. If 'Disabled', the user will be prevented from signing in.
           </p>

@@ -140,9 +140,7 @@ export function AllocateIPDrawer({
 
         {/* Port (Read-only) */}
         <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Port
-          </label>
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">Port</label>
           <Input value={port.name} readOnly disabled fullWidth />
         </VStack>
 

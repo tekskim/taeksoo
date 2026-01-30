@@ -229,18 +229,14 @@ export function DisconnectSubnetDrawer({
 
           {/* Router Info */}
           <div className="w-full bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-            <p className="text-label-sm text-[var(--color-text-subtle)] leading-4 mb-1.5">
-              Router
-            </p>
+            <p className="text-label-sm text-[var(--color-text-subtle)] leading-4 mb-1.5">Router</p>
             <p className="text-body-md text-[var(--color-text-default)] leading-4">{router.name}</p>
           </div>
         </VStack>
 
         {/* Subnet Section */}
         <VStack gap={3} className="w-full pb-5">
-          <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Subnet
-          </h3>
+          <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">Subnet</h3>
 
           <div className="w-[280px]">
             <SearchInput
@@ -269,18 +265,14 @@ export function DisconnectSubnetDrawer({
                 className="flex-1 px-3 py-2 h-[40px] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
                 onClick={() => handleSort('name')}
               >
-                <span className="text-label-sm text-[var(--color-text-default)]">
-                  Name
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Name</span>
                 <IconChevronDown
                   size={12}
                   className={`transition-transform ${sortField === 'name' && sortDirection === 'desc' ? 'rotate-180' : ''}`}
                 />
               </div>
               <div className="flex-1 px-3 py-2 h-[40px] flex items-center border-l border-[var(--color-border-default)]">
-                <span className="text-label-sm text-[var(--color-text-default)]">
-                  Subnet CIDR
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Subnet CIDR</span>
               </div>
               <div className="flex-1 px-3 py-2 h-[40px] flex items-center border-l border-[var(--color-border-default)]">
                 <span className="text-label-sm text-[var(--color-text-default)]">
@@ -291,9 +283,7 @@ export function DisconnectSubnetDrawer({
                 className="flex-1 px-3 py-2 h-[40px] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
                 onClick={() => handleSort('networkName')}
               >
-                <span className="text-label-sm text-[var(--color-text-default)]">
-                  Network
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Network</span>
                 <IconChevronDown
                   size={12}
                   className={`transition-transform ${sortField === 'networkName' && sortDirection === 'desc' ? 'rotate-180' : ''}`}

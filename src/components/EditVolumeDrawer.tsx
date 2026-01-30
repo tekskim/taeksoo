@@ -77,9 +77,7 @@ export function EditVolumeDrawer({ isOpen, onClose, volume, onSubmit }: EditVolu
     >
       <VStack gap={6}>
         {/* Header */}
-        <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-          Edit Volume
-        </h2>
+        <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">Edit Volume</h2>
 
         {/* Volume Name Input */}
         <VStack gap={2} className="w-full">

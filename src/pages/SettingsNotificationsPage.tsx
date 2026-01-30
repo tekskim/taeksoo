@@ -42,7 +42,8 @@ export default function SettingsNotificationsPage() {
   const updateServiceNotification = (
     service: string,
     field: 'whatToNotify' | 'duration' | 'sound',
-    value: string | boolean ) => {
+    value: string | boolean
+  ) => {
     setServiceNotifications((prev) => ({
       ...prev,
       [service]: { ...prev[service], [field]: value },
@@ -84,7 +85,8 @@ export default function SettingsNotificationsPage() {
 
         {/* TabBar (Window controls only) */}
         <div className="flex-1">
-          <TabBar tabs={[]}
+          <TabBar
+            tabs={[]}
             activeTab=""
             onTabChange={() => {}}
             showAddButton={false}
@@ -109,7 +111,8 @@ export default function SettingsNotificationsPage() {
                 {/* Header */}
                 <div>
                   <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
-                    Notifications </h1>
+                    Notifications{' '}
+                  </h1>
                   <p className="text-body-md leading-[18px] text-[var(--color-text-muted)] mt-1">
                     Configure how you receive notifications.
                   </p>
@@ -122,13 +125,16 @@ export default function SettingsNotificationsPage() {
                     {/* Global Notification Setting */}
                     <VStack gap={4}>
                       <span className="text-body-lg font-semibold leading-5 text-[var(--color-text-default)]">
-                        Global Notification Setting </span>
+                        Global Notification Setting{' '}
+                      </span>
 
                       {/* What to Notify */}
                       <VStack gap={2} className="pl-2">
                         <span className="text-label-md text-[var(--color-text-default)]">
-                          What to Notify </span>
-                        <RadioGroup value={globalWhatToNotify}
+                          What to Notify{' '}
+                        </span>
+                        <RadioGroup
+                          value={globalWhatToNotify}
                           onChange={setGlobalWhatToNotify}
                           direction="horizontal"
                         >
@@ -139,12 +145,15 @@ export default function SettingsNotificationsPage() {
                       </VStack>
 
                       {/* Duration */}
-                      <VStack gap={2}
+                      <VStack
+                        gap={2}
                         className={`pl-2 ${globalWhatToNotify === 'off' ? 'opacity-50' : ''}`}
                       >
                         <span className="text-label-md text-[var(--color-text-default)]">
-                          Duration </span>
-                        <Select value={globalDuration}
+                          Duration{' '}
+                        </span>
+                        <Select
+                          value={globalDuration}
                           onChange={setGlobalDuration}
                           options={durationOptions}
                           width="sm"
@@ -153,12 +162,15 @@ export default function SettingsNotificationsPage() {
                       </VStack>
 
                       {/* Sound */}
-                      <VStack gap={2}
+                      <VStack
+                        gap={2}
                         className={`pl-2 ${globalWhatToNotify === 'off' ? 'opacity-50' : ''}`}
                       >
                         <span className="text-label-md text-[var(--color-text-default)]">
-                          Sound </span>
-                        <Toggle checked={globalSound}
+                          Sound{' '}
+                        </span>
+                        <Toggle
+                          checked={globalSound}
                           onChange={(e) => setGlobalSound(e.target.checked)}
                           disabled={globalWhatToNotify === 'off'}
                         />
@@ -171,11 +183,13 @@ export default function SettingsNotificationsPage() {
                     {/* In-app Notification Setting */}
                     <VStack gap={4}>
                       <span className="text-body-lg font-semibold leading-5 text-[var(--color-text-default)]">
-                        In-app Notification Setting </span>
+                        In-app Notification Setting{' '}
+                      </span>
 
                       {/* Service-specific settings */}
                       {services.map(({ key, label }) => (
-                        <Disclosure key={key}
+                        <Disclosure
+                          key={key}
                           className="border border-[var(--color-border-default)] rounded-lg overflow-hidden"
                         >
                           <Disclosure.Trigger className="w-full py-3 px-4 bg-[var(--color-surface-subtle)]">
@@ -187,8 +201,10 @@ export default function SettingsNotificationsPage() {
                             {/* What to Notify */}
                             <div>
                               <span className="text-label-md text-[var(--color-text-default)] block mb-2">
-                                What to Notify </span>
-                              <RadioGroup value={serviceNotifications[key].whatToNotify}
+                                What to Notify{' '}
+                              </span>
+                              <RadioGroup
+                                value={serviceNotifications[key].whatToNotify}
                                 onChange={(value) =>
                                   updateServiceNotification(key, 'whatToNotify', value)
                                 }
@@ -201,13 +217,16 @@ export default function SettingsNotificationsPage() {
                             </div>
 
                             {/* Duration */}
-                            <div className={
+                            <div
+                              className={
                                 serviceNotifications[key].whatToNotify === 'off' ? 'opacity-50' : ''
                               }
                             >
                               <span className="text-label-md text-[var(--color-text-default)] block mb-2">
-                                Duration </span>
-                              <Select value={serviceNotifications[key].duration}
+                                Duration{' '}
+                              </span>
+                              <Select
+                                value={serviceNotifications[key].duration}
                                 onChange={(value) =>
                                   updateServiceNotification(key, 'duration', value)
                                 }
@@ -218,13 +237,16 @@ export default function SettingsNotificationsPage() {
                             </div>
 
                             {/* Sound */}
-                            <div className={
+                            <div
+                              className={
                                 serviceNotifications[key].whatToNotify === 'off' ? 'opacity-50' : ''
                               }
                             >
                               <span className="text-label-md text-[var(--color-text-default)] block mb-2">
-                                Sound </span>
-                              <Toggle checked={serviceNotifications[key].sound}
+                                Sound{' '}
+                              </span>
+                              <Toggle
+                                checked={serviceNotifications[key].sound}
                                 onChange={(e) =>
                                   updateServiceNotification(key, 'sound', e.target.checked)
                                 }

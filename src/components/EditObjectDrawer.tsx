@@ -109,9 +109,7 @@ export function EditObjectDrawer({
     >
       <VStack gap={3}>
         {/* Header */}
-        <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-          Edit Object
-        </h2>
+        <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">Edit Object</h2>
 
         <VStack gap={4} className="w-full">
           {/* Folder Name Input */}

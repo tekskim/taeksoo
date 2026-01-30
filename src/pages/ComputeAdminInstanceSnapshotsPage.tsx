@@ -379,9 +379,7 @@ export function ComputeAdminInstanceSnapshotsPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">
-            ID : {row.id}
-          </span>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
         </div>
       ),
     },
@@ -400,9 +398,7 @@ export function ComputeAdminInstanceSnapshotsPage() {
           >
             {row.tenant}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">
-            ID : {row.tenantId}
-          </span>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.tenantId}</span>
         </div>
       ),
     },

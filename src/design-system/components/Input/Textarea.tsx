@@ -122,10 +122,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     return (
       <div className={wrapperClasses}>
         {label && (
-          <label
-            htmlFor={inputId}
-            className="text-label-lg text-[var(--color-text-default)]"
-          >
+          <label htmlFor={inputId} className="text-label-lg text-[var(--color-text-default)]">
             {label}
             {required && <span className="text-[var(--color-state-danger)] ml-0.5">*</span>}
           </label>
@@ -133,10 +130,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
 
         {/* Helper Text - below label */}
         {helperText && !error && (
-          <p
-            id={`${inputId}-helper`}
-            className="text-body-sm text-[var(--color-text-subtle)]"
-          >
+          <p id={`${inputId}-helper`} className="text-body-sm text-[var(--color-text-subtle)]">
             {helperText}
           </p>
         )}

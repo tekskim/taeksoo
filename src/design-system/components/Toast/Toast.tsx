@@ -258,9 +258,7 @@ export function Toast({ toast, onDismiss, className = '' }: ToastProps) {
         <div className="flex-1 min-w-0 flex flex-col gap-[var(--space-2)]">
           {/* Title */}
           {toast.title && (
-            <p className="text-label-md text-[var(--color-text-default)]">
-              {toast.title}
-            </p>
+            <p className="text-label-md text-[var(--color-text-default)]">{toast.title}</p>
           )}
 
           {/* Message */}
@@ -382,9 +380,7 @@ export function Toast({ toast, onDismiss, className = '' }: ToastProps) {
                   code: {toast.detail.code}
                 </p>
               )}
-              <p className="text-body-md text-[var(--color-text-muted)]">
-                {toast.detail.content}
-              </p>
+              <p className="text-body-md text-[var(--color-text-muted)]">{toast.detail.content}</p>
             </div>
           )}
         </div>

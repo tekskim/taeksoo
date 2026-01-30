@@ -418,9 +418,7 @@ function PodsTab({ pods }: PodsTabProps) {
 
   return (
     <VStack gap={3}>
-      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
-        Pods
-      </h3>
+      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">Pods</h3>
       <HStack gap={2} align="center">
         <SearchInput
           placeholder="Search Pods by attributes"
@@ -564,9 +562,7 @@ function ImagesTab({ images }: ImagesTabProps) {
 
   return (
     <VStack gap={3}>
-      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
-        Images
-      </h3>
+      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">Images</h3>
       <HStack gap={2} align="center">
         <SearchInput
           placeholder="Search Images by attributes"
@@ -607,9 +603,7 @@ function TaintsTab({ taints }: TaintsTabProps) {
 
   return (
     <VStack gap={3}>
-      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
-        Taints
-      </h3>
+      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">Taints</h3>
       <Pagination
         currentPage={currentPage}
         totalPages={1}

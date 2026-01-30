@@ -230,9 +230,7 @@ export function FloatingCard({
           }}
         >
           {/* Title - Always required */}
-          <h2 className="text-label-lg text-[var(--color-text-default)] shrink-0">
-            {title}
-          </h2>
+          <h2 className="text-label-lg text-[var(--color-text-default)] shrink-0">{title}</h2>
 
           {/* Summary Sections - Only render if sections exist */}
           {sections && sections.length > 0 && (
@@ -331,9 +329,7 @@ export function FloatingCard({
             }}
           >
             <div className="flex flex-col items-start gap-3 w-full">
-              <h3 className="text-label-md text-[var(--color-text-default)]">
-                Quota
-              </h3>
+              <h3 className="text-label-md text-[var(--color-text-default)]">Quota</h3>
               <div className="flex flex-col gap-3 w-full">
                 {quota.map((item, index) => (
                   <div key={index} className="flex flex-col gap-1 w-full">

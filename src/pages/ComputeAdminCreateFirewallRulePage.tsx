@@ -91,9 +91,7 @@ function SummarySidebar({
 
         {/* Quota Section */}
         <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-lg p-4 flex flex-col gap-4">
-          <h5 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
-            Quota
-          </h5>
+          <h5 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">Quota</h5>
 
           {/* Firewall Rules Quota */}
           <div className="flex flex-col gap-2 w-full">
@@ -236,7 +234,9 @@ export default function ComputeAdminCreateFirewallRulePage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm leading-4 text-[var(--color-text-muted)]">ID: {row.id}</span>
+          <span className="text-body-sm leading-4 text-[var(--color-text-muted)]">
+            ID: {row.id}
+          </span>
         </div>
       ),
     },
@@ -356,9 +356,7 @@ export default function ComputeAdminCreateFirewallRulePage() {
             <VStack gap={3} className="min-w-[1176px]">
               {/* Page Title */}
               <div className="flex items-center justify-between h-8">
-                <h1 className="text-heading-h4 text-[var(--color-text-default)]">
-                  Create rule
-                </h1>
+                <h1 className="text-heading-h4 text-[var(--color-text-default)]">Create rule</h1>
               </div>
 
               {/* Content Area */}

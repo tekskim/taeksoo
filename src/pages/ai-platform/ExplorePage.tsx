@@ -283,9 +283,7 @@ export function ExplorePage() {
               {/* Header */}
               <HStack justify="between" align="start">
                 <VStack gap={1}>
-                  <h1 className="text-heading-h3 text-[var(--color-text-default)]">
-                    Explore
-                  </h1>
+                  <h1 className="text-heading-h3 text-[var(--color-text-default)]">Explore</h1>
                   <p className="text-body-lg text-[var(--color-text-subtle)]">
                     Discover and deploy community templates
                   </p>

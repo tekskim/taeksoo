@@ -118,9 +118,7 @@ export function EditMemberDrawer({ isOpen, onClose, member, onSubmit }: EditMemb
 
         {/* Source (Read-only) */}
         <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Source
-          </label>
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">Source</label>
           <Input value={member.source} readOnly disabled fullWidth />
         </VStack>
 
@@ -134,17 +132,13 @@ export function EditMemberDrawer({ isOpen, onClose, member, onSubmit }: EditMemb
 
         {/* Port (Read-only) */}
         <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Port
-          </label>
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">Port</label>
           <Input value={String(member.port)} readOnly disabled fullWidth />
         </VStack>
 
         {/* Weight */}
         <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Weight
-          </label>
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">Weight</label>
           <Input
             type="number"
             value={String(weight)}

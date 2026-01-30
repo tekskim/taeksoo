@@ -221,9 +221,7 @@ function Card({
     <div
       className={`p-4 rounded-2xl border border-[var(--color-border-default)] ${bgColor} ${className}`}
     >
-      <h6 className="text-heading-h6 text-[var(--color-text-muted)] mb-4">
-        {title}
-      </h6>
+      <h6 className="text-heading-h6 text-[var(--color-text-muted)] mb-4">{title}</h6>
       {children}
     </div>
   );

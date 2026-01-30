@@ -488,9 +488,7 @@ export default function SecurityGroupDetailPage() {
                 <div className="flex items-center gap-2">
                   {/* ID */}
                   <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-                    <span className="text-label-sm text-[var(--color-text-subtle)]">
-                      ID
-                    </span>
+                    <span className="text-label-sm text-[var(--color-text-subtle)]">ID</span>
                     <div className="flex items-center gap-1 mt-1.5">
                       <p className="text-body-md text-[var(--color-text-default)]">
                         {securityGroup.id}
@@ -537,9 +535,7 @@ export default function SecurityGroupDetailPage() {
                     <VStack gap={4} className="pt-4">
                       {/* Header */}
                       <div className="flex items-center justify-between">
-                        <h3 className="text-heading-h5 text-[var(--color-text-default)]">
-                          Rules
-                        </h3>
+                        <h3 className="text-heading-h5 text-[var(--color-text-default)]">Rules</h3>
                         <Button
                           variant="secondary"
                           size="sm"

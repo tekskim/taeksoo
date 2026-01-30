@@ -302,9 +302,7 @@ function PreSection({ title }: PreSectionProps) {
   return (
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
       <div className="h-8 flex items-center">
-        <h5 className="text-heading-h5 text-[var(--color-text-default)]">
-          {title}
-        </h5>
+        <h5 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h5>
       </div>
     </div>
   );
@@ -322,9 +320,7 @@ function WritingSection({ title }: WritingSectionProps) {
   return (
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
       <div className="h-8 flex items-center justify-between">
-        <h5 className="text-heading-h5 text-[var(--color-text-default)]">
-          {title}
-        </h5>
+        <h5 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h5>
         <span className="text-body-sm text-[var(--color-text-subtle)]">Writing...</span>
       </div>
     </div>
@@ -416,9 +412,7 @@ function SummarySidebar({
         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
           <VStack gap={3}>
             {/* Header */}
-            <h4 className="text-heading-h5 text-[var(--color-text-default)]">
-              Create user group
-            </h4>
+            <h4 className="text-heading-h5 text-[var(--color-text-default)]">Create user group</h4>
 
             {/* Section Status List */}
             <div className="flex flex-col">
@@ -655,9 +649,7 @@ function AddUsersSection({
       sortable: true,
       render: (_, row) => (
         <HStack gap={1.5} align="center">
-          <span className="text-label-md text-[var(--color-action-primary)]">
-            {row.username}
-          </span>
+          <span className="text-label-md text-[var(--color-action-primary)]">{row.username}</span>
           <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
         </HStack>
       ),
@@ -726,9 +718,7 @@ function AddUsersSection({
         <VStack gap={0} className="pt-2 pb-6">
           <div className="flex flex-col gap-2">
             <div className="flex gap-[3px]">
-              <span className="text-label-lg text-[var(--color-text-default)]">
-                Users
-              </span>
+              <span className="text-label-lg text-[var(--color-text-default)]">Users</span>
               <span className="text-[var(--color-state-danger)]">*</span>
             </div>
             <span className="text-body-md text-[var(--color-text-subtle)]">

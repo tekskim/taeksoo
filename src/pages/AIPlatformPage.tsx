@@ -105,9 +105,7 @@ export function AIPlatformSidebar() {
       <div className="h-12 px-4 flex items-center justify-between border-b border-[var(--color-border-subtle)]">
         <Link to="/ai-platform" className="flex items-center gap-2">
           <AIPlatformLogo />
-          <span className="text-label-lg text-[var(--color-text-default)]">
-            AI Platform
-          </span>
+          <span className="text-label-lg text-[var(--color-text-default)]">AI Platform</span>
         </Link>
         <button className="p-1.5 rounded-md border border-[var(--color-border-default)] hover:bg-[var(--color-surface-subtle)] transition-colors">
           <IconApps size={14} stroke={1.5} className="text-[var(--color-text-muted)]" />
@@ -384,9 +382,7 @@ export function AIPlatformPageLayout({
             {/* Page Header */}
             <div className="flex items-center justify-between w-full">
               <div className="flex flex-col items-start justify-center">
-                <h4 className="text-heading-h4 text-[var(--color-text-default)]">
-                  {title}
-                </h4>
+                <h4 className="text-heading-h4 text-[var(--color-text-default)]">{title}</h4>
                 {subtitle && (
                   <p className="text-body-md text-[var(--color-text-subtle)] mt-0.5">{subtitle}</p>
                 )}
@@ -760,9 +756,7 @@ function DashboardContent() {
           <div className="space-y-1">
             <DataRow label="My pending Jobs:" value={0} />
             <DataRow label="My running Jobs:" value={0} />
-            <p className="text-label-md text-[var(--color-text-default)] mt-2">
-              No active jobs
-            </p>
+            <p className="text-label-md text-[var(--color-text-default)] mt-2">No active jobs</p>
             <p className="text-body-sm text-[var(--color-text-subtle)]">
               You can start a new job now
             </p>
@@ -802,9 +796,7 @@ function DashboardContent() {
 
       {/* Quick Actions */}
       <div>
-        <h3 className="text-heading-h6 text-[var(--color-text-default)] mb-3">
-          Quick Actions
-        </h3>
+        <h3 className="text-heading-h6 text-[var(--color-text-default)] mb-3">Quick Actions</h3>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <QuickActionCard
             icon={
@@ -837,9 +829,7 @@ function DashboardContent() {
 
       {/* Service Overview */}
       <div>
-        <h3 className="text-heading-h6 text-[var(--color-text-default)] mb-3">
-          Service Overview
-        </h3>
+        <h3 className="text-heading-h6 text-[var(--color-text-default)] mb-3">Service Overview</h3>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <ServiceOverviewCard
             icon={
@@ -906,9 +896,7 @@ function DashboardContent() {
       <div>
         <div className="flex items-center gap-2 mb-3">
           <IconActivity size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
-          <h3 className="text-heading-h6 text-[var(--color-text-default)]">
-            Recent Services
-          </h3>
+          <h3 className="text-heading-h6 text-[var(--color-text-default)]">Recent Services</h3>
           <span className="text-body-sm text-[var(--color-text-subtle)]">(Last 24 hours)</span>
         </div>
         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-8 flex items-center justify-center">
@@ -1066,12 +1054,8 @@ function StatusCard({ label, count, status }: StatusCardProps) {
       className={`${bgColor} flex flex-[1_0_0] items-center justify-between min-h-px min-w-px px-4 py-3 relative rounded-lg shrink-0`}
     >
       <div className="flex flex-col gap-1.5 items-start leading-4 not-italic relative shrink-0">
-        <p className="text-label-sm text-[var(--color-text-subtle)]">
-          {label}
-        </p>
-        <p className="text-body-md text-[var(--color-text-default)]">
-          {count}
-        </p>
+        <p className="text-label-sm text-[var(--color-text-subtle)]">{label}</p>
+        <p className="text-body-md text-[var(--color-text-default)]">{count}</p>
       </div>
       <div
         className={`${iconBg} flex gap-0 items-center justify-center p-1 relative rounded-2xl shrink-0 size-6`}
@@ -1370,7 +1354,9 @@ function PlaceholderContent({ title }: { title: string }) {
         <IconStack2 size={32} stroke={1} className="text-[var(--color-text-muted)]" />
       </div>
       <h3 className="text-heading-h5 text-[var(--color-text-default)] mb-2">{title}</h3>
-      <p className="text-body-lg text-[var(--color-text-muted)]">This page is under construction.</p>
+      <p className="text-body-lg text-[var(--color-text-muted)]">
+        This page is under construction.
+      </p>
     </div>
   );
 }

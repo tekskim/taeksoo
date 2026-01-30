@@ -533,9 +533,7 @@ export function ComputeAdminVolumeTypesPage() {
             <VStack gap={3}>
               {/* Page Header */}
               <div className="flex items-center justify-between h-8">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-                  Volume Types
-                </h1>
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Volume Types</h1>
                 <Button size="md">
                   {activeTab === 'volume-types' ? 'Create Volume Type' : 'Create QoS Spec'}
                 </Button>

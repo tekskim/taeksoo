@@ -190,42 +190,32 @@ export function AttachInterfaceDrawer({
                 style={{ width: '59px', flexShrink: 0 }}
                 className="flex items-center justify-center px-3 border-l border-[var(--color-border-default)]"
               >
-                <span className="text-label-sm text-[var(--color-text-default)]">
-                  Status
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Status</span>
               </div>
               <div
                 style={{ width: '110px', flexShrink: 0 }}
                 className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
               >
-                <span className="text-label-sm text-[var(--color-text-default)]">
-                  Name
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Name</span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
               </div>
               <div
                 style={{ width: '110px', flexShrink: 0 }}
                 className="flex items-center px-3 border-l border-[var(--color-border-default)]"
               >
-                <span className="text-label-sm text-[var(--color-text-default)]">
-                  Subnet CIDR
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Subnet CIDR</span>
               </div>
               <div
                 style={{ width: '80px', flexShrink: 0 }}
                 className="flex items-center px-3 border-l border-[var(--color-border-default)]"
               >
-                <span className="text-label-sm text-[var(--color-text-default)]">
-                  External
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">External</span>
               </div>
               <div
                 style={{ width: '80px', flexShrink: 0 }}
                 className="flex items-center px-3 border-l border-[var(--color-border-default)]"
               >
-                <span className="text-label-sm text-[var(--color-text-default)]">
-                  Shared
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Shared</span>
               </div>
               <div
                 style={{ width: '109px', flexShrink: 0 }}

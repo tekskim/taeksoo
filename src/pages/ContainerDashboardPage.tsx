@@ -102,9 +102,7 @@ function CapacityProgressBar({ label, used, total, unit, percentage }: CapacityP
       {/* Header Row */}
       <div className="flex items-center justify-between w-full">
         {/* Label */}
-        <span className="text-label-md text-[var(--color-text-default)]">
-          {label}
-        </span>
+        <span className="text-label-md text-[var(--color-text-default)]">{label}</span>
 
         {/* Value and Badge */}
         <div className="flex items-center gap-[var(--spacing-2)]">

@@ -323,9 +323,7 @@ function StatCard({ label, value, color }: StatCardProps) {
     <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
       <VStack gap={1.5}>
         <span className={`text-label-sm ${colorStyles[color].text}`}>{label}</span>
-        <span className={`text-heading-h3 ${colorStyles[color].text}`}>
-          {value}
-        </span>
+        <span className={`text-heading-h3 ${colorStyles[color].text}`}>{value}</span>
       </VStack>
     </div>
   );
@@ -391,9 +389,7 @@ function ResourcesTab({ resources }: ResourcesTabProps) {
 
   return (
     <VStack gap={3}>
-      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
-        Resources
-      </h3>
+      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">Resources</h3>
       <Pagination
         currentPage={currentPage}
         totalPages={1}
@@ -609,9 +605,7 @@ function WorkloadsTab({ workloads }: WorkloadsTabProps) {
 
   return (
     <VStack gap={3}>
-      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
-        Workloads
-      </h3>
+      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">Workloads</h3>
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}

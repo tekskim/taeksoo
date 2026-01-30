@@ -50,9 +50,7 @@ function QuotaProgressBar({ label, used, total }: QuotaProgressBarProps) {
   return (
     <VStack gap={2} className="w-full">
       <HStack className="w-full justify-between items-center">
-        <span className="text-label-lg text-[var(--color-text-default)] leading-5">
-          {label}
-        </span>
+        <span className="text-label-lg text-[var(--color-text-default)] leading-5">{label}</span>
         <HStack gap={0} className="items-center">
           <span className="text-body-md text-[var(--color-text-default)] leading-4">{used}/</span>
           {isUnlimited ? (
@@ -210,9 +208,7 @@ export function CloneVolumeDrawer({
 
           {/* Source Volume Info Box */}
           <div className="w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg">
-            <p className="text-label-sm text-[var(--color-text-subtle)] mb-1.5">
-              Source Volume
-            </p>
+            <p className="text-label-sm text-[var(--color-text-subtle)] mb-1.5">Source Volume</p>
             <p className="text-body-md text-[var(--color-text-default)]">
               {volume ? `${volume.name} (${volume.size}GiB)` : '-'}
             </p>

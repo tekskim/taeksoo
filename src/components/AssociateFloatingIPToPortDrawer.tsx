@@ -259,17 +259,13 @@ export function AssociateFloatingIPToPortDrawer({
 
         {/* Port Info */}
         <div className="w-full bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-          <p className="text-label-sm text-[var(--color-text-subtle)] leading-4 mb-1.5">
-            Port
-          </p>
+          <p className="text-label-sm text-[var(--color-text-subtle)] leading-4 mb-1.5">Port</p>
           <p className="text-body-md text-[var(--color-text-default)] leading-4">{port.name}</p>
         </div>
 
         {/* Fixed IP Section */}
         <VStack gap={3} className="w-full">
-          <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Fixed IP
-          </h3>
+          <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">Fixed IP</h3>
 
           <div className="w-[280px]">
             <SearchInput
@@ -298,23 +294,17 @@ export function AssociateFloatingIPToPortDrawer({
                 className="flex-1 px-3 py-2 h-[40px] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
                 onClick={() => handleFixedIpSort('fixedIp')}
               >
-                <span className="text-label-sm text-[var(--color-text-default)]">
-                  Fixed IP
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Fixed IP</span>
                 <IconChevronDown
                   size={12}
                   className={`transition-transform ${fixedIpSortField === 'fixedIp' && fixedIpSortDirection === 'desc' ? 'rotate-180' : ''}`}
                 />
               </div>
               <div className="flex-1 px-3 py-2 h-[40px] flex items-center border-l border-[var(--color-border-default)]">
-                <span className="text-label-sm text-[var(--color-text-default)]">
-                  MAC Address
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">MAC Address</span>
               </div>
               <div className="flex-1 px-3 py-2 h-[40px] flex items-center border-l border-[var(--color-border-default)]">
-                <span className="text-label-sm text-[var(--color-text-default)]">
-                  Subnet CIDR
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Subnet CIDR</span>
               </div>
             </div>
 
@@ -367,9 +357,7 @@ export function AssociateFloatingIPToPortDrawer({
 
         {/* Floating IP Section */}
         <VStack gap={3} className="w-full pb-5">
-          <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Floating IP
-          </h3>
+          <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">Floating IP</h3>
 
           <div className="w-[280px]">
             <SearchInput
@@ -395,17 +383,13 @@ export function AssociateFloatingIPToPortDrawer({
             <div className="flex items-center bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md">
               <div className="w-[40px] p-3" />
               <div className="w-[59px] px-3 py-2 h-[40px] flex items-center justify-center border-l border-[var(--color-border-default)]">
-                <span className="text-label-sm text-[var(--color-text-default)]">
-                  Status
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Status</span>
               </div>
               <div
                 className="flex-1 px-3 py-2 h-[40px] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
                 onClick={() => handleFloatingIpSort('floatingIp')}
               >
-                <span className="text-label-sm text-[var(--color-text-default)]">
-                  Floating IP
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Floating IP</span>
                 <IconChevronDown
                   size={12}
                   className={`transition-transform ${floatingIpSortField === 'floatingIp' && floatingIpSortDirection === 'desc' ? 'rotate-180' : ''}`}
@@ -415,9 +399,7 @@ export function AssociateFloatingIPToPortDrawer({
                 className="flex-1 px-3 py-2 h-[40px] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
                 onClick={() => handleFloatingIpSort('networkName')}
               >
-                <span className="text-label-sm text-[var(--color-text-default)]">
-                  Network
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Network</span>
                 <IconChevronDown
                   size={12}
                   className={`transition-transform ${floatingIpSortField === 'networkName' && floatingIpSortDirection === 'desc' ? 'rotate-180' : ''}`}
@@ -427,9 +409,7 @@ export function AssociateFloatingIPToPortDrawer({
                 className="flex-1 px-3 py-2 h-[40px] flex items-center gap-1.5 border-l border-[var(--color-border-default)] cursor-pointer hover:bg-[var(--color-surface-muted)]"
                 onClick={() => handleFloatingIpSort('description')}
               >
-                <span className="text-label-sm text-[var(--color-text-default)]">
-                  Description
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Description</span>
                 <IconChevronDown
                   size={12}
                   className={`transition-transform ${floatingIpSortField === 'description' && floatingIpSortDirection === 'desc' ? 'rotate-180' : ''}`}

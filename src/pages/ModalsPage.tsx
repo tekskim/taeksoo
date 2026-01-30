@@ -36,12 +36,14 @@ interface ModalListItemProps {
 
 function ModalListItem({ title, description, category, size, onOpen }: ModalListItemProps) {
   return (
-    <div className="flex items-center justify-between px-4 py-3 rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-subtle)] hover:border-[var(--color-border-strong)] transition-colors cursor-pointer group"
+    <div
+      className="flex items-center justify-between px-4 py-3 rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-subtle)] hover:border-[var(--color-border-strong)] transition-colors cursor-pointer group"
       onClick={onOpen}
     >
       <HStack gap={3} className="flex-1 items-center min-w-0">
         {size && (
-          <Badge variant={size === 'lg' ? 'yellow' : size === 'md' ? 'info' : 'gray'}
+          <Badge
+            variant={size === 'lg' ? 'yellow' : size === 'md' ? 'info' : 'gray'}
             size="sm"
             className="shrink-0 w-[32px] justify-center font-mono uppercase"
           >
@@ -54,15 +56,14 @@ function ModalListItem({ title, description, category, size, onOpen }: ModalList
           </Badge>
         )}
         <div className="min-w-0 flex-1">
-          <h3 className="text-label-lg text-[var(--color-text-default)] truncate">
-            {title}
-          </h3>
+          <h3 className="text-label-lg text-[var(--color-text-default)] truncate">{title}</h3>
           <p className="text-body-md text-[var(--color-text-subtle)] truncate mt-0.5">
             {description}
           </p>
         </div>
       </HStack>
-      <Button variant="secondary"
+      <Button
+        variant="secondary"
         size="sm"
         onClick={(e) => {
           e.stopPropagation();
@@ -70,7 +71,8 @@ function ModalListItem({ title, description, category, size, onOpen }: ModalList
         }}
         className="shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
       >
-        Open </Button>
+        Open{' '}
+      </Button>
     </div>
   );
 }
@@ -236,12 +238,14 @@ export function ModalsPage() {
       <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
 
       {/* Main Content */}
-      <main className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'}`}
+      <main
+        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'}`}
       >
         {/* Fixed Header Area */}
         <div className="shrink-0 bg-[var(--color-surface-default)]">
           {/* TabBar */}
-          <TabBar tabs={tabs.map((tab) => ({
+          <TabBar
+            tabs={tabs.map((tab) => ({
               id: tab.id,
               label: tab.label,
               closable: tab.closable,
@@ -256,13 +260,15 @@ export function ModalsPage() {
           />
 
           {/* TopBar */}
-          <TopBar showSidebarToggle={!sidebarOpen}
+          <TopBar
+            showSidebarToggle={!sidebarOpen}
             onSidebarToggle={() => setSidebarOpen(true)}
             showNavigation={true}
             onBack={() => window.history.back()}
             onForward={() => window.history.forward()}
             breadcrumb={
-              <Breadcrumb items={[{ label: 'Design system', href: '/design-system' }, { label: 'Modals' }]}
+              <Breadcrumb
+                items={[{ label: 'Design system', href: '/design-system' }, { label: 'Modals' }]}
               />
             }
           />
@@ -276,9 +282,11 @@ export function ModalsPage() {
               {/* Header */}
               <VStack gap={2}>
                 <h1 className="text-heading-h3 text-[var(--color-text-default)]">
-                  Modal components </h1>
+                  Modal components{' '}
+                </h1>
                 <p className="text-body-lg text-[var(--color-text-subtle)]">
-                  Collection of modal components used across the application. Click to preview each modal.
+                  Collection of modal components used across the application. Click to preview each
+                  modal.
                 </p>
               </VStack>
 
@@ -295,9 +303,11 @@ export function ModalsPage() {
                           <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
                         )}
                         <Badge variant="info" size="sm" className="w-[70px] justify-center">
-                          Compute </Badge>
+                          Compute{' '}
+                        </Badge>
                         <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
-                          Modals </span>
+                          Modals{' '}
+                        </span>
                         <span className="text-body-md text-[var(--color-text-subtle)]">
                           (16 modals)
                         </span>
@@ -309,33 +319,39 @@ export function ModalsPage() {
                       {/* Delete Modals */}
                       <VStack gap={2}>
                         <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Delete Modals </h2>
+                          Delete Modals{' '}
+                        </h2>
                         <div className="flex flex-col gap-2">
-                          <ModalListItem title="Delete Snapshot"
+                          <ModalListItem
+                            title="Delete Snapshot"
                             description="Confirm deletion of a snapshot with warning about permanent action."
                             category="Confirm"
                             size="sm"
                             onOpen={() => setIsConfirmDeleteOpen(true)}
                           />
-                          <ModalListItem title="Delete Security group"
+                          <ModalListItem
+                            title="Delete Security group"
                             description="Confirm deletion of a single security group with warning."
                             category="Confirm"
                             size="sm"
                             onOpen={() => setIsDeleteSecurityGroupOpen(true)}
                           />
-                          <ModalListItem title="Delete Security groups (Multiple)"
+                          <ModalListItem
+                            title="Delete Security groups (Multiple)"
                             description="Confirm deletion of multiple security groups with scrollable list."
                             category="Confirm"
                             size="md"
                             onOpen={() => setIsDeleteSecurityGroupsMultipleOpen(true)}
                           />
-                          <ModalListItem title="Delete Rule"
+                          <ModalListItem
+                            title="Delete Rule"
                             description="Confirm deletion of a single security group rule."
                             category="Confirm"
                             size="sm"
                             onOpen={() => setIsDeleteRuleOpen(true)}
                           />
-                          <ModalListItem title="Delete Rules (Multiple)"
+                          <ModalListItem
+                            title="Delete Rules (Multiple)"
                             description="Confirm deletion of multiple rules with scrollable list and warning."
                             category="Confirm"
                             size="md"
@@ -347,9 +363,11 @@ export function ModalsPage() {
                       {/* Volume Actions */}
                       <VStack gap={2}>
                         <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Volume Actions </h2>
+                          Volume Actions{' '}
+                        </h2>
                         <div className="flex flex-col gap-2">
-                          <ModalListItem title="Detach volume"
+                          <ModalListItem
+                            title="Detach volume"
                             description="Confirm detachment of a volume with warning about data corruption."
                             category="Volume"
                             size="sm"
@@ -361,21 +379,25 @@ export function ModalsPage() {
                       {/* Backup Actions */}
                       <VStack gap={2}>
                         <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Backup Actions </h2>
+                          Backup Actions{' '}
+                        </h2>
                         <div className="flex flex-col gap-2">
-                          <ModalListItem title="Restore backup"
+                          <ModalListItem
+                            title="Restore backup"
                             description="Simple restore backup confirmation with volume info."
                             category="Backup"
                             size="sm"
                             onOpen={() => setIsRestoreBackupSmallOpen(true)}
                           />
-                          <ModalListItem title="Restore backup (with instance name)"
+                          <ModalListItem
+                            title="Restore backup (with instance name)"
                             description="Restore backup with volume and instance list information."
                             category="Backup"
                             size="md"
                             onOpen={() => setIsRestoreBackupMediumOpen(true)}
                           />
-                          <ModalListItem title="Restore backup (with instance name and warning)"
+                          <ModalListItem
+                            title="Restore backup (with instance name and warning)"
                             description="Restore backup with warning alert and disabled action button."
                             category="Backup"
                             size="lg"
@@ -387,27 +409,32 @@ export function ModalsPage() {
                       {/* Floating IP */}
                       <VStack gap={2}>
                         <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Floating IP </h2>
+                          Floating IP{' '}
+                        </h2>
                         <div className="flex flex-col gap-2">
-                          <ModalListItem title="Disassociate floating IP"
+                          <ModalListItem
+                            title="Disassociate floating IP"
                             description="Confirm disassociation of a floating IP from a resource."
                             category="Network"
                             size="sm"
                             onOpen={() => setIsDisassociateFloatingIPOpen(true)}
                           />
-                          <ModalListItem title="Disassociate floating IP (Load balancer)"
+                          <ModalListItem
+                            title="Disassociate floating IP (Load balancer)"
                             description="Disassociate a floating IP from a load balancer."
                             category="Network"
                             size="sm"
                             onOpen={() => setIsDisassociateFloatingIPLBOpen(true)}
                           />
-                          <ModalListItem title="Release floating IP"
+                          <ModalListItem
+                            title="Release floating IP"
                             description="Release a single floating IP with warning about permanent action."
                             category="Network"
                             size="sm"
                             onOpen={() => setIsReleaseFloatingIPSmallOpen(true)}
                           />
-                          <ModalListItem title="Release floating IP (Associated to)"
+                          <ModalListItem
+                            title="Release floating IP (Associated to)"
                             description="Release multiple floating IPs with scrollable list."
                             category="Network"
                             size="md"
@@ -419,15 +446,18 @@ export function ModalsPage() {
                       {/* Load balancers */}
                       <VStack gap={2}>
                         <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Load balancers </h2>
+                          Load balancers{' '}
+                        </h2>
                         <div className="flex flex-col gap-2">
-                          <ModalListItem title="Delete Load balancer"
+                          <ModalListItem
+                            title="Delete Load balancer"
                             description="Delete a single load balancer with warning about associated resources."
                             category="Network"
                             size="sm"
                             onOpen={() => setIsDeleteLoadBalancerOpen(true)}
                           />
-                          <ModalListItem title="Release Load balancers"
+                          <ModalListItem
+                            title="Release Load balancers"
                             description="Delete multiple load balancers with scrollable list and warning."
                             category="Network"
                             size="md"
@@ -450,9 +480,11 @@ export function ModalsPage() {
                           <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
                         )}
                         <Badge variant="info" size="sm" className="w-[70px] justify-center">
-                          IAM </Badge>
+                          IAM{' '}
+                        </Badge>
                         <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
-                          Modals </span>
+                          Modals{' '}
+                        </span>
                         <span className="text-body-md text-[var(--color-text-subtle)]">
                           (29 modals)
                         </span>
@@ -464,171 +496,200 @@ export function ModalsPage() {
                       {/* User Management Modals */}
                       <VStack gap={2}>
                         <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          User Management </h2>
+                          User Management{' '}
+                        </h2>
                         <div className="flex flex-col gap-2">
-                          <ModalListItem title="Delete user"
+                          <ModalListItem
+                            title="Delete user"
                             description="Confirm deletion of a user with warning about permanent action."
                             category="User"
                             size="sm"
                             onOpen={() => setIsDeleteUserOpen(true)}
                           />
-                          <ModalListItem title="Delete users (Multiple)"
+                          <ModalListItem
+                            title="Delete users (Multiple)"
                             description="Delete multiple users with lists of deletable and non-deletable users."
                             category="User"
                             size="md"
                             onOpen={() => setIsDeleteUsersMultipleOpen(true)}
                           />
-                          <ModalListItem title="Confirm user password"
+                          <ModalListItem
+                            title="Confirm user password"
                             description="Display username and password credentials with copy functionality."
                             category="User"
                             size="sm"
                             onOpen={() => setIsConfirmUserPasswordOpen(true)}
                           />
-                          <ModalListItem title="Detach user group"
+                          <ModalListItem
+                            title="Detach user group"
                             description="Confirm detaching a user from a user group with warning about permission removal."
                             category="User"
                             size="sm"
                             onOpen={() => setIsDetachUserGroupOpen(true)}
                           />
-                          <ModalListItem title="Detach role"
+                          <ModalListItem
+                            title="Detach role"
                             description="Confirm detaching a role from a user with warning about permission removal."
                             category="User"
                             size="sm"
                             onOpen={() => setIsDetachRoleOpen(true)}
                           />
-                          <ModalListItem title="Remove OTP MFA"
+                          <ModalListItem
+                            title="Remove OTP MFA"
                             description="Confirm removing OTP MFA for a user with warning about re-registration."
                             category="User"
                             size="sm"
                             onOpen={() => setIsRemoveOtpMfaOpen(true)}
                           />
-                          <ModalListItem title="Terminate all sessions"
+                          <ModalListItem
+                            title="Terminate all sessions"
                             description="Confirm terminating all sessions for a user with warning about sign-out."
                             category="User"
                             size="sm"
                             onOpen={() => setIsTerminateAllSessionsOpen(true)}
                           />
-                          <ModalListItem title="Terminate session"
+                          <ModalListItem
+                            title="Terminate session"
                             description="Confirm terminating a single session with warning about sign-out from device."
                             category="User"
                             size="sm"
                             onOpen={() => setIsTerminateSessionOpen(true)}
                           />
-                          <ModalListItem title="Remove user from group"
+                          <ModalListItem
+                            title="Remove user from group"
                             description="Confirm removing a user from a group with warning about permission removal."
                             category="User"
                             size="sm"
                             onOpen={() => setIsRemoveUserFromGroupOpen(true)}
                           />
-                          <ModalListItem title="Delete role"
+                          <ModalListItem
+                            title="Delete role"
                             description="Confirm deleting a role with warning about permission removal."
                             category="Role"
                             size="sm"
                             onOpen={() => setIsDeleteRoleOpen(true)}
                           />
-                          <ModalListItem title="Delete roles (Multiple)"
+                          <ModalListItem
+                            title="Delete roles (Multiple)"
                             description="Confirm deleting multiple roles with lists of deletable and non-deletable roles."
                             category="Role"
                             size="md"
                             onOpen={() => setIsDeleteRolesMultipleOpen(true)}
                           />
-                          <ModalListItem title="Detach policy"
+                          <ModalListItem
+                            title="Detach policy"
                             description="Confirm detaching a policy from a role with warning about permission revocation."
                             category="Role"
                             size="sm"
                             onOpen={() => setIsDetachPolicyOpen(true)}
                           />
-                          <ModalListItem title="Delete policy"
+                          <ModalListItem
+                            title="Delete policy"
                             description="Confirm deleting a policy with warning about permanent removal and access loss."
                             category="Policy"
                             size="sm"
                             onOpen={() => setIsDeletePolicyOpen(true)}
                           />
-                          <ModalListItem title="Delete policies (Multiple)"
+                          <ModalListItem
+                            title="Delete policies (Multiple)"
                             description="Confirm deleting multiple policies with lists of deletable/non-deletable policies."
                             category="Policy"
                             size="md"
                             onOpen={() => setIsDeletePoliciesMultipleOpen(true)}
                           />
-                          <ModalListItem title="Revert policy version"
+                          <ModalListItem
+                            title="Revert policy version"
                             description="Confirm reverting a policy to a previous version with warning about permission changes."
                             category="Policy"
                             size="sm"
                             onOpen={() => setIsRevertPolicyVersionOpen(true)}
                           />
-                          <ModalListItem title="Delete policy version"
+                          <ModalListItem
+                            title="Delete policy version"
                             description="Confirm deleting a specific policy version with warning about permanent removal."
                             category="Policy"
                             size="sm"
                             onOpen={() => setIsDeletePolicyVersionOpen(true)}
                           />
-                          <ModalListItem title="Update MFA enforcement policy"
+                          <ModalListItem
+                            title="Update MFA enforcement policy"
                             description="Confirm applying MFA enforcement policy changes with warning about authentication impact."
                             category="Security"
                             size="sm"
                             onOpen={() => setIsUpdateMfaEnforcementOpen(true)}
                           />
-                          <ModalListItem title="Update OTP policy"
+                          <ModalListItem
+                            title="Update OTP policy"
                             description="Confirm applying OTP policy changes with warning about MFA method availability."
                             category="Security"
                             size="sm"
                             onOpen={() => setIsUpdateOtpPolicyOpen(true)}
                           />
-                          <ModalListItem title="Update OTP policy settings"
+                          <ModalListItem
+                            title="Update OTP policy settings"
                             description="Confirm applying OTP policy settings changes without warning alert."
                             category="Security"
                             size="sm"
                             onOpen={() => setIsUpdateOtpPolicySettingsOpen(true)}
                           />
-                          <ModalListItem title="Update email policy"
+                          <ModalListItem
+                            title="Update email policy"
                             description="Confirm applying email policy changes with warning about MFA method availability."
                             category="Security"
                             size="sm"
                             onOpen={() => setIsUpdateEmailPolicyOpen(true)}
                           />
-                          <ModalListItem title="Update email policy settings"
+                          <ModalListItem
+                            title="Update email policy settings"
                             description="Confirm applying email policy settings changes without warning alert."
                             category="Security"
                             size="sm"
                             onOpen={() => setIsUpdateEmailPolicySettingsOpen(true)}
                           />
-                          <ModalListItem title="Update general session policy"
+                          <ModalListItem
+                            title="Update general session policy"
                             description="Confirm applying session policy changes for timeout and lifespan settings."
                             category="Security"
                             size="sm"
                             onOpen={() => setIsUpdateGeneralSessionPolicyOpen(true)}
                           />
-                          <ModalListItem title="Delete domain"
+                          <ModalListItem
+                            title="Delete domain"
                             description="Permanently delete a domain and all its configurations."
                             category="Security"
                             size="sm"
                             onOpen={() => setIsDeleteDomainOpen(true)}
                           />
-                          <ModalListItem title="Switch to domain"
+                          <ModalListItem
+                            title="Switch to domain"
                             description="Confirm switching to a different domain with unsaved changes warning."
                             category="Security"
                             size="sm"
                             onOpen={() => setIsSwitchToDomainOpen(true)}
                           />
-                          <ModalListItem title="Delete system administrator"
+                          <ModalListItem
+                            title="Delete system administrator"
                             description="Permanently delete a system administrator and their global access."
                             category="Security"
                             size="sm"
                             onOpen={() => setIsDeleteSystemAdminOpen(true)}
                           />
-                          <ModalListItem title="Update password policy"
+                          <ModalListItem
+                            title="Update password policy"
                             description="Confirm applying password policy changes for length, requirements, and expiration."
                             category="Security"
                             size="sm"
                             onOpen={() => setIsUpdatePasswordPolicyOpen(true)}
                           />
-                          <ModalListItem title="Update account lockout policy"
+                          <ModalListItem
+                            title="Update account lockout policy"
                             description="Confirm applying account lockout policy changes for lockout type settings."
                             category="Security"
                             size="sm"
                             onOpen={() => setIsUpdateAccountLockoutPolicyOpen(true)}
                           />
-                          <ModalListItem title="Update token policy"
+                          <ModalListItem
+                            title="Update token policy"
                             description="Confirm applying token policy changes for access and refresh token lifespan."
                             category="Security"
                             size="sm"
@@ -640,9 +701,11 @@ export function ModalsPage() {
                       {/* General Modals */}
                       <VStack gap={2}>
                         <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          General </h2>
+                          General{' '}
+                        </h2>
                         <div className="flex flex-col gap-2">
-                          <ModalListItem title="Unsaved changes"
+                          <ModalListItem
+                            title="Unsaved changes"
                             description="Confirm leaving page with unsaved changes."
                             category="Navigation"
                             size="sm"
@@ -665,9 +728,11 @@ export function ModalsPage() {
                           <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
                         )}
                         <Badge variant="info" size="sm" className="w-[70px] justify-center">
-                          Container </Badge>
+                          Container{' '}
+                        </Badge>
                         <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
-                          Modals </span>
+                          Modals{' '}
+                        </span>
                         <span className="text-body-md text-[var(--color-text-subtle)]">
                           (12 modals)
                         </span>
@@ -679,15 +744,18 @@ export function ModalsPage() {
                       {/* Cluster Actions */}
                       <VStack gap={2}>
                         <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Cluster Actions </h2>
+                          Cluster Actions{' '}
+                        </h2>
                         <div className="flex flex-col gap-2">
-                          <ModalListItem title="Delete Cluster"
+                          <ModalListItem
+                            title="Delete Cluster"
                             description="Confirm deletion of a Kubernetes cluster."
                             category="Cluster"
                             size="sm"
                             onOpen={() => setIsDeleteClusterOpen(true)}
                           />
-                          <ModalListItem title="Delete Namespace"
+                          <ModalListItem
+                            title="Delete Namespace"
                             description="Confirm deletion of a Kubernetes namespace."
                             category="Namespace"
                             size="sm"
@@ -699,63 +767,74 @@ export function ModalsPage() {
                       {/* Workload Actions */}
                       <VStack gap={2}>
                         <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Workload Actions </h2>
+                          Workload Actions{' '}
+                        </h2>
                         <div className="flex flex-col gap-2">
-                          <ModalListItem title="Delete Pod"
+                          <ModalListItem
+                            title="Delete Pod"
                             description="Confirm deletion of a Kubernetes pod."
                             category="Pod"
                             size="sm"
                             onOpen={() => setIsDeletePodOpen(true)}
                           />
-                          <ModalListItem title="Delete Deployment"
+                          <ModalListItem
+                            title="Delete Deployment"
                             description="Confirm deletion of a Kubernetes deployment."
                             category="Deployment"
                             size="sm"
                             onOpen={() => setIsDeleteDeploymentOpen(true)}
                           />
-                          <ModalListItem title="Redeploy Deployment"
+                          <ModalListItem
+                            title="Redeploy Deployment"
                             description="Redeploy a Kubernetes deployment with warning about downtime."
                             category="Deployment"
                             size="sm"
                             onOpen={() => setIsRedeployDeploymentOpen(true)}
                           />
-                          <ModalListItem title="Roll Back Deployment"
+                          <ModalListItem
+                            title="Roll Back Deployment"
                             description="Roll back a Kubernetes deployment to a previous revision."
                             category="Deployment"
                             size="sm"
                             onOpen={() => setIsRollBackDeploymentOpen(true)}
                           />
-                          <ModalListItem title="Delete StatefulSet"
+                          <ModalListItem
+                            title="Delete StatefulSet"
                             description="Confirm deletion of a Kubernetes stateful set."
                             category="StatefulSet"
                             size="sm"
                             onOpen={() => setIsDeleteStatefulSetOpen(true)}
                           />
-                          <ModalListItem title="Redeploy StatefulSet"
+                          <ModalListItem
+                            title="Redeploy StatefulSet"
                             description="Redeploy a Kubernetes stateful set with warning about downtime."
                             category="StatefulSet"
                             size="sm"
                             onOpen={() => setIsRedeployStatefulSetOpen(true)}
                           />
-                          <ModalListItem title="Delete DaemonSet"
+                          <ModalListItem
+                            title="Delete DaemonSet"
                             description="Confirm deletion of a Kubernetes daemon set."
                             category="DaemonSet"
                             size="sm"
                             onOpen={() => setIsDeleteDaemonSetOpen(true)}
                           />
-                          <ModalListItem title="Redeploy DaemonSet"
+                          <ModalListItem
+                            title="Redeploy DaemonSet"
                             description="Redeploy a Kubernetes daemon set with warning about downtime."
                             category="DaemonSet"
                             size="sm"
                             onOpen={() => setIsRedeployDaemonSetOpen(true)}
                           />
-                          <ModalListItem title="Delete Job"
+                          <ModalListItem
+                            title="Delete Job"
                             description="Confirm deletion of a Kubernetes job."
                             category="Job"
                             size="sm"
                             onOpen={() => setIsDeleteJobOpen(true)}
                           />
-                          <ModalListItem title="Delete CronJob"
+                          <ModalListItem
+                            title="Delete CronJob"
                             description="Confirm deletion of a Kubernetes cron job."
                             category="CronJob"
                             size="sm"
@@ -778,9 +857,11 @@ export function ModalsPage() {
                           <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
                         )}
                         <Badge variant="info" size="sm" className="w-[70px] justify-center">
-                          Storage </Badge>
+                          Storage{' '}
+                        </Badge>
                         <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
-                          Modals </span>
+                          Modals{' '}
+                        </span>
                         <span className="text-body-md text-[var(--color-text-subtle)]">
                           (1 modal)
                         </span>
@@ -792,9 +873,11 @@ export function ModalsPage() {
                       {/* Delete Modals */}
                       <VStack gap={2}>
                         <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Delete Modals </h2>
+                          Delete Modals{' '}
+                        </h2>
                         <div className="flex flex-col gap-2">
-                          <ModalListItem title="Delete Bucket"
+                          <ModalListItem
+                            title="Delete Bucket"
                             description="Confirm deletion of a non-empty bucket with warning about permanent data loss."
                             category="Bucket"
                             size="sm"
@@ -817,9 +900,11 @@ export function ModalsPage() {
                           <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
                         )}
                         <Badge variant="info" size="sm" className="w-[100px] justify-center">
-                          Compute Admin </Badge>
+                          Compute Admin{' '}
+                        </Badge>
                         <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
-                          Modals </span>
+                          Modals{' '}
+                        </span>
                         <span className="text-body-md text-[var(--color-text-subtle)]">
                           (71 modals)
                         </span>
@@ -831,45 +916,53 @@ export function ModalsPage() {
                       {/* Single Instance Actions */}
                       <VStack gap={2}>
                         <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Single Instance Actions </h2>
+                          Single Instance Actions{' '}
+                        </h2>
                         <div className="flex flex-col gap-2">
-                          <ModalListItem title="Stop Instance"
+                          <ModalListItem
+                            title="Stop Instance"
                             description="Stop a single instance with warning about service interruption."
                             category="Instance"
                             size="sm"
                             onOpen={() => setIsStopInstanceOpen(true)}
                           />
-                          <ModalListItem title="Reboot Instance"
+                          <ModalListItem
+                            title="Reboot Instance"
                             description="Reboot a single instance with warning about service interruption."
                             category="Instance"
                             size="sm"
                             onOpen={() => setIsRebootInstanceOpen(true)}
                           />
-                          <ModalListItem title="Soft Reboot Instance"
+                          <ModalListItem
+                            title="Soft Reboot Instance"
                             description="Perform a soft reboot of a single instance."
                             category="Instance"
                             size="sm"
                             onOpen={() => setIsSoftRebootInstanceOpen(true)}
                           />
-                          <ModalListItem title="Confirm Resize"
+                          <ModalListItem
+                            title="Confirm Resize"
                             description="Confirm the resized state of an instance."
                             category="Instance"
                             size="sm"
                             onOpen={() => setIsConfirmResizeOpen(true)}
                           />
-                          <ModalListItem title="Revert Resize"
+                          <ModalListItem
+                            title="Revert Resize"
                             description="Revert an instance to its previous state before resize."
                             category="Instance"
                             size="sm"
                             onOpen={() => setIsRevertResizeOpen(true)}
                           />
-                          <ModalListItem title="Delete Instance"
+                          <ModalListItem
+                            title="Delete Instance"
                             description="Permanently delete a single instance."
                             category="Instance"
                             size="sm"
                             onOpen={() => setIsDeleteInstanceOpen(true)}
                           />
-                          <ModalListItem title="Shelve Instance"
+                          <ModalListItem
+                            title="Shelve Instance"
                             description="Shelve a single instance with warning about service interruption."
                             category="Instance"
                             size="sm"
@@ -881,27 +974,32 @@ export function ModalsPage() {
                       {/* Multiple Instances Actions */}
                       <VStack gap={2}>
                         <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Multiple Instances Actions </h2>
+                          Multiple Instances Actions{' '}
+                        </h2>
                         <div className="flex flex-col gap-2">
-                          <ModalListItem title="Start Instances"
+                          <ModalListItem
+                            title="Start Instances"
                             description="Start multiple selected instances with eligibility check."
                             category="Instances"
                             size="md"
                             onOpen={() => setIsStartInstancesOpen(true)}
                           />
-                          <ModalListItem title="Stop Instances"
+                          <ModalListItem
+                            title="Stop Instances"
                             description="Stop multiple selected instances with eligibility check."
                             category="Instances"
                             size="md"
                             onOpen={() => setIsStopInstancesOpen(true)}
                           />
-                          <ModalListItem title="Reboot Instances"
+                          <ModalListItem
+                            title="Reboot Instances"
                             description="Reboot multiple selected instances with eligibility check."
                             category="Instances"
                             size="md"
                             onOpen={() => setIsRebootInstancesOpen(true)}
                           />
-                          <ModalListItem title="Delete Instances"
+                          <ModalListItem
+                            title="Delete Instances"
                             description="Permanently delete multiple selected instances with eligibility check."
                             category="Instances"
                             size="md"
@@ -913,39 +1011,46 @@ export function ModalsPage() {
                       {/* Resource Delete Actions */}
                       <VStack gap={2}>
                         <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Resource Delete Actions </h2>
+                          Resource Delete Actions{' '}
+                        </h2>
                         <div className="flex flex-col gap-2">
-                          <ModalListItem title="Delete Instance Template"
+                          <ModalListItem
+                            title="Delete Instance Template"
                             description="Permanently delete a single instance template."
                             category="Template"
                             size="sm"
                             onOpen={() => setIsDeleteInstanceTemplateOpen(true)}
                           />
-                          <ModalListItem title="Delete Instance Templates"
+                          <ModalListItem
+                            title="Delete Instance Templates"
                             description="Permanently delete multiple instance templates."
                             category="Templates"
                             size="md"
                             onOpen={() => setIsDeleteInstanceTemplatesOpen(true)}
                           />
-                          <ModalListItem title="Delete Image"
+                          <ModalListItem
+                            title="Delete Image"
                             description="Permanently delete a single image."
                             category="Image"
                             size="sm"
                             onOpen={() => setIsDeleteImageOpen(true)}
                           />
-                          <ModalListItem title="Delete Images"
+                          <ModalListItem
+                            title="Delete Images"
                             description="Permanently delete multiple images with eligibility check."
                             category="Images"
                             size="md"
                             onOpen={() => setIsDeleteImagesOpen(true)}
                           />
-                          <ModalListItem title="Delete Snapshot"
+                          <ModalListItem
+                            title="Delete Snapshot"
                             description="Permanently delete a single snapshot."
                             category="Snapshot"
                             size="sm"
                             onOpen={() => setIsDeleteSnapshotOpen(true)}
                           />
-                          <ModalListItem title="Delete Snapshots"
+                          <ModalListItem
+                            title="Delete Snapshots"
                             description="Permanently delete multiple snapshots with eligibility check."
                             category="Snapshots"
                             size="md"
@@ -957,81 +1062,95 @@ export function ModalsPage() {
                       {/* Storage Delete Actions */}
                       <VStack gap={2}>
                         <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Storage Delete Actions </h2>
+                          Storage Delete Actions{' '}
+                        </h2>
                         <div className="flex flex-col gap-2">
-                          <ModalListItem title="Delete Volume"
+                          <ModalListItem
+                            title="Delete Volume"
                             description="Permanently delete a single volume."
                             category="Volume"
                             size="sm"
                             onOpen={() => setIsDeleteVolumeOpen(true)}
                           />
-                          <ModalListItem title="Delete Volumes"
+                          <ModalListItem
+                            title="Delete Volumes"
                             description="Permanently delete multiple volumes with eligibility check."
                             category="Volumes"
                             size="md"
                             onOpen={() => setIsDeleteVolumesOpen(true)}
                           />
-                          <ModalListItem title="Delete Volume Type"
+                          <ModalListItem
+                            title="Delete Volume Type"
                             description="Permanently delete a single volume type."
                             category="VolumeType"
                             size="sm"
                             onOpen={() => setIsDeleteVolumeTypeOpen(true)}
                           />
-                          <ModalListItem title="Delete Volume Types"
+                          <ModalListItem
+                            title="Delete Volume Types"
                             description="Permanently delete multiple volume types."
                             category="VolumeTypes"
                             size="sm"
                             onOpen={() => setIsDeleteVolumeTypesOpen(true)}
                           />
-                          <ModalListItem title="Delete Backup"
+                          <ModalListItem
+                            title="Delete Backup"
                             description="Permanently delete a single backup."
                             category="Backup"
                             size="sm"
                             onOpen={() => setIsDeleteBackupOpen(true)}
                           />
-                          <ModalListItem title="Delete Backups"
+                          <ModalListItem
+                            title="Delete Backups"
                             description="Permanently delete multiple backups with eligibility check."
                             category="Backups"
                             size="md"
                             onOpen={() => setIsDeleteBackupsOpen(true)}
                           />
-                          <ModalListItem title="Delete Encryption"
+                          <ModalListItem
+                            title="Delete Encryption"
                             description="Remove encryption configuration from a volume type."
                             category="Encryption"
                             size="sm"
                             onOpen={() => setIsDeleteEncryptionOpen(true)}
                           />
-                          <ModalListItem title="Delete Extra Spec"
+                          <ModalListItem
+                            title="Delete Extra Spec"
                             description="Remove extra specification from a volume type."
                             category="ExtraSpec"
                             size="sm"
                             onOpen={() => setIsDeleteExtraSpecOpen(true)}
                           />
-                          <ModalListItem title="Delete Extra Specs"
+                          <ModalListItem
+                            title="Delete Extra Specs"
                             description="Remove multiple extra specifications from a volume type."
                             category="ExtraSpecs"
                             size="sm"
                             onOpen={() => setIsDeleteExtraSpecsOpen(true)}
                           />
-                          <ModalListItem title="Delete QoS Spec"
+                          <ModalListItem
+                            title="Delete QoS Spec"
                             description="Permanently delete a single QoS specification."
                             category="QoSSpec"
                             size="sm"
                             onOpen={() => setIsDeleteQoSSpecOpen(true)}
                           />
-                          <ModalListItem title="Delete QoS Specs"
+                          <ModalListItem
+                            title="Delete QoS Specs"
                             description="Permanently delete multiple QoS specifications."
                             category="QoSSpecs"
                             size="sm"
                             onOpen={() => setIsDeleteQoSSpecsOpen(true)}
                           />
-                          <ModalListItem title="Delete QoS Extra Spec"
+                          <ModalListItem
+                            title="Delete QoS Extra Spec"
                             description="Remove extra specification from a QoS spec."
                             category="QoSExtra"
                             size="sm"
                             onOpen={() => setIsDeleteQoSExtraSpecOpen(true)}
                           />
-                          <ModalListItem title="Delete QoS Extra Specs"
+                          <ModalListItem
+                            title="Delete QoS Extra Specs"
                             description="Remove multiple extra specifications from a QoS spec."
                             category="QoSExtras"
                             size="sm"
@@ -1043,105 +1162,123 @@ export function ModalsPage() {
                       {/* Network Delete Actions */}
                       <VStack gap={2}>
                         <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Network Delete Actions </h2>
+                          Network Delete Actions{' '}
+                        </h2>
                         <div className="flex flex-col gap-2">
-                          <ModalListItem title="Delete Network"
+                          <ModalListItem
+                            title="Delete Network"
                             description="Permanently delete a single network with warning."
                             category="Network"
                             size="sm"
                             onOpen={() => setIsDeleteNetworkOpen(true)}
                           />
-                          <ModalListItem title="Delete Networks"
+                          <ModalListItem
+                            title="Delete Networks"
                             description="Permanently delete multiple networks with eligibility check."
                             category="Networks"
                             size="md"
                             onOpen={() => setIsDeleteNetworksOpen(true)}
                           />
-                          <ModalListItem title="Delete Subnet"
+                          <ModalListItem
+                            title="Delete Subnet"
                             description="Permanently delete a single subnet with warning."
                             category="Subnet"
                             size="sm"
                             onOpen={() => setIsDeleteSubnetOpen(true)}
                           />
-                          <ModalListItem title="Delete Subnets"
+                          <ModalListItem
+                            title="Delete Subnets"
                             description="Permanently delete multiple subnets."
                             category="Subnets"
                             size="sm"
                             onOpen={() => setIsDeleteSubnetsOpen(true)}
                           />
-                          <ModalListItem title="Delete Port"
+                          <ModalListItem
+                            title="Delete Port"
                             description="Permanently delete a single port with warning."
                             category="Port"
                             size="sm"
                             onOpen={() => setIsDeletePortOpen(true)}
                           />
-                          <ModalListItem title="Delete Ports"
+                          <ModalListItem
+                            title="Delete Ports"
                             description="Permanently delete multiple ports with warning."
                             category="Ports"
                             size="sm"
                             onOpen={() => setIsDeletePortsOpen(true)}
                           />
-                          <ModalListItem title="Delete Router"
+                          <ModalListItem
+                            title="Delete Router"
                             description="Permanently delete a single router with warning."
                             category="Router"
                             size="sm"
                             onOpen={() => setIsDeleteRouterOpen(true)}
                           />
-                          <ModalListItem title="Delete Routers"
+                          <ModalListItem
+                            title="Delete Routers"
                             description="Permanently delete multiple routers with eligibility check."
                             category="Routers"
                             size="md"
                             onOpen={() => setIsDeleteRoutersOpen(true)}
                           />
-                          <ModalListItem title="Delete Static Routes"
+                          <ModalListItem
+                            title="Delete Static Routes"
                             description="Permanently delete multiple static routes."
                             category="Routes"
                             size="sm"
                             onOpen={() => setIsDeleteStaticRoutesOpen(true)}
                           />
-                          <ModalListItem title="Remove DHCP Agents"
+                          <ModalListItem
+                            title="Remove DHCP Agents"
                             description="Remove DHCP agents from a network."
                             category="DHCP"
                             size="sm"
                             onOpen={() => setIsRemoveDHCPAgentsOpen(true)}
                           />
-                          <ModalListItem title="Release Fixed IP"
+                          <ModalListItem
+                            title="Release Fixed IP"
                             description="Release a fixed IP address from a port."
                             category="IP"
                             size="sm"
                             onOpen={() => setIsReleaseFixedIPOpen(true)}
                           />
-                          <ModalListItem title="Delete Allowed Address Pair"
+                          <ModalListItem
+                            title="Delete Allowed Address Pair"
                             description="Remove an allowed address pair from a port."
                             category="Address"
                             size="sm"
                             onOpen={() => setIsDeleteAllowedAddressPairOpen(true)}
                           />
-                          <ModalListItem title="Delete Security Group"
+                          <ModalListItem
+                            title="Delete Security Group"
                             description="Permanently delete a single security group."
                             category="SecGroup"
                             size="sm"
                             onOpen={() => setIsDeleteSecurityGroupAdminOpen(true)}
                           />
-                          <ModalListItem title="Delete Security Groups"
+                          <ModalListItem
+                            title="Delete Security Groups"
                             description="Permanently delete multiple security groups."
                             category="SecGroups"
                             size="md"
                             onOpen={() => setIsDeleteSecurityGroupsAdminOpen(true)}
                           />
-                          <ModalListItem title="Delete Firewall"
+                          <ModalListItem
+                            title="Delete Firewall"
                             description="Permanently delete a single firewall."
                             category="Firewall"
                             size="sm"
                             onOpen={() => setIsDeleteFirewallOpen(true)}
                           />
-                          <ModalListItem title="Delete Firewalls"
+                          <ModalListItem
+                            title="Delete Firewalls"
                             description="Permanently delete multiple firewalls."
                             category="Firewalls"
                             size="md"
                             onOpen={() => setIsDeleteFirewallsOpen(true)}
                           />
-                          <ModalListItem title="Unsaved Changes"
+                          <ModalListItem
+                            title="Unsaved Changes"
                             description="Confirm leaving with unsaved changes."
                             category="Confirm"
                             size="sm"
@@ -1153,99 +1290,116 @@ export function ModalsPage() {
                       {/* Load Balancer & Security Actions */}
                       <VStack gap={2}>
                         <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Load Balancer & Security Actions </h2>
+                          Load Balancer & Security Actions{' '}
+                        </h2>
                         <div className="flex flex-col gap-2">
-                          <ModalListItem title="Disassociate Floating IP"
+                          <ModalListItem
+                            title="Disassociate Floating IP"
                             description="Disassociate a floating IP from a resource."
                             category="FloatingIP"
                             size="sm"
                             onOpen={() => setIsDisassociateFloatingIPOpen(true)}
                           />
-                          <ModalListItem title="Release Floating IP"
+                          <ModalListItem
+                            title="Release Floating IP"
                             description="Release a single floating IP address."
                             category="FloatingIP"
                             size="sm"
                             onOpen={() => setIsReleaseFloatingIPOpen(true)}
                           />
-                          <ModalListItem title="Release Floating IPs"
+                          <ModalListItem
+                            title="Release Floating IPs"
                             description="Release multiple floating IP addresses."
                             category="FloatingIPs"
                             size="sm"
                             onOpen={() => setIsReleaseFloatingIPsOpen(true)}
                           />
-                          <ModalListItem title="Delete Load Balancer"
+                          <ModalListItem
+                            title="Delete Load Balancer"
                             description="Permanently delete a single load balancer."
                             category="LB"
                             size="sm"
                             onOpen={() => setIsDeleteLoadBalancerAdminOpen(true)}
                           />
-                          <ModalListItem title="Delete Load Balancers"
+                          <ModalListItem
+                            title="Delete Load Balancers"
                             description="Permanently delete multiple load balancers."
                             category="LBs"
                             size="md"
                             onOpen={() => setIsDeleteLoadBalancersAdminOpen(true)}
                           />
-                          <ModalListItem title="Delete Listener"
+                          <ModalListItem
+                            title="Delete Listener"
                             description="Permanently delete a single listener."
                             category="Listener"
                             size="sm"
                             onOpen={() => setIsDeleteListenerOpen(true)}
                           />
-                          <ModalListItem title="Delete Listeners"
+                          <ModalListItem
+                            title="Delete Listeners"
                             description="Permanently delete multiple listeners."
                             category="Listeners"
                             size="md"
                             onOpen={() => setIsDeleteListenersOpen(true)}
                           />
-                          <ModalListItem title="Delete Pool"
+                          <ModalListItem
+                            title="Delete Pool"
                             description="Permanently delete a single pool."
                             category="Pool"
                             size="sm"
                             onOpen={() => setIsDeletePoolOpen(true)}
                           />
-                          <ModalListItem title="Delete Pools"
+                          <ModalListItem
+                            title="Delete Pools"
                             description="Permanently delete multiple pools."
                             category="Pools"
                             size="md"
                             onOpen={() => setIsDeletePoolsOpen(true)}
                           />
-                          <ModalListItem title="Delete Member"
+                          <ModalListItem
+                            title="Delete Member"
                             description="Remove a single member from a pool."
                             category="Member"
                             size="sm"
                             onOpen={() => setIsDeleteMemberOpen(true)}
                           />
-                          <ModalListItem title="Delete Members"
+                          <ModalListItem
+                            title="Delete Members"
                             description="Remove multiple members from a pool."
                             category="Members"
                             size="md"
                             onOpen={() => setIsDeleteMembersOpen(true)}
                           />
-                          <ModalListItem title="Delete Security Group Rule"
+                          <ModalListItem
+                            title="Delete Security Group Rule"
                             description="Permanently delete a single security group rule."
                             category="Rule"
                             size="sm"
                             onOpen={() => setIsDeleteSecurityGroupRuleOpen(true)}
                           />
-                          <ModalListItem title="Delete Security Group Rules"
+                          <ModalListItem
+                            title="Delete Security Group Rules"
                             description="Permanently delete multiple security group rules."
                             category="Rules"
                             size="md"
                             onOpen={() => setIsDeleteSecurityGroupRulesOpen(true)}
                           />
-                          <ModalListItem title="Delete L7 Policy"
+                          <ModalListItem
+                            title="Delete L7 Policy"
                             description="Permanently delete a single L7 policy."
                             category="L7Policy"
                             size="sm"
                             onOpen={() => setIsDeleteL7PolicyOpen(true)}
                           />
-                          <ModalListItem title="Delete L7 Policies"
+                          <ModalListItem
+                            title="Delete L7 Policies"
                             description="Permanently delete multiple L7 policies."
                             category="L7Policies"
                             size="md"
                             onOpen={() => setIsDeleteL7PoliciesOpen(true)}
                           />
-                          <ModalListItem title="Delete Health Monitor"
+                          <ModalListItem
+                            title="Delete Health Monitor"
                             description="Permanently delete a health monitor from a pool."
                             category="Monitor"
                             size="sm"
@@ -1257,57 +1411,67 @@ export function ModalsPage() {
                       {/* Firewall & Tenant Actions */}
                       <VStack gap={2}>
                         <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Firewall & Tenant Actions </h2>
+                          Firewall & Tenant Actions{' '}
+                        </h2>
                         <div className="flex flex-col gap-2">
-                          <ModalListItem title="Delete Firewall Policy"
+                          <ModalListItem
+                            title="Delete Firewall Policy"
                             description="Permanently delete a single firewall policy."
                             category="FWPolicy"
                             size="sm"
                             onOpen={() => setIsDeleteFirewallPolicyOpen(true)}
                           />
-                          <ModalListItem title="Delete Firewall Policies"
+                          <ModalListItem
+                            title="Delete Firewall Policies"
                             description="Permanently delete multiple firewall policies."
                             category="FWPolicies"
                             size="md"
                             onOpen={() => setIsDeleteFirewallPoliciesOpen(true)}
                           />
-                          <ModalListItem title="Delete Firewall Rule"
+                          <ModalListItem
+                            title="Delete Firewall Rule"
                             description="Permanently delete a single firewall rule."
                             category="FWRule"
                             size="sm"
                             onOpen={() => setIsDeleteFirewallRuleOpen(true)}
                           />
-                          <ModalListItem title="Delete Firewall Rules"
+                          <ModalListItem
+                            title="Delete Firewall Rules"
                             description="Permanently delete multiple firewall rules."
                             category="FWRules"
                             size="md"
                             onOpen={() => setIsDeleteFirewallRulesOpen(true)}
                           />
-                          <ModalListItem title="Delete Tenant"
+                          <ModalListItem
+                            title="Delete Tenant"
                             description="Permanently delete a single tenant."
                             category="Tenant"
                             size="sm"
                             onOpen={() => setIsDeleteTenantOpen(true)}
                           />
-                          <ModalListItem title="Delete Tenants"
+                          <ModalListItem
+                            title="Delete Tenants"
                             description="Permanently delete multiple tenants."
                             category="Tenants"
                             size="sm"
                             onOpen={() => setIsDeleteTenantsOpen(true)}
                           />
-                          <ModalListItem title="Delete Metadata"
+                          <ModalListItem
+                            title="Delete Metadata"
                             description="Remove a single metadata entry."
                             category="Metadata"
                             size="sm"
                             onOpen={() => setIsDeleteMetadataOpen(true)}
                           />
-                          <ModalListItem title="Delete Metadatas"
+                          <ModalListItem
+                            title="Delete Metadatas"
                             description="Remove multiple metadata entries."
                             category="Metadatas"
                             size="md"
                             onOpen={() => setIsDeleteMetadatasOpen(true)}
                           />
-                          <ModalListItem title="Manage Member"
+                          <ModalListItem
+                            title="Manage Member"
                             description="Redirect to IAM to manage users and groups."
                             category="IAM"
                             size="sm"
@@ -1327,7 +1491,8 @@ export function ModalsPage() {
       {/* Modal components */}
 
       {/* Delete Snapshot Modal */}
-      <Modal isOpen={isConfirmDeleteOpen}
+      <Modal
+        isOpen={isConfirmDeleteOpen}
         onClose={() => setIsConfirmDeleteOpen(false)}
         title="Delete Snapshot"
         description="Removing the selected instances is permanent and cannot be undone."
@@ -1337,31 +1502,39 @@ export function ModalsPage() {
           {/* Snapshot Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Snapshot name </span>
-            <span className="text-body-md text-[var(--color-text-default)] leading-4">2cdfafc1</span>
+              Snapshot name{' '}
+            </span>
+            <span className="text-body-md text-[var(--color-text-default)] leading-4">
+              2cdfafc1
+            </span>
           </div>
 
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
             <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-              Deleting a snapshot is a permanent action and cannot be undone. Any volumes or instances created from this snapshot will not be affected.
+              Deleting a snapshot is a permanent action and cannot be undone. Any volumes or
+              instances created from this snapshot will not be affected.
             </p>
           </div>
         </div>
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsConfirmDeleteOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Snapshot deleted');
@@ -1369,12 +1542,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Security group Modal (Single) */}
-      <Modal isOpen={isDeleteSecurityGroupOpen}
+      <Modal
+        isOpen={isDeleteSecurityGroupOpen}
         onClose={() => setIsDeleteSecurityGroupOpen(false)}
         title="Delete Security group"
         description="Removing the selected instances is permanent and cannot be undone."
@@ -1384,13 +1559,15 @@ export function ModalsPage() {
           {/* Security group Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Security group </span>
+              Security group{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">sg-01</span>
           </div>
 
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -1404,13 +1581,16 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteSecurityGroupOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Security group deleted');
@@ -1418,12 +1598,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Security groups Modal (Multiple) */}
-      <Modal isOpen={isDeleteSecurityGroupsMultipleOpen}
+      <Modal
+        isOpen={isDeleteSecurityGroupsMultipleOpen}
         onClose={() => setIsDeleteSecurityGroupsMultipleOpen(false)}
         title="Delete Security groups"
         description="Removing the selected instances is permanent and cannot be undone."
@@ -1451,7 +1633,8 @@ export function ModalsPage() {
 
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -1465,13 +1648,16 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteSecurityGroupsMultipleOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Security groups deleted');
@@ -1479,12 +1665,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Rule Modal (Single) */}
-      <Modal isOpen={isDeleteRuleOpen}
+      <Modal
+        isOpen={isDeleteRuleOpen}
         onClose={() => setIsDeleteRuleOpen(false)}
         title="Delete Rule"
         description="Removing the selected instances is permanent and cannot be undone."
@@ -1493,22 +1681,25 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           {/* Rule Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-            <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Rule </span>
+            <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">Rule </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              Ingress TCP 80 from 0.0.0.0/0 </span>
+              Ingress TCP 80 from 0.0.0.0/0{' '}
+            </span>
           </div>
         </div>
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteRuleOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Rule deleted');
@@ -1516,12 +1707,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Rules Modal (Multiple with Warning) */}
-      <Modal isOpen={isDeleteRulesMultipleOpen}
+      <Modal
+        isOpen={isDeleteRulesMultipleOpen}
         onClose={() => setIsDeleteRulesMultipleOpen(false)}
         title="Delete Rules"
         description="Removing the selected instances is permanent and cannot be undone."
@@ -1549,7 +1742,8 @@ export function ModalsPage() {
 
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -1563,13 +1757,16 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteRulesMultipleOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Rules deleted');
@@ -1577,12 +1774,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Detach volume Modal */}
-      <Modal isOpen={isDetachVolumeOpen}
+      <Modal
+        isOpen={isDetachVolumeOpen}
         onClose={() => setIsDetachVolumeOpen(false)}
         title="Detach volume"
         description="This action detaches the volume."
@@ -1592,31 +1791,37 @@ export function ModalsPage() {
           {/* Volume Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Volume name </span>
+              Volume name{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">vol57</span>
           </div>
 
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
             <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-              Make sure the filesystem inside the instance is unmounted before detaching. Detaching a volume while the instance is running may cause data corruption.
+              Make sure the filesystem inside the instance is unmounted before detaching. Detaching
+              a volume while the instance is running may cause data corruption.
             </p>
           </div>
         </div>
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDetachVolumeOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="primary"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="primary"
             size="md"
             onClick={() => {
               console.log('Volume detached');
@@ -1624,12 +1829,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Release </Button>
+            Release{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Restore backup (Small) Modal */}
-      <Modal isOpen={isRestoreBackupSmallOpen}
+      <Modal
+        isOpen={isRestoreBackupSmallOpen}
         onClose={() => setIsRestoreBackupSmallOpen(false)}
         title="Restore backup"
         description="This action restores the backup."
@@ -1639,7 +1846,8 @@ export function ModalsPage() {
           {/* Volume Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Volume name </span>
+              Volume name{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
               vol-01 (Available)
             </span>
@@ -1648,13 +1856,16 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsRestoreBackupSmallOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="primary"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="primary"
             size="md"
             onClick={() => {
               console.log('Backup restored');
@@ -1662,12 +1873,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Restore </Button>
+            Restore{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Restore backup (Medium) Modal */}
-      <Modal isOpen={isRestoreBackupMediumOpen}
+      <Modal
+        isOpen={isRestoreBackupMediumOpen}
         onClose={() => setIsRestoreBackupMediumOpen(false)}
         title="Restore backup"
         description="This action restores the backup."
@@ -1677,7 +1890,8 @@ export function ModalsPage() {
           {/* Volume Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Volume name </span>
+              Volume name{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
               vol-01 (Available)
             </span>
@@ -1686,7 +1900,8 @@ export function ModalsPage() {
           {/* Instance Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Instance name </span>
+              Instance name{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
               <li>web-server-1 (Shutoff)</li>
               <li>dev-team (Shutoff)</li>
@@ -1698,13 +1913,16 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsRestoreBackupMediumOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="primary"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="primary"
             size="md"
             onClick={() => {
               console.log('Backup restored');
@@ -1712,12 +1930,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Restore </Button>
+            Restore{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Restore backup (Large) Modal */}
-      <Modal isOpen={isRestoreBackupLargeOpen}
+      <Modal
+        isOpen={isRestoreBackupLargeOpen}
         onClose={() => setIsRestoreBackupLargeOpen(false)}
         title="Restore backup"
         description="This action restores the backup."
@@ -1727,7 +1947,8 @@ export function ModalsPage() {
           {/* Volume Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Volume name </span>
+              Volume name{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
               vol-01 (Available)
             </span>
@@ -1736,7 +1957,8 @@ export function ModalsPage() {
           {/* Instance Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Instance name </span>
+              Instance name{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
               <li>web-server-1 (Shutoff)</li>
               <li>dev-team (Shutoff)</li>
@@ -1747,31 +1969,37 @@ export function ModalsPage() {
 
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
             <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-              Restore cannot proceed. Change the backup status to Available or shut down the attached instance.
+              Restore cannot proceed. Change the backup status to Available or shut down the
+              attached instance.
             </p>
           </div>
         </div>
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsRestoreBackupLargeOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
+            Cancel{' '}
+          </Button>
           <Button variant="primary" size="md" disabled className="flex-1">
-            Restore </Button>
+            Restore{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Disassociate floating IP Modal */}
-      <Modal isOpen={isDisassociateFloatingIPOpen}
+      <Modal
+        isOpen={isDisassociateFloatingIPOpen}
         onClose={() => setIsDisassociateFloatingIPOpen(false)}
         title="Disassociate floating IP"
         description="Disassociating will detach the floating IP from the selected resource. External access via this IP will stop immediately. The IP will remain in your project and can be re-associated later."
@@ -1781,15 +2009,18 @@ export function ModalsPage() {
           {/* Floating IP Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Floating IP </span>
+              Floating IP{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              123.45.67.8 </span>
+              123.45.67.8{' '}
+            </span>
           </div>
 
           {/* Associated to Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Associated to </span>
+              Associated to{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
               <li>Type : Instance</li>
               <li>Name : server-01</li>
@@ -1800,13 +2031,16 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDisassociateFloatingIPOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="primary"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="primary"
             size="md"
             onClick={() => {
               console.log('Disassociate floating IP confirmed');
@@ -1814,12 +2048,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Disassociate </Button>
+            Disassociate{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Disassociate floating IP (Load balancer) Modal */}
-      <Modal isOpen={isDisassociateFloatingIPLBOpen}
+      <Modal
+        isOpen={isDisassociateFloatingIPLBOpen}
         onClose={() => setIsDisassociateFloatingIPLBOpen(false)}
         title="Disassociate floating IP"
         description="Disassociating will detach the floating IP from this load balancer. External access to the load balancer will be interrupted."
@@ -1829,7 +2065,8 @@ export function ModalsPage() {
           {/* Load balancer Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Load balancer </span>
+              Load balancer{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
               web-lb-01(10.0.0.10)
             </span>
@@ -1838,21 +2075,26 @@ export function ModalsPage() {
           {/* Floating IP Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Floating IP </span>
+              Floating IP{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              123.45.67.8 </span>
+              123.45.67.8{' '}
+            </span>
           </div>
         </div>
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDisassociateFloatingIPLBOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="primary"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="primary"
             size="md"
             onClick={() => {
               console.log('Disassociate floating IP from load balancer confirmed');
@@ -1860,12 +2102,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Disassociate </Button>
+            Disassociate{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Release floating IP (Small) Modal */}
-      <Modal isOpen={isReleaseFloatingIPSmallOpen}
+      <Modal
+        isOpen={isReleaseFloatingIPSmallOpen}
         onClose={() => setIsReleaseFloatingIPSmallOpen(false)}
         title="Release floating IP"
         description="This action releases the floating IP."
@@ -1875,14 +2119,17 @@ export function ModalsPage() {
           {/* Floating IP Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Floating IP </span>
+              Floating IP{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              123.45.67.8 </span>
+              123.45.67.8{' '}
+            </span>
           </div>
 
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -1895,13 +2142,16 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsReleaseFloatingIPSmallOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="primary"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="primary"
             size="md"
             onClick={() => {
               console.log('Release floating IP confirmed');
@@ -1909,12 +2159,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Release </Button>
+            Release{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Release floating IP (Medium) Modal */}
-      <Modal isOpen={isReleaseFloatingIPMediumOpen}
+      <Modal
+        isOpen={isReleaseFloatingIPMediumOpen}
         onClose={() => setIsReleaseFloatingIPMediumOpen(false)}
         title="Release floating IP"
         description="This action releases the floating IP."
@@ -1924,7 +2176,8 @@ export function ModalsPage() {
           {/* Associated to Info Box with Scrollable List */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Associated to </span>
+              Associated to{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
               <li>123.45.67.8</li>
               <li>123.45.67.2</li>
@@ -1937,7 +2190,8 @@ export function ModalsPage() {
 
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -1950,13 +2204,16 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsReleaseFloatingIPMediumOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="primary"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="primary"
             size="md"
             onClick={() => {
               console.log('Disassociate floating IPs confirmed');
@@ -1964,12 +2221,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Disassociate </Button>
+            Disassociate{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Load balancer Modal (Single) */}
-      <Modal isOpen={isDeleteLoadBalancerOpen}
+      <Modal
+        isOpen={isDeleteLoadBalancerOpen}
         onClose={() => setIsDeleteLoadBalancerOpen(false)}
         title="Delete Load balancer"
         description="Removing the selected instances is permanent and cannot be undone."
@@ -1979,14 +2238,17 @@ export function ModalsPage() {
           {/* Load balancer Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Load balancer </span>
+              Load balancer{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              web-lb-01 </span>
+              web-lb-01{' '}
+            </span>
           </div>
 
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -1998,13 +2260,16 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteLoadBalancerOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Load balancer deleted');
@@ -2012,12 +2277,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Release Load balancers Modal (Multiple) */}
-      <Modal isOpen={isDeleteLoadBalancersMultipleOpen}
+      <Modal
+        isOpen={isDeleteLoadBalancersMultipleOpen}
         onClose={() => setIsDeleteLoadBalancersMultipleOpen(false)}
         title="Release Load balancers"
         description="Removing the selected instances is permanent and cannot be undone."
@@ -2027,7 +2294,8 @@ export function ModalsPage() {
           {/* Load balancers Info Box with Scrollable List */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Load balancers </span>
+              Load balancers{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
               <li>web-lb-01</li>
               <li>web-lb-02</li>
@@ -2040,7 +2308,8 @@ export function ModalsPage() {
 
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -2052,13 +2321,16 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteLoadBalancersMultipleOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Load balancers deleted');
@@ -2066,7 +2338,8 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
@@ -2074,7 +2347,8 @@ export function ModalsPage() {
           IAM MODALS ======================================== */}
 
       {/* Delete User Modal */}
-      <Modal isOpen={isDeleteUserOpen}
+      <Modal
+        isOpen={isDeleteUserOpen}
         onClose={() => setIsDeleteUserOpen(false)}
         title="Delete user"
         description="Removing the selected instances is permanent and cannot be undone."
@@ -2083,33 +2357,38 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           {/* User Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-            <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              User </span>
+            <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">User </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              DISPLAY NAME </span>
+              DISPLAY NAME{' '}
+            </span>
           </div>
 
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
             <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-              Deleting this user will permanently remove all associated access and sessions. This action cannot be undone.
+              Deleting this user will permanently remove all associated access and sessions. This
+              action cannot be undone.
             </p>
           </div>
         </div>
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteUserOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('User deleted');
@@ -2117,12 +2396,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Users (Multiple) Modal */}
-      <Modal isOpen={isDeleteUsersMultipleOpen}
+      <Modal
+        isOpen={isDeleteUsersMultipleOpen}
         onClose={() => setIsDeleteUsersMultipleOpen(false)}
         title="Delete users"
         description="Removing the selected instances is permanent and cannot be undone."
@@ -2132,7 +2413,8 @@ export function ModalsPage() {
           {/* Users that can be deleted Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Users that can be deleted </span>
+              Users that can be deleted{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
               <li>web-server-01</li>
               <li>web-server-02</li>
@@ -2145,7 +2427,8 @@ export function ModalsPage() {
           {/* Users that cannot be deleted Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Users that cannot be deleted </span>
+              Users that cannot be deleted{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
               <li>my-server-04 (Locked instances cannot be deleted.)</li>
               <li>my-server-03 (Instances in current state cannot be deleted.)</li>
@@ -2156,25 +2439,30 @@ export function ModalsPage() {
 
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
             <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-              Deleting these users will permanently remove all associated access and sessions. This action cannot be undone.
+              Deleting these users will permanently remove all associated access and sessions. This
+              action cannot be undone.
             </p>
           </div>
         </div>
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteUsersMultipleOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Users deleted');
@@ -2182,12 +2470,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Confirm User Password Modal */}
-      <Modal isOpen={isConfirmUserPasswordOpen}
+      <Modal
+        isOpen={isConfirmUserPasswordOpen}
         onClose={() => setIsConfirmUserPasswordOpen(false)}
         title="Confirm user password"
         description="Review the username and password. The password can only be viewed at this step."
@@ -2197,11 +2487,14 @@ export function ModalsPage() {
           {/* Username Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Username </span>
+              Username{' '}
+            </span>
             <div className="flex items-center gap-1.5 min-h-[26px]">
               <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                john.doe </span>
-              <button className="shrink-0 p-0.5 rounded hover:bg-[var(--color-surface-default)] transition-colors"
+                john.doe{' '}
+              </span>
+              <button
+                className="shrink-0 p-0.5 rounded hover:bg-[var(--color-surface-default)] transition-colors"
                 aria-label="Copy to clipboard"
                 onClick={() => {
                   navigator.clipboard.writeText('john.doe');
@@ -2221,12 +2514,14 @@ export function ModalsPage() {
           {/* Password Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Password </span>
+              Password{' '}
+            </span>
             <div className="flex items-center gap-1.5 min-h-[26px]">
               <span className="text-body-md text-[var(--color-text-default)] leading-4">
                 TempP@ss123!
               </span>
-              <button className="shrink-0 p-0.5 rounded hover:bg-[var(--color-surface-default)] transition-colors"
+              <button
+                className="shrink-0 p-0.5 rounded hover:bg-[var(--color-surface-default)] transition-colors"
                 aria-label="Copy to clipboard"
                 onClick={() => {
                   navigator.clipboard.writeText('TempP@ss123!');
@@ -2246,17 +2541,20 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex w-full">
-          <Button variant="primary"
+          <Button
+            variant="primary"
             size="md"
             onClick={() => setIsConfirmUserPasswordOpen(false)}
             className="flex-1"
           >
-            Close </Button>
+            Close{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Unsaved Changes Modal */}
-      <Modal isOpen={isUnsavedChangesOpen}
+      <Modal
+        isOpen={isUnsavedChangesOpen}
         onClose={() => setIsUnsavedChangesOpen(false)}
         title="Unsaved changes"
         description="Any unsaved changes will be lost. Do you want to leave?"
@@ -2264,7 +2562,8 @@ export function ModalsPage() {
       >
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => {
               console.log('Leave clicked');
@@ -2272,18 +2571,22 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Leave </Button>
-          <Button variant="primary"
+            Leave{' '}
+          </Button>
+          <Button
+            variant="primary"
             size="md"
             onClick={() => setIsUnsavedChangesOpen(false)}
             className="flex-1"
           >
-            Stay </Button>
+            Stay{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Detach User Group Modal */}
-      <Modal isOpen={isDetachUserGroupOpen}
+      <Modal
+        isOpen={isDetachUserGroupOpen}
         onClose={() => setIsDetachUserGroupOpen(false)}
         title="Detach user group"
         description="This action detaches the user from the group."
@@ -2292,41 +2595,48 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           {/* User Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-            <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              User </span>
+            <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">User </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              DISPLAY NAME </span>
+              DISPLAY NAME{' '}
+            </span>
           </div>
 
           {/* User Group Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              User group </span>
+              User group{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              USERGROUP NAME </span>
+              USERGROUP NAME{' '}
+            </span>
           </div>
 
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
             <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-              Detaching this user will immediately remove all permissions granted through this group.
+              Detaching this user will immediately remove all permissions granted through this
+              group.
             </p>
           </div>
         </div>
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDetachUserGroupOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="primary"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="primary"
             size="md"
             onClick={() => {
               console.log('User detached from group');
@@ -2334,12 +2644,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Detach </Button>
+            Detach{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Detach Role Modal */}
-      <Modal isOpen={isDetachRoleOpen}
+      <Modal
+        isOpen={isDetachRoleOpen}
         onClose={() => setIsDetachRoleOpen(false)}
         title="Detach role"
         description="This action detaches the role from the user."
@@ -2348,22 +2660,24 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           {/* User Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-            <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              User </span>
+            <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">User </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              DISPLAY NAME </span>
+              DISPLAY NAME{' '}
+            </span>
           </div>
 
           {/* Role Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-            <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Role </span>
-            <span className="text-body-md text-[var(--color-text-default)] leading-4">ROLENAME</span>
+            <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">Role </span>
+            <span className="text-body-md text-[var(--color-text-default)] leading-4">
+              ROLENAME
+            </span>
           </div>
 
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -2375,13 +2689,16 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDetachRoleOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="primary"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="primary"
             size="md"
             onClick={() => {
               console.log('Role detached from user');
@@ -2389,12 +2706,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Detach </Button>
+            Detach{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Remove OTP MFA Modal */}
-      <Modal isOpen={isRemoveOtpMfaOpen}
+      <Modal
+        isOpen={isRemoveOtpMfaOpen}
         onClose={() => setIsRemoveOtpMfaOpen(false)}
         title="Remove OTP MFA"
         description="This action removes OTP MFA for the user."
@@ -2403,15 +2722,16 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           {/* User Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-            <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              User </span>
+            <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">User </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              DISPLAY NAME </span>
+              DISPLAY NAME{' '}
+            </span>
           </div>
 
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -2423,13 +2743,16 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsRemoveOtpMfaOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="primary"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="primary"
             size="md"
             onClick={() => {
               console.log('OTP MFA removed');
@@ -2437,12 +2760,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Remove </Button>
+            Remove{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Terminate All Sessions Modal */}
-      <Modal isOpen={isTerminateAllSessionsOpen}
+      <Modal
+        isOpen={isTerminateAllSessionsOpen}
         onClose={() => setIsTerminateAllSessionsOpen(false)}
         title="Terminate all sessions"
         description="This action terminates all sessions for the user."
@@ -2451,33 +2776,38 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           {/* User Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-            <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              User </span>
+            <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">User </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              DISPLAYNAME </span>
+              DISPLAYNAME{' '}
+            </span>
           </div>
 
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
             <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-              Terminating all sessions will immediately sign the user out from all devices and require re-authentication.
+              Terminating all sessions will immediately sign the user out from all devices and
+              require re-authentication.
             </p>
           </div>
         </div>
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsTerminateAllSessionsOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="primary"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="primary"
             size="md"
             onClick={() => {
               console.log('All sessions terminated');
@@ -2485,12 +2815,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Terminate </Button>
+            Terminate{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Terminate Session Modal (Single Session) */}
-      <Modal isOpen={isTerminateSessionOpen}
+      <Modal
+        isOpen={isTerminateSessionOpen}
         onClose={() => setIsTerminateSessionOpen(false)}
         title="Terminate session"
         description="This action terminates the session."
@@ -2500,7 +2832,8 @@ export function ModalsPage() {
           {/* Session Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Session </span>
+              Session{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
               DISPLAYNAME (Browser/device)
             </span>
@@ -2508,25 +2841,30 @@ export function ModalsPage() {
 
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
             <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-              Terminating this session will sign the user out from this device and require re-authentication.
+              Terminating this session will sign the user out from this device and require
+              re-authentication.
             </p>
           </div>
         </div>
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsTerminateSessionOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="primary"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="primary"
             size="md"
             onClick={() => {
               console.log('Session terminated');
@@ -2534,12 +2872,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Terminate </Button>
+            Terminate{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Remove User From Group Modal */}
-      <Modal isOpen={isRemoveUserFromGroupOpen}
+      <Modal
+        isOpen={isRemoveUserFromGroupOpen}
         onClose={() => setIsRemoveUserFromGroupOpen(false)}
         title="Remove user"
         description="This action removes the user from the group."
@@ -2549,22 +2889,25 @@ export function ModalsPage() {
           {/* User Group Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              User group </span>
+              User group{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              USERGROUP NAME </span>
+              USERGROUP NAME{' '}
+            </span>
           </div>
 
           {/* User Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-            <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              User </span>
+            <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">User </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              DISPLAY NAME </span>
+              DISPLAY NAME{' '}
+            </span>
           </div>
 
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -2576,13 +2919,16 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsRemoveUserFromGroupOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="primary"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="primary"
             size="md"
             onClick={() => {
               console.log('User removed from group');
@@ -2590,12 +2936,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Remove </Button>
+            Remove{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Role Modal */}
-      <Modal isOpen={isDeleteRoleOpen}
+      <Modal
+        isOpen={isDeleteRoleOpen}
         onClose={() => setIsDeleteRoleOpen(false)}
         title="Delete role"
         description="Removing the selected instances is permanent and cannot be undone."
@@ -2604,14 +2952,16 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           {/* Role Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-            <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Role </span>
-            <span className="text-body-md text-[var(--color-text-default)] leading-4">ROLENAME</span>
+            <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">Role </span>
+            <span className="text-body-md text-[var(--color-text-default)] leading-4">
+              ROLENAME
+            </span>
           </div>
 
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -2623,13 +2973,16 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteRoleOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Role deleted');
@@ -2637,12 +2990,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Roles (Multiple) Modal */}
-      <Modal isOpen={isDeleteRolesMultipleOpen}
+      <Modal
+        isOpen={isDeleteRolesMultipleOpen}
         onClose={() => setIsDeleteRolesMultipleOpen(false)}
         title="Delete roles"
         description="Removing the selected instances is permanent and cannot be undone."
@@ -2652,7 +3007,8 @@ export function ModalsPage() {
           {/* Roles that can be deleted */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Roles that can be deleted </span>
+              Roles that can be deleted{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
               <li>web-server-01</li>
               <li>web-server-02</li>
@@ -2665,7 +3021,8 @@ export function ModalsPage() {
           {/* Roles that cannot be deleted */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Roles that cannot be deleted </span>
+              Roles that cannot be deleted{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
               <li>my-server-04 (Locked instances cannot be deleted.)</li>
               <li>my-server-03 (Instances in current state cannot be deleted.)</li>
@@ -2676,25 +3033,30 @@ export function ModalsPage() {
 
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
             <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-              Deleting these roles will immediately remove all permissions granted through these roles.
+              Deleting these roles will immediately remove all permissions granted through these
+              roles.
             </p>
           </div>
         </div>
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteRolesMultipleOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Multiple roles deleted');
@@ -2702,12 +3064,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Detach Policy Modal */}
-      <Modal isOpen={isDetachPolicyOpen}
+      <Modal
+        isOpen={isDetachPolicyOpen}
         onClose={() => setIsDetachPolicyOpen(false)}
         title="Detach policy"
         description="This action detaches the policy from the role."
@@ -2716,40 +3080,48 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           {/* Role Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-            <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Role </span>
-            <span className="text-body-md text-[var(--color-text-default)] leading-4">ROLENAME</span>
+            <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">Role </span>
+            <span className="text-body-md text-[var(--color-text-default)] leading-4">
+              ROLENAME
+            </span>
           </div>
 
           {/* Policy Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Policy </span>
+              Policy{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              POLICYNAME </span>
+              POLICYNAME{' '}
+            </span>
           </div>
 
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
             <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-              Detaching this policy will immediately revoke permissions granted to this role through this policy.
+              Detaching this policy will immediately revoke permissions granted to this role through
+              this policy.
             </p>
           </div>
         </div>
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDetachPolicyOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="primary"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="primary"
             size="md"
             onClick={() => {
               console.log('Policy detached from role');
@@ -2757,12 +3129,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Detach </Button>
+            Detach{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Policy Modal */}
-      <Modal isOpen={isDeletePolicyOpen}
+      <Modal
+        isOpen={isDeletePolicyOpen}
         onClose={() => setIsDeletePolicyOpen(false)}
         title="Delete policy"
         description="Removing the selected instances is permanent and cannot be undone."
@@ -2772,32 +3146,39 @@ export function ModalsPage() {
           {/* Policy Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Policy </span>
+              Policy{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              POLICYNAME </span>
+              POLICYNAME{' '}
+            </span>
           </div>
 
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
             <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-              This policy will be permanently removed. Users or roles attached to this policy will immediately lose access permissions.
+              This policy will be permanently removed. Users or roles attached to this policy will
+              immediately lose access permissions.
             </p>
           </div>
         </div>
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeletePolicyOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Policy deleted');
@@ -2805,12 +3186,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Policies (Multiple) Modal */}
-      <Modal isOpen={isDeletePoliciesMultipleOpen}
+      <Modal
+        isOpen={isDeletePoliciesMultipleOpen}
         onClose={() => setIsDeletePoliciesMultipleOpen(false)}
         title="Delete policies"
         description="Removing the selected instances is permanent and cannot be undone."
@@ -2820,7 +3203,8 @@ export function ModalsPage() {
           {/* Policies that can be deleted */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Policies that can be deleted </span>
+              Policies that can be deleted{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
               <li>web-server-01</li>
               <li>web-server-02</li>
@@ -2833,7 +3217,8 @@ export function ModalsPage() {
           {/* Policies that cannot be deleted */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Policies that cannot be deleted </span>
+              Policies that cannot be deleted{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
               <li>my-server-04 (Locked instances cannot be deleted.)</li>
               <li>my-server-03 (Instances in current state cannot be deleted.)</li>
@@ -2844,25 +3229,30 @@ export function ModalsPage() {
 
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
             <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-              These policies will be permanently removed. Users or roles attached to these policies will immediately lose access permissions.
+              These policies will be permanently removed. Users or roles attached to these policies
+              will immediately lose access permissions.
             </p>
           </div>
         </div>
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeletePoliciesMultipleOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Multiple policies deleted');
@@ -2870,12 +3260,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Revert Policy Version Modal */}
-      <Modal isOpen={isRevertPolicyVersionOpen}
+      <Modal
+        isOpen={isRevertPolicyVersionOpen}
         onClose={() => setIsRevertPolicyVersionOpen(false)}
         title="Revert policy version"
         description="This action reverts the policy to the selected version."
@@ -2885,38 +3277,45 @@ export function ModalsPage() {
           {/* Current Version Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Current version </span>
+              Current version{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">VERSION</span>
           </div>
 
           {/* Target Version Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Target version </span>
+              Target version{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">VERSION</span>
           </div>
 
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
             <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-              Reverting to this version will immediately replace the currently active policy and may change permissions for all roles using it.
+              Reverting to this version will immediately replace the currently active policy and may
+              change permissions for all roles using it.
             </p>
           </div>
         </div>
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsRevertPolicyVersionOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="primary"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="primary"
             size="md"
             onClick={() => {
               console.log('Policy version reverted');
@@ -2924,12 +3323,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Revert </Button>
+            Revert{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Policy Version Modal */}
-      <Modal isOpen={isDeletePolicyVersionOpen}
+      <Modal
+        isOpen={isDeletePolicyVersionOpen}
         onClose={() => setIsDeletePolicyVersionOpen(false)}
         title="Delete policy version"
         description="Removing the selected instances is permanent and cannot be undone."
@@ -2938,25 +3339,30 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
             <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-              Deleting this version will permanently remove its policy definitions. This action cannot be undone.
+              Deleting this version will permanently remove its policy definitions. This action
+              cannot be undone.
             </p>
           </div>
         </div>
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeletePolicyVersionOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Policy version deleted');
@@ -2964,12 +3370,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Update MFA Enforcement Policy Modal */}
-      <Modal isOpen={isUpdateMfaEnforcementOpen}
+      <Modal
+        isOpen={isUpdateMfaEnforcementOpen}
         onClose={() => setIsUpdateMfaEnforcementOpen(false)}
         title="Update MFA enforcement policy"
         description="This action applies the changes."
@@ -2979,7 +3387,8 @@ export function ModalsPage() {
           {/* Changes Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Changes </span>
+              Changes{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
               <li>MFA enforcement: Voluntary → Required for all users</li>
             </ul>
@@ -2987,25 +3396,30 @@ export function ModalsPage() {
 
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
             <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-              Updating MFA enforcement may immediately affect authentication requirements for all users.
+              Updating MFA enforcement may immediately affect authentication requirements for all
+              users.
             </p>
           </div>
         </div>
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsUpdateMfaEnforcementOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="primary"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="primary"
             size="md"
             onClick={() => {
               console.log('MFA enforcement policy updated');
@@ -3013,12 +3427,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Apply </Button>
+            Apply{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Update OTP Policy Modal */}
-      <Modal isOpen={isUpdateOtpPolicyOpen}
+      <Modal
+        isOpen={isUpdateOtpPolicyOpen}
         onClose={() => setIsUpdateOtpPolicyOpen(false)}
         title="Update OTP policy"
         description="This action applies the changes."
@@ -3028,7 +3444,8 @@ export function ModalsPage() {
           {/* Changes Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Changes </span>
+              Changes{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
               <li>OTP policy: On → Off</li>
             </ul>
@@ -3036,25 +3453,30 @@ export function ModalsPage() {
 
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
             <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-              Turning off OTP authentication will remove OTP as an available MFA method for all users.
+              Turning off OTP authentication will remove OTP as an available MFA method for all
+              users.
             </p>
           </div>
         </div>
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsUpdateOtpPolicyOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="primary"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="primary"
             size="md"
             onClick={() => {
               console.log('OTP policy updated');
@@ -3062,12 +3484,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Apply </Button>
+            Apply{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Update OTP Policy Settings Modal */}
-      <Modal isOpen={isUpdateOtpPolicySettingsOpen}
+      <Modal
+        isOpen={isUpdateOtpPolicySettingsOpen}
         onClose={() => setIsUpdateOtpPolicySettingsOpen(false)}
         title="Update OTP policy"
         description="This action applies the changes."
@@ -3077,7 +3501,8 @@ export function ModalsPage() {
           {/* Changes Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Changes </span>
+              Changes{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
               <li>Look around Window: 1 → 0</li>
               <li>Reusable token: Off → On</li>
@@ -3087,13 +3512,16 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsUpdateOtpPolicySettingsOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="primary"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="primary"
             size="md"
             onClick={() => {
               console.log('OTP policy settings updated');
@@ -3101,12 +3529,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Apply </Button>
+            Apply{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Update Email Policy Modal */}
-      <Modal isOpen={isUpdateEmailPolicyOpen}
+      <Modal
+        isOpen={isUpdateEmailPolicyOpen}
         onClose={() => setIsUpdateEmailPolicyOpen(false)}
         title="Update email policy"
         description="This action applies the changes."
@@ -3116,7 +3546,8 @@ export function ModalsPage() {
           {/* Changes Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Changes </span>
+              Changes{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
               <li>Email policy: On → Off</li>
             </ul>
@@ -3124,25 +3555,30 @@ export function ModalsPage() {
 
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
             <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-              Turning off email authentication will remove email as an available MFA method for all users.
+              Turning off email authentication will remove email as an available MFA method for all
+              users.
             </p>
           </div>
         </div>
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsUpdateEmailPolicyOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="primary"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="primary"
             size="md"
             onClick={() => {
               console.log('Email policy updated');
@@ -3150,12 +3586,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Apply </Button>
+            Apply{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Update Email Policy Settings Modal */}
-      <Modal isOpen={isUpdateEmailPolicySettingsOpen}
+      <Modal
+        isOpen={isUpdateEmailPolicySettingsOpen}
         onClose={() => setIsUpdateEmailPolicySettingsOpen(false)}
         title="Update email policy"
         description="This action applies the changes."
@@ -3165,7 +3603,8 @@ export function ModalsPage() {
           {/* Changes Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Changes </span>
+              Changes{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
               <li>Code validity period: 300 → 600 seconds</li>
               <li>Resend cooldown: 60 → 1 seconds</li>
@@ -3177,13 +3616,16 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsUpdateEmailPolicySettingsOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="primary"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="primary"
             size="md"
             onClick={() => {
               console.log('Email policy settings updated');
@@ -3191,12 +3633,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Apply </Button>
+            Apply{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Update General Session Policy Modal */}
-      <Modal isOpen={isUpdateGeneralSessionPolicyOpen}
+      <Modal
+        isOpen={isUpdateGeneralSessionPolicyOpen}
         onClose={() => setIsUpdateGeneralSessionPolicyOpen(false)}
         title="Update general session policy"
         description="This action applies the changes."
@@ -3206,7 +3650,8 @@ export function ModalsPage() {
           {/* Changes Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Changes </span>
+              Changes{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
               <li>Session idle timeout: 30 → 10 minutes</li>
               <li>Session max lifespan: 8 → 10 hours</li>
@@ -3218,13 +3663,16 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsUpdateGeneralSessionPolicyOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="primary"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="primary"
             size="md"
             onClick={() => {
               console.log('General session policy updated');
@@ -3232,12 +3680,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Apply </Button>
+            Apply{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Domain Modal */}
-      <Modal isOpen={isDeleteDomainOpen}
+      <Modal
+        isOpen={isDeleteDomainOpen}
         onClose={() => setIsDeleteDomainOpen(false)}
         title="Delete domain"
         description="Removing the selected instances is permanent and cannot be undone."
@@ -3247,32 +3697,39 @@ export function ModalsPage() {
           {/* Domain Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              domain </span>
+              domain{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              DOMAINNAME </span>
+              DOMAINNAME{' '}
+            </span>
           </div>
 
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
             <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-              Deleting this domain will permanently remove all configurations, policies, and associations linked to it. This action cannot be undone.
+              Deleting this domain will permanently remove all configurations, policies, and
+              associations linked to it. This action cannot be undone.
             </p>
           </div>
         </div>
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteDomainOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Domain deleted');
@@ -3280,12 +3737,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Switch to Domain Modal */}
-      <Modal isOpen={isSwitchToDomainOpen}
+      <Modal
+        isOpen={isSwitchToDomainOpen}
         onClose={() => setIsSwitchToDomainOpen(false)}
         title="Switch to domain"
         description="Any unsaved changes may be lost when switching to another domain. Do you want to switch?"
@@ -3295,8 +3754,11 @@ export function ModalsPage() {
           {/* Current Domain Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 w-full">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Current domain </span>
-            <span className="text-body-md text-[var(--color-text-default)] leading-4">Domain A</span>
+              Current domain{' '}
+            </span>
+            <span className="text-body-md text-[var(--color-text-default)] leading-4">
+              Domain A
+            </span>
           </div>
 
           {/* Chevron Down Icon */}
@@ -3305,20 +3767,26 @@ export function ModalsPage() {
           {/* Target Domain Info Box */}
           <div className="bg-[#eff6ff] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 w-full">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Target domain </span>
-            <span className="text-body-md text-[var(--color-text-default)] leading-4">Domain B</span>
+              Target domain{' '}
+            </span>
+            <span className="text-body-md text-[var(--color-text-default)] leading-4">
+              Domain B
+            </span>
           </div>
         </div>
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsSwitchToDomainOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="primary"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="primary"
             size="md"
             onClick={() => {
               console.log('Switched to domain');
@@ -3326,12 +3794,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Switch </Button>
+            Switch{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete System Administrator Modal */}
-      <Modal isOpen={isDeleteSystemAdminOpen}
+      <Modal
+        isOpen={isDeleteSystemAdminOpen}
         onClose={() => setIsDeleteSystemAdminOpen(false)}
         title="Delete system administrator"
         description="Removing the selected instances is permanent and cannot be undone."
@@ -3341,32 +3811,39 @@ export function ModalsPage() {
           {/* System Administrator Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              System administrator </span>
+              System administrator{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              DISPLAY NAME </span>
+              DISPLAY NAME{' '}
+            </span>
           </div>
 
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
             <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-              Deleting this system administrator will permanently remove their global access and cannot be undone.
+              Deleting this system administrator will permanently remove their global access and
+              cannot be undone.
             </p>
           </div>
         </div>
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteSystemAdminOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('System administrator deleted');
@@ -3374,12 +3851,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Update Password Policy Modal */}
-      <Modal isOpen={isUpdatePasswordPolicyOpen}
+      <Modal
+        isOpen={isUpdatePasswordPolicyOpen}
         onClose={() => setIsUpdatePasswordPolicyOpen(false)}
         title="Update password policy"
         description="This action applies the changes."
@@ -3389,11 +3868,14 @@ export function ModalsPage() {
           {/* Changes Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Changes </span>
+              Changes{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
               <li>Length: 8-64 → 1-100</li>
               <li>
-                Requirements: Uppercase, Lowercase, number, Special character → Uppercase, Lowercase </li>
+                Requirements: Uppercase, Lowercase, number, Special character → Uppercase,
+                Lowercase{' '}
+              </li>
               <li>Exclusion rules: none → Username, Email</li>
               <li>Password expiration: 30 → 47 days</li>
               <li>Prevent password reuse: Off → On</li>
@@ -3403,13 +3885,16 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsUpdatePasswordPolicyOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="primary"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="primary"
             size="md"
             onClick={() => {
               console.log('Password policy updated');
@@ -3417,12 +3902,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Apply </Button>
+            Apply{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Update Account Lockout Policy Modal */}
-      <Modal isOpen={isUpdateAccountLockoutPolicyOpen}
+      <Modal
+        isOpen={isUpdateAccountLockoutPolicyOpen}
         onClose={() => setIsUpdateAccountLockoutPolicyOpen(false)}
         title="Update account lockout policy"
         description="This action applies the changes."
@@ -3432,23 +3919,28 @@ export function ModalsPage() {
           {/* Changes Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Changes </span>
+              Changes{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
               <li>
-                Lockout type: Lockout permanently after Temporary lockout → Lockout temporarily </li>
+                Lockout type: Lockout permanently after Temporary lockout → Lockout temporarily{' '}
+              </li>
             </ul>
           </div>
         </div>
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsUpdateAccountLockoutPolicyOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="primary"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="primary"
             size="md"
             onClick={() => {
               console.log('Account lockout policy updated');
@@ -3456,12 +3948,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Apply </Button>
+            Apply{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Update Token Policy Modal */}
-      <Modal isOpen={isUpdateTokenPolicyOpen}
+      <Modal
+        isOpen={isUpdateTokenPolicyOpen}
         onClose={() => setIsUpdateTokenPolicyOpen(false)}
         title="Update token policy"
         description="This action applies the changes."
@@ -3471,7 +3965,8 @@ export function ModalsPage() {
           {/* Changes Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Changes </span>
+              Changes{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc pl-4 space-y-0.5">
               <li>Access token lifespan: 10 → 15 minutes</li>
               <li>Refresh token lifespan: 7 → 3 days</li>
@@ -3480,25 +3975,30 @@ export function ModalsPage() {
 
           {/* Warning Alert Box */}
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
             <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-              Updating token settings may immediately affect authentication behavior across the system.
+              Updating token settings may immediately affect authentication behavior across the
+              system.
             </p>
           </div>
         </div>
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsUpdateTokenPolicyOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="primary"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="primary"
             size="md"
             onClick={() => {
               console.log('Token policy updated');
@@ -3506,7 +4006,8 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Apply </Button>
+            Apply{' '}
+          </Button>
         </div>
       </Modal>
 
@@ -3514,14 +4015,16 @@ export function ModalsPage() {
           STORAGE MODALS ============================================= */}
 
       {/* Delete Bucket Modal */}
-      <Modal isOpen={isDeleteBucketOpen}
+      <Modal
+        isOpen={isDeleteBucketOpen}
         onClose={() => setIsDeleteBucketOpen(false)}
         title="Delete bucket"
         size="sm"
       >
         {/* Warning Alert Box */}
         <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-          <IconAlertCircle size={16}
+          <IconAlertCircle
+            size={16}
             className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
             stroke={1.5}
           />
@@ -3536,13 +4039,16 @@ export function ModalsPage() {
 
         {/* Button Group */}
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteBucketOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Bucket deleted');
@@ -3550,7 +4056,8 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
@@ -3558,7 +4065,8 @@ export function ModalsPage() {
           CONTAINER MODALS ============================================= */}
 
       {/* Delete Cluster Modal */}
-      <DeleteClusterModal isOpen={isDeleteClusterOpen}
+      <DeleteClusterModal
+        isOpen={isDeleteClusterOpen}
         onClose={() => setIsDeleteClusterOpen(false)}
         cluster={{ id: 'cluster-001', name: 'production-cluster' }}
         onConfirm={() => {
@@ -3568,7 +4076,8 @@ export function ModalsPage() {
       />
 
       {/* Delete Namespace Modal */}
-      <DeleteNamespaceModal isOpen={isDeleteNamespaceOpen}
+      <DeleteNamespaceModal
+        isOpen={isDeleteNamespaceOpen}
         onClose={() => setIsDeleteNamespaceOpen(false)}
         namespace={{ id: 'ns-001', name: 'default' }}
         onConfirm={() => {
@@ -3578,7 +4087,8 @@ export function ModalsPage() {
       />
 
       {/* Delete Pod Modal */}
-      <DeletePodModal isOpen={isDeletePodOpen}
+      <DeletePodModal
+        isOpen={isDeletePodOpen}
         onClose={() => setIsDeletePodOpen(false)}
         pod={{ id: 'pod-001', name: 'nginx-deployment-7fb96c846b-abc12' }}
         onConfirm={() => {
@@ -3588,7 +4098,8 @@ export function ModalsPage() {
       />
 
       {/* Delete Job Modal */}
-      <DeleteJobModal isOpen={isDeleteJobOpen}
+      <DeleteJobModal
+        isOpen={isDeleteJobOpen}
         onClose={() => setIsDeleteJobOpen(false)}
         job={{ id: 'job-001', name: 'backup-job-20240115' }}
         onConfirm={() => {
@@ -3598,7 +4109,8 @@ export function ModalsPage() {
       />
 
       {/* Delete CronJob Modal */}
-      <DeleteCronJobModal isOpen={isDeleteCronJobOpen}
+      <DeleteCronJobModal
+        isOpen={isDeleteCronJobOpen}
         onClose={() => setIsDeleteCronJobOpen(false)}
         cronJob={{ id: 'cronjob-001', name: 'daily-backup' }}
         onConfirm={() => {
@@ -3608,7 +4120,8 @@ export function ModalsPage() {
       />
 
       {/* Delete Deployment Modal */}
-      <DeleteDeploymentModal isOpen={isDeleteDeploymentOpen}
+      <DeleteDeploymentModal
+        isOpen={isDeleteDeploymentOpen}
         onClose={() => setIsDeleteDeploymentOpen(false)}
         deployment={{ id: 'deploy-001', name: 'nginx-deployment' }}
         onConfirm={() => {
@@ -3618,7 +4131,8 @@ export function ModalsPage() {
       />
 
       {/* Delete StatefulSet Modal */}
-      <DeleteStatefulSetModal isOpen={isDeleteStatefulSetOpen}
+      <DeleteStatefulSetModal
+        isOpen={isDeleteStatefulSetOpen}
         onClose={() => setIsDeleteStatefulSetOpen(false)}
         statefulSet={{ id: 'sts-001', name: 'mysql-statefulset' }}
         onConfirm={() => {
@@ -3628,7 +4142,8 @@ export function ModalsPage() {
       />
 
       {/* Delete DaemonSet Modal */}
-      <DeleteDaemonSetModal isOpen={isDeleteDaemonSetOpen}
+      <DeleteDaemonSetModal
+        isOpen={isDeleteDaemonSetOpen}
         onClose={() => setIsDeleteDaemonSetOpen(false)}
         daemonSet={{ id: 'ds-001', name: 'fluentd-daemonset' }}
         onConfirm={() => {
@@ -3638,7 +4153,8 @@ export function ModalsPage() {
       />
 
       {/* Redeploy Deployment Modal */}
-      <RedeployDeploymentModal isOpen={isRedeployDeploymentOpen}
+      <RedeployDeploymentModal
+        isOpen={isRedeployDeploymentOpen}
         onClose={() => setIsRedeployDeploymentOpen(false)}
         deployment={{ id: 'deploy-001', name: 'nginx-deployment' }}
         onConfirm={() => {
@@ -3648,7 +4164,8 @@ export function ModalsPage() {
       />
 
       {/* Redeploy StatefulSet Modal */}
-      <RedeployStatefulSetModal isOpen={isRedeployStatefulSetOpen}
+      <RedeployStatefulSetModal
+        isOpen={isRedeployStatefulSetOpen}
         onClose={() => setIsRedeployStatefulSetOpen(false)}
         statefulSet={{ id: 'sts-001', name: 'mysql-statefulset' }}
         onConfirm={() => {
@@ -3658,7 +4175,8 @@ export function ModalsPage() {
       />
 
       {/* Redeploy DaemonSet Modal */}
-      <RedeployDaemonSetModal isOpen={isRedeployDaemonSetOpen}
+      <RedeployDaemonSetModal
+        isOpen={isRedeployDaemonSetOpen}
         onClose={() => setIsRedeployDaemonSetOpen(false)}
         daemonSet={{ id: 'ds-001', name: 'fluentd-daemonset' }}
         onConfirm={() => {
@@ -3668,7 +4186,8 @@ export function ModalsPage() {
       />
 
       {/* Roll Back Deployment Modal */}
-      <RollBackDeploymentModal isOpen={isRollBackDeploymentOpen}
+      <RollBackDeploymentModal
+        isOpen={isRollBackDeploymentOpen}
         onClose={() => setIsRollBackDeploymentOpen(false)}
         deployment={{ id: 'deploy-001', name: 'nginx-deployment' }}
         onConfirm={(revisionId) => {
@@ -3681,7 +4200,8 @@ export function ModalsPage() {
          Compute Admin Modals ---------------------------------------- */}
 
       {/* Stop Instance Modal */}
-      <Modal isOpen={isStopInstanceOpen}
+      <Modal
+        isOpen={isStopInstanceOpen}
         onClose={() => setIsStopInstanceOpen(false)}
         title="Stop Instance"
         description="This action stops the instance."
@@ -3690,12 +4210,15 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Instance </span>
+              Instance{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              web-server-01 </span>
+              web-server-01{' '}
+            </span>
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -3705,13 +4228,16 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsStopInstanceOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="primary"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="primary"
             size="md"
             onClick={() => {
               console.log('Instance stopped');
@@ -3719,12 +4245,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Stop </Button>
+            Stop{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Reboot Instance Modal */}
-      <Modal isOpen={isRebootInstanceOpen}
+      <Modal
+        isOpen={isRebootInstanceOpen}
         onClose={() => setIsRebootInstanceOpen(false)}
         title="Reboot Instance"
         description="This action reboots the instance."
@@ -3733,12 +4261,15 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Instance </span>
+              Instance{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              web-server-01 </span>
+              web-server-01{' '}
+            </span>
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -3748,13 +4279,16 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsRebootInstanceOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="primary"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="primary"
             size="md"
             onClick={() => {
               console.log('Instance rebooted');
@@ -3762,12 +4296,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Reboot </Button>
+            Reboot{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Soft Reboot Instance Modal */}
-      <Modal isOpen={isSoftRebootInstanceOpen}
+      <Modal
+        isOpen={isSoftRebootInstanceOpen}
         onClose={() => setIsSoftRebootInstanceOpen(false)}
         title="Soft Reboot Instance"
         description="This action performs a soft reboot of the instance."
@@ -3776,12 +4312,15 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Instance </span>
+              Instance{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              web-server-01 </span>
+              web-server-01{' '}
+            </span>
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -3791,13 +4330,16 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsSoftRebootInstanceOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="primary"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="primary"
             size="md"
             onClick={() => {
               console.log('Instance soft rebooted');
@@ -3805,12 +4347,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Soft Reboot </Button>
+            Soft Reboot{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Confirm Resize Modal */}
-      <Modal isOpen={isConfirmResizeOpen}
+      <Modal
+        isOpen={isConfirmResizeOpen}
         onClose={() => setIsConfirmResizeOpen(false)}
         title="Confirm Resize"
         description="This action confirms the resized state of the instance."
@@ -3819,12 +4363,15 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Instance </span>
+              Instance{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              web-server-01 </span>
+              web-server-01{' '}
+            </span>
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -3834,13 +4381,16 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsConfirmResizeOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="primary"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="primary"
             size="md"
             onClick={() => {
               console.log('Resize confirmed');
@@ -3848,12 +4398,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Confirm </Button>
+            Confirm{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Revert Resize Modal */}
-      <Modal isOpen={isRevertResizeOpen}
+      <Modal
+        isOpen={isRevertResizeOpen}
         onClose={() => setIsRevertResizeOpen(false)}
         title="Revert Resize"
         description="This action reverts the instance to its previous state before the resize."
@@ -3862,12 +4414,15 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Instance </span>
+              Instance{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              web-server-01 </span>
+              web-server-01{' '}
+            </span>
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -3877,13 +4432,16 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsRevertResizeOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="primary"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="primary"
             size="md"
             onClick={() => {
               console.log('Resize reverted');
@@ -3891,12 +4449,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Revert </Button>
+            Revert{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Instance Modal */}
-      <Modal isOpen={isDeleteInstanceOpen}
+      <Modal
+        isOpen={isDeleteInstanceOpen}
         onClose={() => setIsDeleteInstanceOpen(false)}
         title="Delete Instance"
         description="Removing the instance is permanent and cannot be undone."
@@ -3905,12 +4465,15 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Instance </span>
+              Instance{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              web-server-01 </span>
+              web-server-01{' '}
+            </span>
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -3920,13 +4483,16 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteInstanceOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Instance deleted');
@@ -3934,12 +4500,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Shelve Instance Modal */}
-      <Modal isOpen={isShelveInstanceOpen}
+      <Modal
+        isOpen={isShelveInstanceOpen}
         onClose={() => setIsShelveInstanceOpen(false)}
         title="Shelve Instance"
         description="This action shelves the instance."
@@ -3948,12 +4516,15 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Instance </span>
+              Instance{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              web-server-01 </span>
+              web-server-01{' '}
+            </span>
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -3963,13 +4534,16 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsShelveInstanceOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="primary"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="primary"
             size="md"
             onClick={() => {
               console.log('Instance shelved');
@@ -3977,12 +4551,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Shelve </Button>
+            Shelve{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Start Instances Modal */}
-      <Modal isOpen={isStartInstancesOpen}
+      <Modal
+        isOpen={isStartInstancesOpen}
         onClose={() => setIsStartInstancesOpen(false)}
         title="Start Instances"
         description="This action starts the selected instances."
@@ -3991,7 +4567,8 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Instances that can be started </span>
+              Instances that can be started{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>web-server-01</li>
               <li>web-server-02</li>
@@ -4001,7 +4578,8 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Instances that cannot be started </span>
+              Instances that cannot be started{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>web-server-03</li>
               <li>web-server-04</li>
@@ -4010,7 +4588,8 @@ export function ModalsPage() {
             </ul>
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -4020,13 +4599,16 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsStartInstancesOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="primary"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="primary"
             size="md"
             onClick={() => {
               console.log('Instances started');
@@ -4034,12 +4616,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Start </Button>
+            Start{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Stop Instances Modal */}
-      <Modal isOpen={isStopInstancesOpen}
+      <Modal
+        isOpen={isStopInstancesOpen}
         onClose={() => setIsStopInstancesOpen(false)}
         title="Stop Instances"
         description="This action stops the selected instances."
@@ -4048,7 +4632,8 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Instances that can be stopped </span>
+              Instances that can be stopped{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>web-server-01</li>
               <li>web-server-02</li>
@@ -4058,7 +4643,8 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Instances that cannot be stopped </span>
+              Instances that cannot be stopped{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>web-server-03</li>
               <li>web-server-04</li>
@@ -4067,7 +4653,8 @@ export function ModalsPage() {
             </ul>
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -4077,13 +4664,16 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsStopInstancesOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="primary"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="primary"
             size="md"
             onClick={() => {
               console.log('Instances stopped');
@@ -4091,12 +4681,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Stop </Button>
+            Stop{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Reboot Instances Modal */}
-      <Modal isOpen={isRebootInstancesOpen}
+      <Modal
+        isOpen={isRebootInstancesOpen}
         onClose={() => setIsRebootInstancesOpen(false)}
         title="Reboot Instances"
         description="This action reboots the selected instances."
@@ -4105,7 +4697,8 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Instances that can be rebooted </span>
+              Instances that can be rebooted{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>web-server-01</li>
               <li>web-server-02</li>
@@ -4115,7 +4708,8 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Instances that cannot be rebooted </span>
+              Instances that cannot be rebooted{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>web-server-03</li>
               <li>web-server-04</li>
@@ -4124,7 +4718,8 @@ export function ModalsPage() {
             </ul>
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -4134,13 +4729,16 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsRebootInstancesOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="primary"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="primary"
             size="md"
             onClick={() => {
               console.log('Instances rebooted');
@@ -4148,12 +4746,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Reboot </Button>
+            Reboot{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Instances Modal */}
-      <Modal isOpen={isDeleteInstancesOpen}
+      <Modal
+        isOpen={isDeleteInstancesOpen}
         onClose={() => setIsDeleteInstancesOpen(false)}
         title="Delete Instances"
         description="Removing the selected instances is permanent and cannot be undone."
@@ -4162,7 +4762,8 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Instances that can be deleted </span>
+              Instances that can be deleted{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>web-server-01</li>
               <li>web-server-02</li>
@@ -4172,7 +4773,8 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Instances that cannot be deleted </span>
+              Instances that cannot be deleted{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>web-server-03</li>
               <li>web-server-04</li>
@@ -4181,7 +4783,8 @@ export function ModalsPage() {
             </ul>
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -4191,13 +4794,16 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteInstancesOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Instances deleted');
@@ -4205,12 +4811,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Instance Template Modal */}
-      <Modal isOpen={isDeleteInstanceTemplateOpen}
+      <Modal
+        isOpen={isDeleteInstanceTemplateOpen}
         onClose={() => setIsDeleteInstanceTemplateOpen(false)}
         title="Delete Instance Template"
         description="Deleting the instance template is permanent and cannot be undone."
@@ -4219,19 +4827,24 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Instance Template </span>
+              Instance Template{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              web-server-template-01 </span>
+              web-server-template-01{' '}
+            </span>
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteInstanceTemplateOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Instance template deleted');
@@ -4239,12 +4852,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Instance Templates Modal */}
-      <Modal isOpen={isDeleteInstanceTemplatesOpen}
+      <Modal
+        isOpen={isDeleteInstanceTemplatesOpen}
         onClose={() => setIsDeleteInstanceTemplatesOpen(false)}
         title="Delete Instance Templates"
         description="Deleting the selected instance templates is permanent and cannot be undone."
@@ -4253,7 +4868,8 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Instance Templates </span>
+              Instance Templates{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>web-server-template-01</li>
               <li>api-server-template-01</li>
@@ -4263,13 +4879,16 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteInstanceTemplatesOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Instance templates deleted');
@@ -4277,12 +4896,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Image Modal */}
-      <Modal isOpen={isDeleteImageOpen}
+      <Modal
+        isOpen={isDeleteImageOpen}
         onClose={() => setIsDeleteImageOpen(false)}
         title="Delete Image"
         description="Deleting the image is permanent and cannot be undone."
@@ -4290,20 +4911,23 @@ export function ModalsPage() {
       >
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-            <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Image </span>
+            <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">Image </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              ubuntu-22.04-server </span>
+              ubuntu-22.04-server{' '}
+            </span>
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteImageOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Image deleted');
@@ -4311,12 +4935,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Images Modal */}
-      <Modal isOpen={isDeleteImagesOpen}
+      <Modal
+        isOpen={isDeleteImagesOpen}
         onClose={() => setIsDeleteImagesOpen(false)}
         title="Delete Images"
         description="Deleting the selected images is permanent and cannot be undone."
@@ -4325,7 +4951,8 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Images that can be deleted </span>
+              Images that can be deleted{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>ubuntu-22.04-server</li>
               <li>centos-8-stream</li>
@@ -4335,7 +4962,8 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Images that cannot be deleted </span>
+              Images that cannot be deleted{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>windows-2022-server (in use)</li>
               <li>rhel-9-base (protected)</li>
@@ -4345,13 +4973,16 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteImagesOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Images deleted');
@@ -4359,12 +4990,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Snapshot Modal */}
-      <Modal isOpen={isDeleteSnapshotOpen}
+      <Modal
+        isOpen={isDeleteSnapshotOpen}
         onClose={() => setIsDeleteSnapshotOpen(false)}
         title="Delete Snapshot"
         description="Deleting the snapshot is permanent and cannot be undone."
@@ -4373,19 +5006,24 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Snapshot </span>
+              Snapshot{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              snapshot-2024-01-15 </span>
+              snapshot-2024-01-15{' '}
+            </span>
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteSnapshotOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Snapshot deleted');
@@ -4393,12 +5031,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Snapshots Modal */}
-      <Modal isOpen={isDeleteSnapshotsOpen}
+      <Modal
+        isOpen={isDeleteSnapshotsOpen}
         onClose={() => setIsDeleteSnapshotsOpen(false)}
         title="Delete Snapshots"
         description="Deleting the selected snapshots is permanent and cannot be undone."
@@ -4407,7 +5047,8 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Snapshots that can be deleted </span>
+              Snapshots that can be deleted{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>snapshot-2024-01-15</li>
               <li>snapshot-2024-01-10</li>
@@ -4417,7 +5058,8 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Snapshots that cannot be deleted </span>
+              Snapshots that cannot be deleted{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>snapshot-2023-12-25 (in use)</li>
               <li>snapshot-2023-12-20 (protected)</li>
@@ -4427,13 +5069,16 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteSnapshotsOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Snapshots deleted');
@@ -4441,12 +5086,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Volume Modal */}
-      <Modal isOpen={isDeleteVolumeOpen}
+      <Modal
+        isOpen={isDeleteVolumeOpen}
         onClose={() => setIsDeleteVolumeOpen(false)}
         title="Delete Volume"
         description="Deleting the volume is permanent and cannot be undone."
@@ -4455,19 +5102,24 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Volume </span>
+              Volume{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              volume-data-01 </span>
+              volume-data-01{' '}
+            </span>
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteVolumeOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Volume deleted');
@@ -4475,12 +5127,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Volumes Modal */}
-      <Modal isOpen={isDeleteVolumesOpen}
+      <Modal
+        isOpen={isDeleteVolumesOpen}
         onClose={() => setIsDeleteVolumesOpen(false)}
         title="Delete Volumes"
         description="Deleting the selected volumes is permanent and cannot be undone."
@@ -4489,7 +5143,8 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Volumes that can be delete </span>
+              Volumes that can be delete{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>volume-data-01</li>
               <li>volume-data-02</li>
@@ -4499,7 +5154,8 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Volumes that cannot be delete </span>
+              Volumes that cannot be delete{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>volume-data-05</li>
               <li>volume-data-06</li>
@@ -4509,13 +5165,16 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteVolumesOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Volumes deleted');
@@ -4523,12 +5182,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Volume Type Modal */}
-      <Modal isOpen={isDeleteVolumeTypeOpen}
+      <Modal
+        isOpen={isDeleteVolumeTypeOpen}
         onClose={() => setIsDeleteVolumeTypeOpen(false)}
         title="Delete Volume Type"
         description="Deleting the volume type is permanent and cannot be undone."
@@ -4537,19 +5198,24 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Volume type </span>
+              Volume type{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              ssd-performance </span>
+              ssd-performance{' '}
+            </span>
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteVolumeTypeOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Volume type deleted');
@@ -4557,12 +5223,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Volume Types Modal */}
-      <Modal isOpen={isDeleteVolumeTypesOpen}
+      <Modal
+        isOpen={isDeleteVolumeTypesOpen}
         onClose={() => setIsDeleteVolumeTypesOpen(false)}
         title="Delete Volume Types"
         description="Deleting the selected volume types is permanent and cannot be undone."
@@ -4571,7 +5239,8 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Volume types </span>
+              Volume types{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>ssd-performance</li>
               <li>hdd-standard</li>
@@ -4581,13 +5250,16 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteVolumeTypesOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Volume types deleted');
@@ -4595,12 +5267,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Backup Modal */}
-      <Modal isOpen={isDeleteBackupOpen}
+      <Modal
+        isOpen={isDeleteBackupOpen}
         onClose={() => setIsDeleteBackupOpen(false)}
         title="Delete Backup"
         description="Deleting the backup is permanent and cannot be undone."
@@ -4609,19 +5283,24 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Backup </span>
+              Backup{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              backup-2024-01-15 </span>
+              backup-2024-01-15{' '}
+            </span>
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteBackupOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Backup deleted');
@@ -4629,12 +5308,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Backups Modal */}
-      <Modal isOpen={isDeleteBackupsOpen}
+      <Modal
+        isOpen={isDeleteBackupsOpen}
         onClose={() => setIsDeleteBackupsOpen(false)}
         title="Delete Backups"
         description="Deleting the selected backups is permanent and cannot be undone."
@@ -4643,7 +5324,8 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Backups that can be delete </span>
+              Backups that can be delete{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>backup-2024-01-15</li>
               <li>backup-2024-01-10</li>
@@ -4653,7 +5335,8 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Backups that cannot be delete </span>
+              Backups that cannot be delete{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>backup-2023-12-25 (in progress)</li>
               <li>backup-2023-12-20 (restoring)</li>
@@ -4663,13 +5346,16 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteBackupsOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Backups deleted');
@@ -4677,12 +5363,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Encryption Modal */}
-      <Modal isOpen={isDeleteEncryptionOpen}
+      <Modal
+        isOpen={isDeleteEncryptionOpen}
         onClose={() => setIsDeleteEncryptionOpen(false)}
         title="Delete Encryption"
         description="This action removes the encryption configuration from the volume type."
@@ -4691,19 +5379,24 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Volume type </span>
+              Volume type{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              ssd-encrypted </span>
+              ssd-encrypted{' '}
+            </span>
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteEncryptionOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Encryption deleted');
@@ -4711,12 +5404,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Extra Spec Modal */}
-      <Modal isOpen={isDeleteExtraSpecOpen}
+      <Modal
+        isOpen={isDeleteExtraSpecOpen}
         onClose={() => setIsDeleteExtraSpecOpen(false)}
         title="Delete Extra Spec"
         description="This action removes the extra specification from the volume type."
@@ -4725,25 +5420,32 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Volume type </span>
+              Volume type{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              ssd-performance </span>
+              ssd-performance{' '}
+            </span>
           </div>
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Extra spec </span>
+              Extra spec{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              volume_backend_name=lvm </span>
+              volume_backend_name=lvm{' '}
+            </span>
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteExtraSpecOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Extra spec deleted');
@@ -4751,12 +5453,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Extra Specs Modal */}
-      <Modal isOpen={isDeleteExtraSpecsOpen}
+      <Modal
+        isOpen={isDeleteExtraSpecsOpen}
         onClose={() => setIsDeleteExtraSpecsOpen(false)}
         title="Delete Extra Specs"
         description="Deleting the selected extra specifications is permanent and cannot be undone."
@@ -4765,13 +5469,16 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Volume type </span>
+              Volume type{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              ssd-performance </span>
+              ssd-performance{' '}
+            </span>
           </div>
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Extra specs </span>
+              Extra specs{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>volume_backend_name=lvm</li>
               <li>max_iops=10000</li>
@@ -4781,13 +5488,16 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteExtraSpecsOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Extra specs deleted');
@@ -4795,12 +5505,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete QoS Spec Modal */}
-      <Modal isOpen={isDeleteQoSSpecOpen}
+      <Modal
+        isOpen={isDeleteQoSSpecOpen}
         onClose={() => setIsDeleteQoSSpecOpen(false)}
         title="Delete QoS Spec"
         description="This action removes the QoS specification."
@@ -4809,19 +5521,24 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              QoS Spec </span>
+              QoS Spec{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              high-performance </span>
+              high-performance{' '}
+            </span>
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteQoSSpecOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('QoS spec deleted');
@@ -4829,12 +5546,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete QoS Specs Modal */}
-      <Modal isOpen={isDeleteQoSSpecsOpen}
+      <Modal
+        isOpen={isDeleteQoSSpecsOpen}
         onClose={() => setIsDeleteQoSSpecsOpen(false)}
         title="Delete QoS Specs"
         description="This action removes the selected QoS specifications."
@@ -4843,7 +5562,8 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              QoS Specs </span>
+              QoS Specs{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>high-performance</li>
               <li>standard-iops</li>
@@ -4853,13 +5573,16 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteQoSSpecsOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('QoS specs deleted');
@@ -4867,12 +5590,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete QoS Extra Spec Modal */}
-      <Modal isOpen={isDeleteQoSExtraSpecOpen}
+      <Modal
+        isOpen={isDeleteQoSExtraSpecOpen}
         onClose={() => setIsDeleteQoSExtraSpecOpen(false)}
         title="Delete Extra Spec"
         description="This action removes the extra specification from the volume type."
@@ -4881,25 +5606,32 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Volume type </span>
+              Volume type{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              high-performance </span>
+              high-performance{' '}
+            </span>
           </div>
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Extra spec </span>
+              Extra spec{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              minIOPS=1000 </span>
+              minIOPS=1000{' '}
+            </span>
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteQoSExtraSpecOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('QoS extra spec deleted');
@@ -4907,12 +5639,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete QoS Extra Specs Modal */}
-      <Modal isOpen={isDeleteQoSExtraSpecsOpen}
+      <Modal
+        isOpen={isDeleteQoSExtraSpecsOpen}
         onClose={() => setIsDeleteQoSExtraSpecsOpen(false)}
         title="Delete Extra Specs"
         description="Deleting the selected extra specifications is permanent and cannot be undone."
@@ -4921,13 +5655,16 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Volume type </span>
+              Volume type{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              high-performance </span>
+              high-performance{' '}
+            </span>
           </div>
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Extra specs </span>
+              Extra specs{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>minIOPS=1000</li>
               <li>maxIOPS=10000</li>
@@ -4937,13 +5674,16 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteQoSExtraSpecsOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('QoS extra specs deleted');
@@ -4951,12 +5691,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Network Modal */}
-      <Modal isOpen={isDeleteNetworkOpen}
+      <Modal
+        isOpen={isDeleteNetworkOpen}
         onClose={() => setIsDeleteNetworkOpen(false)}
         title="Delete Network"
         description="Deleting the network is permanent and cannot be undone."
@@ -4965,12 +5707,15 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Network </span>
+              Network{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              internal-network-01 </span>
+              internal-network-01{' '}
+            </span>
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -4980,13 +5725,16 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteNetworkOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Network deleted');
@@ -4994,12 +5742,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Networks Modal */}
-      <Modal isOpen={isDeleteNetworksOpen}
+      <Modal
+        isOpen={isDeleteNetworksOpen}
         onClose={() => setIsDeleteNetworksOpen(false)}
         title="Delete Networks"
         description="Removing the selected networks is permanent and cannot be undone."
@@ -5008,7 +5758,8 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Networks that can be delete </span>
+              Networks that can be delete{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>internal-network-01</li>
               <li>internal-network-02</li>
@@ -5018,7 +5769,8 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Networks that cannot be delete </span>
+              Networks that cannot be delete{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>production-network (in use)</li>
               <li>shared-network (external)</li>
@@ -5027,7 +5779,8 @@ export function ModalsPage() {
             </ul>
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -5037,13 +5790,16 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteNetworksOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Networks deleted');
@@ -5051,12 +5807,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Subnet Modal */}
-      <Modal isOpen={isDeleteSubnetOpen}
+      <Modal
+        isOpen={isDeleteSubnetOpen}
         onClose={() => setIsDeleteSubnetOpen(false)}
         title="Delete Subnet"
         description="Deleting the subnet is permanent and cannot be undone."
@@ -5065,12 +5823,15 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Subnet </span>
+              Subnet{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              subnet-192-168-1-0 </span>
+              subnet-192-168-1-0{' '}
+            </span>
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -5080,13 +5841,16 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteSubnetOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Subnet deleted');
@@ -5094,12 +5858,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Subnets Modal */}
-      <Modal isOpen={isDeleteSubnetsOpen}
+      <Modal
+        isOpen={isDeleteSubnetsOpen}
         onClose={() => setIsDeleteSubnetsOpen(false)}
         title="Delete Subnets"
         description="Deleting the selected subnets is permanent and cannot be undone."
@@ -5108,7 +5874,8 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Extra specs </span>
+              Extra specs{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>subnet-192-168-1-0</li>
               <li>subnet-10-0-0-0</li>
@@ -5117,7 +5884,8 @@ export function ModalsPage() {
             </ul>
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -5127,13 +5895,16 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteSubnetsOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Subnets deleted');
@@ -5141,12 +5912,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Port Modal */}
-      <Modal isOpen={isDeletePortOpen}
+      <Modal
+        isOpen={isDeletePortOpen}
         onClose={() => setIsDeletePortOpen(false)}
         title="Delete Port"
         description="Deleting the port is permanent and cannot be undone."
@@ -5154,13 +5927,14 @@ export function ModalsPage() {
       >
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-            <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Port </span>
+            <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">Port </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              port-abc12345 </span>
+              port-abc12345{' '}
+            </span>
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -5170,13 +5944,16 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeletePortOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Port deleted');
@@ -5184,12 +5961,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Ports Modal */}
-      <Modal isOpen={isDeletePortsOpen}
+      <Modal
+        isOpen={isDeletePortsOpen}
         onClose={() => setIsDeletePortsOpen(false)}
         title="Delete Ports"
         description="Deleting the selected ports is permanent and cannot be undone."
@@ -5197,8 +5976,7 @@ export function ModalsPage() {
       >
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
-            <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Ports </span>
+            <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">Ports </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>port-abc12345</li>
               <li>port-def67890</li>
@@ -5207,7 +5985,8 @@ export function ModalsPage() {
             </ul>
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -5217,13 +5996,16 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeletePortsOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Ports deleted');
@@ -5231,12 +6013,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Router Modal */}
-      <Modal isOpen={isDeleteRouterOpen}
+      <Modal
+        isOpen={isDeleteRouterOpen}
         onClose={() => setIsDeleteRouterOpen(false)}
         title="Delete Router"
         description="Deleting the router is permanent and cannot be undone."
@@ -5245,12 +6029,15 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Router </span>
+              Router{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              main-router-01 </span>
+              main-router-01{' '}
+            </span>
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -5260,13 +6047,16 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteRouterOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Router deleted');
@@ -5274,12 +6064,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Routers Modal */}
-      <Modal isOpen={isDeleteRoutersOpen}
+      <Modal
+        isOpen={isDeleteRoutersOpen}
         onClose={() => setIsDeleteRoutersOpen(false)}
         title="Delete Routers"
         description="Removing the selected routers is permanent and cannot be undone."
@@ -5288,7 +6080,8 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Routers that can be delete </span>
+              Routers that can be delete{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>main-router-01</li>
               <li>backup-router-01</li>
@@ -5298,7 +6091,8 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Routers that cannot be delete </span>
+              Routers that cannot be delete{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>production-router (in use)</li>
               <li>gateway-router (external)</li>
@@ -5307,7 +6101,8 @@ export function ModalsPage() {
             </ul>
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -5317,13 +6112,16 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteRoutersOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Routers deleted');
@@ -5331,12 +6129,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Static Routes Modal */}
-      <Modal isOpen={isDeleteStaticRoutesOpen}
+      <Modal
+        isOpen={isDeleteStaticRoutesOpen}
         onClose={() => setIsDeleteStaticRoutesOpen(false)}
         title="Delete Static Routes"
         description="Deleting the selected static routers is permanent and cannot be undone."
@@ -5345,7 +6145,8 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Static Routes </span>
+              Static Routes{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>10.0.0.0/24 via 192.168.1.1</li>
               <li>172.16.0.0/16 via 192.168.1.1</li>
@@ -5354,7 +6155,8 @@ export function ModalsPage() {
             </ul>
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -5364,13 +6166,16 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteStaticRoutesOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Static routes deleted');
@@ -5378,12 +6183,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Remove DHCP Agents Modal */}
-      <Modal isOpen={isRemoveDHCPAgentsOpen}
+      <Modal
+        isOpen={isRemoveDHCPAgentsOpen}
         onClose={() => setIsRemoveDHCPAgentsOpen(false)}
         title="Remove DHCP Agents"
         description="This action removes the selected DHCP agents from the network."
@@ -5392,13 +6199,16 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Network </span>
+              Network{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              internal-network-01 </span>
+              internal-network-01{' '}
+            </span>
           </div>
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              DHCP Agents </span>
+              DHCP Agents{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>dhcp-agent-001</li>
               <li>dhcp-agent-002</li>
@@ -5407,23 +6217,28 @@ export function ModalsPage() {
             </ul>
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
             <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-              Removing these DHCP agents may affect IP address assignment for instances in the network.
+              Removing these DHCP agents may affect IP address assignment for instances in the
+              network.
             </p>
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsRemoveDHCPAgentsOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="primary"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="primary"
             size="md"
             onClick={() => {
               console.log('DHCP agents removed');
@@ -5431,12 +6246,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Release Fixed IP Modal */}
-      <Modal isOpen={isReleaseFixedIPOpen}
+      <Modal
+        isOpen={isReleaseFixedIPOpen}
         onClose={() => setIsReleaseFixedIPOpen(false)}
         title="Release fixed IP"
         description="This action releases the fixed IP from the port."
@@ -5444,19 +6261,22 @@ export function ModalsPage() {
       >
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-            <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Port </span>
+            <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">Port </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              port-abc12345 </span>
+              port-abc12345{' '}
+            </span>
           </div>
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Fixed IP </span>
+              Fixed IP{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              192.168.1.100 </span>
+              192.168.1.100{' '}
+            </span>
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -5466,13 +6286,16 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsReleaseFixedIPOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="primary"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="primary"
             size="md"
             onClick={() => {
               console.log('Fixed IP released');
@@ -5480,12 +6303,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Release </Button>
+            Release{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Allowed Address Pair Modal */}
-      <Modal isOpen={isDeleteAllowedAddressPairOpen}
+      <Modal
+        isOpen={isDeleteAllowedAddressPairOpen}
         onClose={() => setIsDeleteAllowedAddressPairOpen(false)}
         title="Delete Allowed Address Pair"
         description="This action removes the allowed address pair from the port."
@@ -5493,19 +6318,22 @@ export function ModalsPage() {
       >
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-            <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Port </span>
+            <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">Port </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              port-abc12345 </span>
+              port-abc12345{' '}
+            </span>
           </div>
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              IP address </span>
+              IP address{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              10.0.0.50 </span>
+              10.0.0.50{' '}
+            </span>
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -5515,13 +6343,16 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteAllowedAddressPairOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Allowed address pair deleted');
@@ -5529,12 +6360,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Security Group Admin Modal */}
-      <Modal isOpen={isDeleteSecurityGroupAdminOpen}
+      <Modal
+        isOpen={isDeleteSecurityGroupAdminOpen}
         onClose={() => setIsDeleteSecurityGroupAdminOpen(false)}
         title="Delete Security Group"
         description="Deleting the security group is permanent and cannot be undone."
@@ -5543,28 +6376,35 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Security group </span>
+              Security group{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              web-servers-sg </span>
+              web-servers-sg{' '}
+            </span>
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
             <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-              This action will permanently delete the security group and all its rules. If this group is attached to any instances, their network traffic may be affected.
+              This action will permanently delete the security group and all its rules. If this
+              group is attached to any instances, their network traffic may be affected.
             </p>
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteSecurityGroupAdminOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Security group deleted');
@@ -5572,12 +6412,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Security Groups Admin Modal */}
-      <Modal isOpen={isDeleteSecurityGroupsAdminOpen}
+      <Modal
+        isOpen={isDeleteSecurityGroupsAdminOpen}
         onClose={() => setIsDeleteSecurityGroupsAdminOpen(false)}
         title="Delete Security Groups"
         description="Deleting the selected security groups is permanent and cannot be undone."
@@ -5586,7 +6428,8 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Security groups that can be delete </span>
+              Security groups that can be delete{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>web-servers-sg</li>
               <li>database-sg</li>
@@ -5596,7 +6439,8 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Security groups that cannot be delete </span>
+              Security groups that cannot be delete{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>default (system)</li>
               <li>production-sg (in use)</li>
@@ -5605,7 +6449,8 @@ export function ModalsPage() {
             </ul>
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -5615,13 +6460,16 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteSecurityGroupsAdminOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Security groups deleted');
@@ -5629,12 +6477,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Firewall Modal */}
-      <Modal isOpen={isDeleteFirewallOpen}
+      <Modal
+        isOpen={isDeleteFirewallOpen}
         onClose={() => setIsDeleteFirewallOpen(false)}
         title="Delete Firewall"
         description="Deleting the firewall is permanent and cannot be undone."
@@ -5643,12 +6493,15 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Firewall </span>
+              Firewall{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              perimeter-firewall-01 </span>
+              perimeter-firewall-01{' '}
+            </span>
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -5658,13 +6511,16 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteFirewallOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Firewall deleted');
@@ -5672,12 +6528,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Firewalls Modal */}
-      <Modal isOpen={isDeleteFirewallsOpen}
+      <Modal
+        isOpen={isDeleteFirewallsOpen}
         onClose={() => setIsDeleteFirewallsOpen(false)}
         title="Delete Firewalls"
         description="Deleting the selected firewalls is permanent and cannot be undone."
@@ -5686,7 +6544,8 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Firewalls that can be delete </span>
+              Firewalls that can be delete{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>perimeter-firewall-01</li>
               <li>internal-firewall-01</li>
@@ -5696,7 +6555,8 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Firewalls that cannot be delete </span>
+              Firewalls that cannot be delete{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>production-firewall (in use)</li>
               <li>gateway-firewall (system)</li>
@@ -5705,7 +6565,8 @@ export function ModalsPage() {
             </ul>
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -5715,13 +6576,16 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteFirewallsOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Firewalls deleted');
@@ -5729,25 +6593,30 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Unsaved Changes Admin Modal */}
-      <Modal isOpen={isUnsavedChangesAdminOpen}
+      <Modal
+        isOpen={isUnsavedChangesAdminOpen}
         onClose={() => setIsUnsavedChangesAdminOpen(false)}
         title="Unsaved changes"
         description="Any unsaved changes will be lost. Do you want to leave?"
         size="sm"
       >
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsUnsavedChangesAdminOpen(false)}
             className="flex-1"
           >
-            Leave </Button>
-          <Button variant="primary"
+            Leave{' '}
+          </Button>
+          <Button
+            variant="primary"
             size="md"
             onClick={() => {
               console.log('Staying on page');
@@ -5755,12 +6624,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Stay </Button>
+            Stay{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Release Floating IP Modal */}
-      <Modal isOpen={isReleaseFloatingIPOpen}
+      <Modal
+        isOpen={isReleaseFloatingIPOpen}
         onClose={() => setIsReleaseFloatingIPOpen(false)}
         title="Release Floating IP"
         description="Releasing the floating IP is permanent and cannot be undone."
@@ -5769,12 +6640,15 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Floating IP </span>
+              Floating IP{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              203.0.113.50 </span>
+              203.0.113.50{' '}
+            </span>
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -5784,13 +6658,16 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsReleaseFloatingIPOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="primary"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="primary"
             size="md"
             onClick={() => {
               console.log('Floating IP released');
@@ -5798,12 +6675,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Release </Button>
+            Release{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Release Floating IPs Modal */}
-      <Modal isOpen={isReleaseFloatingIPsOpen}
+      <Modal
+        isOpen={isReleaseFloatingIPsOpen}
         onClose={() => setIsReleaseFloatingIPsOpen(false)}
         title="Release Floating IPs"
         description="Releasing the floating IPs is permanent and cannot be undone."
@@ -5812,7 +6691,8 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Floating IPs </span>
+              Floating IPs{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>203.0.113.50</li>
               <li>203.0.113.51</li>
@@ -5821,7 +6701,8 @@ export function ModalsPage() {
             </ul>
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -5831,13 +6712,16 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsReleaseFloatingIPsOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="primary"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="primary"
             size="md"
             onClick={() => {
               console.log('Floating IPs released');
@@ -5845,12 +6729,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Release </Button>
+            Release{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Load Balancer Admin Modal */}
-      <Modal isOpen={isDeleteLoadBalancerAdminOpen}
+      <Modal
+        isOpen={isDeleteLoadBalancerAdminOpen}
         onClose={() => setIsDeleteLoadBalancerAdminOpen(false)}
         title="Delete Load Balancer"
         description="Removing the load balancer is permanent and cannot be undone."
@@ -5859,12 +6745,15 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Load balancer </span>
+              Load balancer{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              web-lb-01 </span>
+              web-lb-01{' '}
+            </span>
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -5874,13 +6763,16 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteLoadBalancerAdminOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Load balancer deleted');
@@ -5888,12 +6780,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Load Balancers Admin Modal */}
-      <Modal isOpen={isDeleteLoadBalancersAdminOpen}
+      <Modal
+        isOpen={isDeleteLoadBalancersAdminOpen}
         onClose={() => setIsDeleteLoadBalancersAdminOpen(false)}
         title="Delete load balancers"
         description="Removing the load balancers is permanent and cannot be undone."
@@ -5902,7 +6796,8 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Load balancers that can be delete </span>
+              Load balancers that can be delete{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>web-lb-01</li>
               <li>api-lb-01</li>
@@ -5912,7 +6807,8 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Load balancers that cannot be delete </span>
+              Load balancers that cannot be delete{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>production-lb (in use)</li>
               <li>gateway-lb (external)</li>
@@ -5921,7 +6817,8 @@ export function ModalsPage() {
             </ul>
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -5931,13 +6828,16 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteLoadBalancersAdminOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Load balancers deleted');
@@ -5945,12 +6845,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Listener Modal */}
-      <Modal isOpen={isDeleteListenerOpen}
+      <Modal
+        isOpen={isDeleteListenerOpen}
         onClose={() => setIsDeleteListenerOpen(false)}
         title="Delete Listener"
         description="Removing the listener is permanent and cannot be undone."
@@ -5959,19 +6861,24 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Listener </span>
+              Listener{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              http-listener-443 </span>
+              http-listener-443{' '}
+            </span>
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteListenerOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Listener deleted');
@@ -5979,12 +6886,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Listeners Modal */}
-      <Modal isOpen={isDeleteListenersOpen}
+      <Modal
+        isOpen={isDeleteListenersOpen}
         onClose={() => setIsDeleteListenersOpen(false)}
         title="Delete Listeners"
         description="Removing the listeners is permanent and cannot be undone."
@@ -5993,7 +6902,8 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Load balancers that can be delete </span>
+              Load balancers that can be delete{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>http-listener-80</li>
               <li>https-listener-443</li>
@@ -6003,7 +6913,8 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Load balancers that cannot be delete </span>
+              Load balancers that cannot be delete{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>production-listener (in use)</li>
               <li>critical-listener (protected)</li>
@@ -6013,13 +6924,16 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteListenersOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Listeners deleted');
@@ -6027,12 +6941,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Pool Modal */}
-      <Modal isOpen={isDeletePoolOpen}
+      <Modal
+        isOpen={isDeletePoolOpen}
         onClose={() => setIsDeletePoolOpen(false)}
         title="Delete Pool"
         description="Removing the pool is permanent and cannot be undone."
@@ -6040,13 +6956,14 @@ export function ModalsPage() {
       >
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-            <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Pool </span>
+            <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">Pool </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              web-servers-pool </span>
+              web-servers-pool{' '}
+            </span>
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -6056,13 +6973,16 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeletePoolOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Pool deleted');
@@ -6070,12 +6990,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Pools Modal */}
-      <Modal isOpen={isDeletePoolsOpen}
+      <Modal
+        isOpen={isDeletePoolsOpen}
         onClose={() => setIsDeletePoolsOpen(false)}
         title="Delete pools"
         description="Removing the pools is permanent and cannot be undone."
@@ -6084,7 +7006,8 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Listeners that can be delete </span>
+              Listeners that can be delete{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>web-servers-pool</li>
               <li>api-servers-pool</li>
@@ -6094,7 +7017,8 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Listeners that cannot be delete </span>
+              Listeners that cannot be delete{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>production-pool (in use)</li>
               <li>critical-pool (protected)</li>
@@ -6103,7 +7027,8 @@ export function ModalsPage() {
             </ul>
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -6113,13 +7038,16 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeletePoolsOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Pools deleted');
@@ -6127,12 +7055,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Member Modal */}
-      <Modal isOpen={isDeleteMemberOpen}
+      <Modal
+        isOpen={isDeleteMemberOpen}
         onClose={() => setIsDeleteMemberOpen(false)}
         title="Delete Member"
         description="Removing the member is permanent and cannot be undone."
@@ -6141,12 +7071,15 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Member </span>
+              Member{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              192.168.1.10:8080 </span>
+              192.168.1.10:8080{' '}
+            </span>
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -6156,13 +7089,16 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteMemberOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Member deleted');
@@ -6170,12 +7106,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Members Modal */}
-      <Modal isOpen={isDeleteMembersOpen}
+      <Modal
+        isOpen={isDeleteMembersOpen}
         onClose={() => setIsDeleteMembersOpen(false)}
         title="Delete Members"
         description="Removing the members is permanent and cannot be undone."
@@ -6184,7 +7122,8 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Members that can be delete </span>
+              Members that can be delete{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>192.168.1.10:8080</li>
               <li>192.168.1.11:8080</li>
@@ -6194,7 +7133,8 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Members that cannot be delete </span>
+              Members that cannot be delete{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>192.168.1.1:8080 (primary)</li>
               <li>192.168.1.2:8080 (backup)</li>
@@ -6203,7 +7143,8 @@ export function ModalsPage() {
             </ul>
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -6213,13 +7154,16 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteMembersOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Members deleted');
@@ -6227,12 +7171,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Security Group Rule Modal */}
-      <Modal isOpen={isDeleteSecurityGroupRuleOpen}
+      <Modal
+        isOpen={isDeleteSecurityGroupRuleOpen}
         onClose={() => setIsDeleteSecurityGroupRuleOpen(false)}
         title="Delete Rule"
         description="Removing the rule group is permanent and cannot be undone."
@@ -6240,13 +7186,14 @@ export function ModalsPage() {
       >
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-            <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Rule </span>
+            <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">Rule </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              Ingress/TCP/443 </span>
+              Ingress/TCP/443{' '}
+            </span>
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -6256,13 +7203,16 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteSecurityGroupRuleOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Security group rule deleted');
@@ -6270,12 +7220,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Security Group Rules Modal */}
-      <Modal isOpen={isDeleteSecurityGroupRulesOpen}
+      <Modal
+        isOpen={isDeleteSecurityGroupRulesOpen}
         onClose={() => setIsDeleteSecurityGroupRulesOpen(false)}
         title="Delete Rules"
         description="Removing the rules is permanent and cannot be undone."
@@ -6284,7 +7236,8 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Rules that can be delete </span>
+              Rules that can be delete{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>Ingress/TCP/80</li>
               <li>Ingress/TCP/443</li>
@@ -6294,7 +7247,8 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Rules that cannot be delete </span>
+              Rules that cannot be delete{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>Ingress/TCP/22 (SSH required)</li>
               <li>Egress/All/All (default)</li>
@@ -6303,7 +7257,8 @@ export function ModalsPage() {
             </ul>
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -6313,13 +7268,16 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteSecurityGroupRulesOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Security group rules deleted');
@@ -6327,12 +7285,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete L7 Policy Modal */}
-      <Modal isOpen={isDeleteL7PolicyOpen}
+      <Modal
+        isOpen={isDeleteL7PolicyOpen}
         onClose={() => setIsDeleteL7PolicyOpen(false)}
         title="Delete L7 Policy"
         description="Removing the L7 policy is permanent and cannot be undone."
@@ -6341,12 +7301,15 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              L7 Policy </span>
+              L7 Policy{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              redirect-to-https </span>
+              redirect-to-https{' '}
+            </span>
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -6356,13 +7319,16 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteL7PolicyOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('L7 policy deleted');
@@ -6370,12 +7336,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete L7 Policies Modal */}
-      <Modal isOpen={isDeleteL7PoliciesOpen}
+      <Modal
+        isOpen={isDeleteL7PoliciesOpen}
         onClose={() => setIsDeleteL7PoliciesOpen(false)}
         title="Delete L7 Policies"
         description="Removing the L7 policies is permanent and cannot be undone."
@@ -6384,7 +7352,8 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              L7 Policies that can be delete </span>
+              L7 Policies that can be delete{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>redirect-to-https</li>
               <li>block-bad-bots</li>
@@ -6394,7 +7363,8 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              L7 Policies that cannot be delete </span>
+              L7 Policies that cannot be delete{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>default-redirect (system)</li>
               <li>security-headers (required)</li>
@@ -6403,7 +7373,8 @@ export function ModalsPage() {
             </ul>
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
@@ -6413,13 +7384,16 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteL7PoliciesOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('L7 policies deleted');
@@ -6427,12 +7401,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Health Monitor Modal */}
-      <Modal isOpen={isDeleteHealthMonitorOpen}
+      <Modal
+        isOpen={isDeleteHealthMonitorOpen}
         onClose={() => setIsDeleteHealthMonitorOpen(false)}
         title="Delete Health Monitor"
         description="Removing the health monitor is permanent and cannot be undone."
@@ -6441,28 +7417,35 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Health Monitor </span>
+              Health Monitor{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              http-health-check </span>
+              http-health-check{' '}
+            </span>
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
             <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-              Deleting this health monitor may affect the pool&apos;s ability to detect unhealthy members.
+              Deleting this health monitor may affect the pool&apos;s ability to detect unhealthy
+              members.
             </p>
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteHealthMonitorOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Health monitor deleted');
@@ -6470,12 +7453,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Firewall Policy Modal */}
-      <Modal isOpen={isDeleteFirewallPolicyOpen}
+      <Modal
+        isOpen={isDeleteFirewallPolicyOpen}
         onClose={() => setIsDeleteFirewallPolicyOpen(false)}
         title="Delete Firewall Policy"
         description="Deleting the firewall policy is permanent and cannot be undone."
@@ -6484,19 +7469,24 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Firewall Policy </span>
+              Firewall Policy{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              web-policy-01 </span>
+              web-policy-01{' '}
+            </span>
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteFirewallPolicyOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Firewall policy deleted');
@@ -6504,12 +7494,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Firewall Policies Modal */}
-      <Modal isOpen={isDeleteFirewallPoliciesOpen}
+      <Modal
+        isOpen={isDeleteFirewallPoliciesOpen}
         onClose={() => setIsDeleteFirewallPoliciesOpen(false)}
         title="Delete Firewall Policies"
         description="Removing the selected firewall policies is permanent and cannot be undone."
@@ -6518,7 +7510,8 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Firewall policies that can be delete </span>
+              Firewall policies that can be delete{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>web-policy-01</li>
               <li>api-policy-01</li>
@@ -6528,7 +7521,8 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Firewall policies that cannot be delete </span>
+              Firewall policies that cannot be delete{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>production-policy (in use)</li>
               <li>gateway-policy (system)</li>
@@ -6538,13 +7532,16 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteFirewallPoliciesOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Firewall policies deleted');
@@ -6552,12 +7549,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Firewall Rule Modal */}
-      <Modal isOpen={isDeleteFirewallRuleOpen}
+      <Modal
+        isOpen={isDeleteFirewallRuleOpen}
         onClose={() => setIsDeleteFirewallRuleOpen(false)}
         title="Delete Firewall Rule"
         description="Deleting the firewall rule is permanent and cannot be undone."
@@ -6566,19 +7565,24 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Firewall Rule </span>
+              Firewall Rule{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              allow-https-443 </span>
+              allow-https-443{' '}
+            </span>
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteFirewallRuleOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Firewall rule deleted');
@@ -6586,12 +7590,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Firewall Rules Modal */}
-      <Modal isOpen={isDeleteFirewallRulesOpen}
+      <Modal
+        isOpen={isDeleteFirewallRulesOpen}
         onClose={() => setIsDeleteFirewallRulesOpen(false)}
         title="Delete Firewall Rules"
         description="Removing the selected firewall rules is permanent and cannot be undone."
@@ -6600,7 +7606,8 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Firewall rules that can be delete </span>
+              Firewall rules that can be delete{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>allow-https-443</li>
               <li>allow-http-80</li>
@@ -6610,7 +7617,8 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Firewall rules that cannot be delete </span>
+              Firewall rules that cannot be delete{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>default-egress (system)</li>
               <li>management-access (protected)</li>
@@ -6620,13 +7628,16 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteFirewallRulesOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Firewall rules deleted');
@@ -6634,12 +7645,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Tenant Modal */}
-      <Modal isOpen={isDeleteTenantOpen}
+      <Modal
+        isOpen={isDeleteTenantOpen}
         onClose={() => setIsDeleteTenantOpen(false)}
         title="Delete Tenant"
         description="Deleting the tenant is permanent and cannot be undone."
@@ -6648,28 +7661,35 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Tenant </span>
+              Tenant{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              project-alpha </span>
+              project-alpha{' '}
+            </span>
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
             <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-              Deleting this tenant does not delete the resources inside it. Those resources will remain and must be managed separately.
+              Deleting this tenant does not delete the resources inside it. Those resources will
+              remain and must be managed separately.
             </p>
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteTenantOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Tenant deleted');
@@ -6677,12 +7697,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Tenants Modal */}
-      <Modal isOpen={isDeleteTenantsOpen}
+      <Modal
+        isOpen={isDeleteTenantsOpen}
         onClose={() => setIsDeleteTenantsOpen(false)}
         title="Delete Tenant"
         description="Removing the selected tenants is permanent and cannot be undone."
@@ -6691,7 +7713,8 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Tenants </span>
+              Tenants{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>project-alpha</li>
               <li>project-beta</li>
@@ -6700,23 +7723,28 @@ export function ModalsPage() {
             </ul>
           </div>
           <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
-            <IconAlertCircle size={16}
+            <IconAlertCircle
+              size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1.5}
             />
             <p className="text-body-sm text-[var(--color-text-default)] leading-4">
-              Deleting these tenants does not delete the resources inside them. Those resources will remain and must be managed separately.
+              Deleting these tenants does not delete the resources inside them. Those resources will
+              remain and must be managed separately.
             </p>
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteTenantsOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Tenants deleted');
@@ -6724,12 +7752,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Metadata Modal */}
-      <Modal isOpen={isDeleteMetadataOpen}
+      <Modal
+        isOpen={isDeleteMetadataOpen}
         onClose={() => setIsDeleteMetadataOpen(false)}
         title="Delete Metadata"
         description="This action removes the metadata."
@@ -6738,19 +7768,24 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Metadata </span>
+              Metadata{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              environment=production </span>
+              environment=production{' '}
+            </span>
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteMetadataOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Metadata deleted');
@@ -6758,12 +7793,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Delete Metadatas Modal */}
-      <Modal isOpen={isDeleteMetadatasOpen}
+      <Modal
+        isOpen={isDeleteMetadatasOpen}
         onClose={() => setIsDeleteMetadatasOpen(false)}
         title="Delete Metadata"
         description="This action removes the selected metadata."
@@ -6772,7 +7809,8 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Metadata that can be delete </span>
+              Metadata that can be delete{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>environment=production</li>
               <li>team=platform</li>
@@ -6782,7 +7820,8 @@ export function ModalsPage() {
           </div>
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5 max-h-[96px] overflow-y-auto modal-scroll">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Metadata that cannot be delete </span>
+              Metadata that cannot be delete{' '}
+            </span>
             <ul className="text-body-md text-[var(--color-text-default)] leading-4 list-disc list-inside">
               <li>system-id=xyz (system)</li>
               <li>created-by=admin (protected)</li>
@@ -6792,13 +7831,16 @@ export function ModalsPage() {
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsDeleteMetadatasOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="danger"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="danger"
             size="md"
             onClick={() => {
               console.log('Metadatas deleted');
@@ -6806,12 +7848,14 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Delete </Button>
+            Delete{' '}
+          </Button>
         </div>
       </Modal>
 
       {/* Manage Member Modal */}
-      <Modal isOpen={isManageMemberOpen}
+      <Modal
+        isOpen={isManageMemberOpen}
         onClose={() => setIsManageMemberOpen(false)}
         title="Manage Member"
         description="User management for this project is handled in the IAM app. You will be redirected to IAM to manage users and user groups."
@@ -6820,19 +7864,24 @@ export function ModalsPage() {
         <div className="flex flex-col gap-2">
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
             <span className="text-label-sm text-[var(--color-text-subtle)]  leading-4">
-              Tenant </span>
+              Tenant{' '}
+            </span>
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              project-alpha </span>
+              project-alpha{' '}
+            </span>
           </div>
         </div>
         <div className="flex gap-2 w-full">
-          <Button variant="outline"
+          <Button
+            variant="outline"
             size="md"
             onClick={() => setIsManageMemberOpen(false)}
             className="flex-1"
           >
-            Cancel </Button>
-          <Button variant="primary"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="primary"
             size="md"
             onClick={() => {
               console.log('Redirecting to IAM');
@@ -6840,7 +7889,8 @@ export function ModalsPage() {
             }}
             className="flex-1"
           >
-            Go to IAM </Button>
+            Go to IAM{' '}
+          </Button>
         </div>
       </Modal>
     </div>

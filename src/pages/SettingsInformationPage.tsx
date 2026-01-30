@@ -29,7 +29,8 @@ export default function SettingsInformationPage() {
 
         {/* TabBar (Window controls only) */}
         <div className="flex-1">
-          <TabBar tabs={[]}
+          <TabBar
+            tabs={[]}
             activeTab=""
             onTabChange={() => {}}
             showAddButton={false}
@@ -54,7 +55,8 @@ export default function SettingsInformationPage() {
                 {/* Header */}
                 <div>
                   <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
-                    Information </h1>
+                    Information{' '}
+                  </h1>
                   <p className="text-body-md leading-[18px] text-[var(--color-text-muted)] mt-1">
                     View application version and related resources.
                   </p>
@@ -76,14 +78,16 @@ export default function SettingsInformationPage() {
                   <SectionCard.Header title="Terms" />
                   <SectionCard.Content>
                     <div className="flex flex-col gap-2">
-                      <a href="https://thaki.cloud/terms"
+                      <a
+                        href="https://thaki.cloud/terms"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-action-primary)] hover:underline w-fit"
                       >
                         Terms of Service <IconExternalLink size={14} stroke={1.5} />
                       </a>
-                      <a href="https://thaki.cloud/privacy"
+                      <a
+                        href="https://thaki.cloud/privacy"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-action-primary)] hover:underline w-fit"
@@ -99,14 +103,16 @@ export default function SettingsInformationPage() {
                   <SectionCard.Header title="Support" />
                   <SectionCard.Content>
                     <div className="flex flex-col gap-2">
-                      <a href="https://thaki.cloud"
+                      <a
+                        href="https://thaki.cloud"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-action-primary)] hover:underline w-fit"
                       >
                         Official Website <IconExternalLink size={14} stroke={1.5} />
                       </a>
-                      <a href="https://support.thaki.cloud"
+                      <a
+                        href="https://support.thaki.cloud"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-action-primary)] hover:underline w-fit"

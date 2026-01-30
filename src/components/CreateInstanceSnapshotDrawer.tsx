@@ -107,9 +107,7 @@ export function CreateInstanceSnapshotDrawer({
 
           {/* Instance Info Box */}
           <div className="w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg">
-            <p className="text-label-sm text-[var(--color-text-subtle)] mb-1.5">
-              Instance
-            </p>
+            <p className="text-label-sm text-[var(--color-text-subtle)] mb-1.5">Instance</p>
             <p className="text-body-md text-[var(--color-text-default)]">{instance?.name || '-'}</p>
           </div>
 

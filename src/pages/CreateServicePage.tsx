@@ -190,9 +190,7 @@ function SummarySidebar({
         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
           <VStack gap={3}>
             {/* Title */}
-            <span className="text-heading-h5 text-[var(--color-text-default)]">
-              Summary
-            </span>
+            <span className="text-heading-h5 text-[var(--color-text-default)]">Summary</span>
 
             <VStack gap={0}>
               {SERVICE_SECTION_ORDER.map((key) => {
@@ -520,9 +518,7 @@ export function CreateServicePage() {
             <VStack gap={6}>
               {/* Page Header */}
               <VStack gap={2}>
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-                  Create Service
-                </h1>
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create Service</h1>
                 <p className="text-body-sm text-[var(--color-text-subtle)]">
                   Services allow you to define a logical set of Pods that can be accessed with a
                   single IP address and port.

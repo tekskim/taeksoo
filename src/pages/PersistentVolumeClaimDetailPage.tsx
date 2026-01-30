@@ -626,9 +626,7 @@ export function PersistentVolumeClaimDetailPage() {
                       </h3>
                       {/* Source */}
                       <VStack gap={1.5} align="start">
-                        <h4 className="text-label-lg text-[var(--color-text-default)]">
-                          Source
-                        </h4>
+                        <h4 className="text-label-lg text-[var(--color-text-default)]">Source</h4>
                         <RadioGroup value={pvcData.source} onChange={() => {}}>
                           <VStack gap={1} align="start">
                             <Radio
@@ -791,9 +789,7 @@ export function PersistentVolumeClaimDetailPage() {
                       </h3>
                       {/* Labels Section */}
                       <VStack gap={4} align="start" className="w-full">
-                        <h4 className="text-label-lg text-[var(--color-text-default)]">
-                          Labels
-                        </h4>
+                        <h4 className="text-label-lg text-[var(--color-text-default)]">Labels</h4>
                         <VStack gap={2} align="start" className="w-full">
                           {labelsCount > 0 ? (
                             Object.entries(pvcData.labels).map(([key, val]) => (
@@ -817,7 +813,9 @@ export function PersistentVolumeClaimDetailPage() {
                               </div>
                             ))
                           ) : (
-                            <p className="text-body-md text-[var(--color-text-subtle)]">No labels</p>
+                            <p className="text-body-md text-[var(--color-text-subtle)]">
+                              No labels
+                            </p>
                           )}
                         </VStack>
                       </VStack>

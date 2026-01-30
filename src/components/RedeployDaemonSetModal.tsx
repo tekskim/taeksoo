@@ -44,9 +44,7 @@ export function RedeployDaemonSetModal({
       {/* Info Box */}
       <div className="flex flex-col gap-2">
         <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-          <span className="text-label-sm text-[var(--color-text-subtle)]">
-            DaemonSet name
-          </span>
+          <span className="text-label-sm text-[var(--color-text-subtle)]">DaemonSet name</span>
           <span className="text-body-md text-[var(--color-text-default)]">
             {daemonSet?.name ?? ''}
           </span>

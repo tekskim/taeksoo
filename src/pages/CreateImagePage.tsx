@@ -245,9 +245,7 @@ export function CreateImagePage() {
             <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)] min-h-full">
               {/* Page Title */}
               <div className="flex items-center justify-between h-8 max-w-[1320px] mx-auto mb-3">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-                  Create image
-                </h1>
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create image</h1>
               </div>
 
               <div className="flex gap-6 max-w-[1320px] mx-auto items-start">

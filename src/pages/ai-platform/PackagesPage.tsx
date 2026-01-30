@@ -40,7 +40,9 @@ function ThakiImageCard({
           stroke={1.5}
         />
         <VStack gap={1} className="flex-1 min-w-0">
-          <span className="text-body-lg font-semibold text-[var(--color-text-default)]">{name}</span>
+          <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
+            {name}
+          </span>
           <span className="text-body-md text-[var(--color-text-subtle)]">
             {versionsCount} versions available
           </span>
@@ -97,7 +99,9 @@ function CommonImageCard({ name, onDeploy }: CommonImageCardProps) {
           stroke={1.5}
         />
         <VStack gap={1} className="flex-1 min-w-0">
-          <span className="text-body-lg font-semibold text-[var(--color-text-default)]">{name}</span>
+          <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
+            {name}
+          </span>
           <span className="text-body-sm px-2 py-0.5 bg-[var(--color-surface-subtle)] text-[var(--color-text-muted)] rounded w-fit">
             Common Image
           </span>
@@ -246,9 +250,7 @@ export function PackagesPage() {
               {/* Header */}
               <HStack justify="between" align="start">
                 <VStack gap={1}>
-                  <h1 className="text-heading-h3 text-[var(--color-text-default)]">
-                    Packages Hub
-                  </h1>
+                  <h1 className="text-heading-h3 text-[var(--color-text-default)]">Packages Hub</h1>
                   <p className="text-body-lg text-[var(--color-text-subtle)]">
                     AI Container Image Package Management
                   </p>

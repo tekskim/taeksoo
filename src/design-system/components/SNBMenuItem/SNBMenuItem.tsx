@@ -118,11 +118,7 @@ export function SNBMenuItem({
     >
       {type === 'icon' && renderIcon()}
       {type === 'text' && (
-        <span
-          className={`text-heading-h4 ${textColorStyles[status]}`}
-        >
-          {text}
-        </span>
+        <span className={`text-heading-h4 ${textColorStyles[status]}`}>{text}</span>
       )}
     </button>
   );

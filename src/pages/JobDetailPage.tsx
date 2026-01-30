@@ -332,9 +332,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
 
   return (
     <VStack gap={3}>
-      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
-        Pods
-      </h3>
+      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">Pods</h3>
       <HStack gap={2} align="center">
         <SearchInput
           placeholder="Search Pods by attributes"

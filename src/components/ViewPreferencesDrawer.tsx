@@ -164,9 +164,7 @@ export function ViewPreferencesDrawer({
       <div className="flex flex-col gap-6">
         {/* Rows per page */}
         <div className="flex flex-col gap-2">
-          <label className="text-label-lg text-[var(--color-text-default)]">
-            Rows per page
-          </label>
+          <label className="text-label-lg text-[var(--color-text-default)]">Rows per page</label>
           <Select
             options={rowsPerPageOptions}
             value={localRowsPerPage}

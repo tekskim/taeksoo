@@ -155,9 +155,7 @@ export function AttachPortToInstanceDrawer({
 
         {/* Instances Section */}
         <VStack gap={3} className="w-full pb-5">
-          <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Instances
-          </h3>
+          <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">Instances</h3>
 
           {/* Search */}
           <div className="w-[280px]">

@@ -676,9 +676,7 @@ export default function RouterDetailPage() {
                     <VStack gap={4} className="pt-4">
                       {/* Header */}
                       <div className="flex items-center justify-between">
-                        <h3 className="text-heading-h5 text-[var(--color-text-default)]">
-                          Ports
-                        </h3>
+                        <h3 className="text-heading-h5 text-[var(--color-text-default)]">Ports</h3>
                       </div>
 
                       {/* Action Bar */}

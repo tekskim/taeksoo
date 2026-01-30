@@ -372,9 +372,7 @@ export function ComputeImagesPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">
-            ID : {row.id}
-          </span>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
         </div>
       ),
     },
@@ -522,9 +520,7 @@ export function ComputeImagesPage() {
             <VStack gap={3}>
               {/* Page Header */}
               <div className="flex items-center justify-between h-8">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-                  Images
-                </h1>
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Images</h1>
                 <Button onClick={() => navigate('/compute/images/create')}>Create image</Button>
               </div>
 

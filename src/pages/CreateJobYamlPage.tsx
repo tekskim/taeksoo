@@ -223,9 +223,7 @@ export function CreateJobYamlPage() {
             <VStack gap={6} className="flex-1 min-h-0">
               {/* Header */}
               <VStack gap={2} className="flex-shrink-0">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-                  Create Job
-                </h1>
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create Job</h1>
                 <p className="text-body-sm text-[var(--color-text-subtle)]">
                   Create a Job to run pods until a specified task completes successfully, ensuring
                   reliable execution for short-lived or one-time workloads.

@@ -137,11 +137,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
       <div className={`flex flex-col gap-1.5 w-full ${className}`}>
         {/* Header */}
         <div className="flex items-center justify-between">
-          {label && (
-            <span className="text-label-sm text-[var(--color-text-default)]">
-              {label}
-            </span>
-          )}
+          {label && <span className="text-label-sm text-[var(--color-text-default)]">{label}</span>}
           {showValue && (
             <div className="flex items-center text-body-sm text-[var(--color-text-default)]">
               <span>{value + newValue}/</span>
@@ -227,9 +223,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1">
             {label && (
-              <span className="text-body-md text-[var(--color-text-default)]">
-                {label}
-              </span>
+              <span className="text-body-md text-[var(--color-text-default)]">{label}</span>
             )}
             {error && (
               <div className="relative group">
@@ -249,9 +243,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
             )}
           </div>
           {statusText && (
-            <span className="text-body-sm text-[var(--color-text-subtle)]">
-              {statusText}
-            </span>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">{statusText}</span>
           )}
         </div>
       )}

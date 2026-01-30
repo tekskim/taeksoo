@@ -233,9 +233,7 @@ export function EditPodYamlPage() {
             <VStack gap={6} className="flex-1 min-h-0">
               {/* Header */}
               <VStack gap={2} className="flex-shrink-0">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-                  Pod: {podName}
-                </h1>
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Pod: {podName}</h1>
               </VStack>
 
               {/* YAML Editor */}

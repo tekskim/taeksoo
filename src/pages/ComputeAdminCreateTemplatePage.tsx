@@ -486,9 +486,7 @@ function TemplateSidebar({ onCancel, sectionStatus }: TemplateSidebarProps) {
         {/* Summary Card */}
         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
           <VStack gap={3}>
-            <h5 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
-              Summary
-            </h5>
+            <h5 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">Summary</h5>
             <div className="flex flex-col">
               {SECTION_ORDER.map((sectionKey) => {
                 const isWriting = sectionStatus[sectionKey] === 'writing';
@@ -538,9 +536,7 @@ function PreSection({ title }: PreSectionProps) {
   return (
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
       <div className="h-8 flex items-center">
-        <h5 className="text-heading-h5 text-[var(--color-text-default)]">
-          {title}
-        </h5>
+        <h5 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h5>
       </div>
     </div>
   );
@@ -558,9 +554,7 @@ function WritingSection({ title }: WritingSectionProps) {
   return (
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
       <div className="h-8 flex items-center justify-between">
-        <h5 className="text-heading-h5 text-[var(--color-text-default)]">
-          {title}
-        </h5>
+        <h5 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h5>
         <span className="text-body-sm text-[var(--color-text-subtle)]">Writing...</span>
       </div>
     </div>
@@ -580,13 +574,9 @@ function SkippedSection({ title, onEdit }: SkippedSectionProps) {
   return (
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
       <div className="flex items-center justify-between h-8">
-        <h5 className="text-heading-h5 text-[var(--color-text-default)]">
-          {title}
-        </h5>
+        <h5 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h5>
         <div className="flex items-center gap-3">
-          <span className="text-body-md text-[var(--color-text-muted)]">
-            Not configured
-          </span>
+          <span className="text-body-md text-[var(--color-text-muted)]">Not configured</span>
           <Button variant="outline" size="sm" leftIcon={<IconEdit size={12} />} onClick={onEdit}>
             Edit
           </Button>
@@ -792,9 +782,7 @@ function TemplateInformationSection({
 
         {/* Description */}
         <VStack gap={2}>
-          <span className="text-label-lg text-[var(--color-text-default)]">
-            Description
-          </span>
+          <span className="text-label-lg text-[var(--color-text-default)]">Description</span>
           <Input
             placeholder="Enter description"
             value={description}
@@ -1305,9 +1293,7 @@ function ImageSection({
         <VStack gap={4} className="pt-2">
           {/* Start Source */}
           <VStack gap={3}>
-            <span className="text-label-lg text-[var(--color-text-default)]">
-              Start source
-            </span>
+            <span className="text-label-lg text-[var(--color-text-default)]">Start source</span>
             <span className="text-body-md text-[var(--color-text-subtle)]">
               Select a template to launch the instance. You can start from an OS image, a snapshot,
               or an existing volume.
@@ -1421,9 +1407,7 @@ function ImageSection({
 
           {/* System disk Section */}
           <VStack gap={3}>
-            <span className="text-label-lg text-[var(--color-text-default)]">
-              System disk
-            </span>
+            <span className="text-label-lg text-[var(--color-text-default)]">System disk</span>
             <span className="text-body-md text-[var(--color-text-subtle)]">
               Configure whether to create a system disk for booting.
             </span>
@@ -1440,9 +1424,7 @@ function ImageSection({
               <div className="w-full bg-white border border-[var(--color-border-default)] rounded-[6px] px-4 py-2">
                 <HStack gap={6} align="center">
                   <HStack gap={1.5} align="center">
-                    <span className="text-label-lg text-[var(--color-text-default)]">
-                      Type
-                    </span>
+                    <span className="text-label-lg text-[var(--color-text-default)]">Type</span>
                     <Select
                       options={storageTypeOptions}
                       value={storageType}
@@ -1451,9 +1433,7 @@ function ImageSection({
                     />
                   </HStack>
                   <HStack gap={1.5} align="center">
-                    <span className="text-label-lg text-[var(--color-text-default)]">
-                      Size
-                    </span>
+                    <span className="text-label-lg text-[var(--color-text-default)]">Size</span>
                     <NumberInput
                       value={storageSize}
                       onChange={onStorageSizeChange}
@@ -1475,9 +1455,7 @@ function ImageSection({
 
           {/* Data disk Section */}
           <VStack gap={3} align="start">
-            <span className="text-label-lg text-[var(--color-text-default)]">
-              Data disk
-            </span>
+            <span className="text-label-lg text-[var(--color-text-default)]">Data disk</span>
             <span className="text-body-md text-[var(--color-text-subtle)]">
               Attach additional volumes for data storage.
             </span>
@@ -2203,9 +2181,7 @@ function NetworkSection({
               >
                 <HStack gap={4} align="center">
                   <HStack gap={1.5} align="center">
-                    <span className="text-label-lg text-[var(--color-text-default)]">
-                      Network
-                    </span>
+                    <span className="text-label-lg text-[var(--color-text-default)]">Network</span>
                     <Select
                       options={[{ value: 'network', label: 'network' }]}
                       value={vlan.network}
@@ -2214,9 +2190,7 @@ function NetworkSection({
                     />
                   </HStack>
                   <HStack gap={1.5} align="center">
-                    <span className="text-label-lg text-[var(--color-text-default)]">
-                      Subnet
-                    </span>
+                    <span className="text-label-lg text-[var(--color-text-default)]">Subnet</span>
                     <Select
                       options={[{ value: 'subnet', label: 'subnet' }]}
                       value={vlan.subnet}
@@ -2712,9 +2686,7 @@ function AdvancedSection({
           {/* User data Section */}
           <VStack gap={3} align="stretch">
             <VStack gap={2} align="stretch">
-              <span className="text-label-lg text-[var(--color-text-default)]">
-                User data
-              </span>
+              <span className="text-label-lg text-[var(--color-text-default)]">User data</span>
               <span className="text-body-md text-[var(--color-text-subtle)]">
                 Enter a script or cloud-init configuration to run when the instance first boots.
               </span>

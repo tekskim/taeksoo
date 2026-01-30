@@ -162,9 +162,7 @@ function RulesTab({ rules }: RulesTabProps) {
 
   return (
     <VStack gap={3}>
-      <h3 className="text-heading-h5 text-[var(--color-text-default)]">
-        Rules
-      </h3>
+      <h3 className="text-heading-h5 text-[var(--color-text-default)]">Rules</h3>
       <Pagination
         currentPage={currentPage}
         totalPages={1}

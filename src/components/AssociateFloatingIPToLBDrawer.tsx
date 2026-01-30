@@ -169,9 +169,7 @@ export function AssociateFloatingIPToLBDrawer({
 
         {/* Floating IP Section */}
         <VStack gap={3} className="pb-5">
-          <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Floating IP
-          </h3>
+          <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">Floating IP</h3>
 
           {/* Search */}
           <div className="w-[280px]">

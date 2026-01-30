@@ -1573,9 +1573,7 @@ export default function HostDetailPage() {
                     <VStack gap={4} className="pt-4">
                       {/* Header */}
                       <div className="flex items-center h-7">
-                        <h3 className="text-heading-h5 text-[var(--color-text-default)]">
-                          Daemon
-                        </h3>
+                        <h3 className="text-heading-h5 text-[var(--color-text-default)]">Daemon</h3>
                       </div>
 
                       {/* Search */}
@@ -1885,7 +1883,9 @@ export default function HostDetailPage() {
                         <div className="grid grid-cols-2 gap-4 mb-6">
                           {/* OSDs Card */}
                           <div className="bg-[var(--color-surface-subtle)] rounded-lg p-4">
-                            <span className="text-body-md text-[var(--color-text-muted)]">OSDs</span>
+                            <span className="text-body-md text-[var(--color-text-muted)]">
+                              OSDs
+                            </span>
                             <div className="text-heading-h3 text-[var(--color-text-default)] mt-1">
                               {host.osds || 24}
                             </div>

@@ -133,10 +133,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className={wrapperClasses}>
         {label && (
-          <label
-            htmlFor={inputId}
-            className={`text-label-lg text-[var(--color-text-default)]`}
-          >
+          <label htmlFor={inputId} className={`text-label-lg text-[var(--color-text-default)]`}>
             {label}
             {required && <span className="text-[var(--color-state-danger)] ml-0.5">*</span>}
           </label>
@@ -171,19 +168,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 
         {/* Helper Text - below input */}
         {helperText && !error && (
-          <p
-            id={`${inputId}-helper`}
-            className="text-body-sm text-[var(--color-text-subtle)]"
-          >
+          <p id={`${inputId}-helper`} className="text-body-sm text-[var(--color-text-subtle)]">
             {helperText}
           </p>
         )}
 
         {error && (
-          <p
-            id={`${inputId}-error`}
-            className="text-body-sm text-[var(--color-state-danger)]"
-          >
+          <p id={`${inputId}-error`} className="text-body-sm text-[var(--color-state-danger)]">
             {error}
           </p>
         )}

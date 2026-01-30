@@ -197,42 +197,32 @@ export function DetachInterfaceDrawer({
                 style={{ width: '59px', flexShrink: 0 }}
                 className="flex items-center justify-center px-3 border-l border-[var(--color-border-default)]"
               >
-                <span className="text-label-sm text-[var(--color-text-default)]">
-                  Status
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Status</span>
               </div>
               <div
                 style={{ width: '125px', flexShrink: 0 }}
                 className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
               >
-                <span className="text-label-sm text-[var(--color-text-default)]">
-                  Name
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Name</span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
               </div>
               <div
                 style={{ width: '108px', flexShrink: 0 }}
                 className="flex items-center px-3 border-l border-[var(--color-border-default)]"
               >
-                <span className="text-label-sm text-[var(--color-text-default)]">
-                  Fixed IP
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Fixed IP</span>
               </div>
               <div
                 style={{ width: '108px', flexShrink: 0 }}
                 className="flex items-center px-3 border-l border-[var(--color-border-default)]"
               >
-                <span className="text-label-sm text-[var(--color-text-default)]">
-                  Floating IP
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Floating IP</span>
               </div>
               <div
                 style={{ width: '148px', flexShrink: 0 }}
                 className="flex items-center px-3 border-l border-[var(--color-border-default)]"
               >
-                <span className="text-label-sm text-[var(--color-text-default)]">
-                  MAC Address
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">MAC Address</span>
               </div>
             </div>
 

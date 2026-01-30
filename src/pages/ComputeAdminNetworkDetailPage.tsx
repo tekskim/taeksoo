@@ -493,9 +493,7 @@ export default function NetworkDetailPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">
-            ID:{row.id}
-          </span>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">ID:{row.id}</span>
         </div>
       ),
     },
@@ -591,9 +589,7 @@ export default function NetworkDetailPage() {
           >
             {row.name}
           </Link>
-          <span className="text-body-sm text-[var(--color-text-subtle)]">
-            ID: {row.id}
-          </span>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
         </div>
       ),
     },
@@ -990,9 +986,7 @@ export default function NetworkDetailPage() {
                     <VStack gap={3} className="pt-6">
                       {/* Header */}
                       <div className="flex items-center justify-between">
-                        <h3 className="text-heading-h5 text-[var(--color-text-default)]">
-                          Ports
-                        </h3>
+                        <h3 className="text-heading-h5 text-[var(--color-text-default)]">Ports</h3>
                         <Button
                           variant="secondary"
                           size="sm"

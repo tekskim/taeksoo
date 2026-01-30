@@ -451,9 +451,7 @@ export function ContainerNodesPage() {
               {/* Header */}
               <HStack justify="between" align="center" className="w-full min-h-8">
                 <HStack gap={2} align="center">
-                  <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-                    Nodes
-                  </h1>
+                  <h1 className="text-heading-h5 text-[var(--color-text-default)]">Nodes</h1>
                 </HStack>
               </HStack>
 

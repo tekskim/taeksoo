@@ -80,9 +80,7 @@ export function EditImageDrawer({ isOpen, onClose, image, onSubmit }: EditImageD
     >
       <VStack gap={6}>
         {/* Header */}
-        <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
-          Edit Image
-        </h2>
+        <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">Edit Image</h2>
 
         {/* Image Name Input */}
         <VStack gap={2} className="w-full">

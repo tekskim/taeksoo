@@ -105,7 +105,8 @@ export default function SettingsAccountPage() {
 
         {/* TabBar (Window controls only) */}
         <div className="flex-1">
-          <TabBar tabs={[]}
+          <TabBar
+            tabs={[]}
             activeTab=""
             onTabChange={() => {}}
             showAddButton={false}
@@ -130,7 +131,8 @@ export default function SettingsAccountPage() {
                 {/* Header */}
                 <div>
                   <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
-                    Account </h1>
+                    Account{' '}
+                  </h1>
                   <p className="text-body-md leading-[18px] text-[var(--color-text-muted)] mt-1">
                     Manage your account information and security settings.
                   </p>
@@ -138,11 +140,13 @@ export default function SettingsAccountPage() {
 
                 {/* Account Information */}
                 <SectionCard>
-                  <SectionCard.Header title="Account Information"
+                  <SectionCard.Header
+                    title="Account Information"
                     actions={
                       <Button variant="outline" size="sm" className="gap-1.5">
                         <IconEdit size={12} />
-                        Edit </Button>
+                        Edit{' '}
+                      </Button>
                     }
                   />
                   <SectionCard.Content>
@@ -160,24 +164,29 @@ export default function SettingsAccountPage() {
                     <VStack gap={4}>
                       <VStack gap={2}>
                         <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
-                          Password </span>
+                          Password{' '}
+                        </span>
                         <p className="text-body-md leading-4 text-[var(--color-text-subtle)]">
                           Last updated: {passwordLastUpdated}
                         </p>
                       </VStack>
                       {!isEditingPassword ? (
-                        <Button variant="primary"
+                        <Button
+                          variant="primary"
                           size="sm"
                           onClick={() => setIsEditingPassword(true)}
                           className="w-fit"
                         >
-                          Change Password </Button>
+                          Change Password{' '}
+                        </Button>
                       ) : (
                         <VStack gap={3} className="max-w-[400px]">
                           <VStack gap={2}>
                             <span className="text-label-md text-[var(--color-text-default)]">
-                              Enter a new password </span>
-                            <Input type="password"
+                              Enter a new password{' '}
+                            </span>
+                            <Input
+                              type="password"
                               value={newPassword}
                               onChange={(e) => setNewPassword(e.target.value)}
                               placeholder="New password"
@@ -185,15 +194,18 @@ export default function SettingsAccountPage() {
                           </VStack>
                           <VStack gap={2}>
                             <span className="text-label-md text-[var(--color-text-default)]">
-                              Confirm your new password </span>
-                            <Input type="password"
+                              Confirm your new password{' '}
+                            </span>
+                            <Input
+                              type="password"
                               value={confirmPassword}
                               onChange={(e) => setConfirmPassword(e.target.value)}
                               placeholder="Confirm password"
                             />
                           </VStack>
                           <div className="flex gap-2">
-                            <Button variant="secondary"
+                            <Button
+                              variant="secondary"
                               size="sm"
                               onClick={() => {
                                 setIsEditingPassword(false);
@@ -201,8 +213,10 @@ export default function SettingsAccountPage() {
                                 setConfirmPassword('');
                               }}
                             >
-                              Cancel </Button>
-                            <Button variant="primary"
+                              Cancel{' '}
+                            </Button>
+                            <Button
+                              variant="primary"
                               size="sm"
                               onClick={() => {
                                 const now = new Date();
@@ -220,9 +234,11 @@ export default function SettingsAccountPage() {
                                 setConfirmPassword('');
                               }}
                               disabled={
-                                !newPassword || !confirmPassword || newPassword !== confirmPassword }
+                                !newPassword || !confirmPassword || newPassword !== confirmPassword
+                              }
                             >
-                              Save </Button>
+                              Save{' '}
+                            </Button>
                           </div>
                         </VStack>
                       )}
@@ -235,7 +251,8 @@ export default function SettingsAccountPage() {
                     <VStack gap={4}>
                       <VStack gap={2}>
                         <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
-                          MFA Setting </span>
+                          MFA Setting{' '}
+                        </span>
                         <p className="text-body-md leading-4 text-[var(--color-text-subtle)]">
                           Add an extra layer of security to your account.
                         </p>
@@ -245,13 +262,15 @@ export default function SettingsAccountPage() {
                       <div className="flex items-center justify-between p-4 border border-[var(--color-border-default)] rounded-lg bg-[var(--color-surface-subtle)]">
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 rounded-lg bg-[var(--color-action-primary-subtle)] flex items-center justify-center">
-                            <IconShieldCheck size={20}
+                            <IconShieldCheck
+                              size={20}
                               className="text-[var(--color-action-primary)]"
                             />
                           </div>
                           <div>
                             <div className="text-label-md text-[var(--color-text-default)]">
-                              Authenticator App </div>
+                              Authenticator App{' '}
+                            </div>
                             {authenticatorSetup.configured ? (
                               <div className="flex items-center gap-1.5 text-body-md text-[var(--color-state-success)]">
                                 <IconCheck size={12} />
@@ -264,7 +283,8 @@ export default function SettingsAccountPage() {
                             )}
                           </div>
                         </div>
-                        <Button variant={authenticatorSetup.configured ? 'secondary' : 'primary'}
+                        <Button
+                          variant={authenticatorSetup.configured ? 'secondary' : 'primary'}
                           size="sm"
                           onClick={() => {
                             if (authenticatorSetup.configured) {
@@ -294,7 +314,8 @@ export default function SettingsAccountPage() {
                     <p className="text-body-md leading-[18px] text-[var(--color-text-muted)] mb-4">
                       View your recent login sessions.
                     </p>
-                    <Table columns={sessionColumns}
+                    <Table
+                      columns={sessionColumns}
                       data={sessions}
                       rowKey="id"
                       emptyMessage="No sessions found"
@@ -305,7 +326,8 @@ export default function SettingsAccountPage() {
                 {/* Logout */}
                 <div className="pt-6 border-t border-[var(--color-border-default)] flex justify-end min-w-[600px]">
                   <Button variant="secondary" size="md" onClick={() => setShowLogoutModal(true)}>
-                    Logout </Button>
+                    Logout{' '}
+                  </Button>
                 </div>
               </VStack>
             </div>
@@ -320,14 +342,17 @@ export default function SettingsAccountPage() {
         </p>
         <div className="flex justify-end gap-3">
           <Button variant="secondary" onClick={() => setShowLogoutModal(false)}>
-            Cancel </Button>
-          <Button variant="primary"
+            Cancel{' '}
+          </Button>
+          <Button
+            variant="primary"
             onClick={() => {
               setShowLogoutModal(false);
               window.location.href = '/';
             }}
           >
-            Logout </Button>
+            Logout{' '}
+          </Button>
         </div>
       </Modal>
     </div>

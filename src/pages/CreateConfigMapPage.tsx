@@ -65,9 +65,7 @@ function PreSection({ title }: PreSectionProps) {
   return (
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
       <div className="h-8 flex items-center">
-        <h5 className="text-heading-h5 text-[var(--color-text-default)]">
-          {title}
-        </h5>
+        <h5 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h5>
       </div>
     </div>
   );
@@ -85,9 +83,7 @@ function WritingSection({ title }: WritingSectionProps) {
   return (
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
       <div className="h-8 flex items-center justify-between">
-        <h5 className="text-heading-h5 text-[var(--color-text-default)]">
-          {title}
-        </h5>
+        <h5 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h5>
         <span className="text-body-sm text-[var(--color-text-subtle)]">Writing...</span>
       </div>
     </div>
@@ -284,9 +280,7 @@ function BasicInfoSection({
 
           {/* Description */}
           <VStack gap={2}>
-            <label className="text-label-lg text-[var(--color-text-default)]">
-              Description
-            </label>
+            <label className="text-label-lg text-[var(--color-text-default)]">Description</label>
             <Input
               placeholder="Enter a description (optional)"
               value={description}
@@ -641,9 +635,7 @@ function LabelsAnnotationsSection({
           {/* Labels */}
           <VStack gap={4}>
             <VStack gap={1}>
-              <span className="text-label-sm text-[var(--color-text-default)]">
-                Labels
-              </span>
+              <span className="text-label-sm text-[var(--color-text-default)]">Labels</span>
               <p className="text-body-md text-[var(--color-text-subtle)]">
                 Specify the labels used to identify and categorize the resource.
               </p>
@@ -685,9 +677,7 @@ function LabelsAnnotationsSection({
           {/* Annotations */}
           <VStack gap={4}>
             <VStack gap={1}>
-              <span className="text-label-sm text-[var(--color-text-default)]">
-                Annotations
-              </span>
+              <span className="text-label-sm text-[var(--color-text-default)]">Annotations</span>
               <p className="text-body-md text-[var(--color-text-subtle)]">
                 Specify the annotations used to provide additional metadata for the resource.
               </p>

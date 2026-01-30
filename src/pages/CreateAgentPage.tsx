@@ -383,9 +383,7 @@ export function CreateAgentPage() {
         <div className="bg-[var(--color-surface-default)] flex flex-col gap-3 items-center pb-6 pt-4 px-8 w-full min-h-full">
           <div className="flex flex-col gap-3 items-start min-w-[1176px] relative shrink-0 w-full">
             <div className="flex items-center justify-between h-8 w-full">
-              <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-                Create agent
-              </h1>
+              <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create agent</h1>
             </div>
             <div className="flex flex-row flex-1 items-start min-h-0 relative w-full gap-6">
               {/* Left Content */}
