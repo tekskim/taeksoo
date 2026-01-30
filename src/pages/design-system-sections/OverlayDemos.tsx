@@ -362,13 +362,7 @@ export function DrawerDemo() {
    ---------------------------------------- */
 
 // Edit Basic Information Drawer
-export function EditBasicInfoDrawer({
-  isOpen,
-  onClose,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-}) {
+export function EditBasicInfoDrawer({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const [agentName, setAgentName] = useState('');
   const [description, setDescription] = useState('');
   const [status, setStatus] = useState('inactive');
@@ -671,7 +665,9 @@ export function EditPromptSettingsDrawer({
         {/* Tone */}
         <FormField required>
           <FormField.Label>Tone</FormField.Label>
-          <FormField.HelperText>Select the response style the agent should use.</FormField.HelperText>
+          <FormField.HelperText>
+            Select the response style the agent should use.
+          </FormField.HelperText>
           <FormField.Control>
             <RadioGroup value={tone} onChange={setTone}>
               <VStack gap={3}>
@@ -934,7 +930,10 @@ export function AIAgentDrawerDemo() {
       <Button variant="outline" size="sm" onClick={() => setIsEditBasicInfoOpen(true)}>
         Edit Basic Info
       </Button>
-      <EditBasicInfoDrawer isOpen={isEditBasicInfoOpen} onClose={() => setIsEditBasicInfoOpen(false)} />
+      <EditBasicInfoDrawer
+        isOpen={isEditBasicInfoOpen}
+        onClose={() => setIsEditBasicInfoOpen(false)}
+      />
 
       <Button variant="outline" size="sm" onClick={() => setIsEditModelSettingsOpen(true)}>
         Edit Model Settings

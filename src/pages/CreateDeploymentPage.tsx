@@ -571,13 +571,18 @@ function BasicInfoSection({
           </VStack>
 
           {/* Description (Collapsible) */}
-          <Disclosure title="Description" defaultOpen={false}>
-            <Input
-              placeholder="Description"
-              value={description}
-              onChange={(e) => onDescriptionChange(e.target.value)}
-              fullWidth
-            />
+          <Disclosure defaultOpen={false}>
+            <Disclosure.Trigger>Description</Disclosure.Trigger>
+            <Disclosure.Panel>
+              <div className="pt-2">
+                <Input
+                  placeholder="Description"
+                  value={description}
+                  onChange={(e) => onDescriptionChange(e.target.value)}
+                  fullWidth
+                />
+              </div>
+            </Disclosure.Panel>
           </Disclosure>
         </VStack>
       </SectionCard.Content>
@@ -875,18 +880,16 @@ function ScalingPolicySection({
                 available.
               </p>
             </VStack>
-            <HStack gap={2}>
+            <HStack gap={2} align="center">
               <NumberInput
                 value={minReady}
                 onChange={onMinReadyChange}
                 min={0}
                 className="w-[320px]"
               />
-              <div className="flex items-center justify-center w-[80px] h-[32px] px-[10px] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-[6px]">
-                <span className="text-[12px] text-[var(--color-text-default)] leading-4">
-                  Seconds
-                </span>
-              </div>
+              <span className="text-[12px] text-[var(--color-text-default)] whitespace-nowrap">
+                Seconds
+              </span>
             </HStack>
           </VStack>
 
@@ -900,18 +903,16 @@ function ScalingPolicySection({
                 The maximum number of revision histories to retain for the Deployment.
               </p>
             </VStack>
-            <HStack gap={2}>
+            <HStack gap={2} align="center">
               <NumberInput
                 value={revisionHistoryLimit}
                 onChange={onRevisionHistoryLimitChange}
                 min={0}
                 className="w-[320px]"
               />
-              <div className="flex items-center justify-center w-[80px] h-[32px] px-[10px] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-[6px]">
-                <span className="text-[12px] text-[var(--color-text-default)] leading-4">
-                  Revisions
-                </span>
-              </div>
+              <span className="text-[12px] text-[var(--color-text-default)] whitespace-nowrap">
+                Revisions
+              </span>
             </HStack>
           </VStack>
 
@@ -926,18 +927,16 @@ function ScalingPolicySection({
                 failed.
               </p>
             </VStack>
-            <HStack gap={2}>
+            <HStack gap={2} align="center">
               <NumberInput
                 value={progressDeadline}
                 onChange={onProgressDeadlineChange}
                 min={0}
                 className="w-[320px]"
               />
-              <div className="flex items-center justify-center w-[80px] h-[32px] px-[10px] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-[6px]">
-                <span className="text-[12px] text-[var(--color-text-default)] leading-4">
-                  Seconds
-                </span>
-              </div>
+              <span className="text-[12px] text-[var(--color-text-default)] whitespace-nowrap">
+                Seconds
+              </span>
             </HStack>
           </VStack>
         </VStack>
