@@ -16,7 +16,12 @@ import {
   DoughnutChartDemo,
   HalfDoughnutChartDemo,
 } from './design-system-sections/ChartComponents';
-import { ModalDemo, ModalUseCaseDemo, DrawerDemo, AIAgentModalDemo } from './design-system-sections/OverlayDemos';
+import {
+  ModalDemo,
+  ModalUseCaseDemo,
+  DrawerDemo,
+  AIAgentModalDemo,
+} from './design-system-sections/OverlayDemos';
 import { CommonPatternsSection } from './design-system-sections/CommonPatterns';
 
 // App icons

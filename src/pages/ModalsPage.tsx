@@ -249,9 +249,7 @@ export function ModalsPage() {
             >
               Back
             </Button>
-            <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-              Modal Components
-            </h1>
+            <h1 className="text-heading-h5 text-[var(--color-text-default)]">Modal Components</h1>
           </div>
         </div>
       </header>
@@ -262,1240 +260,1244 @@ export function ModalsPage() {
           <VStack gap={8}>
             {/* Page Description */}
             <p className="text-body-lg text-[var(--color-text-subtle)]">
-              Collection of modal components used across the application. Click to preview each modal.
+              Collection of modal components used across the application. Click to preview each
+              modal.
             </p>
 
             {/* Modal Categories by App */}
             <VStack gap={4}>
-                {/* Compute App Modals */}
-                <Disclosure open={isComputeOpen} onChange={setIsComputeOpen}>
-                  <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
-                    <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
-                      <div className="flex items-center gap-3">
-                        {isComputeOpen ? (
-                          <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
-                        ) : (
-                          <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
-                        )}
-                        <Badge variant="info" size="sm" className="w-[70px] justify-center">
-                          Compute{' '}
-                        </Badge>
-                        <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
-                          Modals{' '}
-                        </span>
-                        <span className="text-body-md text-[var(--color-text-subtle)]">
-                          (16 modals)
-                        </span>
-                      </div>
+              {/* Compute App Modals */}
+              <Disclosure open={isComputeOpen} onChange={setIsComputeOpen}>
+                <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
+                  <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
+                    <div className="flex items-center gap-3">
+                      {isComputeOpen ? (
+                        <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
+                      ) : (
+                        <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
+                      )}
+                      <Badge variant="info" size="sm" className="w-[70px] justify-center">
+                        Compute{' '}
+                      </Badge>
+                      <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
+                        Modals{' '}
+                      </span>
+                      <span className="text-body-md text-[var(--color-text-subtle)]">
+                        (16 modals)
+                      </span>
                     </div>
-                  </Disclosure.Trigger>
-                  <Disclosure.Panel>
-                    <VStack gap={4} className="pt-4">
-                      {/* Delete Modals */}
-                      <VStack gap={2}>
-                        <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Delete Modals{' '}
-                        </h2>
-                        <div className="flex flex-col gap-2">
-                          <ModalListItem
-                            title="Delete Snapshot"
-                            description="Confirm deletion of a snapshot with warning about permanent action."
-                            category="Confirm"
-                            size="sm"
-                            onOpen={() => setIsConfirmDeleteOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Security group"
-                            description="Confirm deletion of a single security group with warning."
-                            category="Confirm"
-                            size="sm"
-                            onOpen={() => setIsDeleteSecurityGroupOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Security groups (Multiple)"
-                            description="Confirm deletion of multiple security groups with scrollable list."
-                            category="Confirm"
-                            size="md"
-                            onOpen={() => setIsDeleteSecurityGroupsMultipleOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Rule"
-                            description="Confirm deletion of a single security group rule."
-                            category="Confirm"
-                            size="sm"
-                            onOpen={() => setIsDeleteRuleOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Rules (Multiple)"
-                            description="Confirm deletion of multiple rules with scrollable list and warning."
-                            category="Confirm"
-                            size="md"
-                            onOpen={() => setIsDeleteRulesMultipleOpen(true)}
-                          />
-                        </div>
-                      </VStack>
-
-                      {/* Volume Actions */}
-                      <VStack gap={2}>
-                        <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Volume Actions{' '}
-                        </h2>
-                        <div className="flex flex-col gap-2">
-                          <ModalListItem
-                            title="Detach volume"
-                            description="Confirm detachment of a volume with warning about data corruption."
-                            category="Volume"
-                            size="sm"
-                            onOpen={() => setIsDetachVolumeOpen(true)}
-                          />
-                        </div>
-                      </VStack>
-
-                      {/* Backup Actions */}
-                      <VStack gap={2}>
-                        <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Backup Actions{' '}
-                        </h2>
-                        <div className="flex flex-col gap-2">
-                          <ModalListItem
-                            title="Restore backup"
-                            description="Simple restore backup confirmation with volume info."
-                            category="Backup"
-                            size="sm"
-                            onOpen={() => setIsRestoreBackupSmallOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Restore backup (with instance name)"
-                            description="Restore backup with volume and instance list information."
-                            category="Backup"
-                            size="md"
-                            onOpen={() => setIsRestoreBackupMediumOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Restore backup (with instance name and warning)"
-                            description="Restore backup with warning alert and disabled action button."
-                            category="Backup"
-                            size="lg"
-                            onOpen={() => setIsRestoreBackupLargeOpen(true)}
-                          />
-                        </div>
-                      </VStack>
-
-                      {/* Floating IP */}
-                      <VStack gap={2}>
-                        <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Floating IP{' '}
-                        </h2>
-                        <div className="flex flex-col gap-2">
-                          <ModalListItem
-                            title="Disassociate floating IP"
-                            description="Confirm disassociation of a floating IP from a resource."
-                            category="Network"
-                            size="sm"
-                            onOpen={() => setIsDisassociateFloatingIPOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Disassociate floating IP (Load balancer)"
-                            description="Disassociate a floating IP from a load balancer."
-                            category="Network"
-                            size="sm"
-                            onOpen={() => setIsDisassociateFloatingIPLBOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Release floating IP"
-                            description="Release a single floating IP with warning about permanent action."
-                            category="Network"
-                            size="sm"
-                            onOpen={() => setIsReleaseFloatingIPSmallOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Release floating IP (Associated to)"
-                            description="Release multiple floating IPs with scrollable list."
-                            category="Network"
-                            size="md"
-                            onOpen={() => setIsReleaseFloatingIPMediumOpen(true)}
-                          />
-                        </div>
-                      </VStack>
-
-                      {/* Load balancers */}
-                      <VStack gap={2}>
-                        <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Load balancers{' '}
-                        </h2>
-                        <div className="flex flex-col gap-2">
-                          <ModalListItem
-                            title="Delete Load balancer"
-                            description="Delete a single load balancer with warning about associated resources."
-                            category="Network"
-                            size="sm"
-                            onOpen={() => setIsDeleteLoadBalancerOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Release Load balancers"
-                            description="Delete multiple load balancers with scrollable list and warning."
-                            category="Network"
-                            size="md"
-                            onOpen={() => setIsDeleteLoadBalancersMultipleOpen(true)}
-                          />
-                        </div>
-                      </VStack>
-                    </VStack>
-                  </Disclosure.Panel>
-                </Disclosure>
-
-                {/* IAM App Modals */}
-                <Disclosure open={isIAMOpen} onChange={setIsIAMOpen}>
-                  <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
-                    <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
-                      <div className="flex items-center gap-3">
-                        {isIAMOpen ? (
-                          <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
-                        ) : (
-                          <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
-                        )}
-                        <Badge variant="info" size="sm" className="w-[70px] justify-center">
-                          IAM{' '}
-                        </Badge>
-                        <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
-                          Modals{' '}
-                        </span>
-                        <span className="text-body-md text-[var(--color-text-subtle)]">
-                          (29 modals)
-                        </span>
+                  </div>
+                </Disclosure.Trigger>
+                <Disclosure.Panel>
+                  <VStack gap={4} className="pt-4">
+                    {/* Delete Modals */}
+                    <VStack gap={2}>
+                      <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                        Delete Modals{' '}
+                      </h2>
+                      <div className="flex flex-col gap-2">
+                        <ModalListItem
+                          title="Delete Snapshot"
+                          description="Confirm deletion of a snapshot with warning about permanent action."
+                          category="Confirm"
+                          size="sm"
+                          onOpen={() => setIsConfirmDeleteOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Security group"
+                          description="Confirm deletion of a single security group with warning."
+                          category="Confirm"
+                          size="sm"
+                          onOpen={() => setIsDeleteSecurityGroupOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Security groups (Multiple)"
+                          description="Confirm deletion of multiple security groups with scrollable list."
+                          category="Confirm"
+                          size="md"
+                          onOpen={() => setIsDeleteSecurityGroupsMultipleOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Rule"
+                          description="Confirm deletion of a single security group rule."
+                          category="Confirm"
+                          size="sm"
+                          onOpen={() => setIsDeleteRuleOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Rules (Multiple)"
+                          description="Confirm deletion of multiple rules with scrollable list and warning."
+                          category="Confirm"
+                          size="md"
+                          onOpen={() => setIsDeleteRulesMultipleOpen(true)}
+                        />
                       </div>
-                    </div>
-                  </Disclosure.Trigger>
-                  <Disclosure.Panel>
-                    <VStack gap={4} className="pt-4">
-                      {/* User Management Modals */}
-                      <VStack gap={2}>
-                        <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          User Management{' '}
-                        </h2>
-                        <div className="flex flex-col gap-2">
-                          <ModalListItem
-                            title="Delete user"
-                            description="Confirm deletion of a user with warning about permanent action."
-                            category="User"
-                            size="sm"
-                            onOpen={() => setIsDeleteUserOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete users (Multiple)"
-                            description="Delete multiple users with lists of deletable and non-deletable users."
-                            category="User"
-                            size="md"
-                            onOpen={() => setIsDeleteUsersMultipleOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Confirm user password"
-                            description="Display username and password credentials with copy functionality."
-                            category="User"
-                            size="sm"
-                            onOpen={() => setIsConfirmUserPasswordOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Detach user group"
-                            description="Confirm detaching a user from a user group with warning about permission removal."
-                            category="User"
-                            size="sm"
-                            onOpen={() => setIsDetachUserGroupOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Detach role"
-                            description="Confirm detaching a role from a user with warning about permission removal."
-                            category="User"
-                            size="sm"
-                            onOpen={() => setIsDetachRoleOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Remove OTP MFA"
-                            description="Confirm removing OTP MFA for a user with warning about re-registration."
-                            category="User"
-                            size="sm"
-                            onOpen={() => setIsRemoveOtpMfaOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Terminate all sessions"
-                            description="Confirm terminating all sessions for a user with warning about sign-out."
-                            category="User"
-                            size="sm"
-                            onOpen={() => setIsTerminateAllSessionsOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Terminate session"
-                            description="Confirm terminating a single session with warning about sign-out from device."
-                            category="User"
-                            size="sm"
-                            onOpen={() => setIsTerminateSessionOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Remove user from group"
-                            description="Confirm removing a user from a group with warning about permission removal."
-                            category="User"
-                            size="sm"
-                            onOpen={() => setIsRemoveUserFromGroupOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete role"
-                            description="Confirm deleting a role with warning about permission removal."
-                            category="Role"
-                            size="sm"
-                            onOpen={() => setIsDeleteRoleOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete roles (Multiple)"
-                            description="Confirm deleting multiple roles with lists of deletable and non-deletable roles."
-                            category="Role"
-                            size="md"
-                            onOpen={() => setIsDeleteRolesMultipleOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Detach policy"
-                            description="Confirm detaching a policy from a role with warning about permission revocation."
-                            category="Role"
-                            size="sm"
-                            onOpen={() => setIsDetachPolicyOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete policy"
-                            description="Confirm deleting a policy with warning about permanent removal and access loss."
-                            category="Policy"
-                            size="sm"
-                            onOpen={() => setIsDeletePolicyOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete policies (Multiple)"
-                            description="Confirm deleting multiple policies with lists of deletable/non-deletable policies."
-                            category="Policy"
-                            size="md"
-                            onOpen={() => setIsDeletePoliciesMultipleOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Revert policy version"
-                            description="Confirm reverting a policy to a previous version with warning about permission changes."
-                            category="Policy"
-                            size="sm"
-                            onOpen={() => setIsRevertPolicyVersionOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete policy version"
-                            description="Confirm deleting a specific policy version with warning about permanent removal."
-                            category="Policy"
-                            size="sm"
-                            onOpen={() => setIsDeletePolicyVersionOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Update MFA enforcement policy"
-                            description="Confirm applying MFA enforcement policy changes with warning about authentication impact."
-                            category="Security"
-                            size="sm"
-                            onOpen={() => setIsUpdateMfaEnforcementOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Update OTP policy"
-                            description="Confirm applying OTP policy changes with warning about MFA method availability."
-                            category="Security"
-                            size="sm"
-                            onOpen={() => setIsUpdateOtpPolicyOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Update OTP policy settings"
-                            description="Confirm applying OTP policy settings changes without warning alert."
-                            category="Security"
-                            size="sm"
-                            onOpen={() => setIsUpdateOtpPolicySettingsOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Update email policy"
-                            description="Confirm applying email policy changes with warning about MFA method availability."
-                            category="Security"
-                            size="sm"
-                            onOpen={() => setIsUpdateEmailPolicyOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Update email policy settings"
-                            description="Confirm applying email policy settings changes without warning alert."
-                            category="Security"
-                            size="sm"
-                            onOpen={() => setIsUpdateEmailPolicySettingsOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Update general session policy"
-                            description="Confirm applying session policy changes for timeout and lifespan settings."
-                            category="Security"
-                            size="sm"
-                            onOpen={() => setIsUpdateGeneralSessionPolicyOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete domain"
-                            description="Permanently delete a domain and all its configurations."
-                            category="Security"
-                            size="sm"
-                            onOpen={() => setIsDeleteDomainOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Switch to domain"
-                            description="Confirm switching to a different domain with unsaved changes warning."
-                            category="Security"
-                            size="sm"
-                            onOpen={() => setIsSwitchToDomainOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete system administrator"
-                            description="Permanently delete a system administrator and their global access."
-                            category="Security"
-                            size="sm"
-                            onOpen={() => setIsDeleteSystemAdminOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Update password policy"
-                            description="Confirm applying password policy changes for length, requirements, and expiration."
-                            category="Security"
-                            size="sm"
-                            onOpen={() => setIsUpdatePasswordPolicyOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Update account lockout policy"
-                            description="Confirm applying account lockout policy changes for lockout type settings."
-                            category="Security"
-                            size="sm"
-                            onOpen={() => setIsUpdateAccountLockoutPolicyOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Update token policy"
-                            description="Confirm applying token policy changes for access and refresh token lifespan."
-                            category="Security"
-                            size="sm"
-                            onOpen={() => setIsUpdateTokenPolicyOpen(true)}
-                          />
-                        </div>
-                      </VStack>
-
-                      {/* General Modals */}
-                      <VStack gap={2}>
-                        <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          General{' '}
-                        </h2>
-                        <div className="flex flex-col gap-2">
-                          <ModalListItem
-                            title="Unsaved changes"
-                            description="Confirm leaving page with unsaved changes."
-                            category="Navigation"
-                            size="sm"
-                            onOpen={() => setIsUnsavedChangesOpen(true)}
-                          />
-                        </div>
-                      </VStack>
                     </VStack>
-                  </Disclosure.Panel>
-                </Disclosure>
 
-                {/* Container App Modals - Placeholder for future */}
-                <Disclosure open={isContainerOpen} onChange={setIsContainerOpen}>
-                  <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
-                    <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
-                      <div className="flex items-center gap-3">
-                        {isContainerOpen ? (
-                          <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
-                        ) : (
-                          <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
-                        )}
-                        <Badge variant="info" size="sm" className="w-[70px] justify-center">
-                          Container{' '}
-                        </Badge>
-                        <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
-                          Modals{' '}
-                        </span>
-                        <span className="text-body-md text-[var(--color-text-subtle)]">
-                          (12 modals)
-                        </span>
+                    {/* Volume Actions */}
+                    <VStack gap={2}>
+                      <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                        Volume Actions{' '}
+                      </h2>
+                      <div className="flex flex-col gap-2">
+                        <ModalListItem
+                          title="Detach volume"
+                          description="Confirm detachment of a volume with warning about data corruption."
+                          category="Volume"
+                          size="sm"
+                          onOpen={() => setIsDetachVolumeOpen(true)}
+                        />
                       </div>
-                    </div>
-                  </Disclosure.Trigger>
-                  <Disclosure.Panel>
-                    <VStack gap={4} className="pt-4">
-                      {/* Cluster Actions */}
-                      <VStack gap={2}>
-                        <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Cluster Actions{' '}
-                        </h2>
-                        <div className="flex flex-col gap-2">
-                          <ModalListItem
-                            title="Delete Cluster"
-                            description="Confirm deletion of a Kubernetes cluster."
-                            category="Cluster"
-                            size="sm"
-                            onOpen={() => setIsDeleteClusterOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Namespace"
-                            description="Confirm deletion of a Kubernetes namespace."
-                            category="Namespace"
-                            size="sm"
-                            onOpen={() => setIsDeleteNamespaceOpen(true)}
-                          />
-                        </div>
-                      </VStack>
-
-                      {/* Workload Actions */}
-                      <VStack gap={2}>
-                        <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Workload Actions{' '}
-                        </h2>
-                        <div className="flex flex-col gap-2">
-                          <ModalListItem
-                            title="Delete Pod"
-                            description="Confirm deletion of a Kubernetes pod."
-                            category="Pod"
-                            size="sm"
-                            onOpen={() => setIsDeletePodOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Deployment"
-                            description="Confirm deletion of a Kubernetes deployment."
-                            category="Deployment"
-                            size="sm"
-                            onOpen={() => setIsDeleteDeploymentOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Redeploy Deployment"
-                            description="Redeploy a Kubernetes deployment with warning about downtime."
-                            category="Deployment"
-                            size="sm"
-                            onOpen={() => setIsRedeployDeploymentOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Roll Back Deployment"
-                            description="Roll back a Kubernetes deployment to a previous revision."
-                            category="Deployment"
-                            size="sm"
-                            onOpen={() => setIsRollBackDeploymentOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete StatefulSet"
-                            description="Confirm deletion of a Kubernetes stateful set."
-                            category="StatefulSet"
-                            size="sm"
-                            onOpen={() => setIsDeleteStatefulSetOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Redeploy StatefulSet"
-                            description="Redeploy a Kubernetes stateful set with warning about downtime."
-                            category="StatefulSet"
-                            size="sm"
-                            onOpen={() => setIsRedeployStatefulSetOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete DaemonSet"
-                            description="Confirm deletion of a Kubernetes daemon set."
-                            category="DaemonSet"
-                            size="sm"
-                            onOpen={() => setIsDeleteDaemonSetOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Redeploy DaemonSet"
-                            description="Redeploy a Kubernetes daemon set with warning about downtime."
-                            category="DaemonSet"
-                            size="sm"
-                            onOpen={() => setIsRedeployDaemonSetOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Job"
-                            description="Confirm deletion of a Kubernetes job."
-                            category="Job"
-                            size="sm"
-                            onOpen={() => setIsDeleteJobOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete CronJob"
-                            description="Confirm deletion of a Kubernetes cron job."
-                            category="CronJob"
-                            size="sm"
-                            onOpen={() => setIsDeleteCronJobOpen(true)}
-                          />
-                        </div>
-                      </VStack>
                     </VStack>
-                  </Disclosure.Panel>
-                </Disclosure>
 
-                {/* Storage App Modals */}
-                <Disclosure open={isStorageOpen} onChange={setIsStorageOpen}>
-                  <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
-                    <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
-                      <div className="flex items-center gap-3">
-                        {isStorageOpen ? (
-                          <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
-                        ) : (
-                          <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
-                        )}
-                        <Badge variant="info" size="sm" className="w-[70px] justify-center">
-                          Storage{' '}
-                        </Badge>
-                        <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
-                          Modals{' '}
-                        </span>
-                        <span className="text-body-md text-[var(--color-text-subtle)]">
-                          (1 modal)
-                        </span>
+                    {/* Backup Actions */}
+                    <VStack gap={2}>
+                      <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                        Backup Actions{' '}
+                      </h2>
+                      <div className="flex flex-col gap-2">
+                        <ModalListItem
+                          title="Restore backup"
+                          description="Simple restore backup confirmation with volume info."
+                          category="Backup"
+                          size="sm"
+                          onOpen={() => setIsRestoreBackupSmallOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Restore backup (with instance name)"
+                          description="Restore backup with volume and instance list information."
+                          category="Backup"
+                          size="md"
+                          onOpen={() => setIsRestoreBackupMediumOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Restore backup (with instance name and warning)"
+                          description="Restore backup with warning alert and disabled action button."
+                          category="Backup"
+                          size="lg"
+                          onOpen={() => setIsRestoreBackupLargeOpen(true)}
+                        />
                       </div>
-                    </div>
-                  </Disclosure.Trigger>
-                  <Disclosure.Panel>
-                    <VStack gap={4} className="pt-4">
-                      {/* Delete Modals */}
-                      <VStack gap={2}>
-                        <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Delete Modals{' '}
-                        </h2>
-                        <div className="flex flex-col gap-2">
-                          <ModalListItem
-                            title="Delete Bucket"
-                            description="Confirm deletion of a non-empty bucket with warning about permanent data loss."
-                            category="Bucket"
-                            size="sm"
-                            onOpen={() => setIsDeleteBucketOpen(true)}
-                          />
-                        </div>
-                      </VStack>
                     </VStack>
-                  </Disclosure.Panel>
-                </Disclosure>
 
-                {/* Compute Admin Modals */}
-                <Disclosure open={isComputeAdminOpen} onChange={setIsComputeAdminOpen}>
-                  <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
-                    <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
-                      <div className="flex items-center gap-3">
-                        {isComputeAdminOpen ? (
-                          <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
-                        ) : (
-                          <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
-                        )}
-                        <Badge variant="info" size="sm" className="w-[100px] justify-center">
-                          Compute Admin{' '}
-                        </Badge>
-                        <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
-                          Modals{' '}
-                        </span>
-                        <span className="text-body-md text-[var(--color-text-subtle)]">
-                          (71 modals)
-                        </span>
+                    {/* Floating IP */}
+                    <VStack gap={2}>
+                      <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                        Floating IP{' '}
+                      </h2>
+                      <div className="flex flex-col gap-2">
+                        <ModalListItem
+                          title="Disassociate floating IP"
+                          description="Confirm disassociation of a floating IP from a resource."
+                          category="Network"
+                          size="sm"
+                          onOpen={() => setIsDisassociateFloatingIPOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Disassociate floating IP (Load balancer)"
+                          description="Disassociate a floating IP from a load balancer."
+                          category="Network"
+                          size="sm"
+                          onOpen={() => setIsDisassociateFloatingIPLBOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Release floating IP"
+                          description="Release a single floating IP with warning about permanent action."
+                          category="Network"
+                          size="sm"
+                          onOpen={() => setIsReleaseFloatingIPSmallOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Release floating IP (Associated to)"
+                          description="Release multiple floating IPs with scrollable list."
+                          category="Network"
+                          size="md"
+                          onOpen={() => setIsReleaseFloatingIPMediumOpen(true)}
+                        />
                       </div>
-                    </div>
-                  </Disclosure.Trigger>
-                  <Disclosure.Panel>
-                    <VStack gap={4} className="pt-4">
-                      {/* Single Instance Actions */}
-                      <VStack gap={2}>
-                        <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Single Instance Actions{' '}
-                        </h2>
-                        <div className="flex flex-col gap-2">
-                          <ModalListItem
-                            title="Stop Instance"
-                            description="Stop a single instance with warning about service interruption."
-                            category="Instance"
-                            size="sm"
-                            onOpen={() => setIsStopInstanceOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Reboot Instance"
-                            description="Reboot a single instance with warning about service interruption."
-                            category="Instance"
-                            size="sm"
-                            onOpen={() => setIsRebootInstanceOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Soft Reboot Instance"
-                            description="Perform a soft reboot of a single instance."
-                            category="Instance"
-                            size="sm"
-                            onOpen={() => setIsSoftRebootInstanceOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Confirm Resize"
-                            description="Confirm the resized state of an instance."
-                            category="Instance"
-                            size="sm"
-                            onOpen={() => setIsConfirmResizeOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Revert Resize"
-                            description="Revert an instance to its previous state before resize."
-                            category="Instance"
-                            size="sm"
-                            onOpen={() => setIsRevertResizeOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Instance"
-                            description="Permanently delete a single instance."
-                            category="Instance"
-                            size="sm"
-                            onOpen={() => setIsDeleteInstanceOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Shelve Instance"
-                            description="Shelve a single instance with warning about service interruption."
-                            category="Instance"
-                            size="sm"
-                            onOpen={() => setIsShelveInstanceOpen(true)}
-                          />
-                        </div>
-                      </VStack>
-
-                      {/* Multiple Instances Actions */}
-                      <VStack gap={2}>
-                        <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Multiple Instances Actions{' '}
-                        </h2>
-                        <div className="flex flex-col gap-2">
-                          <ModalListItem
-                            title="Start Instances"
-                            description="Start multiple selected instances with eligibility check."
-                            category="Instances"
-                            size="md"
-                            onOpen={() => setIsStartInstancesOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Stop Instances"
-                            description="Stop multiple selected instances with eligibility check."
-                            category="Instances"
-                            size="md"
-                            onOpen={() => setIsStopInstancesOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Reboot Instances"
-                            description="Reboot multiple selected instances with eligibility check."
-                            category="Instances"
-                            size="md"
-                            onOpen={() => setIsRebootInstancesOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Instances"
-                            description="Permanently delete multiple selected instances with eligibility check."
-                            category="Instances"
-                            size="md"
-                            onOpen={() => setIsDeleteInstancesOpen(true)}
-                          />
-                        </div>
-                      </VStack>
-
-                      {/* Resource Delete Actions */}
-                      <VStack gap={2}>
-                        <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Resource Delete Actions{' '}
-                        </h2>
-                        <div className="flex flex-col gap-2">
-                          <ModalListItem
-                            title="Delete Instance Template"
-                            description="Permanently delete a single instance template."
-                            category="Template"
-                            size="sm"
-                            onOpen={() => setIsDeleteInstanceTemplateOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Instance Templates"
-                            description="Permanently delete multiple instance templates."
-                            category="Templates"
-                            size="md"
-                            onOpen={() => setIsDeleteInstanceTemplatesOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Image"
-                            description="Permanently delete a single image."
-                            category="Image"
-                            size="sm"
-                            onOpen={() => setIsDeleteImageOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Images"
-                            description="Permanently delete multiple images with eligibility check."
-                            category="Images"
-                            size="md"
-                            onOpen={() => setIsDeleteImagesOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Snapshot"
-                            description="Permanently delete a single snapshot."
-                            category="Snapshot"
-                            size="sm"
-                            onOpen={() => setIsDeleteSnapshotOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Snapshots"
-                            description="Permanently delete multiple snapshots with eligibility check."
-                            category="Snapshots"
-                            size="md"
-                            onOpen={() => setIsDeleteSnapshotsOpen(true)}
-                          />
-                        </div>
-                      </VStack>
-
-                      {/* Storage Delete Actions */}
-                      <VStack gap={2}>
-                        <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Storage Delete Actions{' '}
-                        </h2>
-                        <div className="flex flex-col gap-2">
-                          <ModalListItem
-                            title="Delete Volume"
-                            description="Permanently delete a single volume."
-                            category="Volume"
-                            size="sm"
-                            onOpen={() => setIsDeleteVolumeOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Volumes"
-                            description="Permanently delete multiple volumes with eligibility check."
-                            category="Volumes"
-                            size="md"
-                            onOpen={() => setIsDeleteVolumesOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Volume Type"
-                            description="Permanently delete a single volume type."
-                            category="VolumeType"
-                            size="sm"
-                            onOpen={() => setIsDeleteVolumeTypeOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Volume Types"
-                            description="Permanently delete multiple volume types."
-                            category="VolumeTypes"
-                            size="sm"
-                            onOpen={() => setIsDeleteVolumeTypesOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Backup"
-                            description="Permanently delete a single backup."
-                            category="Backup"
-                            size="sm"
-                            onOpen={() => setIsDeleteBackupOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Backups"
-                            description="Permanently delete multiple backups with eligibility check."
-                            category="Backups"
-                            size="md"
-                            onOpen={() => setIsDeleteBackupsOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Encryption"
-                            description="Remove encryption configuration from a volume type."
-                            category="Encryption"
-                            size="sm"
-                            onOpen={() => setIsDeleteEncryptionOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Extra Spec"
-                            description="Remove extra specification from a volume type."
-                            category="ExtraSpec"
-                            size="sm"
-                            onOpen={() => setIsDeleteExtraSpecOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Extra Specs"
-                            description="Remove multiple extra specifications from a volume type."
-                            category="ExtraSpecs"
-                            size="sm"
-                            onOpen={() => setIsDeleteExtraSpecsOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete QoS Spec"
-                            description="Permanently delete a single QoS specification."
-                            category="QoSSpec"
-                            size="sm"
-                            onOpen={() => setIsDeleteQoSSpecOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete QoS Specs"
-                            description="Permanently delete multiple QoS specifications."
-                            category="QoSSpecs"
-                            size="sm"
-                            onOpen={() => setIsDeleteQoSSpecsOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete QoS Extra Spec"
-                            description="Remove extra specification from a QoS spec."
-                            category="QoSExtra"
-                            size="sm"
-                            onOpen={() => setIsDeleteQoSExtraSpecOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete QoS Extra Specs"
-                            description="Remove multiple extra specifications from a QoS spec."
-                            category="QoSExtras"
-                            size="sm"
-                            onOpen={() => setIsDeleteQoSExtraSpecsOpen(true)}
-                          />
-                        </div>
-                      </VStack>
-
-                      {/* Network Delete Actions */}
-                      <VStack gap={2}>
-                        <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Network Delete Actions{' '}
-                        </h2>
-                        <div className="flex flex-col gap-2">
-                          <ModalListItem
-                            title="Delete Network"
-                            description="Permanently delete a single network with warning."
-                            category="Network"
-                            size="sm"
-                            onOpen={() => setIsDeleteNetworkOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Networks"
-                            description="Permanently delete multiple networks with eligibility check."
-                            category="Networks"
-                            size="md"
-                            onOpen={() => setIsDeleteNetworksOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Subnet"
-                            description="Permanently delete a single subnet with warning."
-                            category="Subnet"
-                            size="sm"
-                            onOpen={() => setIsDeleteSubnetOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Subnets"
-                            description="Permanently delete multiple subnets."
-                            category="Subnets"
-                            size="sm"
-                            onOpen={() => setIsDeleteSubnetsOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Port"
-                            description="Permanently delete a single port with warning."
-                            category="Port"
-                            size="sm"
-                            onOpen={() => setIsDeletePortOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Ports"
-                            description="Permanently delete multiple ports with warning."
-                            category="Ports"
-                            size="sm"
-                            onOpen={() => setIsDeletePortsOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Router"
-                            description="Permanently delete a single router with warning."
-                            category="Router"
-                            size="sm"
-                            onOpen={() => setIsDeleteRouterOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Routers"
-                            description="Permanently delete multiple routers with eligibility check."
-                            category="Routers"
-                            size="md"
-                            onOpen={() => setIsDeleteRoutersOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Static Routes"
-                            description="Permanently delete multiple static routes."
-                            category="Routes"
-                            size="sm"
-                            onOpen={() => setIsDeleteStaticRoutesOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Remove DHCP Agents"
-                            description="Remove DHCP agents from a network."
-                            category="DHCP"
-                            size="sm"
-                            onOpen={() => setIsRemoveDHCPAgentsOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Release Fixed IP"
-                            description="Release a fixed IP address from a port."
-                            category="IP"
-                            size="sm"
-                            onOpen={() => setIsReleaseFixedIPOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Allowed Address Pair"
-                            description="Remove an allowed address pair from a port."
-                            category="Address"
-                            size="sm"
-                            onOpen={() => setIsDeleteAllowedAddressPairOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Security Group"
-                            description="Permanently delete a single security group."
-                            category="SecGroup"
-                            size="sm"
-                            onOpen={() => setIsDeleteSecurityGroupAdminOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Security Groups"
-                            description="Permanently delete multiple security groups."
-                            category="SecGroups"
-                            size="md"
-                            onOpen={() => setIsDeleteSecurityGroupsAdminOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Firewall"
-                            description="Permanently delete a single firewall."
-                            category="Firewall"
-                            size="sm"
-                            onOpen={() => setIsDeleteFirewallOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Firewalls"
-                            description="Permanently delete multiple firewalls."
-                            category="Firewalls"
-                            size="md"
-                            onOpen={() => setIsDeleteFirewallsOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Unsaved Changes"
-                            description="Confirm leaving with unsaved changes."
-                            category="Confirm"
-                            size="sm"
-                            onOpen={() => setIsUnsavedChangesAdminOpen(true)}
-                          />
-                        </div>
-                      </VStack>
-
-                      {/* Load Balancer & Security Actions */}
-                      <VStack gap={2}>
-                        <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Load Balancer & Security Actions{' '}
-                        </h2>
-                        <div className="flex flex-col gap-2">
-                          <ModalListItem
-                            title="Disassociate Floating IP"
-                            description="Disassociate a floating IP from a resource."
-                            category="FloatingIP"
-                            size="sm"
-                            onOpen={() => setIsDisassociateFloatingIPOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Release Floating IP"
-                            description="Release a single floating IP address."
-                            category="FloatingIP"
-                            size="sm"
-                            onOpen={() => setIsReleaseFloatingIPOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Release Floating IPs"
-                            description="Release multiple floating IP addresses."
-                            category="FloatingIPs"
-                            size="sm"
-                            onOpen={() => setIsReleaseFloatingIPsOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Load Balancer"
-                            description="Permanently delete a single load balancer."
-                            category="LB"
-                            size="sm"
-                            onOpen={() => setIsDeleteLoadBalancerAdminOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Load Balancers"
-                            description="Permanently delete multiple load balancers."
-                            category="LBs"
-                            size="md"
-                            onOpen={() => setIsDeleteLoadBalancersAdminOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Listener"
-                            description="Permanently delete a single listener."
-                            category="Listener"
-                            size="sm"
-                            onOpen={() => setIsDeleteListenerOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Listeners"
-                            description="Permanently delete multiple listeners."
-                            category="Listeners"
-                            size="md"
-                            onOpen={() => setIsDeleteListenersOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Pool"
-                            description="Permanently delete a single pool."
-                            category="Pool"
-                            size="sm"
-                            onOpen={() => setIsDeletePoolOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Pools"
-                            description="Permanently delete multiple pools."
-                            category="Pools"
-                            size="md"
-                            onOpen={() => setIsDeletePoolsOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Member"
-                            description="Remove a single member from a pool."
-                            category="Member"
-                            size="sm"
-                            onOpen={() => setIsDeleteMemberOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Members"
-                            description="Remove multiple members from a pool."
-                            category="Members"
-                            size="md"
-                            onOpen={() => setIsDeleteMembersOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Security Group Rule"
-                            description="Permanently delete a single security group rule."
-                            category="Rule"
-                            size="sm"
-                            onOpen={() => setIsDeleteSecurityGroupRuleOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Security Group Rules"
-                            description="Permanently delete multiple security group rules."
-                            category="Rules"
-                            size="md"
-                            onOpen={() => setIsDeleteSecurityGroupRulesOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete L7 Policy"
-                            description="Permanently delete a single L7 policy."
-                            category="L7Policy"
-                            size="sm"
-                            onOpen={() => setIsDeleteL7PolicyOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete L7 Policies"
-                            description="Permanently delete multiple L7 policies."
-                            category="L7Policies"
-                            size="md"
-                            onOpen={() => setIsDeleteL7PoliciesOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Health Monitor"
-                            description="Permanently delete a health monitor from a pool."
-                            category="Monitor"
-                            size="sm"
-                            onOpen={() => setIsDeleteHealthMonitorOpen(true)}
-                          />
-                        </div>
-                      </VStack>
-
-                      {/* Firewall & Tenant Actions */}
-                      <VStack gap={2}>
-                        <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Firewall & Tenant Actions{' '}
-                        </h2>
-                        <div className="flex flex-col gap-2">
-                          <ModalListItem
-                            title="Delete Firewall Policy"
-                            description="Permanently delete a single firewall policy."
-                            category="FWPolicy"
-                            size="sm"
-                            onOpen={() => setIsDeleteFirewallPolicyOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Firewall Policies"
-                            description="Permanently delete multiple firewall policies."
-                            category="FWPolicies"
-                            size="md"
-                            onOpen={() => setIsDeleteFirewallPoliciesOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Firewall Rule"
-                            description="Permanently delete a single firewall rule."
-                            category="FWRule"
-                            size="sm"
-                            onOpen={() => setIsDeleteFirewallRuleOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Firewall Rules"
-                            description="Permanently delete multiple firewall rules."
-                            category="FWRules"
-                            size="md"
-                            onOpen={() => setIsDeleteFirewallRulesOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Tenant"
-                            description="Permanently delete a single tenant."
-                            category="Tenant"
-                            size="sm"
-                            onOpen={() => setIsDeleteTenantOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Tenants"
-                            description="Permanently delete multiple tenants."
-                            category="Tenants"
-                            size="sm"
-                            onOpen={() => setIsDeleteTenantsOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Metadata"
-                            description="Remove a single metadata entry."
-                            category="Metadata"
-                            size="sm"
-                            onOpen={() => setIsDeleteMetadataOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Delete Metadatas"
-                            description="Remove multiple metadata entries."
-                            category="Metadatas"
-                            size="md"
-                            onOpen={() => setIsDeleteMetadatasOpen(true)}
-                          />
-                          <ModalListItem
-                            title="Manage Member"
-                            description="Redirect to IAM to manage users and groups."
-                            category="IAM"
-                            size="sm"
-                            onOpen={() => setIsManageMemberOpen(true)}
-                          />
-                        </div>
-                      </VStack>
                     </VStack>
-                  </Disclosure.Panel>
-                </Disclosure>
 
-                {/* AI Agent Modals */}
-                <Disclosure open={isAIAgentOpen} onChange={setIsAIAgentOpen}>
-                  <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
-                    <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
-                      <div className="flex items-center gap-3">
-                        {isAIAgentOpen ? (
-                          <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
-                        ) : (
-                          <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
-                        )}
-                        <Badge variant="info" size="sm" className="w-[70px] justify-center">
-                          AI Agent </Badge>
-                        <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
-                          Modals </span>
-                        <span className="text-body-md text-[var(--color-text-subtle)]">
-                          (1 modal)
-                        </span>
+                    {/* Load balancers */}
+                    <VStack gap={2}>
+                      <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                        Load balancers{' '}
+                      </h2>
+                      <div className="flex flex-col gap-2">
+                        <ModalListItem
+                          title="Delete Load balancer"
+                          description="Delete a single load balancer with warning about associated resources."
+                          category="Network"
+                          size="sm"
+                          onOpen={() => setIsDeleteLoadBalancerOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Release Load balancers"
+                          description="Delete multiple load balancers with scrollable list and warning."
+                          category="Network"
+                          size="md"
+                          onOpen={() => setIsDeleteLoadBalancersMultipleOpen(true)}
+                        />
                       </div>
-                    </div>
-                  </Disclosure.Trigger>
-                  <Disclosure.Panel>
-                    <VStack gap={4} className="pt-4">
-                      {/* Agent Actions */}
-                      <VStack gap={2}>
-                        <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Agent Actions </h2>
-                        <div className="flex flex-col gap-2">
-                          <ModalListItem
-                            title="Delete Agent Source"
-                            description="Confirm deletion of an agent source with warning."
-                            category="Agent"
-                            size="sm"
-                            onOpen={() => setIsDeleteAgentSourceOpen(true)}
-                          />
-                        </div>
-                      </VStack>
                     </VStack>
-                  </Disclosure.Panel>
+                  </VStack>
+                </Disclosure.Panel>
+              </Disclosure>
+
+              {/* IAM App Modals */}
+              <Disclosure open={isIAMOpen} onChange={setIsIAMOpen}>
+                <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
+                  <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
+                    <div className="flex items-center gap-3">
+                      {isIAMOpen ? (
+                        <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
+                      ) : (
+                        <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
+                      )}
+                      <Badge variant="info" size="sm" className="w-[70px] justify-center">
+                        IAM{' '}
+                      </Badge>
+                      <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
+                        Modals{' '}
+                      </span>
+                      <span className="text-body-md text-[var(--color-text-subtle)]">
+                        (29 modals)
+                      </span>
+                    </div>
+                  </div>
+                </Disclosure.Trigger>
+                <Disclosure.Panel>
+                  <VStack gap={4} className="pt-4">
+                    {/* User Management Modals */}
+                    <VStack gap={2}>
+                      <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                        User Management{' '}
+                      </h2>
+                      <div className="flex flex-col gap-2">
+                        <ModalListItem
+                          title="Delete user"
+                          description="Confirm deletion of a user with warning about permanent action."
+                          category="User"
+                          size="sm"
+                          onOpen={() => setIsDeleteUserOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete users (Multiple)"
+                          description="Delete multiple users with lists of deletable and non-deletable users."
+                          category="User"
+                          size="md"
+                          onOpen={() => setIsDeleteUsersMultipleOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Confirm user password"
+                          description="Display username and password credentials with copy functionality."
+                          category="User"
+                          size="sm"
+                          onOpen={() => setIsConfirmUserPasswordOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Detach user group"
+                          description="Confirm detaching a user from a user group with warning about permission removal."
+                          category="User"
+                          size="sm"
+                          onOpen={() => setIsDetachUserGroupOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Detach role"
+                          description="Confirm detaching a role from a user with warning about permission removal."
+                          category="User"
+                          size="sm"
+                          onOpen={() => setIsDetachRoleOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Remove OTP MFA"
+                          description="Confirm removing OTP MFA for a user with warning about re-registration."
+                          category="User"
+                          size="sm"
+                          onOpen={() => setIsRemoveOtpMfaOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Terminate all sessions"
+                          description="Confirm terminating all sessions for a user with warning about sign-out."
+                          category="User"
+                          size="sm"
+                          onOpen={() => setIsTerminateAllSessionsOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Terminate session"
+                          description="Confirm terminating a single session with warning about sign-out from device."
+                          category="User"
+                          size="sm"
+                          onOpen={() => setIsTerminateSessionOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Remove user from group"
+                          description="Confirm removing a user from a group with warning about permission removal."
+                          category="User"
+                          size="sm"
+                          onOpen={() => setIsRemoveUserFromGroupOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete role"
+                          description="Confirm deleting a role with warning about permission removal."
+                          category="Role"
+                          size="sm"
+                          onOpen={() => setIsDeleteRoleOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete roles (Multiple)"
+                          description="Confirm deleting multiple roles with lists of deletable and non-deletable roles."
+                          category="Role"
+                          size="md"
+                          onOpen={() => setIsDeleteRolesMultipleOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Detach policy"
+                          description="Confirm detaching a policy from a role with warning about permission revocation."
+                          category="Role"
+                          size="sm"
+                          onOpen={() => setIsDetachPolicyOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete policy"
+                          description="Confirm deleting a policy with warning about permanent removal and access loss."
+                          category="Policy"
+                          size="sm"
+                          onOpen={() => setIsDeletePolicyOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete policies (Multiple)"
+                          description="Confirm deleting multiple policies with lists of deletable/non-deletable policies."
+                          category="Policy"
+                          size="md"
+                          onOpen={() => setIsDeletePoliciesMultipleOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Revert policy version"
+                          description="Confirm reverting a policy to a previous version with warning about permission changes."
+                          category="Policy"
+                          size="sm"
+                          onOpen={() => setIsRevertPolicyVersionOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete policy version"
+                          description="Confirm deleting a specific policy version with warning about permanent removal."
+                          category="Policy"
+                          size="sm"
+                          onOpen={() => setIsDeletePolicyVersionOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Update MFA enforcement policy"
+                          description="Confirm applying MFA enforcement policy changes with warning about authentication impact."
+                          category="Security"
+                          size="sm"
+                          onOpen={() => setIsUpdateMfaEnforcementOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Update OTP policy"
+                          description="Confirm applying OTP policy changes with warning about MFA method availability."
+                          category="Security"
+                          size="sm"
+                          onOpen={() => setIsUpdateOtpPolicyOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Update OTP policy settings"
+                          description="Confirm applying OTP policy settings changes without warning alert."
+                          category="Security"
+                          size="sm"
+                          onOpen={() => setIsUpdateOtpPolicySettingsOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Update email policy"
+                          description="Confirm applying email policy changes with warning about MFA method availability."
+                          category="Security"
+                          size="sm"
+                          onOpen={() => setIsUpdateEmailPolicyOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Update email policy settings"
+                          description="Confirm applying email policy settings changes without warning alert."
+                          category="Security"
+                          size="sm"
+                          onOpen={() => setIsUpdateEmailPolicySettingsOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Update general session policy"
+                          description="Confirm applying session policy changes for timeout and lifespan settings."
+                          category="Security"
+                          size="sm"
+                          onOpen={() => setIsUpdateGeneralSessionPolicyOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete domain"
+                          description="Permanently delete a domain and all its configurations."
+                          category="Security"
+                          size="sm"
+                          onOpen={() => setIsDeleteDomainOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Switch to domain"
+                          description="Confirm switching to a different domain with unsaved changes warning."
+                          category="Security"
+                          size="sm"
+                          onOpen={() => setIsSwitchToDomainOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete system administrator"
+                          description="Permanently delete a system administrator and their global access."
+                          category="Security"
+                          size="sm"
+                          onOpen={() => setIsDeleteSystemAdminOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Update password policy"
+                          description="Confirm applying password policy changes for length, requirements, and expiration."
+                          category="Security"
+                          size="sm"
+                          onOpen={() => setIsUpdatePasswordPolicyOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Update account lockout policy"
+                          description="Confirm applying account lockout policy changes for lockout type settings."
+                          category="Security"
+                          size="sm"
+                          onOpen={() => setIsUpdateAccountLockoutPolicyOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Update token policy"
+                          description="Confirm applying token policy changes for access and refresh token lifespan."
+                          category="Security"
+                          size="sm"
+                          onOpen={() => setIsUpdateTokenPolicyOpen(true)}
+                        />
+                      </div>
+                    </VStack>
+
+                    {/* General Modals */}
+                    <VStack gap={2}>
+                      <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                        General{' '}
+                      </h2>
+                      <div className="flex flex-col gap-2">
+                        <ModalListItem
+                          title="Unsaved changes"
+                          description="Confirm leaving page with unsaved changes."
+                          category="Navigation"
+                          size="sm"
+                          onOpen={() => setIsUnsavedChangesOpen(true)}
+                        />
+                      </div>
+                    </VStack>
+                  </VStack>
+                </Disclosure.Panel>
+              </Disclosure>
+
+              {/* Container App Modals - Placeholder for future */}
+              <Disclosure open={isContainerOpen} onChange={setIsContainerOpen}>
+                <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
+                  <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
+                    <div className="flex items-center gap-3">
+                      {isContainerOpen ? (
+                        <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
+                      ) : (
+                        <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
+                      )}
+                      <Badge variant="info" size="sm" className="w-[70px] justify-center">
+                        Container{' '}
+                      </Badge>
+                      <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
+                        Modals{' '}
+                      </span>
+                      <span className="text-body-md text-[var(--color-text-subtle)]">
+                        (12 modals)
+                      </span>
+                    </div>
+                  </div>
+                </Disclosure.Trigger>
+                <Disclosure.Panel>
+                  <VStack gap={4} className="pt-4">
+                    {/* Cluster Actions */}
+                    <VStack gap={2}>
+                      <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                        Cluster Actions{' '}
+                      </h2>
+                      <div className="flex flex-col gap-2">
+                        <ModalListItem
+                          title="Delete Cluster"
+                          description="Confirm deletion of a Kubernetes cluster."
+                          category="Cluster"
+                          size="sm"
+                          onOpen={() => setIsDeleteClusterOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Namespace"
+                          description="Confirm deletion of a Kubernetes namespace."
+                          category="Namespace"
+                          size="sm"
+                          onOpen={() => setIsDeleteNamespaceOpen(true)}
+                        />
+                      </div>
+                    </VStack>
+
+                    {/* Workload Actions */}
+                    <VStack gap={2}>
+                      <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                        Workload Actions{' '}
+                      </h2>
+                      <div className="flex flex-col gap-2">
+                        <ModalListItem
+                          title="Delete Pod"
+                          description="Confirm deletion of a Kubernetes pod."
+                          category="Pod"
+                          size="sm"
+                          onOpen={() => setIsDeletePodOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Deployment"
+                          description="Confirm deletion of a Kubernetes deployment."
+                          category="Deployment"
+                          size="sm"
+                          onOpen={() => setIsDeleteDeploymentOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Redeploy Deployment"
+                          description="Redeploy a Kubernetes deployment with warning about downtime."
+                          category="Deployment"
+                          size="sm"
+                          onOpen={() => setIsRedeployDeploymentOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Roll Back Deployment"
+                          description="Roll back a Kubernetes deployment to a previous revision."
+                          category="Deployment"
+                          size="sm"
+                          onOpen={() => setIsRollBackDeploymentOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete StatefulSet"
+                          description="Confirm deletion of a Kubernetes stateful set."
+                          category="StatefulSet"
+                          size="sm"
+                          onOpen={() => setIsDeleteStatefulSetOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Redeploy StatefulSet"
+                          description="Redeploy a Kubernetes stateful set with warning about downtime."
+                          category="StatefulSet"
+                          size="sm"
+                          onOpen={() => setIsRedeployStatefulSetOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete DaemonSet"
+                          description="Confirm deletion of a Kubernetes daemon set."
+                          category="DaemonSet"
+                          size="sm"
+                          onOpen={() => setIsDeleteDaemonSetOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Redeploy DaemonSet"
+                          description="Redeploy a Kubernetes daemon set with warning about downtime."
+                          category="DaemonSet"
+                          size="sm"
+                          onOpen={() => setIsRedeployDaemonSetOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Job"
+                          description="Confirm deletion of a Kubernetes job."
+                          category="Job"
+                          size="sm"
+                          onOpen={() => setIsDeleteJobOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete CronJob"
+                          description="Confirm deletion of a Kubernetes cron job."
+                          category="CronJob"
+                          size="sm"
+                          onOpen={() => setIsDeleteCronJobOpen(true)}
+                        />
+                      </div>
+                    </VStack>
+                  </VStack>
+                </Disclosure.Panel>
+              </Disclosure>
+
+              {/* Storage App Modals */}
+              <Disclosure open={isStorageOpen} onChange={setIsStorageOpen}>
+                <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
+                  <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
+                    <div className="flex items-center gap-3">
+                      {isStorageOpen ? (
+                        <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
+                      ) : (
+                        <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
+                      )}
+                      <Badge variant="info" size="sm" className="w-[70px] justify-center">
+                        Storage{' '}
+                      </Badge>
+                      <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
+                        Modals{' '}
+                      </span>
+                      <span className="text-body-md text-[var(--color-text-subtle)]">
+                        (1 modal)
+                      </span>
+                    </div>
+                  </div>
+                </Disclosure.Trigger>
+                <Disclosure.Panel>
+                  <VStack gap={4} className="pt-4">
+                    {/* Delete Modals */}
+                    <VStack gap={2}>
+                      <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                        Delete Modals{' '}
+                      </h2>
+                      <div className="flex flex-col gap-2">
+                        <ModalListItem
+                          title="Delete Bucket"
+                          description="Confirm deletion of a non-empty bucket with warning about permanent data loss."
+                          category="Bucket"
+                          size="sm"
+                          onOpen={() => setIsDeleteBucketOpen(true)}
+                        />
+                      </div>
+                    </VStack>
+                  </VStack>
+                </Disclosure.Panel>
+              </Disclosure>
+
+              {/* Compute Admin Modals */}
+              <Disclosure open={isComputeAdminOpen} onChange={setIsComputeAdminOpen}>
+                <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
+                  <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
+                    <div className="flex items-center gap-3">
+                      {isComputeAdminOpen ? (
+                        <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
+                      ) : (
+                        <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
+                      )}
+                      <Badge variant="info" size="sm" className="w-[100px] justify-center">
+                        Compute Admin{' '}
+                      </Badge>
+                      <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
+                        Modals{' '}
+                      </span>
+                      <span className="text-body-md text-[var(--color-text-subtle)]">
+                        (71 modals)
+                      </span>
+                    </div>
+                  </div>
+                </Disclosure.Trigger>
+                <Disclosure.Panel>
+                  <VStack gap={4} className="pt-4">
+                    {/* Single Instance Actions */}
+                    <VStack gap={2}>
+                      <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                        Single Instance Actions{' '}
+                      </h2>
+                      <div className="flex flex-col gap-2">
+                        <ModalListItem
+                          title="Stop Instance"
+                          description="Stop a single instance with warning about service interruption."
+                          category="Instance"
+                          size="sm"
+                          onOpen={() => setIsStopInstanceOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Reboot Instance"
+                          description="Reboot a single instance with warning about service interruption."
+                          category="Instance"
+                          size="sm"
+                          onOpen={() => setIsRebootInstanceOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Soft Reboot Instance"
+                          description="Perform a soft reboot of a single instance."
+                          category="Instance"
+                          size="sm"
+                          onOpen={() => setIsSoftRebootInstanceOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Confirm Resize"
+                          description="Confirm the resized state of an instance."
+                          category="Instance"
+                          size="sm"
+                          onOpen={() => setIsConfirmResizeOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Revert Resize"
+                          description="Revert an instance to its previous state before resize."
+                          category="Instance"
+                          size="sm"
+                          onOpen={() => setIsRevertResizeOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Instance"
+                          description="Permanently delete a single instance."
+                          category="Instance"
+                          size="sm"
+                          onOpen={() => setIsDeleteInstanceOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Shelve Instance"
+                          description="Shelve a single instance with warning about service interruption."
+                          category="Instance"
+                          size="sm"
+                          onOpen={() => setIsShelveInstanceOpen(true)}
+                        />
+                      </div>
+                    </VStack>
+
+                    {/* Multiple Instances Actions */}
+                    <VStack gap={2}>
+                      <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                        Multiple Instances Actions{' '}
+                      </h2>
+                      <div className="flex flex-col gap-2">
+                        <ModalListItem
+                          title="Start Instances"
+                          description="Start multiple selected instances with eligibility check."
+                          category="Instances"
+                          size="md"
+                          onOpen={() => setIsStartInstancesOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Stop Instances"
+                          description="Stop multiple selected instances with eligibility check."
+                          category="Instances"
+                          size="md"
+                          onOpen={() => setIsStopInstancesOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Reboot Instances"
+                          description="Reboot multiple selected instances with eligibility check."
+                          category="Instances"
+                          size="md"
+                          onOpen={() => setIsRebootInstancesOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Instances"
+                          description="Permanently delete multiple selected instances with eligibility check."
+                          category="Instances"
+                          size="md"
+                          onOpen={() => setIsDeleteInstancesOpen(true)}
+                        />
+                      </div>
+                    </VStack>
+
+                    {/* Resource Delete Actions */}
+                    <VStack gap={2}>
+                      <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                        Resource Delete Actions{' '}
+                      </h2>
+                      <div className="flex flex-col gap-2">
+                        <ModalListItem
+                          title="Delete Instance Template"
+                          description="Permanently delete a single instance template."
+                          category="Template"
+                          size="sm"
+                          onOpen={() => setIsDeleteInstanceTemplateOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Instance Templates"
+                          description="Permanently delete multiple instance templates."
+                          category="Templates"
+                          size="md"
+                          onOpen={() => setIsDeleteInstanceTemplatesOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Image"
+                          description="Permanently delete a single image."
+                          category="Image"
+                          size="sm"
+                          onOpen={() => setIsDeleteImageOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Images"
+                          description="Permanently delete multiple images with eligibility check."
+                          category="Images"
+                          size="md"
+                          onOpen={() => setIsDeleteImagesOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Snapshot"
+                          description="Permanently delete a single snapshot."
+                          category="Snapshot"
+                          size="sm"
+                          onOpen={() => setIsDeleteSnapshotOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Snapshots"
+                          description="Permanently delete multiple snapshots with eligibility check."
+                          category="Snapshots"
+                          size="md"
+                          onOpen={() => setIsDeleteSnapshotsOpen(true)}
+                        />
+                      </div>
+                    </VStack>
+
+                    {/* Storage Delete Actions */}
+                    <VStack gap={2}>
+                      <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                        Storage Delete Actions{' '}
+                      </h2>
+                      <div className="flex flex-col gap-2">
+                        <ModalListItem
+                          title="Delete Volume"
+                          description="Permanently delete a single volume."
+                          category="Volume"
+                          size="sm"
+                          onOpen={() => setIsDeleteVolumeOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Volumes"
+                          description="Permanently delete multiple volumes with eligibility check."
+                          category="Volumes"
+                          size="md"
+                          onOpen={() => setIsDeleteVolumesOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Volume Type"
+                          description="Permanently delete a single volume type."
+                          category="VolumeType"
+                          size="sm"
+                          onOpen={() => setIsDeleteVolumeTypeOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Volume Types"
+                          description="Permanently delete multiple volume types."
+                          category="VolumeTypes"
+                          size="sm"
+                          onOpen={() => setIsDeleteVolumeTypesOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Backup"
+                          description="Permanently delete a single backup."
+                          category="Backup"
+                          size="sm"
+                          onOpen={() => setIsDeleteBackupOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Backups"
+                          description="Permanently delete multiple backups with eligibility check."
+                          category="Backups"
+                          size="md"
+                          onOpen={() => setIsDeleteBackupsOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Encryption"
+                          description="Remove encryption configuration from a volume type."
+                          category="Encryption"
+                          size="sm"
+                          onOpen={() => setIsDeleteEncryptionOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Extra Spec"
+                          description="Remove extra specification from a volume type."
+                          category="ExtraSpec"
+                          size="sm"
+                          onOpen={() => setIsDeleteExtraSpecOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Extra Specs"
+                          description="Remove multiple extra specifications from a volume type."
+                          category="ExtraSpecs"
+                          size="sm"
+                          onOpen={() => setIsDeleteExtraSpecsOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete QoS Spec"
+                          description="Permanently delete a single QoS specification."
+                          category="QoSSpec"
+                          size="sm"
+                          onOpen={() => setIsDeleteQoSSpecOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete QoS Specs"
+                          description="Permanently delete multiple QoS specifications."
+                          category="QoSSpecs"
+                          size="sm"
+                          onOpen={() => setIsDeleteQoSSpecsOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete QoS Extra Spec"
+                          description="Remove extra specification from a QoS spec."
+                          category="QoSExtra"
+                          size="sm"
+                          onOpen={() => setIsDeleteQoSExtraSpecOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete QoS Extra Specs"
+                          description="Remove multiple extra specifications from a QoS spec."
+                          category="QoSExtras"
+                          size="sm"
+                          onOpen={() => setIsDeleteQoSExtraSpecsOpen(true)}
+                        />
+                      </div>
+                    </VStack>
+
+                    {/* Network Delete Actions */}
+                    <VStack gap={2}>
+                      <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                        Network Delete Actions{' '}
+                      </h2>
+                      <div className="flex flex-col gap-2">
+                        <ModalListItem
+                          title="Delete Network"
+                          description="Permanently delete a single network with warning."
+                          category="Network"
+                          size="sm"
+                          onOpen={() => setIsDeleteNetworkOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Networks"
+                          description="Permanently delete multiple networks with eligibility check."
+                          category="Networks"
+                          size="md"
+                          onOpen={() => setIsDeleteNetworksOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Subnet"
+                          description="Permanently delete a single subnet with warning."
+                          category="Subnet"
+                          size="sm"
+                          onOpen={() => setIsDeleteSubnetOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Subnets"
+                          description="Permanently delete multiple subnets."
+                          category="Subnets"
+                          size="sm"
+                          onOpen={() => setIsDeleteSubnetsOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Port"
+                          description="Permanently delete a single port with warning."
+                          category="Port"
+                          size="sm"
+                          onOpen={() => setIsDeletePortOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Ports"
+                          description="Permanently delete multiple ports with warning."
+                          category="Ports"
+                          size="sm"
+                          onOpen={() => setIsDeletePortsOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Router"
+                          description="Permanently delete a single router with warning."
+                          category="Router"
+                          size="sm"
+                          onOpen={() => setIsDeleteRouterOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Routers"
+                          description="Permanently delete multiple routers with eligibility check."
+                          category="Routers"
+                          size="md"
+                          onOpen={() => setIsDeleteRoutersOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Static Routes"
+                          description="Permanently delete multiple static routes."
+                          category="Routes"
+                          size="sm"
+                          onOpen={() => setIsDeleteStaticRoutesOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Remove DHCP Agents"
+                          description="Remove DHCP agents from a network."
+                          category="DHCP"
+                          size="sm"
+                          onOpen={() => setIsRemoveDHCPAgentsOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Release Fixed IP"
+                          description="Release a fixed IP address from a port."
+                          category="IP"
+                          size="sm"
+                          onOpen={() => setIsReleaseFixedIPOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Allowed Address Pair"
+                          description="Remove an allowed address pair from a port."
+                          category="Address"
+                          size="sm"
+                          onOpen={() => setIsDeleteAllowedAddressPairOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Security Group"
+                          description="Permanently delete a single security group."
+                          category="SecGroup"
+                          size="sm"
+                          onOpen={() => setIsDeleteSecurityGroupAdminOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Security Groups"
+                          description="Permanently delete multiple security groups."
+                          category="SecGroups"
+                          size="md"
+                          onOpen={() => setIsDeleteSecurityGroupsAdminOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Firewall"
+                          description="Permanently delete a single firewall."
+                          category="Firewall"
+                          size="sm"
+                          onOpen={() => setIsDeleteFirewallOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Firewalls"
+                          description="Permanently delete multiple firewalls."
+                          category="Firewalls"
+                          size="md"
+                          onOpen={() => setIsDeleteFirewallsOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Unsaved Changes"
+                          description="Confirm leaving with unsaved changes."
+                          category="Confirm"
+                          size="sm"
+                          onOpen={() => setIsUnsavedChangesAdminOpen(true)}
+                        />
+                      </div>
+                    </VStack>
+
+                    {/* Load Balancer & Security Actions */}
+                    <VStack gap={2}>
+                      <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                        Load Balancer & Security Actions{' '}
+                      </h2>
+                      <div className="flex flex-col gap-2">
+                        <ModalListItem
+                          title="Disassociate Floating IP"
+                          description="Disassociate a floating IP from a resource."
+                          category="FloatingIP"
+                          size="sm"
+                          onOpen={() => setIsDisassociateFloatingIPOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Release Floating IP"
+                          description="Release a single floating IP address."
+                          category="FloatingIP"
+                          size="sm"
+                          onOpen={() => setIsReleaseFloatingIPOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Release Floating IPs"
+                          description="Release multiple floating IP addresses."
+                          category="FloatingIPs"
+                          size="sm"
+                          onOpen={() => setIsReleaseFloatingIPsOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Load Balancer"
+                          description="Permanently delete a single load balancer."
+                          category="LB"
+                          size="sm"
+                          onOpen={() => setIsDeleteLoadBalancerAdminOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Load Balancers"
+                          description="Permanently delete multiple load balancers."
+                          category="LBs"
+                          size="md"
+                          onOpen={() => setIsDeleteLoadBalancersAdminOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Listener"
+                          description="Permanently delete a single listener."
+                          category="Listener"
+                          size="sm"
+                          onOpen={() => setIsDeleteListenerOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Listeners"
+                          description="Permanently delete multiple listeners."
+                          category="Listeners"
+                          size="md"
+                          onOpen={() => setIsDeleteListenersOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Pool"
+                          description="Permanently delete a single pool."
+                          category="Pool"
+                          size="sm"
+                          onOpen={() => setIsDeletePoolOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Pools"
+                          description="Permanently delete multiple pools."
+                          category="Pools"
+                          size="md"
+                          onOpen={() => setIsDeletePoolsOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Member"
+                          description="Remove a single member from a pool."
+                          category="Member"
+                          size="sm"
+                          onOpen={() => setIsDeleteMemberOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Members"
+                          description="Remove multiple members from a pool."
+                          category="Members"
+                          size="md"
+                          onOpen={() => setIsDeleteMembersOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Security Group Rule"
+                          description="Permanently delete a single security group rule."
+                          category="Rule"
+                          size="sm"
+                          onOpen={() => setIsDeleteSecurityGroupRuleOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Security Group Rules"
+                          description="Permanently delete multiple security group rules."
+                          category="Rules"
+                          size="md"
+                          onOpen={() => setIsDeleteSecurityGroupRulesOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete L7 Policy"
+                          description="Permanently delete a single L7 policy."
+                          category="L7Policy"
+                          size="sm"
+                          onOpen={() => setIsDeleteL7PolicyOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete L7 Policies"
+                          description="Permanently delete multiple L7 policies."
+                          category="L7Policies"
+                          size="md"
+                          onOpen={() => setIsDeleteL7PoliciesOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Health Monitor"
+                          description="Permanently delete a health monitor from a pool."
+                          category="Monitor"
+                          size="sm"
+                          onOpen={() => setIsDeleteHealthMonitorOpen(true)}
+                        />
+                      </div>
+                    </VStack>
+
+                    {/* Firewall & Tenant Actions */}
+                    <VStack gap={2}>
+                      <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                        Firewall & Tenant Actions{' '}
+                      </h2>
+                      <div className="flex flex-col gap-2">
+                        <ModalListItem
+                          title="Delete Firewall Policy"
+                          description="Permanently delete a single firewall policy."
+                          category="FWPolicy"
+                          size="sm"
+                          onOpen={() => setIsDeleteFirewallPolicyOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Firewall Policies"
+                          description="Permanently delete multiple firewall policies."
+                          category="FWPolicies"
+                          size="md"
+                          onOpen={() => setIsDeleteFirewallPoliciesOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Firewall Rule"
+                          description="Permanently delete a single firewall rule."
+                          category="FWRule"
+                          size="sm"
+                          onOpen={() => setIsDeleteFirewallRuleOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Firewall Rules"
+                          description="Permanently delete multiple firewall rules."
+                          category="FWRules"
+                          size="md"
+                          onOpen={() => setIsDeleteFirewallRulesOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Tenant"
+                          description="Permanently delete a single tenant."
+                          category="Tenant"
+                          size="sm"
+                          onOpen={() => setIsDeleteTenantOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Tenants"
+                          description="Permanently delete multiple tenants."
+                          category="Tenants"
+                          size="sm"
+                          onOpen={() => setIsDeleteTenantsOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Metadata"
+                          description="Remove a single metadata entry."
+                          category="Metadata"
+                          size="sm"
+                          onOpen={() => setIsDeleteMetadataOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Delete Metadatas"
+                          description="Remove multiple metadata entries."
+                          category="Metadatas"
+                          size="md"
+                          onOpen={() => setIsDeleteMetadatasOpen(true)}
+                        />
+                        <ModalListItem
+                          title="Manage Member"
+                          description="Redirect to IAM to manage users and groups."
+                          category="IAM"
+                          size="sm"
+                          onOpen={() => setIsManageMemberOpen(true)}
+                        />
+                      </div>
+                    </VStack>
+                  </VStack>
+                </Disclosure.Panel>
+              </Disclosure>
+
+              {/* AI Agent Modals */}
+              <Disclosure open={isAIAgentOpen} onChange={setIsAIAgentOpen}>
+                <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
+                  <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
+                    <div className="flex items-center gap-3">
+                      {isAIAgentOpen ? (
+                        <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
+                      ) : (
+                        <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
+                      )}
+                      <Badge variant="info" size="sm" className="w-[70px] justify-center">
+                        AI Agent{' '}
+                      </Badge>
+                      <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
+                        Modals{' '}
+                      </span>
+                      <span className="text-body-md text-[var(--color-text-subtle)]">
+                        (1 modal)
+                      </span>
+                    </div>
+                  </div>
+                </Disclosure.Trigger>
+                <Disclosure.Panel>
+                  <VStack gap={4} className="pt-4">
+                    {/* Agent Actions */}
+                    <VStack gap={2}>
+                      <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                        Agent Actions{' '}
+                      </h2>
+                      <div className="flex flex-col gap-2">
+                        <ModalListItem
+                          title="Delete Agent Source"
+                          description="Confirm deletion of an agent source with warning."
+                          category="Agent"
+                          size="sm"
+                          onOpen={() => setIsDeleteAgentSourceOpen(true)}
+                        />
+                      </div>
+                    </VStack>
+                  </VStack>
+                </Disclosure.Panel>
               </Disclosure>
             </VStack>
           </VStack>

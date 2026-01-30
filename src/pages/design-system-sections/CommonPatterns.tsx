@@ -8,15 +8,12 @@ import {
   Table,
   Pagination,
   Toggle,
-  Checkbox,
   Radio,
   RadioGroup,
   Tabs,
   TabList,
   Tab,
   TabPanel,
-  Badge,
-  Breadcrumb,
   StatusIndicator,
   VStack,
   HStack,
@@ -27,7 +24,6 @@ import {
   SelectionIndicator,
   Modal,
   Drawer,
-  InlineMessage,
   ListToolbar,
   ContextMenu,
   fixedColumns,
@@ -64,10 +60,15 @@ export function ListPagePatternDemo() {
   // Filter fields configuration
   const filterFields: FilterField[] = [
     { id: 'name', label: 'Name', type: 'text' },
-    { id: 'status', label: 'Status', type: 'select', options: [
-      { value: 'active', label: 'Active' },
-      { value: 'error', label: 'Error' },
-    ]},
+    {
+      id: 'status',
+      label: 'Status',
+      type: 'select',
+      options: [
+        { value: 'active', label: 'Active' },
+        { value: 'error', label: 'Error' },
+      ],
+    },
   ];
 
   const columns = [
@@ -77,7 +78,10 @@ export function ListPagePatternDemo() {
       width: fixedColumns.status,
       align: 'center' as const,
       render: (_: string, row: { status: string }) => (
-        <StatusIndicator status={row.status as 'active' | 'error' | 'building'} layout="icon-only" />
+        <StatusIndicator
+          status={row.status as 'active' | 'error' | 'building'}
+          layout="icon-only"
+        />
       ),
     },
     { key: 'name', label: 'Name', flex: 1, minWidth: columnMinWidths.name },
@@ -102,9 +106,7 @@ export function ListPagePatternDemo() {
     <VStack gap={3} className="w-full">
       {/* Page Header */}
       <div className="flex items-center justify-between h-8">
-        <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-          Instances
-        </h1>
+        <h1 className="text-heading-h5 text-[var(--color-text-default)]">Instances</h1>
         <Button size="md">Create Instance</Button>
       </div>
 
@@ -321,18 +323,12 @@ export function FormDrawerPatternDemo() {
         }
       >
         <VStack gap={6}>
-          <h2 className="text-heading-h5 text-[var(--color-text-default)]">
-            Edit Instance
-          </h2>
+          <h2 className="text-heading-h5 text-[var(--color-text-default)]">Edit Instance</h2>
 
           {/* Info Box Pattern */}
           <div className="w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg">
-            <div className="text-label-sm text-[var(--color-text-subtle)] mb-1.5">
-              Instance ID
-            </div>
-            <div className="text-body-md text-[var(--color-text-default)]">
-              i-1234567890abcdef0
-            </div>
+            <div className="text-label-sm text-[var(--color-text-subtle)] mb-1.5">Instance ID</div>
+            <div className="text-body-md text-[var(--color-text-default)]">i-1234567890abcdef0</div>
           </div>
 
           {/* Form Fields */}
@@ -358,9 +354,7 @@ export function FormDrawerPatternDemo() {
                 fullWidth
               />
             </FormField.Control>
-            <FormField.HelperText>
-              Optional description for this instance
-            </FormField.HelperText>
+            <FormField.HelperText>Optional description for this instance</FormField.HelperText>
           </FormField>
         </VStack>
       </Drawer>
@@ -413,9 +407,7 @@ export function SelectionDrawerPatternDemo() {
         }
       >
         <VStack gap={4}>
-          <h2 className="text-heading-h5 text-[var(--color-text-default)]">
-            Select Network
-          </h2>
+          <h2 className="text-heading-h5 text-[var(--color-text-default)]">Select Network</h2>
 
           <SearchInput
             value={searchQuery}
@@ -439,9 +431,15 @@ export function SelectionDrawerPatternDemo() {
               <thead>
                 <tr className="bg-[var(--color-surface-subtle)] border-b border-[var(--color-border-default)]">
                   <th className="w-10 p-3"></th>
-                  <th className="text-left p-3 text-label-sm text-[var(--color-text-muted)]">Status</th>
-                  <th className="text-left p-3 text-label-sm text-[var(--color-text-muted)]">Name</th>
-                  <th className="text-left p-3 text-label-sm text-[var(--color-text-muted)]">CIDR</th>
+                  <th className="text-left p-3 text-label-sm text-[var(--color-text-muted)]">
+                    Status
+                  </th>
+                  <th className="text-left p-3 text-label-sm text-[var(--color-text-muted)]">
+                    Name
+                  </th>
+                  <th className="text-left p-3 text-label-sm text-[var(--color-text-muted)]">
+                    CIDR
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -452,13 +450,23 @@ export function SelectionDrawerPatternDemo() {
                     onClick={() => setSelectedId(item.id)}
                   >
                     <td className="p-3">
-                      <Radio checked={selectedId === item.id} onChange={() => setSelectedId(item.id)} />
+                      <Radio
+                        checked={selectedId === item.id}
+                        onChange={() => setSelectedId(item.id)}
+                      />
                     </td>
                     <td className="p-3">
-                      <StatusIndicator status={item.status as 'active' | 'error'} layout="icon-only" />
+                      <StatusIndicator
+                        status={item.status as 'active' | 'error'}
+                        layout="icon-only"
+                      />
                     </td>
-                    <td className="p-3 text-body-md text-[var(--color-text-default)]">{item.name}</td>
-                    <td className="p-3 text-body-md text-[var(--color-text-default)]">{item.cidr}</td>
+                    <td className="p-3 text-body-md text-[var(--color-text-default)]">
+                      {item.name}
+                    </td>
+                    <td className="p-3 text-body-md text-[var(--color-text-default)]">
+                      {item.cidr}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -484,7 +492,9 @@ export function ConfirmationModalPatternDemo() {
 
   return (
     <>
-      <Button variant="danger" onClick={() => setIsOpen(true)}>Delete Instance</Button>
+      <Button variant="danger" onClick={() => setIsOpen(true)}>
+        Delete Instance
+      </Button>
 
       <Modal
         isOpen={isOpen}
@@ -495,9 +505,7 @@ export function ConfirmationModalPatternDemo() {
       >
         {/* Info Box */}
         <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-          <span className="text-label-sm text-[var(--color-text-subtle)]">
-            Instance name
-          </span>
+          <span className="text-label-sm text-[var(--color-text-subtle)]">Instance name</span>
           <span className="text-body-md text-[var(--color-text-default)]">
             instance-production-01
           </span>
@@ -527,7 +535,9 @@ export function WarningModalPatternDemo() {
 
   return (
     <>
-      <Button variant="secondary" onClick={() => setIsOpen(true)}>Reboot Instance</Button>
+      <Button variant="secondary" onClick={() => setIsOpen(true)}>
+        Reboot Instance
+      </Button>
 
       <Modal
         isOpen={isOpen}
@@ -539,9 +549,7 @@ export function WarningModalPatternDemo() {
         <VStack gap={3}>
           {/* Info Box */}
           <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-            <span className="text-label-sm text-[var(--color-text-subtle)]">
-              Instance name
-            </span>
+            <span className="text-label-sm text-[var(--color-text-subtle)]">Instance name</span>
             <span className="text-body-md text-[var(--color-text-default)]">
               instance-production-01
             </span>
@@ -601,9 +609,7 @@ export function FormFieldPatternDemo() {
             fullWidth
           />
         </FormField.Control>
-        <FormField.HelperText>
-          This will be displayed as the resource name
-        </FormField.HelperText>
+        <FormField.HelperText>This will be displayed as the resource name</FormField.HelperText>
       </FormField>
 
       {/* Error State */}
@@ -618,9 +624,7 @@ export function FormFieldPatternDemo() {
             fullWidth
           />
         </FormField.Control>
-        <FormField.ErrorMessage>
-          Please enter a valid email address
-        </FormField.ErrorMessage>
+        <FormField.ErrorMessage>Please enter a valid email address</FormField.ErrorMessage>
       </FormField>
 
       {/* Select Field */}
@@ -708,9 +712,7 @@ export function InfoBoxPatternDemo() {
     <VStack gap={4} className="w-full max-w-md">
       {/* Single Value */}
       <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-        <span className="text-label-sm text-[var(--color-text-subtle)]">
-          Instance Name
-        </span>
+        <span className="text-label-sm text-[var(--color-text-subtle)]">Instance Name</span>
         <span className="text-body-md text-[var(--color-text-default)]">
           instance-production-01
         </span>
@@ -821,19 +823,31 @@ export function ActionButtonPatternsDemo() {
     <VStack gap={6}>
       {/* Cancel / Submit Pattern */}
       <VStack gap={2} align="start">
-        <span className="text-label-sm text-[var(--color-text-muted)]">Cancel / Submit (Drawer Footer)</span>
+        <span className="text-label-sm text-[var(--color-text-muted)]">
+          Cancel / Submit (Drawer Footer)
+        </span>
         <HStack gap={2}>
-          <Button variant="secondary" className="flex-1 min-w-[120px]">Cancel</Button>
-          <Button variant="primary" className="flex-1 min-w-[120px]">Save</Button>
+          <Button variant="secondary" className="flex-1 min-w-[120px]">
+            Cancel
+          </Button>
+          <Button variant="primary" className="flex-1 min-w-[120px]">
+            Save
+          </Button>
         </HStack>
       </VStack>
 
       {/* Cancel / Danger Pattern */}
       <VStack gap={2} align="start">
-        <span className="text-label-sm text-[var(--color-text-muted)]">Cancel / Danger (Delete Modal)</span>
+        <span className="text-label-sm text-[var(--color-text-muted)]">
+          Cancel / Danger (Delete Modal)
+        </span>
         <HStack gap={2}>
-          <Button variant="secondary" className="flex-1 min-w-[120px]">Cancel</Button>
-          <Button variant="danger" className="flex-1 min-w-[120px]">Delete</Button>
+          <Button variant="secondary" className="flex-1 min-w-[120px]">
+            Cancel
+          </Button>
+          <Button variant="danger" className="flex-1 min-w-[120px]">
+            Delete
+          </Button>
         </HStack>
       </VStack>
 
@@ -841,17 +855,27 @@ export function ActionButtonPatternsDemo() {
       <VStack gap={2} align="start">
         <span className="text-label-sm text-[var(--color-text-muted)]">Toolbar Actions</span>
         <HStack gap={2}>
-          <Button variant="secondary" size="sm" disabled>Delete (0)</Button>
-          <Button variant="primary" size="sm" leftIcon={<IconPlus size={14} />}>Create</Button>
+          <Button variant="secondary" size="sm" disabled>
+            Delete (0)
+          </Button>
+          <Button variant="primary" size="sm" leftIcon={<IconPlus size={14} />}>
+            Create
+          </Button>
         </HStack>
       </VStack>
 
       {/* Edit Mode Actions */}
       <VStack gap={2} align="start">
-        <span className="text-label-sm text-[var(--color-text-muted)]">Edit Mode Actions (SectionCard Header)</span>
+        <span className="text-label-sm text-[var(--color-text-muted)]">
+          Edit Mode Actions (SectionCard Header)
+        </span>
         <HStack gap={2}>
-          <Button variant="secondary" size="sm">Cancel</Button>
-          <Button variant="primary" size="sm">Done</Button>
+          <Button variant="secondary" size="sm">
+            Cancel
+          </Button>
+          <Button variant="primary" size="sm">
+            Done
+          </Button>
         </HStack>
       </VStack>
     </VStack>
@@ -870,12 +894,13 @@ export function CommonPatternsSection() {
         <h3 className="text-heading-h4 text-[var(--color-text-default)]">
           1. Page Layout Patterns
         </h3>
-        
+
         <VStack gap={6}>
           <VStack gap={2}>
             <h4 className="text-heading-h5 text-[var(--color-text-default)]">List Page Pattern</h4>
             <p className="text-body-md text-[var(--color-text-muted)]">
-              리스트 페이지의 기본 구조입니다. Toolbar + Pagination + Table 조합으로 60개 이상의 페이지에서 사용됩니다.
+              리스트 페이지의 기본 구조입니다. Toolbar + Pagination + Table 조합으로 60개 이상의
+              페이지에서 사용됩니다.
             </p>
             <div className="p-4 border border-[var(--color-border-default)] rounded-lg">
               <ListPagePatternDemo />
@@ -883,9 +908,12 @@ export function CommonPatternsSection() {
           </VStack>
 
           <VStack gap={2}>
-            <h4 className="text-heading-h5 text-[var(--color-text-default)]">Detail Page Pattern</h4>
+            <h4 className="text-heading-h5 text-[var(--color-text-default)]">
+              Detail Page Pattern
+            </h4>
             <p className="text-body-md text-[var(--color-text-muted)]">
-              상세 페이지의 기본 구조입니다. DetailHeader + Tabs + SectionCards 조합으로 50개 이상의 페이지에서 사용됩니다.
+              상세 페이지의 기본 구조입니다. DetailHeader + Tabs + SectionCards 조합으로 50개 이상의
+              페이지에서 사용됩니다.
             </p>
             <div className="p-4 border border-[var(--color-border-default)] rounded-lg">
               <DetailPagePatternDemo />
@@ -896,9 +924,7 @@ export function CommonPatternsSection() {
 
       {/* Drawer Patterns */}
       <VStack gap={4}>
-        <h3 className="text-heading-h4 text-[var(--color-text-default)]">
-          2. Drawer Patterns
-        </h3>
+        <h3 className="text-heading-h4 text-[var(--color-text-default)]">2. Drawer Patterns</h3>
 
         <VStack gap={6}>
           <VStack gap={2}>
@@ -925,9 +951,7 @@ export function CommonPatternsSection() {
 
       {/* Modal Patterns */}
       <VStack gap={4}>
-        <h3 className="text-heading-h4 text-[var(--color-text-default)]">
-          3. Modal Patterns
-        </h3>
+        <h3 className="text-heading-h4 text-[var(--color-text-default)]">3. Modal Patterns</h3>
 
         <VStack gap={6}>
           <VStack gap={2}>
@@ -947,9 +971,7 @@ export function CommonPatternsSection() {
 
       {/* Form Patterns */}
       <VStack gap={4}>
-        <h3 className="text-heading-h4 text-[var(--color-text-default)]">
-          4. Form Patterns
-        </h3>
+        <h3 className="text-heading-h4 text-[var(--color-text-default)]">4. Form Patterns</h3>
 
         <VStack gap={6}>
           <VStack gap={2}>
@@ -963,7 +985,9 @@ export function CommonPatternsSection() {
           </VStack>
 
           <VStack gap={2}>
-            <h4 className="text-heading-h5 text-[var(--color-text-default)]">Toggle & RadioGroup</h4>
+            <h4 className="text-heading-h5 text-[var(--color-text-default)]">
+              Toggle & RadioGroup
+            </h4>
             <p className="text-body-md text-[var(--color-text-muted)]">
               Toggle + Label, RadioGroup 패턴입니다.
             </p>
@@ -995,7 +1019,9 @@ export function CommonPatternsSection() {
           </VStack>
 
           <VStack gap={2}>
-            <h4 className="text-heading-h5 text-[var(--color-text-default)]">SectionCard with Actions</h4>
+            <h4 className="text-heading-h5 text-[var(--color-text-default)]">
+              SectionCard with Actions
+            </h4>
             <p className="text-body-md text-[var(--color-text-muted)]">
               Header에 Action 버튼이 있는 SectionCard 패턴입니다.
             </p>
@@ -1018,9 +1044,7 @@ export function CommonPatternsSection() {
 
       {/* Button Patterns */}
       <VStack gap={4}>
-        <h3 className="text-heading-h4 text-[var(--color-text-default)]">
-          6. Button Patterns
-        </h3>
+        <h3 className="text-heading-h4 text-[var(--color-text-default)]">6. Button Patterns</h3>
 
         <VStack gap={2}>
           <p className="text-body-md text-[var(--color-text-muted)]">
