@@ -1,7 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import {
   Button,
-  Tooltip,
   Table,
   SearchInput,
   Pagination,
@@ -15,11 +14,6 @@ import {
 } from '@/design-system';
 import { AgentPageLayout } from '@/layouts';
 import {
-  IconMessage,
-  IconRobot,
-  IconDatabase,
-  IconPuzzle,
-  IconSettings,
   IconTrash,
   IconStar,
   IconStarFilled,
@@ -29,13 +23,9 @@ import {
   IconRefresh,
   IconLoader2,
   IconTarget,
-  IconHome,
 } from '@tabler/icons-react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import ThakiSymbol from '@/assets/thakiSymbol.svg';
-import { useDarkMode } from '@/hooks/useDarkMode';
+import { useNavigate } from 'react-router-dom';
 import { useProject } from '@/contexts/ProjectContext';
-import { ProjectSelector } from '@/components/ProjectSelector';
 
 /* ----------------------------------------
    Status Card Component
@@ -89,155 +79,6 @@ function StatusCard({ label, count, status }: StatusCardProps) {
         {getStatusIcon()}
       </div>
     </div>
-  );
-}
-
-/* ----------------------------------------
-   Agent Sidebar Component (Reused)
-   ---------------------------------------- */
-export function AgentSidebar() {
-  const { isDark } = useDarkMode();
-  const location = useLocation();
-  const { projects, selectedProjectId, setSelectedProjectId } = useProject();
-
-  return (
-    <nav className="fixed left-0 top-0 w-[62px] h-screen bg-[var(--color-surface-default)] border-r border-[var(--color-border-default)] flex flex-col items-center z-50">
-      {/* Logo */}
-      <Link
-        to="/"
-        className="border-b border-[var(--color-border-default)] flex h-[36px] items-center justify-center w-full hover:bg-[var(--color-surface-muted)] transition-colors shrink-0"
-      >
-        <img src={ThakiSymbol} alt="THAKI" className="h-[18px] w-[18px]" />
-      </Link>
-
-      {/* Menu Items - Project Selector and Navigation */}
-      <div className="flex flex-col gap-2 items-center px-2 pt-3 flex-1 min-h-0 w-full">
-        {/* Project Selector Button */}
-        <div className="w-full flex items-center justify-center shrink-0">
-          <ProjectSelector
-            projects={projects}
-            selectedProjectId={selectedProjectId}
-            onProjectSelect={setSelectedProjectId}
-            variant="sidebar-icon"
-          />
-        </div>
-
-        {/* Home */}
-        <Tooltip content="Home" position="right">
-          <Link
-            to="/agent"
-            className={`flex items-center justify-center size-[38px] rounded-lg transition-colors shrink-0 ${
-              location.pathname === '/agent'
-                ? 'bg-[var(--color-info-weak-bg,#eff6ff)]'
-                : 'bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-muted)]'
-            }`}
-          >
-            <IconHome
-              size={20}
-              stroke={1.5}
-              className={
-                location.pathname === '/agent'
-                  ? 'text-[var(--color-action-primary)]'
-                  : 'text-[var(--color-text-muted)]'
-              }
-            />
-          </Link>
-        </Tooltip>
-
-        {/* Chat */}
-        <Tooltip content="Chat" position="right">
-          <Link
-            to="/chat"
-            className={`flex items-center justify-center size-[38px] rounded-lg transition-colors shrink-0 ${
-              location.pathname === '/chat'
-                ? 'bg-[var(--color-info-weak-bg,#eff6ff)]'
-                : 'bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-muted)]'
-            }`}
-          >
-            <IconMessage
-              size={20}
-              stroke={1.5}
-              className={
-                location.pathname === '/chat'
-                  ? 'text-[var(--color-action-primary)]'
-                  : 'text-[var(--color-text-muted)]'
-              }
-            />
-          </Link>
-        </Tooltip>
-
-        {/* Robot */}
-        <Tooltip content="Agent" position="right">
-          <Link
-            to="/agent/list"
-            className={`flex items-center justify-center size-[38px] rounded-lg transition-colors shrink-0 ${
-              location.pathname === '/agent/list' ||
-              location.pathname.startsWith('/agent/list') ||
-              location.pathname.startsWith('/agent/create')
-                ? 'bg-[var(--color-info-weak-bg,#eff6ff)]'
-                : 'bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-muted)]'
-            }`}
-          >
-            <IconRobot
-              size={20}
-              stroke={1.5}
-              className={
-                location.pathname === '/agent/list' ||
-                location.pathname.startsWith('/agent/list') ||
-                location.pathname.startsWith('/agent/create')
-                  ? 'text-[var(--color-action-primary)]'
-                  : 'text-[var(--color-text-muted)]'
-              }
-            />
-          </Link>
-        </Tooltip>
-
-        {/* Data sources - Coming soon */}
-        <Tooltip content="Data sources (Coming soon)" position="right">
-          <button
-            type="button"
-            disabled
-            className="flex items-center justify-center size-[38px] rounded-lg transition-colors shrink-0 bg-[var(--color-surface-default)] cursor-not-allowed opacity-50"
-          >
-            <IconDatabase size={20} stroke={1.5} className="text-[var(--color-text-disabled)]" />
-          </button>
-        </Tooltip>
-
-        {/* MCP tools */}
-        <Tooltip content="MCP tools" position="right">
-          <Link
-            to="/mcp-tools"
-            className={`flex items-center justify-center size-[38px] rounded-lg transition-colors shrink-0 ${
-              location.pathname === '/mcp-tools'
-                ? 'bg-[var(--color-info-weak-bg,#eff6ff)]'
-                : 'bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-muted)]'
-            }`}
-          >
-            <IconPuzzle
-              size={20}
-              stroke={1.5}
-              className={
-                location.pathname === '/mcp-tools'
-                  ? 'text-[var(--color-action-primary)]'
-                  : 'text-[var(--color-text-muted)]'
-              }
-            />
-          </Link>
-        </Tooltip>
-      </div>
-
-      {/* Settings (Bottom) */}
-      <div className="px-2 pb-3 w-full flex items-center justify-center shrink-0">
-        <Tooltip content="Settings" position="right">
-          <Link
-            to="/agent"
-            className="flex items-center justify-center size-[38px] rounded-lg bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-muted)] transition-colors shrink-0"
-          >
-            <IconSettings size={20} stroke={1.5} className="text-[var(--color-text-default)]" />
-          </Link>
-        </Tooltip>
-      </div>
-    </nav>
   );
 }
 
@@ -395,6 +236,11 @@ export function StoragePage() {
       flex: 1,
       minWidth: columnMinWidths.name,
       sortable: true,
+      render: (value: string) => (
+        <span className="truncate block" title={value}>
+          {value}
+        </span>
+      ),
     },
     {
       key: 'type',
@@ -413,8 +259,8 @@ export function StoragePage() {
         if (row.documentsProgress) {
           const { current, total, percentage, hasError } = row.documentsProgress;
           return (
-            <div className="flex flex-col gap-1">
-              <div className="flex items-center justify-between text-body-md">
+            <div className="flex flex-col gap-1 min-w-0">
+              <div className="flex items-center gap-1 text-body-md whitespace-nowrap">
                 <span className="text-[var(--color-text-default)]">
                   {current}/{total}
                 </span>
@@ -431,7 +277,7 @@ export function StoragePage() {
             </div>
           );
         }
-        return <span className="text-[var(--color-text-default)]">{row.documents}</span>;
+        return <span className="text-[var(--color-text-default)]">{row.documents ?? '-'}</span>;
       },
     },
     {
@@ -440,6 +286,9 @@ export function StoragePage() {
       flex: 1,
       minWidth: columnMinWidths.size,
       sortable: true,
+      render: (value: string) => (
+        <span className="whitespace-nowrap">{value ?? '-'}</span>
+      ),
     },
     {
       key: 'createdAt',
@@ -447,6 +296,9 @@ export function StoragePage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
+      render: (value: string) => (
+        <span className="whitespace-nowrap">{value}</span>
+      ),
     },
     {
       key: 'actions',

@@ -16,6 +16,15 @@ import {
   Chip,
   InlineMessage,
   FormField,
+  SearchInput,
+  Checkbox,
+  StatusIndicator,
+  Badge,
+  Table,
+  SelectionIndicator,
+  fixedColumns,
+  columnMinWidths,
+  type TableColumn,
 } from '@/design-system';
 import { IconAlertCircle } from '@tabler/icons-react';
 import { Label } from './HelperComponents';
@@ -389,10 +398,10 @@ export function EditBasicInfoDrawer({ isOpen, onClose }: { isOpen: boolean; onCl
       width={376}
       footer={
         <HStack gap={2} className="w-full">
-          <Button variant="secondary" onClick={onClose} className="flex-1">
+          <Button variant="secondary" size="md" onClick={onClose} className="flex-1">
             Cancel
           </Button>
-          <Button variant="primary" onClick={onClose} className="flex-1">
+          <Button variant="primary" size="md" onClick={onClose} className="flex-1">
             Save
           </Button>
         </HStack>
@@ -515,10 +524,10 @@ export function EditModelSettingsDrawer({
       width={376}
       footer={
         <HStack gap={2} className="w-full">
-          <Button variant="secondary" onClick={onClose} className="flex-1">
+          <Button variant="secondary" size="md" onClick={onClose} className="flex-1">
             Cancel
           </Button>
-          <Button variant="primary" onClick={onClose} className="flex-1">
+          <Button variant="primary" size="md" onClick={onClose} className="flex-1">
             Save
           </Button>
         </HStack>
@@ -633,10 +642,10 @@ export function EditPromptSettingsDrawer({
       width={376}
       footer={
         <HStack gap={2} className="w-full">
-          <Button variant="secondary" onClick={onClose} className="flex-1">
+          <Button variant="secondary" size="md" onClick={onClose} className="flex-1">
             Cancel
           </Button>
-          <Button variant="primary" onClick={onClose} className="flex-1">
+          <Button variant="primary" size="md" onClick={onClose} className="flex-1">
             Save
           </Button>
         </HStack>
@@ -709,6 +718,17 @@ export function EditPromptSettingsDrawer({
   );
 }
 
+// Connect Data Source Drawer - Data source type
+interface DataSourceItem {
+  id: string;
+  name: string;
+  source: string;
+  category: string;
+  tags: string[];
+  createdAt: string;
+  status: 'active' | 'error';
+}
+
 // Connect Data Source Drawer
 export function ConnectDataSourceDrawer({
   isOpen,
@@ -718,18 +738,85 @@ export function ConnectDataSourceDrawer({
   onClose: () => void;
 }) {
   const [selectedSources, setSelectedSources] = useState<string[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const dataSources = [
-    { id: '1', name: 'Document Store A', type: 'File', documents: 150, size: '2.3 GB' },
-    { id: '2', name: 'Knowledge Base', type: 'Database', documents: 500, size: '5.1 GB' },
-    { id: '3', name: 'FAQ Collection', type: 'File', documents: 75, size: '120 MB' },
+  const dataSources: DataSourceItem[] = [
+    { id: '1', name: 'Document Store A', source: 'AWS S3', category: 'Storage', tags: ['docs'], createdAt: 'Nov 11, 2025', status: 'active' },
+    { id: '2', name: 'Knowledge Base', source: 'PostgreSQL', category: 'Database', tags: ['knowledge'], createdAt: 'Nov 10, 2025', status: 'active' },
+    { id: '3', name: 'FAQ Collection', source: 'MongoDB', category: 'Database', tags: ['faq'], createdAt: 'Nov 9, 2025', status: 'active' },
+    { id: '4', name: 'Product Catalog', source: 'Redis', category: 'Cache', tags: ['product'], createdAt: 'Nov 8, 2025', status: 'active' },
   ];
 
-  const handleToggle = (id: string) => {
-    setSelectedSources((prev) =>
-      prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id]
-    );
-  };
+  const filteredSources = dataSources.filter((source) =>
+    source.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  // Table columns following design guidelines
+  const columns: TableColumn<DataSourceItem>[] = [
+    {
+      key: 'status',
+      label: 'Status',
+      width: fixedColumns.status,
+      align: 'center',
+      sortable: false,
+      render: (_, row) => (
+        <StatusIndicator status={row.status === 'active' ? 'active' : 'shutoff'} layout="icon-only" />
+      ),
+    },
+    {
+      key: 'name',
+      label: 'Title',
+      flex: 1,
+      minWidth: columnMinWidths.name,
+      sortable: true,
+      render: (value) => (
+        <span className="text-[var(--color-action-primary)] font-medium hover:underline cursor-pointer truncate block" title={String(value)}>
+          {value}
+        </span>
+      ),
+    },
+    {
+      key: 'source',
+      label: 'Source',
+      flex: 1,
+      minWidth: '100px',
+      sortable: true,
+    },
+    {
+      key: 'category',
+      label: 'Category',
+      flex: 1,
+      minWidth: columnMinWidths.category,
+      sortable: true,
+    },
+    {
+      key: 'tags',
+      label: 'Tags',
+      flex: 1,
+      minWidth: columnMinWidths.labels,
+      sortable: false,
+      render: (_, row) => (
+        <div className="flex flex-wrap gap-1">
+          {row.tags.slice(0, 2).map((tag, idx) => (
+            <Badge key={idx} variant="gray" size="sm">{tag}</Badge>
+          ))}
+          {row.tags.length > 2 && (
+            <span className="text-body-sm text-[var(--color-text-subtle)]">+{row.tags.length - 2}</span>
+          )}
+        </div>
+      ),
+    },
+    {
+      key: 'createdAt',
+      label: 'Created at',
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
+      sortable: true,
+      render: (value) => (
+        <span className="whitespace-nowrap">{value}</span>
+      ),
+    },
+  ];
 
   return (
     <Drawer
@@ -740,73 +827,85 @@ export function ConnectDataSourceDrawer({
       width={696}
       footer={
         <HStack gap={2} className="w-full">
-          <Button variant="secondary" onClick={onClose} className="flex-1">
+          <Button variant="secondary" size="md" onClick={onClose} className="flex-1">
             Cancel
           </Button>
           <Button
             variant="primary"
+            size="md"
             onClick={onClose}
             className="flex-1"
-            disabled={selectedSources.length === 0}
           >
-            Connect ({selectedSources.length})
+            Add
           </Button>
         </HStack>
       }
     >
       <VStack gap={6}>
-        <div>
-          <h2 className="text-heading-h5 text-[var(--color-text-default)]">Connect data source</h2>
-          <p className="text-body-md text-[var(--color-text-subtle)] mt-2">
-            Select data sources to connect to this agent.
-          </p>
-        </div>
+        {/* Header */}
+        <h2 className="text-heading-h5 text-[var(--color-text-default)]">Connect data sources</h2>
 
-        {/* Data Source List */}
-        <VStack gap={2} className="w-full">
-          {dataSources.map((source) => (
-            <div
-              key={source.id}
-              onClick={() => handleToggle(source.id)}
-              className={`
-                w-full p-4 rounded-lg border cursor-pointer transition-all
-                ${
-                  selectedSources.includes(source.id)
-                    ? 'border-[var(--color-action-primary)] bg-[var(--color-state-info-bg)]'
-                    : 'border-[var(--color-border-default)] hover:border-[var(--color-border-strong)]'
-                }
-              `}
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-body-md font-medium text-[var(--color-text-default)]">
-                    {source.name}
-                  </p>
-                  <p className="text-body-sm text-[var(--color-text-subtle)]">
-                    {source.type} • {source.documents} documents • {source.size}
-                  </p>
-                </div>
-                <div
-                  className={`
-                  w-5 h-5 rounded-full border-2 flex items-center justify-center
-                  ${
-                    selectedSources.includes(source.id)
-                      ? 'border-[var(--color-action-primary)] bg-[var(--color-action-primary)]'
-                      : 'border-[var(--color-border-strong)]'
-                  }
-                `}
-                >
-                  {selectedSources.includes(source.id) && (
-                    <div className="w-2 h-2 rounded-full bg-white" />
-                  )}
-                </div>
-              </div>
-            </div>
-          ))}
+        {/* Data Sources Section */}
+        <VStack gap={2}>
+          <p className="text-label-md text-[var(--color-text-default)]">Data sources</p>
+          <p className="text-body-md text-[var(--color-text-subtle)]">
+            Choose the data sources the agent can access to retrieve information for its responses. (Multiple selection available)
+          </p>
+        </VStack>
+
+        {/* Search and Table */}
+        <VStack gap={3}>
+          {/* Search Input */}
+          <SearchInput
+            placeholder="Find data sources with filters"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            size="sm"
+            className="w-[280px]"
+          />
+
+          {/* Pagination Info */}
+          <div className="flex items-center gap-2 text-label-sm text-[var(--color-text-subtle)]">
+            <span className="text-[var(--color-action-primary)]">{selectedSources.length}</span>
+            <span>/</span>
+            <span>{filteredSources.length} items</span>
+          </div>
+
+          {/* Table - following design guidelines */}
+          <Table
+            columns={columns}
+            data={filteredSources}
+            rowKey="id"
+            rowHeight="40px"
+            selectable
+            selectedKeys={selectedSources}
+            onSelectionChange={setSelectedSources}
+            emptyMessage="No data sources found"
+          />
+
+          {/* Selection Indicator */}
+          <SelectionIndicator
+            selectedItems={selectedSources.map((id) => {
+              const source = dataSources.find((s) => s.id === id);
+              return { id, label: source?.name || id };
+            })}
+            onRemove={(id) => setSelectedSources((prev) => prev.filter((s) => s !== id))}
+          />
         </VStack>
       </VStack>
     </Drawer>
   );
+}
+
+// MCP Tool type
+interface MCPToolItem {
+  id: string;
+  name: string;
+  server: string;
+  category: string;
+  tags: string[];
+  createdAt: string;
+  status: 'active' | 'error';
 }
 
 // Connect MCP Server Drawer
@@ -817,19 +916,92 @@ export function ConnectMCPServerDrawer({
   isOpen: boolean;
   onClose: () => void;
 }) {
-  const [selectedServers, setSelectedServers] = useState<string[]>([]);
+  const [selectedTools, setSelectedTools] = useState<string[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const mcpServers = [
-    { id: '1', name: 'Slack Integration', category: 'Communication', tags: ['slack', 'messaging'] },
-    { id: '2', name: 'GitHub Tools', category: 'Development', tags: ['github', 'git', 'code'] },
-    { id: '3', name: 'Jira Connector', category: 'Project Management', tags: ['jira', 'tickets'] },
+  const mcpTools: MCPToolItem[] = [
+    { id: '1', name: 'send_slack_message', server: 'Slack', category: 'Communication', tags: ['messaging'], createdAt: 'Nov 11, 2025', status: 'active' },
+    { id: '2', name: 'create_github_issue', server: 'GitHub', category: 'Development', tags: ['code'], createdAt: 'Nov 10, 2025', status: 'active' },
+    { id: '3', name: 'search_jira_tickets', server: 'Jira', category: 'Project Management', tags: ['tickets'], createdAt: 'Nov 9, 2025', status: 'active' },
+    { id: '4', name: 'query_database', server: 'PostgreSQL', category: 'Database', tags: ['sql'], createdAt: 'Nov 8, 2025', status: 'active' },
   ];
 
-  const handleToggle = (id: string) => {
-    setSelectedServers((prev) =>
-      prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id]
-    );
-  };
+  const filteredTools = mcpTools.filter((tool) =>
+    tool.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  // Table columns following design guidelines
+  const columns: TableColumn<MCPToolItem>[] = [
+    {
+      key: 'status',
+      label: 'Status',
+      width: fixedColumns.status,
+      align: 'center',
+      sortable: false,
+      render: (_, row) => (
+        <StatusIndicator status={row.status === 'active' ? 'active' : 'shutoff'} layout="icon-only" />
+      ),
+    },
+    {
+      key: 'name',
+      label: 'Title',
+      flex: 1,
+      minWidth: columnMinWidths.name,
+      sortable: true,
+      render: (value) => (
+        <span className="text-[var(--color-action-primary)] font-medium hover:underline cursor-pointer truncate block" title={String(value)}>
+          {value}
+        </span>
+      ),
+    },
+    {
+      key: 'server',
+      label: 'MCP server',
+      flex: 1,
+      minWidth: '100px',
+      sortable: true,
+      render: (_, row) => (
+        <div className="flex items-center gap-1.5 min-w-0">
+          <div className="w-5 h-5 rounded-md border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)] shrink-0" />
+          <span className="truncate" title={row.server}>{row.server}</span>
+        </div>
+      ),
+    },
+    {
+      key: 'category',
+      label: 'Category',
+      flex: 1,
+      minWidth: columnMinWidths.category,
+      sortable: true,
+    },
+    {
+      key: 'tags',
+      label: 'Tags',
+      flex: 1,
+      minWidth: columnMinWidths.labels,
+      sortable: false,
+      render: (_, row) => (
+        <div className="flex flex-wrap gap-1">
+          {row.tags.slice(0, 2).map((tag, idx) => (
+            <Badge key={idx} variant="gray" size="sm">{tag}</Badge>
+          ))}
+          {row.tags.length > 2 && (
+            <span className="text-body-sm text-[var(--color-text-subtle)]">+{row.tags.length - 2}</span>
+          )}
+        </div>
+      ),
+    },
+    {
+      key: 'createdAt',
+      label: 'Created at',
+      flex: 1,
+      minWidth: columnMinWidths.createdAt,
+      sortable: true,
+      render: (value) => (
+        <span className="whitespace-nowrap">{value}</span>
+      ),
+    },
+  ];
 
   return (
     <Drawer
@@ -840,77 +1012,309 @@ export function ConnectMCPServerDrawer({
       width={696}
       footer={
         <HStack gap={2} className="w-full">
-          <Button variant="secondary" onClick={onClose} className="flex-1">
+          <Button variant="secondary" size="md" onClick={onClose} className="flex-1">
             Cancel
           </Button>
           <Button
             variant="primary"
+            size="md"
             onClick={onClose}
             className="flex-1"
-            disabled={selectedServers.length === 0}
           >
-            Connect ({selectedServers.length})
+            Add
           </Button>
         </HStack>
       }
     >
       <VStack gap={6}>
-        <div>
-          <h2 className="text-heading-h5 text-[var(--color-text-default)]">Connect MCP server</h2>
-          <p className="text-body-md text-[var(--color-text-subtle)] mt-2">
-            Select MCP servers to connect to this agent.
+        {/* Header */}
+        <h2 className="text-heading-h5 text-[var(--color-text-default)]">Connect MCP tools</h2>
+
+        {/* MCP Tools Section */}
+        <VStack gap={2}>
+          <p className="text-label-md text-[var(--color-text-default)]">MCP tools</p>
+          <p className="text-body-md text-[var(--color-text-subtle)]">
+            Choose the MCP tools the agent can use to perform actions or retrieve external information. (Multiple selection available)
           </p>
+        </VStack>
+
+        {/* Search and Table */}
+        <VStack gap={3}>
+          {/* Search Input */}
+          <SearchInput
+            placeholder="Find MCP tools with filters"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            size="sm"
+            className="w-[280px]"
+          />
+
+          {/* Pagination Info */}
+          <div className="flex items-center gap-2 text-label-sm text-[var(--color-text-subtle)]">
+            <span className="text-[var(--color-action-primary)]">{selectedTools.length}</span>
+            <span>/</span>
+            <span>{filteredTools.length} items</span>
+          </div>
+
+          {/* Table - following design guidelines */}
+          <Table
+            columns={columns}
+            data={filteredTools}
+            rowKey="id"
+            rowHeight="40px"
+            selectable
+            selectedKeys={selectedTools}
+            onSelectionChange={setSelectedTools}
+            emptyMessage="No MCP tools found"
+          />
+
+          {/* Selection Indicator */}
+          <SelectionIndicator
+            selectedItems={selectedTools.map((id) => {
+              const tool = mcpTools.find((t) => t.id === id);
+              return { id, label: tool?.name || id };
+            })}
+            onRemove={(id) => setSelectedTools((prev) => prev.filter((s) => s !== id))}
+          />
+        </VStack>
+      </VStack>
+    </Drawer>
+  );
+}
+
+// Agent Log Detail Drawer
+export function AgentLogDetailDrawer({
+  isOpen,
+  onClose,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+}) {
+  const [expandedSteps, setExpandedSteps] = useState<string[]>(['step-2', 'step-3']);
+
+  const toggleStep = (stepId: string) => {
+    setExpandedSteps((prev) =>
+      prev.includes(stepId) ? prev.filter((id) => id !== stepId) : [...prev, stepId]
+    );
+  };
+
+  const logData = {
+    question: '2025년 한국 GDP 성장률 전망은?',
+    response: `# 2025년 한국 GDP 성장률 전망
+
+한국은행의 **2025년 8월 경제전망보고서**에 따르면, 2025년 한국 GDP 성장률은 **0.9%**로 전망됩니다.
+
+## 📊 주요 전망 내용
+
+### **연간 성장률**
+- **2025년**: 0.9% (5월 전망 0.8%에서 0.1%p 상향)
+- **2026년**: 1.6% (5월 전망과 동일)
+
+### **분기별 전망 (2025년)**
+- **1분기**: 0.0% (전년동기대비)
+- **2분기**: 0.5%
+- **3분기**: 1.6% (예상)
+- **4분기**: 1.5% (예상)`,
+    createdAt: 'Sep 26, 2025',
+    responseTime: '29.4s',
+    steps: 6,
+    status: 'Completed',
+  };
+
+  const steps = [
+    {
+      id: 'step-1',
+      type: 'Think',
+      color: 'bg-[#eab308]',
+      textColor: 'text-[#fefce8]',
+      confidence: 81,
+      analyze: `사용자가 '2025년 한국 GDP 성장률 전망'을 질문했습니다. 이전 대화에서 사용자가 '한국은행 경제전망보고서 2025년 8월' 문서를 언급했고, 이 문서에 GDP 전망이 포함되어 있다고 언급했습니다.`,
+      plan: `이전 대화에서 문서의 존재는 확인되었으나, 구체적인 GDP 성장률 수치는 아직 제공되지 않았습니다. 'rag_search' 도구를 사용하여 한국은행 경제전망보고서에서 2025년 GDP 성장률 전망 데이터를 찾아야 합니다.`,
+    },
+    {
+      id: 'step-2',
+      type: 'Act',
+      color: 'bg-[#16a34a]',
+      textColor: 'text-[#f0fdf4]',
+      confidence: 81,
+      analyze: 'rag_search',
+      tool: `{
+  "limit": 10,
+  "query": "2025년 한국 GDP 성장률 전망 경제성장률 한국은행",
+  "agent_id": "44f63560-0a77-42b1-901e-31981c0459b6",
+  "datasource_id": null,
+  "score_threshold": 0.3
+}`,
+    },
+    {
+      id: 'step-3',
+      type: 'Observe',
+      color: 'bg-[#3b82f6]',
+      textColor: 'text-[#eff6ff]',
+      confidence: 81,
+      analyze: 'rag_search',
+      toolResult: `Found 10 search results.
+[Search Result 1] 📁 Document: 한국경제전망보고서_텍스트파일.pdf
+📄 Chunk ID: b14b2791-f0b7-4293-b955-9655a988af51
+📑 Document ID: fa41ea17-a910-4f0c-9451-0fb7d4e3c52a
+🎯 Relevance Score: 0.560
+
+GDP 성장률(%)3) 2.0 0.2 1.6 0.9 [+0.1] 2.0 1.3 1.6 [ - ]
+• 민간소비 1.1 0.7 2.0 1.4 [+0.3] 2.2 1.1 1.6 [ - ]
+• 건설투자 -3.3 -12.4 -4.3 -8.3 [-2.2] 4.4 3.2 3.8 [+1.0]`,
+      nextAction: 'complete',
+    },
+  ];
+
+  return (
+    <Drawer
+      isOpen={isOpen}
+      onClose={onClose}
+      title=""
+      showCloseButton={false}
+      width={696}
+    >
+      <VStack gap={6}>
+        {/* Header */}
+        <VStack gap={2}>
+          <h2 className="text-heading-h4 text-[var(--color-text-default)]">Log detail</h2>
+          <p className="text-body-md text-[var(--color-text-subtle)]">
+            Shows a history of the agent's operations and results.
+          </p>
+        </VStack>
+
+        {/* Summary Section */}
+        <div className="w-full p-4 border border-[var(--color-border-default)] rounded-md">
+          <VStack gap={5}>
+            {/* Question & Response */}
+            <VStack gap={2}>
+              <p className="text-label-sm text-[var(--color-text-muted)]">
+                질문: {logData.question}
+              </p>
+              <p className="text-label-sm text-[var(--color-text-muted)]">최종 응답</p>
+              <div className="w-full h-[200px] max-h-[200px] overflow-auto bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg px-3 py-2">
+                <p className="text-body-md text-[var(--color-text-subtle)] whitespace-pre-wrap">
+                  {logData.response}
+                </p>
+              </div>
+            </VStack>
+
+            {/* Metadata */}
+            <div className="flex items-center justify-between w-full">
+              <HStack gap={4}>
+                <span className="text-label-sm text-[var(--color-text-subtle)]">
+                  Created at: {logData.createdAt}
+                </span>
+                <span className="text-label-sm text-[var(--color-text-subtle)]">
+                  Response Time: {logData.responseTime}
+                </span>
+                <span className="text-label-sm text-[var(--color-text-subtle)]">
+                  Steps: {logData.steps}
+                </span>
+              </HStack>
+              <Badge variant="success" size="sm">{logData.status}</Badge>
+            </div>
+          </VStack>
         </div>
 
-        {/* MCP Server List */}
-        <VStack gap={2} className="w-full">
-          {mcpServers.map((server) => (
-            <div
-              key={server.id}
-              onClick={() => handleToggle(server.id)}
-              className={`
-                w-full p-4 rounded-lg border cursor-pointer transition-all
-                ${
-                  selectedServers.includes(server.id)
-                    ? 'border-[var(--color-action-primary)] bg-[var(--color-state-info-bg)]'
-                    : 'border-[var(--color-border-default)] hover:border-[var(--color-border-strong)]'
-                }
-              `}
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-body-md font-medium text-[var(--color-text-default)]">
-                    {server.name}
-                  </p>
-                  <p className="text-body-sm text-[var(--color-text-subtle)]">{server.category}</p>
-                  <div className="flex gap-1 mt-1">
-                    {server.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="px-2 py-0.5 text-body-xs bg-[var(--color-surface-subtle)] rounded"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
+        {/* Steps */}
+        <VStack gap={3}>
+          {steps.map((step, index) => {
+            const isExpanded = expandedSteps.includes(step.id);
+            return (
+              <div
+                key={step.id}
+                className="w-full border border-[var(--color-border-default)] rounded-md overflow-hidden"
+              >
+                {/* Step Header */}
                 <div
-                  className={`
-                  w-5 h-5 rounded-full border-2 flex items-center justify-center
-                  ${
-                    selectedServers.includes(server.id)
-                      ? 'border-[var(--color-action-primary)] bg-[var(--color-action-primary)]'
-                      : 'border-[var(--color-border-strong)]'
-                  }
-                `}
+                  className="flex items-center justify-between px-4 py-3 cursor-pointer hover:bg-[var(--color-surface-subtle)]"
+                  onClick={() => toggleStep(step.id)}
                 >
-                  {selectedServers.includes(server.id) && (
-                    <div className="w-2 h-2 rounded-full bg-white" />
-                  )}
+                  <HStack gap={1.5}>
+                    <span
+                      className={`transform transition-transform ${isExpanded ? 'rotate-90' : ''}`}
+                    >
+                      <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+                        <path d="M4.5 2L8.5 6L4.5 10" stroke="currentColor" strokeWidth="1.5" fill="none" />
+                      </svg>
+                    </span>
+                    <span
+                      className={`px-1.5 py-0.5 rounded-md text-label-sm ${step.color} ${step.textColor}`}
+                    >
+                      {index + 1}. {step.type}
+                    </span>
+                  </HStack>
+                  <Badge variant="gray" size="sm">Confidence: {step.confidence}%</Badge>
                 </div>
+
+                {/* Step Content */}
+                {isExpanded && (
+                  <div className="px-4 pb-4">
+                    <VStack gap={5}>
+                      {/* Analyze */}
+                      <VStack gap={1}>
+                        <p className="text-label-sm text-[var(--color-text-subtle)]">Analyze</p>
+                        <div className="w-full px-3 py-2 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md">
+                          <p className="text-body-md text-[var(--color-text-muted)]">
+                            {step.analyze}
+                          </p>
+                        </div>
+                      </VStack>
+
+                      {/* Plan (Think step) */}
+                      {step.plan && (
+                        <VStack gap={1}>
+                          <p className="text-label-sm text-[var(--color-text-subtle)]">Plan</p>
+                          <div className="w-full px-3 py-2 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md">
+                            <p className="text-body-md text-[var(--color-text-muted)]">
+                              {step.plan}
+                            </p>
+                          </div>
+                        </VStack>
+                      )}
+
+                      {/* Tool (Act step) */}
+                      {step.tool && (
+                        <VStack gap={1}>
+                          <p className="text-label-sm text-[var(--color-text-subtle)]">Tool</p>
+                          <div className="w-full px-3 py-2 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md">
+                            <pre className="text-body-md text-[var(--color-text-muted)] whitespace-pre-wrap font-mono text-[11px]">
+                              {step.tool}
+                            </pre>
+                          </div>
+                        </VStack>
+                      )}
+
+                      {/* Tool Result (Observe step) */}
+                      {step.toolResult && (
+                        <VStack gap={1}>
+                          <p className="text-label-sm text-[var(--color-text-subtle)]">Tool</p>
+                          <div className="w-full h-[200px] max-h-[200px] overflow-auto px-3 py-2 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md">
+                            <p className="text-body-md text-[var(--color-text-subtle)] whitespace-pre-wrap">
+                              {step.toolResult}
+                            </p>
+                          </div>
+                        </VStack>
+                      )}
+
+                      {/* Next Action (Observe step) */}
+                      {step.nextAction && (
+                        <VStack gap={1}>
+                          <p className="text-label-sm text-[var(--color-text-subtle)]">다음행동</p>
+                          <div className="w-full px-3 py-2 bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md">
+                            <p className="text-body-md text-[var(--color-text-muted)]">
+                              {step.nextAction}
+                            </p>
+                          </div>
+                        </VStack>
+                      )}
+                    </VStack>
+                  </div>
+                )}
               </div>
-            </div>
-          ))}
+            );
+          })}
         </VStack>
       </VStack>
     </Drawer>
@@ -924,6 +1328,7 @@ export function AIAgentDrawerDemo() {
   const [isEditPromptSettingsOpen, setIsEditPromptSettingsOpen] = useState(false);
   const [isConnectDataSourceOpen, setIsConnectDataSourceOpen] = useState(false);
   const [isConnectMCPServerOpen, setIsConnectMCPServerOpen] = useState(false);
+  const [isLogDetailOpen, setIsLogDetailOpen] = useState(false);
 
   return (
     <div className="flex gap-2 flex-wrap">
@@ -965,6 +1370,14 @@ export function AIAgentDrawerDemo() {
       <ConnectMCPServerDrawer
         isOpen={isConnectMCPServerOpen}
         onClose={() => setIsConnectMCPServerOpen(false)}
+      />
+
+      <Button variant="outline" size="sm" onClick={() => setIsLogDetailOpen(true)}>
+        Log Detail
+      </Button>
+      <AgentLogDetailDrawer
+        isOpen={isLogDetailOpen}
+        onClose={() => setIsLogDetailOpen(false)}
       />
     </div>
   );
@@ -1045,5 +1458,676 @@ export function AIAgentModalDemo() {
         agentName="my-research-agent"
       />
     </div>
+  );
+}
+
+// ==========================================
+// MCP Tools Drawers
+// ==========================================
+
+// Create MCP Template Drawer
+export function CreateMCPTemplateDrawer({
+  isOpen,
+  onClose,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+}) {
+  const [templateName, setTemplateName] = useState('');
+  const [description, setDescription] = useState('');
+  const [version, setVersion] = useState('');
+  const [homepageUrl, setHomepageUrl] = useState('');
+  const [tags, setTags] = useState<string[]>(['Tag 1', 'Tag 2', 'Tag 3']);
+  const [category, setCategory] = useState('');
+  const [authType, setAuthType] = useState('');
+
+  return (
+    <Drawer
+      isOpen={isOpen}
+      onClose={onClose}
+      title=""
+      showCloseButton={false}
+      width={696}
+      footer={
+        <HStack gap={2} className="w-full">
+          <Button variant="secondary" size="md" onClick={onClose} className="flex-1">
+            Cancel
+          </Button>
+          <Button variant="primary" size="md" onClick={onClose} className="flex-1">
+            Create
+          </Button>
+        </HStack>
+      }
+    >
+      <VStack gap={6}>
+        {/* Header */}
+        <h2 className="text-heading-h5 text-[var(--color-text-default)]">Create MCP template</h2>
+
+        {/* Basic Information */}
+        <VStack gap={4}>
+          <h3 className="text-heading-h6 text-[var(--color-text-default)]">Basic information</h3>
+          
+          <FormField required>
+            <FormField.Label>Template name</FormField.Label>
+            <FormField.Control>
+              <Input
+                placeholder="Enter a name for this agent"
+                value={templateName}
+                onChange={(e) => setTemplateName(e.target.value)}
+                fullWidth
+              />
+            </FormField.Control>
+          </FormField>
+
+          <FormField required>
+            <FormField.Label>Description</FormField.Label>
+            <FormField.Control>
+              <Textarea
+                placeholder="Add a description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                fullWidth
+                rows={3}
+              />
+            </FormField.Control>
+          </FormField>
+
+          <FormField>
+            <FormField.Label>Version</FormField.Label>
+            <FormField.Control>
+              <Input
+                placeholder="Enter a name for this agent"
+                value={version}
+                onChange={(e) => setVersion(e.target.value)}
+                fullWidth
+              />
+            </FormField.Control>
+            <FormField.HelperText>
+              The version of the template. Useful for tracking changes and updates.
+            </FormField.HelperText>
+          </FormField>
+
+          <FormField required>
+            <FormField.Label>Homepage URL</FormField.Label>
+            <FormField.Control>
+              <Input
+                placeholder="https://docs.example.com/"
+                value={homepageUrl}
+                onChange={(e) => setHomepageUrl(e.target.value)}
+                fullWidth
+              />
+            </FormField.Control>
+            <FormField.HelperText>
+              A URL to documentation or the homepage for this template.
+            </FormField.HelperText>
+          </FormField>
+
+          <FormField>
+            <FormField.Label>Tags</FormField.Label>
+            <FormField.Control>
+              <Input placeholder="Enter tags" fullWidth />
+            </FormField.Control>
+            <FormField.HelperText>
+              Comma-separated tags for filtering, up to 10 tags allowed.
+            </FormField.HelperText>
+            <div className="flex gap-1.5 flex-wrap mt-2">
+              {tags.map((tag, idx) => (
+                <Badge key={idx} theme="gray" type="subtle" size="sm">
+                  {tag} ×
+                </Badge>
+              ))}
+            </div>
+          </FormField>
+
+          <FormField>
+            <FormField.Label>Category</FormField.Label>
+            <FormField.Control>
+              <Select
+                value={category}
+                onChange={(value) => setCategory(value)}
+                options={[
+                  { value: 'communication', label: 'Communication' },
+                  { value: 'development', label: 'Development' },
+                  { value: 'productivity', label: 'Productivity' },
+                  { value: 'other', label: 'Other' },
+                ]}
+                placeholder="Select"
+                fullWidth
+              />
+            </FormField.Control>
+            <FormField.HelperText>
+              The category this template belongs to.
+            </FormField.HelperText>
+          </FormField>
+
+          <FormField>
+            <FormField.Label>Auth type</FormField.Label>
+            <FormField.Control>
+              <Select
+                value={authType}
+                onChange={(value) => setAuthType(value)}
+                options={[
+                  { value: 'config-required', label: 'Config Required' },
+                  { value: 'oauth', label: 'OAuth' },
+                  { value: 'api-key', label: 'API Key' },
+                  { value: 'none', label: 'None' },
+                ]}
+                placeholder="Config Required"
+                fullWidth
+              />
+            </FormField.Control>
+            <FormField.HelperText>
+              Defines whether authentication or additional config action is required to use this template.
+            </FormField.HelperText>
+          </FormField>
+        </VStack>
+      </VStack>
+    </Drawer>
+  );
+}
+
+// Template Type Settings Drawer
+export function TemplateTypeSettingsDrawer({
+  isOpen,
+  onClose,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+}) {
+  const [templateType, setTemplateType] = useState<'stdio' | 'http'>('stdio');
+
+  return (
+    <Drawer
+      isOpen={isOpen}
+      onClose={onClose}
+      title=""
+      showCloseButton={false}
+      width={696}
+      footer={
+        <HStack gap={2} className="w-full">
+          <Button variant="secondary" size="md" onClick={onClose} className="flex-1">
+            Cancel
+          </Button>
+          <Button variant="primary" size="md" onClick={onClose} className="flex-1">
+            Save
+          </Button>
+        </HStack>
+      }
+    >
+      <VStack gap={6}>
+        {/* Header */}
+        <h2 className="text-heading-h5 text-[var(--color-text-default)]">Template type settings</h2>
+
+        {/* Template Type Selection */}
+        <VStack gap={4}>
+          <FormField>
+            <FormField.Label>Template type</FormField.Label>
+            <FormField.HelperText>
+              Select the template type. STDIO runs in a container, HTTP connects to a remote server.
+            </FormField.HelperText>
+          </FormField>
+
+          <VStack gap={2}>
+            {/* STDIO Option */}
+            <div 
+              className={`w-full p-4 border rounded-lg cursor-pointer transition-colors ${
+                templateType === 'stdio' 
+                  ? 'border-[var(--color-action-primary)] bg-[var(--color-state-info-bg)]' 
+                  : 'border-[var(--color-border-default)] hover:bg-[var(--color-surface-subtle)]'
+              }`}
+              onClick={() => setTemplateType('stdio')}
+            >
+              <HStack gap={3}>
+                <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
+                  templateType === 'stdio' ? 'border-[var(--color-action-primary)]' : 'border-[var(--color-border-default)]'
+                }`}>
+                  {templateType === 'stdio' && (
+                    <div className="w-2 h-2 rounded-full bg-[var(--color-action-primary)]" />
+                  )}
+                </div>
+                <VStack gap={0.5}>
+                  <span className="text-label-md text-[var(--color-text-default)]">STDIO (Container)</span>
+                  <span className="text-body-sm text-[var(--color-text-subtle)]">
+                    A containerized MCP server deployed on Kubernetes
+                  </span>
+                </VStack>
+              </HStack>
+            </div>
+
+            {/* HTTP Option */}
+            <div 
+              className={`w-full p-4 border rounded-lg cursor-pointer transition-colors ${
+                templateType === 'http' 
+                  ? 'border-[var(--color-action-primary)] bg-[var(--color-state-info-bg)]' 
+                  : 'border-[var(--color-border-default)] hover:bg-[var(--color-surface-subtle)]'
+              }`}
+              onClick={() => setTemplateType('http')}
+            >
+              <HStack gap={3}>
+                <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
+                  templateType === 'http' ? 'border-[var(--color-action-primary)]' : 'border-[var(--color-border-default)]'
+                }`}>
+                  {templateType === 'http' && (
+                    <div className="w-2 h-2 rounded-full bg-[var(--color-action-primary)]" />
+                  )}
+                </div>
+                <VStack gap={0.5}>
+                  <span className="text-label-md text-[var(--color-text-default)]">HTTP (Remote)</span>
+                  <span className="text-body-sm text-[var(--color-text-subtle)]">
+                    External HTTP MCP server endpoint
+                  </span>
+                </VStack>
+              </HStack>
+            </div>
+          </VStack>
+        </VStack>
+      </VStack>
+    </Drawer>
+  );
+}
+
+// Container Settings Drawer
+export function ContainerSettingsDrawer({
+  isOpen,
+  onClose,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+}) {
+  const [dockerImage, setDockerImage] = useState('');
+  const [port, setPort] = useState('8000');
+  const [cpuRequest, setCpuRequest] = useState('');
+  const [cpuLimit, setCpuLimit] = useState('');
+  const [memoryRequest, setMemoryRequest] = useState('');
+  const [memoryLimit, setMemoryLimit] = useState('');
+  const [transportType, setTransportType] = useState('');
+
+  return (
+    <Drawer
+      isOpen={isOpen}
+      onClose={onClose}
+      title=""
+      showCloseButton={false}
+      width={696}
+      footer={
+        <HStack gap={2} className="w-full">
+          <Button variant="secondary" size="md" onClick={onClose} className="flex-1">
+            Cancel
+          </Button>
+          <Button variant="primary" size="md" onClick={onClose} className="flex-1">
+            Save
+          </Button>
+        </HStack>
+      }
+    >
+      <VStack gap={6}>
+        {/* Header */}
+        <h2 className="text-heading-h5 text-[var(--color-text-default)]">Container settings</h2>
+
+        {/* Container Configuration */}
+        <VStack gap={4}>
+          <FormField required>
+            <FormField.Label>Docker image</FormField.Label>
+            <FormField.Control>
+              <Input
+                placeholder="https://dockerhub.com/..."
+                value={dockerImage}
+                onChange={(e) => setDockerImage(e.target.value)}
+                fullWidth
+              />
+            </FormField.Control>
+            <FormField.HelperText>
+              Specify the Docker image that will be used to run the MCP server.
+            </FormField.HelperText>
+          </FormField>
+
+          <FormField>
+            <FormField.Label>Port</FormField.Label>
+            <FormField.Control>
+              <NumberInput
+                value={parseInt(port) || 8000}
+                onChange={(value) => setPort(String(value))}
+                min={1}
+                max={65535}
+              />
+            </FormField.Control>
+            <FormField.HelperText>
+              The port on which the container listens for incoming requests.
+            </FormField.HelperText>
+          </FormField>
+
+          <div className="grid grid-cols-2 gap-4">
+            <FormField>
+              <FormField.Label>CPU request</FormField.Label>
+              <FormField.Control>
+                <Input
+                  placeholder="Enter a name for this agent"
+                  value={cpuRequest}
+                  onChange={(e) => setCpuRequest(e.target.value)}
+                  fullWidth
+                />
+              </FormField.Control>
+              <FormField.HelperText>
+                The minimum amount of CPU resources guaranteed for this container.
+              </FormField.HelperText>
+            </FormField>
+
+            <FormField>
+              <FormField.Label>CPU limit</FormField.Label>
+              <FormField.Control>
+                <Input
+                  placeholder="Enter a name for this agent"
+                  value={cpuLimit}
+                  onChange={(e) => setCpuLimit(e.target.value)}
+                  fullWidth
+                />
+              </FormField.Control>
+              <FormField.HelperText>
+                The maximum amount of CPU resources the container is allowed to use.
+              </FormField.HelperText>
+            </FormField>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <FormField>
+              <FormField.Label>Memory request</FormField.Label>
+              <FormField.Control>
+                <Input
+                  placeholder="Enter a name for this agent"
+                  value={memoryRequest}
+                  onChange={(e) => setMemoryRequest(e.target.value)}
+                  fullWidth
+                />
+              </FormField.Control>
+              <FormField.HelperText>
+                The minimum amount of memory guaranteed for this container.
+              </FormField.HelperText>
+            </FormField>
+
+            <FormField>
+              <FormField.Label>Memory limit</FormField.Label>
+              <FormField.Control>
+                <Input
+                  placeholder="Enter a name for this agent"
+                  value={memoryLimit}
+                  onChange={(e) => setMemoryLimit(e.target.value)}
+                  fullWidth
+                />
+              </FormField.Control>
+              <FormField.HelperText>
+                The maximum amount of memory the container is allowed to consume.
+              </FormField.HelperText>
+            </FormField>
+          </div>
+
+          <FormField required>
+            <FormField.Label>Transport type</FormField.Label>
+            <FormField.Control>
+              <Select
+                value={transportType}
+                onChange={(value) => setTransportType(value)}
+                options={[
+                  { value: 'streamable-http', label: 'Streamable HTTP (SSE-05-1B) - incp' },
+                  { value: 'http', label: 'HTTP' },
+                  { value: 'websocket', label: 'WebSocket' },
+                ]}
+                placeholder="Streamable HTTP (SSE-05-1B) - incp"
+                fullWidth
+              />
+            </FormField.Control>
+            <FormField.HelperText>
+              Select the transport protocol used to expose the MCP server to clients.
+            </FormField.HelperText>
+          </FormField>
+        </VStack>
+      </VStack>
+    </Drawer>
+  );
+}
+
+// HTTP Settings Drawer
+export function HTTPSettingsDrawer({
+  isOpen,
+  onClose,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+}) {
+  const [url, setUrl] = useState('');
+  const [headers, setHeaders] = useState('');
+  const [transportType, setTransportType] = useState('');
+
+  return (
+    <Drawer
+      isOpen={isOpen}
+      onClose={onClose}
+      title=""
+      showCloseButton={false}
+      width={696}
+      footer={
+        <HStack gap={2} className="w-full">
+          <Button variant="secondary" size="md" onClick={onClose} className="flex-1">
+            Cancel
+          </Button>
+          <Button variant="primary" size="md" onClick={onClose} className="flex-1">
+            Save
+          </Button>
+        </HStack>
+      }
+    >
+      <VStack gap={6}>
+        {/* Header */}
+        <h2 className="text-heading-h5 text-[var(--color-text-default)]">HTTP settings</h2>
+
+        {/* HTTP Configuration */}
+        <VStack gap={4}>
+          <FormField required>
+            <FormField.Label>URL</FormField.Label>
+            <FormField.Control>
+              <Input
+                placeholder="https://externalservice.com"
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
+                fullWidth
+              />
+            </FormField.Control>
+            <FormField.HelperText>
+              The base URL of the MCP server exposed over HTTP.
+            </FormField.HelperText>
+          </FormField>
+
+          <FormField>
+            <FormField.Label>Headers</FormField.Label>
+            <FormField.Control>
+              <Input
+                placeholder='{"Authorization": "Bearer ..."}'
+                value={headers}
+                onChange={(e) => setHeaders(e.target.value)}
+                fullWidth
+              />
+            </FormField.Control>
+            <FormField.HelperText>
+              Optional HTTP headers to include in requests to the MCP server.
+            </FormField.HelperText>
+          </FormField>
+
+          <FormField required>
+            <FormField.Label>Transport type</FormField.Label>
+            <FormField.Control>
+              <Select
+                value={transportType}
+                onChange={(value) => setTransportType(value)}
+                options={[
+                  { value: 'streamable-http', label: 'Streamable HTTP (SSE-05-1B)' },
+                  { value: 'http', label: 'HTTP' },
+                  { value: 'websocket', label: 'WebSocket' },
+                ]}
+                placeholder="Streamable HTTP (SSE-05-1B)"
+                fullWidth
+              />
+            </FormField.Control>
+            <FormField.HelperText>
+              Select the transport protocol used to expose the MCP server to clients.
+            </FormField.HelperText>
+          </FormField>
+        </VStack>
+      </VStack>
+    </Drawer>
+  );
+}
+
+// Tool Access Control Drawer  
+export function ToolAccessControlDrawer({
+  isOpen,
+  onClose,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+}) {
+  const [visibility, setVisibility] = useState('all');
+  const [rateLimit, setRateLimit] = useState('50');
+
+  return (
+    <Drawer
+      isOpen={isOpen}
+      onClose={onClose}
+      title=""
+      showCloseButton={false}
+      width={376}
+      footer={
+        <HStack gap={2} className="w-full">
+          <Button variant="secondary" size="md" onClick={onClose} className="flex-1">
+            Cancel
+          </Button>
+          <Button variant="primary" size="md" onClick={onClose} className="flex-1">
+            Save
+          </Button>
+        </HStack>
+      }
+    >
+      <VStack gap={6}>
+        {/* Header */}
+        <h2 className="text-heading-h5 text-[var(--color-text-default)]">Edit access control</h2>
+
+        {/* Form Fields */}
+        <VStack gap={4}>
+          <FormField>
+            <FormField.Label>Visibility</FormField.Label>
+            <FormField.Control>
+              <Select
+                value={visibility}
+                onChange={(value) => setVisibility(value)}
+                options={[
+                  { value: 'all', label: 'All agents' },
+                  { value: 'selected', label: 'Selected agents only' },
+                  { value: 'none', label: 'Hidden' },
+                ]}
+                fullWidth
+              />
+            </FormField.Control>
+          </FormField>
+
+          <FormField>
+            <FormField.Label>Rate limit per agent</FormField.Label>
+            <FormField.Control>
+              <Input
+                placeholder="50"
+                value={rateLimit}
+                onChange={(e) => setRateLimit(e.target.value)}
+                fullWidth
+              />
+            </FormField.Control>
+            <FormField.HelperText>
+              Maximum requests per minute per agent.
+            </FormField.HelperText>
+          </FormField>
+        </VStack>
+      </VStack>
+    </Drawer>
+  );
+}
+
+// Tool Authentication Drawer
+export function ToolAuthenticationDrawer({
+  isOpen,
+  onClose,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+}) {
+  const [authType, setAuthType] = useState('oauth');
+  const [tokenExpiry, setTokenExpiry] = useState('1');
+  const [scopes, setScopes] = useState('');
+
+  return (
+    <Drawer
+      isOpen={isOpen}
+      onClose={onClose}
+      title=""
+      showCloseButton={false}
+      width={376}
+      footer={
+        <HStack gap={2} className="w-full">
+          <Button variant="secondary" size="md" onClick={onClose} className="flex-1">
+            Cancel
+          </Button>
+          <Button variant="primary" size="md" onClick={onClose} className="flex-1">
+            Save
+          </Button>
+        </HStack>
+      }
+    >
+      <VStack gap={6}>
+        {/* Header */}
+        <h2 className="text-heading-h5 text-[var(--color-text-default)]">Edit authentication</h2>
+
+        {/* Form Fields */}
+        <VStack gap={4}>
+          <FormField>
+            <FormField.Label>Auth type</FormField.Label>
+            <FormField.Control>
+              <Select
+                value={authType}
+                onChange={(value) => setAuthType(value)}
+                options={[
+                  { value: 'oauth', label: 'OAuth 2.0' },
+                  { value: 'api-key', label: 'API Key' },
+                  { value: 'basic', label: 'Basic Auth' },
+                  { value: 'none', label: 'None' },
+                ]}
+                fullWidth
+              />
+            </FormField.Control>
+          </FormField>
+
+          <FormField>
+            <FormField.Label>Token expiry (hours)</FormField.Label>
+            <FormField.Control>
+              <NumberInput
+                value={parseInt(tokenExpiry) || 1}
+                onChange={(value) => setTokenExpiry(String(value))}
+                min={1}
+                max={24}
+              />
+            </FormField.Control>
+          </FormField>
+
+          <FormField>
+            <FormField.Label>Scopes</FormField.Label>
+            <FormField.Control>
+              <Input
+                placeholder="chat:write, chat:read"
+                value={scopes}
+                onChange={(e) => setScopes(e.target.value)}
+                fullWidth
+              />
+            </FormField.Control>
+            <FormField.HelperText>
+              Comma-separated list of OAuth scopes.
+            </FormField.HelperText>
+          </FormField>
+        </VStack>
+      </VStack>
+    </Drawer>
   );
 }
