@@ -44,7 +44,7 @@ export function AgentAppLayout({ children }: AgentAppLayoutProps) {
     <div className="h-screen w-screen overflow-hidden bg-[var(--color-surface-subtle)] flex">
       <AgentSidebar />
 
-      <main className="flex flex-1 flex-col h-full bg-[var(--color-surface-default)] ml-[62px] overflow-hidden">
+      <main className="flex flex-1 flex-col h-full bg-[var(--color-surface-default)] ml-[60px] overflow-hidden">
         <div className="w-full flex flex-col h-full min-h-0">
           {/* Shared TabBar */}
           <TabBar
