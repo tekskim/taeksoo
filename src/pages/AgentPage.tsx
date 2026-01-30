@@ -305,7 +305,7 @@ export function AgentPage() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string) => (
-        <span 
+        <span
           className="text-[var(--color-action-primary)] font-medium hover:underline cursor-pointer truncate block"
           title={value}
         >
