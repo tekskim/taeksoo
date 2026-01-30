@@ -414,9 +414,7 @@ export function ComputeAdminVolumeDetailPage() {
           >
             {row.name}
           </Link>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-            ID : {row.id}
-          </span>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
         </div>
       ),
     },
@@ -480,9 +478,7 @@ export function ComputeAdminVolumeDetailPage() {
           >
             {row.name}
           </Link>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-            ID : {row.id}
-          </span>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
         </div>
       ),
     },
@@ -715,7 +711,7 @@ export function ComputeAdminVolumeDetailPage() {
                     <VStack gap={4} className="pt-4">
                       {/* Section Header */}
                       <div className="flex items-center justify-between w-full">
-                        <h2 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
+                        <h2 className="text-heading-h5 text-[var(--color-text-default)]">
                           Volume snapshots
                         </h2>
                       </div>
@@ -764,7 +760,7 @@ export function ComputeAdminVolumeDetailPage() {
                     <VStack gap={4} className="pt-4">
                       {/* Section Header */}
                       <div className="flex items-center justify-between w-full">
-                        <h2 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
+                        <h2 className="text-heading-h5 text-[var(--color-text-default)]">
                           Volume backups
                         </h2>
                       </div>

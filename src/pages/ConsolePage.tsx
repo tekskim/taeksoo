@@ -7,14 +7,12 @@ import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
 
 /* ----------------------------------------
-   Types
-   ---------------------------------------- */
+   Types ---------------------------------------- */
 
 type ConnectionStatus = 'connected' | 'connecting' | 'disconnected';
 
 /* ----------------------------------------
-   Connection Status indicator
-   ---------------------------------------- */
+   Connection Status indicator ---------------------------------------- */
 
 function ConnectionStatusIndicator({ status }: { status: ConnectionStatus }) {
   const statusConfig = {
@@ -37,14 +35,13 @@ function ConnectionStatusIndicator({ status }: { status: ConnectionStatus }) {
   return (
     <div className="flex items-center gap-1.5 ml-3">
       <span className={`size-2 rounded-full ${config.color}`} />
-      <span className="text-[12px] text-[var(--color-text-default)]">{config.label}</span>
+      <span className="text-body-md text-[var(--color-text-default)]">{config.label}</span>
     </div>
   );
 }
 
 /* ----------------------------------------
-   Console Page Component
-   ---------------------------------------- */
+   Console Page Component ---------------------------------------- */
 
 export function ConsolePage() {
   const { instanceId } = useParams<{ instanceId: string }>();
@@ -204,7 +201,7 @@ export function ConsolePage() {
           {/* Log Content - Dark background */}
           <div
             ref={contentRef}
-            className="flex-1 overflow-auto p-4 font-mono text-[12px] leading-5 bg-[#0d1117] text-slate-300 shell-scroll"
+            className="flex-1 overflow-auto p-4 font-mono text-body-md leading-5 bg-[#0d1117] text-slate-300 shell-scroll"
           >
             {content ? (
               <pre className="whitespace-pre-wrap break-all m-0">{content}</pre>
@@ -228,7 +225,7 @@ export function ConsolePage() {
 
               {/* Clear Button */}
               <Button size="sm" variant="secondary" onClick={handleClear}>
-                Clear
+                Clear{' '}
               </Button>
 
               {/* Download Button - Custom style for 28x28 */}
@@ -281,16 +278,16 @@ function generateSampleLogs(_instanceName: string): string {
   };
 
   const logs = [
-    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:11.570725    1 main.go:152] "Version" version="v"`,
-    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:11.570824    1 main.go:153] "Running node-driver-registrar" mode=""`,
-    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:11.570828    1 main.go:174] "Attempting to open a gRPC connection" csiAddress="/csi/csi.sock"`,
-    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:17.836012    1 main.go:182] "Calling CSI driver to discover driver name"`,
-    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:17.837013    1 main.go:191] "CSI driver name" csiDriverName="driver.csi.io"`,
-    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:17.837042    1 node_register.go:56] "Starting Registration Server" socketPath="/registration/driver.csi.io-reg.sock"`,
-    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:17.837176    1 node_register.go:66] "Registration Server started" socketPath="/registration/driver.csi.io-reg.sock"`,
-    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:17.837245    1 node_register.go:96] "Skipping HTTP server"`,
-    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:18.515514    1 main.go:97] "Received GetInfo call" request="&InfoRequest{}"`,
-    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:18.529723    1 main.go:109] "Received NotifyRegistrationStatus call" status="&RegistrationStatus{PluginRegistered:true,Error:,}"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:11.570725 1 main.go:152] "Version" version="v"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:11.570824 1 main.go:153] "Running node-driver-registrar" mode=""`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:11.570828 1 main.go:174] "Attempting to open a gRPC connection" csiAddress="/csi/csi.sock"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:17.836012 1 main.go:182] "Calling CSI driver to discover driver name"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:17.837013 1 main.go:191] "CSI driver name" csiDriverName="driver.csi.io"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:17.837042 1 node_register.go:56] "Starting Registration Server" socketPath="/registration/driver.csi.io-reg.sock"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:17.837176 1 node_register.go:66] "Registration Server started" socketPath="/registration/driver.csi.io-reg.sock"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:17.837245 1 node_register.go:96] "Skipping HTTP server"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:18.515514 1 main.go:97] "Received GetInfo call" request="&InfoRequest{}"`,
+    `${formatDate(now)} ${formatTime(now)}  I1029 02:06:18.529723 1 main.go:109] "Received NotifyRegistrationStatus call" status="&RegistrationStatus{PluginRegistered:true,Error:,}"`,
   ];
 
   return logs.join('\n');

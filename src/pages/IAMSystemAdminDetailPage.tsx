@@ -210,10 +210,8 @@ function InfoCard({ label, value, statusIndicator }: InfoCardProps) {
   return (
     <div className="basis-0 grow bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3 flex items-center justify-between min-w-0">
       <div className="flex flex-col gap-1.5">
-        <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)]">
-          {label}
-        </span>
-        <span className="text-[12px] leading-4 text-[var(--color-text-default)]">{value}</span>
+        <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">{label}</span>
+        <span className="text-body-md leading-4 text-[var(--color-text-default)]">{value}</span>
       </div>
       {statusIndicator}
     </div>
@@ -425,7 +423,7 @@ export default function IAMSystemAdminDetailPage() {
               <div className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 pt-3 pb-4">
                 <VStack gap={3}>
                   {/* Title */}
-                  <h1 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+                  <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
                     {admin.username}
                   </h1>
 
@@ -522,7 +520,7 @@ export default function IAMSystemAdminDetailPage() {
                   <VStack gap={4} className="pt-4">
                     {/* Header */}
                     <div className="flex items-center justify-between">
-                      <h3 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+                      <h3 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
                         Sessions
                       </h3>
                     </div>

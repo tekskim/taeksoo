@@ -71,12 +71,8 @@ function StatusCard({ label, count, status }: StatusCardProps) {
       className={`${bgColor} flex flex-[1_0_0] items-center justify-between min-h-px min-w-px px-4 py-3 relative rounded-lg shrink-0`}
     >
       <div className="flex flex-col gap-1.5 items-start leading-4 not-italic relative shrink-0">
-        <p className="font-medium text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
-          {label}
-        </p>
-        <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">
-          {count}
-        </p>
+        <p className="text-label-sm text-[var(--color-text-subtle)]">{label}</p>
+        <p className="text-body-md text-[var(--color-text-default)]">{count}</p>
       </div>
       <div
         className={`${iconBg} flex gap-0 items-center justify-center p-1 relative rounded-2xl shrink-0 size-6`}

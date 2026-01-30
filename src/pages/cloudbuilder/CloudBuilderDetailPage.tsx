@@ -117,9 +117,7 @@ export function CloudBuilderDetailPage() {
       <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
         <VStack gap={6} className="min-w-[1176px]">
           <div className="flex items-center justify-between h-8">
-            <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
-              {config.title}
-            </h1>
+            <h1 className="text-heading-h5 text-[var(--color-text-default)]">{config.title}</h1>
           </div>
 
           {isNetworkAgent ? (
@@ -219,7 +217,7 @@ export function CloudBuilderDetailPage() {
                   }
                 />
                 <SectionCard.Content gap={3}>
-                  <pre className="max-h-[420px] overflow-auto rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)] p-3 text-[12px] leading-5 text-[var(--color-text-default)]">
+                  <pre className="max-h-[420px] overflow-auto rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)] p-3 text-body-md leading-5 text-[var(--color-text-default)]">
                     {networkAgentMeta?.configurationText ?? ''}
                   </pre>
                 </SectionCard.Content>
@@ -244,7 +242,7 @@ export function CloudBuilderDetailPage() {
                   {nextStatus === 'Disabled' && !!config.statusAction?.requireDisableReason ? (
                     <div className="py-4">
                       <div className="grid grid-cols-12 gap-6 items-start">
-                        <div className="col-span-12 md:col-span-4 text-[14px] text-[var(--color-text-default)]">
+                        <div className="col-span-12 md:col-span-4 text-body-lg text-[var(--color-text-default)]">
                           <span>Reason</span>{' '}
                           <span className="ml-1 text-[var(--color-state-danger)]">*</span>
                         </div>
@@ -303,7 +301,7 @@ export function CloudBuilderDetailPage() {
                       <SectionCard.DataRow key={k} label={k} value={String(v ?? '-') || '-'} />
                     ))
                 ) : (
-                  <div className="py-10 text-center text-[12px] text-[var(--color-text-subtle)]">
+                  <div className="py-10 text-center text-body-md text-[var(--color-text-subtle)]">
                     데이터를 찾을 수 없습니다.
                   </div>
                 )}

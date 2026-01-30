@@ -236,7 +236,7 @@ export const Pagination: React.FC<PaginationProps> = ({
       {totalItems !== undefined && (
         <>
           <div className="h-4 w-px bg-[var(--color-border-default)]" />
-          <span className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+          <span className="text-body-sm text-[var(--color-text-subtle)]">
             {selectedCount > 0 ? (
               <span>
                 <span className="text-[var(--color-text-default)] font-medium">

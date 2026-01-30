@@ -144,10 +144,10 @@ export function AttachPortToInstanceDrawer({
         {/* Port Info */}
         <div className="w-full bg-[var(--color-surface-muted)] rounded-lg px-4 py-3">
           <VStack gap={1.5}>
-            <span className="text-[11px] font-medium text-[var(--color-text-subtle)] leading-4">
+            <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
               Port name
             </span>
-            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+            <span className="text-body-md text-[var(--color-text-default)] leading-4">
               {portName}
             </span>
           </VStack>
@@ -155,9 +155,7 @@ export function AttachPortToInstanceDrawer({
 
         {/* Instances Section */}
         <VStack gap={3} className="w-full pb-5">
-          <h3 className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
-            Instances
-          </h3>
+          <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">Instances</h3>
 
           {/* Search */}
           <div className="w-[280px]">
@@ -246,7 +244,7 @@ export function AttachPortToInstanceDrawer({
                       className="shrink-0 text-[var(--color-action-primary)]"
                     />
                   </HStack>
-                  <span className="text-[11px] text-[var(--color-text-subtle)] truncate">
+                  <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
                     ID : {inst.id}
                   </span>
                 </div>

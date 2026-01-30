@@ -7,8 +7,7 @@ import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
 import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
 
 /* ----------------------------------------
-   Settings Information Page
-   ---------------------------------------- */
+   Settings Information Page ---------------------------------------- */
 
 export default function SettingsInformationPage() {
   const navigate = useNavigate();
@@ -55,10 +54,10 @@ export default function SettingsInformationPage() {
               <VStack gap={6}>
                 {/* Header */}
                 <div>
-                  <h1 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
-                    Information
+                  <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
+                    Information{' '}
                   </h1>
-                  <p className="text-[12px] leading-[18px] text-[var(--color-text-muted)] mt-1">
+                  <p className="text-body-md leading-[18px] text-[var(--color-text-muted)] mt-1">
                     View application version and related resources.
                   </p>
                 </div>
@@ -85,8 +84,7 @@ export default function SettingsInformationPage() {
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-action-primary)] hover:underline w-fit"
                       >
-                        Terms of Service
-                        <IconExternalLink size={14} stroke={1.5} />
+                        Terms of Service <IconExternalLink size={14} stroke={1.5} />
                       </a>
                       <a
                         href="https://thaki.cloud/privacy"
@@ -94,8 +92,7 @@ export default function SettingsInformationPage() {
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-action-primary)] hover:underline w-fit"
                       >
-                        Privacy Policy
-                        <IconExternalLink size={14} stroke={1.5} />
+                        Privacy Policy <IconExternalLink size={14} stroke={1.5} />
                       </a>
                     </div>
                   </SectionCard.Content>
@@ -112,8 +109,7 @@ export default function SettingsInformationPage() {
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-action-primary)] hover:underline w-fit"
                       >
-                        Official Website
-                        <IconExternalLink size={14} stroke={1.5} />
+                        Official Website <IconExternalLink size={14} stroke={1.5} />
                       </a>
                       <a
                         href="https://support.thaki.cloud"
@@ -121,8 +117,7 @@ export default function SettingsInformationPage() {
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-action-primary)] hover:underline w-fit"
                       >
-                        Support Center
-                        <IconExternalLink size={14} stroke={1.5} />
+                        Support Center <IconExternalLink size={14} stroke={1.5} />
                       </a>
                     </div>
                   </SectionCard.Content>

@@ -763,15 +763,13 @@ export default function CreateLoadBalancerPage() {
         render: (_value, row) => (
           <VStack gap={0.5} align="start">
             <HStack gap={1.5} align="center">
-              <span className="text-[var(--color-action-primary)] text-[12px] font-medium">
-                {row.name}
-              </span>
+              <span className="text-[var(--color-action-primary)] text-label-md">{row.name}</span>
               <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
               {row.status === 'error' && (
                 <IconAlertCircle size={12} className="text-[var(--color-state-danger)]" />
               )}
             </HStack>
-            <span className="text-[11px] text-[var(--color-text-subtle)]">ID: {row.id}</span>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
           </VStack>
         ),
       },
@@ -831,15 +829,13 @@ export default function CreateLoadBalancerPage() {
         render: (_value, row) => (
           <VStack gap={0.5} align="start">
             <HStack gap={1.5} align="center">
-              <span className="text-[var(--color-action-primary)] text-[12px] font-medium">
-                {row.name}
-              </span>
+              <span className="text-[var(--color-action-primary)] text-label-md">{row.name}</span>
               <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
               {row.status === 'paused' && (
                 <IconAlertCircle size={12} className="text-[var(--color-state-danger)]" />
               )}
             </HStack>
-            <span className="text-[11px] text-[var(--color-text-subtle)]">ID: {row.id}</span>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
           </VStack>
         ),
       },
@@ -859,12 +855,14 @@ export default function CreateLoadBalancerPage() {
         render: (_value, row) => (
           <VStack gap={0.5} align="start">
             <HStack gap={1} align="center">
-              <span className="text-[12px] text-[var(--color-text-default)]">{row.listener}</span>
-              <span className="text-[12px] text-[var(--color-text-default)]">
+              <span className="text-body-md text-[var(--color-text-default)]">{row.listener}</span>
+              <span className="text-body-md text-[var(--color-text-default)]">
                 (+{row.listenerCount})
               </span>
             </HStack>
-            <span className="text-[11px] text-[var(--color-text-subtle)]">ID:{row.listenerId}</span>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">
+              ID:{row.listenerId}
+            </span>
           </VStack>
         ),
       },
@@ -918,15 +916,13 @@ export default function CreateLoadBalancerPage() {
         render: (_value, row) => (
           <VStack gap={0.5} align="start">
             <HStack gap={1.5} align="center">
-              <span className="text-[var(--color-action-primary)] text-[12px] font-medium">
-                {row.name}
-              </span>
+              <span className="text-[var(--color-action-primary)] text-label-md">{row.name}</span>
               <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
               {row.status === 'paused' && (
                 <IconAlertCircle size={12} className="text-[var(--color-state-danger)]" />
               )}
             </HStack>
-            <span className="text-[11px] text-[var(--color-text-subtle)]">ID: {row.id}</span>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
           </VStack>
         ),
       },
@@ -939,12 +935,14 @@ export default function CreateLoadBalancerPage() {
         render: (_value, row) => (
           <VStack gap={0.5} align="start">
             <HStack gap={1} align="center">
-              <span className="text-[12px] text-[var(--color-text-default)]">{row.listener}</span>
-              <span className="text-[12px] text-[var(--color-text-default)]">
+              <span className="text-body-md text-[var(--color-text-default)]">{row.listener}</span>
+              <span className="text-body-md text-[var(--color-text-default)]">
                 (+{row.listenerCount})
               </span>
             </HStack>
-            <span className="text-[11px] text-[var(--color-text-subtle)]">ID:{row.listenerId}</span>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">
+              ID:{row.listenerId}
+            </span>
           </VStack>
         ),
       },
@@ -1008,15 +1006,13 @@ export default function CreateLoadBalancerPage() {
         render: (_value, row) => (
           <VStack gap={0.5} align="start">
             <HStack gap={1.5} align="center">
-              <span className="text-[var(--color-action-primary)] text-[12px] font-medium">
-                {row.name}
-              </span>
+              <span className="text-[var(--color-action-primary)] text-label-md">{row.name}</span>
               <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
               {row.status === 'paused' && (
                 <IconAlertCircle size={12} className="text-[var(--color-state-danger)]" />
               )}
             </HStack>
-            <span className="text-[11px] text-[var(--color-text-subtle)]">ID: {row.id}</span>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
           </VStack>
         ),
       },
@@ -1036,12 +1032,12 @@ export default function CreateLoadBalancerPage() {
         render: (_value, row) => (
           <HStack gap={1} align="center">
             <VStack gap={0.5} align="start">
-              <span className="text-[12px] text-[var(--color-text-default)]">{row.listener}</span>
-              <span className="text-[11px] text-[var(--color-text-subtle)]">
+              <span className="text-body-md text-[var(--color-text-default)]">{row.listener}</span>
+              <span className="text-body-sm text-[var(--color-text-subtle)]">
                 ID:{row.listenerId}
               </span>
             </VStack>
-            <span className="text-[12px] text-[var(--color-text-default)]">
+            <span className="text-body-md text-[var(--color-text-default)]">
               (+{row.listenerCount})
             </span>
           </HStack>
@@ -1204,7 +1200,7 @@ export default function CreateLoadBalancerPage() {
             <VStack gap={3} className="min-w-[1176px]">
               {/* Page Header */}
               <div className="flex items-center justify-between h-8">
-                <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
                   Create load balancer
                 </h1>
               </div>
@@ -1249,7 +1245,7 @@ export default function CreateLoadBalancerPage() {
                                 error={!!lbNameError}
                               />
                               {lbNameError && (
-                                <span className="text-[11px] leading-[var(--line-height-16)] text-[var(--color-state-danger)]">
+                                <span className="text-body-sm text-[var(--color-state-danger)]">
                                   {lbNameError}
                                 </span>
                               )}
@@ -1312,7 +1308,7 @@ export default function CreateLoadBalancerPage() {
                               </HStack>
                             </VStack>
                             {providerError && (
-                              <span className="text-[11px] leading-[var(--line-height-16)] text-[var(--color-state-danger)]">
+                              <span className="text-body-sm text-[var(--color-state-danger)]">
                                 {providerError}
                               </span>
                             )}
@@ -1372,7 +1368,7 @@ export default function CreateLoadBalancerPage() {
                               }}
                             />
                           ) : (
-                            <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md p-4 text-center text-[12px] text-[var(--color-text-default)]">
+                            <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md p-4 text-center text-body-md text-[var(--color-text-default)]">
                               Select a provider to view the network list.
                             </div>
                           )}
@@ -1411,7 +1407,7 @@ export default function CreateLoadBalancerPage() {
                           </FormField.HelperText>
                           <div className="mt-3 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md px-4 py-2 flex items-center gap-2">
                             <HStack gap={2} align="center">
-                              <span className="text-[12px] font-medium text-[var(--color-text-default)]">
+                              <span className="text-label-md text-[var(--color-text-default)]">
                                 Subnet
                               </span>
                               <Select
@@ -1434,7 +1430,7 @@ export default function CreateLoadBalancerPage() {
                               />
                             </HStack>
                             <HStack gap={2} align="center">
-                              <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                              <span className="text-label-lg text-[var(--color-text-default)]">
                                 VIP
                               </span>
                               <Select
@@ -1455,7 +1451,7 @@ export default function CreateLoadBalancerPage() {
                                   style={{ width: '160px' }}
                                 />
                               )}
-                              <span className="text-[11px] text-[var(--color-text-subtle)]">
+                              <span className="text-body-sm text-[var(--color-text-subtle)]">
                                 10.62.0.31 - 10.62.0.77
                               </span>
                             </HStack>
@@ -1580,7 +1576,7 @@ export default function CreateLoadBalancerPage() {
                         {/* Listener protocol */}
                         <FormField required>
                           <FormField.Label>Listener protocol</FormField.Label>
-                          <p className="text-[12px] text-[var(--color-text-subtle)] mb-2">
+                          <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
                             Select the protocol used to handle client requests.
                           </p>
                           <FormField.Control>
@@ -1611,7 +1607,7 @@ export default function CreateLoadBalancerPage() {
                         {listenerProtocol === 'HTTP' && (
                           <FormField required>
                             <FormField.Label>SSL Parsing Method</FormField.Label>
-                            <p className="text-[12px] text-[var(--color-text-subtle)] mb-3">
+                            <p className="text-body-md text-[var(--color-text-subtle)] mb-3">
                               Defines how SSL information is parsed from incoming HTTPS requests.
                             </p>
                             <VStack gap={3} align="start">
@@ -1634,7 +1630,7 @@ export default function CreateLoadBalancerPage() {
                           <VStack gap={4}>
                             <FormField required>
                               <FormField.Label>Server Certificates</FormField.Label>
-                              <p className="text-[12px] text-[var(--color-text-subtle)]">
+                              <p className="text-body-md text-[var(--color-text-subtle)]">
                                 Select a server certificate for the listener to handle HTTPS
                                 traffic.
                               </p>
@@ -1689,7 +1685,7 @@ export default function CreateLoadBalancerPage() {
                           <VStack gap={4} align="stretch">
                             <FormField required>
                               <FormField.Label>CA Certificates</FormField.Label>
-                              <p className="text-[12px] text-[var(--color-text-subtle)] mb-2">
+                              <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
                                 Select a CA certificate to validate client certificates.
                               </p>
                             </FormField>
@@ -1742,13 +1738,13 @@ export default function CreateLoadBalancerPage() {
                         {listenerProtocol === 'HTTP' && (
                           <FormField>
                             <FormField.Label>SNI</FormField.Label>
-                            <p className="text-[12px] text-[var(--color-text-subtle)] mb-2">
+                            <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
                               Add more certificates here to host multiple, different HTTPS websites
                               on this single listener.
                             </p>
                             <HStack gap={2} align="center">
                               <Toggle checked={sniEnabled} onChange={setSniEnabled} />
-                              <span className="text-[12px] text-[var(--color-text-default)]">
+                              <span className="text-body-md text-[var(--color-text-default)]">
                                 {sniEnabled ? 'On' : 'Off'}
                               </span>
                             </HStack>
@@ -1758,7 +1754,7 @@ export default function CreateLoadBalancerPage() {
                         {/* SNI Certificates - shown when HTTP is selected AND SNI is enabled */}
                         {listenerProtocol === 'HTTP' && sniEnabled && (
                           <VStack gap={4} align="stretch">
-                            <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                            <span className="text-label-lg text-[var(--color-text-default)]">
                               SNI Certificates
                             </span>
 
@@ -1804,7 +1800,7 @@ export default function CreateLoadBalancerPage() {
                         {/* Protocol port */}
                         <FormField required>
                           <FormField.Label>Protocol port</FormField.Label>
-                          <p className="text-[12px] text-[var(--color-text-subtle)] mb-2">
+                          <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
                             The port on which the listener receives client requests.
                           </p>
                           <FormField.Control>
@@ -1822,7 +1818,7 @@ export default function CreateLoadBalancerPage() {
                         {/* Connection limit */}
                         <FormField required>
                           <FormField.Label>Connection limit</FormField.Label>
-                          <p className="text-[12px] text-[var(--color-text-subtle)] mb-2">
+                          <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
                             Defines the maximum number of concurrent connections the listener can
                             handle.
                           </p>
@@ -1854,7 +1850,7 @@ export default function CreateLoadBalancerPage() {
                         {/* Listener admin state */}
                         <FormField>
                           <FormField.Label>Listener admin state</FormField.Label>
-                          <p className="text-[12px] text-[var(--color-text-subtle)] mb-2">
+                          <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
                             Set the administrative state of the listener. 'UP' enables traffic
                             handling, while 'DOWN' disables it.
                           </p>
@@ -1864,7 +1860,7 @@ export default function CreateLoadBalancerPage() {
                                 checked={listenerAdminState}
                                 onChange={(e) => setListenerAdminState(e.target.checked)}
                               />
-                              <span className="text-[12px] text-[var(--color-text-default)]">
+                              <span className="text-body-md text-[var(--color-text-default)]">
                                 {listenerAdminState ? 'Up' : 'Down'}
                               </span>
                             </HStack>
@@ -1879,7 +1875,7 @@ export default function CreateLoadBalancerPage() {
                               {/* Custom headers */}
                               <FormField>
                                 <FormField.Label>Custom headers</FormField.Label>
-                                <p className="text-[12px] text-[var(--color-text-subtle)] mb-3">
+                                <p className="text-body-md text-[var(--color-text-subtle)] mb-3">
                                   Defines custom header values to be forwarded to backend servers.
                                 </p>
                                 <VStack gap={3} align="start">
@@ -1915,7 +1911,7 @@ export default function CreateLoadBalancerPage() {
                               {/* Client data timeout */}
                               <FormField>
                                 <FormField.Label>Client data timeout (ms)</FormField.Label>
-                                <p className="text-[12px] text-[var(--color-text-subtle)] mb-2">
+                                <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
                                   Maximum time to wait for client request data.
                                 </p>
                                 <FormField.Control>
@@ -1931,7 +1927,7 @@ export default function CreateLoadBalancerPage() {
                               {/* Member connect timeout */}
                               <FormField>
                                 <FormField.Label>Member connect timeout (ms)</FormField.Label>
-                                <p className="text-[12px] text-[var(--color-text-subtle)] mb-2">
+                                <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
                                   Maximum time to wait when establishing a connection to a backend
                                   member.
                                 </p>
@@ -1948,7 +1944,7 @@ export default function CreateLoadBalancerPage() {
                               {/* Member data timeout */}
                               <FormField>
                                 <FormField.Label>Member data timeout (ms)</FormField.Label>
-                                <p className="text-[12px] text-[var(--color-text-subtle)] mb-2">
+                                <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
                                   Maximum time to wait for response data from a backend member.
                                 </p>
                                 <FormField.Control>
@@ -1964,7 +1960,7 @@ export default function CreateLoadBalancerPage() {
                               {/* TCP Inspect Timeout */}
                               <FormField>
                                 <FormField.Label>TCP Inspect Timeout (ms)</FormField.Label>
-                                <p className="text-[12px] text-[var(--color-text-subtle)] mb-2">
+                                <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
                                   Timeout for TCP packet inspection or handshake. 0 disables this
                                   feature.
                                 </p>
@@ -1981,7 +1977,7 @@ export default function CreateLoadBalancerPage() {
                               {/* Allowed CIDRs */}
                               <FormField>
                                 <FormField.Label>Allowed CIDRs</FormField.Label>
-                                <p className="text-[12px] text-[var(--color-text-subtle)] mb-2">
+                                <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
                                   Defines the client IP ranges allowed to access the listener.
                                 </p>
                                 <VStack gap={2} align="start">
@@ -2081,12 +2077,12 @@ export default function CreateLoadBalancerPage() {
                       <SectionCard.Content gap={6} className="pt-2">
                         {/* Create Pool toggle */}
                         <VStack gap={2} align="start">
-                          <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                          <span className="text-label-lg text-[var(--color-text-default)]">
                             Create Pool
                           </span>
                           <HStack gap={2} align="center">
                             <Toggle checked={createPool} onChange={setCreatePool} />
-                            <span className="text-[12px] text-[var(--color-text-default)]">
+                            <span className="text-body-md text-[var(--color-text-default)]">
                               {createPool ? 'Yes' : 'No'}
                             </span>
                           </HStack>
@@ -2131,7 +2127,7 @@ export default function CreateLoadBalancerPage() {
                             {/* Pool algorithm */}
                             <FormField required>
                               <FormField.Label>Pool algorithm</FormField.Label>
-                              <p className="text-[12px] text-[var(--color-text-subtle)] mb-2">
+                              <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
                                 Select how incoming requests are distributed across backend members.
                                 The chosen algorithm determines how traffic is routed to each
                                 server.
@@ -2165,7 +2161,7 @@ export default function CreateLoadBalancerPage() {
                             {/* Pool protocol */}
                             <FormField required>
                               <FormField.Label>Pool protocol</FormField.Label>
-                              <p className="text-[12px] text-[var(--color-text-subtle)] mb-2">
+                              <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
                                 Select the protocol used to communicate with backend members. It
                                 must match or be compatible with the listener's protocol.
                               </p>
@@ -2182,16 +2178,16 @@ export default function CreateLoadBalancerPage() {
 
                             {/* Pool admin state */}
                             <VStack gap={2} align="start">
-                              <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                              <span className="text-label-lg text-[var(--color-text-default)]">
                                 Pool admin state
                               </span>
-                              <p className="text-[12px] text-[var(--color-text-subtle)]">
+                              <p className="text-body-md text-[var(--color-text-subtle)]">
                                 Set the administrative state of the pool. 'UP' enables traffic
                                 handling, while 'DOWN' disables it.
                               </p>
                               <HStack gap={2} align="center">
                                 <Toggle checked={poolAdminState} onChange={setPoolAdminState} />
-                                <span className="text-[12px] text-[var(--color-text-default)]">
+                                <span className="text-body-md text-[var(--color-text-default)]">
                                   {poolAdminState ? 'Up' : 'Down'}
                                 </span>
                               </HStack>
@@ -2207,10 +2203,10 @@ export default function CreateLoadBalancerPage() {
                                 <VStack gap={4} align="stretch" className="pt-4">
                                   {/* Session persistence */}
                                   <VStack gap={3} align="start">
-                                    <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                    <span className="text-label-lg text-[var(--color-text-default)]">
                                       Session persistence
                                     </span>
-                                    <p className="text-[12px] text-[var(--color-text-subtle)]">
+                                    <p className="text-body-md text-[var(--color-text-subtle)]">
                                       Select the protocol used to communicate with backend members.
                                       It must match or be compatible with the listener's protocol.
                                     </p>
@@ -2244,7 +2240,7 @@ export default function CreateLoadBalancerPage() {
                                               disabled={sessionPersistence !== 'app_cookie'}
                                               className="w-[var(--layout-sidebar-width)]"
                                             />
-                                            <span className="text-[11px] text-[var(--color-text-subtle)]">
+                                            <span className="text-body-sm text-[var(--color-text-subtle)]">
                                               You can use letters, numbers, and special
                                               characters(+.-_!#$%&'*^|~).
                                             </span>
@@ -2321,10 +2317,10 @@ export default function CreateLoadBalancerPage() {
                         {/* Ports Section */}
                         <VStack gap={3} align="stretch">
                           <VStack gap={2} align="start">
-                            <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                            <span className="text-label-lg text-[var(--color-text-default)]">
                               Ports
                             </span>
-                            <p className="text-[12px] text-[var(--color-text-subtle)]">
+                            <p className="text-body-md text-[var(--color-text-subtle)]">
                               Select one of the IP addresses associated with the port to add as a
                               member.
                             </p>
@@ -2350,16 +2346,16 @@ export default function CreateLoadBalancerPage() {
                           <div className="w-full border border-[var(--color-border-default)] rounded-md overflow-hidden">
                             {/* Table Header */}
                             <div className="flex bg-[var(--color-surface-subtle)] border-b border-[var(--color-border-default)]">
-                              <div className="flex-1 px-3 py-2 text-[11px] font-medium text-[var(--color-text-default)]">
+                              <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)]">
                                 Name
                               </div>
-                              <div className="flex-1 px-3 py-2 text-[11px] font-medium text-[var(--color-text-default)]">
+                              <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)]">
                                 Attached instance
                               </div>
-                              <div className="flex-1 px-3 py-2 text-[11px] font-medium text-[var(--color-text-default)]">
+                              <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)]">
                                 IP Address
                               </div>
-                              <div className="flex-1 px-3 py-2 text-[11px] font-medium text-[var(--color-text-default)] text-center">
+                              <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)] text-center">
                                 Action
                               </div>
                             </div>
@@ -2373,7 +2369,7 @@ export default function CreateLoadBalancerPage() {
                                 <div className="flex-1 px-3 py-2">
                                   <VStack gap={0.5} align="start">
                                     <HStack gap={1.5} align="center">
-                                      <span className="text-[12px] font-medium text-[var(--color-action-primary)]">
+                                      <span className="text-label-md text-[var(--color-action-primary)]">
                                         {port.name}
                                       </span>
                                       <IconExternalLink
@@ -2381,7 +2377,7 @@ export default function CreateLoadBalancerPage() {
                                         className="text-[var(--color-action-primary)]"
                                       />
                                     </HStack>
-                                    <span className="text-[11px] text-[var(--color-text-subtle)]">
+                                    <span className="text-body-sm text-[var(--color-text-subtle)]">
                                       ID: {port.id}
                                     </span>
                                   </VStack>
@@ -2391,7 +2387,7 @@ export default function CreateLoadBalancerPage() {
                                   {port.attachedInstance ? (
                                     <VStack gap={0.5} align="start">
                                       <HStack gap={1.5} align="center">
-                                        <span className="text-[12px] font-medium text-[var(--color-action-primary)]">
+                                        <span className="text-label-md text-[var(--color-action-primary)]">
                                           {port.attachedInstance}
                                         </span>
                                         <IconExternalLink
@@ -2399,12 +2395,12 @@ export default function CreateLoadBalancerPage() {
                                           className="text-[var(--color-action-primary)]"
                                         />
                                       </HStack>
-                                      <span className="text-[11px] text-[var(--color-text-subtle)]">
+                                      <span className="text-body-sm text-[var(--color-text-subtle)]">
                                         ID: {port.attachedInstanceId}
                                       </span>
                                     </VStack>
                                   ) : (
-                                    <span className="text-[12px] text-[var(--color-text-default)]">
+                                    <span className="text-body-md text-[var(--color-text-default)]">
                                       -
                                     </span>
                                   )}
@@ -2427,7 +2423,7 @@ export default function CreateLoadBalancerPage() {
                                       style={{ width: '152px' }}
                                     />
                                   ) : (
-                                    <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                    <span className="text-body-md text-[var(--color-text-subtle)]">
                                       -
                                     </span>
                                   )}
@@ -2478,12 +2474,12 @@ export default function CreateLoadBalancerPage() {
                         <VStack gap={3} align="start">
                           <VStack gap={2} align="start">
                             <HStack gap={1} align="center">
-                              <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                              <span className="text-label-lg text-[var(--color-text-default)]">
                                 Allocated Members
                               </span>
                               <span className="text-[var(--color-state-danger)]">*</span>
                             </HStack>
-                            <p className="text-[12px] text-[var(--color-text-subtle)]">
+                            <p className="text-body-md text-[var(--color-text-subtle)]">
                               Adding a member registers a new backend server to the pool, while
                               removing a member excludes it from load balancing.
                             </p>
@@ -2516,7 +2512,7 @@ export default function CreateLoadBalancerPage() {
                             >
                               {/* IP Address */}
                               <div className="flex-1 flex flex-col gap-2">
-                                <span className="text-[12px] font-medium text-[var(--color-text-default)]">
+                                <span className="text-label-md text-[var(--color-text-default)]">
                                   IP Address
                                 </span>
                                 <Input
@@ -2536,7 +2532,7 @@ export default function CreateLoadBalancerPage() {
                               </div>
                               {/* Port */}
                               <div className="flex-1 flex flex-col gap-2">
-                                <span className="text-[12px] font-medium text-[var(--color-text-default)]">
+                                <span className="text-label-md text-[var(--color-text-default)]">
                                   Port
                                 </span>
                                 <NumberInput
@@ -2555,7 +2551,7 @@ export default function CreateLoadBalancerPage() {
                               </div>
                               {/* Weights */}
                               <div className="flex-1 flex flex-col gap-2">
-                                <span className="text-[12px] font-medium text-[var(--color-text-default)]">
+                                <span className="text-label-md text-[var(--color-text-default)]">
                                   Weights
                                 </span>
                                 <NumberInput
@@ -2591,16 +2587,16 @@ export default function CreateLoadBalancerPage() {
                           {allocatedMembers.length > 0 && (
                             <div className="w-full border border-[var(--color-border-default)] rounded-md overflow-hidden">
                               <div className="flex bg-[var(--color-surface-subtle)] border-b border-[var(--color-border-default)]">
-                                <div className="flex-1 px-3 py-2 text-[11px] font-medium text-[var(--color-text-default)]">
+                                <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)]">
                                   IP Address
                                 </div>
-                                <div className="flex-1 px-3 py-2 text-[11px] font-medium text-[var(--color-text-default)]">
+                                <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)]">
                                   Port
                                 </div>
-                                <div className="flex-1 px-3 py-2 text-[11px] font-medium text-[var(--color-text-default)]">
+                                <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)]">
                                   Instance
                                 </div>
-                                <div className="w-[80px] px-3 py-2 text-[11px] font-medium text-[var(--color-text-default)] text-center">
+                                <div className="w-[80px] px-3 py-2 text-label-sm text-[var(--color-text-default)] text-center">
                                   Action
                                 </div>
                               </div>
@@ -2609,20 +2605,20 @@ export default function CreateLoadBalancerPage() {
                                   key={member.id}
                                   className="flex items-center border-b border-[var(--color-border-default)] last:border-b-0 bg-[var(--color-surface-default)]"
                                 >
-                                  <div className="flex-1 px-3 py-2 text-[12px] text-[var(--color-text-default)]">
+                                  <div className="flex-1 px-3 py-2 text-body-md text-[var(--color-text-default)]">
                                     {member.ipAddress}
                                   </div>
                                   <div className="flex-1 px-3 py-2">
                                     <VStack gap={0.5} align="start">
-                                      <span className="text-[12px] text-[var(--color-action-primary)]">
+                                      <span className="text-body-md text-[var(--color-action-primary)]">
                                         {member.portName}
                                       </span>
-                                      <span className="text-[11px] text-[var(--color-text-subtle)]">
+                                      <span className="text-body-sm text-[var(--color-text-subtle)]">
                                         ID: {member.portId}
                                       </span>
                                     </VStack>
                                   </div>
-                                  <div className="flex-1 px-3 py-2 text-[12px] text-[var(--color-text-default)]">
+                                  <div className="flex-1 px-3 py-2 text-body-md text-[var(--color-text-default)]">
                                     {member.instanceName || '-'}
                                   </div>
                                   <div className="w-[80px] px-3 py-2 flex items-center justify-center">
@@ -2694,7 +2690,7 @@ export default function CreateLoadBalancerPage() {
                       <SectionCard.Content gap={6} className="pt-2">
                         {/* Create Health Monitor toggle */}
                         <VStack gap={2} align="start">
-                          <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                          <span className="text-label-lg text-[var(--color-text-default)]">
                             Create Health Monitor
                           </span>
                           <HStack gap={2} align="center">
@@ -2702,7 +2698,7 @@ export default function CreateLoadBalancerPage() {
                               checked={createHealthMonitor}
                               onChange={setCreateHealthMonitor}
                             />
-                            <span className="text-[12px] text-[var(--color-text-default)]">
+                            <span className="text-body-md text-[var(--color-text-default)]">
                               {createHealthMonitor ? 'Yes' : 'No'}
                             </span>
                           </HStack>
@@ -2730,7 +2726,7 @@ export default function CreateLoadBalancerPage() {
                             {/* Health monitor type */}
                             <FormField required>
                               <FormField.Label>Health monitor type</FormField.Label>
-                              <p className="text-[12px] text-[var(--color-text-subtle)] mb-2">
+                              <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
                                 Select the health check method used to monitor backend members.
                               </p>
                               <FormField.Control>
@@ -2747,7 +2743,7 @@ export default function CreateLoadBalancerPage() {
                             {/* Interval (sec) */}
                             <FormField required>
                               <FormField.Label>Interval (sec)</FormField.Label>
-                              <p className="text-[12px] text-[var(--color-text-subtle)] mb-2">
+                              <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
                                 Specifies the interval in seconds between health checks.
                               </p>
                               <FormField.Control>
@@ -2768,7 +2764,7 @@ export default function CreateLoadBalancerPage() {
                             {/* Timeout (sec) */}
                             <FormField required>
                               <FormField.Label>Timeout (sec)</FormField.Label>
-                              <p className="text-[12px] text-[var(--color-text-subtle)] mb-2">
+                              <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
                                 Specifies the timeout in seconds for health check responses.
                               </p>
                               <FormField.Control>
@@ -2789,7 +2785,7 @@ export default function CreateLoadBalancerPage() {
                             {/* Max retries */}
                             <FormField required>
                               <FormField.Label>Max retries</FormField.Label>
-                              <p className="text-[12px] text-[var(--color-text-subtle)] mb-2">
+                              <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
                                 Specifies the number of retries before marking the health check as
                                 failed.
                               </p>
@@ -2809,10 +2805,10 @@ export default function CreateLoadBalancerPage() {
 
                             {/* Health monitor admin state */}
                             <VStack gap={2} align="start">
-                              <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                              <span className="text-label-lg text-[var(--color-text-default)]">
                                 Health monitor admin state
                               </span>
-                              <p className="text-[12px] text-[var(--color-text-subtle)]">
+                              <p className="text-body-md text-[var(--color-text-subtle)]">
                                 Set the administrative state of the health monitor. 'UP' enables
                                 traffic handling, while 'DOWN' disables it.
                               </p>
@@ -2821,7 +2817,7 @@ export default function CreateLoadBalancerPage() {
                                   checked={healthMonitorAdminState}
                                   onChange={setHealthMonitorAdminState}
                                 />
-                                <span className="text-[12px] text-[var(--color-text-default)]">
+                                <span className="text-body-md text-[var(--color-text-default)]">
                                   {healthMonitorAdminState ? 'Up' : 'Down'}
                                 </span>
                               </HStack>

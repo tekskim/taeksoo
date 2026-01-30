@@ -129,10 +129,10 @@ export function AllocateIPDrawer({
       <VStack gap={6}>
         {/* Header */}
         <VStack gap={2}>
-          <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
             Allocate IP
           </h2>
-          <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+          <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
             Assign an additional fixed IP address to this port. Select a subnet from the list below
             and choose whether to assign an IP automatically or manually.
           </p>
@@ -140,15 +140,13 @@ export function AllocateIPDrawer({
 
         {/* Port (Read-only) */}
         <VStack gap={2} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
-            Port
-          </label>
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">Port</label>
           <Input value={port.name} readOnly disabled fullWidth />
         </VStack>
 
         {/* Owned Network (Read-only) */}
         <VStack gap={2} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             Owned Network
           </label>
           <Input value={port.networkName} readOnly disabled fullWidth />
@@ -159,7 +157,7 @@ export function AllocateIPDrawer({
           <button
             type="button"
             onClick={() => setIsExpanded(!isExpanded)}
-            className="flex items-center gap-1.5 text-[14px] font-medium text-[var(--color-text-default)] leading-5"
+            className="flex items-center gap-1.5 text-label-lg text-[var(--color-text-default)] leading-5"
           >
             {isExpanded ? (
               <IconChevronDown size={12} stroke={1} />
@@ -180,7 +178,7 @@ export function AllocateIPDrawer({
                 error={hasAttemptedSubmit && !selectedSubnetId}
               />
               {hasAttemptedSubmit && !selectedSubnetId && (
-                <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+                <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
                   Please select a subnet
                 </p>
               )}
@@ -204,7 +202,7 @@ export function AllocateIPDrawer({
                     error={hasAttemptedSubmit && !manualIpAddress.trim()}
                   />
                   {hasAttemptedSubmit && !manualIpAddress.trim() && (
-                    <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+                    <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
                       IP address is required
                     </p>
                   )}
@@ -213,7 +211,7 @@ export function AllocateIPDrawer({
 
               {/* IP Range Helper Text */}
               {selectedSubnetId && ipRangeText && (
-                <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+                <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
                   {ipRangeText}
                 </p>
               )}

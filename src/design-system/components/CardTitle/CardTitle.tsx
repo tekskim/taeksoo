@@ -94,7 +94,7 @@ function BadgeItem({ badge }: BadgeItemProps) {
 
   return (
     <span
-      className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[11px] font-medium leading-4 ${
+      className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-label-sm leading-4 ${
         variantClasses[badge.variant || 'muted']
       }`}
     >
@@ -171,11 +171,11 @@ export function CardTitle({
       <div className="flex-1 min-w-0 flex flex-col gap-3">
         {/* Title & Description */}
         <div className="flex flex-col gap-1">
-          <h4 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)] truncate">
+          <h4 className="text-heading-h5 leading-6 text-[var(--color-text-default)] truncate">
             {title}
           </h4>
           {description && (
-            <p className="text-[12px] leading-4 text-[var(--color-text-subtle)] line-clamp-2">
+            <p className="text-body-md leading-4 text-[var(--color-text-subtle)] line-clamp-2">
               {description}
             </p>
           )}
@@ -194,10 +194,10 @@ export function CardTitle({
       {/* Side Content */}
       {side === 'gauge' && (
         <div className="flex flex-col items-end gap-1 shrink-0">
-          <span className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+          <span className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
             {gaugeValue}
           </span>
-          <span className="text-[12px] leading-4 text-[var(--color-text-subtle)]">
+          <span className="text-body-md leading-4 text-[var(--color-text-subtle)]">
             {gaugeLabel}
           </span>
         </div>

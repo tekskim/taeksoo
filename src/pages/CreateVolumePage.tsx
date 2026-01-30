@@ -470,14 +470,10 @@ export function CreateVolumePage() {
       render: (value: string, row: ImageRow) => (
         <div className="flex flex-col gap-0.5">
           <div className="flex items-center gap-1.5">
-            <span className="text-[12px] text-[var(--color-action-primary)] leading-[16px]">
-              {value}
-            </span>
+            <span className="text-body-md text-[var(--color-action-primary)]">{value}</span>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </div>
-          <span className="text-[11px] text-[var(--color-text-subtle)] leading-[16px]">
-            ID: {row.id}
-          </span>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
         </div>
       ),
     },
@@ -524,17 +520,13 @@ export function CreateVolumePage() {
       render: (value: string, row: SnapshotRow) => (
         <div className="flex flex-col gap-0.5">
           <div className="flex items-center gap-1.5">
-            <span className="text-[12px] text-[var(--color-action-primary)] leading-[16px]">
-              {value}
-            </span>
+            <span className="text-body-md text-[var(--color-action-primary)]">{value}</span>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
             {row.status === 'error' && (
               <IconAlertCircle size={16} className="text-[var(--color-state-danger)]" />
             )}
           </div>
-          <span className="text-[11px] text-[var(--color-text-subtle)] leading-[16px]">
-            ID: {row.id}
-          </span>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
         </div>
       ),
     },
@@ -616,9 +608,7 @@ export function CreateVolumePage() {
           <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)] min-h-full">
             {/* Page Title */}
             <div className="flex items-center justify-between h-8 max-w-[1320px] mx-auto mb-3">
-              <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
-                Create volume
-              </h1>
+              <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create volume</h1>
             </div>
 
             <div className="flex gap-6 max-w-[1320px] mx-auto items-start">
@@ -660,7 +650,7 @@ export function CreateVolumePage() {
                                 error={!!volumeNameError}
                               />
                               {volumeNameError && (
-                                <span className="text-[11px] leading-[var(--line-height-16)] text-[var(--color-state-danger)]">
+                                <span className="text-body-sm text-[var(--color-state-danger)]">
                                   {volumeNameError}
                                 </span>
                               )}
@@ -692,7 +682,7 @@ export function CreateVolumePage() {
                                 fullWidth
                               />
                               {azError && (
-                                <span className="text-[11px] leading-[var(--line-height-16)] text-[var(--color-state-danger)]">
+                                <span className="text-body-sm text-[var(--color-state-danger)]">
                                   {azError}
                                 </span>
                               )}
@@ -796,7 +786,7 @@ export function CreateVolumePage() {
                                     key={tab.id}
                                     onClick={() => setImageOsFilter(tab.id)}
                                     className={`
-                                      inline-flex items-center gap-1.5 px-3 py-2 rounded-[4px] cursor-pointer text-[12px] font-medium transition-colors
+                                      inline-flex items-center gap-1.5 px-3 py-2 rounded-[4px] cursor-pointer text-label-md transition-colors
                                       ${
                                         isSelected
                                           ? 'bg-[var(--color-surface-default)] text-[var(--color-text-default)] shadow-sm'
@@ -985,17 +975,17 @@ export function CreateVolumePage() {
                             {/* Volume type - Read-only for snapshot */}
                             <VStack gap={4} align="stretch">
                               <VStack gap={3} align="start">
-                                <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
+                                <span className="text-label-lg text-[var(--color-text-default)]">
                                   Volume type{' '}
                                   <span className="text-[var(--color-state-danger)]">*</span>
                                 </span>
-                                <span className="text-[12px] text-[var(--color-text-subtle)] leading-[16px]">
+                                <span className="text-body-md text-[var(--color-text-subtle)]">
                                   Automatically set to the volume type of the source volume used to
                                   create the snapshot.
                                 </span>
                               </VStack>
                               <div className="bg-[var(--color-surface-subtle)] px-4 py-3 rounded-lg w-full">
-                                <span className="text-[12px] text-[var(--color-text-default)]">
+                                <span className="text-body-md text-[var(--color-text-default)]">
                                   {selectedSnapshot.length > 0
                                     ? mockSnapshots.find((s) => s.id === selectedSnapshot[0])
                                         ?.volumeType || '_DEFAULT_'
@@ -1029,7 +1019,7 @@ export function CreateVolumePage() {
                                       max={1460}
                                     />
                                   </div>
-                                  <span className="text-[12px] text-[var(--color-text-default)]">
+                                  <span className="text-body-md text-[var(--color-text-default)]">
                                     GiB
                                   </span>
                                 </div>
@@ -1131,7 +1121,7 @@ export function CreateVolumePage() {
                                       max={1000}
                                     />
                                   </div>
-                                  <span className="text-[14px] text-[var(--color-text-default)]">
+                                  <span className="text-body-lg text-[var(--color-text-default)]">
                                     GiB
                                   </span>
                                 </div>

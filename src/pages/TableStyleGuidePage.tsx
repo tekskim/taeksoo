@@ -4,8 +4,7 @@ import { Button, SectionCard } from '@/design-system';
 import { IconDownload, IconArrowLeft, IconCopy, IconCheck } from '@tabler/icons-react';
 
 /* ----------------------------------------
-   Code Block Component
-   ---------------------------------------- */
+   Code Block Component ---------------------------------------- */
 
 interface CodeBlockProps {
   code: string;
@@ -35,7 +34,7 @@ function CodeBlock({ code, language = 'typescript' }: CodeBlockProps) {
           )}
         </button>
       </div>
-      <pre className="bg-[var(--color-surface-subtle)] p-4 rounded-lg overflow-x-auto text-[12px] leading-relaxed">
+      <pre className="bg-[var(--color-surface-subtle)] p-4 rounded-lg overflow-x-auto text-body-md leading-relaxed">
         <code className={`language-${language}`}>{code}</code>
       </pre>
     </div>
@@ -43,8 +42,7 @@ function CodeBlock({ code, language = 'typescript' }: CodeBlockProps) {
 }
 
 /* ----------------------------------------
-   Table Component for Guide
-   ---------------------------------------- */
+   Table Component for Guide ---------------------------------------- */
 
 interface GuideTableProps {
   headers: string[];
@@ -54,7 +52,7 @@ interface GuideTableProps {
 function GuideTable({ headers, rows }: GuideTableProps) {
   return (
     <div className="overflow-x-auto">
-      <table className="w-full text-[12px]">
+      <table className="w-full text-body-md">
         <thead>
           <tr className="border-b border-[var(--color-border-default)]">
             {headers.map((header, i) => (
@@ -73,7 +71,7 @@ function GuideTable({ headers, rows }: GuideTableProps) {
               {row.map((cell, j) => (
                 <td key={j} className="py-2 px-3 text-[var(--color-text-default)]">
                   {cell.startsWith('`') && cell.endsWith('`') ? (
-                    <code className="px-1.5 py-0.5 rounded bg-[var(--color-surface-subtle)] text-[11px] font-mono">
+                    <code className="px-1.5 py-0.5 rounded bg-[var(--color-surface-subtle)] text-body-sm font-mono">
                       {cell.slice(1, -1)}
                     </code>
                   ) : (
@@ -90,8 +88,7 @@ function GuideTable({ headers, rows }: GuideTableProps) {
 }
 
 /* ----------------------------------------
-   TableStyleGuidePage
-   ---------------------------------------- */
+   TableStyleGuidePage ---------------------------------------- */
 
 export function TableStyleGuidePage() {
   const navigate = useNavigate();
@@ -146,11 +143,9 @@ export function TableStyleGuidePage() {
               leftIcon={<IconArrowLeft size={14} />}
               onClick={() => navigate('/')}
             >
-              Back
+              Back{' '}
             </Button>
-            <h1 className="text-[16px] font-semibold text-[var(--color-text-default)]">
-              Table Style Guide
-            </h1>
+            <h1 className="text-heading-h5 text-[var(--color-text-default)]">Table Style Guide </h1>
           </div>
           <div className="flex items-center gap-2">
             <Button
@@ -179,14 +174,14 @@ export function TableStyleGuidePage() {
         <aside className="hidden lg:block w-56 flex-shrink-0">
           <div className="sticky top-24">
             <nav className="space-y-1">
-              <p className="text-[11px] font-medium text-[var(--color-text-subtle)] uppercase tracking-wide mb-3">
-                목차
+              <p className="text-label-sm text-[var(--color-text-subtle)] uppercase tracking-wide mb-3">
+                목차{' '}
               </p>
               {tocItems.map((item) => (
                 <button
                   key={item.id}
                   onClick={() => scrollToSection(item.id)}
-                  className="block w-full text-left text-[12px] py-1.5 px-2 rounded-md text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] hover:bg-[var(--color-surface-default)] transition-colors"
+                  className="block w-full text-left text-body-md py-1.5 px-2 rounded-md text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] hover:bg-[var(--color-surface-default)] transition-colors"
                 >
                   {item.label}
                 </button>
@@ -198,7 +193,7 @@ export function TableStyleGuidePage() {
         {/* Content */}
         <main className="flex-1 min-w-0 space-y-8">
           {/* Version Info */}
-          <div className="flex items-center gap-4 text-[12px] text-[var(--color-text-subtle)]">
+          <div className="flex items-center gap-4 text-body-md text-[var(--color-text-subtle)]">
             <span>버전: 1.0</span>
             <span>•</span>
             <span>최종 업데이트: 2026-01-27</span>
@@ -215,7 +210,7 @@ export function TableStyleGuidePage() {
 
               <div>
                 <h4 className="text-[13px] font-medium mb-2">적용 대상</h4>
-                <ul className="list-disc list-inside text-[12px] text-[var(--color-text-muted)] space-y-1">
+                <ul className="list-disc list-inside text-body-md text-[var(--color-text-muted)] space-y-1">
                   <li>모든 리스트 페이지 테이블</li>
                   <li>상세 페이지 내 탭 테이블</li>
                   <li>모달/Drawer 내 테이블</li>
@@ -269,8 +264,8 @@ export function TableStyleGuidePage() {
 
               <div>
                 <h4 className="text-[13px] font-medium mb-2">2.3 완전 고정 컬럼 (fixedColumns)</h4>
-                <p className="text-[12px] text-[var(--color-text-muted)] mb-3">
-                  아이콘이나 버튼만 표시되어 크기가 변할 필요 없는 컬럼
+                <p className="text-body-md text-[var(--color-text-muted)] mb-3">
+                  아이콘이나 버튼만 표시되어 크기가 변할 필요 없는 컬럼{' '}
                 </p>
                 <GuideTable
                   headers={['키', '너비', '용도', '예시']}
@@ -291,8 +286,8 @@ export function TableStyleGuidePage() {
 
               <div>
                 <h4 className="text-[13px] font-medium mb-2">2.4 유연 컬럼 (columnMinWidths)</h4>
-                <p className="text-[12px] text-[var(--color-text-muted)] mb-3">
-                  텍스트나 데이터를 표시하며 공간에 따라 늘어나야 하는 컬럼
+                <p className="text-body-md text-[var(--color-text-muted)] mb-3">
+                  텍스트나 데이터를 표시하며 공간에 따라 늘어나야 하는 컬럼{' '}
                 </p>
                 <GuideTable
                   headers={['카테고리', '키', 'minWidth', '용도']}
@@ -326,39 +321,38 @@ export function TableStyleGuidePage() {
 
               <div>
                 <h4 className="text-[13px] font-medium mb-2">2.5 장점</h4>
-                <ul className="list-decimal list-inside text-[12px] text-[var(--color-text-muted)] space-y-1">
+                <ul className="list-decimal list-inside text-body-md text-[var(--color-text-muted)] space-y-1">
                   <li>
                     <strong>여백 문제 해결</strong>: 어떤 컬럼을 숨겨도 남은 flex 컬럼들이 공간을
-                    채움
+                    채움{' '}
                   </li>
                   <li>
-                    <strong>최소 가독성 보장</strong>: minWidth로 컬럼이 너무 좁아지는 것 방지
+                    <strong>최소 가독성 보장</strong>: minWidth로 컬럼이 너무 좁아지는 것 방지{' '}
                   </li>
                   <li>
-                    <strong>일관성</strong>: 고정 컬럼(status, actions)은 항상 동일한 크기 유지
+                    <strong>일관성</strong>: 고정 컬럼(status, actions)은 항상 동일한 크기 유지{' '}
                   </li>
                 </ul>
               </div>
 
               <div>
                 <h4 className="text-[13px] font-medium mb-2">2.6 가로 스크롤 정책</h4>
-                <p className="text-[12px] text-[var(--color-text-muted)] mb-3">
+                <p className="text-body-md text-[var(--color-text-muted)] mb-3">
                   테이블에 가로 스크롤이 발생하는 조건:
                 </p>
                 <div className="p-3 rounded-lg bg-[var(--color-surface-subtle)] mb-4">
-                  <code className="text-[11px] font-mono">
-                    (고정 컬럼들의 width 합) + (유연 컬럼들의 minWidth 합) &gt; 컨테이너 너비
+                  <code className="text-body-sm font-mono">
+                    (고정 컬럼들의 width 합) + (유연 컬럼들의 minWidth 합) &gt; 컨테이너 너비{' '}
                   </code>
                 </div>
 
-                <p className="text-[12px] text-[var(--color-text-muted)] mb-2">
+                <p className="text-body-md text-[var(--color-text-muted)] mb-2">
                   <strong>예시:</strong> status(64) + name(180) + ip(130) + createdAt(140) +
-                  actions(64) = 578px
-                  <br />→ 컨테이너가 578px보다 좁으면 가로 스크롤 발생
+                  actions(64) = 578px <br />→ 컨테이너가 578px보다 좁으면 가로 스크롤 발생{' '}
                 </p>
 
                 <div className="mt-4">
-                  <h5 className="text-[12px] font-medium mb-2">의도된 동작</h5>
+                  <h5 className="text-label-md mb-2">의도된 동작</h5>
                   <GuideTable
                     headers={['상황', '가로 스크롤 없음', '가로 스크롤 있음']}
                     rows={[
@@ -371,30 +365,30 @@ export function TableStyleGuidePage() {
 
                 <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
-                    <p className="text-[11px] font-medium text-red-700 dark:text-red-400 mb-1">
-                      minWidth가 없으면
+                    <p className="text-label-sm text-red-700 dark:text-red-400 mb-1">
+                      minWidth가 없으면{' '}
                     </p>
-                    <code className="text-[10px] font-mono text-red-600 dark:text-red-300">
+                    <code className="text-body-xs font-mono text-red-600 dark:text-red-300">
                       | status | ins... | 192... | 20... | ⋮ |
                     </code>
-                    <p className="text-[10px] text-red-500 mt-1">← 내용 알아볼 수 없음</p>
+                    <p className="text-body-xs text-red-500 mt-1">← 내용 알아볼 수 없음</p>
                   </div>
                   <div className="p-3 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800">
-                    <p className="text-[11px] font-medium text-green-700 dark:text-green-400 mb-1">
-                      minWidth가 있으면
+                    <p className="text-label-sm text-green-700 dark:text-green-400 mb-1">
+                      minWidth가 있으면{' '}
                     </p>
-                    <code className="text-[10px] font-mono text-green-600 dark:text-green-300">
+                    <code className="text-body-xs font-mono text-green-600 dark:text-green-300">
                       | status | instance-na... | 192.168.1.10 | ⋮ |
                     </code>
-                    <p className="text-[10px] text-green-500 mt-1">← 가로 스크롤로 확인 가능</p>
+                    <p className="text-body-xs text-green-500 mt-1">← 가로 스크롤로 확인 가능</p>
                   </div>
                 </div>
 
                 <div className="mt-4">
-                  <p className="text-[12px] text-[var(--color-text-muted)]">
+                  <p className="text-body-md text-[var(--color-text-muted)]">
                     <strong>테이블 컨테이너:</strong> Table 컴포넌트는 자동으로{' '}
-                    <code className="px-1 py-0.5 rounded bg-[var(--color-surface-subtle)] text-[11px]">
-                      overflow-x-auto
+                    <code className="px-1 py-0.5 rounded bg-[var(--color-surface-subtle)] text-body-sm">
+                      overflow-x-auto{' '}
                     </code>
                     가 적용되어 가로 스크롤을 지원합니다.
                   </p>
@@ -422,16 +416,16 @@ export function TableStyleGuidePage() {
                 <h4 className="text-[13px] font-medium mb-2">3.2 사용 기준</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="p-4 rounded-lg bg-[var(--color-surface-subtle)]">
-                    <h5 className="text-[12px] font-medium mb-2">기본 높이 (48px) 사용</h5>
-                    <ul className="text-[11px] text-[var(--color-text-muted)] space-y-1">
+                    <h5 className="text-label-md mb-2">기본 높이 (48px) 사용</h5>
+                    <ul className="text-body-sm text-[var(--color-text-muted)] space-y-1">
                       <li>• 메인 리스트 페이지</li>
                       <li>• 데이터가 많지 않은 테이블</li>
                       <li>• 가독성이 중요한 테이블</li>
                     </ul>
                   </div>
                   <div className="p-4 rounded-lg bg-[var(--color-surface-subtle)]">
-                    <h5 className="text-[12px] font-medium mb-2">밀집 높이 (40px) 사용</h5>
-                    <ul className="text-[11px] text-[var(--color-text-muted)] space-y-1">
+                    <h5 className="text-label-md mb-2">밀집 높이 (40px) 사용</h5>
+                    <ul className="text-body-sm text-[var(--color-text-muted)] space-y-1">
                       <li>• 설정 페이지 내 테이블</li>
                       <li>• 모니터링/대시보드 테이블</li>
                       <li>• 공간이 제한된 영역의 테이블</li>
@@ -482,17 +476,18 @@ export function TableStyleGuidePage() {
 
               <div>
                 <h4 className="text-[13px] font-medium mb-2">4.2 적용 규칙</h4>
-                <ul className="list-decimal list-inside text-[12px] text-[var(--color-text-muted)] space-y-2">
+                <ul className="list-decimal list-inside text-body-md text-[var(--color-text-muted)] space-y-2">
                   <li>
                     <strong>고정 컬럼은 중앙 정렬</strong>: fixedColumns에 정의된 모든 컬럼은 align:
-                    'center' 적용
+                    'center' 적용{' '}
                   </li>
                   <li>
                     <strong>유연 컬럼은 왼쪽 정렬</strong>: 텍스트, 숫자 등 데이터 컬럼은 명시적
                     설정 불필요 (기본값)
                   </li>
                   <li>
-                    <strong>오른쪽 정렬은 특수 케이스만</strong>: 연관 리소스 참조 컬럼에만 사용
+                    <strong>오른쪽 정렬은 특수 케이스만</strong>: 연관 리소스 참조 컬럼에만
+                    사용{' '}
                   </li>
                 </ul>
               </div>
@@ -556,8 +551,7 @@ export function TableStyleGuidePage() {
   flex: 1,
   minWidth: columnMinWidths.name,
   render: (_, row) => (
-    <Link 
-      to={\`/items/\${row.id}\`}
+    <Link to={\`/items/\${row.id}\`}
       className="text-[var(--color-action-primary)] hover:underline truncate block"
       title={row.name}
     >
@@ -579,14 +573,12 @@ export function TableStyleGuidePage() {
   minWidth: columnMinWidths.name,
   render: (_, row) => (
     <div className="flex flex-col min-w-0">
-      <span 
-        className="font-medium text-[var(--color-action-primary)] hover:underline truncate"
+      <span className="font-medium text-[var(--color-action-primary)] hover:underline truncate"
         title={row.name}
       >
         {row.name}
       </span>
-      <span 
-        className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] truncate"
+      <span className="text-body-sm text-[var(--color-text-subtle)] truncate"
         title={row.id}
       >
         {row.id}
@@ -644,9 +636,7 @@ export function TableStyleGuidePage() {
                 <h4 className="text-[13px] font-medium mb-2">6.2 컬럼 정의 비교</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <p className="text-[11px] font-medium text-[var(--color-text-muted)] mb-2">
-                      TDS (SSOT)
-                    </p>
+                    <p className="text-label-sm text-[var(--color-text-muted)] mb-2">TDS (SSOT)</p>
                     <CodeBlock
                       code={`const columns = [
   { key: 'status', width: fixedColumns.status, align: 'center' },
@@ -657,14 +647,11 @@ export function TableStyleGuidePage() {
                     />
                   </div>
                   <div>
-                    <p className="text-[11px] font-medium text-[var(--color-text-muted)] mb-2">
-                      thaki-ui
-                    </p>
+                    <p className="text-label-sm text-[var(--color-text-muted)] mb-2">thaki-ui </p>
                     <CodeBlock
                       code={`const columns = [
   { key: 'status', width: 60, align: 'center' },
-  { key: 'username' },  // width 없음 → 자동 분배
-  { key: 'groups' },
+  { key: 'username' },  // width 없음 → 자동 분배 { key: 'groups' },
   { key: 'actions', width: 80, align: 'center' },
 ];`}
                     />
@@ -691,8 +678,8 @@ export function TableStyleGuidePage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="p-4 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
-                  <p className="text-[12px] font-medium text-red-700 dark:text-red-400 mb-2">
-                    thaki-ui: 비율 제어 불가
+                  <p className="text-label-md text-red-700 dark:text-red-400 mb-2">
+                    thaki-ui: 비율 제어 불가{' '}
                   </p>
                   <CodeBlock
                     code={`{ key: 'name' }   // 1/3
@@ -702,8 +689,8 @@ export function TableStyleGuidePage() {
                   />
                 </div>
                 <div className="p-4 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800">
-                  <p className="text-[12px] font-medium text-green-700 dark:text-green-400 mb-2">
-                    TDS: flex로 비율 제어
+                  <p className="text-label-md text-green-700 dark:text-green-400 mb-2">
+                    TDS: flex로 비율 제어{' '}
                   </p>
                   <CodeBlock
                     code={`{ key: 'name', flex: 2 }   // 2/4 (더 넓게)
@@ -764,8 +751,7 @@ import { fixedColumns, columnMinWidths } from '@/design-system';`}
 {
   key: 'createdAt',
   label: 'Created at',
-  flex: 1,                              // ✅ 유연하게 늘어남
-  minWidth: columnMinWidths.createdAt,  // ✅ 최소 너비 보장
+  flex: 1,                              // ✅ 유연하게 늘어남 minWidth: columnMinWidths.createdAt,  // ✅ 최소 너비 보장
 }`}
                 />
               </div>
@@ -798,7 +784,7 @@ import { fixedColumns, columnMinWidths } from '@/design-system';`}
                   <p className="text-[13px] font-medium text-[var(--color-text-default)] mb-1">
                     Q: {item.q}
                   </p>
-                  <p className="text-[12px] text-[var(--color-text-muted)]">A: {item.a}</p>
+                  <p className="text-body-md text-[var(--color-text-muted)]">A: {item.a}</p>
                 </div>
               ))}
             </SectionCard.Content>
@@ -830,37 +816,31 @@ import { fixedColumns, columnMinWidths } from '@/design-system';`}
                 <h4 className="text-[13px] font-medium mb-2">B. columnMinWidths (주요 항목)</h4>
                 <CodeBlock
                   code={`export const columnMinWidths = {
-  // 이름/식별자
-  name: '180px',
+  // 이름/식별자 name: '180px',
   nameLg: '240px',
   hostname: '150px',
   username: '150px',
   
-  // 날짜/시간
-  createdAt: '140px',
+  // 날짜/시간 createdAt: '140px',
   updatedAt: '140px',
   expiresAt: '120px',
   lastSignIn: '120px',
   
-  // IP/주소
-  ipAddress: '130px',
+  // IP/주소 ipAddress: '130px',
   fixedIp: '130px',
   floatingIp: '130px',
   macAddress: '150px',
   cidr: '130px',
   
-  // 타입/분류
-  type: '100px',
+  // 타입/분류 type: '100px',
   category: '140px',
   protocol: '90px',
   
-  // 리소스
-  vcpu: '80px',
+  // 리소스 vcpu: '80px',
   ram: '80px',
   disk: '80px',
   
-  // 기타
-  description: '200px',
+  // 기타 description: '200px',
   role: '100px',
   mfa: '80px',
   fingerprint: '360px',
@@ -886,7 +866,7 @@ import { fixedColumns, columnMinWidths } from '@/design-system';`}
           <SectionCard>
             <SectionCard.Header title="체크리스트" />
             <SectionCard.Content>
-              <p className="text-[12px] text-[var(--color-text-muted)] mb-3">
+              <p className="text-body-md text-[var(--color-text-muted)] mb-3">
                 새 테이블 구현 시 확인 사항:
               </p>
               <ul className="space-y-2">
@@ -901,7 +881,7 @@ import { fixedColumns, columnMinWidths } from '@/design-system';`}
                 ].map((item, i) => (
                   <li
                     key={i}
-                    className="flex items-center gap-2 text-[12px] text-[var(--color-text-muted)]"
+                    className="flex items-center gap-2 text-body-md text-[var(--color-text-muted)]"
                   >
                     <input type="checkbox" className="rounded" />
                     <span>{item}</span>

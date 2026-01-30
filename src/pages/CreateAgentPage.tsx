@@ -302,13 +302,13 @@ export function CreateAgentPage() {
           {row.tags.slice(0, 3).map((tag, idx) => (
             <span
               key={idx}
-              className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] px-2 py-0.5 rounded-md text-[11px] leading-4 text-[var(--color-text-default)] whitespace-nowrap"
+              className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] px-2 py-0.5 rounded-md text-body-sm text-[var(--color-text-default)] whitespace-nowrap"
             >
               {tag}
             </span>
           ))}
           {row.tags.length > 3 && (
-            <span className="text-[11px] text-[var(--color-text-default)] whitespace-nowrap">
+            <span className="text-body-sm text-[var(--color-text-default)] whitespace-nowrap">
               +{row.tags.length - 3}
             </span>
           )}
@@ -383,9 +383,7 @@ export function CreateAgentPage() {
         <div className="bg-[var(--color-surface-default)] flex flex-col gap-3 items-center pb-6 pt-4 px-8 w-full min-h-full">
           <div className="flex flex-col gap-3 items-start min-w-[1176px] relative shrink-0 w-full">
             <div className="flex items-center justify-between h-8 w-full">
-              <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
-                Create agent
-              </h1>
+              <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create agent</h1>
             </div>
             <div className="flex flex-row flex-1 items-start min-h-0 relative w-full gap-6">
               {/* Left Content */}
@@ -426,7 +424,7 @@ export function CreateAgentPage() {
                               error={!!agentNameError}
                             />
                             {agentNameError && (
-                              <span className="text-[11px] leading-[var(--line-height-16)] text-[var(--color-state-danger)]">
+                              <span className="text-body-sm text-[var(--color-state-danger)]">
                                 {agentNameError}
                               </span>
                             )}
@@ -445,11 +443,11 @@ export function CreateAgentPage() {
 
                           {/* Status */}
                           <VStack gap={2} className="w-full">
-                            <label className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
+                            <label className="text-label-lg text-[var(--color-text-default)]">
                               Status
                               <span className="text-[var(--color-state-danger)] ml-0.5">*</span>
                             </label>
-                            <p className="text-[11px] text-[var(--color-text-subtle)]">
+                            <p className="text-body-sm text-[var(--color-text-subtle)]">
                               Choose whether the agent will be active immediately or remain
                               inactive.
                             </p>
@@ -464,10 +462,10 @@ export function CreateAgentPage() {
 
                           {/* Tag */}
                           <VStack gap={2} className="w-full">
-                            <label className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
+                            <label className="text-label-lg text-[var(--color-text-default)]">
                               Tag
                             </label>
-                            <p className="text-[11px] text-[var(--color-text-subtle)]">
+                            <p className="text-body-sm text-[var(--color-text-subtle)]">
                               Tags help categorize and identify your resources.
                             </p>
                             <Input
@@ -545,11 +543,11 @@ export function CreateAgentPage() {
 
                           {/* Temperature */}
                           <VStack gap={2} className="w-full">
-                            <label className="text-[14px] font-medium text-[var(--color-text-default)]">
+                            <label className="text-label-lg text-[var(--color-text-default)]">
                               Temperature
                               <span className="text-[var(--color-state-danger)] ml-0.5">*</span>
                             </label>
-                            <p className="text-[11px] text-[var(--color-text-subtle)]">
+                            <p className="text-body-sm text-[var(--color-text-subtle)]">
                               Adjust how creative or deterministic the model's responses should be.
                             </p>
                             <div className="flex items-center gap-3 w-[289px]">
@@ -562,11 +560,11 @@ export function CreateAgentPage() {
                                   step={0.1}
                                 />
                               </div>
-                              <span className="text-[12px] text-[var(--color-text-default)] shrink-0">
+                              <span className="text-body-md text-[var(--color-text-default)] shrink-0">
                                 {temperature}
                               </span>
                             </div>
-                            <p className="text-[11px] text-[var(--color-text-subtle)]">
+                            <p className="text-body-sm text-[var(--color-text-subtle)]">
                               Lower values make answers more consistent, while higher values
                               increase variability.
                             </p>
@@ -574,11 +572,11 @@ export function CreateAgentPage() {
 
                           {/* Max tokens */}
                           <VStack gap={2} className="w-full">
-                            <label className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
+                            <label className="text-label-lg text-[var(--color-text-default)]">
                               Max tokens
                               <span className="text-[var(--color-state-danger)] ml-0.5">*</span>
                             </label>
-                            <p className="text-[11px] text-[var(--color-text-subtle)]">
+                            <p className="text-body-sm text-[var(--color-text-subtle)]">
                               Adjust how creative or deterministic the model's responses should be.
                             </p>
                             <div className="flex items-center gap-3 w-fit">
@@ -592,11 +590,11 @@ export function CreateAgentPage() {
                                   className="w-full"
                                 />
                               </div>
-                              <span className="text-[12px] text-[var(--color-text-default)] shrink-0">
+                              <span className="text-body-md text-[var(--color-text-default)] shrink-0">
                                 {maxTokens.toLocaleString()}
                               </span>
                             </div>
-                            <p className="text-[11px] text-[var(--color-text-subtle)]">
+                            <p className="text-body-sm text-[var(--color-text-subtle)]">
                               Max: 64,000
                             </p>
                           </VStack>
@@ -621,11 +619,11 @@ export function CreateAgentPage() {
 
                           {/* Tone */}
                           <VStack gap={2} className="w-full">
-                            <label className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
+                            <label className="text-label-lg text-[var(--color-text-default)]">
                               Tone
                               <span className="text-[var(--color-state-danger)] ml-0.5">*</span>
                             </label>
-                            <p className="text-[11px] text-[var(--color-text-subtle)]">
+                            <p className="text-body-sm text-[var(--color-text-subtle)]">
                               Select the response style the agent should use.
                             </p>
                             <RadioGroup value={tone} onChange={setTone}>
@@ -639,11 +637,11 @@ export function CreateAgentPage() {
 
                           {/* Max iteration */}
                           <VStack gap={2} className="w-full">
-                            <label className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
+                            <label className="text-label-lg text-[var(--color-text-default)]">
                               Max iteration
                               <span className="text-[var(--color-state-danger)] ml-0.5">*</span>
                             </label>
-                            <p className="text-[11px] text-[var(--color-text-subtle)]">
+                            <p className="text-body-sm text-[var(--color-text-subtle)]">
                               Limits how many reasoning cycles the agent can run.
                             </p>
                             <div className="w-[80px]">
@@ -655,7 +653,7 @@ export function CreateAgentPage() {
                                 fullWidth
                               />
                             </div>
-                            <p className="text-[11px] text-[var(--color-text-subtle)]">Max: 10</p>
+                            <p className="text-body-sm text-[var(--color-text-subtle)]">Max: 10</p>
                           </VStack>
                         </SectionCard.Content>
                       </SectionCard>
@@ -676,7 +674,7 @@ export function CreateAgentPage() {
                       <SectionCard id="connect-data-sources">
                         <SectionCard.Header title="Connect data sources" />
                         <SectionCard.Content>
-                          <p className="text-[11px] text-[var(--color-text-subtle)]">
+                          <p className="text-body-sm text-[var(--color-text-subtle)]">
                             Select the data sources the agent can reference when generating answers.
                             (Multiple selection available).
                           </p>
@@ -731,7 +729,7 @@ export function CreateAgentPage() {
                       <SectionCard id="connect-mcp-tools">
                         <SectionCard.Header title="Connect MCP tools" />
                         <SectionCard.Content>
-                          <p className="text-[11px] text-[var(--color-text-subtle)]">
+                          <p className="text-body-sm text-[var(--color-text-subtle)]">
                             Choose the MCP tools the agent can use to perform actions or retrieve
                             external information. (Multiple selection available).
                           </p>

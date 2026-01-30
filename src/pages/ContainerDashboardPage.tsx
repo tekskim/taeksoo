@@ -102,13 +102,11 @@ function CapacityProgressBar({ label, used, total, unit, percentage }: CapacityP
       {/* Header Row */}
       <div className="flex items-center justify-between w-full">
         {/* Label */}
-        <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)]">
-          {label}
-        </span>
+        <span className="text-label-md text-[var(--color-text-default)]">{label}</span>
 
         {/* Value and Badge */}
         <div className="flex items-center gap-[var(--spacing-2)]">
-          <span className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+          <span className="text-body-sm text-[var(--color-text-subtle)]">
             {used} / {total} {unit}
           </span>
           <div
@@ -116,7 +114,7 @@ function CapacityProgressBar({ label, used, total, unit, percentage }: CapacityP
             style={{ backgroundColor: isDarkMode ? colors.darkBg : colors.bg }}
           >
             <span
-              className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] font-medium"
+              className="text-label-sm"
               style={{ color: isDarkMode ? colors.fill : colors.text }}
             >
               {percentage}%
@@ -159,13 +157,13 @@ function CapacityProgressBar({ label, used, total, unit, percentage }: CapacityP
                 className="w-[5px] h-[5px] rounded-[1px]"
                 style={{ backgroundColor: isDarkMode ? 'var(--color-text-muted)' : '#0F172A' }}
               />
-              <span className="text-[11px] leading-[14px] text-[var(--color-text-default)] whitespace-nowrap">
+              <span className="text-body-sm text-[var(--color-text-default)] whitespace-nowrap">
                 Used: {used} {unit} ({percentage}%)
               </span>
             </div>
             <div className="flex items-center gap-1.5">
               <div className="w-[5px] h-[5px] rounded-[1px] bg-[var(--color-border-subtle)]" />
-              <span className="text-[11px] leading-[14px] text-[var(--color-text-default)] whitespace-nowrap">
+              <span className="text-body-sm text-[var(--color-text-default)] whitespace-nowrap">
                 Total: {total} {unit}
               </span>
             </div>
@@ -215,10 +213,10 @@ function ControlPlaneCard({ name, uptime, status = 'healthy' }: ControlPlaneCard
       {/* Info */}
       <div className="flex-1">
         <div className="flex items-center justify-between">
-          <span className="text-[14px] font-medium text-[var(--color-text-default)]">{name}</span>
+          <span className="text-label-lg text-[var(--color-text-default)]">{name}</span>
           <IconHelp size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
         </div>
-        <span className="text-[12px] text-[var(--color-text-muted)] opacity-60">
+        <span className="text-body-md text-[var(--color-text-muted)] opacity-60">
           Uptime: {uptime}
         </span>
       </div>

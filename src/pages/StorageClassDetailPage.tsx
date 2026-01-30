@@ -330,13 +330,13 @@ export function StorageClassDetailPage() {
                               <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
                             ))}
                           {labelsCount > 1 && (
-                            <span className="text-[11px] text-[var(--color-text-default)] cursor-pointer hover:underline">
+                            <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
                               (+{labelsCount - 1})
                             </span>
                           )}
                         </div>
                       ) : (
-                        <span className="text-[12px] text-[var(--color-text-default)]">-</span>
+                        <span className="text-body-md text-[var(--color-text-default)]">-</span>
                       )
                     }
                   />
@@ -351,13 +351,13 @@ export function StorageClassDetailPage() {
                               <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
                             ))}
                           {annotationsCount > 1 && (
-                            <span className="text-[11px] text-[var(--color-text-default)] cursor-pointer hover:underline">
+                            <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
                               (+{annotationsCount - 1})
                             </span>
                           )}
                         </div>
                       ) : (
-                        <span className="text-[12px] text-[var(--color-text-default)]">-</span>
+                        <span className="text-body-md text-[var(--color-text-default)]">-</span>
                       )
                     }
                   />
@@ -377,7 +377,7 @@ export function StorageClassDetailPage() {
                   <div className="w-full border border-[var(--color-border-default)] rounded-[8px] p-4">
                     <VStack gap={3}>
                       {/* Title */}
-                      <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
+                      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
                         Parameters
                       </h3>
 
@@ -385,14 +385,14 @@ export function StorageClassDetailPage() {
                         <div className="flex gap-2 w-full">
                           {/* Key Column */}
                           <div className="flex-1">
-                            <label className="text-[11px] font-medium text-[var(--color-text-default)] mb-2 block">
+                            <label className="text-label-sm text-[var(--color-text-default)] mb-2 block">
                               Key
                             </label>
                             <VStack gap={2}>
                               {parametersEntries.map(([key]) => (
                                 <div
                                   key={key}
-                                  className="w-full h-[36px] px-[10px] py-[8px] bg-[var(--color-border-default)] border border-[var(--color-border-strong)] rounded-[6px] text-[12px] text-[var(--color-text-subtle)]"
+                                  className="w-full h-[36px] px-[10px] py-[8px] bg-[var(--color-border-default)] border border-[var(--color-border-strong)] rounded-[6px] text-body-md text-[var(--color-text-subtle)]"
                                 >
                                   {key}
                                 </div>
@@ -401,14 +401,14 @@ export function StorageClassDetailPage() {
                           </div>
                           {/* Value Column */}
                           <div className="flex-1">
-                            <label className="text-[11px] font-medium text-[var(--color-text-default)] mb-2 block">
+                            <label className="text-label-sm text-[var(--color-text-default)] mb-2 block">
                               Value
                             </label>
                             <VStack gap={2}>
                               {parametersEntries.map(([key, val]) => (
                                 <div
                                   key={key}
-                                  className="w-full h-[36px] px-[10px] py-[8px] bg-[var(--color-border-default)] border border-[var(--color-border-strong)] rounded-[6px] text-[12px] text-[var(--color-text-subtle)]"
+                                  className="w-full h-[36px] px-[10px] py-[8px] bg-[var(--color-border-default)] border border-[var(--color-border-strong)] rounded-[6px] text-body-md text-[var(--color-text-subtle)]"
                                 >
                                   {val}
                                 </div>
@@ -417,7 +417,7 @@ export function StorageClassDetailPage() {
                           </div>
                         </div>
                       ) : (
-                        <p className="text-[12px] text-[var(--color-text-subtle)]">
+                        <p className="text-body-md text-[var(--color-text-subtle)]">
                           No parameters defined.
                         </p>
                       )}
@@ -431,13 +431,13 @@ export function StorageClassDetailPage() {
                   <div className="w-full border border-[var(--color-border-default)] rounded-[8px] px-4 py-3">
                     <VStack gap={3}>
                       {/* Title */}
-                      <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
+                      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
                         Customize
                       </h3>
 
                       {/* Reclaim Policy */}
                       <VStack gap={1.5} align="start">
-                        <label className="text-[14px] font-medium text-[var(--color-text-default)]">
+                        <label className="text-label-lg text-[var(--color-text-default)]">
                           Reclaim Policy
                         </label>
                         <VStack gap={1} align="start">
@@ -458,7 +458,7 @@ export function StorageClassDetailPage() {
 
                       {/* Allow Volume Expansion */}
                       <VStack gap={1.5} align="start">
-                        <label className="text-[14px] font-medium text-[var(--color-text-default)]">
+                        <label className="text-label-lg text-[var(--color-text-default)]">
                           Allow Volume Expansion
                         </label>
                         <VStack gap={1} align="start">
@@ -479,7 +479,7 @@ export function StorageClassDetailPage() {
 
                       {/* Volume Binding Mode */}
                       <VStack gap={1.5} align="start">
-                        <label className="text-[14px] font-medium text-[var(--color-text-default)]">
+                        <label className="text-label-lg text-[var(--color-text-default)]">
                           Volume Binding Mode
                         </label>
                         <VStack gap={1} align="start">
@@ -500,7 +500,7 @@ export function StorageClassDetailPage() {
 
                       {/* Mount Options */}
                       <VStack gap={2} align="start" className="w-full">
-                        <label className="text-[14px] font-medium text-[var(--color-text-default)]">
+                        <label className="text-label-lg text-[var(--color-text-default)]">
                           Mount Options
                         </label>
                         {scData.mountOptions.length > 0 ? (
@@ -508,14 +508,14 @@ export function StorageClassDetailPage() {
                             {scData.mountOptions.map((option, index) => (
                               <div
                                 key={index}
-                                className="w-full h-[32px] px-[10px] py-[8px] bg-[#e5e7eb] rounded-[6px] text-[12px] text-[var(--color-text-subtle)] flex items-center"
+                                className="w-full h-[32px] px-[10px] py-[8px] bg-[#e5e7eb] rounded-[6px] text-body-md text-[var(--color-text-subtle)] flex items-center"
                               >
                                 {option}
                               </div>
                             ))}
                           </VStack>
                         ) : (
-                          <p className="text-[12px] text-[var(--color-text-subtle)]">
+                          <p className="text-body-md text-[var(--color-text-subtle)]">
                             No mount options defined.
                           </p>
                         )}

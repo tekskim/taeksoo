@@ -92,8 +92,8 @@ const FormFieldLabel = forwardRef<HTMLLabelElement, FormFieldLabelProps>(
     const isRequired = requiredProp ?? contextRequired;
 
     const sizeStyles = {
-      sm: 'text-[length:var(--font-size-12)] leading-[var(--line-height-16)]',
-      md: 'text-[length:var(--font-size-14)] leading-[var(--line-height-20)]',
+      sm: 'text-label-md',
+      md: 'text-label-lg',
     };
 
     return (
@@ -147,10 +147,7 @@ const FormFieldHelperText = forwardRef<HTMLParagraphElement, FormFieldHelperText
       <p
         ref={ref}
         id={id ? `${id}-helper` : undefined}
-        className={twMerge(
-          'text-[11px] leading-[var(--line-height-16)] text-[var(--color-text-subtle)]',
-          className
-        )}
+        className={twMerge('text-body-sm text-[var(--color-text-subtle)]', className)}
         {...props}
       >
         {children}
@@ -177,10 +174,7 @@ const FormFieldErrorMessage = forwardRef<HTMLParagraphElement, FormFieldErrorMes
         ref={ref}
         id={id ? `${id}-error` : undefined}
         role="alert"
-        className={twMerge(
-          'text-[11px] leading-[var(--line-height-16)] text-[var(--color-state-danger)]',
-          className
-        )}
+        className={twMerge('text-body-sm text-[var(--color-state-danger)]', className)}
         {...props}
       >
         {children}

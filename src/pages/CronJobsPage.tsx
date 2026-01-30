@@ -36,8 +36,7 @@ import {
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
-   Types
-   ---------------------------------------- */
+   Types ---------------------------------------- */
 
 interface CronJobRow {
   id: string;
@@ -51,8 +50,7 @@ interface CronJobRow {
 }
 
 /* ----------------------------------------
-   Mock Data
-   ---------------------------------------- */
+   Mock Data ---------------------------------------- */
 
 const cronJobsData: CronJobRow[] = [
   {
@@ -138,8 +136,7 @@ const cronJobsData: CronJobRow[] = [
 ];
 
 /* ----------------------------------------
-   Component
-   ---------------------------------------- */
+   Component ---------------------------------------- */
 
 export function CronJobsPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -422,8 +419,8 @@ export function CronJobsPage() {
               {/* Header */}
               <HStack justify="between" align="center" className="w-full min-h-8">
                 <HStack gap={2} align="center">
-                  <h1 className="text-[16px] leading-6 font-semibold text-[var(--color-text-default)]">
-                    CronJobs
+                  <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
+                    CronJobs{' '}
                   </h1>
                 </HStack>
 
@@ -434,7 +431,7 @@ export function CronJobsPage() {
                     size="md"
                     rightIcon={<IconChevronDown size={14} stroke={1.5} />}
                   >
-                    Create CronJob
+                    Create CronJob{' '}
                   </Button>
                 </ContextMenu>
               </HStack>
@@ -469,7 +466,7 @@ export function CronJobsPage() {
                     leftIcon={<IconPlayerPlay size={12} stroke={1.5} />}
                     disabled={selectedRows.length === 0}
                   >
-                    Run Now
+                    Run Now{' '}
                   </Button>
                   <Button
                     variant="secondary"
@@ -477,7 +474,7 @@ export function CronJobsPage() {
                     leftIcon={<IconPlayerPlay size={12} stroke={1.5} />}
                     disabled={selectedRows.length === 0}
                   >
-                    Resume
+                    Resume{' '}
                   </Button>
                   <Button
                     variant="secondary"
@@ -485,7 +482,7 @@ export function CronJobsPage() {
                     leftIcon={<IconPlayerPause size={12} stroke={1.5} />}
                     disabled={selectedRows.length === 0}
                   >
-                    Suspend
+                    Suspend{' '}
                   </Button>
                   <Button
                     variant="secondary"
@@ -493,7 +490,7 @@ export function CronJobsPage() {
                     leftIcon={<IconDownload size={12} stroke={1.5} />}
                     disabled={selectedRows.length === 0}
                   >
-                    Download YAML
+                    Download YAML{' '}
                   </Button>
                   <Button
                     variant="secondary"
@@ -501,7 +498,7 @@ export function CronJobsPage() {
                     leftIcon={<IconTrash size={12} stroke={1.5} />}
                     disabled={selectedRows.length === 0}
                   >
-                    Delete
+                    Delete{' '}
                   </Button>
                 </HStack>
               </HStack>
@@ -525,9 +522,9 @@ export function CronJobsPage() {
                   </HStack>
                   <button
                     onClick={handleClearFilters}
-                    className="text-[11px] font-medium text-[var(--color-action-primary)] hover:underline"
+                    className="text-label-sm text-[var(--color-action-primary)] hover:underline"
                   >
-                    Clear Filters
+                    Clear Filters{' '}
                   </button>
                 </HStack>
               )}

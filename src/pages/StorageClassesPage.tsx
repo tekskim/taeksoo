@@ -35,8 +35,7 @@ import {
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
-   Types
-   ---------------------------------------- */
+   Types ---------------------------------------- */
 
 interface StorageClassRow {
   id: string;
@@ -47,8 +46,7 @@ interface StorageClassRow {
 }
 
 /* ----------------------------------------
-   Mock Data
-   ---------------------------------------- */
+   Mock Data ---------------------------------------- */
 
 const storageClassesData: StorageClassRow[] = [
   {
@@ -89,8 +87,7 @@ const storageClassesData: StorageClassRow[] = [
 ];
 
 /* ----------------------------------------
-   Component
-   ---------------------------------------- */
+   Component ---------------------------------------- */
 
 export function StorageClassesPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -366,8 +363,8 @@ export function StorageClassesPage() {
               {/* Header */}
               <HStack justify="between" align="center" className="w-full min-h-8">
                 <HStack gap={2} align="center">
-                  <h1 className="text-[16px] leading-6 font-semibold text-[var(--color-text-default)]">
-                    Storage Classes
+                  <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
+                    Storage Classes{' '}
                   </h1>
                 </HStack>
 
@@ -378,7 +375,7 @@ export function StorageClassesPage() {
                     size="md"
                     rightIcon={<IconChevronDown size={14} stroke={1.5} />}
                   >
-                    Create Storage Class
+                    Create Storage Class{' '}
                   </Button>
                 </ContextMenu>
               </HStack>
@@ -413,7 +410,7 @@ export function StorageClassesPage() {
                     leftIcon={<IconDownload size={12} stroke={1.5} />}
                     disabled={selectedRows.length === 0}
                   >
-                    Download YAML
+                    Download YAML{' '}
                   </Button>
                   <Button
                     variant="secondary"
@@ -421,7 +418,7 @@ export function StorageClassesPage() {
                     leftIcon={<IconTrash size={12} stroke={1.5} />}
                     disabled={selectedRows.length === 0}
                   >
-                    Delete
+                    Delete{' '}
                   </Button>
                 </HStack>
               </HStack>
@@ -445,9 +442,9 @@ export function StorageClassesPage() {
                   </HStack>
                   <button
                     onClick={handleClearFilters}
-                    className="text-[11px] font-medium text-[var(--color-action-primary)] hover:underline"
+                    className="text-label-sm text-[var(--color-action-primary)] hover:underline"
                   >
-                    Clear Filters
+                    Clear Filters{' '}
                   </button>
                 </HStack>
               )}

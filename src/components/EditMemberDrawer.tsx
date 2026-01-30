@@ -111,22 +111,20 @@ export function EditMemberDrawer({ isOpen, onClose, member, onSubmit }: EditMemb
       <VStack gap={6} className="pb-6">
         {/* Header */}
         <VStack gap={2}>
-          <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
             Edit Member
           </h2>
         </VStack>
 
         {/* Source (Read-only) */}
         <VStack gap={2} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
-            Source
-          </label>
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">Source</label>
           <Input value={member.source} readOnly disabled fullWidth />
         </VStack>
 
         {/* IP Address (Read-only) */}
         <VStack gap={2} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             IP Address
           </label>
           <Input value={member.ipAddress} readOnly disabled fullWidth />
@@ -134,17 +132,13 @@ export function EditMemberDrawer({ isOpen, onClose, member, onSubmit }: EditMemb
 
         {/* Port (Read-only) */}
         <VStack gap={2} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
-            Port
-          </label>
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">Port</label>
           <Input value={String(member.port)} readOnly disabled fullWidth />
         </VStack>
 
         {/* Weight */}
         <VStack gap={2} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
-            Weight
-          </label>
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">Weight</label>
           <Input
             type="number"
             value={String(weight)}
@@ -153,7 +147,7 @@ export function EditMemberDrawer({ isOpen, onClose, member, onSubmit }: EditMemb
             max={256}
             fullWidth
           />
-          <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">1~256</p>
+          <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">1~256</p>
         </VStack>
 
         {/* Advanced Options (Collapsible) */}
@@ -161,7 +155,7 @@ export function EditMemberDrawer({ isOpen, onClose, member, onSubmit }: EditMemb
           <button
             type="button"
             onClick={() => setIsAdvancedExpanded(!isAdvancedExpanded)}
-            className="flex items-center gap-1.5 text-[14px] font-medium text-[var(--color-text-default)] leading-5"
+            className="flex items-center gap-1.5 text-label-lg text-[var(--color-text-default)] leading-5"
           >
             {isAdvancedExpanded ? (
               <IconChevronDown size={12} stroke={1} />
@@ -175,7 +169,7 @@ export function EditMemberDrawer({ isOpen, onClose, member, onSubmit }: EditMemb
             <VStack gap={6} className="w-full pt-4">
               {/* Monitor IP Address */}
               <VStack gap={2} className="w-full">
-                <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                <label className="text-label-lg text-[var(--color-text-default)] leading-5">
                   Monitor IP Address
                 </label>
                 <Input
@@ -188,7 +182,7 @@ export function EditMemberDrawer({ isOpen, onClose, member, onSubmit }: EditMemb
 
               {/* Monitor Port */}
               <VStack gap={2} className="w-full">
-                <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                <label className="text-label-lg text-[var(--color-text-default)] leading-5">
                   Monitor Port
                 </label>
                 <Input
@@ -198,17 +192,17 @@ export function EditMemberDrawer({ isOpen, onClose, member, onSubmit }: EditMemb
                   placeholder="e.g. 8080"
                   fullWidth
                 />
-                <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">1~65535</p>
+                <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">1~65535</p>
               </VStack>
 
               {/* Backup */}
               <VStack gap={3} className="w-full">
-                <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                <label className="text-label-lg text-[var(--color-text-default)] leading-5">
                   Backup
                 </label>
                 <HStack gap={2} className="items-center">
                   <Toggle checked={backup} onChange={(e) => setBackup(e.target.checked)} />
-                  <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+                  <span className="text-body-md text-[var(--color-text-default)] leading-4">
                     {backup ? 'On' : 'Off'}
                   </span>
                 </HStack>
@@ -216,7 +210,7 @@ export function EditMemberDrawer({ isOpen, onClose, member, onSubmit }: EditMemb
 
               {/* Admin State */}
               <VStack gap={3} className="w-full">
-                <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                <label className="text-label-lg text-[var(--color-text-default)] leading-5">
                   Admin State
                 </label>
                 <HStack gap={2} className="items-center">
@@ -224,7 +218,7 @@ export function EditMemberDrawer({ isOpen, onClose, member, onSubmit }: EditMemb
                     checked={adminStateUp}
                     onChange={(e) => setAdminStateUp(e.target.checked)}
                   />
-                  <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+                  <span className="text-body-md text-[var(--color-text-default)] leading-4">
                     {adminStateUp ? 'Up' : 'Down'}
                   </span>
                 </HStack>

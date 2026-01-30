@@ -34,8 +34,7 @@ import {
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
-   Types
-   ---------------------------------------- */
+   Types ---------------------------------------- */
 
 interface PodRow {
   id: string;
@@ -50,8 +49,7 @@ interface PodRow {
 }
 
 /* ----------------------------------------
-   Mock Data
-   ---------------------------------------- */
+   Mock Data ---------------------------------------- */
 
 const podsData: PodRow[] = [
   {
@@ -145,8 +143,7 @@ const podsData: PodRow[] = [
 ];
 
 /* ----------------------------------------
-   Component
-   ---------------------------------------- */
+   Component ---------------------------------------- */
 
 export function PodsPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -442,8 +439,8 @@ export function PodsPage() {
               {/* Header */}
               <HStack justify="between" align="center" className="w-full min-h-8">
                 <HStack gap={2} align="center">
-                  <h1 className="text-[16px] leading-6 font-semibold text-[var(--color-text-default)]">
-                    Pods
+                  <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
+                    Pods{' '}
                   </h1>
                 </HStack>
 
@@ -454,7 +451,7 @@ export function PodsPage() {
                     size="md"
                     rightIcon={<IconChevronDown size={14} stroke={1.5} />}
                   >
-                    Create Pod
+                    Create Pod{' '}
                   </Button>
                 </ContextMenu>
               </HStack>
@@ -489,7 +486,7 @@ export function PodsPage() {
                     leftIcon={<IconDownload size={12} stroke={1.5} />}
                     disabled={selectedRows.length === 0}
                   >
-                    Download YAML
+                    Download YAML{' '}
                   </Button>
                   <Button
                     variant="secondary"
@@ -497,7 +494,7 @@ export function PodsPage() {
                     leftIcon={<IconTrash size={12} stroke={1.5} />}
                     disabled={selectedRows.length === 0}
                   >
-                    Delete
+                    Delete{' '}
                   </Button>
                 </HStack>
               </HStack>
@@ -521,9 +518,9 @@ export function PodsPage() {
                   </HStack>
                   <button
                     onClick={handleClearFilters}
-                    className="text-[11px] font-medium text-[var(--color-action-primary)] hover:underline"
+                    className="text-label-sm text-[var(--color-action-primary)] hover:underline"
                   >
-                    Clear Filters
+                    Clear Filters{' '}
                   </button>
                 </HStack>
               )}

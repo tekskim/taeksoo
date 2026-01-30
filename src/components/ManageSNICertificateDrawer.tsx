@@ -194,24 +194,22 @@ export function ManageSNICertificateDrawer({
     >
       <VStack gap={6} className="h-full">
         {/* Header */}
-        <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+        <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
           Manage SNI Certificate
         </h2>
 
         {/* SNI Toggle Section */}
         <VStack gap={3}>
           <VStack gap={2}>
-            <h3 className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
-              SNI
-            </h3>
-            <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+            <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">SNI</h3>
+            <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
               Add more certificates here to host multiple, different HTTPS websites on this single
               listener.
             </p>
           </VStack>
           <HStack gap={2} align="center">
             <Toggle checked={sniEnabled} onChange={setSniEnabled} />
-            <span className="text-[12px] text-[var(--color-text-default)]">
+            <span className="text-body-md text-[var(--color-text-default)]">
               {sniEnabled ? 'On' : 'Off'}
             </span>
           </HStack>
@@ -219,7 +217,7 @@ export function ManageSNICertificateDrawer({
 
         {/* SNI Certificates Section */}
         <VStack gap={3} className="w-full pb-5">
-          <h3 className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">
             SNI Certificates
           </h3>
 
@@ -318,7 +316,7 @@ export function ManageSNICertificateDrawer({
                       className="shrink-0 text-[var(--color-action-primary)]"
                     />
                   </HStack>
-                  <span className="text-[11px] text-[var(--color-text-subtle)] truncate">
+                  <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
                     ID : {cert.id}
                   </span>
                 </div>

@@ -110,7 +110,7 @@ function StatCard({
         <span className="text-[40px] font-normal leading-[48px] text-[var(--color-text-default)]">
           {value}
         </span>
-        {unit && <span className="text-[14px] text-[var(--color-text-muted)]">{unit}</span>}
+        {unit && <span className="text-body-lg text-[var(--color-text-muted)]">{unit}</span>}
       </div>
     </div>
   );
@@ -148,19 +148,13 @@ function FileSystemCard() {
           return (
             <div key={fs.name} className="flex flex-col gap-1.5">
               <div className="flex items-center justify-between">
-                <span className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)]">
-                  {fs.name}
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">{fs.name}</span>
                 <div className="flex items-center gap-2">
-                  <span className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-muted)]">
+                  <span className="text-body-sm text-[var(--color-text-muted)]">
                     {fs.used}/{fs.total} GiB
                   </span>
                   <div className={`flex items-center px-1.5 py-0.5 rounded-md ${colors.bg}`}>
-                    <span
-                      className={`text-[length:var(--font-size-11)] leading-[var(--line-height-16)] font-medium ${colors.text}`}
-                    >
-                      {fs.percent}%
-                    </span>
+                    <span className={`text-label-sm ${colors.text}`}>{fs.percent}%</span>
                   </div>
                 </div>
               </div>
@@ -722,7 +716,7 @@ export default function ComputeAdminPhysicalNodesPage() {
             <VStack gap={6}>
               {/* Page Header */}
               <div className="flex items-center justify-between">
-                <h1 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+                <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
                   Physical Nodes
                 </h1>
               </div>

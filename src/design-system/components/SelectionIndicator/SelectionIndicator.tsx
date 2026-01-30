@@ -85,7 +85,7 @@ export function SelectionIndicator({
             </span>
           </>
         ) : (
-          <span className="text-[12px] text-[var(--color-text-muted)]">{emptyText}</span>
+          <span className="text-body-md text-[var(--color-text-muted)]">{emptyText}</span>
         )}
       </div>
 

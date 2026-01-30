@@ -59,10 +59,10 @@ function TemplateCard({
       {/* Header */}
       <HStack justify="between" align="start">
         <VStack gap={1} className="flex-1 min-w-0">
-          <span className="text-[14px] font-semibold text-[var(--color-text-default)] truncate">
+          <span className="text-body-lg font-semibold text-[var(--color-text-default)] truncate">
             {name}
           </span>
-          <span className="text-[12px] text-[var(--color-text-subtle)] truncate">{imageUrl}</span>
+          <span className="text-body-md text-[var(--color-text-subtle)] truncate">{imageUrl}</span>
         </VStack>
         <button className="p-1 hover:bg-[var(--color-surface-subtle)] rounded transition-colors">
           <IconStar size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
@@ -74,7 +74,7 @@ function TemplateCard({
         {tags.map((tag) => (
           <span
             key={tag}
-            className="px-2 py-0.5 text-[11px] bg-[var(--color-surface-subtle)] text-[var(--color-text-muted)] rounded"
+            className="px-2 py-0.5 text-body-sm bg-[var(--color-surface-subtle)] text-[var(--color-text-muted)] rounded"
           >
             {tag}
           </span>
@@ -82,7 +82,7 @@ function TemplateCard({
       </HStack>
 
       {/* Resources */}
-      <div className="grid grid-cols-2 gap-2 text-[11px] text-[var(--color-text-muted)]">
+      <div className="grid grid-cols-2 gap-2 text-body-sm text-[var(--color-text-muted)]">
         <HStack gap={1} align="center">
           <IconCpu size={12} stroke={1.5} />
           <span>{cpu}</span>
@@ -110,7 +110,7 @@ function TemplateCard({
 
       {/* Footer */}
       <HStack justify="between" align="center">
-        <HStack gap={3} className="text-[11px] text-[var(--color-text-subtle)]">
+        <HStack gap={3} className="text-body-sm text-[var(--color-text-subtle)]">
           <HStack gap={1} align="center">
             <IconDownload size={12} stroke={1.5} />
             <span>{downloads}</span>
@@ -283,10 +283,8 @@ export function ExplorePage() {
               {/* Header */}
               <HStack justify="between" align="start">
                 <VStack gap={1}>
-                  <h1 className="text-[24px] font-semibold text-[var(--color-text-default)]">
-                    Explore
-                  </h1>
-                  <p className="text-[14px] text-[var(--color-text-subtle)]">
+                  <h1 className="text-heading-h3 text-[var(--color-text-default)]">Explore</h1>
+                  <p className="text-body-lg text-[var(--color-text-subtle)]">
                     Discover and deploy community templates
                   </p>
                 </VStack>
@@ -328,7 +326,7 @@ export function ExplorePage() {
 
               {/* Templates Grid */}
               <VStack gap={4}>
-                <h2 className="text-[16px] font-semibold text-[var(--color-text-default)]">
+                <h2 className="text-heading-h5 text-[var(--color-text-default)]">
                   All Templates ({filteredTemplates.length})
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

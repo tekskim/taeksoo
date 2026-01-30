@@ -105,9 +105,7 @@ export function AIPlatformSidebar() {
       <div className="h-12 px-4 flex items-center justify-between border-b border-[var(--color-border-subtle)]">
         <Link to="/ai-platform" className="flex items-center gap-2">
           <AIPlatformLogo />
-          <span className="font-semibold text-[14px] text-[var(--color-text-default)]">
-            AI Platform
-          </span>
+          <span className="text-label-lg text-[var(--color-text-default)]">AI Platform</span>
         </Link>
         <button className="p-1.5 rounded-md border border-[var(--color-border-default)] hover:bg-[var(--color-surface-subtle)] transition-colors">
           <IconApps size={14} stroke={1.5} className="text-[var(--color-text-muted)]" />
@@ -384,11 +382,9 @@ export function AIPlatformPageLayout({
             {/* Page Header */}
             <div className="flex items-center justify-between w-full">
               <div className="flex flex-col items-start justify-center">
-                <h4 className="text-[18px] leading-7 font-semibold text-[var(--color-text-default)]">
-                  {title}
-                </h4>
+                <h4 className="text-heading-h4 text-[var(--color-text-default)]">{title}</h4>
                 {subtitle && (
-                  <p className="text-[12px] text-[var(--color-text-subtle)] mt-0.5">{subtitle}</p>
+                  <p className="text-body-md text-[var(--color-text-subtle)] mt-0.5">{subtitle}</p>
                 )}
               </div>
               {headerActions && <div className="flex items-center gap-2">{headerActions}</div>}
@@ -635,7 +631,7 @@ function ResourceCard({ icon, title, children }: ResourceCardProps) {
         {icon}
       </div>
       <div className="flex-1 min-w-0">
-        <h3 className="text-[14px] font-semibold text-[var(--color-text-default)] mb-2">{title}</h3>
+        <h3 className="text-heading-h6 text-[var(--color-text-default)] mb-2">{title}</h3>
         {children}
       </div>
     </div>
@@ -664,8 +660,8 @@ function StatCard({
         {icon}
       </div>
       <div>
-        <p className="text-[18px] font-semibold text-[var(--color-text-default)]">{value}</p>
-        <p className="text-[11px] text-[var(--color-text-subtle)]">{label}</p>
+        <p className="text-heading-h4 text-[var(--color-text-default)]">{value}</p>
+        <p className="text-body-sm text-[var(--color-text-subtle)]">{label}</p>
       </div>
     </div>
   );
@@ -688,8 +684,8 @@ function QuickActionCard({ icon, title, description, onClick }: QuickActionCardP
       <div className="w-12 h-12 rounded-lg bg-[var(--color-surface-subtle)] flex items-center justify-center mb-3">
         {icon}
       </div>
-      <h4 className="text-[14px] font-medium text-[var(--color-text-default)] mb-1">{title}</h4>
-      <p className="text-[11px] text-[var(--color-text-subtle)]">{description}</p>
+      <h4 className="text-label-lg text-[var(--color-text-default)] mb-1">{title}</h4>
+      <p className="text-body-sm text-[var(--color-text-subtle)]">{description}</p>
     </button>
   );
 }
@@ -709,8 +705,8 @@ function ServiceOverviewCard({ icon, count, label, onClick }: ServiceOverviewCar
       className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-5 flex flex-col items-center text-center hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface-muted)] transition-all"
     >
       <div className="mb-3">{icon}</div>
-      <p className="text-[18px] font-semibold text-[var(--color-text-default)]">{count}</p>
-      <p className="text-[11px] text-[var(--color-text-subtle)]">{label}</p>
+      <p className="text-heading-h4 text-[var(--color-text-default)]">{count}</p>
+      <p className="text-body-sm text-[var(--color-text-subtle)]">{label}</p>
     </button>
   );
 }
@@ -724,8 +720,8 @@ interface DataRowProps {
 function DataRow({ label, value }: DataRowProps) {
   return (
     <div className="flex items-center justify-between py-1">
-      <span className="text-[12px] text-[var(--color-text-subtle)]">{label}</span>
-      <span className="text-[12px] font-medium text-[var(--color-text-default)]">{value}</span>
+      <span className="text-body-md text-[var(--color-text-subtle)]">{label}</span>
+      <span className="text-label-md text-[var(--color-text-default)]">{value}</span>
     </div>
   );
 }
@@ -760,10 +756,8 @@ function DashboardContent() {
           <div className="space-y-1">
             <DataRow label="My pending Jobs:" value={0} />
             <DataRow label="My running Jobs:" value={0} />
-            <p className="text-[12px] font-medium text-[var(--color-text-default)] mt-2">
-              No active jobs
-            </p>
-            <p className="text-[11px] text-[var(--color-text-subtle)]">
+            <p className="text-label-md text-[var(--color-text-default)] mt-2">No active jobs</p>
+            <p className="text-body-sm text-[var(--color-text-subtle)]">
               You can start a new job now
             </p>
           </div>
@@ -802,9 +796,7 @@ function DashboardContent() {
 
       {/* Quick Actions */}
       <div>
-        <h3 className="text-[14px] font-semibold text-[var(--color-text-default)] mb-3">
-          Quick Actions
-        </h3>
+        <h3 className="text-heading-h6 text-[var(--color-text-default)] mb-3">Quick Actions</h3>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <QuickActionCard
             icon={
@@ -837,9 +829,7 @@ function DashboardContent() {
 
       {/* Service Overview */}
       <div>
-        <h3 className="text-[14px] font-semibold text-[var(--color-text-default)] mb-3">
-          Service Overview
-        </h3>
+        <h3 className="text-heading-h6 text-[var(--color-text-default)] mb-3">Service Overview</h3>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <ServiceOverviewCard
             icon={
@@ -906,15 +896,13 @@ function DashboardContent() {
       <div>
         <div className="flex items-center gap-2 mb-3">
           <IconActivity size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
-          <h3 className="text-[14px] font-semibold text-[var(--color-text-default)]">
-            Recent Services
-          </h3>
-          <span className="text-[11px] text-[var(--color-text-subtle)]">(Last 24 hours)</span>
+          <h3 className="text-heading-h6 text-[var(--color-text-default)]">Recent Services</h3>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">(Last 24 hours)</span>
         </div>
         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-8 flex items-center justify-center">
           <div className="flex items-center gap-2 text-[var(--color-text-muted)]">
             <IconActivity size={16} stroke={1.5} className="animate-spin" />
-            <span className="text-[12px]">Loading services...</span>
+            <span className="text-body-md">Loading services...</span>
           </div>
         </div>
       </div>
@@ -1066,12 +1054,8 @@ function StatusCard({ label, count, status }: StatusCardProps) {
       className={`${bgColor} flex flex-[1_0_0] items-center justify-between min-h-px min-w-px px-4 py-3 relative rounded-lg shrink-0`}
     >
       <div className="flex flex-col gap-1.5 items-start leading-4 not-italic relative shrink-0">
-        <p className="font-medium text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
-          {label}
-        </p>
-        <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">
-          {count}
-        </p>
+        <p className="text-label-sm text-[var(--color-text-subtle)]">{label}</p>
+        <p className="text-body-md text-[var(--color-text-default)]">{count}</p>
       </div>
       <div
         className={`${iconBg} flex gap-0 items-center justify-center p-1 relative rounded-2xl shrink-0 size-6`}
@@ -1220,7 +1204,7 @@ function WorkloadsContent() {
           >
             {row.name}
           </Link>
-          <span className="text-[11px] text-[var(--color-text-subtle)]">{row.namespace}</span>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">{row.namespace}</span>
         </div>
       ),
     },
@@ -1369,8 +1353,10 @@ function PlaceholderContent({ title }: { title: string }) {
       <div className="w-16 h-16 rounded-full bg-[var(--color-surface-subtle)] flex items-center justify-center mb-4">
         <IconStack2 size={32} stroke={1} className="text-[var(--color-text-muted)]" />
       </div>
-      <h3 className="text-[16px] font-medium text-[var(--color-text-default)] mb-2">{title}</h3>
-      <p className="text-[14px] text-[var(--color-text-muted)]">This page is under construction.</p>
+      <h3 className="text-heading-h5 text-[var(--color-text-default)] mb-2">{title}</h3>
+      <p className="text-body-lg text-[var(--color-text-muted)]">
+        This page is under construction.
+      </p>
     </div>
   );
 }

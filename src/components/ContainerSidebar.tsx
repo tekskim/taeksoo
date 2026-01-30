@@ -253,7 +253,7 @@ function NamespaceSelector() {
 
   return (
     <div className="px-3 py-4 border-b border-[var(--color-border-default)]">
-      <label className="block text-[11px] leading-[16px] font-medium text-[var(--color-text-default)] mb-1">
+      <label className="block text-label-sm leading-[16px] text-[var(--color-text-default)] mb-1">
         Namespace
       </label>
       <button
@@ -262,9 +262,7 @@ function NamespaceSelector() {
         onClick={() => setIsOpen(!isOpen)}
         className="w-full px-2.5 py-1.5 rounded-md bg-[var(--color-surface-subtle)] hover:bg-[var(--color-surface-muted)] transition-colors flex items-center justify-between"
       >
-        <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-          {getButtonText()}
-        </span>
+        <span className="text-label-sm text-[var(--color-text-default)]">{getButtonText()}</span>
         <ArrowRightLeft
           size={12}
           className="text-[var(--color-text-default)] shrink-0"
@@ -292,7 +290,7 @@ function NamespaceSelector() {
                 placeholder="Search namespaces"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="flex-1 bg-transparent text-[11px] text-[var(--color-text-default)] placeholder:text-[var(--color-text-muted)] outline-none"
+                className="flex-1 bg-transparent text-body-sm text-[var(--color-text-default)] placeholder:text-[var(--color-text-muted)] outline-none"
                 autoFocus
               />
               <IconSearch size={12} className="text-[var(--color-text-muted)]" />
@@ -319,7 +317,7 @@ function NamespaceSelector() {
               >
                 {allSelected && <IconCheck size={12} className="text-white" stroke={2} />}
               </div>
-              <span className="text-[12px] text-[var(--color-text-default)]">All Namespaces</span>
+              <span className="text-body-md text-[var(--color-text-default)]">All Namespaces</span>
             </button>
 
             {/* Divider */}
@@ -347,13 +345,13 @@ function NamespaceSelector() {
                     <div className="flex flex-col gap-1.5">
                       {/* Header */}
                       <div className="flex items-center justify-between">
-                        <span className="text-[12px] font-medium text-[var(--color-text-default)]">
+                        <span className="text-label-md text-[var(--color-text-default)]">
                           {ns.name}
                         </span>
                       </div>
 
                       {/* Footer - only date */}
-                      <div className="text-[10px] text-[var(--color-text-subtle)]">
+                      <div className="text-body-xs text-[var(--color-text-subtle)]">
                         {ns.createdAt}
                       </div>
                     </div>
@@ -362,7 +360,7 @@ function NamespaceSelector() {
               })}
 
               {filteredNamespaces.length === 0 && (
-                <div className="text-center py-4 text-[11px] text-[var(--color-text-muted)]">
+                <div className="text-center py-4 text-body-sm text-[var(--color-text-muted)]">
                   No namespaces found
                 </div>
               )}
@@ -532,7 +530,7 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
               {/* Back to All Services */}
               <Link
                 to="/"
-                className="w-[175px] px-[var(--menu-item-padding-x)] py-[var(--menu-item-padding-y)] rounded-[var(--menu-item-radius)] flex items-center gap-[var(--menu-item-gap)] text-[length:var(--font-size-11)] transition-colors duration-[var(--duration-fast)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)]"
+                className="w-[175px] px-[var(--menu-item-padding-x)] py-[var(--menu-item-padding-y)] rounded-[var(--menu-item-radius)] flex items-center gap-[var(--menu-item-gap)] text-body-sm transition-colors duration-[var(--duration-fast)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)]"
               >
                 <IconArrowLeft size={16} stroke={1.5} />
                 <span>All Services</span>
@@ -540,7 +538,7 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
 
               {/* Bookmarks */}
               <div className="py-2">
-                <button className="flex items-center gap-2 px-0 py-1.5 text-[12px] leading-[16px] font-medium text-[var(--color-text-default)]">
+                <button className="flex items-center gap-2 px-0 py-1.5 text-label-md leading-[16px] text-[var(--color-text-default)]">
                   <IconChevronDown size={12} stroke={2} className="rotate-[-90deg]" />
                   <span>Bookmarks</span>
                 </button>

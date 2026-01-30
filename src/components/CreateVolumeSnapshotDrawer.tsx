@@ -45,15 +45,13 @@ function QuotaProgressBar({ label, used, total }: QuotaProgressBarProps) {
   return (
     <VStack gap={2} className="w-full">
       <HStack className="w-full justify-between items-center">
-        <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
-          {label}
-        </span>
+        <span className="text-label-lg text-[var(--color-text-default)] leading-5">{label}</span>
         <HStack gap={0} className="items-center">
-          <span className="text-[12px] text-[var(--color-text-default)] leading-4">{used}/</span>
+          <span className="text-body-md text-[var(--color-text-default)] leading-4">{used}/</span>
           {isUnlimited ? (
             <IconInfinity size={16} className="text-[var(--color-text-default)]" stroke={1} />
           ) : (
-            <span className="text-[12px] text-[var(--color-text-default)] leading-4">{total}</span>
+            <span className="text-body-md text-[var(--color-text-default)] leading-4">{total}</span>
           )}
         </HStack>
       </HStack>
@@ -164,10 +162,10 @@ export function CreateVolumeSnapshotDrawer({
         <VStack gap={3}>
           {/* Header */}
           <VStack gap={2}>
-            <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
               Create Volume Snapshot
             </h2>
-            <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
               Create a snapshot of this volume to back up its current data state. You can use the
               snapshot to create new volumes or restore data later.
             </p>
@@ -175,8 +173,8 @@ export function CreateVolumeSnapshotDrawer({
 
           {/* Volume Info Box */}
           <div className="w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg">
-            <p className="text-[11px] font-medium text-[var(--color-text-subtle)] mb-1.5">Volume</p>
-            <p className="text-[12px] text-[var(--color-text-default)]">
+            <p className="text-label-sm text-[var(--color-text-subtle)] mb-1.5">Volume</p>
+            <p className="text-body-md text-[var(--color-text-default)]">
               {volume ? `${volume.name} (${volume.size}GiB)` : '-'}
             </p>
           </div>
@@ -188,7 +186,7 @@ export function CreateVolumeSnapshotDrawer({
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1}
             />
-            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+            <p className="text-body-sm text-[var(--color-text-default)] leading-4">
               For data consistency, stop all write operations on the instance before creating a
               snapshot.
             </p>
@@ -197,7 +195,7 @@ export function CreateVolumeSnapshotDrawer({
 
         {/* Snapshot Name Input */}
         <VStack gap={2} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             Volume snapshot name
           </label>
           <Input
@@ -208,11 +206,11 @@ export function CreateVolumeSnapshotDrawer({
             error={hasAttemptedSubmit && !snapshotName.trim()}
           />
           {hasAttemptedSubmit && !snapshotName.trim() ? (
-            <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+            <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
               Snapshot name is required
             </p>
           ) : (
-            <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
               Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
             </p>
           )}

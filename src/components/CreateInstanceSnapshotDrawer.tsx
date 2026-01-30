@@ -97,20 +97,18 @@ export function CreateInstanceSnapshotDrawer({
         <VStack gap={3}>
           {/* Header */}
           <VStack gap={2}>
-            <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
               Create Instance Snapshot
             </h2>
-            <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
               Create a snapshot of this instance to capture its current system state as an image.
             </p>
           </VStack>
 
           {/* Instance Info Box */}
           <div className="w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg">
-            <p className="text-[11px] font-medium text-[var(--color-text-subtle)] mb-1.5">
-              Instance
-            </p>
-            <p className="text-[12px] text-[var(--color-text-default)]">{instance?.name || '-'}</p>
+            <p className="text-label-sm text-[var(--color-text-subtle)] mb-1.5">Instance</p>
+            <p className="text-body-md text-[var(--color-text-default)]">{instance?.name || '-'}</p>
           </div>
 
           {/* Warning Message */}
@@ -120,7 +118,7 @@ export function CreateInstanceSnapshotDrawer({
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
               stroke={1}
             />
-            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+            <p className="text-body-sm text-[var(--color-text-default)] leading-4">
               For data consistency, stop all write operations on the instance before creating a
               snapshot.
             </p>
@@ -129,7 +127,7 @@ export function CreateInstanceSnapshotDrawer({
 
         {/* Snapshot Name Input */}
         <VStack gap={2} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             Snapshot name
           </label>
           <Input
@@ -140,11 +138,11 @@ export function CreateInstanceSnapshotDrawer({
             error={hasAttemptedSubmit && !snapshotName.trim()}
           />
           {hasAttemptedSubmit && !snapshotName.trim() ? (
-            <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+            <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
               Snapshot name is required
             </p>
           ) : (
-            <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
               Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
             </p>
           )}
@@ -153,10 +151,10 @@ export function CreateInstanceSnapshotDrawer({
         {/* Description Input */}
         <VStack gap={2} className="w-full">
           <div className="flex items-center gap-1">
-            <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+            <label className="text-label-lg text-[var(--color-text-default)] leading-5">
               Description
             </label>
-            <span className="text-[12px] text-[var(--color-text-subtle)]">(optional)</span>
+            <span className="text-body-md text-[var(--color-text-subtle)]">(optional)</span>
           </div>
           <Input value={description} onChange={(e) => setDescription(e.target.value)} fullWidth />
         </VStack>

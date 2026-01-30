@@ -467,9 +467,7 @@ function PieChartCard({
 
   return (
     <div className="flex-1 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-5 flex flex-col gap-4">
-      <span className="text-[length:var(--font-size-13)] font-medium text-[var(--color-text-default)]">
-        {title}
-      </span>
+      <span className="text-label-md text-[var(--color-text-default)]">{title}</span>
       <div className="flex justify-center">
         <ReactECharts option={getOption()} style={{ height: '180px', width: '180px' }} />
       </div>
@@ -480,9 +478,7 @@ function PieChartCard({
               className="w-2.5 h-2.5 rounded-sm shrink-0"
               style={{ backgroundColor: item.color }}
             />
-            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
-              {item.label}
-            </span>
+            <span className="text-body-sm text-[var(--color-text-muted)]">{item.label}</span>
           </div>
         ))}
       </div>
@@ -569,9 +565,7 @@ function SingleValueDoughnutCard({
     <div
       className={`bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-5 flex flex-col gap-4 ${className || 'flex-1'}`}
     >
-      <span className="text-[length:var(--font-size-13)] font-medium text-[var(--color-text-default)]">
-        {title}
-      </span>
+      <span className="text-label-md text-[var(--color-text-default)]">{title}</span>
       <div className="flex justify-center">
         <ReactECharts option={getOption()} style={{ height: '180px', width: '180px' }} />
       </div>
@@ -592,11 +586,11 @@ interface StatCardProps {
 function StatCardItem({ label, value, unit }: StatCardProps) {
   return (
     <div className="flex-1 min-w-0 p-4 border border-[var(--color-border-default)] rounded-lg bg-[var(--color-surface-default)]">
-      <p className="text-[11px] text-[var(--color-text-subtle)] mb-2 whitespace-nowrap">{label}</p>
-      <p className="text-[24px] font-semibold text-[var(--color-text-default)] whitespace-nowrap">
+      <p className="text-body-sm text-[var(--color-text-subtle)] mb-2 whitespace-nowrap">{label}</p>
+      <p className="text-heading-h3 text-[var(--color-text-default)] whitespace-nowrap">
         {value}
         {unit && (
-          <span className="text-[14px] font-normal text-[var(--color-text-muted)] ml-1">
+          <span className="text-body-lg font-normal text-[var(--color-text-muted)] ml-1">
             {unit}
           </span>
         )}
@@ -1150,7 +1144,7 @@ export function OverallPerformancePage() {
             <VStack gap={6} className="min-w-[1176px]">
               {/* Page Header */}
               <div className="flex items-center justify-between h-8">
-                <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
                   Overall performance
                 </h1>
               </div>

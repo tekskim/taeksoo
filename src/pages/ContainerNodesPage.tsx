@@ -150,7 +150,7 @@ const nodesData: NodeRow[] = [
 function ProgressCell({ value }: { value: number }) {
   return (
     <div className="flex flex-col gap-0.5 w-24">
-      <span className="text-[12px] leading-[16px] text-[var(--color-text-default)]">{value}%</span>
+      <span className="text-body-md leading-[16px] text-[var(--color-text-default)]">{value}%</span>
       <ProgressBar value={value} size="sm" />
     </div>
   );
@@ -266,7 +266,7 @@ export function ContainerNodesPage() {
       sortable: true,
       render: (_, row) => (
         <HStack gap={1.5} align="center">
-          <span className="text-[12px] leading-[16px] text-[var(--color-text-default)]">
+          <span className="text-body-md leading-[16px] text-[var(--color-text-default)]">
             {row.externalIp} / {row.internalIp}
           </span>
           <button
@@ -451,9 +451,7 @@ export function ContainerNodesPage() {
               {/* Header */}
               <HStack justify="between" align="center" className="w-full min-h-8">
                 <HStack gap={2} align="center">
-                  <h1 className="text-[16px] leading-6 font-semibold text-[var(--color-text-default)]">
-                    Nodes
-                  </h1>
+                  <h1 className="text-heading-h5 text-[var(--color-text-default)]">Nodes</h1>
                 </HStack>
               </HStack>
 
@@ -519,7 +517,7 @@ export function ContainerNodesPage() {
                   </HStack>
                   <button
                     onClick={handleClearFilters}
-                    className="text-[11px] font-medium text-[var(--color-action-primary)] hover:underline"
+                    className="text-label-sm text-[var(--color-action-primary)] hover:underline"
                   >
                     Clear Filters
                   </button>

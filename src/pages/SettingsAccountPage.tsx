@@ -18,8 +18,7 @@ import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
 import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
 
 /* ----------------------------------------
-   Settings Account Page
-   ---------------------------------------- */
+   Settings Account Page ---------------------------------------- */
 
 export default function SettingsAccountPage() {
   const navigate = useNavigate();
@@ -131,10 +130,10 @@ export default function SettingsAccountPage() {
               <VStack gap={6}>
                 {/* Header */}
                 <div>
-                  <h1 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
-                    Account
+                  <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
+                    Account{' '}
                   </h1>
-                  <p className="text-[12px] leading-[18px] text-[var(--color-text-muted)] mt-1">
+                  <p className="text-body-md leading-[18px] text-[var(--color-text-muted)] mt-1">
                     Manage your account information and security settings.
                   </p>
                 </div>
@@ -146,7 +145,7 @@ export default function SettingsAccountPage() {
                     actions={
                       <Button variant="outline" size="sm" className="gap-1.5">
                         <IconEdit size={12} />
-                        Edit
+                        Edit{' '}
                       </Button>
                     }
                   />
@@ -164,10 +163,10 @@ export default function SettingsAccountPage() {
                     {/* Password */}
                     <VStack gap={4}>
                       <VStack gap={2}>
-                        <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
-                          Password
+                        <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
+                          Password{' '}
                         </span>
-                        <p className="text-[12px] leading-4 text-[var(--color-text-subtle)]">
+                        <p className="text-body-md leading-4 text-[var(--color-text-subtle)]">
                           Last updated: {passwordLastUpdated}
                         </p>
                       </VStack>
@@ -178,13 +177,13 @@ export default function SettingsAccountPage() {
                           onClick={() => setIsEditingPassword(true)}
                           className="w-fit"
                         >
-                          Change Password
+                          Change Password{' '}
                         </Button>
                       ) : (
                         <VStack gap={3} className="max-w-[400px]">
                           <VStack gap={2}>
-                            <span className="text-[12px] font-medium text-[var(--color-text-default)]">
-                              Enter a new password
+                            <span className="text-label-md text-[var(--color-text-default)]">
+                              Enter a new password{' '}
                             </span>
                             <Input
                               type="password"
@@ -194,8 +193,8 @@ export default function SettingsAccountPage() {
                             />
                           </VStack>
                           <VStack gap={2}>
-                            <span className="text-[12px] font-medium text-[var(--color-text-default)]">
-                              Confirm your new password
+                            <span className="text-label-md text-[var(--color-text-default)]">
+                              Confirm your new password{' '}
                             </span>
                             <Input
                               type="password"
@@ -214,7 +213,7 @@ export default function SettingsAccountPage() {
                                 setConfirmPassword('');
                               }}
                             >
-                              Cancel
+                              Cancel{' '}
                             </Button>
                             <Button
                               variant="primary"
@@ -238,7 +237,7 @@ export default function SettingsAccountPage() {
                                 !newPassword || !confirmPassword || newPassword !== confirmPassword
                               }
                             >
-                              Save
+                              Save{' '}
                             </Button>
                           </div>
                         </VStack>
@@ -251,10 +250,10 @@ export default function SettingsAccountPage() {
                     {/* MFA Setting */}
                     <VStack gap={4}>
                       <VStack gap={2}>
-                        <span className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
-                          MFA Setting
+                        <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
+                          MFA Setting{' '}
                         </span>
-                        <p className="text-[12px] leading-4 text-[var(--color-text-subtle)]">
+                        <p className="text-body-md leading-4 text-[var(--color-text-subtle)]">
                           Add an extra layer of security to your account.
                         </p>
                       </VStack>
@@ -269,16 +268,16 @@ export default function SettingsAccountPage() {
                             />
                           </div>
                           <div>
-                            <div className="text-[12px] font-medium text-[var(--color-text-default)]">
-                              Authenticator App
+                            <div className="text-label-md text-[var(--color-text-default)]">
+                              Authenticator App{' '}
                             </div>
                             {authenticatorSetup.configured ? (
-                              <div className="flex items-center gap-1.5 text-[12px] text-[var(--color-state-success)]">
+                              <div className="flex items-center gap-1.5 text-body-md text-[var(--color-state-success)]">
                                 <IconCheck size={12} />
                                 <span>Added {authenticatorSetup.addedAt}</span>
                               </div>
                             ) : (
-                              <div className="text-[12px] text-[var(--color-text-muted)]">
+                              <div className="text-body-md text-[var(--color-text-muted)]">
                                 Use Google Authenticator, Authy, etc.
                               </div>
                             )}
@@ -312,7 +311,7 @@ export default function SettingsAccountPage() {
                 <SectionCard>
                   <SectionCard.Header title="Sessions" />
                   <SectionCard.Content>
-                    <p className="text-[12px] leading-[18px] text-[var(--color-text-muted)] mb-4">
+                    <p className="text-body-md leading-[18px] text-[var(--color-text-muted)] mb-4">
                       View your recent login sessions.
                     </p>
                     <Table
@@ -327,7 +326,7 @@ export default function SettingsAccountPage() {
                 {/* Logout */}
                 <div className="pt-6 border-t border-[var(--color-border-default)] flex justify-end min-w-[600px]">
                   <Button variant="secondary" size="md" onClick={() => setShowLogoutModal(true)}>
-                    Logout
+                    Logout{' '}
                   </Button>
                 </div>
               </VStack>
@@ -343,7 +342,7 @@ export default function SettingsAccountPage() {
         </p>
         <div className="flex justify-end gap-3">
           <Button variant="secondary" onClick={() => setShowLogoutModal(false)}>
-            Cancel
+            Cancel{' '}
           </Button>
           <Button
             variant="primary"
@@ -352,7 +351,7 @@ export default function SettingsAccountPage() {
               window.location.href = '/';
             }}
           >
-            Logout
+            Logout{' '}
           </Button>
         </div>
       </Modal>

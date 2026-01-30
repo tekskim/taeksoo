@@ -350,7 +350,7 @@ export function PersistentVolumeDetailPage() {
                             <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
                           ))}
                         {labelsCount > 1 && (
-                          <span className="text-[11px] text-[var(--color-text-default)] cursor-pointer hover:underline">
+                          <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
                             (+{labelsCount - 1})
                           </span>
                         )}
@@ -367,7 +367,7 @@ export function PersistentVolumeDetailPage() {
                             <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
                           ))}
                         {annotationsCount > 1 && (
-                          <span className="text-[11px] text-[var(--color-text-default)] cursor-pointer hover:underline">
+                          <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
                             (+{annotationsCount - 1})
                           </span>
                         )}
@@ -391,7 +391,7 @@ export function PersistentVolumeDetailPage() {
                       <VStack gap={4}>
                         {/* Access Modes */}
                         <VStack gap={2} align="start">
-                          <h3 className="text-[14px] font-medium text-[var(--color-text-default)]">
+                          <h3 className="text-label-lg text-[var(--color-text-default)]">
                             Access Modes
                           </h3>
                           <VStack gap={1.5} align="start">
@@ -418,7 +418,7 @@ export function PersistentVolumeDetailPage() {
 
                         {/* Assign to Storage Class */}
                         <VStack gap={2} align="start" className="w-full">
-                          <label className="text-[11px] font-medium text-[var(--color-text-default)]">
+                          <label className="text-label-sm text-[var(--color-text-default)]">
                             Assign to Storage Class
                           </label>
                           <Select
@@ -437,11 +437,11 @@ export function PersistentVolumeDetailPage() {
 
                         {/* Mount Options */}
                         <VStack gap={2} align="start" className="w-full">
-                          <h3 className="text-[14px] font-medium text-[var(--color-text-default)]">
+                          <h3 className="text-label-lg text-[var(--color-text-default)]">
                             Mount Options
                           </h3>
                           <VStack gap={2} align="start" className="w-full">
-                            <label className="text-[11px] font-medium text-[var(--color-text-default)]">
+                            <label className="text-label-sm text-[var(--color-text-default)]">
                               Value
                             </label>
                             <Input
@@ -456,7 +456,7 @@ export function PersistentVolumeDetailPage() {
 
                         {/* Node Selectors */}
                         <VStack gap={2} align="start" className="w-full">
-                          <h3 className="text-[14px] font-medium text-[var(--color-text-default)]">
+                          <h3 className="text-label-lg text-[var(--color-text-default)]">
                             Node Selectors
                           </h3>
                           <VStack gap={2} className="w-full">
@@ -469,17 +469,17 @@ export function PersistentVolumeDetailPage() {
                                   {/* Header Row */}
                                   <HStack gap={2} className="w-full">
                                     <div className="flex-1">
-                                      <label className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                      <label className="text-label-sm text-[var(--color-text-default)]">
                                         Key
                                       </label>
                                     </div>
                                     <div className="flex-1">
-                                      <label className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                      <label className="text-label-sm text-[var(--color-text-default)]">
                                         Operator
                                       </label>
                                     </div>
                                     <div className="flex-1">
-                                      <label className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                      <label className="text-label-sm text-[var(--color-text-default)]">
                                         Value
                                       </label>
                                     </div>
@@ -518,7 +518,7 @@ export function PersistentVolumeDetailPage() {
                               </div>
                             ))}
                             {pvData.nodeSelectors.length === 0 && (
-                              <div className="w-full text-center py-4 text-[var(--color-text-subtle)] text-[12px]">
+                              <div className="w-full text-center py-4 text-[var(--color-text-subtle)] text-body-md">
                                 No node selectors configured
                               </div>
                             )}

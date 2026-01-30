@@ -212,12 +212,8 @@ function HalfDonutChart({
         style={{ height: `${chartHeight}px`, width: `${chartWidth}px` }}
       />
       <div className="absolute inset-0 flex flex-col items-center justify-center pt-4 pointer-events-none">
-        {label && <span className="text-[10px] text-[var(--color-text-subtle)]">{label}</span>}
-        {value && (
-          <span className="text-[16px] font-semibold text-[var(--color-text-default)]">
-            {value}
-          </span>
-        )}
+        {label && <span className="text-body-xs text-[var(--color-text-subtle)]">{label}</span>}
+        {value && <span className="text-heading-h5 text-[var(--color-text-default)]">{value}</span>}
       </div>
 
       {/* Tooltip */}
@@ -230,7 +226,7 @@ function HalfDonutChart({
             <div className="flex flex-col gap-1">
               <div className="flex items-center gap-1.5">
                 <div className="w-2 h-2 rounded-sm" style={{ backgroundColor: primaryColor }} />
-                <span className="text-[11px] leading-[14px] text-[var(--color-text-default)]">
+                <span className="text-body-sm leading-[14px] text-[var(--color-text-default)]">
                   {primaryTooltip.label}: {primaryTooltip.value} ({primaryTooltip.percent}%)
                 </span>
               </div>
@@ -239,13 +235,13 @@ function HalfDonutChart({
                   className="w-2 h-2 rounded-sm"
                   style={{ backgroundColor: secondaryColor || bgColor }}
                 />
-                <span className="text-[11px] leading-[14px] text-[var(--color-text-default)]">
+                <span className="text-body-sm leading-[14px] text-[var(--color-text-default)]">
                   {secondaryTooltip.label}: {secondaryTooltip.value} ({secondaryTooltip.percent}%)
                 </span>
               </div>
             </div>
           ) : (
-            <span className="text-[11px] leading-[14px] text-[var(--color-text-default)]">
+            <span className="text-body-sm leading-[14px] text-[var(--color-text-default)]">
               {percentage}%
             </span>
           )}
@@ -275,10 +271,8 @@ function StatCard({ label, value, variant = 'default' }: StatCardProps) {
 
   return (
     <div className={`flex-1 ${bgColors[variant]} rounded-lg px-4 py-3 flex flex-col gap-1.5`}>
-      <p className="text-[11px] leading-[16px] font-medium text-[var(--color-text-subtle)]">
-        {label}
-      </p>
-      <p className="text-[18px] font-semibold text-[var(--color-text-default)]">{value}</p>
+      <p className="text-label-sm leading-[16px] text-[var(--color-text-subtle)]">{label}</p>
+      <p className="text-heading-h4 text-[var(--color-text-default)]">{value}</p>
     </div>
   );
 }
@@ -295,10 +289,8 @@ interface ResourceCardProps {
 function ResourceCard({ label, value }: ResourceCardProps) {
   return (
     <div className="bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3 flex flex-col gap-1.5">
-      <p className="text-[11px] leading-[16px] font-medium text-[var(--color-text-subtle)]">
-        {label}
-      </p>
-      <p className="text-[18px] font-semibold text-[var(--color-text-default)]">{value}</p>
+      <p className="text-label-sm leading-[16px] text-[var(--color-text-subtle)]">{label}</p>
+      <p className="text-heading-h4 text-[var(--color-text-default)]">{value}</p>
     </div>
   );
 }
@@ -390,30 +382,28 @@ export function IAMHomePage() {
               <HStack gap={3} align="stretch">
                 {/* Domain Info Card */}
                 <div className="w-[var(--wizard-summary-width)] shrink-0 bg-[var(--color-surface-default)] rounded-lg p-4 flex flex-col gap-6">
-                  <h2 className="text-[24px] font-semibold text-[var(--color-text-default)]">
-                    DomainA
-                  </h2>
+                  <h2 className="text-heading-h3 text-[var(--color-text-default)]">DomainA</h2>
                   <VStack gap={2}>
                     <HStack gap={2}>
-                      <span className="text-[12px] font-medium text-[var(--color-text-default)]">
+                      <span className="text-label-md text-[var(--color-text-default)]">
                         Created at
                       </span>
-                      <span className="text-[12px] text-[var(--color-text-default)]">
+                      <span className="text-body-md text-[var(--color-text-default)]">
                         Dec 12, 2025
                       </span>
                     </HStack>
                     <HStack gap={2}>
-                      <span className="text-[12px] font-medium text-[var(--color-text-default)]">
+                      <span className="text-label-md text-[var(--color-text-default)]">
                         Description
                       </span>
-                      <span className="text-[12px] text-[var(--color-text-default)]">-</span>
+                      <span className="text-body-md text-[var(--color-text-default)]">-</span>
                     </HStack>
                   </VStack>
                 </div>
 
                 {/* Authentication Summary Card */}
                 <div className="flex-1 bg-[var(--color-surface-default)] rounded-lg pt-3 pb-4 px-4 flex flex-col gap-3">
-                  <h3 className="text-[14px] font-semibold text-[var(--color-text-default)]">
+                  <h3 className="text-heading-h6 text-[var(--color-text-default)]">
                     Authentication summary
                   </h3>
 
@@ -421,19 +411,19 @@ export function IAMHomePage() {
                     {/* Today's Sign-ins */}
                     <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg p-4 flex items-start justify-between">
                       <VStack gap={3}>
-                        <p className="text-[14px] font-medium text-[var(--color-text-default)]">
+                        <p className="text-label-lg text-[var(--color-text-default)]">
                           Today's Sign-ins
                         </p>
                         <VStack gap={2}>
                           <HStack gap={1} align="center">
                             <div className="w-[3px] h-[3px] rounded-full bg-[#4ade80]" />
-                            <span className="text-[11px] font-medium text-[var(--color-text-subtle)]">
+                            <span className="text-label-sm text-[var(--color-text-subtle)]">
                               Success: 1,234 (96%)
                             </span>
                           </HStack>
                           <HStack gap={1} align="center">
                             <div className="w-[3px] h-[3px] rounded-full bg-[#f87171]" />
-                            <span className="text-[11px] font-medium text-[var(--color-text-subtle)]">
+                            <span className="text-label-sm text-[var(--color-text-subtle)]">
                               Failure: 45 (4%)
                             </span>
                           </HStack>
@@ -453,19 +443,19 @@ export function IAMHomePage() {
                     {/* MFA Adoption */}
                     <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg p-4 flex items-start justify-between">
                       <VStack gap={3}>
-                        <p className="text-[14px] font-medium text-[var(--color-text-default)]">
+                        <p className="text-label-lg text-[var(--color-text-default)]">
                           MFA adoption
                         </p>
                         <VStack gap={2}>
                           <HStack gap={1} align="center">
                             <div className="w-[3px] h-[3px] rounded-full bg-[#4ade80]" />
-                            <span className="text-[11px] font-medium text-[var(--color-text-subtle)]">
+                            <span className="text-label-sm text-[var(--color-text-subtle)]">
                               Enabled: 117 (78%)
                             </span>
                           </HStack>
                           <HStack gap={1} align="center">
                             <div className="w-[3px] h-[3px] rounded-full bg-[#e2e8f0]" />
-                            <span className="text-[11px] font-medium text-[var(--color-text-subtle)]">
+                            <span className="text-label-sm text-[var(--color-text-subtle)]">
                               Disabled: 33 (22%)
                             </span>
                           </HStack>
@@ -486,9 +476,7 @@ export function IAMHomePage() {
 
               {/* Row 2: User Status */}
               <div className="bg-[var(--color-surface-default)] rounded-lg pt-3 pb-4 px-4 flex flex-col gap-3">
-                <h3 className="text-[14px] font-semibold text-[var(--color-text-default)]">
-                  User status
-                </h3>
+                <h3 className="text-heading-h6 text-[var(--color-text-default)]">User status</h3>
                 <HStack gap={2}>
                   <StatCard label="Total" value="150" variant="default" />
                   <StatCard label="Online" value="50" variant="success" />
@@ -501,7 +489,7 @@ export function IAMHomePage() {
               <HStack gap={3} align="start">
                 {/* IAM Resources */}
                 <div className="w-[var(--wizard-summary-width)] shrink-0 bg-[var(--color-surface-default)] rounded-lg pt-3 pb-4 px-4 flex flex-col gap-3">
-                  <h3 className="text-[14px] font-semibold text-[var(--color-text-default)]">
+                  <h3 className="text-heading-h6 text-[var(--color-text-default)]">
                     IAM resources
                   </h3>
                   <VStack gap={2}>
@@ -513,7 +501,7 @@ export function IAMHomePage() {
 
                 {/* Recent Events */}
                 <div className="flex-1 bg-[var(--color-surface-default)] rounded-lg p-4 flex flex-col gap-3">
-                  <h3 className="text-[14px] font-semibold text-[var(--color-text-default)]">
+                  <h3 className="text-heading-h6 text-[var(--color-text-default)]">
                     Recent events
                   </h3>
                   <Table<EventRow> columns={eventsColumns} data={eventsData} rowKey="id" />

@@ -196,10 +196,10 @@ export function SetDefaultDomainDrawer({
         {/* Header */}
         <VStack gap={3}>
           <VStack gap={2}>
-            <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
               Set default domain
             </h2>
-            <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
               Defines which domain is opened first when the system administrator signs in. The
               selected domain is used as the initial workspace.
             </p>
@@ -208,10 +208,10 @@ export function SetDefaultDomainDrawer({
           {/* Admin Info Card */}
           <div className="bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
             <VStack gap={1.5}>
-              <span className="text-[11px] font-medium text-[var(--color-text-subtle)] leading-4">
+              <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
                 System administrator
               </span>
-              <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+              <span className="text-body-md text-[var(--color-text-default)] leading-4">
                 {adminUsername}
               </span>
             </VStack>
@@ -223,14 +223,12 @@ export function SetDefaultDomainDrawer({
           {/* Section Header */}
           <VStack gap={2}>
             <div className="flex items-start gap-[3px]">
-              <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+              <span className="text-label-lg text-[var(--color-text-default)] leading-5">
                 Domains
               </span>
-              <span className="text-[14px] font-medium text-[var(--color-state-danger)] leading-5">
-                *
-              </span>
+              <span className="text-label-lg text-[var(--color-state-danger)] leading-5">*</span>
             </div>
-            <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
               Select one of the available domains to set as the default.
             </p>
           </VStack>

@@ -176,8 +176,7 @@ import { EditSystemAdminDrawer } from '@/components/EditSystemAdminDrawer';
 import { ResourceTypeSearchDrawer } from '@/components/ResourceTypeSearchDrawer';
 
 /* ----------------------------------------
-   Mock Data for Drawers
-   ---------------------------------------- */
+   Mock Data for Drawers ---------------------------------------- */
 
 const mockSnapshotInstance: SnapshotInstanceInfo = {
   id: 'inst-001',
@@ -380,8 +379,7 @@ const mockResizeInstance: ResizeInstanceInfo = {
 };
 
 /* ----------------------------------------
-   Drawer List Item Component
-   ---------------------------------------- */
+   Drawer List Item Component ---------------------------------------- */
 
 interface DrawerListItemProps {
   title: string;
@@ -413,16 +411,14 @@ function DrawerListItem({
         )}
         <div className="min-w-0 flex-1">
           <HStack gap={2} className="items-center">
-            <h3 className="text-[14px] font-medium text-[var(--color-text-default)] truncate">
-              {title}
-            </h3>
+            <h3 className="text-label-lg text-[var(--color-text-default)] truncate">{title}</h3>
             {linked && (
               <Badge variant="success" size="sm" className="shrink-0">
                 {linkedTo || '연결됨'}
               </Badge>
             )}
           </HStack>
-          <p className="text-[12px] text-[var(--color-text-subtle)] truncate mt-0.5">
+          <p className="text-body-md text-[var(--color-text-subtle)] truncate mt-0.5">
             {description}
           </p>
         </div>
@@ -436,7 +432,7 @@ function DrawerListItem({
         }}
         className="shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
       >
-        Open
+        Open{' '}
       </Button>
     </div>
   );
@@ -446,8 +442,7 @@ function DrawerListItem({
 const DrawerCard = DrawerListItem;
 
 /* ----------------------------------------
-   DrawersPage Component
-   ---------------------------------------- */
+   DrawersPage Component ---------------------------------------- */
 
 export function DrawersPage() {
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
@@ -612,10 +607,10 @@ export function DrawersPage() {
             <VStack gap={8}>
               {/* Header */}
               <VStack gap={2}>
-                <h1 className="text-[24px] font-semibold text-[var(--color-text-default)]">
-                  Drawer components
+                <h1 className="text-heading-h3 text-[var(--color-text-default)]">
+                  Drawer components{' '}
                 </h1>
-                <p className="text-[14px] text-[var(--color-text-subtle)]">
+                <p className="text-body-lg text-[var(--color-text-subtle)]">
                   Collection of drawer components used across the application. Click to preview each
                   drawer.
                 </p>
@@ -634,12 +629,12 @@ export function DrawersPage() {
                           <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
                         )}
                         <Badge variant="info" size="sm" className="w-[70px] justify-center">
-                          Compute
+                          Compute{' '}
                         </Badge>
-                        <span className="text-[14px] font-semibold text-[var(--color-text-default)]">
-                          Drawers
+                        <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
+                          Drawers{' '}
                         </span>
-                        <span className="text-[12px] text-[var(--color-text-subtle)]">
+                        <span className="text-body-md text-[var(--color-text-subtle)]">
                           (70 drawers)
                         </span>
                       </div>
@@ -649,8 +644,8 @@ export function DrawersPage() {
                     <VStack gap={4} className="pt-4">
                       {/* Instance Actions */}
                       <VStack gap={2}>
-                        <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Instance Actions
+                        <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                          Instance Actions{' '}
                         </h2>
                         <div className="flex flex-col gap-2">
                           <DrawerCard
@@ -714,8 +709,8 @@ export function DrawersPage() {
 
                       {/* Instance Snapshot Actions */}
                       <VStack gap={2}>
-                        <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Instance Snapshot Actions
+                        <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                          Instance Snapshot Actions{' '}
                         </h2>
                         <div className="flex flex-col gap-2">
                           <DrawerCard
@@ -739,8 +734,8 @@ export function DrawersPage() {
 
                       {/* Volume Actions */}
                       <VStack gap={2}>
-                        <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Volume Actions
+                        <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                          Volume Actions{' '}
                         </h2>
                         <div className="flex flex-col gap-2">
                           <DrawerCard
@@ -902,8 +897,8 @@ export function DrawersPage() {
 
                       {/* Image Actions */}
                       <VStack gap={2}>
-                        <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Image Actions
+                        <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                          Image Actions{' '}
                         </h2>
                         <div className="flex flex-col gap-2">
                           <DrawerCard
@@ -927,8 +922,8 @@ export function DrawersPage() {
 
                       {/* Key pair Actions */}
                       <VStack gap={2}>
-                        <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Key pair Actions
+                        <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                          Key pair Actions{' '}
                         </h2>
                         <div className="flex flex-col gap-2">
                           <DrawerCard
@@ -948,8 +943,8 @@ export function DrawersPage() {
 
                       {/* Server group Actions */}
                       <VStack gap={2}>
-                        <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Server group Actions
+                        <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                          Server group Actions{' '}
                         </h2>
                         <div className="flex flex-col gap-2">
                           <DrawerCard
@@ -969,8 +964,8 @@ export function DrawersPage() {
 
                       {/* Network Actions */}
                       <VStack gap={2}>
-                        <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Network Actions
+                        <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                          Network Actions{' '}
                         </h2>
                         <div className="flex flex-col gap-2">
                           <DrawerCard
@@ -1090,8 +1085,8 @@ export function DrawersPage() {
 
                       {/* Security group Actions */}
                       <VStack gap={2}>
-                        <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Security group Actions
+                        <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                          Security group Actions{' '}
                         </h2>
                         <div className="flex flex-col gap-2">
                           <DrawerCard
@@ -1137,8 +1132,8 @@ export function DrawersPage() {
 
                       {/* Load balancer Actions */}
                       <VStack gap={2}>
-                        <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Load balancer Actions
+                        <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                          Load balancer Actions{' '}
                         </h2>
                         <div className="flex flex-col gap-2">
                           <DrawerCard
@@ -1246,12 +1241,12 @@ export function DrawersPage() {
                           <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
                         )}
                         <Badge variant="info" size="sm" className="w-[70px] justify-center">
-                          IAM
+                          IAM{' '}
                         </Badge>
-                        <span className="text-[14px] font-semibold text-[var(--color-text-default)]">
-                          Drawers
+                        <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
+                          Drawers{' '}
                         </span>
-                        <span className="text-[12px] text-[var(--color-text-subtle)]">
+                        <span className="text-body-md text-[var(--color-text-subtle)]">
                           (13 drawers)
                         </span>
                       </div>
@@ -1261,8 +1256,8 @@ export function DrawersPage() {
                     <VStack gap={4} className="pt-4">
                       {/* USER MANAGEMENT ACTIONS */}
                       <VStack gap={2}>
-                        <h3 className="text-[11px] font-semibold text-[var(--color-text-subtle)] tracking-wider uppercase">
-                          User Management Actions
+                        <h3 className="text-body-sm font-semibold text-[var(--color-text-subtle)] tracking-wider uppercase">
+                          User Management Actions{' '}
                         </h3>
                         <div className="flex flex-col gap-2">
                           <DrawerCard
@@ -1300,8 +1295,8 @@ export function DrawersPage() {
 
                       {/* User Group Management */}
                       <VStack gap={2}>
-                        <h3 className="text-[11px] font-semibold text-[var(--color-text-subtle)] tracking-wider uppercase">
-                          User Group Management Actions
+                        <h3 className="text-body-sm font-semibold text-[var(--color-text-subtle)] tracking-wider uppercase">
+                          User Group Management Actions{' '}
                         </h3>
                         <div className="flex flex-col gap-2">
                           <DrawerCard
@@ -1325,8 +1320,8 @@ export function DrawersPage() {
 
                       {/* Role Management */}
                       <VStack gap={2}>
-                        <h3 className="text-[11px] font-semibold text-[var(--color-text-subtle)] tracking-wider uppercase">
-                          Role Management Actions
+                        <h3 className="text-body-sm font-semibold text-[var(--color-text-subtle)] tracking-wider uppercase">
+                          Role Management Actions{' '}
                         </h3>
                         <div className="flex flex-col gap-2">
                           <DrawerCard
@@ -1346,8 +1341,8 @@ export function DrawersPage() {
 
                       {/* Domain Management */}
                       <VStack gap={2}>
-                        <h3 className="text-[11px] font-semibold text-[var(--color-text-subtle)] tracking-wider uppercase">
-                          Domain Management Actions
+                        <h3 className="text-body-sm font-semibold text-[var(--color-text-subtle)] tracking-wider uppercase">
+                          Domain Management Actions{' '}
                         </h3>
                         <div className="flex flex-col gap-2">
                           <DrawerCard
@@ -1397,12 +1392,12 @@ export function DrawersPage() {
                           <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
                         )}
                         <Badge variant="info" size="sm" className="w-[70px] justify-center">
-                          Storage
+                          Storage{' '}
                         </Badge>
-                        <span className="text-[14px] font-semibold text-[var(--color-text-default)]">
-                          Drawers
+                        <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
+                          Drawers{' '}
                         </span>
-                        <span className="text-[12px] text-[var(--color-text-subtle)]">
+                        <span className="text-body-md text-[var(--color-text-subtle)]">
                           (5 drawers)
                         </span>
                       </div>
@@ -1412,8 +1407,8 @@ export function DrawersPage() {
                     <VStack gap={4} className="pt-4">
                       {/* Object Storage Actions */}
                       <VStack gap={2}>
-                        <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Object Storage Actions
+                        <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                          Object Storage Actions{' '}
                         </h2>
                         <div className="flex flex-col gap-2">
                           <DrawerCard
@@ -1445,8 +1440,8 @@ export function DrawersPage() {
 
                       {/* Physical Disk Actions */}
                       <VStack gap={2}>
-                        <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Physical Disk Actions
+                        <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                          Physical Disk Actions{' '}
                         </h2>
                         <div className="flex flex-col gap-2">
                           <DrawerCard
@@ -1472,12 +1467,12 @@ export function DrawersPage() {
                           <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
                         )}
                         <Badge variant="info" size="sm" className="w-[70px] justify-center">
-                          Container
+                          Container{' '}
                         </Badge>
-                        <span className="text-[14px] font-semibold text-[var(--color-text-default)]">
-                          Drawers
+                        <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
+                          Drawers{' '}
                         </span>
-                        <span className="text-[12px] text-[var(--color-text-subtle)]">
+                        <span className="text-body-md text-[var(--color-text-subtle)]">
                           (1 drawer)
                         </span>
                       </div>
@@ -1487,8 +1482,8 @@ export function DrawersPage() {
                     <VStack gap={4} className="pt-4">
                       {/* Resource Search Actions */}
                       <VStack gap={2}>
-                        <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Resource Search Actions
+                        <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                          Resource Search Actions{' '}
                         </h2>
                         <div className="flex flex-col gap-2">
                           <DrawerCard
@@ -1505,8 +1500,8 @@ export function DrawersPage() {
 
                 {/* Table Settings */}
                 <VStack gap={2}>
-                  <h2 className="text-[14px] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                    Table Settings
+                  <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                    Table Settings{' '}
                   </h2>
                   <div className="flex flex-col gap-2">
                     <DrawerCard
@@ -2345,8 +2340,7 @@ export function DrawersPage() {
       />
 
       {/* =============================================
-          STORAGE DRAWERS
-          ============================================= */}
+          STORAGE DRAWERS ============================================= */}
 
       {/* Create Folder Drawer */}
       <CreateFolderDrawer
@@ -2549,8 +2543,7 @@ export function DrawersPage() {
       />
 
       {/* =============================================
-          CONTAINER DRAWERS
-          ============================================= */}
+          CONTAINER DRAWERS ============================================= */}
 
       {/* Resource Type Search Drawer */}
       <ResourceTypeSearchDrawer

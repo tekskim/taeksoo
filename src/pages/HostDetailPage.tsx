@@ -1231,7 +1231,7 @@ export default function HostDetailPage() {
 
         if (timer && timer > 0) {
           return (
-            <span className="text-[11px] font-medium text-[var(--color-state-warning)]">
+            <span className="text-label-sm text-[var(--color-state-warning)]">
               {formatTime(timer)}
             </span>
           );
@@ -1493,7 +1493,7 @@ export default function HostDetailPage() {
                     <VStack gap={4} className="pt-4">
                       {/* Header */}
                       <div className="flex items-center h-7">
-                        <h3 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
+                        <h3 className="text-heading-h5 text-[var(--color-text-default)]">
                           Devices
                         </h3>
                       </div>
@@ -1534,7 +1534,7 @@ export default function HostDetailPage() {
                     <VStack gap={4} className="pt-4">
                       {/* Header */}
                       <div className="flex items-center h-7">
-                        <h3 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
+                        <h3 className="text-heading-h5 text-[var(--color-text-default)]">
                           Physical disks
                         </h3>
                       </div>
@@ -1573,9 +1573,7 @@ export default function HostDetailPage() {
                     <VStack gap={4} className="pt-4">
                       {/* Header */}
                       <div className="flex items-center h-7">
-                        <h3 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
-                          Daemon
-                        </h3>
+                        <h3 className="text-heading-h5 text-[var(--color-text-default)]">Daemon</h3>
                       </div>
 
                       {/* Search */}
@@ -1612,7 +1610,7 @@ export default function HostDetailPage() {
                     <div className="flex gap-4 pt-4">
                       {/* Left Panel - Device List */}
                       <div className="w-[224px] shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-3 flex flex-col gap-3">
-                        <h6 className="text-[length:var(--font-size-16)] font-semibold leading-[var(--line-height-24)] text-[var(--color-text-default)]">
+                        <h6 className="text-heading-h5 text-[var(--color-text-default)]">
                           Device health
                         </h6>
                         <div className="w-full h-px bg-[var(--color-border-subtle)]" />
@@ -1624,7 +1622,7 @@ export default function HostDetailPage() {
                               <button
                                 key={device.id}
                                 onClick={() => setSelectedDeviceHealth(device.id)}
-                                className={`px-2.5 py-[7px] rounded text-left text-[12px] font-medium leading-4 transition-colors ${
+                                className={`px-2.5 py-[7px] rounded text-left text-label-md leading-4 transition-colors ${
                                   isSelected
                                     ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)]'
                                     : 'text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)]'
@@ -1642,7 +1640,7 @@ export default function HostDetailPage() {
                         {selectedDeviceData && (
                           <>
                             {/* Title */}
-                            <h3 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+                            <h3 className="text-heading-h5 text-[var(--color-text-default)]">
                               {selectedDeviceData.device} ({selectedDeviceData.serialId})
                             </h3>
 
@@ -1651,7 +1649,7 @@ export default function HostDetailPage() {
                               <div className="flex gap-2">
                                 <button
                                   onClick={() => setDeviceHealthTab('device-info')}
-                                  className={`flex-1 py-2.5 px-4 text-[14px] font-medium leading-4 rounded-md border transition-colors ${
+                                  className={`flex-1 py-2.5 px-4 text-label-lg leading-4 rounded-md border transition-colors ${
                                     deviceHealthTab === 'device-info'
                                       ? 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] text-[var(--color-action-primary)]'
                                       : 'border-transparent text-[var(--color-text-default)]'
@@ -1661,7 +1659,7 @@ export default function HostDetailPage() {
                                 </button>
                                 <button
                                   onClick={() => setDeviceHealthTab('smart')}
-                                  className={`flex-1 py-2.5 px-4 text-[14px] font-medium leading-4 rounded-md border transition-colors ${
+                                  className={`flex-1 py-2.5 px-4 text-label-lg leading-4 rounded-md border transition-colors ${
                                     deviceHealthTab === 'smart'
                                       ? 'bg-[var(--color-surface-default)] border-[var(--color-border-default)] text-[var(--color-action-primary)]'
                                       : 'border-transparent text-[var(--color-text-default)]'
@@ -1675,16 +1673,16 @@ export default function HostDetailPage() {
                             {/* Content */}
                             {deviceHealthTab === 'device-info' && (
                               <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md p-4 flex flex-col gap-3">
-                                <h4 className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
+                                <h4 className="text-label-lg leading-5 text-[var(--color-text-default)]">
                                   Device Information
                                 </h4>
 
                                 <div className="flex flex-col gap-1.5">
-                                  <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)]">
+                                  <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
                                     Smartctl Output
                                   </span>
                                   <div className="bg-[var(--color-surface-contrast)] rounded-md p-4 overflow-x-auto">
-                                    <pre className="font-[family-name:var(--font-mono)] text-[12px] leading-[18px] text-white whitespace-pre-wrap">
+                                    <pre className="font-[family-name:var(--font-mono)] text-body-md leading-[18px] text-white whitespace-pre-wrap">
                                       {selectedDeviceData.smartctlOutput}
                                     </pre>
                                   </div>
@@ -1719,7 +1717,7 @@ export default function HostDetailPage() {
                                         strokeLinejoin="round"
                                       />
                                     </svg>
-                                    <span className="text-[12px] leading-4 text-[var(--color-text-default)]">
+                                    <span className="text-body-md leading-4 text-[var(--color-text-default)]">
                                       SMART overall-health self-assessment test result:{' '}
                                       <strong>passed</strong>
                                     </span>
@@ -1754,7 +1752,7 @@ export default function HostDetailPage() {
                                         strokeLinejoin="round"
                                       />
                                     </svg>
-                                    <span className="text-[12px] leading-4 text-[var(--color-text-default)]">
+                                    <span className="text-body-md leading-4 text-[var(--color-text-default)]">
                                       No SMART data available for this device.
                                     </span>
                                   </div>
@@ -1788,7 +1786,7 @@ export default function HostDetailPage() {
                                         strokeLinejoin="round"
                                       />
                                     </svg>
-                                    <span className="text-[12px] leading-4 text-[var(--color-text-default)]">
+                                    <span className="text-body-md leading-4 text-[var(--color-text-default)]">
                                       SMART data is loading.
                                     </span>
                                   </div>
@@ -1822,7 +1820,7 @@ export default function HostDetailPage() {
                                         strokeLinejoin="round"
                                       />
                                     </svg>
-                                    <span className="text-[12px] leading-4 text-[var(--color-text-default)]">
+                                    <span className="text-body-md leading-4 text-[var(--color-text-default)]">
                                       SMART overall-health self-assessment test result:{' '}
                                       <strong>failed</strong>
                                     </span>
@@ -1831,15 +1829,15 @@ export default function HostDetailPage() {
 
                                 {/* SMART Card */}
                                 <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md p-4 flex flex-col gap-3">
-                                  <h4 className="text-[14px] font-medium leading-5 text-[var(--color-text-default)]">
+                                  <h4 className="text-label-lg leading-5 text-[var(--color-text-default)]">
                                     SMART
                                   </h4>
 
                                   <div className="flex flex-col gap-1.5">
-                                    <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)]">
+                                    <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
                                       Health Status
                                     </span>
-                                    <span className="text-[12px] leading-4 text-[var(--color-text-default)]">
+                                    <span className="text-body-md leading-4 text-[var(--color-text-default)]">
                                       {selectedDeviceData?.smartStatus === 'passed'
                                         ? 'Passed'
                                         : selectedDeviceData?.smartStatus === 'failed'
@@ -1877,7 +1875,7 @@ export default function HostDetailPage() {
 
                       {/* System Overview Section */}
                       <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-6">
-                        <h3 className="text-[14px] font-semibold text-[var(--color-text-default)] mb-4 tracking-wider">
+                        <h3 className="text-heading-h6 text-[var(--color-text-default)] mb-4 tracking-wider">
                           SYSTEM OVERVIEW
                         </h3>
 
@@ -1885,18 +1883,20 @@ export default function HostDetailPage() {
                         <div className="grid grid-cols-2 gap-4 mb-6">
                           {/* OSDs Card */}
                           <div className="bg-[var(--color-surface-subtle)] rounded-lg p-4">
-                            <span className="text-[12px] text-[var(--color-text-muted)]">OSDs</span>
-                            <div className="text-[24px] leading-[28px] font-semibold text-[var(--color-text-default)] mt-1">
+                            <span className="text-body-md text-[var(--color-text-muted)]">
+                              OSDs
+                            </span>
+                            <div className="text-heading-h3 text-[var(--color-text-default)] mt-1">
                               {host.osds || 24}
                             </div>
                           </div>
 
                           {/* Raw capacity Card */}
                           <div className="bg-[var(--color-surface-subtle)] rounded-lg p-4">
-                            <span className="text-[12px] text-[var(--color-text-muted)]">
+                            <span className="text-body-md text-[var(--color-text-muted)]">
                               Raw capacity
                             </span>
-                            <div className="text-[24px] leading-[28px] font-semibold text-[var(--color-text-default)] mt-1">
+                            <div className="text-heading-h3 text-[var(--color-text-default)] mt-1">
                               {host.rawCapacity || '11.6 TiB'}
                             </div>
                           </div>
@@ -2052,7 +2052,7 @@ export default function HostDetailPage() {
 
                       {/* DISK PERFORMANCE Section */}
                       <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-6">
-                        <h3 className="text-[14px] font-semibold text-[var(--color-text-default)] mb-4 tracking-wider">
+                        <h3 className="text-heading-h6 text-[var(--color-text-default)] mb-4 tracking-wider">
                           DISK PERFORMANCE
                         </h3>
 
@@ -2208,7 +2208,7 @@ export default function HostDetailPage() {
         }
       >
         <div className="flex flex-col gap-6">
-          <p className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+          <p className="text-body-md text-[var(--color-text-subtle)]">
             Please enter the duration how long to indicate the LED.
           </p>
           <FormField>

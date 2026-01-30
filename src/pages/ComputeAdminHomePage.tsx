@@ -38,7 +38,7 @@ function PercentageBadge({ percentage }: PercentageBadgeProps) {
 
   return (
     <div className={`flex items-center px-1.5 py-0.5 rounded-md ${colors.bg}`}>
-      <span className={`text-[11px] font-medium ${colors.text}`}>{percentage}%</span>
+      <span className={`text-label-sm ${colors.text}`}>{percentage}%</span>
     </div>
   );
 }
@@ -59,9 +59,9 @@ function ComputeQuotaBar({ label, used, total, unit }: ComputeQuotaBarProps) {
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between">
-        <span className="text-[12px] font-medium text-[var(--color-text-default)]">{label}</span>
+        <span className="text-label-md text-[var(--color-text-default)]">{label}</span>
         <div className="flex items-center gap-2">
-          <span className="text-[11px] text-[var(--color-text-muted)]">
+          <span className="text-body-sm text-[var(--color-text-muted)]">
             {used}/{total} {unit}
           </span>
           <PercentageBadge percentage={percentage} />
@@ -95,7 +95,7 @@ function SummaryStatBox({ value, label }: SummaryStatBoxProps) {
       className={`flex-1 bg-[var(--color-surface-subtle)] rounded-lg p-4 border-2 border-transparent transition-colors ${isClickable ? 'hover:border-[var(--color-action-primary)] cursor-pointer' : ''}`}
     >
       <div className={`text-[20px] font-medium ${textColor} pb-1`}>{value}</div>
-      <div className="text-[11px] text-[var(--color-text-subtle)]">{label}</div>
+      <div className="text-body-sm text-[var(--color-text-subtle)]">{label}</div>
     </div>
   );
 }
@@ -116,7 +116,7 @@ function TenantUsageCard({ icon, label, used, total }: TenantUsageCardProps) {
   return (
     <div className="bg-[var(--color-surface-subtle)] rounded-lg p-4">
       <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-1 text-[12px] font-medium text-[var(--color-text-default)]">
+        <div className="flex items-center gap-1 text-label-md text-[var(--color-text-default)]">
           <span className="flex-shrink-0">{icon}</span>
           <span className="truncate">{label}</span>
         </div>
@@ -124,7 +124,7 @@ function TenantUsageCard({ icon, label, used, total }: TenantUsageCardProps) {
       </div>
       <div className="flex items-baseline mb-3">
         <span className="text-[24px] text-[var(--color-text-default)]">{used}</span>
-        <span className="text-[14px] text-[var(--color-text-muted)] pt-1.5">/{total}</span>
+        <span className="text-body-lg text-[var(--color-text-muted)] pt-1.5">/{total}</span>
       </div>
       <div className="h-1 rounded-sm bg-[var(--color-surface-muted)] overflow-hidden">
         <div
@@ -156,11 +156,11 @@ function TenantRow({ name, enabled, resources }: TenantRowProps) {
     <div className="space-y-3">
       <div className="flex items-center gap-2">
         <span
-          className={`px-2 py-0.5 rounded text-[10px] font-medium ${enabled ? 'bg-[var(--color-state-success)]/15 text-[var(--color-state-success)]' : 'bg-[var(--color-surface-muted)] text-[var(--color-text-muted)]'}`}
+          className={`px-2 py-0.5 rounded text-body-xs font-medium ${enabled ? 'bg-[var(--color-state-success)]/15 text-[var(--color-state-success)]' : 'bg-[var(--color-surface-muted)] text-[var(--color-text-muted)]'}`}
         >
           {enabled ? 'Enabled' : 'Disabled'}
         </span>
-        <button className="flex items-center gap-1 text-[12px] font-medium text-[var(--color-text-default)] hover:text-[var(--color-action-primary)]">
+        <button className="flex items-center gap-1 text-label-md text-[var(--color-text-default)] hover:text-[var(--color-action-primary)]">
           {name}
           <IconChevronRight size={14} className="text-[var(--color-text-muted)]" />
         </button>
@@ -221,9 +221,7 @@ function Card({
     <div
       className={`p-4 rounded-2xl border border-[var(--color-border-default)] ${bgColor} ${className}`}
     >
-      <h6 className="text-[length:var(--font-size-12)] leading-[var(--line-height-16)] font-semibold text-[var(--color-text-muted)] mb-4">
-        {title}
-      </h6>
+      <h6 className="text-heading-h6 text-[var(--color-text-muted)] mb-4">{title}</h6>
       {children}
     </div>
   );
@@ -304,10 +302,10 @@ export function ComputeAdminHomePage() {
               {/* INSTANCE SUMMARY */}
               <Card title="INSTANCE SUMMARY" className="flex flex-col">
                 <div className="mb-4">
-                  <div className="text-[24px] leading-[32px] font-semibold text-[var(--color-text-default)]">
+                  <div className="text-heading-h3 leading-[32px] text-[var(--color-text-default)]">
                     13
                   </div>
-                  <div className="text-[12px] text-[var(--color-text-subtle)]">Total</div>
+                  <div className="text-body-md text-[var(--color-text-subtle)]">Total</div>
                 </div>
                 <div className="space-y-2 mt-auto">
                   <div className="flex gap-2">
@@ -324,10 +322,10 @@ export function ComputeAdminHomePage() {
               {/* BARE METAL SUMMARY */}
               <Card title="BARE METAL SUMMARY" className="flex flex-col">
                 <div className="mb-4">
-                  <div className="text-[24px] leading-[32px] font-semibold text-[var(--color-text-default)]">
+                  <div className="text-heading-h3 leading-[32px] text-[var(--color-text-default)]">
                     8
                   </div>
-                  <div className="text-[12px] text-[var(--color-text-subtle)]">Total</div>
+                  <div className="text-body-md text-[var(--color-text-subtle)]">Total</div>
                 </div>
                 <div className="space-y-2 mt-auto">
                   <div className="flex gap-2">

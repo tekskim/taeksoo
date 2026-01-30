@@ -290,7 +290,7 @@ export function ComputeAdminVolumeTypesPage() {
           >
             {value}
           </Link>
-          <span className="text-[11px] text-[var(--color-text-muted)]">ID: {row.id}</span>
+          <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.id}</span>
         </div>
       ),
     },
@@ -317,7 +317,7 @@ export function ComputeAdminVolumeTypesPage() {
             >
               {row.qosSpec}
             </Link>
-            <span className="text-[11px] text-[var(--color-text-muted)]">ID: {row.qosSpecId}</span>
+            <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.qosSpecId}</span>
           </div>
         ) : (
           <span className="text-[var(--color-text-muted)]">-</span>
@@ -411,7 +411,7 @@ export function ComputeAdminVolumeTypesPage() {
           >
             {value}
           </Link>
-          <span className="text-[11px] text-[var(--color-text-muted)]">ID: {row.id}</span>
+          <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.id}</span>
         </div>
       ),
     },
@@ -533,9 +533,7 @@ export function ComputeAdminVolumeTypesPage() {
             <VStack gap={3}>
               {/* Page Header */}
               <div className="flex items-center justify-between h-8">
-                <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
-                  Volume Types
-                </h1>
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Volume Types</h1>
                 <Button size="md">
                   {activeTab === 'volume-types' ? 'Create Volume Type' : 'Create QoS Spec'}
                 </Button>

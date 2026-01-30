@@ -214,7 +214,7 @@ export default function ComputeAdminFirewallDetailPage() {
           >
             {row.name}
           </Link>
-          <span className="text-[11px] text-[var(--color-text-muted)]">ID: {row.id}</span>
+          <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.id}</span>
         </div>
       ),
     },
@@ -232,7 +232,7 @@ export default function ComputeAdminFirewallDetailPage() {
             >
               {row.attachedToName}
             </Link>
-            <span className="text-[11px] text-[var(--color-text-muted)]">
+            <span className="text-body-sm text-[var(--color-text-muted)]">
               ID: {row.attachedToId}
             </span>
           </div>
@@ -274,7 +274,7 @@ export default function ComputeAdminFirewallDetailPage() {
           >
             {row.network}
           </Link>
-          <span className="text-[11px] text-[var(--color-text-muted)]">ID: {row.networkId}</span>
+          <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.networkId}</span>
         </div>
       ),
     },
@@ -431,7 +431,7 @@ export default function ComputeAdminFirewallDetailPage() {
                   <TabPanel value="ports" className="pt-6">
                     <VStack gap={3}>
                       {/* Title */}
-                      <h3 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+                      <h3 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
                         Ports
                       </h3>
 

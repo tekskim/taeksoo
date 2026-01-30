@@ -34,10 +34,8 @@ function InfoBox({ label, value }: { label: string; value: string }) {
   return (
     <div className="w-full bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
       <VStack gap={2}>
-        <span className="text-[11px] font-medium text-[var(--color-text-subtle)] leading-4">
-          {label}
-        </span>
-        <span className="text-[12px] text-[var(--color-text-default)] leading-4">{value}</span>
+        <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">{label}</span>
+        <span className="text-body-md text-[var(--color-text-default)] leading-4">{value}</span>
       </VStack>
     </div>
   );
@@ -118,10 +116,10 @@ export function ChangeVolumeTypeDrawer({
         {/* Header */}
         <VStack gap={3}>
           <VStack gap={2}>
-            <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
               Change Type
             </h2>
-            <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
               Change the storage type of this volume to another available volume type. The operation
               may take some time.
             </p>
@@ -130,7 +128,7 @@ export function ChangeVolumeTypeDrawer({
           {/* Warning Box */}
           <div className="w-full bg-[var(--color-status-error-subtle)] rounded-lg p-3 flex gap-2 items-start">
             <IconAlertCircle size={16} className="text-red-400 flex-shrink-0 mt-0.5" stroke={1} />
-            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+            <p className="text-body-sm text-[var(--color-text-default)] leading-4">
               For data consistency, stop all write operations on the instance before retyping.
             </p>
           </div>
@@ -144,7 +142,7 @@ export function ChangeVolumeTypeDrawer({
 
         {/* New Volume Type Select */}
         <VStack gap={2} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             New Volume type
           </label>
           <Select
@@ -156,7 +154,7 @@ export function ChangeVolumeTypeDrawer({
             error={hasAttemptedSubmit && !selectedType}
           />
           {hasAttemptedSubmit && !selectedType && (
-            <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+            <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
               Please select a volume type
             </p>
           )}

@@ -340,7 +340,7 @@ export function ServerGroupDetailPage() {
               className="flex-shrink-0 text-[var(--color-action-primary)]"
             />
           </div>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] truncate">
+          <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
             ID : {row.id}
           </span>
         </div>
@@ -514,7 +514,7 @@ export function ServerGroupDetailPage() {
                   <TabPanel value="instances" className="pt-0">
                     <VStack gap={4} className="pt-4">
                       {/* Section Header */}
-                      <h2 className="text-[length:var(--font-size-16)] leading-[var(--line-height-24)] font-semibold text-[var(--color-text-default)]">
+                      <h2 className="text-heading-h5 text-[var(--color-text-default)]">
                         Instances
                       </h2>
 

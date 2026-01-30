@@ -177,7 +177,7 @@ export default function ComputeAdminFirewallPolicyDetailPage() {
           >
             {row.name}
           </Link>
-          <span className="text-[11px] text-[var(--color-text-muted)]">ID: {row.id}</span>
+          <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.id}</span>
         </div>
       ),
     },
@@ -195,7 +195,7 @@ export default function ComputeAdminFirewallPolicyDetailPage() {
           >
             {row.tenant}
           </Link>
-          <span className="text-[11px] text-[var(--color-text-muted)]">ID: {row.tenantId}</span>
+          <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.tenantId}</span>
         </div>
       ),
     },
@@ -320,7 +320,7 @@ export default function ComputeAdminFirewallPolicyDetailPage() {
                   <TabPanel value="rules" className="pt-6">
                     <VStack gap={3}>
                       {/* Sub Header */}
-                      <h3 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+                      <h3 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
                         Rules
                       </h3>
                       {/* Action Bar */}

@@ -101,10 +101,10 @@ export function EditDomainDrawer({
       <VStack gap={6} className="pb-6">
         {/* Header */}
         <VStack gap={2}>
-          <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
             Edit domain
           </h2>
-          <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+          <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
             Edit the domain's basic information.
           </p>
         </VStack>
@@ -112,12 +112,10 @@ export function EditDomainDrawer({
         {/* Domain name field */}
         <VStack gap={2}>
           <div className="flex items-start gap-[3px]">
-            <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+            <span className="text-label-lg text-[var(--color-text-default)] leading-5">
               Domain name
             </span>
-            <span className="text-[14px] font-medium text-[var(--color-state-danger)] leading-5">
-              *
-            </span>
+            <span className="text-label-lg text-[var(--color-state-danger)] leading-5">*</span>
           </div>
           <Input
             value={name}
@@ -125,7 +123,7 @@ export function EditDomainDrawer({
             placeholder="Enter domain name"
             fullWidth
           />
-          <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+          <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
             You can use letters, numbers, and special characters (+=,.@-_), and the length must be
             between 2-128 characters.
           </p>
@@ -133,7 +131,7 @@ export function EditDomainDrawer({
 
         {/* Description field */}
         <VStack gap={2}>
-          <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <span className="text-label-lg text-[var(--color-text-default)] leading-5">
             Description
           </span>
           <Input
@@ -142,7 +140,7 @@ export function EditDomainDrawer({
             placeholder="Enter description"
             fullWidth
           />
-          <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+          <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
             You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255
             characters.
           </p>
@@ -150,16 +148,14 @@ export function EditDomainDrawer({
 
         {/* Status field */}
         <VStack gap={2}>
-          <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
-            Status
-          </span>
-          <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+          <span className="text-label-lg text-[var(--color-text-default)] leading-5">Status</span>
+          <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
             Select the domain's status. If 'disabled', users in this domain will not be able to sign
             in.
           </p>
           <HStack gap={2} align="center">
             <Toggle checked={enabled} onChange={setEnabled} />
-            <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+            <span className="text-body-md text-[var(--color-text-default)] leading-4">
               {enabled ? 'Enabled' : 'Disabled'}
             </span>
           </HStack>

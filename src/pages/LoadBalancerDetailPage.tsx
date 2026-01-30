@@ -285,9 +285,7 @@ export function LoadBalancerDetailPage() {
           >
             {row.name}
           </Link>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-            ID : {row.id}
-          </span>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
         </div>
       ),
     },
@@ -378,9 +376,7 @@ export function LoadBalancerDetailPage() {
           >
             {row.name}
           </Link>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-            ID : {row.id}
-          </span>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
         </div>
       ),
     },
@@ -413,7 +409,7 @@ export function LoadBalancerDetailPage() {
           >
             {row.listener.name}
           </Link>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+          <span className="text-body-sm text-[var(--color-text-subtle)]">
             ID : {row.listener.id}
           </span>
         </div>
@@ -666,7 +662,7 @@ export function LoadBalancerDetailPage() {
                       <VStack gap={4} className="pt-4">
                         {/* Header */}
                         <div className="flex items-center justify-between">
-                          <h3 className="text-[16px] font-semibold text-[var(--color-text-default)]">
+                          <h3 className="text-heading-h5 text-[var(--color-text-default)]">
                             Listener
                           </h3>
                           <Button
@@ -731,7 +727,7 @@ export function LoadBalancerDetailPage() {
                       <VStack gap={4} className="pt-4">
                         {/* Header */}
                         <div className="flex items-center justify-between">
-                          <h3 className="text-[16px] font-semibold text-[var(--color-text-default)]">
+                          <h3 className="text-heading-h5 text-[var(--color-text-default)]">
                             Pools
                           </h3>
                           <Button

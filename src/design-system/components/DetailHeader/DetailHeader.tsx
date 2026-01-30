@@ -43,7 +43,7 @@ function DetailHeaderTitle({ children, className, ...props }: DetailHeaderTitleP
   return (
     <h1
       className={twMerge(
-        'text-[16px] font-semibold leading-6',
+        'text-heading-h5 leading-6',
         'text-[var(--color-text-default)]',
         'mb-3',
         className
@@ -147,13 +147,13 @@ function DetailHeaderInfoCard({
       )}
 
       <div className={twMerge('flex flex-col gap-1.5 min-w-0', status && 'pr-6')}>
-        <span className="text-[11px] font-medium leading-4 text-[var(--color-text-subtle)] whitespace-nowrap">
+        <span className="text-label-sm leading-4 text-[var(--color-text-subtle)] whitespace-nowrap">
           {label}
         </span>
         <div className="flex items-center gap-1 min-w-0 min-h-[26px]">
           {isStringValue ? (
             <span
-              className="text-[12px] leading-4 font-normal truncate text-[var(--color-text-default)]"
+              className="text-body-md leading-4 font-normal truncate text-[var(--color-text-default)]"
               title={value}
             >
               {value}

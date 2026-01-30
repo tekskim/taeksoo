@@ -150,13 +150,9 @@ export function Modal({
       <div className={modalClasses} onClick={(e) => e.stopPropagation()}>
         {/* Header */}
         <div className="flex flex-col gap-2">
-          <h2 className="text-[length:var(--font-size-16)] font-semibold text-[var(--color-text-default)] leading-6">
-            {title}
-          </h2>
+          <h2 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h2>
           {description && (
-            <p className="text-[length:var(--font-size-12)] text-[var(--color-text-subtle)] leading-4">
-              {description}
-            </p>
+            <p className="text-body-md text-[var(--color-text-subtle)]">{description}</p>
           )}
         </div>
 
@@ -199,12 +195,8 @@ export function ConfirmModal({
       {/* Info Box */}
       {infoLabel && infoValue && (
         <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] font-medium leading-4">
-            {infoLabel}
-          </span>
-          <span className="text-[length:var(--font-size-12)] text-[var(--color-text-default)] leading-4">
-            {infoValue}
-          </span>
+          <span className="text-label-sm text-[var(--color-text-subtle)]">{infoLabel}</span>
+          <span className="text-body-md text-[var(--color-text-default)]">{infoValue}</span>
         </div>
       )}
 

@@ -339,7 +339,7 @@ function EventDetailsConsole({ details }: { details: EventLog['details'] }) {
 
   return (
     <div className="border-x border-b border-[var(--color-border-default)] rounded-b-md overflow-hidden">
-      <div className="bg-[var(--color-surface-contrast)] p-4 font-mono text-[12px] leading-[18px] text-white overflow-x-auto">
+      <div className="bg-[var(--color-surface-contrast)] p-4 font-mono text-body-md leading-[18px] text-white overflow-x-auto">
         <pre className="whitespace-pre-wrap">{jsonString}</pre>
       </div>
     </div>
@@ -433,7 +433,7 @@ export default function IAMEventLogsPage() {
             <VStack gap={3}>
               {/* Header */}
               <HStack justify="between" align="center" className="w-full min-h-[28px]">
-                <h1 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
+                <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
                   Event logs
                 </h1>
               </HStack>
@@ -472,26 +472,26 @@ export default function IAMEventLogsPage() {
                 <div className="w-full flex flex-col gap-1">
                   {/* Table Header */}
                   <div className="flex items-stretch min-h-[40px] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-md">
-                    <div className="flex-1 px-3 py-2 text-[11px] font-medium text-[var(--color-text-default)] flex items-center">
+                    <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)] flex items-center">
                       <span>Event</span>
                       <IconChevronDown size={12} className="ml-1.5" />
                     </div>
-                    <div className="flex-1 px-3 py-2 text-[11px] font-medium text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">
+                    <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">
                       <span>Time</span>
                       <IconChevronDown size={12} className="ml-1.5" />
                     </div>
-                    <div className="flex-1 px-3 py-2 text-[11px] font-medium text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">
+                    <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">
                       <span>User</span>
                       <IconChevronDown size={12} className="ml-1.5" />
                     </div>
-                    <div className="flex-1 px-3 py-2 text-[11px] font-medium text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">
+                    <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">
                       <span>Target</span>
                       <IconChevronDown size={12} className="ml-1.5" />
                     </div>
-                    <div className="flex-1 px-3 py-2 text-[11px] font-medium text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">
+                    <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">
                       <span>Result</span>
                     </div>
-                    <div className="flex-1 px-3 py-2 text-[11px] font-medium text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">
+                    <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">
                       <span>IP address</span>
                       <IconChevronDown size={12} className="ml-1.5" />
                     </div>
@@ -530,10 +530,10 @@ export default function IAMEventLogsPage() {
                               )}
                             </button>
                             <div className="flex flex-col gap-0.5">
-                              <span className="text-[12px] text-[var(--color-text-default)]">
+                              <span className="text-body-md text-[var(--color-text-default)]">
                                 {log.eventName}
                               </span>
-                              <span className="text-[11px] text-[var(--color-text-subtle)]">
+                              <span className="text-body-sm text-[var(--color-text-subtle)]">
                                 ID: {log.eventId}
                               </span>
                             </div>
@@ -541,21 +541,21 @@ export default function IAMEventLogsPage() {
 
                           {/* Time Cell */}
                           <div className="flex-1 px-3 py-2 flex items-center border-l border-transparent">
-                            <span className="text-[12px] text-[var(--color-text-default)]">
+                            <span className="text-body-md text-[var(--color-text-default)]">
                               {log.displayTime}
                             </span>
                           </div>
 
                           {/* User Cell */}
                           <div className="flex-1 px-3 py-2 flex items-center border-l border-transparent">
-                            <span className="text-[12px] text-[var(--color-text-default)]">
+                            <span className="text-body-md text-[var(--color-text-default)]">
                               {log.user}
                             </span>
                           </div>
 
                           {/* Target Cell */}
                           <div className="flex-1 px-3 py-2 flex items-center border-l border-transparent">
-                            <span className="text-[12px] text-[var(--color-text-default)]">
+                            <span className="text-body-md text-[var(--color-text-default)]">
                               {log.target}
                             </span>
                           </div>
@@ -563,7 +563,7 @@ export default function IAMEventLogsPage() {
                           {/* Result Cell */}
                           <div className="flex-1 px-3 py-2 flex items-center border-l border-transparent">
                             <span
-                              className={`text-[12px] ${log.result === 'success' ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-state-danger)]'}`}
+                              className={`text-body-md ${log.result === 'success' ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-state-danger)]'}`}
                             >
                               {log.result === 'success' ? 'Success' : 'Failure'}
                             </span>
@@ -571,7 +571,7 @@ export default function IAMEventLogsPage() {
 
                           {/* IP Address Cell */}
                           <div className="flex-1 px-3 py-2 flex items-center border-l border-transparent">
-                            <span className="text-[12px] text-[var(--color-text-default)]">
+                            <span className="text-body-md text-[var(--color-text-default)]">
                               {log.ipAddress}
                             </span>
                           </div>

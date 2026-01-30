@@ -73,7 +73,7 @@ function ConnectionStatusIndicator({ status }: { status: ConnectionStatus }) {
   return (
     <div className="flex items-center gap-1.5 ml-3">
       <span className={`size-2 rounded-full ${config.color}`} />
-      <span className="text-[12px] text-[var(--color-text-default)]">{config.label}</span>
+      <span className="text-body-md text-[var(--color-text-default)]">{config.label}</span>
     </div>
   );
 }
@@ -275,7 +275,7 @@ export function ShellPanel({
       {/* Content - Dark background for logs */}
       <div
         ref={contentRef}
-        className="flex-1 overflow-auto p-4 font-mono text-[12px] leading-5 bg-[#0d1117] text-slate-300 shell-scroll"
+        className="flex-1 overflow-auto p-4 font-mono text-body-md leading-5 bg-[#0d1117] text-slate-300 shell-scroll"
       >
         {activeTab ? (
           activeTab.content ? (

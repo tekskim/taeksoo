@@ -1055,7 +1055,7 @@ export function OSDDetailPage() {
                     <VStack gap={4} className="pt-4">
                       {/* Section Header */}
                       <div className="flex items-center h-7">
-                        <h2 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
+                        <h2 className="text-heading-h5 text-[var(--color-text-default)]">
                           Devices
                         </h2>
                       </div>
@@ -1099,7 +1099,7 @@ export function OSDDetailPage() {
                     <div className="flex gap-4 pt-4">
                       {/* Device List Sidebar */}
                       <div className="w-[224px] shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-3">
-                        <h6 className="text-[length:var(--font-size-16)] font-semibold leading-[var(--line-height-24)] text-[var(--color-text-default)]">
+                        <h6 className="text-heading-h5 text-[var(--color-text-default)]">
                           Device health
                         </h6>
                         <div className="w-full h-px bg-[var(--color-border-subtle)] my-3" />
@@ -1109,7 +1109,7 @@ export function OSDDetailPage() {
                               key={device.id}
                               onClick={() => setSelectedHealthDevice(device)}
                               className={`
-                                text-left px-2.5 py-[7px] rounded text-[12px] font-medium truncate
+                                text-left px-2.5 py-[7px] rounded text-label-md truncate
                                 transition-colors duration-[var(--duration-fast)]
                                 ${
                                   selectedHealthDevice.id === device.id
@@ -1127,7 +1127,7 @@ export function OSDDetailPage() {
                       {/* Device Details */}
                       <div className="flex-1 flex flex-col gap-3 min-w-0">
                         {/* Selected Device Header */}
-                        <h2 className="text-[16px] font-semibold text-[var(--color-text-default)]">
+                        <h2 className="text-heading-h5 text-[var(--color-text-default)]">
                           {selectedHealthDevice.name} ({selectedHealthDevice.serialNumber})
                         </h2>
 
@@ -1136,7 +1136,7 @@ export function OSDDetailPage() {
                           <button
                             onClick={() => setHealthSubTab('device-info')}
                             className={`
-                              flex-1 py-2.5 px-4 rounded-md text-[14px] font-medium text-center border
+                              flex-1 py-2.5 px-4 rounded-md text-label-lg text-center border
                               transition-colors duration-[var(--duration-fast)]
                               ${
                                 healthSubTab === 'device-info'
@@ -1150,7 +1150,7 @@ export function OSDDetailPage() {
                           <button
                             onClick={() => setHealthSubTab('smart')}
                             className={`
-                              flex-1 py-2.5 px-4 rounded-md text-[14px] font-medium text-center border
+                              flex-1 py-2.5 px-4 rounded-md text-label-lg text-center border
                               transition-colors duration-[var(--duration-fast)]
                               ${
                                 healthSubTab === 'smart'
@@ -1187,11 +1187,11 @@ export function OSDDetailPage() {
 
                             {/* Smartctl Output */}
                             <div className="pt-3 mt-3 border-t border-[var(--color-border-default)]">
-                              <p className="text-[11px] font-medium text-[var(--color-text-subtle)] mb-1.5">
+                              <p className="text-label-sm text-[var(--color-text-subtle)] mb-1.5">
                                 Smartctl Output
                               </p>
                               <div className="bg-[var(--color-surface-contrast)] rounded-md p-4 overflow-x-auto">
-                                <pre className="font-[family-name:var(--font-mono)] text-[12px] leading-[18px] text-white whitespace-pre-wrap">
+                                <pre className="font-[family-name:var(--font-mono)] text-body-md leading-[18px] text-white whitespace-pre-wrap">
                                   {selectedHealthDevice.smartctlOutput}
                                 </pre>
                               </div>

@@ -94,14 +94,14 @@ export function EditNetworkDrawer({ isOpen, onClose, network, onSubmit }: EditNe
       <VStack gap={6}>
         {/* Header */}
         <VStack gap={2}>
-          <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
             Edit Network
           </h2>
         </VStack>
 
         {/* Network Name Input */}
         <VStack gap={2} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             Network name
           </label>
           <Input
@@ -110,7 +110,7 @@ export function EditNetworkDrawer({ isOpen, onClose, network, onSubmit }: EditNe
             placeholder="e.g. my-network"
             fullWidth
           />
-          <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+          <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
             Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
           </p>
         </VStack>
@@ -118,10 +118,10 @@ export function EditNetworkDrawer({ isOpen, onClose, network, onSubmit }: EditNe
         {/* Description Input */}
         <VStack gap={2} className="w-full">
           <HStack gap={1} className="items-center">
-            <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+            <label className="text-label-lg text-[var(--color-text-default)] leading-5">
               Description
             </label>
-            <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+            <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
               (optional)
             </span>
           </HStack>
@@ -137,7 +137,7 @@ export function EditNetworkDrawer({ isOpen, onClose, network, onSubmit }: EditNe
         <button
           type="button"
           onClick={() => setIsAdvancedExpanded(!isAdvancedExpanded)}
-          className="flex items-center gap-1.5 text-[14px] font-medium text-[var(--color-text-default)] leading-5"
+          className="flex items-center gap-1.5 text-label-lg text-[var(--color-text-default)] leading-5"
         >
           {isAdvancedExpanded ? (
             <IconChevronDown size={12} stroke={1} />
@@ -153,10 +153,10 @@ export function EditNetworkDrawer({ isOpen, onClose, network, onSubmit }: EditNe
             {/* Admin State */}
             <VStack gap={3} className="w-full">
               <VStack gap={2} className="w-full">
-                <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                <label className="text-label-lg text-[var(--color-text-default)] leading-5">
                   Admin State
                 </label>
-                <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+                <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
                   Setting it to "Down" disables all related network or control operations,
                   regardless of runtime status.
                 </p>
@@ -166,7 +166,7 @@ export function EditNetworkDrawer({ isOpen, onClose, network, onSubmit }: EditNe
                   checked={adminStateUp}
                   onChange={(e) => setAdminStateUp(e.target.checked)}
                 />
-                <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+                <span className="text-body-md text-[var(--color-text-default)] leading-4">
                   {adminStateUp ? 'Up' : 'Down'}
                 </span>
               </HStack>
@@ -175,10 +175,10 @@ export function EditNetworkDrawer({ isOpen, onClose, network, onSubmit }: EditNe
             {/* Port Security */}
             <VStack gap={3} className="w-full">
               <VStack gap={2} className="w-full">
-                <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                <label className="text-label-lg text-[var(--color-text-default)] leading-5">
                   Port Security
                 </label>
-                <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+                <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
                   Enhances security by allowing only permitted devices to access this network. It is
                   recommended to keep this enabled in most cases.
                 </p>
@@ -188,7 +188,7 @@ export function EditNetworkDrawer({ isOpen, onClose, network, onSubmit }: EditNe
                   checked={portSecurityEnabled}
                   onChange={(e) => setPortSecurityEnabled(e.target.checked)}
                 />
-                <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+                <span className="text-body-md text-[var(--color-text-default)] leading-4">
                   {portSecurityEnabled ? 'On' : 'Off'}
                 </span>
               </HStack>

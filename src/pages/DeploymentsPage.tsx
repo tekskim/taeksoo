@@ -35,8 +35,7 @@ import {
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
-   Types
-   ---------------------------------------- */
+   Types ---------------------------------------- */
 
 interface DeploymentRow {
   id: string;
@@ -51,8 +50,7 @@ interface DeploymentRow {
 }
 
 /* ----------------------------------------
-   Mock Data
-   ---------------------------------------- */
+   Mock Data ---------------------------------------- */
 
 const deploymentsData: DeploymentRow[] = [
   {
@@ -146,8 +144,7 @@ const deploymentsData: DeploymentRow[] = [
 ];
 
 /* ----------------------------------------
-   Component
-   ---------------------------------------- */
+   Component ---------------------------------------- */
 
 export function DeploymentsPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -446,8 +443,8 @@ export function DeploymentsPage() {
               {/* Header */}
               <HStack justify="between" align="center" className="w-full min-h-8">
                 <HStack gap={2} align="center">
-                  <h1 className="text-[16px] leading-6 font-semibold text-[var(--color-text-default)]">
-                    Deployments
+                  <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
+                    Deployments{' '}
                   </h1>
                 </HStack>
 
@@ -458,7 +455,7 @@ export function DeploymentsPage() {
                     size="md"
                     rightIcon={<IconChevronDown size={14} stroke={1.5} />}
                   >
-                    Create Deployment
+                    Create Deployment{' '}
                   </Button>
                 </ContextMenu>
               </HStack>
@@ -493,7 +490,7 @@ export function DeploymentsPage() {
                     leftIcon={<IconRefresh size={12} stroke={1.5} />}
                     disabled={selectedRows.length === 0}
                   >
-                    Redeploy
+                    Redeploy{' '}
                   </Button>
                   <Button
                     variant="secondary"
@@ -501,7 +498,7 @@ export function DeploymentsPage() {
                     leftIcon={<IconDownload size={12} stroke={1.5} />}
                     disabled={selectedRows.length === 0}
                   >
-                    Download YAML
+                    Download YAML{' '}
                   </Button>
                   <Button
                     variant="secondary"
@@ -509,7 +506,7 @@ export function DeploymentsPage() {
                     leftIcon={<IconTrash size={12} stroke={1.5} />}
                     disabled={selectedRows.length === 0}
                   >
-                    Delete
+                    Delete{' '}
                   </Button>
                 </HStack>
               </HStack>
@@ -533,9 +530,9 @@ export function DeploymentsPage() {
                   </HStack>
                   <button
                     onClick={handleClearFilters}
-                    className="text-[11px] font-medium text-[var(--color-action-primary)] hover:underline"
+                    className="text-label-sm text-[var(--color-action-primary)] hover:underline"
                   >
-                    Clear Filters
+                    Clear Filters{' '}
                   </button>
                 </HStack>
               )}

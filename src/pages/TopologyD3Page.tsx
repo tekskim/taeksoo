@@ -21,6 +21,7 @@ import {
   IconRefresh,
   IconSearch,
   IconBell,
+  IconCheck,
 } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
@@ -81,6 +82,7 @@ interface ExternalNetwork {
   name: string;
   status?: 'active' | 'inactive' | 'error';
   description?: string;
+  createdAt?: string; // ISO date for sorting
 }
 
 interface Router {
@@ -88,12 +90,14 @@ interface Router {
   name: string;
   status: 'active' | 'inactive' | 'error';
   externalNetworkId?: string;
+  createdAt?: string; // ISO date for sorting
 }
 
 interface Network {
   id: string;
   name: string;
   status: 'active' | 'inactive' | 'error';
+  createdAt?: string; // ISO date for sorting
 }
 
 interface Subnet {
@@ -103,6 +107,7 @@ interface Subnet {
   status: 'active' | 'inactive' | 'error';
   networkId: string;
   routerId?: string;
+  createdAt?: string; // ISO date for sorting
 }
 
 interface LoadBalancer {
@@ -111,11 +116,25 @@ interface LoadBalancer {
   status: 'active' | 'inactive' | 'error';
   subnetId: string;
   vip: string;
+  createdAt?: string; // ISO date for sorting
 }
 
 interface NetworkGroup {
   extNet: ExternalNetwork;
   routers: Router[];
+}
+
+/* ----------------------------------------
+   Sorting Helpers - 생성일 기준 정렬
+   ---------------------------------------- */
+// Generic sort by createdAt (oldest first = left, newest last = right)
+function sortByCreatedAt<T extends { createdAt?: string }>(items: T[]): T[] {
+  return [...items].sort((a, b) => {
+    if (!a.createdAt && !b.createdAt) return 0;
+    if (!a.createdAt) return 1; // Items without createdAt go to the end
+    if (!b.createdAt) return -1;
+    return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+  });
 }
 
 /* ----------------------------------------
@@ -135,18 +154,21 @@ const externalNetworks: ExternalNetwork[] = [
     name: 'extnet-apne2-public',
     status: 'active',
     description: 'Seoul Region Public Internet',
+    createdAt: '2024-01-15T09:00:00Z',
   },
   {
     id: 'extnet-usw2-pub-001',
     name: 'extnet-usw2-public',
     status: 'active',
     description: 'Oregon Region Public Internet',
+    createdAt: '2024-02-20T14:30:00Z',
   },
   {
     id: 'extnet-dc-priv-001',
     name: 'extnet-dc-private',
     status: 'active',
     description: 'Datacenter Direct Connect',
+    createdAt: '2024-03-10T11:00:00Z',
   },
   // Case 1: 아무것도 연결되지 않은 External Network
   {
@@ -154,6 +176,7 @@ const externalNetworks: ExternalNetwork[] = [
     name: 'extnet-isolated',
     status: 'active',
     description: 'Isolated External Network (no connections)',
+    createdAt: '2024-06-01T08:00:00Z',
   },
   // Case 2: External Network + Router만 연결 (VPC 없음)
   {
@@ -161,6 +184,7 @@ const externalNetworks: ExternalNetwork[] = [
     name: 'extnet-router-only',
     status: 'active',
     description: 'External Network with Router only',
+    createdAt: '2024-04-05T16:00:00Z',
   },
 ];
 
@@ -172,18 +196,21 @@ const routers: Router[] = [
     name: 'prod-apne2-edge',
     status: 'active',
     externalNetworkId: 'extnet-apne2-pub-001',
+    createdAt: '2024-01-20T10:00:00Z',
   },
   {
     id: 'rtr-nprd-apne2-edge-001',
     name: 'k8s-clusterapi-cluster-tkdev-oks-tkdev-oks-003',
     status: 'active',
     externalNetworkId: 'extnet-apne2-pub-001',
+    createdAt: '2024-01-25T14:00:00Z',
   },
   {
     id: 'rtr-mgmt-apne2-int-001',
     name: 'mgmt-apne2-int',
     status: 'active',
     externalNetworkId: 'extnet-dc-priv-001',
+    createdAt: '2024-03-15T09:00:00Z',
   },
   // US Region (usw2)
   {
@@ -191,12 +218,14 @@ const routers: Router[] = [
     name: 'prod-usw2-edge',
     status: 'active',
     externalNetworkId: 'extnet-usw2-pub-001',
+    createdAt: '2024-02-25T11:00:00Z',
   },
   {
     id: 'rtr-dr-usw2-edge-001',
     name: 'dr-usw2-edge',
     status: 'inactive',
     externalNetworkId: 'extnet-usw2-pub-001',
+    createdAt: '2024-03-01T16:00:00Z',
   },
   // Shared Infrastructure
   {
@@ -204,6 +233,7 @@ const routers: Router[] = [
     name: 'shrd-dc-int',
     status: 'active',
     externalNetworkId: 'extnet-dc-priv-001',
+    createdAt: '2024-03-20T13:00:00Z',
   },
   // Case 2: External Network + Router만 연결
   {
@@ -211,6 +241,7 @@ const routers: Router[] = [
     name: 'router-only',
     status: 'active',
     externalNetworkId: 'extnet-router-only-001',
+    createdAt: '2024-04-10T10:00:00Z',
   },
   // Case 3: 아무것도 연결되지 않은 Router (standalone)
   {
@@ -218,12 +249,14 @@ const routers: Router[] = [
     name: 'isolated-router',
     status: 'active',
     // externalNetworkId 없음
+    createdAt: '2024-05-01T08:00:00Z',
   },
   // Case 4: Router + VPC + LB만 (External Network 없음)
   {
     id: 'rtr-internal-only-001',
     name: 'internal-only-router',
     status: 'active',
+    createdAt: '2024-05-15T12:00:00Z',
     // externalNetworkId 없음
   },
 ];
@@ -259,24 +292,79 @@ const standaloneRouters: Router[] = routers.filter((r) => !r.externalNetworkId);
 // VPCs/Networks - 네트워크 (환경별, 목적별)
 const networks: Network[] = [
   // Production - Korea (apne2)
-  { id: 'vpc-prod-apne2-web-001', name: 'prod-apne2-web', status: 'active' },
-  { id: 'vpc-prod-apne2-app-001', name: 'prod-apne2-app', status: 'active' },
-  { id: 'vpc-prod-apne2-data-001', name: 'prod-apne2-data', status: 'active' },
+  {
+    id: 'vpc-prod-apne2-web-001',
+    name: 'prod-apne2-web',
+    status: 'active',
+    createdAt: '2024-01-22T09:00:00Z',
+  },
+  {
+    id: 'vpc-prod-apne2-app-001',
+    name: 'prod-apne2-app',
+    status: 'active',
+    createdAt: '2024-01-23T10:00:00Z',
+  },
+  {
+    id: 'vpc-prod-apne2-data-001',
+    name: 'prod-apne2-data',
+    status: 'active',
+    createdAt: '2024-01-24T11:00:00Z',
+  },
   // Production - US (usw2)
-  { id: 'vpc-prod-usw2-web-001', name: 'prod-usw2-web', status: 'active' },
-  { id: 'vpc-prod-usw2-app-001', name: 'prod-usw2-app', status: 'active' },
+  {
+    id: 'vpc-prod-usw2-web-001',
+    name: 'prod-usw2-web',
+    status: 'active',
+    createdAt: '2024-02-26T09:00:00Z',
+  },
+  {
+    id: 'vpc-prod-usw2-app-001',
+    name: 'prod-usw2-app',
+    status: 'active',
+    createdAt: '2024-02-27T10:00:00Z',
+  },
   // Non-Production
-  { id: 'vpc-stg-apne2-001', name: 'stg-apne2', status: 'active' },
-  { id: 'vpc-dev-apne2-001', name: 'dev-apne2', status: 'active' },
-  { id: 'vpc-qa-apne2-001', name: 'qa-apne2', status: 'active' },
+  {
+    id: 'vpc-stg-apne2-001',
+    name: 'stg-apne2',
+    status: 'active',
+    createdAt: '2024-02-01T08:00:00Z',
+  },
+  {
+    id: 'vpc-dev-apne2-001',
+    name: 'dev-apne2',
+    status: 'active',
+    createdAt: '2024-02-05T09:00:00Z',
+  },
+  { id: 'vpc-qa-apne2-001', name: 'qa-apne2', status: 'active', createdAt: '2024-02-10T10:00:00Z' },
   // Infrastructure
-  { id: 'vpc-shrd-dc-001', name: 'shrd-dc', status: 'active' },
-  { id: 'vpc-mgmt-apne2-001', name: 'mgmt-apne2', status: 'active' },
-  { id: 'vpc-dmz-apne2-001', name: 'dmz-apne2', status: 'active' },
+  { id: 'vpc-shrd-dc-001', name: 'shrd-dc', status: 'active', createdAt: '2024-03-18T08:00:00Z' },
+  {
+    id: 'vpc-mgmt-apne2-001',
+    name: 'mgmt-apne2',
+    status: 'active',
+    createdAt: '2024-03-16T09:00:00Z',
+  },
+  {
+    id: 'vpc-dmz-apne2-001',
+    name: 'dmz-apne2',
+    status: 'active',
+    createdAt: '2024-03-17T10:00:00Z',
+  },
   // Case 4: Router + VPC + LB만 (ExtNet 없음)
-  { id: 'vpc-internal-only-001', name: 'internal-only-vpc', status: 'active' },
+  {
+    id: 'vpc-internal-only-001',
+    name: 'internal-only-vpc',
+    status: 'active',
+    createdAt: '2024-05-16T08:00:00Z',
+  },
   // Case 5: VPC + LB만 (Router 없음)
-  { id: 'vpc-standalone-001', name: 'standalone-vpc', status: 'active' },
+  {
+    id: 'vpc-standalone-001',
+    name: 'standalone-vpc',
+    status: 'active',
+    createdAt: '2024-06-01T09:00:00Z',
+  },
 ];
 
 // Subnets - 서브넷 (AZ별, 티어별)
@@ -892,12 +980,14 @@ const loadBalancers: LoadBalancer[] = [
   // ============================================
   // Management
   // ============================================
+  // Case 6: 4 LBs connected to single subnet (monitoring stack)
   {
     id: 'alb-mgmt-apne2-prom-001',
     name: 'alb-prometheus',
     status: 'active',
     subnetId: 'snet-mgmt-apne2-mon-001',
     vip: '10.251.10.100',
+    createdAt: '2024-03-18T09:00:00Z',
   },
   {
     id: 'alb-mgmt-apne2-grafana-001',
@@ -905,6 +995,23 @@ const loadBalancers: LoadBalancer[] = [
     status: 'active',
     subnetId: 'snet-mgmt-apne2-mon-001',
     vip: '10.251.10.101',
+    createdAt: '2024-03-18T10:00:00Z',
+  },
+  {
+    id: 'alb-mgmt-apne2-alertmgr-001',
+    name: 'alb-alertmanager',
+    status: 'active',
+    subnetId: 'snet-mgmt-apne2-mon-001',
+    vip: '10.251.10.102',
+    createdAt: '2024-03-18T11:00:00Z',
+  },
+  {
+    id: 'alb-mgmt-apne2-loki-001',
+    name: 'alb-loki',
+    status: 'active',
+    subnetId: 'snet-mgmt-apne2-mon-001',
+    vip: '10.251.10.103',
+    createdAt: '2024-03-18T12:00:00Z',
   },
   {
     id: 'alb-mgmt-apne2-jenkins-001',
@@ -1039,16 +1146,27 @@ interface PopoverProps {
 
 // Helper component for copyable text
 function CopyableText({ value }: { value: string }) {
-  const handleCopy = () => navigator.clipboard.writeText(value);
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(value);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   return (
-    <Tooltip content={value}>
-      <span className="inline-flex items-center gap-1 max-w-[160px]">
-        <span className="text-[length:var(--font-size-11)] truncate">{value}</span>
+    <Tooltip content={copied ? 'Copied!' : value}>
+      <span className="inline-flex items-center gap-1 max-w-[200px]">
+        <span className="text-body-sm truncate">{value}</span>
         <button
           onClick={handleCopy}
           className="text-[var(--color-text-subtle)] hover:text-[var(--color-text-muted)] flex-shrink-0"
         >
-          <IconCopy size={12} />
+          {copied ? (
+            <IconCheck size={12} className="text-[var(--color-state-success)]" />
+          ) : (
+            <IconCopy size={12} />
+          )}
         </button>
       </span>
     </Tooltip>
@@ -1061,7 +1179,7 @@ function LinkText({ value, href }: { value: string; href?: string }) {
     <Tooltip content={value}>
       <Link
         to={href || '#'}
-        className="text-[var(--color-action-primary)] hover:underline inline-flex items-center gap-0.5 font-medium max-w-[160px]"
+        className="text-[var(--color-action-primary)] hover:underline inline-flex items-center gap-0.5 font-medium max-w-[200px]"
       >
         <span className="truncate">{value}</span>
         <IconExternalLink size={12} className="flex-shrink-0" />
@@ -1077,7 +1195,7 @@ function ViewDetailLink({ count }: { count: number }) {
       <span className="font-medium">{count}</span>
       <Link
         to="#"
-        className="text-[var(--color-action-primary)] hover:underline ml-2 text-[length:var(--font-size-11)] font-medium"
+        className="text-[var(--color-action-primary)] hover:underline ml-2 text-label-sm"
       >
         View detail
       </Link>
@@ -1099,13 +1217,8 @@ function ListenersSection({
   return (
     <div className="mt-3 pt-3 border-t border-[var(--color-border-subtle)]">
       <div className="flex items-center justify-between">
-        <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] font-medium">
-          Listeners ({listeners.length})
-        </span>
-        <Link
-          to="#"
-          className="text-[var(--color-action-primary)] hover:underline text-[length:var(--font-size-11)] font-medium"
-        >
+        <span className="text-[var(--color-text-muted)]">Listeners ({listeners.length})</span>
+        <Link to="#" className="text-[var(--color-action-primary)] hover:underline text-label-sm">
           View detail
         </Link>
       </div>
@@ -1118,13 +1231,8 @@ function RoutersSection({ routers }: { routers: RouterItem[] }) {
   return (
     <div className="mt-3 pt-3 border-t border-[var(--color-border-subtle)]">
       <div className="flex items-center justify-between">
-        <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] font-medium">
-          Routers ({routers.length})
-        </span>
-        <Link
-          to="#"
-          className="text-[var(--color-action-primary)] hover:underline text-[length:var(--font-size-11)] font-medium"
-        >
+        <span className="text-[var(--color-text-muted)]">Routers ({routers.length})</span>
+        <Link to="#" className="text-[var(--color-action-primary)] hover:underline text-label-sm">
           View detail
         </Link>
       </div>
@@ -1137,13 +1245,8 @@ function SubnetsSection({ subnets }: { subnets: SubnetItem[] }) {
   return (
     <div className="mt-3 pt-3 border-t border-[var(--color-border-subtle)]">
       <div className="flex items-center justify-between">
-        <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] font-medium">
-          Subnets ({subnets.length})
-        </span>
-        <Link
-          to="#"
-          className="text-[var(--color-action-primary)] hover:underline text-[length:var(--font-size-11)] font-medium"
-        >
+        <span className="text-[var(--color-text-muted)]">Subnets ({subnets.length})</span>
+        <Link to="#" className="text-[var(--color-action-primary)] hover:underline text-label-sm">
           View detail
         </Link>
       </div>
@@ -1228,27 +1331,25 @@ function Popover({ data, position, onClose }: PopoverProps) {
   return (
     <div
       ref={popoverRef}
-      className={`fixed z-50 bg-white border border-slate-200 rounded-xl shadow-xl min-w-[240px] max-w-[var(--search-input-width)] font-['Mona_Sans'] ${isDragging ? 'cursor-grabbing' : ''}`}
+      className={`fixed z-50 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[0px_0px_4px_0px_rgba(0,0,0,0.1)] w-[312px] p-4 flex flex-col gap-4 font-['Mona_Sans'] ${isDragging ? 'cursor-grabbing' : ''}`}
       style={{ left: pos.x, top: pos.y }}
     >
       {/* Header - Draggable */}
       <div
-        className={`flex items-center justify-between px-4 pt-3 pb-2 ${!isDragging ? 'cursor-grab' : 'cursor-grabbing'}`}
+        className={`flex items-center justify-between ${!isDragging ? 'cursor-grab' : 'cursor-grabbing'}`}
         onMouseDown={handleMouseDown}
       >
-        <span className="text-[length:var(--font-size-12)] font-semibold text-[var(--color-text-default)]">
-          {getHeaderTitle()}
-        </span>
+        <span className="text-heading-h6 text-[var(--color-text-default)]">{getHeaderTitle()}</span>
         <button
           onClick={onClose}
-          className="flex items-center justify-center w-[var(--window-control-size)] h-[var(--window-control-size)] rounded-[var(--window-control-radius)] text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] transition-colors"
+          className="flex items-center justify-center w-[var(--window-control-size)] h-[var(--window-control-size)] rounded-[var(--window-control-radius)] text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] transition-colors -mr-2 -mt-2"
         >
           <IconX size={12} stroke={1} />
         </button>
       </div>
 
       {/* Content */}
-      <div className="px-4 pb-4 text-[length:var(--font-size-11)] text-[var(--color-text-default)] space-y-1.5">
+      <div className="text-body-sm text-[var(--color-text-default)] space-y-1.5">
         {/* Status */}
         <div className="flex justify-between">
           <span className="text-[var(--color-text-muted)]">Status:</span>
@@ -1297,13 +1398,13 @@ function Popover({ data, position, onClose }: PopoverProps) {
             {data.vpcSubnetGroups && data.vpcSubnetGroups.length > 0 && (
               <div className="mt-3 pt-3 border-t border-[var(--color-border-subtle)]">
                 <div className="flex items-center justify-between">
-                  <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] font-medium">
+                  <span className="text-[var(--color-text-muted)]">
                     Subnets ({data.vpcSubnetGroups.reduce((acc, g) => acc + g.subnets.length, 0)}{' '}
                     total)
                   </span>
                   <Link
                     to="#"
-                    className="text-[var(--color-action-primary)] hover:underline text-[length:var(--font-size-11)] font-medium"
+                    className="text-[var(--color-action-primary)] hover:underline text-label-sm"
                   >
                     View detail
                   </Link>
@@ -1351,12 +1452,12 @@ function Popover({ data, position, onClose }: PopoverProps) {
             {data.routerList && data.routerList.length > 0 && (
               <div className="mt-3 pt-3 border-t border-[var(--color-border-subtle)]">
                 <div className="flex items-center justify-between">
-                  <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] font-medium">
+                  <span className="text-[var(--color-text-muted)]">
                     Routers ({data.routerList.length})
                   </span>
                   <Link
                     to="#"
-                    className="text-[var(--color-action-primary)] hover:underline text-[length:var(--font-size-11)] font-medium"
+                    className="text-[var(--color-action-primary)] hover:underline text-label-sm"
                   >
                     View detail
                   </Link>
@@ -1368,12 +1469,12 @@ function Popover({ data, position, onClose }: PopoverProps) {
             {data.instanceList && data.instanceList.length > 0 && (
               <div className="mt-3 pt-3 border-t border-[var(--color-border-subtle)]">
                 <div className="flex items-center justify-between">
-                  <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] font-medium">
+                  <span className="text-[var(--color-text-muted)]">
                     Instances ({data.instanceList.length})
                   </span>
                   <Link
                     to="#"
-                    className="text-[var(--color-action-primary)] hover:underline text-[length:var(--font-size-11)] font-medium"
+                    className="text-[var(--color-action-primary)] hover:underline text-label-sm"
                   >
                     View detail
                   </Link>
@@ -1385,12 +1486,12 @@ function Popover({ data, position, onClose }: PopoverProps) {
             {data.loadBalancerList && data.loadBalancerList.length > 0 && (
               <div className="mt-3 pt-3 border-t border-[var(--color-border-subtle)]">
                 <div className="flex items-center justify-between">
-                  <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)] font-medium">
+                  <span className="text-[var(--color-text-muted)]">
                     Load balancers ({data.loadBalancerList.length})
                   </span>
                   <Link
                     to="#"
-                    className="text-[var(--color-action-primary)] hover:underline text-[length:var(--font-size-11)] font-medium"
+                    className="text-[var(--color-action-primary)] hover:underline text-label-sm"
                   >
                     View detail
                   </Link>
@@ -1558,20 +1659,31 @@ export function TopologyD3Page() {
     const filteredVpcIds = new Set(filteredSubnets.map((s) => s.networkId));
     const filteredVpcs = networks.filter((n) => filteredVpcIds.has(n.id));
 
-    // Build filtered network groups
-    const filteredNetworkGroups = filteredExtNets
+    // Apply sorting by createdAt (oldest first = left, newest last = right)
+    // Row 1: External Networks sorted by createdAt
+    const sortedExtNets = sortByCreatedAt(filteredExtNets);
+    // Row 2: Routers sorted by createdAt
+    const sortedRouters = sortByCreatedAt(filteredRouters);
+    // Row 3: Subnets sorted by createdAt
+    const sortedSubnets = sortByCreatedAt(filteredSubnets);
+    // Row 4: Load Balancers sorted by createdAt
+    const sortedLbs = sortByCreatedAt(filteredLbs);
+
+    // Build filtered network groups with sorted data
+    const filteredNetworkGroups = sortedExtNets
       .map((extNet) => ({
         extNet,
-        routers: filteredRouters.filter((r) => r.externalNetworkId === extNet.id),
+        // Routers under same ExtNet sorted by createdAt
+        routers: sortByCreatedAt(sortedRouters.filter((r) => r.externalNetworkId === extNet.id)),
       }))
       .filter((g) => g.routers.length > 0);
 
     return {
       networkGroups: filteredNetworkGroups,
-      subnets: filteredSubnets,
-      loadBalancers: filteredLbs,
+      subnets: sortedSubnets,
+      loadBalancers: sortedLbs,
       networks: filteredVpcs,
-      routers: filteredRouters,
+      routers: sortedRouters,
     };
   }, [searchTerm, filterRouter, filterVpc, filterStatus]);
 
@@ -1721,9 +1833,11 @@ export function TopologyD3Page() {
       subnetPos: { x: number; y: number };
     }[] = [];
 
-    // Group subnets by router
+    // Group subnets by router (sorted by createdAt within each router)
     const subnetsByRouter: Record<string, Subnet[]> = {};
-    currentSubnets.forEach((subnet) => {
+    // First, sort all subnets by createdAt
+    const sortedCurrentSubnets = sortByCreatedAt(currentSubnets);
+    sortedCurrentSubnets.forEach((subnet) => {
       if (subnet.routerId) {
         if (!subnetsByRouter[subnet.routerId]) subnetsByRouter[subnet.routerId] = [];
         subnetsByRouter[subnet.routerId].push(subnet);
@@ -1760,9 +1874,11 @@ export function TopologyD3Page() {
       }
     });
 
-    // Group LBs by subnet
+    // Group LBs by subnet (sorted by createdAt within each subnet)
     const lbsBySubnet: Record<string, LoadBalancer[]> = {};
-    currentLoadBalancers.forEach((lb) => {
+    // First, sort all LBs by createdAt
+    const sortedCurrentLBs = sortByCreatedAt(currentLoadBalancers);
+    sortedCurrentLBs.forEach((lb) => {
       if (!lbsBySubnet[lb.subnetId]) lbsBySubnet[lb.subnetId] = [];
       lbsBySubnet[lb.subnetId].push(lb);
     });
@@ -2019,10 +2135,11 @@ export function TopologyD3Page() {
       currentX = Math.max(currentX + groupWidth + nodeGap / 2, routerX + nodeGap / 2);
     });
 
-    // Standalone routers
-    if (standaloneRouters.length > 0) {
+    // Standalone routers (sorted by createdAt)
+    const sortedStandaloneRouters = sortByCreatedAt(standaloneRouters);
+    if (sortedStandaloneRouters.length > 0) {
       let standaloneX = currentX;
-      standaloneRouters.forEach((router) => {
+      sortedStandaloneRouters.forEach((router) => {
         const routerWidth = Math.max(nodeGap, getRouterWidth(router.id));
         const rx = standaloneX + routerWidth / 2;
         const ry = startY + layerGap;
@@ -2141,18 +2258,29 @@ export function TopologyD3Page() {
       currentX = standaloneX;
     }
 
-    // Standalone external networks
-    if (standaloneExternalNetworks.length > 0) {
+    // Standalone external networks (sorted by createdAt)
+    const sortedStandaloneExtNets = sortByCreatedAt(standaloneExternalNetworks);
+    if (sortedStandaloneExtNets.length > 0) {
+      // Calculate separator line position: rightmost VPC edge + gap
+      const rightmostVpcEdge =
+        vpcGroups.length > 0
+          ? Math.max(...vpcGroups.map((vpc) => vpc.x + vpc.width)) + nodeGap / 2
+          : currentX;
+      const separatorX = Math.max(currentX, rightmostVpcEdge);
+
       g.append('line')
-        .attr('x1', currentX - nodeGap / 4)
+        .attr('x1', separatorX)
         .attr('y1', startY - 20)
-        .attr('x2', currentX - nodeGap / 4)
+        .attr('x2', separatorX)
         .attr('y2', startY + layerGap * 3 + 80)
         .attr('stroke', '#e2e8f0')
         .attr('stroke-width', 1)
         .attr('stroke-dasharray', '4,4');
 
-      standaloneExternalNetworks.forEach((extNet, idx) => {
+      // Update currentX for standalone external networks positioning
+      currentX = separatorX + nodeGap / 2;
+
+      sortedStandaloneExtNets.forEach((extNet, idx) => {
         nodes.push({
           id: extNet.id,
           x: currentX + idx * nodeGap,
@@ -2160,6 +2288,104 @@ export function TopologyD3Page() {
           type: 'externalNetwork',
           data: extNet,
         });
+      });
+
+      // Update currentX after standalone external networks
+      currentX = currentX + sortedStandaloneExtNets.length * nodeGap + nodeGap / 2;
+    }
+
+    // Standalone VPCs (VPCs with subnets that have no router connection) - sorted by createdAt
+    const allRoutedSubnetNetworkIds = new Set(
+      subnets.filter((s) => s.routerId).map((s) => s.networkId)
+    );
+    const standaloneVpcs = sortByCreatedAt(
+      networks.filter((vpc) => {
+        const vpcSubnets = subnets.filter((s) => s.networkId === vpc.id);
+        // VPC has subnets, but none of them are connected to a router
+        return vpcSubnets.length > 0 && !allRoutedSubnetNetworkIds.has(vpc.id);
+      })
+    );
+
+    if (standaloneVpcs.length > 0) {
+      // Add separator line before standalone VPCs
+      const separatorX = currentX;
+      g.append('line')
+        .attr('x1', separatorX)
+        .attr('y1', startY - 20)
+        .attr('x2', separatorX)
+        .attr('y2', startY + layerGap * 3 + 80)
+        .attr('stroke', '#e2e8f0')
+        .attr('stroke-width', 1)
+        .attr('stroke-dasharray', '4,4');
+
+      currentX = separatorX + nodeGap / 2;
+
+      standaloneVpcs.forEach((vpc, vpcIdx) => {
+        // Subnets within VPC sorted by createdAt
+        const vpcSubnets = sortByCreatedAt(subnets.filter((s) => s.networkId === vpc.id));
+        const vpcStartX = currentX;
+        let vpcWidth = 0;
+
+        vpcSubnets.forEach((subnet, subnetIdx) => {
+          const subnetWidth = getSubnetWidth(subnet.id);
+          const sx = currentX + subnetWidth / 2;
+          const sy = startY + layerGap * 2;
+
+          nodes.push({
+            id: subnet.id,
+            x: sx,
+            y: sy,
+            type: 'subnet',
+            data: subnet,
+          });
+
+          // Load balancers for this subnet (sorted by createdAt)
+          const subnetLbs = sortByCreatedAt(
+            loadBalancers.filter((lb) => lb.subnetId === subnet.id)
+          );
+          subnetLbs.forEach((lb, lbIdx) => {
+            const lx = sx + (lbIdx - (subnetLbs.length - 1) / 2) * 30;
+            const ly = startY + layerGap * 3;
+
+            nodes.push({
+              id: lb.id,
+              x: lx,
+              y: ly,
+              type: 'loadBalancer',
+              data: lb,
+            });
+
+            // Edge: Subnet -> Load Balancer
+            edges.push({
+              source: { x: sx, y: sy + NODE_SIZES.subnet.node / 2 },
+              target: { x: lx, y: ly - NODE_SIZES.loadBalancer.node / 2 },
+              sourceType: 'subnet',
+              status: subnet.status,
+            });
+          });
+
+          currentX += subnetWidth;
+          vpcWidth += subnetWidth;
+        });
+
+        // VPC Group Panel for standalone VPC
+        vpcGroups.push({
+          x: vpcStartX,
+          y: startY + layerGap * 2 - 60,
+          width: vpcWidth,
+          height: 130,
+          name: vpc.name,
+          networkId: vpc.id,
+          status: vpc.status,
+          isSplit: false,
+          splitIndex: undefined,
+          splitTotal: undefined,
+        });
+
+        // Add gap between standalone VPCs
+        if (vpcIdx < standaloneVpcs.length - 1) {
+          currentX += vpcGap;
+        }
       });
     }
 
@@ -2850,9 +3076,7 @@ export function TopologyD3Page() {
             <VStack gap={3} className="flex-1 min-h-0">
               {/* Page Header */}
               <div className="flex justify-between items-center h-8 w-full">
-                <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
-                  Topology
-                </h1>
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Topology</h1>
               </div>
 
               {/* Filters */}
@@ -2947,7 +3171,7 @@ export function TopologyD3Page() {
 
                   {/* Stats & Zoom Controls */}
                   <div className="absolute top-4 left-4 flex items-center gap-3 bg-white/90 px-3 py-2 rounded-lg border border-slate-200">
-                    <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
+                    <span className="text-body-sm text-[var(--color-text-subtle)]">
                       {stats.filteredSubnets === stats.totalSubnets
                         ? `${stats.totalSubnets} subnets`
                         : `${stats.filteredSubnets} of ${stats.totalSubnets} subnets`}{' '}
@@ -2959,11 +3183,11 @@ export function TopologyD3Page() {
                     </span>
                     <div className="h-4 w-px bg-[var(--color-border-default)]" />
                     <div className="flex items-center gap-2 px-2 py-1 bg-[var(--color-surface-muted)] rounded-md">
-                      <span className="text-[length:var(--font-size-11)] font-medium text-[var(--color-text-default)]">
+                      <span className="text-label-sm text-[var(--color-text-default)]">
                         {Math.round(zoomLevel * 100)}%
                       </span>
                       <span
-                        className={`text-[length:var(--font-size-11)] px-1.5 py-0.5 rounded ${
+                        className={`text-body-sm px-1.5 py-0.5 rounded ${
                           zoomLevel >= 1.0
                             ? 'bg-green-100 text-green-700'
                             : zoomLevel >= 0.6

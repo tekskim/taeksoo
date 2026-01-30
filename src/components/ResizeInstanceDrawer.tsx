@@ -163,10 +163,8 @@ export function ResizeInstanceDrawer({
             {/* vCPU Quota */}
             <VStack gap={2} className="w-full">
               <HStack justify="space-between" className="w-full">
-                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
-                  vCPU Quota
-                </span>
-                <span className="text-[12px] text-[var(--color-text-default)]">
+                <span className="text-label-lg text-[var(--color-text-default)]">vCPU Quota</span>
+                <span className="text-body-md text-[var(--color-text-default)]">
                   {quota.vcpu.used}/{quota.vcpu.total}
                 </span>
               </HStack>
@@ -186,10 +184,10 @@ export function ResizeInstanceDrawer({
             {/* RAM Quota */}
             <VStack gap={2} className="w-full">
               <HStack justify="space-between" className="w-full">
-                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                <span className="text-label-lg text-[var(--color-text-default)]">
                   RAM Quota (GiB)
                 </span>
-                <span className="text-[12px] text-[var(--color-text-default)]">
+                <span className="text-body-md text-[var(--color-text-default)]">
                   {quota.ram.used}/{quota.ram.total}
                 </span>
               </HStack>
@@ -228,10 +226,10 @@ export function ResizeInstanceDrawer({
         {/* Header Section */}
         <VStack gap={3}>
           <VStack gap={2}>
-            <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+            <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
               Resize Instance
             </h2>
-            <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
               Change the flavor of this instance to adjust its vCPU, memory, or disk capacity.
             </p>
           </VStack>
@@ -242,7 +240,7 @@ export function ResizeInstanceDrawer({
               size={16}
               className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
             />
-            <p className="text-[11px] text-[var(--color-text-default)] leading-4">
+            <p className="text-body-sm text-[var(--color-text-default)] leading-4">
               The instance will be stopped and restarted automatically during resize. All running
               processes and connections will be interrupted.
             </p>
@@ -250,14 +248,14 @@ export function ResizeInstanceDrawer({
 
           {/* Instance Info Box */}
           <div className="w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg">
-            <div className="text-[11px] text-[var(--color-text-subtle)] mb-1.5">Instance</div>
-            <div className="text-[12px] text-[var(--color-text-default)]">{instance.name}</div>
+            <div className="text-body-sm text-[var(--color-text-subtle)] mb-1.5">Instance</div>
+            <div className="text-body-md text-[var(--color-text-default)]">{instance.name}</div>
           </div>
         </VStack>
 
         {/* Flavor Section */}
         <VStack gap={3}>
-          <span className="text-[14px] font-medium text-[var(--color-text-default)]">Flavor</span>
+          <span className="text-label-lg text-[var(--color-text-default)]">Flavor</span>
 
           {/* Tabs */}
           <Tabs
@@ -305,43 +303,35 @@ export function ResizeInstanceDrawer({
                 style={{ width: '120px', flexShrink: 0 }}
                 className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
               >
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                  Name
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Name</span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
               </div>
               <div
                 style={{ width: '80px', flexShrink: 0 }}
                 className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
               >
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                  vCPU
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">vCPU</span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
               </div>
               <div
                 style={{ width: '80px', flexShrink: 0 }}
                 className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
               >
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                  RAM
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">RAM</span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
               </div>
               <div
                 style={{ width: '80px', flexShrink: 0 }}
                 className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
               >
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                  Disk
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Disk</span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
               </div>
               <div
                 style={{ width: '108px', flexShrink: 0 }}
                 className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
               >
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                <span className="text-label-sm text-[var(--color-text-default)]">
                   Ephemeral Disk
                 </span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
@@ -350,7 +340,7 @@ export function ResizeInstanceDrawer({
                 style={{ width: '140px', flexShrink: 0 }}
                 className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
               >
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                <span className="text-label-sm text-[var(--color-text-default)]">
                   Internal Network Bandwidth
                 </span>
                 <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
@@ -395,7 +385,7 @@ export function ResizeInstanceDrawer({
                     className="flex flex-col justify-center px-3 py-2 overflow-hidden"
                   >
                     <div className="flex items-center gap-1.5">
-                      <span className="text-[12px] font-medium text-[var(--color-action-primary)] truncate">
+                      <span className="text-label-md text-[var(--color-action-primary)] truncate">
                         {flavor.name}
                       </span>
                       <IconExternalLink
@@ -403,7 +393,7 @@ export function ResizeInstanceDrawer({
                         className="shrink-0 text-[var(--color-action-primary)]"
                       />
                     </div>
-                    <span className="text-[11px] text-[var(--color-text-subtle)] truncate">
+                    <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
                       ID : 17kfj123
                     </span>
                   </div>
@@ -411,7 +401,7 @@ export function ResizeInstanceDrawer({
                     style={{ width: '80px', flexShrink: 0 }}
                     className="flex items-center px-3 py-2 overflow-hidden"
                   >
-                    <span className="text-[12px] text-[var(--color-text-default)] truncate">
+                    <span className="text-body-md text-[var(--color-text-default)] truncate">
                       {flavor.vcpu}
                     </span>
                   </div>
@@ -419,7 +409,7 @@ export function ResizeInstanceDrawer({
                     style={{ width: '80px', flexShrink: 0 }}
                     className="flex items-center px-3 py-2 overflow-hidden"
                   >
-                    <span className="text-[12px] text-[var(--color-text-default)] truncate">
+                    <span className="text-body-md text-[var(--color-text-default)] truncate">
                       {flavor.ram}
                     </span>
                   </div>
@@ -427,7 +417,7 @@ export function ResizeInstanceDrawer({
                     style={{ width: '80px', flexShrink: 0 }}
                     className="flex items-center px-3 py-2 overflow-hidden"
                   >
-                    <span className="text-[12px] text-[var(--color-text-default)] truncate">
+                    <span className="text-body-md text-[var(--color-text-default)] truncate">
                       {flavor.disk}
                     </span>
                   </div>
@@ -435,7 +425,7 @@ export function ResizeInstanceDrawer({
                     style={{ width: '108px', flexShrink: 0 }}
                     className="flex items-center px-3 py-2 overflow-hidden"
                   >
-                    <span className="text-[12px] text-[var(--color-text-default)] truncate">
+                    <span className="text-body-md text-[var(--color-text-default)] truncate">
                       {flavor.ephemeralDisk}
                     </span>
                   </div>
@@ -443,7 +433,7 @@ export function ResizeInstanceDrawer({
                     style={{ width: '140px', flexShrink: 0 }}
                     className="flex items-center px-3 py-2 overflow-hidden"
                   >
-                    <span className="text-[12px] text-[var(--color-text-default)] truncate">
+                    <span className="text-body-md text-[var(--color-text-default)] truncate">
                       {flavor.internalBandwidth}
                     </span>
                   </div>
@@ -474,9 +464,7 @@ export function ResizeInstanceDrawer({
 
         {/* Flavor Comparison Section */}
         <VStack gap={3}>
-          <span className="text-[14px] font-medium text-[var(--color-text-default)]">
-            Flavor Comparison
-          </span>
+          <span className="text-label-lg text-[var(--color-text-default)]">Flavor Comparison</span>
 
           {/* Comparison Table */}
           <div style={{ width: '648px', maxWidth: '648px' }}>
@@ -489,7 +477,7 @@ export function ResizeInstanceDrawer({
                 style={{ width: '90px', flexShrink: 0 }}
                 className="flex items-center justify-start px-3"
               >
-                <span className="text-[11px] font-medium text-[var(--color-text-default)] text-left">
+                <span className="text-label-sm text-[var(--color-text-default)] text-left">
                   Comparison
                 </span>
               </div>
@@ -497,39 +485,31 @@ export function ResizeInstanceDrawer({
                 style={{ width: '90px', flexShrink: 0 }}
                 className="flex items-center px-3 border-l border-[var(--color-border-default)]"
               >
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                  Name
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Name</span>
               </div>
               <div
                 style={{ width: '65px', flexShrink: 0 }}
                 className="flex items-center px-3 border-l border-[var(--color-border-default)]"
               >
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                  vCPU
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">vCPU</span>
               </div>
               <div
                 style={{ width: '65px', flexShrink: 0 }}
                 className="flex items-center px-3 border-l border-[var(--color-border-default)]"
               >
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                  RAM
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">RAM</span>
               </div>
               <div
                 style={{ width: '65px', flexShrink: 0 }}
                 className="flex items-center px-3 border-l border-[var(--color-border-default)]"
               >
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                  Disk
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Disk</span>
               </div>
               <div
                 style={{ width: '95px', flexShrink: 0 }}
                 className="flex items-center px-3 border-l border-[var(--color-border-default)]"
               >
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                <span className="text-label-sm text-[var(--color-text-default)]">
                   Ephemeral Disk
                 </span>
               </div>
@@ -537,17 +517,13 @@ export function ResizeInstanceDrawer({
                 style={{ width: '65px', flexShrink: 0 }}
                 className="flex items-center px-3 border-l border-[var(--color-border-default)]"
               >
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                  GPU
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">GPU</span>
               </div>
               <div
                 style={{ width: '113px', flexShrink: 0 }}
                 className="flex items-center px-3 border-l border-[var(--color-border-default)]"
               >
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                  NPU
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">NPU</span>
               </div>
             </div>
 
@@ -560,7 +536,7 @@ export function ResizeInstanceDrawer({
                 style={{ width: '90px', flexShrink: 0 }}
                 className="flex items-center justify-start px-3 py-2"
               >
-                <span className="text-[12px] text-[var(--color-text-default)] text-left">
+                <span className="text-body-md text-[var(--color-text-default)] text-left">
                   Current
                   <br />
                   flavor
@@ -571,7 +547,7 @@ export function ResizeInstanceDrawer({
                 className="flex flex-col justify-center px-3 py-2 overflow-hidden"
               >
                 <div className="flex items-center gap-1.5">
-                  <span className="text-[12px] font-medium text-[var(--color-action-primary)] truncate">
+                  <span className="text-label-md text-[var(--color-action-primary)] truncate">
                     {instance.currentFlavor.name}
                   </span>
                   <IconExternalLink
@@ -579,32 +555,32 @@ export function ResizeInstanceDrawer({
                     className="shrink-0 text-[var(--color-action-primary)]"
                   />
                 </div>
-                <span className="text-[11px] text-[var(--color-text-subtle)] truncate">
+                <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
                   ID : 90jkl567
                 </span>
               </div>
               <div style={{ width: '65px', flexShrink: 0 }} className="flex items-center px-3 py-2">
-                <span className="text-[12px] text-[var(--color-text-default)]">
+                <span className="text-body-md text-[var(--color-text-default)]">
                   {instance.currentFlavor.vcpu}
                 </span>
               </div>
               <div style={{ width: '65px', flexShrink: 0 }} className="flex items-center px-3 py-2">
-                <span className="text-[12px] text-[var(--color-text-default)]">
+                <span className="text-body-md text-[var(--color-text-default)]">
                   {instance.currentFlavor.ram}
                 </span>
               </div>
               <div style={{ width: '65px', flexShrink: 0 }} className="flex items-center px-3 py-2">
-                <span className="text-[12px] text-[var(--color-text-default)]">
+                <span className="text-body-md text-[var(--color-text-default)]">
                   {instance.currentFlavor.disk}
                 </span>
               </div>
               <div style={{ width: '95px', flexShrink: 0 }} className="flex items-center px-3 py-2">
-                <span className="text-[12px] text-[var(--color-text-default)]">
+                <span className="text-body-md text-[var(--color-text-default)]">
                   {instance.currentFlavor.ephemeralDisk}
                 </span>
               </div>
               <div style={{ width: '65px', flexShrink: 0 }} className="flex items-center px-3 py-2">
-                <span className="text-[12px] text-[var(--color-text-default)]">
+                <span className="text-body-md text-[var(--color-text-default)]">
                   {instance.currentFlavor.gpu}
                 </span>
               </div>
@@ -612,7 +588,7 @@ export function ResizeInstanceDrawer({
                 style={{ width: '113px', flexShrink: 0 }}
                 className="flex items-center px-3 py-2"
               >
-                <span className="text-[12px] text-[var(--color-text-default)]">
+                <span className="text-body-md text-[var(--color-text-default)]">
                   {instance.currentFlavor.npu}
                 </span>
               </div>
@@ -627,7 +603,7 @@ export function ResizeInstanceDrawer({
                 style={{ width: '90px', flexShrink: 0 }}
                 className="flex items-center justify-start px-3 py-2"
               >
-                <span className="text-[12px] text-[var(--color-text-default)] text-left">
+                <span className="text-body-md text-[var(--color-text-default)] text-left">
                   Target
                   <br />
                   flavor
@@ -640,7 +616,7 @@ export function ResizeInstanceDrawer({
                 {selectedFlavor ? (
                   <>
                     <div className="flex items-center gap-1.5">
-                      <span className="text-[12px] font-medium text-[var(--color-action-primary)] truncate">
+                      <span className="text-label-md text-[var(--color-action-primary)] truncate">
                         {selectedFlavor.name}
                       </span>
                       <IconExternalLink
@@ -648,42 +624,42 @@ export function ResizeInstanceDrawer({
                         className="shrink-0 text-[var(--color-action-primary)]"
                       />
                     </div>
-                    <span className="text-[11px] text-[var(--color-text-subtle)] truncate">
+                    <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
                       ID : 90jkl567
                     </span>
                   </>
                 ) : (
-                  <span className="text-[12px] text-[var(--color-text-subtle)]">-</span>
+                  <span className="text-body-md text-[var(--color-text-subtle)]">-</span>
                 )}
               </div>
               <div style={{ width: '65px', flexShrink: 0 }} className="flex items-center px-3 py-2">
-                <span className="text-[12px] text-[var(--color-text-default)]">
+                <span className="text-body-md text-[var(--color-text-default)]">
                   {selectedFlavor?.vcpu ?? '-'}
                 </span>
               </div>
               <div style={{ width: '65px', flexShrink: 0 }} className="flex items-center px-3 py-2">
-                <span className="text-[12px] text-[var(--color-text-default)]">
+                <span className="text-body-md text-[var(--color-text-default)]">
                   {selectedFlavor?.ram ?? '-'}
                 </span>
               </div>
               <div style={{ width: '65px', flexShrink: 0 }} className="flex items-center px-3 py-2">
-                <span className="text-[12px] text-[var(--color-text-default)]">
+                <span className="text-body-md text-[var(--color-text-default)]">
                   {selectedFlavor?.disk ?? '-'}
                 </span>
               </div>
               <div style={{ width: '95px', flexShrink: 0 }} className="flex items-center px-3 py-2">
-                <span className="text-[12px] text-[var(--color-text-default)]">
+                <span className="text-body-md text-[var(--color-text-default)]">
                   {selectedFlavor?.ephemeralDisk ?? '-'}
                 </span>
               </div>
               <div style={{ width: '65px', flexShrink: 0 }} className="flex items-center px-3 py-2">
-                <span className="text-[12px] text-[var(--color-text-default)]">-</span>
+                <span className="text-body-md text-[var(--color-text-default)]">-</span>
               </div>
               <div
                 style={{ width: '113px', flexShrink: 0 }}
                 className="flex items-center px-3 py-2"
               >
-                <span className="text-[12px] text-[var(--color-text-default)]">-</span>
+                <span className="text-body-md text-[var(--color-text-default)]">-</span>
               </div>
             </div>
           </div>
@@ -691,9 +667,7 @@ export function ResizeInstanceDrawer({
 
         {/* Approval Method Section */}
         <VStack gap={3} className="pb-5">
-          <span className="text-[14px] font-medium text-[var(--color-text-default)]">
-            Approval Method
-          </span>
+          <span className="text-label-lg text-[var(--color-text-default)]">Approval Method</span>
 
           <VStack gap={3}>
             {/* Manual confirm option */}
@@ -722,9 +696,7 @@ export function ResizeInstanceDrawer({
           {approvalMethod === 'auto' && (
             <div className="w-full px-4 py-2 border border-[var(--color-border-default)] rounded-md flex items-center gap-6">
               <HStack gap={1.5} align="center">
-                <span className="text-[14px] font-medium text-[var(--color-text-default)]">
-                  After
-                </span>
+                <span className="text-label-lg text-[var(--color-text-default)]">After</span>
                 <NumberInput
                   value={autoConfirmMinutes}
                   onChange={setAutoConfirmMinutes}
@@ -732,10 +704,10 @@ export function ResizeInstanceDrawer({
                   max={60}
                   className="w-[80px]"
                 />
-                <span className="text-[12px] text-[var(--color-text-default)]">minutes,</span>
+                <span className="text-body-md text-[var(--color-text-default)]">minutes,</span>
               </HStack>
               <HStack gap={1.5} align="center">
-                <span className="text-[14px] font-medium text-[var(--color-text-default)]">do</span>
+                <span className="text-label-lg text-[var(--color-text-default)]">do</span>
                 <Select
                   value={autoConfirmAction}
                   onChange={(value) => setAutoConfirmAction(value)}

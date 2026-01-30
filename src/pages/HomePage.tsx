@@ -26,9 +26,7 @@ function StatCard({ value, label }: StatCardProps) {
   return (
     <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg p-4 border-2 border-transparent transition-colors hover:border-[var(--color-action-primary)] cursor-pointer">
       <div className={`text-[20px] font-medium ${textColor} pb-1`}>{value}</div>
-      <div className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
-        {label}
-      </div>
+      <div className="text-body-sm text-[var(--color-text-subtle)]">{label}</div>
     </div>
   );
 }
@@ -69,12 +67,8 @@ function StatusCard({ label, count, status }: StatusCardProps) {
   return (
     <div className={`${bgColor} flex flex-1 items-center justify-between px-4 py-3 rounded-lg`}>
       <div className="flex flex-col gap-1">
-        <span className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-subtle)]">
-          {label}
-        </span>
-        <span className="text-[length:var(--font-size-12)] leading-[var(--line-height-18)] text-[var(--color-text-default)]">
-          {count}
-        </span>
+        <span className="text-label-sm text-[var(--color-text-subtle)]">{label}</span>
+        <span className="text-body-md text-[var(--color-text-default)]">{count}</span>
       </div>
       <div className={`${iconBg} flex items-center justify-center p-1 rounded-full w-6 h-6`}>
         {getStatusIcon()}
@@ -106,9 +100,7 @@ function QuickActionCard({ icon, label, highlighted = false, onClick }: QuickAct
       <div className="pb-1">
         <span className="text-[var(--color-text-muted)]">{icon}</span>
       </div>
-      <div className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-muted)]">
-        {label}
-      </div>
+      <div className="text-body-sm text-[var(--color-text-muted)]">{label}</div>
     </button>
   );
 }
@@ -130,16 +122,10 @@ function ChatItem({ title, description, createdAt, onClick }: ChatItemProps) {
       className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3 cursor-pointer transition-colors hover:border-[var(--color-border-focus)]"
     >
       <div className="flex flex-col gap-1 mb-3">
-        <p className="text-[length:var(--font-size-14)] leading-[var(--line-height-20)] font-medium text-[var(--color-text-default)]">
-          {title}
-        </p>
-        <p className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-subtle)] line-clamp-2">
-          {description}
-        </p>
+        <p className="text-label-lg text-[var(--color-text-default)]">{title}</p>
+        <p className="text-body-sm text-[var(--color-text-subtle)] line-clamp-2">{description}</p>
       </div>
-      <div className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-subtle)]">
-        Created at: {createdAt}
-      </div>
+      <div className="text-label-sm text-[var(--color-text-subtle)]">Created at: {createdAt}</div>
     </div>
   );
 }
@@ -152,11 +138,7 @@ interface SectionTitleProps {
 }
 
 function SectionTitle({ children }: SectionTitleProps) {
-  return (
-    <h3 className="text-[length:var(--font-size-18)] leading-[var(--line-height-28)] font-semibold text-[var(--color-text-default)]">
-      {children}
-    </h3>
-  );
+  return <h3 className="text-heading-h4 text-[var(--color-text-default)]">{children}</h3>;
 }
 
 /* ----------------------------------------
@@ -167,11 +149,7 @@ interface SubLabelProps {
 }
 
 function SubLabel({ children }: SubLabelProps) {
-  return (
-    <p className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
-      {children}
-    </p>
-  );
+  return <p className="text-body-sm text-[var(--color-text-subtle)]">{children}</p>;
 }
 
 /* ----------------------------------------

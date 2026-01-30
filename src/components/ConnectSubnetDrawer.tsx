@@ -261,7 +261,7 @@ export function ConnectSubnetDrawer({
     >
       <VStack gap={6} className="h-full">
         {/* Description */}
-        <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+        <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
           Connect an existing subnet to this router to enable routing between networks. Once
           connected, instances within the subnet can communicate with other subnets or access
           external networks (if an external gateway is configured).
@@ -270,16 +270,14 @@ export function ConnectSubnetDrawer({
         {/* Router Info Box */}
         <div className="w-full bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
           <VStack gap={1.5}>
-            <span className="text-[11px] text-[var(--color-text-subtle)] font-medium">Router</span>
-            <span className="text-[12px] text-[var(--color-text-default)]">{router.name}</span>
+            <span className="text-label-sm text-[var(--color-text-subtle)]">Router</span>
+            <span className="text-body-md text-[var(--color-text-default)]">{router.name}</span>
           </VStack>
         </div>
 
         {/* Network Section */}
         <VStack gap={3} className="w-full pb-5">
-          <h3 className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
-            Network
-          </h3>
+          <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">Network</h3>
 
           {/* Search */}
           <div className="w-[280px]">
@@ -308,41 +306,31 @@ export function ConnectSubnetDrawer({
             <div className="flex items-center bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md">
               <div className="w-[40px] p-3" />
               <div className="w-[59px] px-3 py-2 border-l border-[var(--color-border-default)] flex items-center justify-center">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                  Status
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Status</span>
               </div>
               <div
                 className="flex-1 px-3 py-2 border-l border-[var(--color-border-default)] flex items-center gap-1.5 cursor-pointer hover:bg-[var(--color-surface-muted)]"
                 onClick={() => toggleNetworkSort('name')}
               >
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                  Name
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Name</span>
                 <SortIcon active={networkSortKey === 'name'} direction={networkSortDir} />
               </div>
               <div
                 className="flex-1 px-3 py-2 border-l border-[var(--color-border-default)] flex items-center gap-1.5 cursor-pointer hover:bg-[var(--color-surface-muted)]"
                 onClick={() => toggleNetworkSort('size')}
               >
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                  Size
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Size</span>
                 <SortIcon active={networkSortKey === 'size'} direction={networkSortDir} />
               </div>
               <div
                 className="flex-1 px-3 py-2 border-l border-[var(--color-border-default)] flex items-center gap-1.5 cursor-pointer hover:bg-[var(--color-surface-muted)]"
                 onClick={() => toggleNetworkSort('access')}
               >
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                  Access
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Access</span>
                 <SortIcon active={networkSortKey === 'access'} direction={networkSortDir} />
               </div>
               <div className="flex-1 px-3 py-2 border-l border-[var(--color-border-default)] flex items-center">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                  Subnet CIDR
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Subnet CIDR</span>
               </div>
             </div>
 
@@ -369,7 +357,7 @@ export function ConnectSubnetDrawer({
                 <div className="flex-1 px-3 py-2">
                   <VStack gap={0.5}>
                     <HStack gap={1.5} align="center">
-                      <span className="text-[12px] font-medium text-[var(--color-action-primary)]">
+                      <span className="text-label-md text-[var(--color-action-primary)]">
                         {network.name}
                       </span>
                       <IconExternalLink
@@ -378,23 +366,23 @@ export function ConnectSubnetDrawer({
                         stroke={1.5}
                       />
                     </HStack>
-                    <span className="text-[11px] text-[var(--color-text-subtle)]">
+                    <span className="text-body-sm text-[var(--color-text-subtle)]">
                       ID : {network.id}
                     </span>
                   </VStack>
                 </div>
                 <div className="flex-1 px-3 py-2">
-                  <span className="text-[12px] text-[var(--color-text-default)]">
+                  <span className="text-body-md text-[var(--color-text-default)]">
                     {network.size}
                   </span>
                 </div>
                 <div className="flex-1 px-3 py-2">
-                  <span className="text-[12px] text-[var(--color-text-default)]">
+                  <span className="text-body-md text-[var(--color-text-default)]">
                     {network.access}
                   </span>
                 </div>
                 <div className="flex-1 px-3 py-2">
-                  <span className="text-[12px] text-[var(--color-text-default)]">
+                  <span className="text-body-md text-[var(--color-text-default)]">
                     {network.subnetCidr}
                   </span>
                 </div>
@@ -417,9 +405,7 @@ export function ConnectSubnetDrawer({
 
         {/* Subnet Section */}
         <VStack gap={3} className="w-full pb-5">
-          <h3 className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
-            Subnet
-          </h3>
+          <h3 className="text-label-lg text-[var(--color-text-default)] leading-5">Subnet</h3>
 
           {/* Search */}
           <div className="w-[280px]">
@@ -451,13 +437,11 @@ export function ConnectSubnetDrawer({
                 className="flex-1 px-3 py-2 border-l border-[var(--color-border-default)] flex items-center gap-1.5 cursor-pointer hover:bg-[var(--color-surface-muted)]"
                 onClick={() => toggleSubnetSort('name')}
               >
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                  Name
-                </span>
+                <span className="text-label-sm text-[var(--color-text-default)]">Name</span>
                 <SortIcon active={subnetSortKey === 'name'} direction={subnetSortDir} />
               </div>
               <div className="flex-1 px-3 py-2 border-l border-[var(--color-border-default)] flex items-center">
-                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                <span className="text-label-sm text-[var(--color-text-default)]">
                   Allocation Pools
                 </span>
               </div>
@@ -481,7 +465,7 @@ export function ConnectSubnetDrawer({
                 <div className="flex-1 px-3 py-2">
                   <VStack gap={0.5}>
                     <HStack gap={1.5} align="center">
-                      <span className="text-[12px] font-medium text-[var(--color-action-primary)]">
+                      <span className="text-label-md text-[var(--color-action-primary)]">
                         {subnet.name}
                       </span>
                       <IconExternalLink
@@ -490,13 +474,13 @@ export function ConnectSubnetDrawer({
                         stroke={1.5}
                       />
                     </HStack>
-                    <span className="text-[11px] text-[var(--color-text-subtle)]">
+                    <span className="text-body-sm text-[var(--color-text-subtle)]">
                       ID : {subnet.id}
                     </span>
                   </VStack>
                 </div>
                 <div className="flex-1 px-3 py-2">
-                  <span className="text-[12px] text-[var(--color-text-default)]">
+                  <span className="text-body-md text-[var(--color-text-default)]">
                     {subnet.allocationPools}
                   </span>
                 </div>

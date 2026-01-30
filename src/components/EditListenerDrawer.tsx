@@ -166,14 +166,14 @@ export function EditListenerDrawer({
       <VStack gap={6} className="pb-6">
         {/* Header */}
         <VStack gap={2}>
-          <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
             Edit Listener
           </h2>
         </VStack>
 
         {/* Listener Name */}
         <VStack gap={2} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             Listener Name
           </label>
           <Input
@@ -182,16 +182,16 @@ export function EditListenerDrawer({
             placeholder="e.g. listener-http-80"
             fullWidth
           />
-          <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+          <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
             Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
           </p>
         </VStack>
 
         {/* Description */}
         <VStack gap={2} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             Description{' '}
-            <span className="text-[12px] text-[var(--color-text-subtle)]">(optional)</span>
+            <span className="text-body-md text-[var(--color-text-subtle)]">(optional)</span>
           </label>
           <Input
             value={description}
@@ -203,7 +203,7 @@ export function EditListenerDrawer({
 
         {/* Protocol (Read-only) */}
         <VStack gap={2} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             Protocol
           </label>
           <Input value={listener.protocol} readOnly disabled fullWidth />
@@ -211,15 +211,13 @@ export function EditListenerDrawer({
 
         {/* Port (Read-only) */}
         <VStack gap={2} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
-            Port
-          </label>
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">Port</label>
           <Input value={String(listener.port)} readOnly disabled fullWidth />
         </VStack>
 
         {/* Connection Limit */}
         <VStack gap={3} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             Connection Limit
           </label>
           <RadioGroup
@@ -246,7 +244,7 @@ export function EditListenerDrawer({
           <button
             type="button"
             onClick={() => setIsAdvancedExpanded(!isAdvancedExpanded)}
-            className="flex items-center gap-1.5 text-[14px] font-medium text-[var(--color-text-default)] leading-5"
+            className="flex items-center gap-1.5 text-label-lg text-[var(--color-text-default)] leading-5"
           >
             {isAdvancedExpanded ? (
               <IconChevronDown size={12} stroke={1} />
@@ -254,7 +252,7 @@ export function EditListenerDrawer({
               <IconChevronRight size={12} stroke={1} />
             )}
             Advanced
-            <span className="text-[12px] text-[var(--color-text-subtle)] font-normal">
+            <span className="text-body-md text-[var(--color-text-subtle)] font-normal">
               (Optional)
             </span>
           </button>
@@ -263,7 +261,7 @@ export function EditListenerDrawer({
             <VStack gap={6} className="w-full pt-4">
               {/* Custom Headers */}
               <VStack gap={3} className="w-full">
-                <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                <label className="text-label-lg text-[var(--color-text-default)] leading-5">
                   Custom Headers
                 </label>
                 <VStack gap={3}>
@@ -282,10 +280,10 @@ export function EditListenerDrawer({
 
               {/* Client Data Timeout */}
               <VStack gap={2} className="w-full">
-                <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                <label className="text-label-lg text-[var(--color-text-default)] leading-5">
                   Client Data Timeout (ms)
                 </label>
-                <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+                <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
                   Maximum time to wait for client request data.
                 </p>
                 <Input
@@ -298,10 +296,10 @@ export function EditListenerDrawer({
 
               {/* Member Connect Timeout */}
               <VStack gap={2} className="w-full">
-                <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                <label className="text-label-lg text-[var(--color-text-default)] leading-5">
                   Member Connect Timeout (ms)
                 </label>
-                <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+                <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
                   Maximum time to wait when establishing a connection to a backend member.
                 </p>
                 <Input
@@ -314,10 +312,10 @@ export function EditListenerDrawer({
 
               {/* Member Data Timeout */}
               <VStack gap={2} className="w-full">
-                <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                <label className="text-label-lg text-[var(--color-text-default)] leading-5">
                   Member Data Timeout (ms)
                 </label>
-                <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+                <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
                   Maximum time to wait for response data from a backend member.
                 </p>
                 <Input
@@ -330,10 +328,10 @@ export function EditListenerDrawer({
 
               {/* TCP Inspect Timeout */}
               <VStack gap={2} className="w-full">
-                <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                <label className="text-label-lg text-[var(--color-text-default)] leading-5">
                   TCP Inspect Timeout (ms)
                 </label>
-                <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+                <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
                   Timeout for TCP packet inspection or handshake. 0 disables this feature.
                 </p>
                 <Input
@@ -346,7 +344,7 @@ export function EditListenerDrawer({
 
               {/* Allowed CIDRs */}
               <VStack gap={2} className="w-full">
-                <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                <label className="text-label-lg text-[var(--color-text-default)] leading-5">
                   Allowed CIDRs
                 </label>
                 <Button
@@ -365,9 +363,7 @@ export function EditListenerDrawer({
                     gap={3}
                     className="w-full items-center bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md px-4 py-2"
                   >
-                    <span className="text-[14px] font-medium text-[var(--color-text-default)]">
-                      Key
-                    </span>
+                    <span className="text-label-lg text-[var(--color-text-default)]">Key</span>
                     <Input
                       value={newCidr}
                       onChange={(e) => setNewCidr(e.target.value)}
@@ -389,10 +385,8 @@ export function EditListenerDrawer({
                     gap={3}
                     className="w-full items-center bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md px-4 py-2"
                   >
-                    <span className="text-[14px] font-medium text-[var(--color-text-default)]">
-                      Key
-                    </span>
-                    <div className="flex-1 px-2.5 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md text-[12px] text-[var(--color-text-default)]">
+                    <span className="text-label-lg text-[var(--color-text-default)]">Key</span>
+                    <div className="flex-1 px-2.5 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md text-body-md text-[var(--color-text-default)]">
                       {cidr}
                     </div>
                     <button
@@ -410,9 +404,7 @@ export function EditListenerDrawer({
                     gap={3}
                     className="w-full items-center bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md px-4 py-2"
                   >
-                    <span className="text-[14px] font-medium text-[var(--color-text-default)]">
-                      Key
-                    </span>
+                    <span className="text-label-lg text-[var(--color-text-default)]">Key</span>
                     <Input
                       value={newCidr}
                       onChange={(e) => setNewCidr(e.target.value)}
@@ -430,7 +422,7 @@ export function EditListenerDrawer({
 
               {/* Listener Admin State */}
               <VStack gap={3} className="w-full">
-                <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                <label className="text-label-lg text-[var(--color-text-default)] leading-5">
                   Listener Admin State
                 </label>
                 <HStack gap={2} className="items-center">
@@ -438,7 +430,7 @@ export function EditListenerDrawer({
                     checked={adminStateUp}
                     onChange={(e) => setAdminStateUp(e.target.checked)}
                   />
-                  <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+                  <span className="text-body-md text-[var(--color-text-default)] leading-4">
                     {adminStateUp ? 'Up' : 'Down'}
                   </span>
                 </HStack>

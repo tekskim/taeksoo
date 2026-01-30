@@ -29,10 +29,8 @@ function QuotaProgressBar({ label, used, limit }: { label: string; used: number;
   return (
     <VStack gap={2} className="w-full">
       <HStack className="w-full justify-between">
-        <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
-          {label}
-        </span>
-        <span className="text-[12px] text-[var(--color-text-default)] leading-4">
+        <span className="text-label-lg text-[var(--color-text-default)] leading-5">{label}</span>
+        <span className="text-body-md text-[var(--color-text-default)] leading-4">
           {used}/{limit}
         </span>
       </HStack>
@@ -128,14 +126,14 @@ export function CreateSecurityGroupDrawer({
       <VStack gap={6}>
         {/* Header */}
         <VStack gap={2}>
-          <h2 className="text-[16px] font-semibold text-[var(--color-text-default)] leading-6">
+          <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">
             Create Security Group
           </h2>
         </VStack>
 
         {/* Security Group Name Input */}
         <VStack gap={2} className="w-full">
-          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             Security Group name
           </label>
           <Input
@@ -146,11 +144,11 @@ export function CreateSecurityGroupDrawer({
             error={hasAttemptedSubmit && !name.trim()}
           />
           {hasAttemptedSubmit && !name.trim() ? (
-            <p className="text-[11px] text-[var(--color-state-danger)] leading-4">
+            <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
               Security Group name is required
             </p>
           ) : (
-            <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+            <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
               Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
             </p>
           )}
@@ -159,10 +157,10 @@ export function CreateSecurityGroupDrawer({
         {/* Description Input */}
         <VStack gap={2} className="w-full">
           <HStack gap={1} className="items-center">
-            <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+            <label className="text-label-lg text-[var(--color-text-default)] leading-5">
               Description
             </label>
-            <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+            <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
               (optional)
             </span>
           </HStack>

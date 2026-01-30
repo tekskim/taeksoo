@@ -152,7 +152,7 @@ function CreateHPADropdown({ onCreateForm, onCreateYaml }: CreateHPADropdownProp
               }}
             >
               <button
-                className="w-full px-3 py-2 text-left text-[12px] text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] transition-colors"
+                className="w-full px-3 py-2 text-left text-body-md text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] transition-colors"
                 onClick={() => {
                   setIsOpen(false);
                   onCreateForm();
@@ -161,7 +161,7 @@ function CreateHPADropdown({ onCreateForm, onCreateYaml }: CreateHPADropdownProp
                 Create as Form
               </button>
               <button
-                className="w-full px-3 py-2 text-left text-[12px] text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] transition-colors"
+                className="w-full px-3 py-2 text-left text-body-md text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] transition-colors"
                 onClick={() => {
                   setIsOpen(false);
                   onCreateYaml();
@@ -428,7 +428,7 @@ export function ContainerHPAPage() {
               {/* Header */}
               <HStack justify="between" align="center" className="w-full min-h-8">
                 <HStack gap={2} align="center">
-                  <h1 className="text-[16px] leading-6 font-semibold text-[var(--color-text-default)]">
+                  <h1 className="text-heading-h5 text-[var(--color-text-default)]">
                     Horizontal Pod Autoscalers
                   </h1>
                   <button className="p-1 hover:bg-[var(--color-surface-subtle)] rounded transition-colors">

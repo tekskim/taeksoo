@@ -350,7 +350,7 @@ export function ComputeAdminCreateFlavorPage() {
               <VStack gap={3} className="min-w-[1176px]">
                 {/* Page Title */}
                 <div className="flex items-center justify-between h-8">
-                  <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
+                  <h1 className="text-heading-h5 text-[var(--color-text-default)]">
                     Create flavor
                   </h1>
                 </div>
@@ -410,12 +410,12 @@ export function ComputeAdminCreateFlavorPage() {
                           {/* Category section */}
                           <div className="flex flex-col gap-2">
                             <div className="flex items-center gap-1.5">
-                              <span className="text-[14px] font-medium leading-[var(--line-height-20)] text-[var(--color-text-default)]">
+                              <span className="text-label-lg leading-[var(--line-height-20)] text-[var(--color-text-default)]">
                                 Category
                               </span>
                               <span className="text-[var(--color-state-danger)]">*</span>
                             </div>
-                            <span className="text-[12px] font-normal leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                            <span className="text-body-md leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
                               Choose the resource category to apply to the flavor.
                             </span>
                             <RadioGroup
@@ -435,12 +435,12 @@ export function ComputeAdminCreateFlavorPage() {
                           <div className="flex flex-col gap-3">
                             <div className="flex flex-col gap-2">
                               <div className="flex items-center gap-1.5">
-                                <span className="text-[14px] font-medium leading-[var(--line-height-20)] text-[var(--color-text-default)]">
+                                <span className="text-label-lg leading-[var(--line-height-20)] text-[var(--color-text-default)]">
                                   Public
                                 </span>
                                 <span className="text-[var(--color-state-danger)]">*</span>
                               </div>
-                              <span className="text-[12px] font-normal leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                              <span className="text-body-md leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
                                 Indicates whether the flavor is available to other tenants.
                               </span>
                             </div>
@@ -456,12 +456,12 @@ export function ComputeAdminCreateFlavorPage() {
                             <div className="flex flex-col gap-4">
                               <div className="flex flex-col gap-2">
                                 <div className="flex items-center gap-1.5">
-                                  <span className="text-[14px] font-medium leading-[var(--line-height-20)] text-[var(--color-text-default)]">
+                                  <span className="text-label-lg leading-[var(--line-height-20)] text-[var(--color-text-default)]">
                                     Tenant
                                   </span>
                                   <span className="text-[var(--color-state-danger)]">*</span>
                                 </div>
-                                <span className="text-[12px] font-normal leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                                <span className="text-body-md leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
                                   Select the tenant that can use the flavor.
                                 </span>
                               </div>
@@ -495,17 +495,17 @@ export function ComputeAdminCreateFlavorPage() {
                                       />
                                     </div>
                                     <div className="flex items-center justify-center p-3 w-[60px] border-l border-[var(--color-border-default)]">
-                                      <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                      <span className="text-label-sm text-[var(--color-text-default)]">
                                         Status
                                       </span>
                                     </div>
                                     <div className="flex-1 p-3 border-l border-[var(--color-border-default)]">
-                                      <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                      <span className="text-label-sm text-[var(--color-text-default)]">
                                         Name
                                       </span>
                                     </div>
                                     <div className="flex-1 p-3 border-l border-[var(--color-border-default)]">
-                                      <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                      <span className="text-label-sm text-[var(--color-text-default)]">
                                         Description
                                       </span>
                                     </div>
@@ -533,17 +533,17 @@ export function ComputeAdminCreateFlavorPage() {
                                       <div className="flex-1 flex flex-col gap-0.5 p-3">
                                         <Link
                                           to={`/compute-admin/tenants/${tenant.id}`}
-                                          className="text-[12px] font-medium text-[var(--color-link)] hover:underline flex items-center gap-1.5"
+                                          className="text-label-md text-[var(--color-link)] hover:underline flex items-center gap-1.5"
                                         >
                                           {tenant.name}
                                           <IconExternalLink size={12} />
                                         </Link>
-                                        <span className="text-[11px] text-[var(--color-text-muted)]">
+                                        <span className="text-body-sm text-[var(--color-text-muted)]">
                                           ID: {tenant.id}
                                         </span>
                                       </div>
                                       <div className="flex-1 p-3">
-                                        <span className="text-[12px] text-[var(--color-text-default)]">
+                                        <span className="text-body-md text-[var(--color-text-default)]">
                                           {tenant.description}
                                         </span>
                                       </div>
@@ -553,7 +553,7 @@ export function ComputeAdminCreateFlavorPage() {
 
                                 {/* Selection count */}
                                 <div className="bg-[var(--color-surface-subtle)] px-2 py-2 rounded-md">
-                                  <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                  <span className="text-body-md text-[var(--color-text-subtle)]">
                                     {selectedTenants.length === 0
                                       ? 'No item selected'
                                       : `${selectedTenants.length} item${selectedTenants.length > 1 ? 's' : ''} selected`}
@@ -627,12 +627,12 @@ export function ComputeAdminCreateFlavorPage() {
                           {/* vCPU */}
                           <div className="flex flex-col gap-2">
                             <div className="flex items-center gap-1.5">
-                              <span className="text-[14px] font-medium leading-[var(--line-height-20)] text-[var(--color-text-default)]">
+                              <span className="text-label-lg leading-[var(--line-height-20)] text-[var(--color-text-default)]">
                                 vCPU
                               </span>
                               <span className="text-[var(--color-state-danger)]">*</span>
                             </div>
-                            <span className="text-[12px] font-normal leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                            <span className="text-body-md leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
                               Number of virtual CPUs for instances using this flavor.
                             </span>
                             <HStack gap={2} align="center">
@@ -643,7 +643,7 @@ export function ComputeAdminCreateFlavorPage() {
                                 max={128}
                                 className="w-[100px]"
                               />
-                              <span className="text-[12px] text-[var(--color-text-default)]">
+                              <span className="text-body-md text-[var(--color-text-default)]">
                                 cores
                               </span>
                             </HStack>
@@ -652,12 +652,12 @@ export function ComputeAdminCreateFlavorPage() {
                           {/* RAM */}
                           <div className="flex flex-col gap-2">
                             <div className="flex items-center gap-1.5">
-                              <span className="text-[14px] font-medium leading-[var(--line-height-20)] text-[var(--color-text-default)]">
+                              <span className="text-label-lg leading-[var(--line-height-20)] text-[var(--color-text-default)]">
                                 RAM
                               </span>
                               <span className="text-[var(--color-state-danger)]">*</span>
                             </div>
-                            <span className="text-[12px] font-normal leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                            <span className="text-body-md leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
                               Amount of memory for instances using this flavor.
                             </span>
                             <HStack gap={2} align="center">
@@ -668,7 +668,7 @@ export function ComputeAdminCreateFlavorPage() {
                                 max={1024}
                                 className="w-[100px]"
                               />
-                              <span className="text-[12px] text-[var(--color-text-default)]">
+                              <span className="text-body-md text-[var(--color-text-default)]">
                                 GiB
                               </span>
                             </HStack>
@@ -677,12 +677,12 @@ export function ComputeAdminCreateFlavorPage() {
                           {/* Root Disk */}
                           <div className="flex flex-col gap-2">
                             <div className="flex items-center gap-1.5">
-                              <span className="text-[14px] font-medium leading-[var(--line-height-20)] text-[var(--color-text-default)]">
+                              <span className="text-label-lg leading-[var(--line-height-20)] text-[var(--color-text-default)]">
                                 Root disk
                               </span>
                               <span className="text-[var(--color-state-danger)]">*</span>
                             </div>
-                            <span className="text-[12px] font-normal leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                            <span className="text-body-md leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
                               Size of the root disk. Use 0 for no local disk (boot from volume).
                             </span>
                             <HStack gap={2} align="center">
@@ -693,7 +693,7 @@ export function ComputeAdminCreateFlavorPage() {
                                 max={10000}
                                 className="w-[100px]"
                               />
-                              <span className="text-[12px] text-[var(--color-text-default)]">
+                              <span className="text-body-md text-[var(--color-text-default)]">
                                 GiB
                               </span>
                             </HStack>
@@ -701,10 +701,10 @@ export function ComputeAdminCreateFlavorPage() {
 
                           {/* Ephemeral Disk */}
                           <div className="flex flex-col gap-2">
-                            <span className="text-[14px] font-medium leading-[var(--line-height-20)] text-[var(--color-text-default)]">
+                            <span className="text-label-lg leading-[var(--line-height-20)] text-[var(--color-text-default)]">
                               Ephemeral disk
                             </span>
-                            <span className="text-[12px] font-normal leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                            <span className="text-body-md leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
                               Size of temporary disk. This disk is deleted when the instance is
                               terminated.
                             </span>
@@ -716,7 +716,7 @@ export function ComputeAdminCreateFlavorPage() {
                                 max={10000}
                                 className="w-[100px]"
                               />
-                              <span className="text-[12px] text-[var(--color-text-default)]">
+                              <span className="text-body-md text-[var(--color-text-default)]">
                                 GiB
                               </span>
                             </HStack>
@@ -724,10 +724,10 @@ export function ComputeAdminCreateFlavorPage() {
 
                           {/* Swap Disk */}
                           <div className="flex flex-col gap-2">
-                            <span className="text-[14px] font-medium leading-[var(--line-height-20)] text-[var(--color-text-default)]">
+                            <span className="text-label-lg leading-[var(--line-height-20)] text-[var(--color-text-default)]">
                               Swap disk
                             </span>
-                            <span className="text-[12px] font-normal leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                            <span className="text-body-md leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
                               Size of swap space. Use 0 for no swap.
                             </span>
                             <HStack gap={2} align="center">
@@ -738,7 +738,7 @@ export function ComputeAdminCreateFlavorPage() {
                                 max={10000}
                                 className="w-[100px]"
                               />
-                              <span className="text-[12px] text-[var(--color-text-default)]">
+                              <span className="text-body-md text-[var(--color-text-default)]">
                                 MiB
                               </span>
                             </HStack>
@@ -801,12 +801,12 @@ export function ComputeAdminCreateFlavorPage() {
                           {/* Metadata Description */}
                           <div className="flex flex-col gap-2">
                             <div className="flex items-center gap-1.5">
-                              <span className="text-[14px] font-medium leading-[var(--line-height-20)] text-[var(--color-text-default)]">
+                              <span className="text-label-lg leading-[var(--line-height-20)] text-[var(--color-text-default)]">
                                 Metadata
                               </span>
                               <span className="text-[var(--color-state-danger)]">*</span>
                             </div>
-                            <span className="text-[12px] font-normal leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
+                            <span className="text-body-md leading-[var(--line-height-16)] text-[var(--color-text-subtle)]">
                               Select existing metadata or define new metadata to apply to the host
                               aggregate.
                             </span>
@@ -816,7 +816,7 @@ export function ComputeAdminCreateFlavorPage() {
                           <div className="flex gap-6">
                             {/* Left Column - Available Metadata */}
                             <div className="flex-1 flex flex-col gap-2 bg-[var(--color-surface-subtle)] rounded-md p-2">
-                              <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                              <span className="text-label-lg text-[var(--color-text-default)]">
                                 Available metadata
                               </span>
 
@@ -910,7 +910,7 @@ export function ComputeAdminCreateFlavorPage() {
                                               />
                                             )}
                                           </button>
-                                          <span className="text-[12px] font-medium text-[var(--color-text-default)]">
+                                          <span className="text-label-md text-[var(--color-text-default)]">
                                             {item.label}
                                           </span>
                                         </div>
@@ -948,7 +948,7 @@ export function ComputeAdminCreateFlavorPage() {
                                               `}
                                             >
                                               <div className="flex-1 flex items-center gap-2 px-3 py-2 pl-10 min-h-[40px]">
-                                                <span className="text-[12px] font-medium text-[var(--color-text-default)]">
+                                                <span className="text-label-md text-[var(--color-text-default)]">
                                                   {child}
                                                 </span>
                                               </div>
@@ -991,7 +991,7 @@ export function ComputeAdminCreateFlavorPage() {
 
                             {/* Right Column - Existing Metadata */}
                             <div className="flex-1 flex flex-col gap-2 bg-[var(--color-surface-subtle)] rounded-md p-2">
-                              <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                              <span className="text-label-lg text-[var(--color-text-default)]">
                                 Existing metadata
                               </span>
 
@@ -1019,7 +1019,7 @@ export function ComputeAdminCreateFlavorPage() {
                                       className="flex items-center bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md"
                                     >
                                       <div className="flex-1 flex items-center gap-2 px-3 py-2 min-h-[40px]">
-                                        <span className="text-[12px] font-medium text-[var(--color-text-default)] shrink-0">
+                                        <span className="text-label-md text-[var(--color-text-default)] shrink-0">
                                           {item.key}
                                         </span>
                                         <div className="w-px h-4 bg-[var(--color-border-default)]" />
@@ -1055,7 +1055,7 @@ export function ComputeAdminCreateFlavorPage() {
                                   ))}
                                 {selectedMetadata.length === 0 && (
                                   <div className="flex items-center justify-center py-8">
-                                    <span className="text-[12px] text-[var(--color-text-muted)]">
+                                    <span className="text-body-md text-[var(--color-text-muted)]">
                                       No metadata selected
                                     </span>
                                   </div>
@@ -1091,7 +1091,7 @@ export function ComputeAdminCreateFlavorPage() {
                             />
                           ))}
                           {selectedMetadata.length > 3 && (
-                            <span className="text-[12px] text-[var(--color-text-muted)]">
+                            <span className="text-body-md text-[var(--color-text-muted)]">
                               +{selectedMetadata.length - 3} more items
                             </span>
                           )}

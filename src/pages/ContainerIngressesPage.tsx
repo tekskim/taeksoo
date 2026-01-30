@@ -148,7 +148,7 @@ function CreateIngressDropdown({ onCreateForm, onCreateYaml }: CreateIngressDrop
               }}
             >
               <button
-                className="w-full px-3 py-2 text-left text-[12px] text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] transition-colors"
+                className="w-full px-3 py-2 text-left text-body-md text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] transition-colors"
                 onClick={() => {
                   setIsOpen(false);
                   onCreateForm();
@@ -157,7 +157,7 @@ function CreateIngressDropdown({ onCreateForm, onCreateYaml }: CreateIngressDrop
                 Create as Form
               </button>
               <button
-                className="w-full px-3 py-2 text-left text-[12px] text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] transition-colors"
+                className="w-full px-3 py-2 text-left text-body-md text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] transition-colors"
                 onClick={() => {
                   setIsOpen(false);
                   onCreateYaml();
@@ -253,7 +253,7 @@ export function ContainerIngressesPage() {
       render: (value: string[]) => (
         <div className="flex flex-col gap-0.5">
           {value.map((item, index) => (
-            <span key={index} className="text-[12px] leading-4 text-[var(--color-text-default)]">
+            <span key={index} className="text-body-md leading-4 text-[var(--color-text-default)]">
               {item}
             </span>
           ))}
@@ -417,9 +417,7 @@ export function ContainerIngressesPage() {
               {/* Header */}
               <HStack justify="between" align="center" className="w-full min-h-8">
                 <HStack gap={2} align="center">
-                  <h1 className="text-[16px] leading-6 font-semibold text-[var(--color-text-default)]">
-                    Ingresses
-                  </h1>
+                  <h1 className="text-heading-h5 text-[var(--color-text-default)]">Ingresses</h1>
                   <button className="p-1 hover:bg-[var(--color-surface-subtle)] rounded transition-colors">
                     <IconStar size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
                   </button>
@@ -492,7 +490,7 @@ export function ContainerIngressesPage() {
                   </HStack>
                   <button
                     onClick={handleClearFilters}
-                    className="text-[11px] font-medium text-[var(--color-action-primary)] hover:underline"
+                    className="text-label-sm text-[var(--color-action-primary)] hover:underline"
                   >
                     Clear Filters
                   </button>

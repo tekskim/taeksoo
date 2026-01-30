@@ -443,7 +443,7 @@ export function NetworkPolicyDetailPage() {
                 {/* Ingress Rules Tab */}
                 <TabPanel value="ingress-rules">
                   <VStack gap={4}>
-                    <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
+                    <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
                       Ingress Rules
                     </h3>
 
@@ -455,7 +455,7 @@ export function NetworkPolicyDetailPage() {
                             {networkPolicyData.ingressRules.map((rule) => (
                               <button
                                 key={rule.id}
-                                className={`w-full px-3 py-2 text-left text-[11px] font-medium flex items-center justify-between hover:bg-[var(--color-surface-muted)] ${
+                                className={`w-full px-3 py-2 text-left text-label-sm flex items-center justify-between hover:bg-[var(--color-surface-muted)] ${
                                   selectedRule === rule.id
                                     ? 'bg-[var(--color-surface-default)] text-[var(--color-action-primary)]'
                                     : 'text-[var(--color-text-default)]'
@@ -472,7 +472,7 @@ export function NetworkPolicyDetailPage() {
                                 )}
                               </button>
                             ))}
-                            <button className="w-full px-3 py-2 text-left text-[11px] font-medium text-[var(--color-action-primary)] flex items-center gap-1 hover:bg-[var(--color-surface-muted)]">
+                            <button className="w-full px-3 py-2 text-left text-label-sm text-[var(--color-action-primary)] flex items-center gap-1 hover:bg-[var(--color-surface-muted)]">
                               <IconPlus size={12} stroke={1.5} />
                               Add Rule
                             </button>
@@ -483,13 +483,13 @@ export function NetworkPolicyDetailPage() {
                         <div className="flex-1 p-4">
                           {selectedRuleData ? (
                             <VStack gap={4}>
-                              <h4 className="text-[12px] font-semibold text-[var(--color-text-default)]">
+                              <h4 className="text-body-md font-semibold text-[var(--color-text-default)]">
                                 Targets
                               </h4>
 
                               {/* Rule Type */}
                               <VStack gap={2}>
-                                <label className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                <label className="text-label-sm text-[var(--color-text-default)]">
                                   Rule type
                                 </label>
                                 <Select
@@ -505,17 +505,17 @@ export function NetworkPolicyDetailPage() {
                                 <HStack gap={2} className="mb-2">
                                   <div className="w-[100px]" />
                                   <div className="flex-1">
-                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                    <span className="text-label-sm text-[var(--color-text-default)]">
                                       Key
                                     </span>
                                   </div>
                                   <div className="flex-1">
-                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                    <span className="text-label-sm text-[var(--color-text-default)]">
                                       Operator
                                     </span>
                                   </div>
                                   <div className="flex-1">
-                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                    <span className="text-label-sm text-[var(--color-text-default)]">
                                       Value
                                     </span>
                                   </div>
@@ -525,7 +525,7 @@ export function NetworkPolicyDetailPage() {
                                 {/* Namespace Row */}
                                 <HStack gap={2} className="mb-2" align="center">
                                   <div className="w-[100px]">
-                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                    <span className="text-label-sm text-[var(--color-text-default)]">
                                       Namespace
                                     </span>
                                   </div>
@@ -563,7 +563,7 @@ export function NetworkPolicyDetailPage() {
                                 {/* Pod Row */}
                                 <HStack gap={2} className="mb-2" align="center">
                                   <div className="w-[100px]">
-                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                    <span className="text-label-sm text-[var(--color-text-default)]">
                                       Pod
                                     </span>
                                   </div>
@@ -606,7 +606,7 @@ export function NetworkPolicyDetailPage() {
 
                               {/* Matching Pods */}
                               <VStack gap={2} className="mt-4">
-                                <h4 className="text-[12px] font-semibold text-[var(--color-text-default)]">
+                                <h4 className="text-body-md font-semibold text-[var(--color-text-default)]">
                                   Matching Pods ({networkPolicyData.matchingPods.length}/10)
                                 </h4>
 
@@ -627,13 +627,13 @@ export function NetworkPolicyDetailPage() {
 
                               {/* Allowed Ports */}
                               <VStack gap={2} className="mt-4">
-                                <h4 className="text-[12px] font-semibold text-[var(--color-text-default)]">
+                                <h4 className="text-body-md font-semibold text-[var(--color-text-default)]">
                                   Allowed Ports
                                 </h4>
 
                                 <HStack gap={4}>
                                   <VStack gap={2} className="flex-1">
-                                    <label className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                    <label className="text-label-sm text-[var(--color-text-default)]">
                                       Port
                                     </label>
                                     <Input
@@ -644,7 +644,7 @@ export function NetworkPolicyDetailPage() {
                                     />
                                   </VStack>
                                   <VStack gap={2} className="flex-1">
-                                    <label className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                    <label className="text-label-sm text-[var(--color-text-default)]">
                                       Protocol
                                     </label>
                                     <Select
@@ -659,7 +659,7 @@ export function NetworkPolicyDetailPage() {
                               </VStack>
                             </VStack>
                           ) : (
-                            <p className="text-[12px] text-[var(--color-text-subtle)]">
+                            <p className="text-body-md text-[var(--color-text-subtle)]">
                               No rule selected. Click on a rule or add a new one.
                             </p>
                           )}
@@ -672,7 +672,7 @@ export function NetworkPolicyDetailPage() {
                 {/* Egress Rules Tab */}
                 <TabPanel value="egress-rules">
                   <VStack gap={4}>
-                    <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
+                    <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
                       Egress Rules
                     </h3>
 
@@ -684,7 +684,7 @@ export function NetworkPolicyDetailPage() {
                             {networkPolicyData.egressRules.map((rule) => (
                               <button
                                 key={rule.id}
-                                className={`w-full px-3 py-2 text-left text-[11px] font-medium flex items-center justify-between hover:bg-[var(--color-surface-muted)] ${
+                                className={`w-full px-3 py-2 text-left text-label-sm flex items-center justify-between hover:bg-[var(--color-surface-muted)] ${
                                   selectedEgressRule === rule.id
                                     ? 'bg-[var(--color-surface-default)] text-[var(--color-action-primary)]'
                                     : 'text-[var(--color-text-default)]'
@@ -701,7 +701,7 @@ export function NetworkPolicyDetailPage() {
                                 )}
                               </button>
                             ))}
-                            <button className="w-full px-3 py-2 text-left text-[11px] font-medium text-[var(--color-action-primary)] flex items-center gap-1 hover:bg-[var(--color-surface-muted)]">
+                            <button className="w-full px-3 py-2 text-left text-label-sm text-[var(--color-action-primary)] flex items-center gap-1 hover:bg-[var(--color-surface-muted)]">
                               <IconPlus size={12} stroke={1.5} />
                               Add Rule
                             </button>
@@ -712,13 +712,13 @@ export function NetworkPolicyDetailPage() {
                         <div className="flex-1 p-4">
                           {selectedEgressRuleData ? (
                             <VStack gap={4}>
-                              <h4 className="text-[12px] font-semibold text-[var(--color-text-default)]">
+                              <h4 className="text-body-md font-semibold text-[var(--color-text-default)]">
                                 Targets
                               </h4>
 
                               {/* Rule Type */}
                               <VStack gap={2}>
-                                <label className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                <label className="text-label-sm text-[var(--color-text-default)]">
                                   Rule type
                                 </label>
                                 <Select
@@ -734,17 +734,17 @@ export function NetworkPolicyDetailPage() {
                                 <HStack gap={2} className="mb-2">
                                   <div className="w-[100px]" />
                                   <div className="flex-1">
-                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                    <span className="text-label-sm text-[var(--color-text-default)]">
                                       Key
                                     </span>
                                   </div>
                                   <div className="flex-1">
-                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                    <span className="text-label-sm text-[var(--color-text-default)]">
                                       Operator
                                     </span>
                                   </div>
                                   <div className="flex-1">
-                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                    <span className="text-label-sm text-[var(--color-text-default)]">
                                       Value
                                     </span>
                                   </div>
@@ -754,7 +754,7 @@ export function NetworkPolicyDetailPage() {
                                 {/* Namespace Row */}
                                 <HStack gap={2} className="mb-2" align="center">
                                   <div className="w-[100px]">
-                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                    <span className="text-label-sm text-[var(--color-text-default)]">
                                       Namespace
                                     </span>
                                   </div>
@@ -796,7 +796,7 @@ export function NetworkPolicyDetailPage() {
                                 {/* Pod Row */}
                                 <HStack gap={2} className="mb-2" align="center">
                                   <div className="w-[100px]">
-                                    <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                    <span className="text-label-sm text-[var(--color-text-default)]">
                                       Pod
                                     </span>
                                   </div>
@@ -840,7 +840,7 @@ export function NetworkPolicyDetailPage() {
 
                               {/* Matching Pods */}
                               <VStack gap={2} className="mt-4">
-                                <h4 className="text-[12px] font-semibold text-[var(--color-text-default)]">
+                                <h4 className="text-body-md font-semibold text-[var(--color-text-default)]">
                                   Matching Pods ({networkPolicyData.matchingPods.length}/10)
                                 </h4>
 
@@ -861,13 +861,13 @@ export function NetworkPolicyDetailPage() {
 
                               {/* Allowed Ports */}
                               <VStack gap={2} className="mt-4">
-                                <h4 className="text-[12px] font-semibold text-[var(--color-text-default)]">
+                                <h4 className="text-body-md font-semibold text-[var(--color-text-default)]">
                                   Allowed Ports
                                 </h4>
 
                                 <HStack gap={4}>
                                   <VStack gap={2} className="flex-1">
-                                    <label className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                    <label className="text-label-sm text-[var(--color-text-default)]">
                                       Port
                                     </label>
                                     <Input
@@ -878,7 +878,7 @@ export function NetworkPolicyDetailPage() {
                                     />
                                   </VStack>
                                   <VStack gap={2} className="flex-1">
-                                    <label className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                    <label className="text-label-sm text-[var(--color-text-default)]">
                                       Protocol
                                     </label>
                                     <Select
@@ -895,7 +895,7 @@ export function NetworkPolicyDetailPage() {
                               </VStack>
                             </VStack>
                           ) : (
-                            <p className="text-[12px] text-[var(--color-text-subtle)]">
+                            <p className="text-body-md text-[var(--color-text-subtle)]">
                               No rule selected. Click on a rule or add a new one.
                             </p>
                           )}
@@ -911,7 +911,7 @@ export function NetworkPolicyDetailPage() {
                     <VStack gap={6}>
                       {/* Selectors Section */}
                       <VStack gap={2} className="w-full">
-                        <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
+                        <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
                           Selectors
                         </h3>
 
@@ -921,17 +921,17 @@ export function NetworkPolicyDetailPage() {
                             {/* Column Headers */}
                             <HStack gap={2} className="w-full">
                               <div className="flex-1">
-                                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                <span className="text-label-sm text-[var(--color-text-default)]">
                                   Key
                                 </span>
                               </div>
                               <div className="flex-1">
-                                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                <span className="text-label-sm text-[var(--color-text-default)]">
                                   Operator
                                 </span>
                               </div>
                               <div className="flex-1">
-                                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                <span className="text-label-sm text-[var(--color-text-default)]">
                                   Value
                                 </span>
                               </div>
@@ -974,7 +974,7 @@ export function NetworkPolicyDetailPage() {
                                 </HStack>
                               ))
                             ) : (
-                              <p className="text-[12px] text-[var(--color-text-subtle)]">
+                              <p className="text-body-md text-[var(--color-text-subtle)]">
                                 No selectors configured.
                               </p>
                             )}
@@ -984,7 +984,7 @@ export function NetworkPolicyDetailPage() {
 
                       {/* Matching Pods Section */}
                       <VStack gap={2}>
-                        <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                        <span className="text-label-sm text-[var(--color-text-default)]">
                           Matching Pods ({networkPolicyData.matchingPods.length}/10)
                         </span>
 
@@ -1010,13 +1010,13 @@ export function NetworkPolicyDetailPage() {
                   <div className="w-full border border-[var(--color-border-default)] rounded-[8px] p-4">
                     <VStack gap={6}>
                       {/* Section Title */}
-                      <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
+                      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
                         Labels & Annotations
                       </h3>
 
                       {/* Labels */}
                       <VStack gap={2} className="w-full">
-                        <h4 className="text-[12px] font-semibold text-[var(--color-text-default)]">
+                        <h4 className="text-body-md font-semibold text-[var(--color-text-default)]">
                           Labels
                         </h4>
                         <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-3">
@@ -1024,12 +1024,12 @@ export function NetworkPolicyDetailPage() {
                             {/* Column Headers */}
                             <HStack gap={2} className="w-full">
                               <div className="flex-1">
-                                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                <span className="text-label-sm text-[var(--color-text-default)]">
                                   Key
                                 </span>
                               </div>
                               <div className="flex-1">
-                                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                <span className="text-label-sm text-[var(--color-text-default)]">
                                   Value
                                 </span>
                               </div>
@@ -1059,7 +1059,7 @@ export function NetworkPolicyDetailPage() {
                                 </HStack>
                               ))
                             ) : (
-                              <p className="text-[12px] text-[var(--color-text-subtle)]">
+                              <p className="text-body-md text-[var(--color-text-subtle)]">
                                 No labels configured.
                               </p>
                             )}
@@ -1069,7 +1069,7 @@ export function NetworkPolicyDetailPage() {
 
                       {/* Annotations */}
                       <VStack gap={2} className="w-full">
-                        <h4 className="text-[12px] font-semibold text-[var(--color-text-default)]">
+                        <h4 className="text-body-md font-semibold text-[var(--color-text-default)]">
                           Annotations
                         </h4>
                         <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-3">
@@ -1077,12 +1077,12 @@ export function NetworkPolicyDetailPage() {
                             {/* Column Headers */}
                             <HStack gap={2} className="w-full">
                               <div className="flex-1">
-                                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                <span className="text-label-sm text-[var(--color-text-default)]">
                                   Key
                                 </span>
                               </div>
                               <div className="flex-1">
-                                <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                <span className="text-label-sm text-[var(--color-text-default)]">
                                   Value
                                 </span>
                               </div>
@@ -1112,7 +1112,7 @@ export function NetworkPolicyDetailPage() {
                                 </HStack>
                               ))
                             ) : (
-                              <p className="text-[12px] text-[var(--color-text-subtle)]">
+                              <p className="text-body-md text-[var(--color-text-subtle)]">
                                 No annotations configured.
                               </p>
                             )}

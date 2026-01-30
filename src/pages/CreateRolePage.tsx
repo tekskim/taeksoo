@@ -292,9 +292,7 @@ function PreSection({ title }: PreSectionProps) {
   return (
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
       <div className="h-8 flex items-center">
-        <h5 className="text-[length:var(--font-size-16)] font-semibold leading-[var(--line-height-24)] text-[var(--color-text-default)]">
-          {title}
-        </h5>
+        <h5 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h5>
       </div>
     </div>
   );
@@ -312,10 +310,8 @@ function WritingSection({ title }: WritingSectionProps) {
   return (
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
       <div className="h-8 flex items-center justify-between">
-        <h5 className="text-[length:var(--font-size-16)] font-semibold leading-[var(--line-height-24)] text-[var(--color-text-default)]">
-          {title}
-        </h5>
-        <span className="text-[11px] text-[var(--color-text-subtle)]">Writing...</span>
+        <h5 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h5>
+        <span className="text-body-sm text-[var(--color-text-subtle)]">Writing...</span>
       </div>
     </div>
   );
@@ -406,9 +402,7 @@ function SummarySidebar({
         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
           <VStack gap={3}>
             {/* Header */}
-            <h4 className="text-[16px] font-semibold leading-6 text-[var(--color-text-default)]">
-              Create role
-            </h4>
+            <h4 className="text-heading-h5 text-[var(--color-text-default)]">Create role</h4>
 
             {/* Section Status List */}
             <div className="flex flex-col">
@@ -417,11 +411,11 @@ function SummarySidebar({
 
                 return (
                   <div key={sectionKey} className="flex items-center justify-between py-1">
-                    <span className="text-[12px] leading-5 text-[var(--color-text-default)]">
+                    <span className="text-body-md text-[var(--color-text-default)]">
                       {SECTION_LABELS[sectionKey]}
                     </span>
                     {isWriting ? (
-                      <span className="text-[11px] text-[var(--color-text-subtle)]">
+                      <span className="text-body-sm text-[var(--color-text-subtle)]">
                         Writing...
                       </span>
                     ) : (
@@ -520,7 +514,7 @@ function BasicInformationSection({
         <VStack gap={0}>
           {/* Role Name */}
           <div className="flex flex-col pt-2 pb-6">
-            <label className="text-[14px] font-medium text-[var(--color-text-default)] mb-2">
+            <label className="text-label-lg text-[var(--color-text-default)] mb-2">
               Role name <span className="text-[var(--color-state-danger)]">*</span>
             </label>
             <Input
@@ -535,11 +529,11 @@ function BasicInformationSection({
             />
             <div className="flex flex-col gap-1 mt-1">
               {roleNameError && (
-                <span className="text-[11px] text-[var(--color-state-danger)] leading-[16px]">
+                <span className="text-body-sm text-[var(--color-state-danger)]">
                   {roleNameError}
                 </span>
               )}
-              <span className="text-[11px] text-[var(--color-text-subtle)] leading-[16px]">
+              <span className="text-body-sm text-[var(--color-text-subtle)]">
                 You can use letters, numbers, and special characters (+=,.@-_), and the length must
                 be between 2-128 characters.
               </span>
@@ -551,7 +545,7 @@ function BasicInformationSection({
 
           {/* Description */}
           <div className="flex flex-col pt-2 pb-6">
-            <label className="text-[14px] font-medium text-[var(--color-text-default)] mb-2">
+            <label className="text-label-lg text-[var(--color-text-default)] mb-2">
               Description
             </label>
             <Input
@@ -560,7 +554,7 @@ function BasicInformationSection({
               onChange={(e) => onDescriptionChange(e.target.value)}
               fullWidth
             />
-            <span className="text-[11px] text-[var(--color-text-subtle)] leading-[16px] mt-1">
+            <span className="text-body-sm text-[var(--color-text-subtle)] mt-1">
               You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255
               characters.
             </span>
@@ -753,12 +747,10 @@ function AddPoliciesSection({
         <VStack gap={0} className="pt-2 pb-6">
           <div className="flex flex-col gap-2">
             <div className="flex gap-[3px]">
-              <span className="text-[14px] font-medium text-[var(--color-text-default)]">
-                Policies
-              </span>
+              <span className="text-label-lg text-[var(--color-text-default)]">Policies</span>
               <span className="text-[var(--color-state-danger)]">*</span>
             </div>
-            <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+            <span className="text-body-md text-[var(--color-text-subtle)]">
               Select policies to apply to this role. If policies include conditions, all conditions
               must be satisfied for the permission to be granted.
             </span>
@@ -775,7 +767,7 @@ function AddPoliciesSection({
                   setSearchQuery(e.target.value);
                   setCurrentPage(1);
                 }}
-                className="w-full h-8 pl-3 pr-9 text-[12px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] placeholder:text-[var(--color-text-subtle)] focus:outline-none focus:border-[var(--color-action-primary)] focus:shadow-[0_0_0_1px_var(--color-action-primary)]"
+                className="w-full h-8 pl-3 pr-9 text-body-md bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] placeholder:text-[var(--color-text-subtle)] focus:outline-none focus:border-[var(--color-action-primary)] focus:shadow-[0_0_0_1px_var(--color-action-primary)]"
               />
               <IconSearch
                 size={14}
@@ -793,7 +785,7 @@ function AddPoliciesSection({
                 onPageChange={setCurrentPage}
               />
               <div className="h-4 w-px bg-[var(--color-border-default)]" />
-              <span className="text-[11px] text-[var(--color-text-subtle)]">
+              <span className="text-body-sm text-[var(--color-text-subtle)]">
                 {filteredPolicies.length} items
               </span>
             </div>
@@ -865,7 +857,7 @@ function AddPoliciesSection({
                       )}
                     </button>
                     <HStack gap={1.5} align="center">
-                      <span className="text-[12px] font-medium text-[var(--color-action-primary)]">
+                      <span className="text-label-md text-[var(--color-action-primary)]">
                         {policy.name}
                       </span>
                       <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
@@ -1159,9 +1151,7 @@ export default function CreateRolePage() {
             <VStack gap={3} className="min-w-[1176px]">
               {/* Page Title */}
               <div className="flex items-center justify-between h-8">
-                <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
-                  Create role
-                </h1>
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create role</h1>
               </div>
               <HStack gap={6} align="start" className="w-full">
                 {/* Left Column - Form Sections */}

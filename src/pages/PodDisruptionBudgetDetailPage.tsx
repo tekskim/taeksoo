@@ -558,14 +558,14 @@ export function PodDisruptionBudgetDetailPage() {
                   <TabPanel value="budget">
                     <div className="w-full border border-[var(--color-border-default)] rounded-[8px] p-4">
                       <VStack gap={4}>
-                        <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
+                        <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
                           Budget
                         </h3>
 
                         <HStack gap={3} className="w-full pl-3">
                           {/* Min. available Pods */}
                           <VStack gap={2} className="flex-1">
-                            <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                            <span className="text-label-sm text-[var(--color-text-default)]">
                               Min. available Pods
                             </span>
                             <HStack gap={2} className="w-full">
@@ -592,7 +592,7 @@ export function PodDisruptionBudgetDetailPage() {
 
                           {/* Max. unavailable Pods */}
                           <VStack gap={2} className="flex-1">
-                            <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                            <span className="text-label-sm text-[var(--color-text-default)]">
                               Max. unavailable Pods
                             </span>
                             <HStack gap={2} className="w-full">
@@ -627,7 +627,7 @@ export function PodDisruptionBudgetDetailPage() {
                       <VStack gap={6}>
                         {/* Selectors Section */}
                         <VStack gap={2} className="w-full">
-                          <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
+                          <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
                             Selectors
                           </h3>
 
@@ -637,17 +637,17 @@ export function PodDisruptionBudgetDetailPage() {
                               {/* Column Headers */}
                               <HStack gap={2} className="w-full">
                                 <div className="flex-1">
-                                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                  <span className="text-label-sm text-[var(--color-text-default)]">
                                     Key
                                   </span>
                                 </div>
                                 <div className="flex-1">
-                                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                  <span className="text-label-sm text-[var(--color-text-default)]">
                                     Operator
                                   </span>
                                 </div>
                                 <div className="flex-1">
-                                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                  <span className="text-label-sm text-[var(--color-text-default)]">
                                     Value
                                   </span>
                                 </div>
@@ -690,7 +690,7 @@ export function PodDisruptionBudgetDetailPage() {
                                   </HStack>
                                 ))
                               ) : (
-                                <p className="text-[12px] text-[var(--color-text-subtle)]">
+                                <p className="text-body-md text-[var(--color-text-subtle)]">
                                   No selectors configured.
                                 </p>
                               )}
@@ -700,7 +700,7 @@ export function PodDisruptionBudgetDetailPage() {
 
                         {/* Matching Pods Section */}
                         <VStack gap={2}>
-                          <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                          <span className="text-label-sm text-[var(--color-text-default)]">
                             Matching Pods ({pdbData.matchingPods.length}/10)
                           </span>
 
@@ -724,7 +724,7 @@ export function PodDisruptionBudgetDetailPage() {
                   {/* Conditions Tab */}
                   <TabPanel value="conditions">
                     <VStack gap={3}>
-                      <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
+                      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
                         Conditions
                       </h3>
 
@@ -743,7 +743,7 @@ export function PodDisruptionBudgetDetailPage() {
                           rowKey="condition"
                         />
                       ) : (
-                        <p className="text-[12px] text-[var(--color-text-subtle)]">
+                        <p className="text-body-md text-[var(--color-text-subtle)]">
                           No conditions available.
                         </p>
                       )}
@@ -755,13 +755,13 @@ export function PodDisruptionBudgetDetailPage() {
                     <div className="w-full border border-[var(--color-border-default)] rounded-[8px] p-4">
                       <VStack gap={6}>
                         {/* Section Title */}
-                        <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
+                        <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
                           Labels & Annotations
                         </h3>
 
                         {/* Labels */}
                         <VStack gap={2} className="w-full">
-                          <h4 className="text-[12px] font-semibold text-[var(--color-text-default)]">
+                          <h4 className="text-body-md font-semibold text-[var(--color-text-default)]">
                             Labels
                           </h4>
                           <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-3">
@@ -769,12 +769,12 @@ export function PodDisruptionBudgetDetailPage() {
                               {/* Column Headers */}
                               <HStack gap={2} className="w-full">
                                 <div className="flex-1">
-                                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                  <span className="text-label-sm text-[var(--color-text-default)]">
                                     Key
                                   </span>
                                 </div>
                                 <div className="flex-1">
-                                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                  <span className="text-label-sm text-[var(--color-text-default)]">
                                     Value
                                   </span>
                                 </div>
@@ -804,7 +804,7 @@ export function PodDisruptionBudgetDetailPage() {
                                   </HStack>
                                 ))
                               ) : (
-                                <p className="text-[12px] text-[var(--color-text-subtle)]">
+                                <p className="text-body-md text-[var(--color-text-subtle)]">
                                   No labels configured.
                                 </p>
                               )}
@@ -814,7 +814,7 @@ export function PodDisruptionBudgetDetailPage() {
 
                         {/* Annotations */}
                         <VStack gap={2} className="w-full">
-                          <h4 className="text-[12px] font-semibold text-[var(--color-text-default)]">
+                          <h4 className="text-body-md font-semibold text-[var(--color-text-default)]">
                             Annotations
                           </h4>
                           <div className="w-full border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-3">
@@ -822,12 +822,12 @@ export function PodDisruptionBudgetDetailPage() {
                               {/* Column Headers */}
                               <HStack gap={2} className="w-full">
                                 <div className="flex-1">
-                                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                  <span className="text-label-sm text-[var(--color-text-default)]">
                                     Key
                                   </span>
                                 </div>
                                 <div className="flex-1">
-                                  <span className="text-[11px] font-medium text-[var(--color-text-default)]">
+                                  <span className="text-label-sm text-[var(--color-text-default)]">
                                     Value
                                   </span>
                                 </div>
@@ -857,7 +857,7 @@ export function PodDisruptionBudgetDetailPage() {
                                   </HStack>
                                 ))
                               ) : (
-                                <p className="text-[12px] text-[var(--color-text-subtle)]">
+                                <p className="text-body-md text-[var(--color-text-subtle)]">
                                   No annotations configured.
                                 </p>
                               )}
@@ -871,7 +871,7 @@ export function PodDisruptionBudgetDetailPage() {
                   {/* Recent Events Tab */}
                   <TabPanel value="recent-events">
                     <VStack gap={3}>
-                      <h3 className="text-[16px] font-semibold leading-[24px] text-[var(--color-text-default)]">
+                      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
                         Recent Events
                       </h3>
 
@@ -922,7 +922,7 @@ export function PodDisruptionBudgetDetailPage() {
                           onSelectionChange={setSelectedEvents}
                         />
                       ) : (
-                        <p className="text-[12px] text-[var(--color-text-subtle)]">
+                        <p className="text-body-md text-[var(--color-text-subtle)]">
                           No recent events.
                         </p>
                       )}

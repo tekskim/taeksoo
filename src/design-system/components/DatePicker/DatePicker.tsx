@@ -298,9 +298,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
         <span
           className="
           w-[64px]
-          text-[length:var(--font-size-16)]
-          leading-[var(--line-height-24)]
-          font-semibold
+          text-heading-h5
           text-[var(--color-text-default)]
           text-left
           select-none
@@ -340,9 +338,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                 className="
                   w-[var(--datepicker-cell-size)]
                   px-2 py-0.5
-                  text-[length:var(--font-size-11)]
-                  leading-[var(--line-height-16)]
-                  font-medium
+                  text-label-sm
                   text-[var(--color-text-muted)]
                   text-center
                   select-none
@@ -430,9 +426,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                     w-[var(--datepicker-cell-size)]
                     h-[var(--datepicker-cell-size)]
                     p-2
-                    text-[length:var(--font-size-12)]
-                    leading-[var(--line-height-16)]
-                    font-medium
+                    text-label-md
                     rounded-full
                     transition-colors duration-[var(--duration-fast)]
                     ${

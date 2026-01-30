@@ -253,7 +253,10 @@ export function ContainerEventsPage() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string) => (
-        <span className="text-[12px] text-[var(--color-text-default)] truncate block" title={value}>
+        <span
+          className="text-body-md text-[var(--color-text-default)] truncate block"
+          title={value}
+        >
           {value}
         </span>
       ),
@@ -320,7 +323,10 @@ export function ContainerEventsPage() {
       minWidth: columnMinWidths.message,
       sortable: true,
       render: (value: string) => (
-        <span className="text-[12px] text-[var(--color-text-default)] truncate block" title={value}>
+        <span
+          className="text-body-md text-[var(--color-text-default)] truncate block"
+          title={value}
+        >
           {value}
         </span>
       ),
@@ -464,9 +470,7 @@ export function ContainerEventsPage() {
               {/* Header */}
               <HStack justify="between" align="center" className="w-full min-h-8">
                 <HStack gap={2} align="center">
-                  <h1 className="text-[16px] leading-6 font-semibold text-[var(--color-text-default)]">
-                    Events
-                  </h1>
+                  <h1 className="text-heading-h5 text-[var(--color-text-default)]">Events</h1>
                 </HStack>
               </HStack>
 
@@ -524,7 +528,7 @@ export function ContainerEventsPage() {
                   </HStack>
                   <button
                     onClick={handleClearFilters}
-                    className="text-[11px] font-medium text-[var(--color-action-primary)] hover:underline"
+                    className="text-label-sm text-[var(--color-action-primary)] hover:underline"
                   >
                     Clear Filters
                   </button>

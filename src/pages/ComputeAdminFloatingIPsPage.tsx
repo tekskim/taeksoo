@@ -366,9 +366,7 @@ export function ComputeAdminFloatingIPsPage() {
           >
             {row.tenant}
           </Link>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)]">
-            ID: {row.tenantId}
-          </span>
+          <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.tenantId}</span>
         </div>
       ),
     },
@@ -398,7 +396,7 @@ export function ComputeAdminFloatingIPsPage() {
                   {row.associatedTo}
                 </Link>
               </Tooltip>
-              <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] truncate">
+              <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
                 ID : {row.associatedToId?.substring(0, 8)}
               </span>
             </div>
@@ -436,7 +434,7 @@ export function ComputeAdminFloatingIPsPage() {
               {row.network}
             </Link>
           </Tooltip>
-          <span className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] truncate">
+          <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
             ID : {row.networkId.substring(0, 8)}
           </span>
         </div>
@@ -544,9 +542,7 @@ export function ComputeAdminFloatingIPsPage() {
             <VStack gap={3}>
               {/* Page Header */}
               <div className="flex justify-between items-center h-8 w-full">
-                <h1 className="text-[length:var(--font-size-16)] font-semibold leading-6 text-[var(--color-text-default)]">
-                  Floating IPs
-                </h1>
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Floating IPs</h1>
                 <Button variant="primary" size="md">
                   Allocate Floating IP
                 </Button>

@@ -220,18 +220,14 @@ export function BarChartDemo({ variant }: { variant: 'vertical' | 'horizontal' |
               className="w-2 h-2 rounded-sm"
               style={{ backgroundColor: primaryChartColors[0] }}
             />
-            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
-              Current
-            </span>
+            <span className="text-body-sm text-[var(--color-text-muted)]">Current</span>
           </div>
           <div className="flex items-center gap-1.5">
             <div
               className="w-2 h-2 rounded-sm"
               style={{ backgroundColor: primaryChartColors[1] }}
             />
-            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
-              Previous
-            </span>
+            <span className="text-body-sm text-[var(--color-text-muted)]">Previous</span>
           </div>
         </div>
       )}
@@ -914,17 +910,15 @@ export function QuotaBarDemo({
   return (
     <div className="flex flex-col gap-1.5">
       <div className="flex items-center justify-between">
-        <span className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] font-medium text-[var(--color-text-default)]">
+        <span className="text-label-sm leading-[var(--line-height-16)] text-[var(--color-text-default)]">
           {label}
         </span>
         <div className="flex items-center gap-2">
-          <span className="text-[length:var(--font-size-11)] leading-[var(--line-height-16)] text-[var(--color-text-muted)]">
+          <span className="text-body-sm leading-[var(--line-height-16)] text-[var(--color-text-muted)]">
             {used}/{total} {unit}
           </span>
           <div className={`flex items-center px-1.5 py-0.5 rounded-md ${colors.bg}`}>
-            <span
-              className={`text-[length:var(--font-size-11)] leading-[var(--line-height-16)] font-medium ${colors.text}`}
-            >
+            <span className={`text-label-sm leading-[var(--line-height-16)] ${colors.text}`}>
               {percentage}%
             </span>
           </div>
@@ -1114,9 +1108,7 @@ export function PieChartDemo({
 
   return (
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-5 flex flex-col gap-4 w-[var(--search-input-width)]">
-      <span className="text-[length:var(--font-size-13)] font-medium text-[var(--color-text-default)]">
-        {title}
-      </span>
+      <span className="text-label-md text-[var(--color-text-default)]">{title}</span>
       <div className="flex justify-center">
         <ReactECharts
           option={getOption()}
@@ -1131,9 +1123,7 @@ export function PieChartDemo({
               className="w-2.5 h-2.5 rounded-sm shrink-0"
               style={{ backgroundColor: item.color }}
             />
-            <span className="text-[length:var(--font-size-11)] text-[var(--color-text-muted)]">
-              {item.label}
-            </span>
+            <span className="text-body-sm text-[var(--color-text-muted)]">{item.label}</span>
           </div>
         ))}
       </div>
@@ -1216,9 +1206,7 @@ export function DoughnutChartDemo({
 
   return (
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-5 flex flex-col gap-4 w-[var(--search-input-width)]">
-      <span className="text-[length:var(--font-size-13)] font-medium text-[var(--color-text-default)]">
-        {title}
-      </span>
+      <span className="text-label-md text-[var(--color-text-default)]">{title}</span>
       <div className="flex justify-center">
         <ReactECharts
           option={getOption()}
@@ -1378,17 +1366,17 @@ export function HalfDoughnutChartDemo({
         />
       </div>
       <div className="absolute inset-0 flex flex-col items-center justify-center pt-8 pointer-events-none">
-        <span className="text-[24px] leading-[28px] font-semibold text-[var(--color-text-default)]">
+        <span className="text-heading-h3 leading-[28px] text-[var(--color-text-default)]">
           {value}%
         </span>
         {used !== undefined && total !== undefined ? (
-          <span className="text-[12px] text-[var(--color-text-subtle)]">
+          <span className="text-body-md text-[var(--color-text-subtle)]">
             {used}
             {unit}/{total}
             {unit}
           </span>
         ) : (
-          <span className="text-[12px] text-[var(--color-text-subtle)]">{label}</span>
+          <span className="text-body-md text-[var(--color-text-subtle)]">{label}</span>
         )}
       </div>
 
@@ -1400,14 +1388,14 @@ export function HalfDoughnutChartDemo({
         >
           <div className="flex items-center gap-1.5">
             <div className="w-[5px] h-[5px] rounded-[1px]" style={{ backgroundColor: color }} />
-            <span className="text-[11px] leading-[14px] text-[var(--color-text-default)] whitespace-nowrap">
+            <span className="text-body-sm leading-[14px] text-[var(--color-text-default)] whitespace-nowrap">
               Used: {used}
               {unit} ({value}%)
             </span>
           </div>
           <div className="flex items-center gap-1.5">
             <div className="w-[5px] h-[5px] rounded-[1px] bg-[var(--color-border-subtle)]" />
-            <span className="text-[11px] leading-[14px] text-[var(--color-text-default)] whitespace-nowrap">
+            <span className="text-body-sm leading-[14px] text-[var(--color-text-default)] whitespace-nowrap">
               Available: {available.toFixed(1)}
               {unit} ({availablePercent}%)
             </span>
@@ -1494,7 +1482,7 @@ export function SingleValueDoughnutDemo({
 
   return (
     <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] p-4">
-      <h4 className="text-[13px] font-medium text-[var(--color-text-default)] mb-2">{title}</h4>
+      <h4 className="text-body-md font-medium text-[var(--color-text-default)] mb-2">{title}</h4>
       <ReactECharts
         option={getOption()}
         style={{ height: '180px', width: '200px' }}
