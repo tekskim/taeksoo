@@ -304,6 +304,14 @@ export function AgentPage() {
       flex: 1,
       minWidth: columnMinWidths.name,
       sortable: true,
+      render: (value: string) => (
+        <span 
+          className="text-[var(--color-action-primary)] font-medium hover:underline cursor-pointer truncate block"
+          title={value}
+        >
+          {value}
+        </span>
+      ),
     },
     {
       key: 'model',
@@ -343,7 +351,7 @@ export function AgentPage() {
     {
       key: 'actions',
       label: 'Action',
-      width: fixedColumns.actions,
+      width: fixedColumns.actionWide,
       align: 'center',
       render: (_, row) => {
         const menuItems: ContextMenuItem[] = [
@@ -452,6 +460,7 @@ export function AgentPage() {
           selectable
           selectedKeys={selectedAgents}
           onSelectionChange={setSelectedAgents}
+          onRowClick={(row) => navigate(`/agent/list/${row.id}`)}
         />
       </div>
     </AgentPageLayout>

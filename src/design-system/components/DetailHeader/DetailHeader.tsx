@@ -41,9 +41,9 @@ export interface DetailHeaderTitleProps extends HTMLAttributes<HTMLHeadingElemen
 
 function DetailHeaderTitle({ children, className, ...props }: DetailHeaderTitleProps) {
   return (
-    <h1
+    <h5
       className={twMerge(
-        'text-heading-h5 leading-6',
+        'text-heading-h5',
         'text-[var(--color-text-default)]',
         'mb-3',
         className
@@ -51,7 +51,7 @@ function DetailHeaderTitle({ children, className, ...props }: DetailHeaderTitleP
       {...props}
     >
       {children}
-    </h1>
+    </h5>
   );
 }
 

@@ -1,9 +1,7 @@
 import { useState } from 'react';
-import { useTabs } from '@/contexts/TabContext';
-import { Sidebar } from '@/components/Sidebar';
-import { TopBar, Breadcrumb, TabBar } from '@/design-system';
+import { useNavigate } from 'react-router-dom';
 import { Button, VStack, HStack, Badge, Disclosure } from '@/design-system';
-import { IconChevronRight, IconChevronDown } from '@tabler/icons-react';
+import { IconChevronRight, IconChevronDown, IconArrowLeft } from '@tabler/icons-react';
 
 // Import all drawer components
 import {
@@ -174,6 +172,13 @@ import { SetDefaultDomainDrawer } from '@/components/SetDefaultDomainDrawer';
 import { AdminLockSettingDrawer } from '@/components/AdminLockSettingDrawer';
 import { EditSystemAdminDrawer } from '@/components/EditSystemAdminDrawer';
 import { ResourceTypeSearchDrawer } from '@/components/ResourceTypeSearchDrawer';
+import {
+  EditBasicInfoDrawer,
+  EditModelSettingsDrawer,
+  EditPromptSettingsDrawer,
+  ConnectDataSourceDrawer,
+  ConnectMCPServerDrawer,
+} from '@/pages/design-system-sections/OverlayDemos';
 
 /* ----------------------------------------
    Mock Data for Drawers ---------------------------------------- */
@@ -445,14 +450,14 @@ const DrawerCard = DrawerListItem;
    DrawersPage Component ---------------------------------------- */
 
 export function DrawersPage() {
-  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const navigate = useNavigate();
 
   // App section disclosure states
   const [isComputeOpen, setIsComputeOpen] = useState(false);
   const [isIAMOpen, setIsIAMOpen] = useState(false);
   const [isStorageOpen, setIsStorageOpen] = useState(false);
   const [isContainerOpen, setIsContainerOpen] = useState(false);
+  const [isAIAgentOpen, setIsAIAgentOpen] = useState(false);
 
   // Drawer states
   const [isCreateSnapshotOpen, setIsCreateSnapshotOpen] = useState(false);
@@ -554,70 +559,49 @@ export function DrawersPage() {
   // Container drawer states
   const [isResourceTypeSearchOpen, setIsResourceTypeSearchOpen] = useState(false);
 
+  // AI Agent drawer states
+  const [isEditBasicInfoOpen, setIsEditBasicInfoOpen] = useState(false);
+  const [isEditModelSettingsOpen, setIsEditModelSettingsOpen] = useState(false);
+  const [isEditPromptSettingsOpen, setIsEditPromptSettingsOpen] = useState(false);
+  const [isConnectDataSourceOpen, setIsConnectDataSourceOpen] = useState(false);
+  const [isConnectMCPServerOpen, setIsConnectMCPServerOpen] = useState(false);
+
   // ViewPreferences state
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [columns, setColumns] = useState<ColumnConfig[]>(mockViewPreferencesColumns);
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+    <div className="fixed inset-0 overflow-auto bg-[var(--color-surface-subtle)]">
+      {/* Header */}
+      <header className="sticky top-0 z-50 bg-[var(--color-surface-default)] border-b border-[var(--color-border-default)]">
+        <div className="max-w-7xl mx-auto px-8 h-14 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Button
+              variant="ghost"
+              size="sm"
+              leftIcon={<IconArrowLeft size={14} />}
+              onClick={() => navigate('/')}
+            >
+              Back
+            </Button>
+            <h1 className="text-heading-h5 text-[var(--color-text-default)]">
+              Drawer Components
+            </h1>
+          </div>
+        </div>
+      </header>
 
       {/* Main Content */}
-      <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'}`}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* TabBar */}
-          <TabBar
-            tabs={tabs.map((tab) => ({
-              id: tab.id,
-              label: tab.label,
-              closable: tab.closable,
-            }))}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            onTabAdd={addNewTab}
-            onTabReorder={moveTab}
-            showAddButton={true}
-            showWindowControls={true}
-          />
+      <main>
+        <div className="max-w-7xl mx-auto px-8 py-8">
+          <VStack gap={8}>
+            {/* Page Description */}
+            <p className="text-body-lg text-[var(--color-text-subtle)]">
+              Collection of drawer components used across the application. Click to preview each drawer.
+            </p>
 
-          {/* TopBar */}
-          <TopBar
-            showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
-            showNavigation={true}
-            onBack={() => window.history.back()}
-            onForward={() => window.history.forward()}
-            breadcrumb={
-              <Breadcrumb
-                items={[{ label: 'Design system', href: '/design-system' }, { label: 'Drawers' }]}
-              />
-            }
-          />
-        </div>
-
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
-          {/* Content */}
-          <div className="px-8 py-6">
-            <VStack gap={8}>
-              {/* Header */}
-              <VStack gap={2}>
-                <h1 className="text-heading-h3 text-[var(--color-text-default)]">
-                  Drawer components{' '}
-                </h1>
-                <p className="text-body-lg text-[var(--color-text-subtle)]">
-                  Collection of drawer components used across the application. Click to preview each
-                  drawer.
-                </p>
-              </VStack>
-
-              {/* Drawer Categories */}
-              <VStack gap={4}>
+            {/* Drawer Categories */}
+            <VStack gap={4}>
                 {/* Compute App Drawers */}
                 <Disclosure open={isComputeOpen} onChange={setIsComputeOpen}>
                   <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
@@ -1498,6 +1482,71 @@ export function DrawersPage() {
                   </Disclosure.Panel>
                 </Disclosure>
 
+                {/* AI Agent Drawers */}
+                <Disclosure open={isAIAgentOpen} onChange={setIsAIAgentOpen}>
+                  <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
+                    <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
+                      <div className="flex items-center gap-3">
+                        {isAIAgentOpen ? (
+                          <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
+                        ) : (
+                          <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
+                        )}
+                        <Badge variant="info" size="sm" className="w-[70px] justify-center">
+                          AI Agent </Badge>
+                        <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
+                          Drawers </span>
+                        <span className="text-body-md text-[var(--color-text-subtle)]">
+                          (5 drawers)
+                        </span>
+                      </div>
+                    </div>
+                  </Disclosure.Trigger>
+                  <Disclosure.Panel>
+                    <VStack gap={4} className="pt-4">
+                      {/* Agent Settings */}
+                      <VStack gap={2}>
+                        <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                          Agent Settings </h2>
+                        <div className="flex flex-col gap-2">
+                          <DrawerCard title="Edit Basic Information"
+                            description="Edit agent name, description, status, and tags."
+                            category="Settings"
+                            onOpen={() => setIsEditBasicInfoOpen(true)}
+                          />
+                          <DrawerCard title="Edit Model Settings"
+                            description="Configure model provider, model, temperature, and max tokens."
+                            category="Settings"
+                            onOpen={() => setIsEditModelSettingsOpen(true)}
+                          />
+                          <DrawerCard title="Edit Prompt Settings"
+                            description="Set system prompt, tone, and max iteration count."
+                            category="Settings"
+                            onOpen={() => setIsEditPromptSettingsOpen(true)}
+                          />
+                        </div>
+                      </VStack>
+                      {/* Agent Connections */}
+                      <VStack gap={2}>
+                        <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                          Agent Connections </h2>
+                        <div className="flex flex-col gap-2">
+                          <DrawerCard title="Connect Data Source"
+                            description="Select and connect data sources to the agent."
+                            category="Connection"
+                            onOpen={() => setIsConnectDataSourceOpen(true)}
+                          />
+                          <DrawerCard title="Connect MCP Server"
+                            description="Select and connect MCP servers to the agent."
+                            category="Connection"
+                            onOpen={() => setIsConnectMCPServerOpen(true)}
+                          />
+                        </div>
+                      </VStack>
+                    </VStack>
+                  </Disclosure.Panel>
+                </Disclosure>
+
                 {/* Table Settings */}
                 <VStack gap={2}>
                   <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
@@ -1511,10 +1560,9 @@ export function DrawersPage() {
                       onOpen={() => setIsViewPreferencesOpen(true)}
                     />
                   </div>
-                </VStack>
               </VStack>
             </VStack>
-          </div>
+          </VStack>
         </div>
       </main>
 
@@ -2552,6 +2600,39 @@ export function DrawersPage() {
         onSelect={(categoryId, resourceId, resourceName) => {
           console.log('Resource selected:', { categoryId, resourceId, resourceName });
         }}
+      />
+
+      {/* =============================================
+          AI AGENT DRAWERS ============================================= */}
+
+      {/* Edit Basic Information Drawer */}
+      <EditBasicInfoDrawer
+        isOpen={isEditBasicInfoOpen}
+        onClose={() => setIsEditBasicInfoOpen(false)}
+      />
+
+      {/* Edit Model Settings Drawer */}
+      <EditModelSettingsDrawer
+        isOpen={isEditModelSettingsOpen}
+        onClose={() => setIsEditModelSettingsOpen(false)}
+      />
+
+      {/* Edit Prompt Settings Drawer */}
+      <EditPromptSettingsDrawer
+        isOpen={isEditPromptSettingsOpen}
+        onClose={() => setIsEditPromptSettingsOpen(false)}
+      />
+
+      {/* Connect Data Source Drawer */}
+      <ConnectDataSourceDrawer
+        isOpen={isConnectDataSourceOpen}
+        onClose={() => setIsConnectDataSourceOpen(false)}
+      />
+
+      {/* Connect MCP Server Drawer */}
+      <ConnectMCPServerDrawer
+        isOpen={isConnectMCPServerOpen}
+        onClose={() => setIsConnectMCPServerOpen(false)}
       />
     </div>
   );

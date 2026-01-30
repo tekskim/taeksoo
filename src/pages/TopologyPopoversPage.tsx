@@ -194,7 +194,7 @@ export function TopologyPopoversPage() {
   return (
     <div className="h-screen overflow-auto bg-[var(--color-surface-subtle)]">
       {/* Header */}
-      <div className="bg-[var(--color-surface-default)] border-b border-[var(--color-border-default)]">
+      <div className="sticky top-0 z-50 bg-[var(--color-surface-default)] border-b border-[var(--color-border-default)]">
         <div className="max-w-7xl mx-auto px-8 py-6">
           <HStack gap={4} align="center">
             <Link to="/">
