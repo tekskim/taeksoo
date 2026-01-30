@@ -138,6 +138,8 @@ import { CreateAgentPage } from '@/pages/CreateAgentPage';
 import { ChatPage } from '@/pages/ChatPage';
 import { StoragePage } from '@/pages/StoragePage';
 import { MCPToolsPage } from '@/pages/MCPToolsPage';
+import { MCPToolDetailPage } from '@/pages/MCPToolDetailPage';
+import { CreateMCPTemplatePage } from '@/pages/CreateMCPTemplatePage';
 import { StorageHomePage } from '@/pages/StorageHomePage';
 import { PoolsPage } from '@/pages/PoolsPage';
 import { StoragePoolDetailPage } from '@/pages/StoragePoolDetailPage';
@@ -349,6 +351,8 @@ function AppRoutes() {
         <Route path="/chat" element={<ChatPage />} />
         <Route path="/agent/storage" element={<StoragePage />} />
         <Route path="/mcp-tools" element={<MCPToolsPage />} />
+        <Route path="/mcp-tools/create" element={<CreateMCPTemplatePage />} />
+        <Route path="/mcp-tools/:id" element={<MCPToolDetailPage />} />
       </Route>
 
       {/* Cloud Builder Routes */}

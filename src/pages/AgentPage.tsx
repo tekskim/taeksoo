@@ -9,7 +9,6 @@ import {
   StatusIndicator,
   ContextMenu,
   SNBMenuItem,
-  Icons,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
@@ -27,6 +26,8 @@ import {
   IconDotsVertical,
   IconTarget,
   IconPencil,
+  IconMessages,
+  IconRobotFace,
 } from '@tabler/icons-react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import AgentLogo from '@/assets/icons/agent-logo.svg';
@@ -135,7 +136,7 @@ export function AgentSidebar() {
                 isSelected={isActive(['/chat', '/chat/*'])}
                 onClick={() => navigate('/chat')}
               >
-                <Icons.Chat size={22} stroke={1} />
+                <IconMessages size={20} stroke={1.5} />
               </SNBMenuItem>
             </Tooltip>
 
@@ -150,7 +151,7 @@ export function AgentSidebar() {
                 ])}
                 onClick={() => navigate('/agent/list')}
               >
-                <Icons.Robot size={22} stroke={1} />
+                <IconRobotFace size={20} stroke={1.5} />
               </SNBMenuItem>
             </Tooltip>
 
@@ -160,7 +161,7 @@ export function AgentSidebar() {
                 isSelected={isActive(['/agent/storage', '/agent/storage/*'])}
                 onClick={() => navigate('/agent/storage')}
               >
-                <IconDatabase size={22} stroke={1} />
+                <IconDatabase size={20} stroke={1.5} />
               </SNBMenuItem>
             </Tooltip>
 
@@ -170,7 +171,7 @@ export function AgentSidebar() {
                 isSelected={isActive(['/mcp-tools', '/mcp-tools/*'])}
                 onClick={() => navigate('/mcp-tools')}
               >
-                <IconPuzzle size={22} stroke={1} />
+                <IconPuzzle size={20} stroke={1.5} />
               </SNBMenuItem>
             </Tooltip>
           </div>
@@ -180,7 +181,7 @@ export function AgentSidebar() {
         <div className="flex items-center justify-center">
           <Tooltip content="Settings" position="right">
             <SNBMenuItem onClick={() => navigate('/settings')}>
-              <IconSettings size={22} stroke={1} />
+              <IconSettings size={20} stroke={1.5} />
             </SNBMenuItem>
           </Tooltip>
         </div>
@@ -340,6 +341,9 @@ export function AgentPage() {
       flex: 1,
       minWidth: columnMinWidths.updatedAt,
       sortable: true,
+      render: (value: string) => (
+        <span className="whitespace-nowrap">{value}</span>
+      ),
     },
     {
       key: 'createdAt',
@@ -347,6 +351,9 @@ export function AgentPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
+      render: (value: string) => (
+        <span className="whitespace-nowrap">{value}</span>
+      ),
     },
     {
       key: 'actions',

@@ -9,6 +9,8 @@ const CreateAgentPage = lazy(() => import('@/pages/CreateAgentPage'));
 const ChatPage = lazy(() => import('@/pages/ChatPage'));
 const StoragePage = lazy(() => import('@/pages/StoragePage'));
 const MCPToolsPage = lazy(() => import('@/pages/MCPToolsPage'));
+const MCPToolDetailPage = lazy(() => import('@/pages/MCPToolDetailPage'));
+const CreateMCPTemplatePage = lazy(() => import('@/pages/CreateMCPTemplatePage'));
 
 export const agentRoutes = (
   <>
@@ -20,5 +22,7 @@ export const agentRoutes = (
     <Route path="/chat" element={<ChatPage />} />
     <Route path="/storage" element={<StoragePage />} />
     <Route path="/mcp-tools" element={<MCPToolsPage />} />
+    <Route path="/mcp-tools/create" element={<CreateMCPTemplatePage />} />
+    <Route path="/mcp-tools/:id" element={<MCPToolDetailPage />} />
   </>
 );
