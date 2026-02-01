@@ -1,0 +1,183 @@
+import { IconProps } from '@tabler/icons-react';
+/**
+ * TDS Icon Library
+ *
+ * Figma 아이콘을 @tabler/icons-react에 매핑합니다.
+ * 사용법: import { Icons } from '@/design-system';
+ *
+ * 예시:
+ * <Icons.Play size={16} />
+ * <Icons.ChevronDown size={20} strokeWidth={1.5} />
+ */
+export type { CustomIconProps } from './CustomIcons';
+export { IconAction, IconActivity, IconAdd, IconAddRobot, IconAdjustmentsAlt, IconBrain, IconBranch, IconBuilding, IconCahatbot, IconCategory } from './CustomIcons';
+export { IconChat, IconCheckcircle, IconChevrondown, IconChevronleft, IconChevronright, IconChevronup, IconClosesmall, IconCloudComputing, IconCodeConsole } from './CustomIcons';
+export { IconCopy, IconDashboards, IconDelete, IconDeviceDesktopAnalytics, IconDollarSign, IconDot, IconDownload } from './CustomIcons';
+export { IconEdit, IconErrorWarning, IconExpandOff, IconExpandOn, IconExternallink, IconFavoriteoff, IconFlavor, IconHelp, IconHide, IconHome, IconHourglassHigh } from './CustomIcons';
+export { IconInfo, IconKeypairs, IconLayers, IconLink, IconList, IconLoadbalancer, IconLock, IconMicrosoft, IconMoreKebab, IconMoreMeatball } from './CustomIcons';
+export { IconNetworks, IconNewtab, IconNotification, IconOther, IconPaused, IconPlay, IconPlusCircle, IconProgress, IconRefresh, IconRequest } from './CustomIcons';
+export { IconReset1, IconReset2, IconRouters1, IconSchedule, IconSearch, IconSecurity, IconSecurityerror, IconServer, IconSetting, IconShare } from './CustomIcons';
+export { IconShow, IconSidebar, IconSnapshot, IconStop, IconStorage, IconTemplate, IconTimeout, IconTopology, IconUpload } from './CustomIcons';
+export { IconUserCircle, IconZap, IconRobotCustom, IconAddRobotCustom, IconWindowActive, IconWindowMinimized } from './CustomIcons';
+export { IconActive, IconAddVolume, IconAlert, IconAttach, IconBackup, IconCertificate, IconChart, IconCheckCircle, IconDeactivated, IconDeleting, IconDrawerClose, IconError, IconFavoriteOn, IconFile, IconFloatingIp, IconHardDrive, IconHostAggregates, IconHypervisor, IconImages, IconInstances, IconInuse, IconKey, IconLoadBalancer, IconMaintenance, IconMorekebab, IconNetwork, IconNotificationnew, IconOrder, IconPlugin, IconPorts, IconPorts2, IconPublish, IconReboot, IconRouters, IconSecurityError, IconSecurityGroup, IconShelved, IconSuspended, IconVerify, IconVolumeSearch, IconVolumeType, IconWarning, IconAffiliate, IconArticlehistory, IconCard, IconCheck, IconCloudcomputing, IconFinetuning, IconHistory, IconLanguage, IconNewchat, IconPending, IconPuzzle, IconReset, IconRetry, IconRocky, IconSpeed, IconStudy, IconTransfer, IconUbuntu, IconUnlink, IconGrid } from './CustomIcons';
+export { IconChevronLeft as ChevronLeft, IconChevronRight as ChevronRight, IconChevronDown as ChevronDown, IconChevronUp as ChevronUp, IconLayoutSidebarLeftCollapse as DrawerClose, IconExternalLink as ExternalLink, IconExternalLink as NewTab, IconCirclePlus as PlusCircle, IconPlus as Add, IconSearch as Search, IconPencil as Edit, IconTrash as Delete, IconCopy as Copy, IconDotsVertical as MoreKebab, IconDots as MoreMeatball, IconPoint as Dot, IconMenu2 as Action, IconSettings as Setting, IconLayoutSidebar as Sidebar, IconHome as Home, IconBell as Notification, IconBellRinging as NotificationNew, IconStar as FavoriteOff, IconStarFilled as FavoriteOn, IconX as CloseSmall, } from '@tabler/icons-react';
+export { IconPlayerPlay as Play, IconPlayerStop as Stop, IconPlayerPause as Paused, IconRefresh as Refresh, IconTrashX as Deleting, } from '@tabler/icons-react';
+export { IconAlertCircle as Error, IconAlertTriangle as Alert, IconInfoCircle as Info, IconAlertOctagon as ErrorWarning, IconBan as Suspended, IconHelpCircle as Request, IconCircleCheck as CheckCircle, IconCheck as Check, IconShieldCheck as Verify, IconCircle as Active, IconCircleOff as Deactivated, IconTool as Maintenance, IconAlertTriangle as Warning, IconShieldX as SecurityError, IconPlugConnected as Inuse, IconLock as Lock, IconArchive as Shelved, } from '@tabler/icons-react';
+export { IconList as List, IconLayoutGrid as Card, IconGridDots as Grid, IconUpload as Upload, IconDownload as Download, IconSend as Publish, IconEye as Show, IconEyeOff as Hide, IconCamera as Snapshot, IconArrowsSort as Order, IconChartBar as Chart, IconStack2 as Layers, IconLayoutDashboard as Dashboards, IconActivity as Activity, } from '@tabler/icons-react';
+export { IconCube as Instances, IconServer as Server, IconDatabase as Storage, IconDeviceFloppy as HardDrive, IconNetwork as Networks, IconRouter as Routers, IconPlug as Ports, IconWorldWww as FloatingIp, IconScale as LoadBalancer, IconServer2 as Hypervisor, IconShieldLock as SecurityGroup, IconKey as KeyPairs, IconCertificate as Certificate, IconKey as Key, IconShield as Security, IconPhoto as Images, IconDeviceSdCard as Backup, IconBoxMultiple as VolumeType, IconSquarePlus as AddVolume, IconDatabaseSearch as VolumeSearch, IconCpu as Flavor, IconServerCog as HostAggregates, IconCloud as CloudComputing, IconTopologyStar3 as Topology, IconTopologyStar3 as TopologyStar3, IconNetwork as Network, } from '@tabler/icons-react';
+export { IconBrain as Brain, IconRobot as Robot, IconRobotFace as AddRobot, IconPuzzle as Puzzle, IconMessageChatbot as Chatbot, IconAdjustments as Finetuning, IconBook as Study, IconTestPipe as Test, } from '@tabler/icons-react';
+export { IconClock as Schedule, IconHourglass as HourglassHigh, IconArticle as ArticleHistory, } from '@tabler/icons-react';
+export { IconTemplate as Template, IconFile as File, IconPlug as Plugin, IconCategory as Category, IconAffiliate as Affiliate, } from '@tabler/icons-react';
+export { IconHelp as Help, IconMessage as Chat, IconMessagePlus as NewChat, IconShare as Share, } from '@tabler/icons-react';
+export { IconTransfer as Transfer, IconLink as Link, IconLinkOff as Unlink, } from '@tabler/icons-react';
+export { IconTerminal2 as CodeConsole, IconTerminal as Console, IconDeviceDesktopAnalytics as DeviceDesktopAnalytics, } from '@tabler/icons-react';
+export { IconLanguage as Language, IconBolt as Zap, IconCurrencyDollar as DollarSign, IconGauge as Speed, IconBuilding as Building, IconGitBranch as Branch, IconUserCircle as UserCircle, } from '@tabler/icons-react';
+export { IconBrandUbuntu as Ubuntu, IconBrandWindows as Microsoft, IconCircleDot as Rocky, // Placeholder - Rocky Linux doesn't have a tabler icon
+IconQuestionMark as Other, } from '@tabler/icons-react';
+export { IconRefreshDot as Reboot, IconRotateClockwise as Retry, IconProgress as Pending, IconProgress as Progress, } from '@tabler/icons-react';
+export type TDSIconProps = IconProps;
+/**
+ * Icons 객체 - Figma 아이콘 이름으로 접근
+ *
+ * 사용법:
+ * import { Icons } from '@/design-system';
+ * <Icons.ChevronDown size={16} />
+ */
+export declare const Icons: {
+    readonly ChevronLeft: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly ChevronRight: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly ChevronDown: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly ChevronUp: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly DrawerClose: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly ExternalLink: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly NewTab: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly ExpandOn: import('react').ForwardRefExoticComponent<Omit<import('./CustomIcons').CustomIconProps, "ref"> & import('react').RefAttributes<SVGSVGElement>>;
+    readonly ExpandOff: import('react').ForwardRefExoticComponent<Omit<import('./CustomIcons').CustomIconProps, "ref"> & import('react').RefAttributes<SVGSVGElement>>;
+    readonly PlusCircle: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Add: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Search: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Edit: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Delete: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Copy: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly MoreKebab: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly MoreMeatball: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Dot: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Action: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Setting: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Sidebar: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Home: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Notification: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly NotificationNew: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly FavoriteOff: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly FavoriteOn: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly CloseSmall: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Play: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Stop: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Paused: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Refresh: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Deleting: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Error: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Alert: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Info: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly ErrorWarning: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Suspended: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Request: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly CheckCircle: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Check: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Verify: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Active: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Deactivated: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Maintenance: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Warning: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly SecurityError: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Inuse: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Lock: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Shelved: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly List: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Card: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Grid: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Upload: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Download: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Publish: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Show: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Hide: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Snapshot: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Order: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Chart: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Layers: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Dashboards: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Activity: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Instances: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Server: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Storage: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly HardDrive: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Networks: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Network: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Routers: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Ports: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly FloatingIp: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly LoadBalancer: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Hypervisor: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly SecurityGroup: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly KeyPairs: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Certificate: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Key: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Security: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Images: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Backup: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly VolumeType: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly AddVolume: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly VolumeSearch: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Flavor: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly HostAggregates: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly CloudComputing: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Topology: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly TopologyStar3: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Brain: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Robot: import('react').ForwardRefExoticComponent<Omit<import('./CustomIcons').CustomIconProps, "ref"> & import('react').RefAttributes<SVGSVGElement>>;
+    readonly RobotOriginal: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly AddRobot: import('react').ForwardRefExoticComponent<Omit<import('./CustomIcons').CustomIconProps, "ref"> & import('react').RefAttributes<SVGSVGElement>>;
+    readonly AddRobotOriginal: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Puzzle: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Chatbot: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Finetuning: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Study: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Test: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Schedule: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly History: import('react').ForwardRefExoticComponent<Omit<import('./CustomIcons').CustomIconProps, "ref"> & import('react').RefAttributes<SVGSVGElement>>;
+    readonly HourglassHigh: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly ArticleHistory: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Template: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly File: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Plugin: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Category: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Affiliate: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Help: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Chat: import('react').ForwardRefExoticComponent<Omit<import('./CustomIcons').CustomIconProps, "ref"> & import('react').RefAttributes<SVGSVGElement>>;
+    readonly ChatOriginal: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly NewChat: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Share: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Transfer: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Link: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Unlink: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly CodeConsole: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Console: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly DeviceDesktopAnalytics: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Language: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Zap: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly DollarSign: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Speed: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Building: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Branch: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly UserCircle: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Ubuntu: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Microsoft: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Rocky: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Other: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Reboot: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Retry: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Pending: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Progress: import('react').ForwardRefExoticComponent<IconProps & import('react').RefAttributes<SVGSVGElement>>;
+    readonly Timeout: import('react').ForwardRefExoticComponent<Omit<import('./CustomIcons').CustomIconProps, "ref"> & import('react').RefAttributes<SVGSVGElement>>;
+};
+export type IconName = keyof typeof Icons;
