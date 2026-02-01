@@ -12,6 +12,7 @@ import {
   ListToolbar,
   StatusIndicator,
   ContextMenu,
+  Badge,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
@@ -27,6 +28,7 @@ import {
   IconTarget,
   IconAlertTriangle,
   IconCircleX,
+  IconLock,
 } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -505,6 +507,15 @@ export function MCPToolsPage() {
       flex: 1,
       minWidth: columnMinWidths.name,
       sortable: true,
+      render: (value: string, row) => (
+        <span 
+          className="text-[var(--color-action-primary)] font-medium hover:underline cursor-pointer truncate block" 
+          title={value}
+          onClick={() => navigate(`/mcp-tools/${row.id}`)}
+        >
+          {value}
+        </span>
+      ),
     },
     {
       key: 'mcpServer',
@@ -513,7 +524,7 @@ export function MCPToolsPage() {
       minWidth: columnMinWidths.name,
       sortable: false,
       render: (_, row) => (
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 min-w-0">
           <div className="w-5 h-5 rounded bg-[var(--color-surface-subtle)] flex items-center justify-center overflow-hidden shrink-0 p-0.5">
             <img
               src={row.mcpServer.thumbnail}
@@ -529,7 +540,7 @@ export function MCPToolsPage() {
               }}
             />
           </div>
-          <span>{row.mcpServer.label}</span>
+          <span className="truncate" title={row.mcpServer.label}>{row.mcpServer.label}</span>
         </div>
       ),
     },
@@ -547,16 +558,12 @@ export function MCPToolsPage() {
       minWidth: columnMinWidths.labels,
       sortable: false,
       render: (_, row) => (
-        <div className="flex flex-wrap gap-1">
-          {row.tags.slice(0, 3).map((tag, idx) => (
-            <span key={idx} className="text-body-sm text-[var(--color-text-subtle)]">
-              {tag}
-            </span>
+        <div className="flex gap-1 items-center overflow-hidden">
+          {row.tags.slice(0, 2).map((tag, idx) => (
+            <Badge key={idx} theme="gray" type="subtle" size="sm">{tag}</Badge>
           ))}
-          {row.tags.length > 3 && (
-            <span className="text-body-sm text-[var(--color-text-subtle)]">
-              +{row.tags.length - 3}
-            </span>
+          {row.tags.length > 2 && (
+            <span className="text-body-sm text-[var(--color-text-subtle)]">+{row.tags.length - 2}</span>
           )}
         </div>
       ),
@@ -567,6 +574,9 @@ export function MCPToolsPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
+      render: (value: string) => (
+        <span className="whitespace-nowrap">{value}</span>
+      ),
     },
     {
       key: 'actions',
@@ -609,48 +619,29 @@ export function MCPToolsPage() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (_, row) => (
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 min-w-0">
           {row.isOfficial && (
-            <span className="text-body-xs px-1.5 py-0.5 bg-[var(--color-info-weak-bg)] text-[var(--color-action-primary)] rounded">
+            <Badge theme="blue" type="subtle" size="sm" className="shrink-0">
               Official
-            </span>
+            </Badge>
           )}
-          <span>{row.title}</span>
+          <span className="text-[var(--color-action-primary)] font-medium hover:underline cursor-pointer truncate" title={row.title}>
+            {row.title}
+          </span>
         </div>
       ),
     },
     {
       key: 'visibility',
       label: 'Visibility',
-      flex: 1,
-      minWidth: columnMinWidths.visibility,
+      width: fixedColumns.locked,
+      align: 'center',
       sortable: false,
       render: (_, row) => {
         const currentVisibility = templateVisibility[row.id] || row.visibility;
-        return (
-          <Tooltip
-            content="When set to visible, this item will appear in the catalog tab."
-            position="top"
-          >
-            <div className="flex items-center">
-              <Select
-                size="sm"
-                value={currentVisibility}
-                onChange={(value) => {
-                  setTemplateVisibility({
-                    ...templateVisibility,
-                    [row.id]: value as 'visible' | 'hidden',
-                  });
-                }}
-                options={[
-                  { value: 'visible', label: 'Visible' },
-                  { value: 'hidden', label: 'Hidden' },
-                ]}
-                menuPlacement="auto"
-              />
-            </div>
-          </Tooltip>
-        );
+        return currentVisibility === 'hidden' ? (
+          <IconLock size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
+        ) : null;
       },
     },
     {
@@ -664,7 +655,7 @@ export function MCPToolsPage() {
       key: 'tools',
       label: 'Tools',
       flex: 1,
-      minWidth: '100px',
+      minWidth: columnMinWidths.count,
       sortable: true,
     },
     {
@@ -673,6 +664,9 @@ export function MCPToolsPage() {
       flex: 1,
       minWidth: columnMinWidths.updatedAt,
       sortable: true,
+      render: (value: string) => (
+        <span className="whitespace-nowrap">{value}</span>
+      ),
     },
     {
       key: 'createdAt',
@@ -680,6 +674,9 @@ export function MCPToolsPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
+      render: (value: string) => (
+        <span className="whitespace-nowrap">{value}</span>
+      ),
     },
     {
       key: 'actions',
@@ -826,7 +823,7 @@ export function MCPToolsPage() {
                 </ListToolbar.Actions>
               }
             />
-            <Button size="sm" variant="primary" onClick={() => {}}>
+            <Button size="sm" variant="primary" onClick={() => navigate('/mcp-tools/create')}>
               Create template
             </Button>
           </div>

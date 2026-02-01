@@ -364,6 +364,9 @@ function DataSourcesTab() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
+      render: (value: string) => (
+        <span className="whitespace-nowrap">{value}</span>
+      ),
     },
     {
       key: 'actions',
@@ -424,6 +427,7 @@ function DataSourcesTab() {
         columns={columns}
         data={dataSources}
         rowKey="id"
+        rowHeight="40px"
         emptyMessage="No data sources found"
         selectable
         selectedKeys={selectedRows}
@@ -562,6 +566,9 @@ function MCPServersTab() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
+      render: (value: string) => (
+        <span className="whitespace-nowrap">{value}</span>
+      ),
     },
     {
       key: 'actions',
@@ -622,6 +629,7 @@ function MCPServersTab() {
         columns={columns}
         data={mcpServers}
         rowKey="id"
+        rowHeight="40px"
         emptyMessage="No MCP servers found"
         selectable
         selectedKeys={selectedRows}
@@ -829,6 +837,9 @@ function StatusHistoryTab() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
+      render: (value: string) => (
+        <span className="whitespace-nowrap">{value}</span>
+      ),
     },
     {
       key: 'changedBy',

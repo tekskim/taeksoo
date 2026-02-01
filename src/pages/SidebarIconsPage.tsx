@@ -70,6 +70,10 @@ import {
   IconCopy,
   IconCheck,
   IconFile,
+  IconFolder,
+  IconMessages,
+  IconRobotFace,
+  IconPuzzle,
 } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 import { useDarkMode } from '@/hooks/useDarkMode';
@@ -656,6 +660,22 @@ const appIconData: AppData[] = [
             label: 'System administration',
             slug: 'user-cog',
           },
+        ],
+      },
+    ],
+  },
+  {
+    name: 'AI Agent',
+    sidebarFile: 'src/pages/AgentPage.tsx',
+    sections: [
+      {
+        title: 'Navigation',
+        items: [
+          { icon: IconFolder, name: 'IconFolder', label: 'Project', slug: 'folder' },
+          { icon: IconMessages, name: 'IconMessages', label: 'Chat', slug: 'messages' },
+          { icon: IconRobotFace, name: 'IconRobotFace', label: 'Agent', slug: 'robot-face' },
+          { icon: IconDatabase, name: 'IconDatabase', label: 'Data', slug: 'database' },
+          { icon: IconPuzzle, name: 'IconPuzzle', label: 'Tools', slug: 'puzzle' },
         ],
       },
     ],
