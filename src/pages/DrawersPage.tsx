@@ -573,7 +573,7 @@ export function DrawersPage() {
   const [isConnectDataSourceOpen, setIsConnectDataSourceOpen] = useState(false);
   const [isConnectMCPServerOpen, setIsConnectMCPServerOpen] = useState(false);
   const [isAgentLogDetailOpen, setIsAgentLogDetailOpen] = useState(false);
-  
+
   // MCP Tools Drawer states
   const [isCreateMCPTemplateOpen, setIsCreateMCPTemplateOpen] = useState(false);
   const [isTemplateTypeSettingsOpen, setIsTemplateTypeSettingsOpen] = useState(false);
@@ -600,9 +600,7 @@ export function DrawersPage() {
             >
               Back
             </Button>
-            <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-              Drawer Components
-            </h1>
+            <h1 className="text-heading-h5 text-[var(--color-text-default)]">Drawer Components</h1>
           </div>
         </div>
       </header>
@@ -613,1018 +611,1037 @@ export function DrawersPage() {
           <VStack gap={8}>
             {/* Page Description */}
             <p className="text-body-lg text-[var(--color-text-subtle)]">
-              Collection of drawer components used across the application. Click to preview each drawer.
+              Collection of drawer components used across the application. Click to preview each
+              drawer.
             </p>
 
             {/* Drawer Categories */}
             <VStack gap={4}>
-                {/* Compute App Drawers */}
-                <Disclosure open={isComputeOpen} onChange={setIsComputeOpen}>
-                  <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
-                    <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
-                      <div className="flex items-center gap-3">
-                        {isComputeOpen ? (
-                          <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
-                        ) : (
-                          <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
-                        )}
-                        <Badge variant="info" size="sm" className="w-[70px] justify-center">
-                          Compute{' '}
-                        </Badge>
-                        <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
-                          Drawers{' '}
-                        </span>
-                        <span className="text-body-md text-[var(--color-text-subtle)]">
-                          (70 drawers)
-                        </span>
-                      </div>
+              {/* Compute App Drawers */}
+              <Disclosure open={isComputeOpen} onChange={setIsComputeOpen}>
+                <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
+                  <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
+                    <div className="flex items-center gap-3">
+                      {isComputeOpen ? (
+                        <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
+                      ) : (
+                        <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
+                      )}
+                      <Badge variant="info" size="sm" className="w-[70px] justify-center">
+                        Compute{' '}
+                      </Badge>
+                      <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
+                        Drawers{' '}
+                      </span>
+                      <span className="text-body-md text-[var(--color-text-subtle)]">
+                        (70 drawers)
+                      </span>
                     </div>
-                  </Disclosure.Trigger>
-                  <Disclosure.Panel>
-                    <VStack gap={4} className="pt-4">
-                      {/* Instance Actions */}
-                      <VStack gap={2}>
-                        <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Instance Actions{' '}
-                        </h2>
-                        <div className="flex flex-col gap-2">
-                          <DrawerCard
-                            title="Create instance snapshot"
-                            description="Create a snapshot of an instance to capture its current system state as an image."
-                            category="Instance"
-                            onOpen={() => setIsCreateSnapshotOpen(true)}
-                            linked
-                            linkedTo="Instance List"
-                          />
-                          <DrawerCard
-                            title="Edit instance"
-                            description="Edit instance name and description. Allows modification of basic instance metadata."
-                            category="Instance"
-                            onOpen={() => setIsEditInstanceOpen(true)}
-                            linked
-                            linkedTo="Instance List"
-                          />
-                          <DrawerCard
-                            title="Lock setting"
-                            description="Lock or unlock an instance to prevent accidental deletion or modification."
-                            category="Instance"
-                            onOpen={() => setIsLockSettingOpen(true)}
-                            linked
-                            linkedTo="Instance List"
-                          />
-                          <DrawerCard
-                            title="Manage Tags"
-                            description="Add, edit, or remove tags to categorize and manage resources."
-                            category="Instance"
-                            onOpen={() => setIsManageTagsOpen(true)}
-                            linked
-                            linkedTo="Instance List"
-                          />
-                          <DrawerCard
-                            title="Rescue Instance"
-                            description="Create a temporary recovery server using your instance's root disk."
-                            category="Instance"
-                            onOpen={() => setIsRescueInstanceOpen(true)}
-                            linked
-                            linkedTo="Instance List"
-                          />
-                          <DrawerCard
-                            title="Rebuild Instance"
-                            description="Rebuild the instance by reinstalling the operating system using a new image."
-                            category="Instance"
-                            onOpen={() => setIsRebuildInstanceOpen(true)}
-                            linked
-                            linkedTo="Instance List"
-                          />
-                          <DrawerCard
-                            title="Resize Instance"
-                            description="Change the flavor to adjust vCPU, memory, or disk capacity."
-                            category="Instance"
-                            onOpen={() => setIsResizeInstanceOpen(true)}
-                            linked
-                            linkedTo="Instance List"
-                          />
-                        </div>
-                      </VStack>
-
-                      {/* Instance Snapshot Actions */}
-                      <VStack gap={2}>
-                        <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Instance Snapshot Actions{' '}
-                        </h2>
-                        <div className="flex flex-col gap-2">
-                          <DrawerCard
-                            title="Edit instance Snapshot"
-                            description="Edit the name and description of an instance snapshot."
-                            category="Snapshot"
-                            onOpen={() => setIsEditInstanceSnapshotOpen(true)}
-                            linked
-                            linkedTo="Instance Snapshots"
-                          />
-                          <DrawerCard
-                            title="Create volume from Instance Snapshot"
-                            description="Create a new volume from an instance snapshot, containing the same data as the snapshot's system disk."
-                            category="Snapshot"
-                            onOpen={() => setIsCreateVolumeFromSnapshotOpen(true)}
-                            linked
-                            linkedTo="Instance Snapshots"
-                          />
-                        </div>
-                      </VStack>
-
-                      {/* Volume Actions */}
-                      <VStack gap={2}>
-                        <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Volume Actions{' '}
-                        </h2>
-                        <div className="flex flex-col gap-2">
-                          <DrawerCard
-                            title="Create volume snapshot"
-                            description="Create a snapshot of a volume to back up its current data state for later restoration."
-                            category="Volume"
-                            onOpen={() => setIsCreateVolumeSnapshotOpen(true)}
-                            linked
-                            linkedTo="Volumes"
-                          />
-                          <DrawerCard
-                            title="Create volume backup"
-                            description="Create a full backup of a volume and store it in the backup service for disaster recovery."
-                            category="Volume"
-                            onOpen={() => setIsCreateVolumeBackupOpen(true)}
-                            linked
-                            linkedTo="Volumes"
-                          />
-                          <DrawerCard
-                            title="Create volume backup (with selection)"
-                            description="Create a volume backup with volume selection table, search, and pagination."
-                            category="Volume"
-                            onOpen={() => setIsCreateVolumeBackupWithSelectionOpen(true)}
-                          />
-                          <DrawerCard
-                            title="Restore from snapshot"
-                            description="Restore a volume from a snapshot by selecting from available snapshots."
-                            category="Volume"
-                            onOpen={() => setIsRestoreFromSnapshotOpen(true)}
-                            linked
-                            linkedTo="Volumes"
-                          />
-                          <DrawerCard
-                            title="Attach volume"
-                            description="Attach a volume to an instance by selecting from available instances."
-                            category="Volume"
-                            onOpen={() => setIsAttachVolumeOpen(true)}
-                            linked
-                            linkedTo="Instance List, Volumes"
-                          />
-                          <DrawerCard
-                            title="Create subnet"
-                            description="Create a new subnet with CIDR, gateway, DHCP, and advanced network settings."
-                            category="Network"
-                            onOpen={() => setIsCreateSubnetOpen(true)}
-                            linked
-                            linkedTo="Networks"
-                          />
-                          <DrawerCard
-                            title="Create router"
-                            description="Create a virtual router to route traffic between networks with external gateway options."
-                            category="Network"
-                            onOpen={() => setIsCreateRouterOpen(true)}
-                          />
-                          <DrawerCard
-                            title="Attach port to instance"
-                            description="Attach a network port to an instance with Fixed IP, Floating IP, and availability zone."
-                            category="Network"
-                            onOpen={() => setIsAttachPortToInstanceOpen(true)}
-                            linked
-                            linkedTo="Ports"
-                          />
-                          <DrawerCard
-                            title="Clone volume"
-                            description="Create an exact copy of a volume for testing, backup, or new instance creation."
-                            category="Volume"
-                            onOpen={() => setIsCloneVolumeOpen(true)}
-                            linked
-                            linkedTo="Volumes"
-                          />
-                          <DrawerCard
-                            title="Extend volume"
-                            description="Increase the size of a volume to expand its storage capacity."
-                            category="Volume"
-                            onOpen={() => setIsExtendVolumeOpen(true)}
-                            linked
-                            linkedTo="Volumes"
-                          />
-                          <DrawerCard
-                            title="Create image from Volume"
-                            description="Create a new image using a volume as the source. The image will contain all data currently stored on the volume."
-                            category="Volume"
-                            onOpen={() => setIsCreateImageFromVolumeOpen(true)}
-                            linked
-                            linkedTo="Volumes"
-                          />
-                          <DrawerCard
-                            title="Edit Volume"
-                            description="Edit the name and description of an existing volume."
-                            category="Volume"
-                            onOpen={() => setIsEditVolumeOpen(true)}
-                            linked
-                            linkedTo="Volumes"
-                          />
-                          <DrawerCard
-                            title="Change volume Type"
-                            description="Change the storage type of this volume to another available volume type."
-                            category="Volume"
-                            onOpen={() => setIsChangeVolumeTypeOpen(true)}
-                            linked
-                            linkedTo="Volumes"
-                          />
-                          <DrawerCard
-                            title="Create transfer"
-                            description="Create a transfer request to share this volume with another project."
-                            category="Volume"
-                            onOpen={() => setIsCreateTransferOpen(true)}
-                            linked
-                            linkedTo="Volumes"
-                          />
-                          <DrawerCard
-                            title="Edit Volume backup"
-                            description="Edit the name and description of an existing volume backup."
-                            category="Volume"
-                            onOpen={() => setIsEditVolumeBackupOpen(true)}
-                            linked
-                            linkedTo="Volume Backups"
-                          />
-                          <DrawerCard
-                            title="Accept Volume Transfer"
-                            description="Accept a volume transfer using the provided transfer ID and authorization key."
-                            category="Volume"
-                            onOpen={() => setIsAcceptVolumeTransferOpen(true)}
-                          />
-                          <DrawerCard
-                            title="Edit Volume snapshot"
-                            description="Edit the name and description of an existing volume snapshot."
-                            category="Volume"
-                            onOpen={() => setIsEditVolumeSnapshotOpen(true)}
-                            linked
-                            linkedTo="Volume Snapshots"
-                          />
-                          <DrawerCard
-                            title="Create volume from Snapshot"
-                            description="Create a new volume from an existing volume snapshot with customizable capacity and type."
-                            category="Volume"
-                            onOpen={() => setIsCreateVolumeFromVolumeSnapshotOpen(true)}
-                            linked
-                            linkedTo="Volume Snapshots"
-                          />
-                          <DrawerCard
-                            title="Create volume from Backup"
-                            description="Create a new volume from an existing volume backup with customizable capacity, type, and availability zone."
-                            category="Volume"
-                            onOpen={() => setIsCreateVolumeFromBackupOpen(true)}
-                            linked
-                            linkedTo="Volume Backups"
-                          />
-                          <DrawerCard
-                            title="Detach Volume"
-                            description="Detach a volume from an instance. Once detached, it will no longer be accessible from the instance."
-                            category="Volume"
-                            onOpen={() => setIsDetachVolumeOpen(true)}
-                            linked
-                            linkedTo="Instance List, Volumes"
-                          />
-                        </div>
-                      </VStack>
-
-                      {/* Image Actions */}
-                      <VStack gap={2}>
-                        <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Image Actions{' '}
-                        </h2>
-                        <div className="flex flex-col gap-2">
-                          <DrawerCard
-                            title="Create volume from Image"
-                            description="Create a new volume using the selected image. The new volume will contain an identical copy of the image data."
-                            category="Image"
-                            onOpen={() => setIsCreateVolumeFromImageOpen(true)}
-                            linked
-                            linkedTo="Images"
-                          />
-                          <DrawerCard
-                            title="Edit Image"
-                            description="Edit image name and description. Allows modification of basic image metadata."
-                            category="Image"
-                            onOpen={() => setIsEditImageOpen(true)}
-                            linked
-                            linkedTo="Images"
-                          />
-                        </div>
-                      </VStack>
-
-                      {/* Key pair Actions */}
-                      <VStack gap={2}>
-                        <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Key pair Actions{' '}
-                        </h2>
-                        <div className="flex flex-col gap-2">
-                          <DrawerCard
-                            title="Create Key pair"
-                            description="Create a new SSH key pair or import an existing public key to securely access your instances."
-                            category="Key pair"
-                            onOpen={() => setIsCreateKeyPairOpen(true)}
-                          />
-                          <DrawerCard
-                            title="Edit Key pair"
-                            description="Edit the name of an existing SSH key pair."
-                            category="Key pair"
-                            onOpen={() => setIsEditKeyPairOpen(true)}
-                          />
-                        </div>
-                      </VStack>
-
-                      {/* Server group Actions */}
-                      <VStack gap={2}>
-                        <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Server group Actions{' '}
-                        </h2>
-                        <div className="flex flex-col gap-2">
-                          <DrawerCard
-                            title="Create Server group"
-                            description="Create a server group to control how instances are placed across compute hosts using affinity/anti-affinity policies."
-                            category="Server group"
-                            onOpen={() => setIsCreateServerGroupOpen(true)}
-                          />
-                          <DrawerCard
-                            title="Edit Server group"
-                            description="Edit the name of an existing server group."
-                            category="Server group"
-                            onOpen={() => setIsEditServerGroupOpen(true)}
-                          />
-                        </div>
-                      </VStack>
-
-                      {/* Network Actions */}
-                      <VStack gap={2}>
-                        <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Network Actions{' '}
-                        </h2>
-                        <div className="flex flex-col gap-2">
-                          <DrawerCard
-                            title="Edit Network"
-                            description="Edit network settings including name, description, admin state, and port security."
-                            category="Network"
-                            onOpen={() => setIsEditNetworkOpen(true)}
-                            linked
-                            linkedTo="Networks"
-                          />
-                          <DrawerCard
-                            title="Edit Router"
-                            description="Edit router settings including name, description, and admin state."
-                            category="Router"
-                            onOpen={() => setIsEditRouterOpen(true)}
-                          />
-                          <DrawerCard
-                            title="Create static Route"
-                            description="Add a static route to manually define traffic paths beyond connected subnets."
-                            category="Router"
-                            onOpen={() => setIsCreateStaticRouteOpen(true)}
-                          />
-                          <DrawerCard
-                            title="Edit Port"
-                            description="Edit port settings including name and description."
-                            category="Port"
-                            onOpen={() => setIsEditPortOpen(true)}
-                            linked
-                            linkedTo="Ports"
-                          />
-                          <DrawerCard
-                            title="Create Allowed Address Pair"
-                            description="Specify additional IP or MAC addresses that are allowed to pass through this port."
-                            category="Port"
-                            onOpen={() => setIsCreateAllowedAddressPairOpen(true)}
-                          />
-                          <DrawerCard
-                            title="Edit Floating IP"
-                            description="Edit floating IP description."
-                            category="Floating IP"
-                            onOpen={() => setIsEditFloatingIPOpen(true)}
-                            linked
-                            linkedTo="Floating IPs"
-                          />
-                          <DrawerCard
-                            title="Allocate IP"
-                            description="Assign an additional fixed IP address to a port from a subnet."
-                            category="Port"
-                            onOpen={() => setIsAllocateIPOpen(true)}
-                          />
-                          <DrawerCard
-                            title="Attach Interface"
-                            description="Attach a new network interface to this instance. Connect it to another network or subnet for additional access."
-                            category="Network"
-                            onOpen={() => setIsAttachInterfaceOpen(true)}
-                            linked
-                            linkedTo="Instance List"
-                          />
-                          <DrawerCard
-                            title="Detach Interface"
-                            description="Detach a network interface from this instance. This may interrupt connectivity if the selected port is primary."
-                            category="Network"
-                            onOpen={() => setIsDetachInterfaceOpen(true)}
-                            linked
-                            linkedTo="Instance List"
-                          />
-                          <DrawerCard
-                            title="Associate Floating IP"
-                            description="Assign a floating IP to this instance for external network access."
-                            category="Floating IP"
-                            onOpen={() => setIsAssociateFloatingIPOpen(true)}
-                            linked
-                            linkedTo="Instance List, Floating IPs"
-                          />
-                          <DrawerCard
-                            title="Disassociate Floating IP"
-                            description="Remove the association between a floating IP and this instance. The instance will lose external network access through that IP."
-                            category="Floating IP"
-                            onOpen={() => setIsDisassociateFloatingIPOpen(true)}
-                            linked
-                            linkedTo="Instance List, Floating IPs, LBs"
-                          />
-                          <DrawerCard
-                            title="Allocate Floating IP"
-                            description="Allocate a new floating IP from an external network pool with optional DNS settings."
-                            category="Floating IP"
-                            onOpen={() => setIsAllocateFloatingIPOpen(true)}
-                          />
-                          <DrawerCard
-                            title="External Gateway Setting"
-                            description="Configure external gateway for a router to enable access to external networks."
-                            category="Router"
-                            onOpen={() => setIsExternalGatewaySettingOpen(true)}
-                          />
-                          <DrawerCard
-                            title="Connect Subnet"
-                            description="Connect an existing subnet to a router to enable routing between networks."
-                            category="Router"
-                            onOpen={() => setIsConnectSubnetOpen(true)}
-                          />
-                          <DrawerCard
-                            title="Associate Floating IP to Port"
-                            description="Associate a floating IP with a port to enable external network access."
-                            category="Port"
-                            onOpen={() => setIsAssociateFloatingIPToPortOpen(true)}
-                            linked
-                            linkedTo="Ports"
-                          />
-                          <DrawerCard
-                            title="Disconnect Subnet"
-                            description="Disconnect a subnet from a router to remove its routing path."
-                            category="Router"
-                            onOpen={() => setIsDisconnectSubnetOpen(true)}
-                          />
-                        </div>
-                      </VStack>
-
-                      {/* Security group Actions */}
-                      <VStack gap={2}>
-                        <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Security group Actions{' '}
-                        </h2>
-                        <div className="flex flex-col gap-2">
-                          <DrawerCard
-                            title="Create Security group Rule"
-                            description="Create a rule to define allowed inbound or outbound network traffic for your security group."
-                            category="Security group"
-                            onOpen={() => setIsCreateSecurityGroupRuleOpen(true)}
-                            linked
-                            linkedTo="Security Groups"
-                          />
-                          <DrawerCard
-                            title="Create Security group"
-                            description="Create a security group to define network access rules for your instances."
-                            category="Security group"
-                            onOpen={() => setIsCreateSecurityGroupOpen(true)}
-                          />
-                          <DrawerCard
-                            title="Edit Security group"
-                            description="Edit security group name and description."
-                            category="Security group"
-                            onOpen={() => setIsEditSecurityGroupOpen(true)}
-                            linked
-                            linkedTo="Security Groups"
-                          />
-                          <DrawerCard
-                            title="Manage Security Groups"
-                            description="Attach or detach security groups for an interface to control inbound and outbound traffic."
-                            category="Security group"
-                            onOpen={() => setIsManageSecurityGroupsOpen(true)}
-                            linked
-                            linkedTo="Instance List"
-                          />
-                          <DrawerCard
-                            title="Edit Port Security Groups"
-                            description="Manage security groups on a port with port security toggle and multi-select table."
-                            category="Port"
-                            onOpen={() => setIsEditPortSecurityGroupsOpen(true)}
-                            linked
-                            linkedTo="Ports"
-                          />
-                        </div>
-                      </VStack>
-
-                      {/* Load balancer Actions */}
-                      <VStack gap={2}>
-                        <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Load balancer Actions{' '}
-                        </h2>
-                        <div className="flex flex-col gap-2">
-                          <DrawerCard
-                            title="Add L7 Policy"
-                            description="Add an L7 policy to control traffic routing based on layer 7 attributes like URL path or headers."
-                            category="Load balancer"
-                            onOpen={() => setIsAddL7PolicyOpen(true)}
-                          />
-                          <DrawerCard
-                            title="Register certificate"
-                            description="Register a certificate issued by an external CA for use within Compute resources."
-                            category="Certificate"
-                            onOpen={() => setIsRegisterCertificateOpen(true)}
-                          />
-                          <DrawerCard
-                            title="Edit Certificate"
-                            description="Edit certificate name and description."
-                            category="Certificate"
-                            onOpen={() => setIsEditCertificateOpen(true)}
-                          />
-                          <DrawerCard
-                            title="Edit Load balancer"
-                            description="Edit load balancer name, description, and admin state."
-                            category="Load balancer"
-                            onOpen={() => setIsEditLoadBalancerOpen(true)}
-                            linked
-                            linkedTo="Load Balancers"
-                          />
-                          <DrawerCard
-                            title="Edit Pool"
-                            description="Edit pool settings including algorithm, session persistence, TLS, and admin state."
-                            category="Load balancer"
-                            onOpen={() => setIsEditPoolOpen(true)}
-                          />
-                          <DrawerCard
-                            title="Add L7 Rule"
-                            description="Add an L7 rule to match incoming requests based on headers, paths, or other attributes."
-                            category="Load balancer"
-                            onOpen={() => setIsAddL7RuleOpen(true)}
-                          />
-                          <DrawerCard
-                            title="Edit Listener"
-                            description="Edit listener settings including name, connection limits, timeouts, and allowed CIDRs."
-                            category="Load balancer"
-                            onOpen={() => setIsEditListenerOpen(true)}
-                          />
-                          <DrawerCard
-                            title="Create Health Monitor"
-                            description="Create a health monitor for a pool to check backend member availability."
-                            category="Load balancer"
-                            onOpen={() => setIsCreateHealthMonitorOpen(true)}
-                          />
-                          <DrawerCard
-                            title="Edit Member"
-                            description="Edit pool member settings including weight, monitor address, backup, and admin state."
-                            category="Load balancer"
-                            onOpen={() => setIsEditMemberOpen(true)}
-                          />
-                          <DrawerCard
-                            title="Manage Members"
-                            description="Manage pool members by adding instances or external members with configurable port and weight."
-                            category="Load balancer"
-                            onOpen={() => setIsManageMembersOpen(true)}
-                          />
-                          <DrawerCard
-                            title="Associate Floating IP to LB"
-                            description="Associate a floating IP to a load balancer for external access."
-                            category="Load balancer"
-                            onOpen={() => setIsAssociateFloatingIPToLBOpen(true)}
-                            linked
-                            linkedTo="Load Balancers"
-                          />
-                          <DrawerCard
-                            title="Change Server Certificate"
-                            description="Change the server certificate for a listener with certificate selection table."
-                            category="Certificate"
-                            onOpen={() => setIsChangeServerCertificateOpen(true)}
-                          />
-                          <DrawerCard
-                            title="Change CA Certificate"
-                            description="Change the CA certificate for a listener with certificate selection table."
-                            category="Certificate"
-                            onOpen={() => setIsChangeCACertificateOpen(true)}
-                          />
-                          <DrawerCard
-                            title="Manage SNI Certificate"
-                            description="Enable SNI and manage multiple SNI certificates for a listener."
-                            category="Certificate"
-                            onOpen={() => setIsManageSNICertificateOpen(true)}
-                          />
-                        </div>
-                      </VStack>
-                    </VStack>
-                  </Disclosure.Panel>
-                </Disclosure>
-
-                {/* IAM App Drawers */}
-                <Disclosure open={isIAMOpen} onChange={setIsIAMOpen}>
-                  <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
-                    <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
-                      <div className="flex items-center gap-3">
-                        {isIAMOpen ? (
-                          <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
-                        ) : (
-                          <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
-                        )}
-                        <Badge variant="info" size="sm" className="w-[70px] justify-center">
-                          IAM{' '}
-                        </Badge>
-                        <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
-                          Drawers{' '}
-                        </span>
-                        <span className="text-body-md text-[var(--color-text-subtle)]">
-                          (13 drawers)
-                        </span>
-                      </div>
-                    </div>
-                  </Disclosure.Trigger>
-                  <Disclosure.Panel>
-                    <VStack gap={4} className="pt-4">
-                      {/* USER MANAGEMENT ACTIONS */}
-                      <VStack gap={2}>
-                        <h3 className="text-body-sm font-semibold text-[var(--color-text-subtle)] tracking-wider uppercase">
-                          User Management Actions{' '}
-                        </h3>
-                        <div className="flex flex-col gap-2">
-                          <DrawerCard
-                            title="Manage User Groups"
-                            description="Add or remove user groups for a specific user."
-                            category="User"
-                            onOpen={() => setIsManageUserGroupsOpen(true)}
-                            linked
-                            linkedTo="IAM Users"
-                          />
-                          <DrawerCard
-                            title="Manage Roles"
-                            description="Add or remove roles directly assigned to a specific user."
-                            category="User"
-                            onOpen={() => setIsManageRolesOpen(true)}
-                            linked
-                            linkedTo="IAM Users, User Groups"
-                          />
-                          <DrawerCard
-                            title="Reset Password"
-                            description="Reset the login password for a specific user."
-                            category="User"
-                            onOpen={() => setIsResetPasswordOpen(true)}
-                          />
-                          <DrawerCard
-                            title="Edit User"
-                            description="Edit the user's basic information like email and display name."
-                            category="User"
-                            onOpen={() => setIsEditUserOpen(true)}
-                            linked
-                            linkedTo="IAM Users"
-                          />
-                        </div>
-                      </VStack>
-
-                      {/* User Group Management */}
-                      <VStack gap={2}>
-                        <h3 className="text-body-sm font-semibold text-[var(--color-text-subtle)] tracking-wider uppercase">
-                          User Group Management Actions{' '}
-                        </h3>
-                        <div className="flex flex-col gap-2">
-                          <DrawerCard
-                            title="Manage Users"
-                            description="Add or remove members of a user group."
-                            category="User Group"
-                            onOpen={() => setIsManageUsersOpen(true)}
-                            linked
-                            linkedTo="IAM User Groups"
-                          />
-                          <DrawerCard
-                            title="Edit User Group"
-                            description="Edit the user group's basic information."
-                            category="User Group"
-                            onOpen={() => setIsEditUserGroupOpen(true)}
-                            linked
-                            linkedTo="IAM User Groups"
-                          />
-                        </div>
-                      </VStack>
-
-                      {/* Role Management */}
-                      <VStack gap={2}>
-                        <h3 className="text-body-sm font-semibold text-[var(--color-text-subtle)] tracking-wider uppercase">
-                          Role Management Actions{' '}
-                        </h3>
-                        <div className="flex flex-col gap-2">
-                          <DrawerCard
-                            title="Manage Policies"
-                            description="Add or remove policies of a role."
-                            onOpen={() => setIsManagePoliciesOpen(true)}
-                            badge="Role"
-                          />
-                          <DrawerCard
-                            title="Edit Role"
-                            description="Edit basic information for a role."
-                            onOpen={() => setIsEditRoleOpen(true)}
-                            badge="Role"
-                          />
-                        </div>
-                      </VStack>
-
-                      {/* Domain Management */}
-                      <VStack gap={2}>
-                        <h3 className="text-body-sm font-semibold text-[var(--color-text-subtle)] tracking-wider uppercase">
-                          Domain Management Actions{' '}
-                        </h3>
-                        <div className="flex flex-col gap-2">
-                          <DrawerCard
-                            title="Create Domain"
-                            description="Create a new domain to manage resources and policies independently."
-                            onOpen={() => setIsCreateDomainOpen(true)}
-                            badge="Domain"
-                          />
-                          <DrawerCard
-                            title="Edit Domain"
-                            description="Edit the domain's basic information."
-                            onOpen={() => setIsEditDomainOpen(true)}
-                            badge="Domain"
-                          />
-                          <DrawerCard
-                            title="Set Default Domain"
-                            description="Set the default domain for the system administrator."
-                            onOpen={() => setIsSetDefaultDomainOpen(true)}
-                            badge="Domain"
-                          />
-                          <DrawerCard
-                            title="Lock Setting"
-                            description="Lock or unlock a system administrator account."
-                            onOpen={() => setIsAdminLockSettingOpen(true)}
-                            badge="Admin"
-                          />
-                          <DrawerCard
-                            title="Edit System Administrator"
-                            description="Edit the system administrator's basic information."
-                            onOpen={() => setIsEditSystemAdminOpen(true)}
-                            badge="Admin"
-                          />
-                        </div>
-                      </VStack>
-                    </VStack>
-                  </Disclosure.Panel>
-                </Disclosure>
-
-                {/* Storage App Drawers */}
-                <Disclosure open={isStorageOpen} onChange={setIsStorageOpen}>
-                  <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
-                    <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
-                      <div className="flex items-center gap-3">
-                        {isStorageOpen ? (
-                          <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
-                        ) : (
-                          <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
-                        )}
-                        <Badge variant="info" size="sm" className="w-[70px] justify-center">
-                          Storage{' '}
-                        </Badge>
-                        <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
-                          Drawers{' '}
-                        </span>
-                        <span className="text-body-md text-[var(--color-text-subtle)]">
-                          (5 drawers)
-                        </span>
-                      </div>
-                    </div>
-                  </Disclosure.Trigger>
-                  <Disclosure.Panel>
-                    <VStack gap={4} className="pt-4">
-                      {/* Object Storage Actions */}
-                      <VStack gap={2}>
-                        <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Object Storage Actions{' '}
-                        </h2>
-                        <div className="flex flex-col gap-2">
-                          <DrawerCard
-                            title="Create Folder"
-                            description="Create a new folder in a bucket with a specified parent location."
-                            category="Object Storage"
-                            onOpen={() => setIsCreateFolderOpen(true)}
-                          />
-                          <DrawerCard
-                            title="Create Object"
-                            description="Upload files to a bucket with ACL settings and tags."
-                            category="Object Storage"
-                            onOpen={() => setIsCreateObjectOpen(true)}
-                          />
-                          <DrawerCard
-                            title="Move Files"
-                            description="Move files or folders to a different location within the bucket."
-                            category="Object Storage"
-                            onOpen={() => setIsMoveFilesOpen(true)}
-                          />
-                          <DrawerCard
-                            title="Edit Object"
-                            description="Edit object name and manage tags."
-                            category="Object Storage"
-                            onOpen={() => setIsEditObjectOpen(true)}
-                          />
-                        </div>
-                      </VStack>
-
-                      {/* Physical Disk Actions */}
-                      <VStack gap={2}>
-                        <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Physical Disk Actions{' '}
-                        </h2>
-                        <div className="flex flex-col gap-2">
-                          <DrawerCard
-                            title="Identify Device"
-                            description="Indicate the LED on a physical disk to identify the device."
-                            category="Physical Disk"
-                            onOpen={() => setIsIdentifyDeviceOpen(true)}
-                          />
-                        </div>
-                      </VStack>
-                    </VStack>
-                  </Disclosure.Panel>
-                </Disclosure>
-
-                {/* Container App Drawers */}
-                <Disclosure open={isContainerOpen} onChange={setIsContainerOpen}>
-                  <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
-                    <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
-                      <div className="flex items-center gap-3">
-                        {isContainerOpen ? (
-                          <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
-                        ) : (
-                          <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
-                        )}
-                        <Badge variant="info" size="sm" className="w-[70px] justify-center">
-                          Container{' '}
-                        </Badge>
-                        <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
-                          Drawers{' '}
-                        </span>
-                        <span className="text-body-md text-[var(--color-text-subtle)]">
-                          (1 drawer)
-                        </span>
-                      </div>
-                    </div>
-                  </Disclosure.Trigger>
-                  <Disclosure.Panel>
-                    <VStack gap={4} className="pt-4">
-                      {/* Resource Search Actions */}
-                      <VStack gap={2}>
-                        <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Resource Search Actions{' '}
-                        </h2>
-                        <div className="flex flex-col gap-2">
-                          <DrawerCard
-                            title="Resource Type Search"
-                            description="Search and navigate Kubernetes resource types across clusters with categorized resource lists."
-                            category="Search"
-                            onOpen={() => setIsResourceTypeSearchOpen(true)}
-                          />
-                        </div>
-                      </VStack>
-                    </VStack>
-                  </Disclosure.Panel>
-                </Disclosure>
-
-                {/* AI Agent Drawers */}
-                <Disclosure open={isAIAgentOpen} onChange={setIsAIAgentOpen}>
-                  <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
-                    <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
-                      <div className="flex items-center gap-3">
-                        {isAIAgentOpen ? (
-                          <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
-                        ) : (
-                          <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
-                        )}
-                        <Badge variant="info" size="sm" className="w-[70px] justify-center">
-                          AI Agent </Badge>
-                        <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
-                          Drawers </span>
-                        <span className="text-body-md text-[var(--color-text-subtle)]">
-                          (12 drawers)
-                        </span>
-                      </div>
-                    </div>
-                  </Disclosure.Trigger>
-                  <Disclosure.Panel>
-                    <VStack gap={4} className="pt-4">
-                      {/* Agent Settings */}
-                      <VStack gap={2}>
-                        <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Agent Settings </h2>
-                        <div className="flex flex-col gap-2">
-                          <DrawerCard title="Edit Basic Information"
-                            description="Edit agent name, description, status, and tags."
-                            category="Settings"
-                            onOpen={() => setIsEditBasicInfoOpen(true)}
-                          />
-                          <DrawerCard title="Edit Model Settings"
-                            description="Configure model provider, model, temperature, and max tokens."
-                            category="Settings"
-                            onOpen={() => setIsEditModelSettingsOpen(true)}
-                          />
-                          <DrawerCard title="Edit Prompt Settings"
-                            description="Set system prompt, tone, and max iteration count."
-                            category="Settings"
-                            onOpen={() => setIsEditPromptSettingsOpen(true)}
-                          />
-                        </div>
-                      </VStack>
-                      {/* Agent Connections */}
-                      <VStack gap={2}>
-                        <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Agent Connections </h2>
-                        <div className="flex flex-col gap-2">
-                          <DrawerCard title="Connect Data Source"
-                            description="Select and connect data sources to the agent."
-                            category="Connection"
-                            onOpen={() => setIsConnectDataSourceOpen(true)}
-                          />
-                          <DrawerCard title="Connect MCP Server"
-                            description="Select and connect MCP servers to the agent."
-                            category="Connection"
-                            onOpen={() => setIsConnectMCPServerOpen(true)}
-                          />
-                        </div>
-                      </VStack>
-                      {/* Agent Logs */}
-                      <VStack gap={2}>
-                        <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          Agent Logs </h2>
-                        <div className="flex flex-col gap-2">
-                          <DrawerCard title="Log Detail"
-                            description="Shows a history of the agent's operations and results."
-                            category="Logs"
-                            onOpen={() => setIsAgentLogDetailOpen(true)}
-                          />
-                        </div>
-                      </VStack>
-                      {/* MCP Tools */}
-                      <VStack gap={2}>
-                        <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                          MCP Tools </h2>
-                        <div className="flex flex-col gap-2">
-                          <DrawerCard title="Create MCP Template"
-                            description="Create a new MCP server template with configuration settings."
-                            category="Template"
-                            onOpen={() => setIsCreateMCPTemplateOpen(true)}
-                          />
-                          <DrawerCard title="Template Type Settings"
-                            description="Configure template type between STDIO (Container) and HTTP (Remote)."
-                            category="Template"
-                            onOpen={() => setIsTemplateTypeSettingsOpen(true)}
-                          />
-                          <DrawerCard title="Container Settings"
-                            description="Configure Docker container settings for STDIO MCP servers."
-                            category="Template"
-                            onOpen={() => setIsContainerSettingsOpen(true)}
-                          />
-                          <DrawerCard title="HTTP Settings"
-                            description="Configure HTTP endpoint settings for remote MCP servers."
-                            category="Template"
-                            onOpen={() => setIsHTTPSettingsOpen(true)}
-                          />
-                          <DrawerCard title="Tool Access Control"
-                            description="Configure tool visibility and rate limiting for agents."
-                            category="Settings"
-                            onOpen={() => setIsToolAccessControlOpen(true)}
-                          />
-                          <DrawerCard title="Tool Authentication"
-                            description="Configure authentication settings for MCP tools."
-                            category="Settings"
-                            onOpen={() => setIsToolAuthenticationOpen(true)}
-                          />
-                        </div>
-                      </VStack>
-                    </VStack>
-                  </Disclosure.Panel>
-                </Disclosure>
-
-                {/* Table Settings */}
-                <VStack gap={2}>
-                  <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
-                    Table Settings{' '}
-                  </h2>
-                  <div className="flex flex-col gap-2">
-                    <DrawerCard
-                      title="View Preferences"
-                      description="Customize table view by showing/hiding columns, reordering columns, and adjusting rows per page."
-                      category="Table"
-                      onOpen={() => setIsViewPreferencesOpen(true)}
-                    />
                   </div>
+                </Disclosure.Trigger>
+                <Disclosure.Panel>
+                  <VStack gap={4} className="pt-4">
+                    {/* Instance Actions */}
+                    <VStack gap={2}>
+                      <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                        Instance Actions{' '}
+                      </h2>
+                      <div className="flex flex-col gap-2">
+                        <DrawerCard
+                          title="Create instance snapshot"
+                          description="Create a snapshot of an instance to capture its current system state as an image."
+                          category="Instance"
+                          onOpen={() => setIsCreateSnapshotOpen(true)}
+                          linked
+                          linkedTo="Instance List"
+                        />
+                        <DrawerCard
+                          title="Edit instance"
+                          description="Edit instance name and description. Allows modification of basic instance metadata."
+                          category="Instance"
+                          onOpen={() => setIsEditInstanceOpen(true)}
+                          linked
+                          linkedTo="Instance List"
+                        />
+                        <DrawerCard
+                          title="Lock setting"
+                          description="Lock or unlock an instance to prevent accidental deletion or modification."
+                          category="Instance"
+                          onOpen={() => setIsLockSettingOpen(true)}
+                          linked
+                          linkedTo="Instance List"
+                        />
+                        <DrawerCard
+                          title="Manage Tags"
+                          description="Add, edit, or remove tags to categorize and manage resources."
+                          category="Instance"
+                          onOpen={() => setIsManageTagsOpen(true)}
+                          linked
+                          linkedTo="Instance List"
+                        />
+                        <DrawerCard
+                          title="Rescue Instance"
+                          description="Create a temporary recovery server using your instance's root disk."
+                          category="Instance"
+                          onOpen={() => setIsRescueInstanceOpen(true)}
+                          linked
+                          linkedTo="Instance List"
+                        />
+                        <DrawerCard
+                          title="Rebuild Instance"
+                          description="Rebuild the instance by reinstalling the operating system using a new image."
+                          category="Instance"
+                          onOpen={() => setIsRebuildInstanceOpen(true)}
+                          linked
+                          linkedTo="Instance List"
+                        />
+                        <DrawerCard
+                          title="Resize Instance"
+                          description="Change the flavor to adjust vCPU, memory, or disk capacity."
+                          category="Instance"
+                          onOpen={() => setIsResizeInstanceOpen(true)}
+                          linked
+                          linkedTo="Instance List"
+                        />
+                      </div>
+                    </VStack>
+
+                    {/* Instance Snapshot Actions */}
+                    <VStack gap={2}>
+                      <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                        Instance Snapshot Actions{' '}
+                      </h2>
+                      <div className="flex flex-col gap-2">
+                        <DrawerCard
+                          title="Edit instance Snapshot"
+                          description="Edit the name and description of an instance snapshot."
+                          category="Snapshot"
+                          onOpen={() => setIsEditInstanceSnapshotOpen(true)}
+                          linked
+                          linkedTo="Instance Snapshots"
+                        />
+                        <DrawerCard
+                          title="Create volume from Instance Snapshot"
+                          description="Create a new volume from an instance snapshot, containing the same data as the snapshot's system disk."
+                          category="Snapshot"
+                          onOpen={() => setIsCreateVolumeFromSnapshotOpen(true)}
+                          linked
+                          linkedTo="Instance Snapshots"
+                        />
+                      </div>
+                    </VStack>
+
+                    {/* Volume Actions */}
+                    <VStack gap={2}>
+                      <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                        Volume Actions{' '}
+                      </h2>
+                      <div className="flex flex-col gap-2">
+                        <DrawerCard
+                          title="Create volume snapshot"
+                          description="Create a snapshot of a volume to back up its current data state for later restoration."
+                          category="Volume"
+                          onOpen={() => setIsCreateVolumeSnapshotOpen(true)}
+                          linked
+                          linkedTo="Volumes"
+                        />
+                        <DrawerCard
+                          title="Create volume backup"
+                          description="Create a full backup of a volume and store it in the backup service for disaster recovery."
+                          category="Volume"
+                          onOpen={() => setIsCreateVolumeBackupOpen(true)}
+                          linked
+                          linkedTo="Volumes"
+                        />
+                        <DrawerCard
+                          title="Create volume backup (with selection)"
+                          description="Create a volume backup with volume selection table, search, and pagination."
+                          category="Volume"
+                          onOpen={() => setIsCreateVolumeBackupWithSelectionOpen(true)}
+                        />
+                        <DrawerCard
+                          title="Restore from snapshot"
+                          description="Restore a volume from a snapshot by selecting from available snapshots."
+                          category="Volume"
+                          onOpen={() => setIsRestoreFromSnapshotOpen(true)}
+                          linked
+                          linkedTo="Volumes"
+                        />
+                        <DrawerCard
+                          title="Attach volume"
+                          description="Attach a volume to an instance by selecting from available instances."
+                          category="Volume"
+                          onOpen={() => setIsAttachVolumeOpen(true)}
+                          linked
+                          linkedTo="Instance List, Volumes"
+                        />
+                        <DrawerCard
+                          title="Create subnet"
+                          description="Create a new subnet with CIDR, gateway, DHCP, and advanced network settings."
+                          category="Network"
+                          onOpen={() => setIsCreateSubnetOpen(true)}
+                          linked
+                          linkedTo="Networks"
+                        />
+                        <DrawerCard
+                          title="Create router"
+                          description="Create a virtual router to route traffic between networks with external gateway options."
+                          category="Network"
+                          onOpen={() => setIsCreateRouterOpen(true)}
+                        />
+                        <DrawerCard
+                          title="Attach port to instance"
+                          description="Attach a network port to an instance with Fixed IP, Floating IP, and availability zone."
+                          category="Network"
+                          onOpen={() => setIsAttachPortToInstanceOpen(true)}
+                          linked
+                          linkedTo="Ports"
+                        />
+                        <DrawerCard
+                          title="Clone volume"
+                          description="Create an exact copy of a volume for testing, backup, or new instance creation."
+                          category="Volume"
+                          onOpen={() => setIsCloneVolumeOpen(true)}
+                          linked
+                          linkedTo="Volumes"
+                        />
+                        <DrawerCard
+                          title="Extend volume"
+                          description="Increase the size of a volume to expand its storage capacity."
+                          category="Volume"
+                          onOpen={() => setIsExtendVolumeOpen(true)}
+                          linked
+                          linkedTo="Volumes"
+                        />
+                        <DrawerCard
+                          title="Create image from Volume"
+                          description="Create a new image using a volume as the source. The image will contain all data currently stored on the volume."
+                          category="Volume"
+                          onOpen={() => setIsCreateImageFromVolumeOpen(true)}
+                          linked
+                          linkedTo="Volumes"
+                        />
+                        <DrawerCard
+                          title="Edit Volume"
+                          description="Edit the name and description of an existing volume."
+                          category="Volume"
+                          onOpen={() => setIsEditVolumeOpen(true)}
+                          linked
+                          linkedTo="Volumes"
+                        />
+                        <DrawerCard
+                          title="Change volume Type"
+                          description="Change the storage type of this volume to another available volume type."
+                          category="Volume"
+                          onOpen={() => setIsChangeVolumeTypeOpen(true)}
+                          linked
+                          linkedTo="Volumes"
+                        />
+                        <DrawerCard
+                          title="Create transfer"
+                          description="Create a transfer request to share this volume with another project."
+                          category="Volume"
+                          onOpen={() => setIsCreateTransferOpen(true)}
+                          linked
+                          linkedTo="Volumes"
+                        />
+                        <DrawerCard
+                          title="Edit Volume backup"
+                          description="Edit the name and description of an existing volume backup."
+                          category="Volume"
+                          onOpen={() => setIsEditVolumeBackupOpen(true)}
+                          linked
+                          linkedTo="Volume Backups"
+                        />
+                        <DrawerCard
+                          title="Accept Volume Transfer"
+                          description="Accept a volume transfer using the provided transfer ID and authorization key."
+                          category="Volume"
+                          onOpen={() => setIsAcceptVolumeTransferOpen(true)}
+                        />
+                        <DrawerCard
+                          title="Edit Volume snapshot"
+                          description="Edit the name and description of an existing volume snapshot."
+                          category="Volume"
+                          onOpen={() => setIsEditVolumeSnapshotOpen(true)}
+                          linked
+                          linkedTo="Volume Snapshots"
+                        />
+                        <DrawerCard
+                          title="Create volume from Snapshot"
+                          description="Create a new volume from an existing volume snapshot with customizable capacity and type."
+                          category="Volume"
+                          onOpen={() => setIsCreateVolumeFromVolumeSnapshotOpen(true)}
+                          linked
+                          linkedTo="Volume Snapshots"
+                        />
+                        <DrawerCard
+                          title="Create volume from Backup"
+                          description="Create a new volume from an existing volume backup with customizable capacity, type, and availability zone."
+                          category="Volume"
+                          onOpen={() => setIsCreateVolumeFromBackupOpen(true)}
+                          linked
+                          linkedTo="Volume Backups"
+                        />
+                        <DrawerCard
+                          title="Detach Volume"
+                          description="Detach a volume from an instance. Once detached, it will no longer be accessible from the instance."
+                          category="Volume"
+                          onOpen={() => setIsDetachVolumeOpen(true)}
+                          linked
+                          linkedTo="Instance List, Volumes"
+                        />
+                      </div>
+                    </VStack>
+
+                    {/* Image Actions */}
+                    <VStack gap={2}>
+                      <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                        Image Actions{' '}
+                      </h2>
+                      <div className="flex flex-col gap-2">
+                        <DrawerCard
+                          title="Create volume from Image"
+                          description="Create a new volume using the selected image. The new volume will contain an identical copy of the image data."
+                          category="Image"
+                          onOpen={() => setIsCreateVolumeFromImageOpen(true)}
+                          linked
+                          linkedTo="Images"
+                        />
+                        <DrawerCard
+                          title="Edit Image"
+                          description="Edit image name and description. Allows modification of basic image metadata."
+                          category="Image"
+                          onOpen={() => setIsEditImageOpen(true)}
+                          linked
+                          linkedTo="Images"
+                        />
+                      </div>
+                    </VStack>
+
+                    {/* Key pair Actions */}
+                    <VStack gap={2}>
+                      <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                        Key pair Actions{' '}
+                      </h2>
+                      <div className="flex flex-col gap-2">
+                        <DrawerCard
+                          title="Create Key pair"
+                          description="Create a new SSH key pair or import an existing public key to securely access your instances."
+                          category="Key pair"
+                          onOpen={() => setIsCreateKeyPairOpen(true)}
+                        />
+                        <DrawerCard
+                          title="Edit Key pair"
+                          description="Edit the name of an existing SSH key pair."
+                          category="Key pair"
+                          onOpen={() => setIsEditKeyPairOpen(true)}
+                        />
+                      </div>
+                    </VStack>
+
+                    {/* Server group Actions */}
+                    <VStack gap={2}>
+                      <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                        Server group Actions{' '}
+                      </h2>
+                      <div className="flex flex-col gap-2">
+                        <DrawerCard
+                          title="Create Server group"
+                          description="Create a server group to control how instances are placed across compute hosts using affinity/anti-affinity policies."
+                          category="Server group"
+                          onOpen={() => setIsCreateServerGroupOpen(true)}
+                        />
+                        <DrawerCard
+                          title="Edit Server group"
+                          description="Edit the name of an existing server group."
+                          category="Server group"
+                          onOpen={() => setIsEditServerGroupOpen(true)}
+                        />
+                      </div>
+                    </VStack>
+
+                    {/* Network Actions */}
+                    <VStack gap={2}>
+                      <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                        Network Actions{' '}
+                      </h2>
+                      <div className="flex flex-col gap-2">
+                        <DrawerCard
+                          title="Edit Network"
+                          description="Edit network settings including name, description, admin state, and port security."
+                          category="Network"
+                          onOpen={() => setIsEditNetworkOpen(true)}
+                          linked
+                          linkedTo="Networks"
+                        />
+                        <DrawerCard
+                          title="Edit Router"
+                          description="Edit router settings including name, description, and admin state."
+                          category="Router"
+                          onOpen={() => setIsEditRouterOpen(true)}
+                        />
+                        <DrawerCard
+                          title="Create static Route"
+                          description="Add a static route to manually define traffic paths beyond connected subnets."
+                          category="Router"
+                          onOpen={() => setIsCreateStaticRouteOpen(true)}
+                        />
+                        <DrawerCard
+                          title="Edit Port"
+                          description="Edit port settings including name and description."
+                          category="Port"
+                          onOpen={() => setIsEditPortOpen(true)}
+                          linked
+                          linkedTo="Ports"
+                        />
+                        <DrawerCard
+                          title="Create Allowed Address Pair"
+                          description="Specify additional IP or MAC addresses that are allowed to pass through this port."
+                          category="Port"
+                          onOpen={() => setIsCreateAllowedAddressPairOpen(true)}
+                        />
+                        <DrawerCard
+                          title="Edit Floating IP"
+                          description="Edit floating IP description."
+                          category="Floating IP"
+                          onOpen={() => setIsEditFloatingIPOpen(true)}
+                          linked
+                          linkedTo="Floating IPs"
+                        />
+                        <DrawerCard
+                          title="Allocate IP"
+                          description="Assign an additional fixed IP address to a port from a subnet."
+                          category="Port"
+                          onOpen={() => setIsAllocateIPOpen(true)}
+                        />
+                        <DrawerCard
+                          title="Attach Interface"
+                          description="Attach a new network interface to this instance. Connect it to another network or subnet for additional access."
+                          category="Network"
+                          onOpen={() => setIsAttachInterfaceOpen(true)}
+                          linked
+                          linkedTo="Instance List"
+                        />
+                        <DrawerCard
+                          title="Detach Interface"
+                          description="Detach a network interface from this instance. This may interrupt connectivity if the selected port is primary."
+                          category="Network"
+                          onOpen={() => setIsDetachInterfaceOpen(true)}
+                          linked
+                          linkedTo="Instance List"
+                        />
+                        <DrawerCard
+                          title="Associate Floating IP"
+                          description="Assign a floating IP to this instance for external network access."
+                          category="Floating IP"
+                          onOpen={() => setIsAssociateFloatingIPOpen(true)}
+                          linked
+                          linkedTo="Instance List, Floating IPs"
+                        />
+                        <DrawerCard
+                          title="Disassociate Floating IP"
+                          description="Remove the association between a floating IP and this instance. The instance will lose external network access through that IP."
+                          category="Floating IP"
+                          onOpen={() => setIsDisassociateFloatingIPOpen(true)}
+                          linked
+                          linkedTo="Instance List, Floating IPs, LBs"
+                        />
+                        <DrawerCard
+                          title="Allocate Floating IP"
+                          description="Allocate a new floating IP from an external network pool with optional DNS settings."
+                          category="Floating IP"
+                          onOpen={() => setIsAllocateFloatingIPOpen(true)}
+                        />
+                        <DrawerCard
+                          title="External Gateway Setting"
+                          description="Configure external gateway for a router to enable access to external networks."
+                          category="Router"
+                          onOpen={() => setIsExternalGatewaySettingOpen(true)}
+                        />
+                        <DrawerCard
+                          title="Connect Subnet"
+                          description="Connect an existing subnet to a router to enable routing between networks."
+                          category="Router"
+                          onOpen={() => setIsConnectSubnetOpen(true)}
+                        />
+                        <DrawerCard
+                          title="Associate Floating IP to Port"
+                          description="Associate a floating IP with a port to enable external network access."
+                          category="Port"
+                          onOpen={() => setIsAssociateFloatingIPToPortOpen(true)}
+                          linked
+                          linkedTo="Ports"
+                        />
+                        <DrawerCard
+                          title="Disconnect Subnet"
+                          description="Disconnect a subnet from a router to remove its routing path."
+                          category="Router"
+                          onOpen={() => setIsDisconnectSubnetOpen(true)}
+                        />
+                      </div>
+                    </VStack>
+
+                    {/* Security group Actions */}
+                    <VStack gap={2}>
+                      <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                        Security group Actions{' '}
+                      </h2>
+                      <div className="flex flex-col gap-2">
+                        <DrawerCard
+                          title="Create Security group Rule"
+                          description="Create a rule to define allowed inbound or outbound network traffic for your security group."
+                          category="Security group"
+                          onOpen={() => setIsCreateSecurityGroupRuleOpen(true)}
+                          linked
+                          linkedTo="Security Groups"
+                        />
+                        <DrawerCard
+                          title="Create Security group"
+                          description="Create a security group to define network access rules for your instances."
+                          category="Security group"
+                          onOpen={() => setIsCreateSecurityGroupOpen(true)}
+                        />
+                        <DrawerCard
+                          title="Edit Security group"
+                          description="Edit security group name and description."
+                          category="Security group"
+                          onOpen={() => setIsEditSecurityGroupOpen(true)}
+                          linked
+                          linkedTo="Security Groups"
+                        />
+                        <DrawerCard
+                          title="Manage Security Groups"
+                          description="Attach or detach security groups for an interface to control inbound and outbound traffic."
+                          category="Security group"
+                          onOpen={() => setIsManageSecurityGroupsOpen(true)}
+                          linked
+                          linkedTo="Instance List"
+                        />
+                        <DrawerCard
+                          title="Edit Port Security Groups"
+                          description="Manage security groups on a port with port security toggle and multi-select table."
+                          category="Port"
+                          onOpen={() => setIsEditPortSecurityGroupsOpen(true)}
+                          linked
+                          linkedTo="Ports"
+                        />
+                      </div>
+                    </VStack>
+
+                    {/* Load balancer Actions */}
+                    <VStack gap={2}>
+                      <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                        Load balancer Actions{' '}
+                      </h2>
+                      <div className="flex flex-col gap-2">
+                        <DrawerCard
+                          title="Add L7 Policy"
+                          description="Add an L7 policy to control traffic routing based on layer 7 attributes like URL path or headers."
+                          category="Load balancer"
+                          onOpen={() => setIsAddL7PolicyOpen(true)}
+                        />
+                        <DrawerCard
+                          title="Register certificate"
+                          description="Register a certificate issued by an external CA for use within Compute resources."
+                          category="Certificate"
+                          onOpen={() => setIsRegisterCertificateOpen(true)}
+                        />
+                        <DrawerCard
+                          title="Edit Certificate"
+                          description="Edit certificate name and description."
+                          category="Certificate"
+                          onOpen={() => setIsEditCertificateOpen(true)}
+                        />
+                        <DrawerCard
+                          title="Edit Load balancer"
+                          description="Edit load balancer name, description, and admin state."
+                          category="Load balancer"
+                          onOpen={() => setIsEditLoadBalancerOpen(true)}
+                          linked
+                          linkedTo="Load Balancers"
+                        />
+                        <DrawerCard
+                          title="Edit Pool"
+                          description="Edit pool settings including algorithm, session persistence, TLS, and admin state."
+                          category="Load balancer"
+                          onOpen={() => setIsEditPoolOpen(true)}
+                        />
+                        <DrawerCard
+                          title="Add L7 Rule"
+                          description="Add an L7 rule to match incoming requests based on headers, paths, or other attributes."
+                          category="Load balancer"
+                          onOpen={() => setIsAddL7RuleOpen(true)}
+                        />
+                        <DrawerCard
+                          title="Edit Listener"
+                          description="Edit listener settings including name, connection limits, timeouts, and allowed CIDRs."
+                          category="Load balancer"
+                          onOpen={() => setIsEditListenerOpen(true)}
+                        />
+                        <DrawerCard
+                          title="Create Health Monitor"
+                          description="Create a health monitor for a pool to check backend member availability."
+                          category="Load balancer"
+                          onOpen={() => setIsCreateHealthMonitorOpen(true)}
+                        />
+                        <DrawerCard
+                          title="Edit Member"
+                          description="Edit pool member settings including weight, monitor address, backup, and admin state."
+                          category="Load balancer"
+                          onOpen={() => setIsEditMemberOpen(true)}
+                        />
+                        <DrawerCard
+                          title="Manage Members"
+                          description="Manage pool members by adding instances or external members with configurable port and weight."
+                          category="Load balancer"
+                          onOpen={() => setIsManageMembersOpen(true)}
+                        />
+                        <DrawerCard
+                          title="Associate Floating IP to LB"
+                          description="Associate a floating IP to a load balancer for external access."
+                          category="Load balancer"
+                          onOpen={() => setIsAssociateFloatingIPToLBOpen(true)}
+                          linked
+                          linkedTo="Load Balancers"
+                        />
+                        <DrawerCard
+                          title="Change Server Certificate"
+                          description="Change the server certificate for a listener with certificate selection table."
+                          category="Certificate"
+                          onOpen={() => setIsChangeServerCertificateOpen(true)}
+                        />
+                        <DrawerCard
+                          title="Change CA Certificate"
+                          description="Change the CA certificate for a listener with certificate selection table."
+                          category="Certificate"
+                          onOpen={() => setIsChangeCACertificateOpen(true)}
+                        />
+                        <DrawerCard
+                          title="Manage SNI Certificate"
+                          description="Enable SNI and manage multiple SNI certificates for a listener."
+                          category="Certificate"
+                          onOpen={() => setIsManageSNICertificateOpen(true)}
+                        />
+                      </div>
+                    </VStack>
+                  </VStack>
+                </Disclosure.Panel>
+              </Disclosure>
+
+              {/* IAM App Drawers */}
+              <Disclosure open={isIAMOpen} onChange={setIsIAMOpen}>
+                <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
+                  <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
+                    <div className="flex items-center gap-3">
+                      {isIAMOpen ? (
+                        <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
+                      ) : (
+                        <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
+                      )}
+                      <Badge variant="info" size="sm" className="w-[70px] justify-center">
+                        IAM{' '}
+                      </Badge>
+                      <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
+                        Drawers{' '}
+                      </span>
+                      <span className="text-body-md text-[var(--color-text-subtle)]">
+                        (13 drawers)
+                      </span>
+                    </div>
+                  </div>
+                </Disclosure.Trigger>
+                <Disclosure.Panel>
+                  <VStack gap={4} className="pt-4">
+                    {/* USER MANAGEMENT ACTIONS */}
+                    <VStack gap={2}>
+                      <h3 className="text-body-sm font-semibold text-[var(--color-text-subtle)] tracking-wider uppercase">
+                        User Management Actions{' '}
+                      </h3>
+                      <div className="flex flex-col gap-2">
+                        <DrawerCard
+                          title="Manage User Groups"
+                          description="Add or remove user groups for a specific user."
+                          category="User"
+                          onOpen={() => setIsManageUserGroupsOpen(true)}
+                          linked
+                          linkedTo="IAM Users"
+                        />
+                        <DrawerCard
+                          title="Manage Roles"
+                          description="Add or remove roles directly assigned to a specific user."
+                          category="User"
+                          onOpen={() => setIsManageRolesOpen(true)}
+                          linked
+                          linkedTo="IAM Users, User Groups"
+                        />
+                        <DrawerCard
+                          title="Reset Password"
+                          description="Reset the login password for a specific user."
+                          category="User"
+                          onOpen={() => setIsResetPasswordOpen(true)}
+                        />
+                        <DrawerCard
+                          title="Edit User"
+                          description="Edit the user's basic information like email and display name."
+                          category="User"
+                          onOpen={() => setIsEditUserOpen(true)}
+                          linked
+                          linkedTo="IAM Users"
+                        />
+                      </div>
+                    </VStack>
+
+                    {/* User Group Management */}
+                    <VStack gap={2}>
+                      <h3 className="text-body-sm font-semibold text-[var(--color-text-subtle)] tracking-wider uppercase">
+                        User Group Management Actions{' '}
+                      </h3>
+                      <div className="flex flex-col gap-2">
+                        <DrawerCard
+                          title="Manage Users"
+                          description="Add or remove members of a user group."
+                          category="User Group"
+                          onOpen={() => setIsManageUsersOpen(true)}
+                          linked
+                          linkedTo="IAM User Groups"
+                        />
+                        <DrawerCard
+                          title="Edit User Group"
+                          description="Edit the user group's basic information."
+                          category="User Group"
+                          onOpen={() => setIsEditUserGroupOpen(true)}
+                          linked
+                          linkedTo="IAM User Groups"
+                        />
+                      </div>
+                    </VStack>
+
+                    {/* Role Management */}
+                    <VStack gap={2}>
+                      <h3 className="text-body-sm font-semibold text-[var(--color-text-subtle)] tracking-wider uppercase">
+                        Role Management Actions{' '}
+                      </h3>
+                      <div className="flex flex-col gap-2">
+                        <DrawerCard
+                          title="Manage Policies"
+                          description="Add or remove policies of a role."
+                          onOpen={() => setIsManagePoliciesOpen(true)}
+                          badge="Role"
+                        />
+                        <DrawerCard
+                          title="Edit Role"
+                          description="Edit basic information for a role."
+                          onOpen={() => setIsEditRoleOpen(true)}
+                          badge="Role"
+                        />
+                      </div>
+                    </VStack>
+
+                    {/* Domain Management */}
+                    <VStack gap={2}>
+                      <h3 className="text-body-sm font-semibold text-[var(--color-text-subtle)] tracking-wider uppercase">
+                        Domain Management Actions{' '}
+                      </h3>
+                      <div className="flex flex-col gap-2">
+                        <DrawerCard
+                          title="Create Domain"
+                          description="Create a new domain to manage resources and policies independently."
+                          onOpen={() => setIsCreateDomainOpen(true)}
+                          badge="Domain"
+                        />
+                        <DrawerCard
+                          title="Edit Domain"
+                          description="Edit the domain's basic information."
+                          onOpen={() => setIsEditDomainOpen(true)}
+                          badge="Domain"
+                        />
+                        <DrawerCard
+                          title="Set Default Domain"
+                          description="Set the default domain for the system administrator."
+                          onOpen={() => setIsSetDefaultDomainOpen(true)}
+                          badge="Domain"
+                        />
+                        <DrawerCard
+                          title="Lock Setting"
+                          description="Lock or unlock a system administrator account."
+                          onOpen={() => setIsAdminLockSettingOpen(true)}
+                          badge="Admin"
+                        />
+                        <DrawerCard
+                          title="Edit System Administrator"
+                          description="Edit the system administrator's basic information."
+                          onOpen={() => setIsEditSystemAdminOpen(true)}
+                          badge="Admin"
+                        />
+                      </div>
+                    </VStack>
+                  </VStack>
+                </Disclosure.Panel>
+              </Disclosure>
+
+              {/* Storage App Drawers */}
+              <Disclosure open={isStorageOpen} onChange={setIsStorageOpen}>
+                <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
+                  <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
+                    <div className="flex items-center gap-3">
+                      {isStorageOpen ? (
+                        <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
+                      ) : (
+                        <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
+                      )}
+                      <Badge variant="info" size="sm" className="w-[70px] justify-center">
+                        Storage{' '}
+                      </Badge>
+                      <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
+                        Drawers{' '}
+                      </span>
+                      <span className="text-body-md text-[var(--color-text-subtle)]">
+                        (5 drawers)
+                      </span>
+                    </div>
+                  </div>
+                </Disclosure.Trigger>
+                <Disclosure.Panel>
+                  <VStack gap={4} className="pt-4">
+                    {/* Object Storage Actions */}
+                    <VStack gap={2}>
+                      <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                        Object Storage Actions{' '}
+                      </h2>
+                      <div className="flex flex-col gap-2">
+                        <DrawerCard
+                          title="Create Folder"
+                          description="Create a new folder in a bucket with a specified parent location."
+                          category="Object Storage"
+                          onOpen={() => setIsCreateFolderOpen(true)}
+                        />
+                        <DrawerCard
+                          title="Create Object"
+                          description="Upload files to a bucket with ACL settings and tags."
+                          category="Object Storage"
+                          onOpen={() => setIsCreateObjectOpen(true)}
+                        />
+                        <DrawerCard
+                          title="Move Files"
+                          description="Move files or folders to a different location within the bucket."
+                          category="Object Storage"
+                          onOpen={() => setIsMoveFilesOpen(true)}
+                        />
+                        <DrawerCard
+                          title="Edit Object"
+                          description="Edit object name and manage tags."
+                          category="Object Storage"
+                          onOpen={() => setIsEditObjectOpen(true)}
+                        />
+                      </div>
+                    </VStack>
+
+                    {/* Physical Disk Actions */}
+                    <VStack gap={2}>
+                      <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                        Physical Disk Actions{' '}
+                      </h2>
+                      <div className="flex flex-col gap-2">
+                        <DrawerCard
+                          title="Identify Device"
+                          description="Indicate the LED on a physical disk to identify the device."
+                          category="Physical Disk"
+                          onOpen={() => setIsIdentifyDeviceOpen(true)}
+                        />
+                      </div>
+                    </VStack>
+                  </VStack>
+                </Disclosure.Panel>
+              </Disclosure>
+
+              {/* Container App Drawers */}
+              <Disclosure open={isContainerOpen} onChange={setIsContainerOpen}>
+                <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
+                  <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
+                    <div className="flex items-center gap-3">
+                      {isContainerOpen ? (
+                        <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
+                      ) : (
+                        <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
+                      )}
+                      <Badge variant="info" size="sm" className="w-[70px] justify-center">
+                        Container{' '}
+                      </Badge>
+                      <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
+                        Drawers{' '}
+                      </span>
+                      <span className="text-body-md text-[var(--color-text-subtle)]">
+                        (1 drawer)
+                      </span>
+                    </div>
+                  </div>
+                </Disclosure.Trigger>
+                <Disclosure.Panel>
+                  <VStack gap={4} className="pt-4">
+                    {/* Resource Search Actions */}
+                    <VStack gap={2}>
+                      <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                        Resource Search Actions{' '}
+                      </h2>
+                      <div className="flex flex-col gap-2">
+                        <DrawerCard
+                          title="Resource Type Search"
+                          description="Search and navigate Kubernetes resource types across clusters with categorized resource lists."
+                          category="Search"
+                          onOpen={() => setIsResourceTypeSearchOpen(true)}
+                        />
+                      </div>
+                    </VStack>
+                  </VStack>
+                </Disclosure.Panel>
+              </Disclosure>
+
+              {/* AI Agent Drawers */}
+              <Disclosure open={isAIAgentOpen} onChange={setIsAIAgentOpen}>
+                <Disclosure.Trigger className="w-full [&>span:first-child]:hidden">
+                  <div className="flex items-center justify-between w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg border border-[var(--color-border-default)] hover:border-[var(--color-border-strong)] transition-colors">
+                    <div className="flex items-center gap-3">
+                      {isAIAgentOpen ? (
+                        <IconChevronDown size={16} className="text-[var(--color-text-subtle)]" />
+                      ) : (
+                        <IconChevronRight size={16} className="text-[var(--color-text-subtle)]" />
+                      )}
+                      <Badge variant="info" size="sm" className="w-[70px] justify-center">
+                        AI Agent{' '}
+                      </Badge>
+                      <span className="text-body-lg font-semibold text-[var(--color-text-default)]">
+                        Drawers{' '}
+                      </span>
+                      <span className="text-body-md text-[var(--color-text-subtle)]">
+                        (12 drawers)
+                      </span>
+                    </div>
+                  </div>
+                </Disclosure.Trigger>
+                <Disclosure.Panel>
+                  <VStack gap={4} className="pt-4">
+                    {/* Agent Settings */}
+                    <VStack gap={2}>
+                      <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                        Agent Settings{' '}
+                      </h2>
+                      <div className="flex flex-col gap-2">
+                        <DrawerCard
+                          title="Edit Basic Information"
+                          description="Edit agent name, description, status, and tags."
+                          category="Settings"
+                          onOpen={() => setIsEditBasicInfoOpen(true)}
+                        />
+                        <DrawerCard
+                          title="Edit Model Settings"
+                          description="Configure model provider, model, temperature, and max tokens."
+                          category="Settings"
+                          onOpen={() => setIsEditModelSettingsOpen(true)}
+                        />
+                        <DrawerCard
+                          title="Edit Prompt Settings"
+                          description="Set system prompt, tone, and max iteration count."
+                          category="Settings"
+                          onOpen={() => setIsEditPromptSettingsOpen(true)}
+                        />
+                      </div>
+                    </VStack>
+                    {/* Agent Connections */}
+                    <VStack gap={2}>
+                      <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                        Agent Connections{' '}
+                      </h2>
+                      <div className="flex flex-col gap-2">
+                        <DrawerCard
+                          title="Connect Data Source"
+                          description="Select and connect data sources to the agent."
+                          category="Connection"
+                          onOpen={() => setIsConnectDataSourceOpen(true)}
+                        />
+                        <DrawerCard
+                          title="Connect MCP Server"
+                          description="Select and connect MCP servers to the agent."
+                          category="Connection"
+                          onOpen={() => setIsConnectMCPServerOpen(true)}
+                        />
+                      </div>
+                    </VStack>
+                    {/* Agent Logs */}
+                    <VStack gap={2}>
+                      <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                        Agent Logs{' '}
+                      </h2>
+                      <div className="flex flex-col gap-2">
+                        <DrawerCard
+                          title="Log Detail"
+                          description="Shows a history of the agent's operations and results."
+                          category="Logs"
+                          onOpen={() => setIsAgentLogDetailOpen(true)}
+                        />
+                      </div>
+                    </VStack>
+                    {/* MCP Tools */}
+                    <VStack gap={2}>
+                      <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                        MCP Tools{' '}
+                      </h2>
+                      <div className="flex flex-col gap-2">
+                        <DrawerCard
+                          title="Create MCP Template"
+                          description="Create a new MCP server template with configuration settings."
+                          category="Template"
+                          onOpen={() => setIsCreateMCPTemplateOpen(true)}
+                        />
+                        <DrawerCard
+                          title="Template Type Settings"
+                          description="Configure template type between STDIO (Container) and HTTP (Remote)."
+                          category="Template"
+                          onOpen={() => setIsTemplateTypeSettingsOpen(true)}
+                        />
+                        <DrawerCard
+                          title="Container Settings"
+                          description="Configure Docker container settings for STDIO MCP servers."
+                          category="Template"
+                          onOpen={() => setIsContainerSettingsOpen(true)}
+                        />
+                        <DrawerCard
+                          title="HTTP Settings"
+                          description="Configure HTTP endpoint settings for remote MCP servers."
+                          category="Template"
+                          onOpen={() => setIsHTTPSettingsOpen(true)}
+                        />
+                        <DrawerCard
+                          title="Tool Access Control"
+                          description="Configure tool visibility and rate limiting for agents."
+                          category="Settings"
+                          onOpen={() => setIsToolAccessControlOpen(true)}
+                        />
+                        <DrawerCard
+                          title="Tool Authentication"
+                          description="Configure authentication settings for MCP tools."
+                          category="Settings"
+                          onOpen={() => setIsToolAuthenticationOpen(true)}
+                        />
+                      </div>
+                    </VStack>
+                  </VStack>
+                </Disclosure.Panel>
+              </Disclosure>
+
+              {/* Table Settings */}
+              <VStack gap={2}>
+                <h2 className="text-body-lg font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider px-1">
+                  Table Settings{' '}
+                </h2>
+                <div className="flex flex-col gap-2">
+                  <DrawerCard
+                    title="View Preferences"
+                    description="Customize table view by showing/hiding columns, reordering columns, and adjusting rows per page."
+                    category="Table"
+                    onOpen={() => setIsViewPreferencesOpen(true)}
+                  />
+                </div>
               </VStack>
             </VStack>
           </VStack>

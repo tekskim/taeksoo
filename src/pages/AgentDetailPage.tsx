@@ -364,9 +364,7 @@ function DataSourcesTab() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
-      render: (value: string) => (
-        <span className="whitespace-nowrap">{value}</span>
-      ),
+      render: (value: string) => <span className="whitespace-nowrap">{value}</span>,
     },
     {
       key: 'actions',
@@ -566,9 +564,7 @@ function MCPServersTab() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
-      render: (value: string) => (
-        <span className="whitespace-nowrap">{value}</span>
-      ),
+      render: (value: string) => <span className="whitespace-nowrap">{value}</span>,
     },
     {
       key: 'actions',
@@ -837,9 +833,7 @@ function StatusHistoryTab() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
-      render: (value: string) => (
-        <span className="whitespace-nowrap">{value}</span>
-      ),
+      render: (value: string) => <span className="whitespace-nowrap">{value}</span>,
     },
     {
       key: 'changedBy',
