@@ -17,7 +17,6 @@ import {
   InlineMessage,
   FormField,
   SearchInput,
-  Checkbox,
   StatusIndicator,
   Badge,
   Table,
@@ -741,10 +740,42 @@ export function ConnectDataSourceDrawer({
   const [searchQuery, setSearchQuery] = useState('');
 
   const dataSources: DataSourceItem[] = [
-    { id: '1', name: 'Document Store A', source: 'AWS S3', category: 'Storage', tags: ['docs'], createdAt: 'Nov 11, 2025', status: 'active' },
-    { id: '2', name: 'Knowledge Base', source: 'PostgreSQL', category: 'Database', tags: ['knowledge'], createdAt: 'Nov 10, 2025', status: 'active' },
-    { id: '3', name: 'FAQ Collection', source: 'MongoDB', category: 'Database', tags: ['faq'], createdAt: 'Nov 9, 2025', status: 'active' },
-    { id: '4', name: 'Product Catalog', source: 'Redis', category: 'Cache', tags: ['product'], createdAt: 'Nov 8, 2025', status: 'active' },
+    {
+      id: '1',
+      name: 'Document Store A',
+      source: 'AWS S3',
+      category: 'Storage',
+      tags: ['docs'],
+      createdAt: 'Nov 11, 2025',
+      status: 'active',
+    },
+    {
+      id: '2',
+      name: 'Knowledge Base',
+      source: 'PostgreSQL',
+      category: 'Database',
+      tags: ['knowledge'],
+      createdAt: 'Nov 10, 2025',
+      status: 'active',
+    },
+    {
+      id: '3',
+      name: 'FAQ Collection',
+      source: 'MongoDB',
+      category: 'Database',
+      tags: ['faq'],
+      createdAt: 'Nov 9, 2025',
+      status: 'active',
+    },
+    {
+      id: '4',
+      name: 'Product Catalog',
+      source: 'Redis',
+      category: 'Cache',
+      tags: ['product'],
+      createdAt: 'Nov 8, 2025',
+      status: 'active',
+    },
   ];
 
   const filteredSources = dataSources.filter((source) =>
@@ -760,7 +791,10 @@ export function ConnectDataSourceDrawer({
       align: 'center',
       sortable: false,
       render: (_, row) => (
-        <StatusIndicator status={row.status === 'active' ? 'active' : 'shutoff'} layout="icon-only" />
+        <StatusIndicator
+          status={row.status === 'active' ? 'active' : 'shutoff'}
+          layout="icon-only"
+        />
       ),
     },
     {
@@ -770,7 +804,10 @@ export function ConnectDataSourceDrawer({
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value) => (
-        <span className="text-[var(--color-action-primary)] font-medium hover:underline cursor-pointer truncate block" title={String(value)}>
+        <span
+          className="text-[var(--color-action-primary)] font-medium hover:underline cursor-pointer truncate block"
+          title={String(value)}
+        >
           {value}
         </span>
       ),
@@ -798,10 +835,14 @@ export function ConnectDataSourceDrawer({
       render: (_, row) => (
         <div className="flex flex-wrap gap-1">
           {row.tags.slice(0, 2).map((tag, idx) => (
-            <Badge key={idx} variant="gray" size="sm">{tag}</Badge>
+            <Badge key={idx} variant="gray" size="sm">
+              {tag}
+            </Badge>
           ))}
           {row.tags.length > 2 && (
-            <span className="text-body-sm text-[var(--color-text-subtle)]">+{row.tags.length - 2}</span>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">
+              +{row.tags.length - 2}
+            </span>
           )}
         </div>
       ),
@@ -812,9 +853,7 @@ export function ConnectDataSourceDrawer({
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
-      render: (value) => (
-        <span className="whitespace-nowrap">{value}</span>
-      ),
+      render: (value) => <span className="whitespace-nowrap">{value}</span>,
     },
   ];
 
@@ -830,12 +869,7 @@ export function ConnectDataSourceDrawer({
           <Button variant="secondary" size="md" onClick={onClose} className="flex-1">
             Cancel
           </Button>
-          <Button
-            variant="primary"
-            size="md"
-            onClick={onClose}
-            className="flex-1"
-          >
+          <Button variant="primary" size="md" onClick={onClose} className="flex-1">
             Add
           </Button>
         </HStack>
@@ -849,7 +883,8 @@ export function ConnectDataSourceDrawer({
         <VStack gap={2}>
           <p className="text-label-md text-[var(--color-text-default)]">Data sources</p>
           <p className="text-body-md text-[var(--color-text-subtle)]">
-            Choose the data sources the agent can access to retrieve information for its responses. (Multiple selection available)
+            Choose the data sources the agent can access to retrieve information for its responses.
+            (Multiple selection available)
           </p>
         </VStack>
 
@@ -920,10 +955,42 @@ export function ConnectMCPServerDrawer({
   const [searchQuery, setSearchQuery] = useState('');
 
   const mcpTools: MCPToolItem[] = [
-    { id: '1', name: 'send_slack_message', server: 'Slack', category: 'Communication', tags: ['messaging'], createdAt: 'Nov 11, 2025', status: 'active' },
-    { id: '2', name: 'create_github_issue', server: 'GitHub', category: 'Development', tags: ['code'], createdAt: 'Nov 10, 2025', status: 'active' },
-    { id: '3', name: 'search_jira_tickets', server: 'Jira', category: 'Project Management', tags: ['tickets'], createdAt: 'Nov 9, 2025', status: 'active' },
-    { id: '4', name: 'query_database', server: 'PostgreSQL', category: 'Database', tags: ['sql'], createdAt: 'Nov 8, 2025', status: 'active' },
+    {
+      id: '1',
+      name: 'send_slack_message',
+      server: 'Slack',
+      category: 'Communication',
+      tags: ['messaging'],
+      createdAt: 'Nov 11, 2025',
+      status: 'active',
+    },
+    {
+      id: '2',
+      name: 'create_github_issue',
+      server: 'GitHub',
+      category: 'Development',
+      tags: ['code'],
+      createdAt: 'Nov 10, 2025',
+      status: 'active',
+    },
+    {
+      id: '3',
+      name: 'search_jira_tickets',
+      server: 'Jira',
+      category: 'Project Management',
+      tags: ['tickets'],
+      createdAt: 'Nov 9, 2025',
+      status: 'active',
+    },
+    {
+      id: '4',
+      name: 'query_database',
+      server: 'PostgreSQL',
+      category: 'Database',
+      tags: ['sql'],
+      createdAt: 'Nov 8, 2025',
+      status: 'active',
+    },
   ];
 
   const filteredTools = mcpTools.filter((tool) =>
@@ -939,7 +1006,10 @@ export function ConnectMCPServerDrawer({
       align: 'center',
       sortable: false,
       render: (_, row) => (
-        <StatusIndicator status={row.status === 'active' ? 'active' : 'shutoff'} layout="icon-only" />
+        <StatusIndicator
+          status={row.status === 'active' ? 'active' : 'shutoff'}
+          layout="icon-only"
+        />
       ),
     },
     {
@@ -949,7 +1019,10 @@ export function ConnectMCPServerDrawer({
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value) => (
-        <span className="text-[var(--color-action-primary)] font-medium hover:underline cursor-pointer truncate block" title={String(value)}>
+        <span
+          className="text-[var(--color-action-primary)] font-medium hover:underline cursor-pointer truncate block"
+          title={String(value)}
+        >
           {value}
         </span>
       ),
@@ -963,7 +1036,9 @@ export function ConnectMCPServerDrawer({
       render: (_, row) => (
         <div className="flex items-center gap-1.5 min-w-0">
           <div className="w-5 h-5 rounded-md border border-[var(--color-border-default)] bg-[var(--color-surface-subtle)] shrink-0" />
-          <span className="truncate" title={row.server}>{row.server}</span>
+          <span className="truncate" title={row.server}>
+            {row.server}
+          </span>
         </div>
       ),
     },
@@ -983,10 +1058,14 @@ export function ConnectMCPServerDrawer({
       render: (_, row) => (
         <div className="flex flex-wrap gap-1">
           {row.tags.slice(0, 2).map((tag, idx) => (
-            <Badge key={idx} variant="gray" size="sm">{tag}</Badge>
+            <Badge key={idx} variant="gray" size="sm">
+              {tag}
+            </Badge>
           ))}
           {row.tags.length > 2 && (
-            <span className="text-body-sm text-[var(--color-text-subtle)]">+{row.tags.length - 2}</span>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">
+              +{row.tags.length - 2}
+            </span>
           )}
         </div>
       ),
@@ -997,9 +1076,7 @@ export function ConnectMCPServerDrawer({
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
-      render: (value) => (
-        <span className="whitespace-nowrap">{value}</span>
-      ),
+      render: (value) => <span className="whitespace-nowrap">{value}</span>,
     },
   ];
 
@@ -1015,12 +1092,7 @@ export function ConnectMCPServerDrawer({
           <Button variant="secondary" size="md" onClick={onClose} className="flex-1">
             Cancel
           </Button>
-          <Button
-            variant="primary"
-            size="md"
-            onClick={onClose}
-            className="flex-1"
-          >
+          <Button variant="primary" size="md" onClick={onClose} className="flex-1">
             Add
           </Button>
         </HStack>
@@ -1034,7 +1106,8 @@ export function ConnectMCPServerDrawer({
         <VStack gap={2}>
           <p className="text-label-md text-[var(--color-text-default)]">MCP tools</p>
           <p className="text-body-md text-[var(--color-text-subtle)]">
-            Choose the MCP tools the agent can use to perform actions or retrieve external information. (Multiple selection available)
+            Choose the MCP tools the agent can use to perform actions or retrieve external
+            information. (Multiple selection available)
           </p>
         </VStack>
 
@@ -1167,13 +1240,7 @@ GDP 성장률(%)3) 2.0 0.2 1.6 0.9 [+0.1] 2.0 1.3 1.6 [ - ]
   ];
 
   return (
-    <Drawer
-      isOpen={isOpen}
-      onClose={onClose}
-      title=""
-      showCloseButton={false}
-      width={696}
-    >
+    <Drawer isOpen={isOpen} onClose={onClose} title="" showCloseButton={false} width={696}>
       <VStack gap={6}>
         {/* Header */}
         <VStack gap={2}>
@@ -1212,7 +1279,9 @@ GDP 성장률(%)3) 2.0 0.2 1.6 0.9 [+0.1] 2.0 1.3 1.6 [ - ]
                   Steps: {logData.steps}
                 </span>
               </HStack>
-              <Badge variant="success" size="sm">{logData.status}</Badge>
+              <Badge variant="success" size="sm">
+                {logData.status}
+              </Badge>
             </div>
           </VStack>
         </div>
@@ -1236,7 +1305,12 @@ GDP 성장률(%)3) 2.0 0.2 1.6 0.9 [+0.1] 2.0 1.3 1.6 [ - ]
                       className={`transform transition-transform ${isExpanded ? 'rotate-90' : ''}`}
                     >
                       <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
-                        <path d="M4.5 2L8.5 6L4.5 10" stroke="currentColor" strokeWidth="1.5" fill="none" />
+                        <path
+                          d="M4.5 2L8.5 6L4.5 10"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                          fill="none"
+                        />
                       </svg>
                     </span>
                     <span
@@ -1245,7 +1319,9 @@ GDP 성장률(%)3) 2.0 0.2 1.6 0.9 [+0.1] 2.0 1.3 1.6 [ - ]
                       {index + 1}. {step.type}
                     </span>
                   </HStack>
-                  <Badge variant="gray" size="sm">Confidence: {step.confidence}%</Badge>
+                  <Badge variant="gray" size="sm">
+                    Confidence: {step.confidence}%
+                  </Badge>
                 </div>
 
                 {/* Step Content */}
@@ -1375,10 +1451,7 @@ export function AIAgentDrawerDemo() {
       <Button variant="outline" size="sm" onClick={() => setIsLogDetailOpen(true)}>
         Log Detail
       </Button>
-      <AgentLogDetailDrawer
-        isOpen={isLogDetailOpen}
-        onClose={() => setIsLogDetailOpen(false)}
-      />
+      <AgentLogDetailDrawer isOpen={isLogDetailOpen} onClose={() => setIsLogDetailOpen(false)} />
     </div>
   );
 }
@@ -1506,7 +1579,7 @@ export function CreateMCPTemplateDrawer({
         {/* Basic Information */}
         <VStack gap={4}>
           <h3 className="text-heading-h6 text-[var(--color-text-default)]">Basic information</h3>
-          
+
           <FormField required>
             <FormField.Label>Template name</FormField.Label>
             <FormField.Control>
@@ -1595,9 +1668,7 @@ export function CreateMCPTemplateDrawer({
                 fullWidth
               />
             </FormField.Control>
-            <FormField.HelperText>
-              The category this template belongs to.
-            </FormField.HelperText>
+            <FormField.HelperText>The category this template belongs to.</FormField.HelperText>
           </FormField>
 
           <FormField>
@@ -1617,7 +1688,8 @@ export function CreateMCPTemplateDrawer({
               />
             </FormField.Control>
             <FormField.HelperText>
-              Defines whether authentication or additional config action is required to use this template.
+              Defines whether authentication or additional config action is required to use this
+              template.
             </FormField.HelperText>
           </FormField>
         </VStack>
@@ -1669,24 +1741,30 @@ export function TemplateTypeSettingsDrawer({
 
           <VStack gap={2}>
             {/* STDIO Option */}
-            <div 
+            <div
               className={`w-full p-4 border rounded-lg cursor-pointer transition-colors ${
-                templateType === 'stdio' 
-                  ? 'border-[var(--color-action-primary)] bg-[var(--color-state-info-bg)]' 
+                templateType === 'stdio'
+                  ? 'border-[var(--color-action-primary)] bg-[var(--color-state-info-bg)]'
                   : 'border-[var(--color-border-default)] hover:bg-[var(--color-surface-subtle)]'
               }`}
               onClick={() => setTemplateType('stdio')}
             >
               <HStack gap={3}>
-                <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
-                  templateType === 'stdio' ? 'border-[var(--color-action-primary)]' : 'border-[var(--color-border-default)]'
-                }`}>
+                <div
+                  className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
+                    templateType === 'stdio'
+                      ? 'border-[var(--color-action-primary)]'
+                      : 'border-[var(--color-border-default)]'
+                  }`}
+                >
                   {templateType === 'stdio' && (
                     <div className="w-2 h-2 rounded-full bg-[var(--color-action-primary)]" />
                   )}
                 </div>
                 <VStack gap={0.5}>
-                  <span className="text-label-md text-[var(--color-text-default)]">STDIO (Container)</span>
+                  <span className="text-label-md text-[var(--color-text-default)]">
+                    STDIO (Container)
+                  </span>
                   <span className="text-body-sm text-[var(--color-text-subtle)]">
                     A containerized MCP server deployed on Kubernetes
                   </span>
@@ -1695,24 +1773,30 @@ export function TemplateTypeSettingsDrawer({
             </div>
 
             {/* HTTP Option */}
-            <div 
+            <div
               className={`w-full p-4 border rounded-lg cursor-pointer transition-colors ${
-                templateType === 'http' 
-                  ? 'border-[var(--color-action-primary)] bg-[var(--color-state-info-bg)]' 
+                templateType === 'http'
+                  ? 'border-[var(--color-action-primary)] bg-[var(--color-state-info-bg)]'
                   : 'border-[var(--color-border-default)] hover:bg-[var(--color-surface-subtle)]'
               }`}
               onClick={() => setTemplateType('http')}
             >
               <HStack gap={3}>
-                <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
-                  templateType === 'http' ? 'border-[var(--color-action-primary)]' : 'border-[var(--color-border-default)]'
-                }`}>
+                <div
+                  className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
+                    templateType === 'http'
+                      ? 'border-[var(--color-action-primary)]'
+                      : 'border-[var(--color-border-default)]'
+                  }`}
+                >
                   {templateType === 'http' && (
                     <div className="w-2 h-2 rounded-full bg-[var(--color-action-primary)]" />
                   )}
                 </div>
                 <VStack gap={0.5}>
-                  <span className="text-label-md text-[var(--color-text-default)]">HTTP (Remote)</span>
+                  <span className="text-label-md text-[var(--color-text-default)]">
+                    HTTP (Remote)
+                  </span>
                   <span className="text-body-sm text-[var(--color-text-subtle)]">
                     External HTTP MCP server endpoint
                   </span>
@@ -1886,13 +1970,7 @@ export function ContainerSettingsDrawer({
 }
 
 // HTTP Settings Drawer
-export function HTTPSettingsDrawer({
-  isOpen,
-  onClose,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-}) {
+export function HTTPSettingsDrawer({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const [url, setUrl] = useState('');
   const [headers, setHeaders] = useState('');
   const [transportType, setTransportType] = useState('');
@@ -1976,7 +2054,7 @@ export function HTTPSettingsDrawer({
   );
 }
 
-// Tool Access Control Drawer  
+// Tool Access Control Drawer
 export function ToolAccessControlDrawer({
   isOpen,
   onClose,
@@ -2037,9 +2115,7 @@ export function ToolAccessControlDrawer({
                 fullWidth
               />
             </FormField.Control>
-            <FormField.HelperText>
-              Maximum requests per minute per agent.
-            </FormField.HelperText>
+            <FormField.HelperText>Maximum requests per minute per agent.</FormField.HelperText>
           </FormField>
         </VStack>
       </VStack>
@@ -2122,9 +2198,7 @@ export function ToolAuthenticationDrawer({
                 fullWidth
               />
             </FormField.Control>
-            <FormField.HelperText>
-              Comma-separated list of OAuth scopes.
-            </FormField.HelperText>
+            <FormField.HelperText>Comma-separated list of OAuth scopes.</FormField.HelperText>
           </FormField>
         </VStack>
       </VStack>
