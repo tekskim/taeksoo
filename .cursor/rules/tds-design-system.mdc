@@ -33,6 +33,257 @@ import {
 import type { FilterField, AppliedFilter } from '@/design-system';
 ```
 
+## 디자인 토큰 (실제 값)
+
+### 색상 - Light Mode
+
+```css
+/* Primary */
+--semantic-color-primary: #2563eb;        /* blue600 */
+--semantic-color-primary-hover: #1d4ed8;  /* blue700 */
+--semantic-color-primary-focus: #1e40af;  /* blue800 */
+--semantic-color-on-primary: #ffffff;
+
+/* Secondary */
+--semantic-color-secondary: #475569;       /* blueGray600 */
+--semantic-color-secondary-hover: #334155; /* blueGray700 */
+--semantic-color-on-secondary: #ffffff;
+
+/* Tertiary (Muted Button Background) */
+--semantic-color-tertiary: #f1f5f9;        /* blueGray100 */
+--semantic-color-tertiary-hover: #e2e8f0;  /* blueGray200 */
+--semantic-color-on-tertiary: #0f172a;     /* blueGray900 */
+
+/* Surface */
+--semantic-color-surface: #ffffff;
+--semantic-color-surface-muted: #f8fafc;   /* blueGray50 */
+--semantic-color-surface-hover: #f1f5f9;   /* blueGray100 */
+--semantic-color-surface-elevated: #ffffff;
+
+/* Text */
+--semantic-color-text: #0f172a;            /* blueGray900 */
+--semantic-color-text-muted: #475569;      /* blueGray600 */
+--semantic-color-text-subtle: #64748b;     /* blueGray500 */
+--semantic-color-text-disabled: #94a3b8;   /* blueGray400 */
+
+/* Border */
+--semantic-color-border: #e2e8f0;          /* blueGray200 */
+--semantic-color-border-subtle: #f1f5f9;   /* blueGray100 */
+--semantic-color-border-strong: #cbd5e1;   /* blueGray300 */
+--semantic-color-border-focus: #3b82f6;    /* blue500 */
+
+/* State */
+--semantic-color-state-info: #2563eb;      /* blue600 */
+--semantic-color-state-info-bg: #eff6ff;   /* blue50 */
+--semantic-color-state-success: #16a34a;   /* green600 */
+--semantic-color-state-success-bg: #f0fdf4;/* green50 */
+--semantic-color-state-warning: #ea580c;   /* orange600 */
+--semantic-color-state-warning-bg: #fefce8;/* yellow50 */
+--semantic-color-state-danger: #dc2626;    /* red600 */
+--semantic-color-state-danger-bg: #fef2f2; /* red50 */
+```
+
+### Spacing (rem 단위, 16px 기준)
+
+```css
+--spacing-0: 0;
+--spacing-0-5: 0.125rem;  /* 2px */
+--spacing-1: 0.25rem;     /* 4px */
+--spacing-1-5: 0.375rem;  /* 6px */
+--spacing-2: 0.5rem;      /* 8px */
+--spacing-2-5: 0.625rem;  /* 10px */
+--spacing-3: 0.75rem;     /* 12px */
+--spacing-4: 1rem;        /* 16px */
+--spacing-5: 1.25rem;     /* 20px */
+--spacing-6: 1.5rem;      /* 24px */
+--spacing-8: 2rem;        /* 32px */
+--spacing-10: 2.5rem;     /* 40px */
+--spacing-12: 3rem;       /* 48px */
+--spacing-16: 4rem;       /* 64px */
+```
+
+### Typography
+
+```css
+/* Font Size */
+--font-size-10: 0.625rem;   /* 10px */
+--font-size-11: 0.6875rem;  /* 11px */
+--font-size-12: 0.75rem;    /* 12px */
+--font-size-14: 0.875rem;   /* 14px */
+--font-size-16: 1rem;       /* 16px */
+--font-size-18: 1.125rem;   /* 18px */
+--font-size-24: 1.5rem;     /* 24px */
+--font-size-32: 2rem;       /* 32px */
+--font-size-40: 2.5rem;     /* 40px */
+
+/* Line Height */
+--line-height-16: 1rem;     /* 16px */
+--line-height-18: 1.125rem; /* 18px */
+--line-height-20: 1.25rem;  /* 20px */
+--line-height-24: 1.5rem;   /* 24px */
+--line-height-28: 1.75rem;  /* 28px */
+--line-height-32: 2rem;     /* 32px */
+--line-height-40: 2.5rem;   /* 40px */
+--line-height-48: 3rem;     /* 48px */
+
+/* Font Weight */
+--font-weight-regular: 400;
+--font-weight-medium: 500;
+--font-weight-semibold: 600;
+
+/* Font Family */
+--font-family-sans: "Mona Sans";
+--font-family-mono: "Menlo";
+```
+
+### 타이포그래피 유틸리티 클래스
+
+**반드시 유틸리티 클래스 사용** (하드코딩 금지)
+
+```css
+/* Heading - semibold (600) */
+.text-heading-h1  /* 40px/48px - 2.5rem/3rem */
+.text-heading-h2  /* 32px/40px - 2rem/2.5rem */
+.text-heading-h3  /* 24px/32px - 1.5rem/2rem */
+.text-heading-h4  /* 18px/28px - 1.125rem/1.75rem */
+.text-heading-h5  /* 16px/24px - 1rem/1.5rem - 페이지 타이틀, SectionCard 타이틀 */
+.text-heading-h6  /* 14px/20px - 0.875rem/1.25rem - Drawer 타이틀 */
+
+/* Body - regular (400) */
+.text-body-lg     /* 14px/20px - 0.875rem/1.25rem */
+.text-body-md     /* 12px/18px - 0.75rem/1.125rem - 기본 본문 */
+.text-body-sm     /* 11px/16px - 0.6875rem/1rem - Helper text */
+.text-body-xs     /* 10px/14px - 0.625rem/0.875rem */
+
+/* Label - medium (500) */
+.text-label-lg    /* 14px/20px - 0.875rem/1.25rem */
+.text-label-md    /* 12px/18px - 0.75rem/1.125rem */
+.text-label-sm    /* 11px/16px - 0.6875rem/1rem - 폼 라벨 */
+```
+
+### Border Radius
+
+```css
+--radius-none: 0;
+--radius-sm: 0.25rem;     /* 4px - field, checkbox */
+--radius-md: 0.375rem;    /* 6px - button, badge, menu */
+--radius-lg: 0.5rem;      /* 8px - card */
+--radius-xl: 1rem;        /* 16px - modal */
+--radius-full: 62.4375rem;/* pill, statusIndicator */
+```
+
+### Transition
+
+```css
+--duration-fast: 150ms;
+--duration-normal: 200ms;
+--duration-slow: 300ms;
+```
+
+## 컴포넌트 토큰
+
+### Button
+
+| Size | Height | Padding X | Padding Y | Font Size | Gap | Icon Size |
+|------|--------|-----------|-----------|-----------|-----|-----------|
+| sm | 1.75rem (28px) | 0.625rem (10px) | 0.375rem (6px) | 0.75rem (12px) | 0.375rem (6px) | 12px |
+| md | 2rem (32px) | 0.75rem (12px) | 0.5rem (8px) | 0.75rem (12px) | 0.375rem (6px) | 12px |
+| lg | 2.5rem (40px) | 0.75rem (12px) | 0.625rem (10px) | 0.875rem (14px) | 0.5rem (8px) | 14px |
+
+```css
+--button-radius: 0.375rem; /* 6px */
+```
+
+### Input
+
+| Size | Height | Padding X |
+|------|--------|-----------|
+| sm | 2rem (32px) | 0.75rem (12px) |
+| md | 2.5rem (40px) | 0.75rem (12px) |
+| lg | 3rem (48px) | 1rem (16px) |
+
+```css
+--input-radius: 0.25rem;      /* 4px */
+--input-icon-offset: 0.75rem; /* 12px */
+--input-label-gap: 0.375rem;  /* 6px */
+```
+
+### Badge
+
+| Size | Padding X | Padding Y | Font Size | Line Height |
+|------|-----------|-----------|-----------|-------------|
+| sm | 0.375rem (6px) | 0.125rem (2px) | 0.6875rem (11px) | 1rem (16px) |
+| md | 0.5rem (8px) | 0.25rem (4px) | 0.75rem (12px) | 1rem (16px) |
+| lg | 0.75rem (12px) | 0.25rem (4px) | 0.875rem (14px) | 1.25rem (20px) |
+
+```css
+--badge-radius: 0.375rem; /* 6px */
+--badge-gap: 0.25rem;     /* 4px */
+--badge-dot-size: 0.375rem; /* 6px */
+```
+
+### Card
+
+```css
+--card-padding-sm: 0.75rem;  /* 12px */
+--card-padding-md: 1rem;     /* 16px */
+--card-padding-lg: 1.5rem;   /* 24px */
+--card-radius: 0.5rem;       /* 8px */
+--card-gap: 1rem;            /* 16px */
+```
+
+### Modal
+
+```css
+--modal-padding: 1.5rem;  /* 24px */
+--modal-radius: 1rem;     /* 16px */
+--modal-gap: 1rem;        /* 16px */
+```
+
+### Checkbox
+
+```css
+--checkbox-size: 1rem;    /* 16px */
+--checkbox-radius: 0.25rem; /* 4px */
+--checkbox-gap: 0.375rem; /* 6px */
+```
+
+### Tooltip
+
+```css
+--tooltip-padding-x: 0.5rem;  /* 8px */
+--tooltip-padding-y: 0.25rem; /* 4px */
+--tooltip-radius: 0.25rem;    /* 4px */
+--tooltip-font-size: 0.6875rem; /* 11px */
+--tooltip-max-width: 14.375rem; /* 230px */
+```
+
+### StatusIndicator
+
+```css
+--status-indicator-padding-x: 0.375rem; /* 6px */
+--status-indicator-padding-y: 0.25rem;  /* 4px */
+--status-indicator-gap: 0.25rem;        /* 4px */
+--status-indicator-radius: 1rem;        /* 16px (pill) */
+--status-indicator-font-size: 0.6875rem; /* 11px */
+
+/* Colors */
+--status-active-bg: #4ade80;   /* green400 */
+--status-error-bg: #f87171;    /* red400 */
+--status-muted-bg: #475569;    /* blueGray600 */
+--status-building-bg: #60a5fa; /* blue400 */
+```
+
+### Menu
+
+```css
+--menu-item-padding-x: 0.5rem;   /* 8px */
+--menu-item-padding-y: 0.375rem; /* 6px */
+--menu-item-gap: 0.375rem;       /* 6px */
+--menu-item-radius: 0.375rem;    /* 6px */
+--menu-divider-margin: 0.5rem;   /* 8px */
+```
+
 ## 컴포넌트 목록
 
 ### Form Controls
@@ -83,87 +334,6 @@ import type { FilterField, AppliedFilter } from '@/design-system';
 
 ### Disclosure
 - **Disclosure**: 접기/펼치기 패널
-
-## 디자인 토큰
-
-### 색상 변수
-```css
-/* Text */
---color-text-default      /* 기본 텍스트 */
---color-text-muted        /* 보조 텍스트 */
---color-text-subtle       /* 약한 텍스트 */
---color-text-disabled     /* 비활성 텍스트 */
-
-/* Surface */
---color-surface-default   /* 기본 배경 */
---color-surface-subtle    /* 약한 배경 */
---color-surface-muted     /* 보조 배경 */
-
-/* Border */
---color-border-default    /* 기본 테두리 */
---color-border-subtle     /* 약한 테두리 */
---color-border-strong     /* 강한 테두리 */
-
-/* Action */
---color-action-primary    /* 주요 액션 색상 (파란색) */
-
-/* State */
---color-state-info        /* 정보 */
---color-state-success     /* 성공 */
---color-state-warning     /* 경고 */
---color-state-danger      /* 위험/에러 */
-```
-
-### 타이포그래피 유틸리티 클래스
-
-**반드시 유틸리티 클래스 사용** (하드코딩 금지)
-
-```css
-/* Heading - semibold (600) */
-.text-heading-h1  /* 40px/48px */
-.text-heading-h2  /* 32px/40px */
-.text-heading-h3  /* 24px/32px */
-.text-heading-h4  /* 18px/28px */
-.text-heading-h5  /* 16px/24px - 페이지 타이틀, SectionCard 타이틀 */
-.text-heading-h6  /* 14px/20px - Drawer 타이틀 */
-
-/* Body - regular (400) */
-.text-body-lg     /* 14px/20px */
-.text-body-md     /* 12px/18px - 기본 본문 */
-.text-body-sm     /* 11px/16px - Helper text */
-.text-body-xs     /* 10px/14px */
-
-/* Label - medium (500) */
-.text-label-lg    /* 14px/20px */
-.text-label-md    /* 12px/18px */
-.text-label-sm    /* 11px/16px - 폼 라벨 */
-```
-
-사용 예:
-```tsx
-<h1 className="text-heading-h5 text-[var(--color-text-default)]">Page Title</h1>
-<p className="text-body-md text-[var(--color-text-muted)]">Description</p>
-<span className="text-label-sm text-[var(--color-text-subtle)]">Label</span>
-```
-
-### 간격
-```css
---spacing-1     /* 4px */
---spacing-2     /* 8px */
---spacing-3     /* 12px */
---spacing-4     /* 16px */
---spacing-6     /* 24px */
---spacing-8     /* 32px */
-```
-
-### 반경
-```css
---radius-sm     /* 4px */
---radius-md     /* 6px */
---radius-lg     /* 8px */
---radius-xl     /* 12px */
---radius-full   /* 9999px */
-```
 
 ## FormField 사용법
 
@@ -461,6 +631,7 @@ import type { FilterField, AppliedFilter } from '@/design-system';
 4. **Divider**: `<div className="w-full h-px bg-[var(--color-border-subtle)]" />`
 5. **반응형**: Tailwind CSS 클래스 사용 (`sm:`, `md:`, `lg:`)
 6. **폰트 크기 하드코딩 금지**: `text-[11px]` 대신 `text-body-sm` 사용
+7. **단위**: rem 사용 (16px 기준)
 
 ## 아이콘
 
@@ -471,7 +642,24 @@ import { IconPlus, IconEdit, IconTrash } from '@tabler/icons-react';
 <IconPlus size={16} stroke={1.5} />
 ```
 
+## CSS 변수 사용 예시
+
+```tsx
+// 색상
+<div className="text-[var(--semantic-color-text)]">기본 텍스트</div>
+<div className="bg-[var(--semantic-color-surface-muted)]">배경</div>
+<div className="border-[var(--semantic-color-border)]">테두리</div>
+
+// 간격
+<div className="p-[var(--primitive-spacing-4)]">padding 16px</div>
+<div className="gap-[var(--primitive-spacing-2)]">gap 8px</div>
+
+// 반경
+<div className="rounded-[var(--semantic-radius-card)]">card radius</div>
+```
+
 ## 참고
 
 - 디자인 시스템 페이지: `/design`
+- Storybook: `http://localhost:6006`
 - 컴포넌트 문서: `/DESIGN_SYSTEM.md`
