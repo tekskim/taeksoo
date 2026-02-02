@@ -224,7 +224,6 @@ export default function CreateIngressPage() {
   const [namespace, setNamespace] = useState('default');
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [descriptionOpen, setDescriptionOpen] = useState(false);
 
   // Rules state
   const [rules, setRules] = useState<IngressRule[]>([]);
@@ -478,20 +477,19 @@ export default function CreateIngressPage() {
                         </VStack>
 
                         {/* Description (collapsible) */}
-                        <VStack gap={2}>
-                          <Disclosure
-                            open={descriptionOpen}
-                            onOpenChange={setDescriptionOpen}
-                            title="Description"
-                          >
-                            <Input
-                              placeholder="Description"
-                              value={description}
-                              onChange={(e) => setDescription(e.target.value)}
-                              fullWidth
-                            />
-                          </Disclosure>
-                        </VStack>
+                        <Disclosure>
+                          <Disclosure.Trigger>Description</Disclosure.Trigger>
+                          <Disclosure.Panel>
+                            <div className="pt-2">
+                              <Input
+                                placeholder="Description"
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
+                                fullWidth
+                              />
+                            </div>
+                          </Disclosure.Panel>
+                        </Disclosure>
                       </VStack>
                     </SectionCard.Content>
                   </SectionCard>
