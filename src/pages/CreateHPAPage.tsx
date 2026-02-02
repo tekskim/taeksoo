@@ -625,7 +625,7 @@ export default function CreateHPAPage() {
                                 </VStack>
                                 <button
                                   onClick={() => removeMetric(metric.id)}
-                                  className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                 >
                                   <IconX
                                     size={12}
@@ -793,7 +793,7 @@ export default function CreateHPAPage() {
                                                 onClick={() =>
                                                   removeMetricSelector(metric.id, selector.id)
                                                 }
-                                                className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                                className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                               >
                                                 <IconX
                                                   size={12}
@@ -889,7 +889,7 @@ export default function CreateHPAPage() {
                                     </VStack>
                                     <button
                                       onClick={() => removeLabel(label.id)}
-                                      className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                     >
                                       <IconX
                                         size={12}
@@ -961,7 +961,7 @@ export default function CreateHPAPage() {
                                     </VStack>
                                     <button
                                       onClick={() => removeAnnotation(annotation.id)}
-                                      className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                     >
                                       <IconX
                                         size={12}

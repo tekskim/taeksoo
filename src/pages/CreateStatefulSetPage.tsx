@@ -682,7 +682,7 @@ function LabelsAnnotationsSection({
                       </VStack>
                       <button
                         onClick={() => onRemoveLabel(index)}
-                        className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                       >
                         <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
                       </button>
@@ -748,7 +748,7 @@ function LabelsAnnotationsSection({
                       </VStack>
                       <button
                         onClick={() => onRemoveAnnotation(index)}
-                        className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                       >
                         <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
                       </button>
@@ -1813,7 +1813,7 @@ export function CreateStatefulSetPage() {
                                         </VStack>
                                         <button
                                           onClick={() => removePodLabel(index)}
-                                          className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                          className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                         >
                                           <IconX
                                             size={12}
@@ -1888,7 +1888,7 @@ export function CreateStatefulSetPage() {
                                         </VStack>
                                         <button
                                           onClick={() => removePodAnnotation(index)}
-                                          className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                          className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                         >
                                           <IconX
                                             size={12}
@@ -2066,7 +2066,7 @@ export function CreateStatefulSetPage() {
                                         </VStack>
                                         <button
                                           onClick={() => removeNameserver(index)}
-                                          className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                          className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                         >
                                           <IconX
                                             size={12}
@@ -2126,7 +2126,7 @@ export function CreateStatefulSetPage() {
                                         </VStack>
                                         <button
                                           onClick={() => removeSearchDomain(index)}
-                                          className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                          className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                         >
                                           <IconX
                                             size={12}
@@ -2194,7 +2194,7 @@ export function CreateStatefulSetPage() {
                                         </VStack>
                                         <button
                                           onClick={() => removeResolverOption(index)}
-                                          className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                          className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                         >
                                           <IconX
                                             size={12}
@@ -2262,7 +2262,7 @@ export function CreateStatefulSetPage() {
                                         </VStack>
                                         <button
                                           onClick={() => removeHostAlias(index)}
-                                          className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                          className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                         >
                                           <IconX
                                             size={12}
@@ -2497,7 +2497,7 @@ export function CreateStatefulSetPage() {
                                                     );
                                                     setNodeAffinityTerms(newTerms);
                                                   }}
-                                                  className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                                 >
                                                   <IconX
                                                     size={12}
@@ -3077,7 +3077,7 @@ export function CreateStatefulSetPage() {
                                         </VStack>
                                         <button
                                           onClick={() => removeToleration(index)}
-                                          className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                          className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                         >
                                           <IconX
                                             size={12}
@@ -4053,7 +4053,7 @@ export function CreateStatefulSetPage() {
                                           />
                                         </VStack>
                                         <button
-                                          className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                          className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                           onClick={() => {
                                             const newEnvVars = (config.envVars || []).filter(
                                               (_, i) => i !== index
@@ -6071,7 +6071,7 @@ export function CreateStatefulSetPage() {
                                                       </div>
                                                     </VStack>
                                                     <button
-                                                      className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                                       onClick={() => {
                                                         const newVolumes = [
                                                           ...(config.selectedVolumes || []),

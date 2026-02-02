@@ -721,7 +721,7 @@ export function CreateServicePage() {
                                     )}
                                     <button
                                       onClick={() => removePort(port.id)}
-                                      className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                       disabled={ports.length <= 1}
                                     >
                                       <IconX
@@ -807,7 +807,7 @@ export function CreateServicePage() {
                                   />
                                   <button
                                     onClick={() => removeExternalIP(ip.id)}
-                                    className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                    className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                   >
                                     <IconX
                                       size={12}
@@ -897,7 +897,7 @@ export function CreateServicePage() {
                                     </VStack>
                                     <button
                                       onClick={() => removeSelector(index)}
-                                      className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                     >
                                       <IconX
                                         size={12}
@@ -1051,7 +1051,7 @@ export function CreateServicePage() {
                                     </VStack>
                                     <button
                                       onClick={() => removeLabel(index)}
-                                      className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                     >
                                       <IconX
                                         size={12}
@@ -1126,7 +1126,7 @@ export function CreateServicePage() {
                                     </VStack>
                                     <button
                                       onClick={() => removeAnnotation(index)}
-                                      className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                     >
                                       <IconX
                                         size={12}
