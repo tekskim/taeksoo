@@ -36,7 +36,7 @@ export interface TextareaProps extends Omit<
   minRows?: number;
   /** Maximum rows (when autoResize is true) */
   maxRows?: number;
-  
+
   // thaki-ui compatibility
   /** @deprecated Use error for validation */
   success?: boolean;
@@ -106,7 +106,9 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
 
       // Calculate line height (approximate)
       const lineHeight = parseInt(getComputedStyle(textarea).lineHeight) || 20;
-      const paddingY = parseInt(getComputedStyle(textarea).paddingTop) + parseInt(getComputedStyle(textarea).paddingBottom) || 16;
+      const paddingY =
+        parseInt(getComputedStyle(textarea).paddingTop) +
+          parseInt(getComputedStyle(textarea).paddingBottom) || 16;
 
       const minHeight = lineHeight * minRows + paddingY;
       const maxHeight = maxRows ? lineHeight * maxRows + paddingY : Infinity;

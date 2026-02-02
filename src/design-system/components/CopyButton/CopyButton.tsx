@@ -1,4 +1,10 @@
-import { forwardRef, useState, useCallback, type ButtonHTMLAttributes, type ReactNode } from 'react';
+import {
+  forwardRef,
+  useState,
+  useCallback,
+  type ButtonHTMLAttributes,
+  type ReactNode,
+} from 'react';
 import { twMerge } from 'tailwind-merge';
 import { IconCopy, IconCheck } from '@tabler/icons-react';
 

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { CopyButton, Copyable } from './CopyButton';
-import { IconLink, IconKey } from '@tabler/icons-react';
+import { IconLink } from '@tabler/icons-react';
 
 const meta: Meta<typeof CopyButton> = {
   title: 'Components/CopyButton',
