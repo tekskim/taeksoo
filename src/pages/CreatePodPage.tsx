@@ -373,72 +373,69 @@ function SummarySidebar({
   ];
 
   return (
-    <div className="w-[280px] shrink-0 self-stretch pt-[45px]">
-      <div className="sticky top-4">
-        <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[8px] overflow-hidden flex flex-col gap-3 pt-3 pb-4 px-3">
-          {/* Scrollable content area */}
-          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[8px] pl-4 pr-1 py-4 max-h-[calc(100vh-200px)] overflow-y-auto">
-            <VStack gap={4} className="pr-2">
-              <h5 className="text-[16px] leading-6 font-semibold text-[var(--color-text-default)]">
-                Summary
-              </h5>
+    <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
+      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
+        {/* Scrollable content area */}
+        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4 max-h-[calc(100vh-200px)] overflow-y-auto">
+          <VStack gap={4}>
+            <h5 className="text-[16px] leading-6 font-semibold text-[var(--color-text-default)]">
+              Summary
+            </h5>
 
-              {/* Pod Section */}
-              <VStack gap={2}>
+            {/* Pod Section */}
+            <VStack gap={2}>
+              <SummarySectionHeader
+                label="Pod"
+                status={podComplete ? 'complete' : 'in-progress'}
+                expanded={isPodTab}
+                onToggle={() => {}}
+                hasChildren
+              />
+              {isPodTab && (
+                <VStack gap={0} className="ml-3">
+                  {podSections.map((section) => (
+                    <SummarySubItem key={section} label={section} status="complete" />
+                  ))}
+                </VStack>
+              )}
+            </VStack>
+
+            {/* Container Sections */}
+            {containerTabs.map((container) => (
+              <VStack key={container.id} gap={2}>
                 <SummarySectionHeader
-                  label="Pod"
-                  status={podComplete ? 'complete' : 'in-progress'}
-                  expanded={isPodTab}
+                  label={container.name}
+                  status={containersComplete ? 'complete' : 'in-progress'}
+                  expanded={activeContainerId === container.id}
                   onToggle={() => {}}
                   hasChildren
                 />
-                {isPodTab && (
+                {activeContainerId === container.id && (
                   <VStack gap={0} className="ml-3">
-                    {podSections.map((section) => (
+                    {containerSections.map((section) => (
                       <SummarySubItem key={section} label={section} status="complete" />
                     ))}
                   </VStack>
                 )}
               </VStack>
-
-              {/* Container Sections */}
-              {containerTabs.map((container) => (
-                <VStack key={container.id} gap={2}>
-                  <SummarySectionHeader
-                    label={container.name}
-                    status={containersComplete ? 'complete' : 'in-progress'}
-                    expanded={activeContainerId === container.id}
-                    onToggle={() => {}}
-                    hasChildren
-                  />
-                  {activeContainerId === container.id && (
-                    <VStack gap={0} className="ml-3">
-                      {containerSections.map((section) => (
-                        <SummarySubItem key={section} label={section} status="complete" />
-                      ))}
-                    </VStack>
-                  )}
-                </VStack>
-              ))}
-            </VStack>
-          </div>
-
-          {/* Button Container */}
-          <HStack gap={2} className="w-full pt-3">
-            <Button variant="secondary" size="sm" onClick={onCancel} className="w-[80px]">
-              Cancel
-            </Button>
-            <Button
-              variant="primary"
-              size="sm"
-              onClick={onCreate}
-              className="flex-1 min-w-[80px]"
-              disabled={isCreateDisabled}
-            >
-              Create
-            </Button>
-          </HStack>
+            ))}
+          </VStack>
         </div>
+
+        {/* Button Container */}
+        <HStack gap={2}>
+          <Button variant="secondary" onClick={onCancel} className="w-[80px]">
+            Cancel
+          </Button>
+          <Button
+            variant="primary"
+            onClick={onCreate}
+            className="flex-1 min-w-[80px]"
+            disabled={isCreateDisabled}
+          >
+            Create
+          </Button>
+        </HStack>
       </div>
     </div>
   );
