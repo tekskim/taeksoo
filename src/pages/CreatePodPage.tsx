@@ -32,7 +32,7 @@ import {
   IconFile,
   IconCopy,
   IconSearch,
-  IconPlus,
+  IconCirclePlus,
   IconX,
   IconCirclePlus,
   IconChevronRight,
@@ -216,20 +216,6 @@ interface CreatePVCVolume {
 
 type Volume = ConfigMapVolume | SecretVolume | PVCVolume | CreatePVCVolume;
 
-// Volume Claim Template
-interface VolumeClaimTemplate {
-  name: string;
-  useExistingPV: boolean;
-  storageClass: string;
-  capacity: string;
-  persistentVolume: string;
-  accessModes: {
-    readWriteOnce: boolean;
-    readOnlyMany: boolean;
-    readWriteMany: boolean;
-  };
-}
-
 // Node Affinity Term
 interface NodeAffinityTerm {
   priority: string;
@@ -356,14 +342,15 @@ function SummarySidebar({
   const containersComplete = containerTabs.length > 0; // At least one container exists
 
   // Determine which section to expand based on active tab
-  const isPodConfigTab = activeTab === 'pod-config';
   const isPodTab = activeTab === 'pod';
   const activeContainerId = containerTabs.find((c) => c.id === activeTab)?.id;
 
-  // Pod section items matching Figma design
+  // Pod section items matching actual sections
   const podSections = [
+    'Basic Information',
     'Labels & Annotations',
     'Scaling and Upgrade Policy',
+    'Networking',
     'Node Scheduling',
     'Pod Scheduling',
     'Resources',
@@ -386,99 +373,69 @@ function SummarySidebar({
   ];
 
   return (
-    <div className="w-[280px] shrink-0 self-stretch pt-[45px]">
-      <div className="sticky top-4">
-        <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[8px] overflow-hidden flex flex-col gap-3 pt-3 pb-4 px-3">
-          {/* Scrollable content area */}
-          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[8px] pl-4 pr-1 py-4 max-h-[calc(100vh-200px)] overflow-y-auto">
-            <VStack gap={4} className="pr-2">
-              <h5 className="text-[16px] leading-6 font-semibold text-[var(--color-text-default)]">
-                Summary
-              </h5>
+    <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
+      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
+        {/* Scrollable content area */}
+        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4 max-h-[calc(100vh-200px)] overflow-y-auto">
+          <VStack gap={4}>
+            <h5 className="text-[16px] leading-6 font-semibold text-[var(--color-text-default)]">
+              Summary
+            </h5>
 
-              {/* Deployment Section */}
-              <VStack gap={2}>
+            {/* Pod Section */}
+            <VStack gap={2}>
+              <SummarySectionHeader
+                label="Pod"
+                status={podComplete ? 'complete' : 'in-progress'}
+                expanded={isPodTab}
+                onToggle={() => {}}
+                hasChildren
+              />
+              {isPodTab && (
+                <VStack gap={0} className="ml-3">
+                  {podSections.map((section) => (
+                    <SummarySubItem key={section} label={section} status="complete" />
+                  ))}
+                </VStack>
+              )}
+            </VStack>
+
+            {/* Container Sections */}
+            {containerTabs.map((container) => (
+              <VStack key={container.id} gap={2}>
                 <SummarySectionHeader
-                  label="Deployment"
-                  status={deploymentComplete ? 'complete' : 'in-progress'}
-                  expanded={isPodConfigTab}
+                  label={container.name}
+                  status={containersComplete ? 'complete' : 'in-progress'}
+                  expanded={activeContainerId === container.id}
                   onToggle={() => {}}
                   hasChildren
                 />
-                {isPodConfigTab && (
+                {activeContainerId === container.id && (
                   <VStack gap={0} className="ml-3">
-                    <SummarySubItem
-                      label="Basic Information"
-                      status={basicInfoComplete ? 'complete' : 'in-progress'}
-                    />
-                    <SummarySubItem
-                      label="Labels & Annotations"
-                      status={labelsComplete ? 'complete' : 'in-progress'}
-                    />
-                    <SummarySubItem
-                      label="Scaling and Upgrade Policy"
-                      status={scalingComplete ? 'complete' : 'in-progress'}
-                    />
-                  </VStack>
-                )}
-              </VStack>
-
-              {/* Pod Section */}
-              <VStack gap={2}>
-                <SummarySectionHeader
-                  label="Pod"
-                  status={podComplete ? 'complete' : 'in-progress'}
-                  expanded={isPodTab}
-                  onToggle={() => {}}
-                  hasChildren
-                />
-                {isPodTab && (
-                  <VStack gap={0} className="ml-3">
-                    {podSections.map((section) => (
+                    {containerSections.map((section) => (
                       <SummarySubItem key={section} label={section} status="complete" />
                     ))}
                   </VStack>
                 )}
               </VStack>
-
-              {/* Container Sections */}
-              {containerTabs.map((container) => (
-                <VStack key={container.id} gap={2}>
-                  <SummarySectionHeader
-                    label={container.name}
-                    status={containersComplete ? 'complete' : 'in-progress'}
-                    expanded={activeContainerId === container.id}
-                    onToggle={() => {}}
-                    hasChildren
-                  />
-                  {activeContainerId === container.id && (
-                    <VStack gap={0} className="ml-3">
-                      {containerSections.map((section) => (
-                        <SummarySubItem key={section} label={section} status="complete" />
-                      ))}
-                    </VStack>
-                  )}
-                </VStack>
-              ))}
-            </VStack>
-          </div>
-
-          {/* Button Container */}
-          <HStack gap={2} className="w-full pt-3">
-            <Button variant="secondary" size="sm" onClick={onCancel} className="w-[80px]">
-              Cancel
-            </Button>
-            <Button
-              variant="primary"
-              size="sm"
-              onClick={onCreate}
-              className="flex-1 min-w-[80px]"
-              disabled={isCreateDisabled}
-            >
-              Create
-            </Button>
-          </HStack>
+            ))}
+          </VStack>
         </div>
+
+        {/* Button Container */}
+        <HStack gap={2}>
+          <Button variant="secondary" onClick={onCancel} className="w-[80px]">
+            Cancel
+          </Button>
+          <Button
+            variant="primary"
+            onClick={onCreate}
+            className="flex-1 min-w-[80px]"
+            disabled={isCreateDisabled}
+          >
+            Create
+          </Button>
+        </HStack>
       </div>
     </div>
   );
@@ -495,8 +452,6 @@ interface BasicInfoSectionProps {
   onNameChange: (value: string) => void;
   nameError: string | null;
   onNameErrorChange: (error: string | null) => void;
-  replicas: number;
-  onReplicasChange: (value: number) => void;
   description: string;
   onDescriptionChange: (value: string) => void;
 }
@@ -508,8 +463,6 @@ function BasicInfoSection({
   onNameChange,
   nameError,
   onNameErrorChange,
-  replicas,
-  onReplicasChange,
   description,
   onDescriptionChange,
 }: BasicInfoSectionProps) {
@@ -551,23 +504,6 @@ function BasicInfoSection({
                 {nameError}
               </span>
             )}
-          </VStack>
-
-          {/* Replicas */}
-          <VStack gap={2}>
-            <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
-              Replicas<span className="text-[var(--color-state-danger)]"> *</span>
-            </label>
-            <p className="text-[11px] text-[var(--color-text-subtle)] leading-[16px]">
-              Select the number of pod replicas to create.
-            </p>
-            <NumberInput
-              value={replicas}
-              onChange={onReplicasChange}
-              min={1}
-              max={100}
-              className="w-[320px]"
-            />
           </VStack>
 
           {/* Description (Collapsible) */}
@@ -961,7 +897,6 @@ export function CreatePodPage() {
   // Basic information state
   const [namespace, setNamespace] = useState('default');
   const [name, setName] = useState('');
-  const [replicas, setReplicas] = useState(1);
   const [description, setDescription] = useState('');
 
   // Labels & Annotations state
@@ -1033,6 +968,7 @@ export function CreatePodPage() {
     command: string;
     args: string;
     workingDir: string;
+    stdin: string;
     // Ports
     ports: { name: string; containerPort: string; protocol: string }[];
     // Environment Variables
@@ -1205,9 +1141,6 @@ export function CreatePodPage() {
   const [volumes, setVolumes] = useState<Volume[]>([]);
   const [volumeType, setVolumeType] = useState<string>('configmap');
 
-  // Volume Claim Templates state
-  const [volumeClaimTemplates, setVolumeClaimTemplates] = useState<VolumeClaimTemplate[]>([]);
-
   // Node Affinity state
   const [nodeAffinityTerms, setNodeAffinityTerms] = useState<NodeAffinityTerm[]>([]);
 
@@ -1257,13 +1190,12 @@ export function CreatePodPage() {
     closable: tab.closable,
   }));
 
-  // Active form tab (Pod, Pod Template, Container-X)
-  const [activeTab, setActiveTab] = useState('pod-config');
+  // Active form tab (Pod, Container-X)
+  const [activeTab, setActiveTab] = useState('pod');
 
   // Build inner tabs for the form
   const formTabs = [
-    { id: 'pod-config', label: 'Pod' },
-    { id: 'pod', label: 'Pod Template' },
+    { id: 'pod', label: 'Pod' },
     ...containerTabs.map((c) => ({ id: c.id, label: c.name, closable: containerTabs.length > 1 })),
   ];
 
@@ -1278,7 +1210,7 @@ export function CreatePodPage() {
         return newConfigs;
       });
       if (activeTab === id) {
-        setActiveTab('pod-config');
+        setActiveTab('pod');
       }
     },
     [containerTabs, activeTab]
@@ -1297,40 +1229,15 @@ export function CreatePodPage() {
       return;
     }
 
-    console.log('Creating deployment:', {
+    console.log('Creating pod:', {
       namespace,
       name,
-      replicas,
       description,
       labels,
       annotations,
-      strategy,
-      maxSurge,
-      maxSurgeUnit,
-      maxUnavailable,
-      maxUnavailableUnit,
-      minReady,
-      revisionHistoryLimit,
-      progressDeadline,
     });
-    navigate('/container/deployments');
-  }, [
-    namespace,
-    name,
-    replicas,
-    description,
-    labels,
-    annotations,
-    strategy,
-    maxSurge,
-    maxSurgeUnit,
-    maxUnavailable,
-    maxUnavailableUnit,
-    minReady,
-    revisionHistoryLimit,
-    progressDeadline,
-    navigate,
-  ]);
+    navigate('/container/pods');
+  }, [namespace, name, description, labels, annotations, navigate]);
 
   // Label management
   const addLabel = useCallback(() => {
@@ -1496,37 +1403,6 @@ export function CreatePodPage() {
       setVolumes(newVolumes);
     },
     [volumes]
-  );
-
-  // Volume Claim Template management
-  const addVolumeClaimTemplate = useCallback(() => {
-    setVolumeClaimTemplates([
-      ...volumeClaimTemplates,
-      {
-        name: '',
-        useExistingPV: false,
-        storageClass: '',
-        capacity: '',
-        persistentVolume: '',
-        accessModes: { readWriteOnce: false, readOnlyMany: false, readWriteMany: false },
-      },
-    ]);
-  }, [volumeClaimTemplates]);
-
-  const removeVolumeClaimTemplate = useCallback(
-    (index: number) => {
-      setVolumeClaimTemplates(volumeClaimTemplates.filter((_, i) => i !== index));
-    },
-    [volumeClaimTemplates]
-  );
-
-  const updateVolumeClaimTemplate = useCallback(
-    (index: number, updates: Partial<VolumeClaimTemplate>) => {
-      const newTemplates = [...volumeClaimTemplates];
-      newTemplates[index] = { ...newTemplates[index], ...updates };
-      setVolumeClaimTemplates(newTemplates);
-    },
-    [volumeClaimTemplates]
   );
 
   // Nameserver management
@@ -1735,20 +1611,20 @@ export function CreatePodPage() {
           }
           actions={
             <>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              <button className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+                <IconTerminal2 size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              <button className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+                <IconFile size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              <button className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+                <IconCopy size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              <button className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+                <IconSearch size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              <button className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+                <IconBell size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
             </>
           }
@@ -1794,7 +1670,7 @@ export function CreatePodPage() {
                                       e.stopPropagation();
                                       removeContainerTab(tab.id);
                                     }}
-                                    className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded shrink-0"
+                                    className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
                                   >
                                     <IconX size={12} stroke={1.5} />
                                   </button>
@@ -1807,13 +1683,13 @@ export function CreatePodPage() {
                           onClick={addContainerTab}
                           className="flex items-center justify-center h-[20px] px-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors text-[var(--color-text-muted)] shrink-0"
                         >
-                          <IconPlus size={16} stroke={1.5} />
+                          <IconCirclePlus size={12} stroke={1.5} />
                         </button>
                       </div>
                     </Tabs>
                   </div>
-                  {/* Pod Config Tab */}
-                  {activeTab === 'pod-config' && (
+                  {/* Pod Tab */}
+                  {activeTab === 'pod' && (
                     <>
                       <BasicInfoSection
                         namespace={namespace}
@@ -1822,45 +1698,10 @@ export function CreatePodPage() {
                         onNameChange={setName}
                         nameError={nameError}
                         onNameErrorChange={setNameError}
-                        replicas={replicas}
-                        onReplicasChange={setReplicas}
                         description={description}
                         onDescriptionChange={setDescription}
                       />
-                      <LabelsAnnotationsSection
-                        labels={labels}
-                        onAddLabel={addLabel}
-                        onRemoveLabel={removeLabel}
-                        onUpdateLabel={updateLabel}
-                        annotations={annotations}
-                        onAddAnnotation={addAnnotation}
-                        onRemoveAnnotation={removeAnnotation}
-                        onUpdateAnnotation={updateAnnotation}
-                      />
-                      <ScalingPolicySection
-                        strategy={strategy}
-                        onStrategyChange={setStrategy}
-                        maxSurge={maxSurge}
-                        onMaxSurgeChange={setMaxSurge}
-                        maxSurgeUnit={maxSurgeUnit}
-                        onMaxSurgeUnitChange={setMaxSurgeUnit}
-                        maxUnavailable={maxUnavailable}
-                        onMaxUnavailableChange={setMaxUnavailable}
-                        maxUnavailableUnit={maxUnavailableUnit}
-                        onMaxUnavailableUnitChange={setMaxUnavailableUnit}
-                        minReady={minReady}
-                        onMinReadyChange={setMinReady}
-                        revisionHistoryLimit={revisionHistoryLimit}
-                        onRevisionHistoryLimitChange={setRevisionHistoryLimit}
-                        progressDeadline={progressDeadline}
-                        onProgressDeadlineChange={setProgressDeadline}
-                      />
-                    </>
-                  )}
 
-                  {/* Pod Tab */}
-                  {activeTab === 'pod' && (
-                    <>
                       {/* Labels & Annotations */}
                       <SectionCard>
                         <SectionCard.Header title="Labels & Annotations" />
@@ -2455,10 +2296,10 @@ export function CreatePodPage() {
                                                   )
                                                 );
                                               }}
-                                              className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                              className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                             >
                                               <IconX
-                                                size={16}
+                                                size={12}
                                                 className="text-[var(--color-text-muted)]"
                                                 stroke={1.5}
                                               />
@@ -2698,10 +2539,10 @@ export function CreatePodPage() {
                                             podAffinityTerms.filter((_, i) => i !== termIndex)
                                           );
                                         }}
-                                        className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                       >
                                         <IconX
-                                          size={16}
+                                          size={12}
                                           className="text-[var(--color-text-muted)]"
                                           stroke={1.5}
                                         />
@@ -2966,10 +2807,10 @@ export function CreatePodPage() {
                                                 };
                                                 setPodAffinityTerms(newTerms);
                                               }}
-                                              className="mt-6 p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                              className="mt-6 size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                             >
                                               <IconX
-                                                size={16}
+                                                size={12}
                                                 className="text-[var(--color-text-muted)]"
                                                 stroke={1.5}
                                               />
@@ -3284,10 +3125,10 @@ export function CreatePodPage() {
                                     </span>
                                     <button
                                       onClick={() => removeVolume(index)}
-                                      className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                     >
                                       <IconX
-                                        size={16}
+                                        size={12}
                                         className="text-[var(--color-text-muted)]"
                                         stroke={1.5}
                                       />
@@ -3719,199 +3560,6 @@ export function CreatePodPage() {
                           </VStack>
                         </SectionCard.Content>
                       </SectionCard>
-
-                      {/* Volume Claim Templates */}
-                      <SectionCard>
-                        <SectionCard.Header title="Volume Claim Templates" />
-                        <SectionCard.Content>
-                          <div className="w-full">
-                            <VStack gap={3}>
-                              {volumeClaimTemplates.map((template, index) => (
-                                <div
-                                  key={index}
-                                  className="relative bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
-                                >
-                                  <button
-                                    onClick={() => removeVolumeClaimTemplate(index)}
-                                    className="absolute top-3 right-3 p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                  >
-                                    <IconX
-                                      size={16}
-                                      className="text-[var(--color-text-muted)]"
-                                      stroke={1.5}
-                                    />
-                                  </button>
-                                  <VStack gap={3}>
-                                    <VStack gap={1}>
-                                      <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                                        Persistent Volume Claim Name{' '}
-                                        <span className="text-[var(--color-state-danger)]">*</span>
-                                      </span>
-                                      <Input
-                                        placeholder="pvc-name"
-                                        value={template.name}
-                                        onChange={(e) =>
-                                          updateVolumeClaimTemplate(index, { name: e.target.value })
-                                        }
-                                        fullWidth
-                                      />
-                                    </VStack>
-
-                                    <RadioGroup
-                                      value={template.useExistingPV ? 'existing' : 'new'}
-                                      onChange={(val) =>
-                                        updateVolumeClaimTemplate(index, {
-                                          useExistingPV: val === 'existing',
-                                        })
-                                      }
-                                    >
-                                      <Radio
-                                        value="new"
-                                        label="Use Storage Class and create a new Persistent Volume"
-                                      />
-                                      <Radio
-                                        value="existing"
-                                        label="Use existing Persistent Volume"
-                                      />
-                                    </RadioGroup>
-
-                                    {!template.useExistingPV && (
-                                      <div className="grid grid-cols-2 gap-3">
-                                        <VStack gap={1}>
-                                          <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                                            Storage Class{' '}
-                                            <span className="text-[var(--color-state-danger)]">
-                                              *
-                                            </span>
-                                          </span>
-                                          <Select
-                                            options={[
-                                              { value: 'standard', label: 'standard' },
-                                              { value: 'fast', label: 'fast' },
-                                            ]}
-                                            value={template.storageClass}
-                                            onChange={(val) =>
-                                              updateVolumeClaimTemplate(index, {
-                                                storageClass: val,
-                                              })
-                                            }
-                                            placeholder="Select Storage Class"
-                                            fullWidth
-                                          />
-                                        </VStack>
-                                        <VStack gap={1}>
-                                          <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                                            Capacity{' '}
-                                            <span className="text-[var(--color-state-danger)]">
-                                              *
-                                            </span>
-                                          </span>
-                                          <NumberInput
-                                            placeholder="10"
-                                            value={
-                                              template.capacity
-                                                ? parseInt(template.capacity)
-                                                : undefined
-                                            }
-                                            onChange={(val) =>
-                                              updateVolumeClaimTemplate(index, {
-                                                capacity: val?.toString() || '',
-                                              })
-                                            }
-                                            suffix="Gi"
-                                            fullWidth
-                                          />
-                                        </VStack>
-                                      </div>
-                                    )}
-
-                                    {template.useExistingPV && (
-                                      <VStack gap={1}>
-                                        <span className="text-[11px] font-medium text-[var(--color-text-default)]">
-                                          Persistent Volume{' '}
-                                          <span className="text-[var(--color-state-danger)]">
-                                            *
-                                          </span>
-                                        </span>
-                                        <Select
-                                          options={[
-                                            { value: 'pv-1', label: 'pv-1' },
-                                            { value: 'pv-2', label: 'pv-2' },
-                                          ]}
-                                          value={template.persistentVolume}
-                                          onChange={(val) =>
-                                            updateVolumeClaimTemplate(index, {
-                                              persistentVolume: val,
-                                            })
-                                          }
-                                          placeholder="Select Persistent Volume"
-                                          fullWidth
-                                        />
-                                      </VStack>
-                                    )}
-
-                                    <VStack gap={1.5}>
-                                      <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-[21px]">
-                                        Access Modes{' '}
-                                        <span className="text-[var(--color-state-danger)]">*</span>
-                                      </span>
-                                      <VStack gap={1.5}>
-                                        <Checkbox
-                                          label="Single Node Read-Write"
-                                          checked={template.accessModes.readWriteOnce}
-                                          onChange={(e) =>
-                                            updateVolumeClaimTemplate(index, {
-                                              accessModes: {
-                                                ...template.accessModes,
-                                                readWriteOnce: e.target.checked,
-                                              },
-                                            })
-                                          }
-                                        />
-                                        <Checkbox
-                                          label="Many Nodes Read-Only"
-                                          checked={template.accessModes.readOnlyMany}
-                                          onChange={(e) =>
-                                            updateVolumeClaimTemplate(index, {
-                                              accessModes: {
-                                                ...template.accessModes,
-                                                readOnlyMany: e.target.checked,
-                                              },
-                                            })
-                                          }
-                                        />
-                                        <Checkbox
-                                          label="Many Nodes Read-Write"
-                                          checked={template.accessModes.readWriteMany}
-                                          onChange={(e) =>
-                                            updateVolumeClaimTemplate(index, {
-                                              accessModes: {
-                                                ...template.accessModes,
-                                                readWriteMany: e.target.checked,
-                                              },
-                                            })
-                                          }
-                                        />
-                                      </VStack>
-                                    </VStack>
-                                  </VStack>
-                                </div>
-                              ))}
-
-                              <div className="w-fit">
-                                <Button
-                                  variant="secondary"
-                                  size="sm"
-                                  leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                                  onClick={addVolumeClaimTemplate}
-                                >
-                                  Add Volume Claim Template
-                                </Button>
-                              </div>
-                            </VStack>
-                          </div>
-                        </SectionCard.Content>
-                      </SectionCard>
                     </>
                   )}
 
@@ -4077,7 +3725,87 @@ export function CreatePodPage() {
                             </SectionCard.Content>
                           </SectionCard>
 
-                          {/* 3. Environment Variables Section */}
+                          {/* 3. Command Section */}
+                          <SectionCard>
+                            <SectionCard.Header title="Command" />
+                            <SectionCard.Content>
+                              <VStack gap={4}>
+                                {/* Row 1: Command and Arguments */}
+                                <div className="grid grid-cols-2 gap-4 w-full">
+                                  <VStack gap={2}>
+                                    <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                      Command
+                                    </span>
+                                    <Input
+                                      placeholder="e.g./bin/sh"
+                                      value={config.command || ''}
+                                      onChange={(e) =>
+                                        updateContainerConfig(containerId, {
+                                          command: e.target.value,
+                                        })
+                                      }
+                                      fullWidth
+                                    />
+                                  </VStack>
+                                  <VStack gap={2}>
+                                    <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                      Arguments
+                                    </span>
+                                    <Input
+                                      placeholder="e.g./usr/sbin/httpd -f httpd.conf"
+                                      value={config.args || ''}
+                                      onChange={(e) =>
+                                        updateContainerConfig(containerId, {
+                                          args: e.target.value,
+                                        })
+                                      }
+                                      fullWidth
+                                    />
+                                  </VStack>
+                                </div>
+
+                                {/* Row 2: WorkingDir and Stdin */}
+                                <div className="grid grid-cols-2 gap-4 w-full">
+                                  <VStack gap={2}>
+                                    <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                      WorkingDir
+                                    </span>
+                                    <Input
+                                      placeholder="e.g./myapp"
+                                      value={config.workingDir || ''}
+                                      onChange={(e) =>
+                                        updateContainerConfig(containerId, {
+                                          workingDir: e.target.value,
+                                        })
+                                      }
+                                      fullWidth
+                                    />
+                                  </VStack>
+                                  <VStack gap={2}>
+                                    <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                      Stdin
+                                    </span>
+                                    <Select
+                                      options={[
+                                        { value: 'Always', label: 'Always' },
+                                        { value: 'Never', label: 'Never' },
+                                        { value: 'Once', label: 'Once' },
+                                      ]}
+                                      value={config.stdin || 'Always'}
+                                      onChange={(val) =>
+                                        updateContainerConfig(containerId, {
+                                          stdin: val,
+                                        })
+                                      }
+                                      fullWidth
+                                    />
+                                  </VStack>
+                                </div>
+                              </VStack>
+                            </SectionCard.Content>
+                          </SectionCard>
+
+                          {/* 4. Environment Variables Section */}
                           <SectionCard>
                             <SectionCard.Header title="Environment Variables" />
                             <SectionCard.Content>
@@ -4448,7 +4176,7 @@ export function CreatePodPage() {
                                                         });
                                                       }}
                                                     >
-                                                      <IconX size={16} />
+                                                      <IconX size={12} />
                                                     </Button>
                                                   </div>
                                                 </div>
@@ -4703,7 +4431,7 @@ export function CreatePodPage() {
                                                         });
                                                       }}
                                                     >
-                                                      <IconX size={16} />
+                                                      <IconX size={12} />
                                                     </Button>
                                                   </div>
                                                 </div>
@@ -5167,7 +4895,7 @@ export function CreatePodPage() {
                                                             });
                                                           }}
                                                         >
-                                                          <IconX size={16} />
+                                                          <IconX size={12} />
                                                         </Button>
                                                       </div>
                                                     </div>

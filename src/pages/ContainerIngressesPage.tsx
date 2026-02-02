@@ -355,11 +355,7 @@ export function ContainerIngressesPage() {
               <HStack justify="between" align="center" className="w-full min-h-8">
                 <h1 className="text-heading-h5 text-[var(--color-text-default)]">Ingresses</h1>
                 <ContextMenu items={createDropdownItems} trigger="click" align="right">
-                  <Button
-                    variant="primary"
-                    size="sm"
-                    rightIcon={<IconChevronDown size={12} stroke={1.5} />}
-                  >
+                  <Button variant="primary" rightIcon={<IconChevronDown size={14} stroke={1.5} />}>
                     Create Ingress
                   </Button>
                 </ContextMenu>

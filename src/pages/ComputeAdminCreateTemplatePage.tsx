@@ -441,7 +441,7 @@ function SectionStatusIcon({ status }: { status: SectionState }) {
     return (
       <div className="w-4 h-4 shrink-0">
         <IconProgress
-          size={16}
+          size={12}
           stroke={1.5}
           className="text-[var(--color-text-subtle)] animate-spin"
         />
@@ -1590,7 +1590,7 @@ function FlavorSection({
             </a>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
             {row.hasWarning && (
-              <IconAlertCircle size={16} className="text-[var(--color-state-danger)]" />
+              <IconAlertCircle size={12} className="text-[var(--color-state-danger)]" />
             )}
           </HStack>
           <span className="text-body-sm text-[var(--color-text-muted)] leading-[16px]">
@@ -2209,7 +2209,7 @@ function NetworkSection({
                   className="ml-auto p-1 hover:bg-[var(--color-surface-subtle)] rounded"
                   onClick={() => removeVirtualLAN(vlan.id)}
                 >
-                  <IconX size={16} className="text-[var(--color-text-subtle)]" />
+                  <IconX size={12} className="text-[var(--color-text-subtle)]" />
                 </button>
               </div>
             ))}
@@ -2649,19 +2649,19 @@ function AdvancedSection({
                       placeholder="Key"
                       value={tag.key}
                       onChange={(e) => handleTagChange(index, 'key', e.target.value)}
-                      className="flex-1"
+                      fullWidth
                     />
                     <Input
                       placeholder="Value"
                       value={tag.value}
                       onChange={(e) => handleTagChange(index, 'value', e.target.value)}
-                      className="flex-1"
+                      fullWidth
                     />
                     <button
                       onClick={() => handleRemoveTag(index)}
                       className="p-1 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]"
                     >
-                      <IconX size={16} />
+                      <IconX size={12} />
                     </button>
                   </HStack>
                 ))}
@@ -3002,7 +3002,7 @@ export function ComputeAdminCreateTemplatePage() {
             }
             actions={
               <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
+                icon={<IconBell size={12} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />

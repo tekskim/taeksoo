@@ -18,7 +18,7 @@ import {
   IconEdit,
   IconCheck,
   IconProgress,
-  IconPlus,
+  IconCirclePlus,
   IconChevronDown,
   IconChevronRight,
   IconSearch,
@@ -127,7 +127,7 @@ function SectionStatusIcon({ status }: { status: SectionState }) {
     return (
       <div className="w-4 h-4 shrink-0">
         <IconProgress
-          size={16}
+          size={12}
           stroke={1.5}
           className="text-[var(--color-text-subtle)] animate-spin"
         />
@@ -778,7 +778,7 @@ function PolicyEditorSection({
                   className="absolute top-3 right-3 p-1 rounded hover:bg-[var(--color-surface-subtle)] text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] transition-colors"
                   aria-label="Remove permission"
                 >
-                  <IconX size={16} stroke={1.5} />
+                  <IconX size={12} stroke={1.5} />
                 </button>
               )}
               <VStack gap={6}>
@@ -1030,7 +1030,7 @@ function PolicyEditorSection({
           {/* Add Permission Button */}
           <Button
             variant="secondary"
-            leftIcon={<IconPlus size={12} />}
+            leftIcon={<IconCirclePlus size={12} />}
             onClick={addPermission}
             className="text-[var(--color-action-primary)]"
           >

@@ -20,7 +20,7 @@ import {
   IconFile,
   IconCopy,
   IconSearch,
-  IconPlus,
+  IconCirclePlus,
   IconX,
   IconEdit,
 } from '@tabler/icons-react';
@@ -164,7 +164,7 @@ function SummarySidebar({
             disabled={isCreateDisabled}
             className="flex-1"
           >
-            Create ConfigMap
+            Create
           </Button>
         </HStack>
       </div>
@@ -396,9 +396,9 @@ function DataSection({
                   />
                   <button
                     onClick={() => removeDataEntry(index)}
-                    className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                    className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                   >
-                    <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                    <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
                   </button>
                 </div>
               ))}
@@ -409,7 +409,7 @@ function DataSection({
             <Button
               variant="outline"
               size="sm"
-              leftIcon={<IconPlus size={12} stroke={1.5} />}
+              leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
               onClick={addDataEntry}
             >
               Add Data Entry
@@ -534,9 +534,9 @@ function BinaryDataSection({
                   />
                   <button
                     onClick={() => removeBinaryDataEntry(index)}
-                    className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                    className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                   >
-                    <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                    <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
                   </button>
                 </div>
               ))}
@@ -547,7 +547,7 @@ function BinaryDataSection({
             <Button
               variant="outline"
               size="sm"
-              leftIcon={<IconPlus size={12} stroke={1.5} />}
+              leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
               onClick={addBinaryDataEntry}
             >
               Add Data Entry
@@ -642,24 +642,24 @@ function LabelsAnnotationsSection({
             </VStack>
 
             {labels.map((label, index) => (
-              <HStack gap={2} key={index} className="w-full">
+              <HStack gap={2} key={index} className="w-full items-center">
                 <Input
                   placeholder="Key"
                   value={label.key}
                   onChange={(e) => onUpdateLabel(index, 'key', e.target.value)}
-                  className="flex-1"
+                  fullWidth
                 />
                 <Input
                   placeholder="Value"
                   value={label.value}
                   onChange={(e) => onUpdateLabel(index, 'value', e.target.value)}
-                  className="flex-1"
+                  fullWidth
                 />
                 <button
                   onClick={() => onRemoveLabel(index)}
-                  className="p-2 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
                 >
-                  <IconX size={14} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                  <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
                 </button>
               </HStack>
             ))}
@@ -667,7 +667,7 @@ function LabelsAnnotationsSection({
             <Button
               variant="outline"
               size="sm"
-              leftIcon={<IconPlus size={12} stroke={1.5} />}
+              leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
               onClick={onAddLabel}
             >
               Add Label
@@ -684,7 +684,7 @@ function LabelsAnnotationsSection({
             </VStack>
 
             {annotations.map((annotation, index) => (
-              <HStack gap={2} key={index} className="w-full">
+              <HStack gap={2} key={index} className="w-full items-center">
                 <Input
                   placeholder="Key"
                   value={annotation.key}
@@ -699,9 +699,9 @@ function LabelsAnnotationsSection({
                 />
                 <button
                   onClick={() => onRemoveAnnotation(index)}
-                  className="p-2 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
                 >
-                  <IconX size={14} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                  <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
                 </button>
               </HStack>
             ))}
@@ -709,7 +709,7 @@ function LabelsAnnotationsSection({
             <Button
               variant="outline"
               size="sm"
-              leftIcon={<IconPlus size={12} stroke={1.5} />}
+              leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
               onClick={onAddAnnotation}
             >
               Add Annotation
@@ -1043,20 +1043,20 @@ export function CreateConfigMapPage() {
           }
           actions={
             <>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              <button className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+                <IconTerminal2 size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              <button className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+                <IconFile size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              <button className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+                <IconCopy size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              <button className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+                <IconSearch size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              <button className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+                <IconBell size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
             </>
           }

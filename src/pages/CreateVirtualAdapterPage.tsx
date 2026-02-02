@@ -33,7 +33,7 @@ import type { WizardSummaryItem, WizardSectionState, TableColumn } from '@/desig
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { useSidebar } from '@/contexts/SidebarContext';
-import { IconBell, IconEdit, IconExternalLink, IconPlus, IconX } from '@tabler/icons-react';
+import { IconBell, IconEdit, IconExternalLink, IconCirclePlus, IconX } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -774,7 +774,7 @@ export default function CreateVirtualAdapterPage() {
                                     onClick={() => removeFixedIP(entry.id)}
                                     className="p-1 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] transition-colors"
                                   >
-                                    <IconX size={16} />
+                                    <IconX size={12} />
                                   </button>
                                 </div>
                               ))}
@@ -784,7 +784,7 @@ export default function CreateVirtualAdapterPage() {
                           <Button
                             variant="secondary"
                             size="sm"
-                            leftIcon={<IconPlus size={12} />}
+                            leftIcon={<IconCirclePlus size={12} />}
                             disabled={!selectedNetwork}
                             onClick={addFixedIP}
                             style={{ width: '110px', height: '32px' }}

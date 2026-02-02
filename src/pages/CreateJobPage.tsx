@@ -32,7 +32,7 @@ import {
   IconFile,
   IconCopy,
   IconSearch,
-  IconPlus,
+  IconCirclePlus,
   IconX,
   IconCirclePlus,
   IconChevronRight,
@@ -360,10 +360,12 @@ function SummarySidebar({
   const isPodTab = activeTab === 'pod';
   const activeContainerId = containerTabs.find((c) => c.id === activeTab)?.id;
 
-  // Pod section items matching Figma design
+  // Pod section items matching actual sections
   const podSections = [
+    'Basic Information',
     'Labels & Annotations',
     'Scaling and Upgrade Policy',
+    'Networking',
     'Node Scheduling',
     'Pod Scheduling',
     'Resources',
@@ -386,99 +388,96 @@ function SummarySidebar({
   ];
 
   return (
-    <div className="w-[280px] shrink-0 self-stretch pt-[45px]">
-      <div className="sticky top-4">
-        <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[8px] overflow-hidden flex flex-col gap-3 pt-3 pb-4 px-3">
-          {/* Scrollable content area */}
-          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[8px] pl-4 pr-1 py-4 max-h-[calc(100vh-200px)] overflow-y-auto">
-            <VStack gap={4} className="pr-2">
-              <h5 className="text-[16px] leading-6 font-semibold text-[var(--color-text-default)]">
-                Summary
-              </h5>
+    <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
+      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
+        {/* Scrollable content area */}
+        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4 max-h-[calc(100vh-200px)] overflow-y-auto">
+          <VStack gap={4}>
+            <h5 className="text-[16px] leading-6 font-semibold text-[var(--color-text-default)]">
+              Summary
+            </h5>
 
-              {/* Deployment Section */}
-              <VStack gap={2}>
+            {/* Deployment Section */}
+            <VStack gap={2}>
+              <SummarySectionHeader
+                label="Deployment"
+                status={deploymentComplete ? 'complete' : 'in-progress'}
+                expanded={isJobTab}
+                onToggle={() => {}}
+                hasChildren
+              />
+              {isJobTab && (
+                <VStack gap={0} className="ml-3">
+                  <SummarySubItem
+                    label="Basic Information"
+                    status={basicInfoComplete ? 'complete' : 'in-progress'}
+                  />
+                  <SummarySubItem
+                    label="Labels & Annotations"
+                    status={labelsComplete ? 'complete' : 'in-progress'}
+                  />
+                  <SummarySubItem
+                    label="Scaling and Upgrade Policy"
+                    status={scalingComplete ? 'complete' : 'in-progress'}
+                  />
+                </VStack>
+              )}
+            </VStack>
+
+            {/* Pod Section */}
+            <VStack gap={2}>
+              <SummarySectionHeader
+                label="Pod"
+                status={podComplete ? 'complete' : 'in-progress'}
+                expanded={isPodTab}
+                onToggle={() => {}}
+                hasChildren
+              />
+              {isPodTab && (
+                <VStack gap={0} className="ml-3">
+                  {podSections.map((section) => (
+                    <SummarySubItem key={section} label={section} status="complete" />
+                  ))}
+                </VStack>
+              )}
+            </VStack>
+
+            {/* Container Sections */}
+            {containerTabs.map((container) => (
+              <VStack key={container.id} gap={2}>
                 <SummarySectionHeader
-                  label="Deployment"
-                  status={deploymentComplete ? 'complete' : 'in-progress'}
-                  expanded={isJobTab}
+                  label={container.name}
+                  status={containersComplete ? 'complete' : 'in-progress'}
+                  expanded={activeContainerId === container.id}
                   onToggle={() => {}}
                   hasChildren
                 />
-                {isJobTab && (
+                {activeContainerId === container.id && (
                   <VStack gap={0} className="ml-3">
-                    <SummarySubItem
-                      label="Basic Information"
-                      status={basicInfoComplete ? 'complete' : 'in-progress'}
-                    />
-                    <SummarySubItem
-                      label="Labels & Annotations"
-                      status={labelsComplete ? 'complete' : 'in-progress'}
-                    />
-                    <SummarySubItem
-                      label="Scaling and Upgrade Policy"
-                      status={scalingComplete ? 'complete' : 'in-progress'}
-                    />
-                  </VStack>
-                )}
-              </VStack>
-
-              {/* Pod Section */}
-              <VStack gap={2}>
-                <SummarySectionHeader
-                  label="Pod"
-                  status={podComplete ? 'complete' : 'in-progress'}
-                  expanded={isPodTab}
-                  onToggle={() => {}}
-                  hasChildren
-                />
-                {isPodTab && (
-                  <VStack gap={0} className="ml-3">
-                    {podSections.map((section) => (
+                    {containerSections.map((section) => (
                       <SummarySubItem key={section} label={section} status="complete" />
                     ))}
                   </VStack>
                 )}
               </VStack>
-
-              {/* Container Sections */}
-              {containerTabs.map((container) => (
-                <VStack key={container.id} gap={2}>
-                  <SummarySectionHeader
-                    label={container.name}
-                    status={containersComplete ? 'complete' : 'in-progress'}
-                    expanded={activeContainerId === container.id}
-                    onToggle={() => {}}
-                    hasChildren
-                  />
-                  {activeContainerId === container.id && (
-                    <VStack gap={0} className="ml-3">
-                      {containerSections.map((section) => (
-                        <SummarySubItem key={section} label={section} status="complete" />
-                      ))}
-                    </VStack>
-                  )}
-                </VStack>
-              ))}
-            </VStack>
-          </div>
-
-          {/* Button Container */}
-          <HStack gap={2} className="w-full pt-3">
-            <Button variant="secondary" size="sm" onClick={onCancel} className="w-[80px]">
-              Cancel
-            </Button>
-            <Button
-              variant="primary"
-              size="sm"
-              onClick={onCreate}
-              className="flex-1 min-w-[80px]"
-              disabled={isCreateDisabled}
-            >
-              Create
-            </Button>
-          </HStack>
+            ))}
+          </VStack>
         </div>
+
+        {/* Button Container */}
+        <HStack gap={2}>
+          <Button variant="secondary" onClick={onCancel} className="w-[80px]">
+            Cancel
+          </Button>
+          <Button
+            variant="primary"
+            onClick={onCreate}
+            className="flex-1 min-w-[80px]"
+            disabled={isCreateDisabled}
+          >
+            Create
+          </Button>
+        </HStack>
       </div>
     </div>
   );
@@ -1640,20 +1639,20 @@ export function CreateJobPage() {
           }
           actions={
             <>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              <button className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+                <IconTerminal2 size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              <button className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+                <IconFile size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              <button className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+                <IconCopy size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              <button className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+                <IconSearch size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              <button className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+                <IconBell size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
             </>
           }
@@ -1698,7 +1697,7 @@ export function CreateJobPage() {
                                       e.stopPropagation();
                                       removeContainerTab(tab.id);
                                     }}
-                                    className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded shrink-0"
+                                    className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded shrink-0"
                                   >
                                     <IconX size={12} stroke={1.5} />
                                   </button>
@@ -1711,7 +1710,7 @@ export function CreateJobPage() {
                           onClick={addContainerTab}
                           className="flex items-center justify-center h-[20px] px-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors text-[var(--color-text-muted)] shrink-0"
                         >
-                          <IconPlus size={16} stroke={1.5} />
+                          <IconCirclePlus size={12} stroke={1.5} />
                         </button>
                       </div>
                     </Tabs>
@@ -2351,10 +2350,10 @@ export function CreateJobPage() {
                                                   )
                                                 );
                                               }}
-                                              className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                              className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                             >
                                               <IconX
-                                                size={16}
+                                                size={12}
                                                 className="text-[var(--color-text-muted)]"
                                                 stroke={1.5}
                                               />
@@ -2594,10 +2593,10 @@ export function CreateJobPage() {
                                             podAffinityTerms.filter((_, i) => i !== termIndex)
                                           );
                                         }}
-                                        className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                       >
                                         <IconX
-                                          size={16}
+                                          size={12}
                                           className="text-[var(--color-text-muted)]"
                                           stroke={1.5}
                                         />
@@ -2862,10 +2861,10 @@ export function CreateJobPage() {
                                                 };
                                                 setPodAffinityTerms(newTerms);
                                               }}
-                                              className="mt-6 p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                              className="mt-6 size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                             >
                                               <IconX
-                                                size={16}
+                                                size={12}
                                                 className="text-[var(--color-text-muted)]"
                                                 stroke={1.5}
                                               />
@@ -3180,10 +3179,10 @@ export function CreateJobPage() {
                                     </span>
                                     <button
                                       onClick={() => removeVolume(index)}
-                                      className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                     >
                                       <IconX
-                                        size={16}
+                                        size={12}
                                         className="text-[var(--color-text-muted)]"
                                         stroke={1.5}
                                       />
@@ -3629,10 +3628,10 @@ export function CreateJobPage() {
                                 >
                                   <button
                                     onClick={() => removeVolumeClaimTemplate(index)}
-                                    className="absolute top-3 right-3 p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                    className="absolute top-3 right-3 size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                   >
                                     <IconX
-                                      size={16}
+                                      size={12}
                                       className="text-[var(--color-text-muted)]"
                                       stroke={1.5}
                                     />
@@ -4344,7 +4343,7 @@ export function CreateJobPage() {
                                                         });
                                                       }}
                                                     >
-                                                      <IconX size={16} />
+                                                      <IconX size={12} />
                                                     </Button>
                                                   </div>
                                                 </div>
@@ -4599,7 +4598,7 @@ export function CreateJobPage() {
                                                         });
                                                       }}
                                                     >
-                                                      <IconX size={16} />
+                                                      <IconX size={12} />
                                                     </Button>
                                                   </div>
                                                 </div>
@@ -5063,7 +5062,7 @@ export function CreateJobPage() {
                                                             });
                                                           }}
                                                         >
-                                                          <IconX size={16} />
+                                                          <IconX size={12} />
                                                         </Button>
                                                       </div>
                                                     </div>
