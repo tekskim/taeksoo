@@ -727,7 +727,7 @@ export default function CreateHPAPage() {
                                     <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
                                       Metric Selector
                                     </label>
-                                    <div className="border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                                    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
                                       <VStack gap={2}>
                                         {metric.selectors.map((selector) => (
                                           <div
