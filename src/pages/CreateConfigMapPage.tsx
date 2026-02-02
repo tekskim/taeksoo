@@ -647,13 +647,13 @@ function LabelsAnnotationsSection({
                   placeholder="Key"
                   value={label.key}
                   onChange={(e) => onUpdateLabel(index, 'key', e.target.value)}
-                  className="flex-1"
+                  fullWidth
                 />
                 <Input
                   placeholder="Value"
                   value={label.value}
                   onChange={(e) => onUpdateLabel(index, 'value', e.target.value)}
-                  className="flex-1"
+                  fullWidth
                 />
                 <button
                   onClick={() => onRemoveLabel(index)}
