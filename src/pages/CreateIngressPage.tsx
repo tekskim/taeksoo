@@ -621,10 +621,10 @@ export default function CreateIngressPage() {
                                           />
                                         </VStack>
 
-                                        {/* Remove path button */}
+                                        {/* Remove path button - aligned with labels */}
                                         <button
                                           onClick={() => removePath(rule.id, path.id)}
-                                          className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors self-center mt-5"
+                                          className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors self-start"
                                         >
                                           <IconX
                                             size={12}
