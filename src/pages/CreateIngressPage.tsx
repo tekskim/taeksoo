@@ -624,7 +624,7 @@ export default function CreateIngressPage() {
                                         {/* Remove path button - aligned with labels */}
                                         <button
                                           onClick={() => removePath(rule.id, path.id)}
-                                          className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors self-start"
+                                          className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors self-start"
                                         >
                                           <IconX
                                             size={12}
