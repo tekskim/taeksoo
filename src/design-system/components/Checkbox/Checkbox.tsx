@@ -18,7 +18,10 @@ import { IconCheck, IconMinus } from '@tabler/icons-react';
 type ThakiOnChange = (checked: boolean) => void;
 type StandardOnChange = (e: React.ChangeEvent<HTMLInputElement>) => void;
 
-export interface CheckboxProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type' | 'onChange'> {
+export interface CheckboxProps extends Omit<
+  InputHTMLAttributes<HTMLInputElement>,
+  'type' | 'onChange'
+> {
   /** Checkbox label */
   label?: ReactNode;
   /** Description text below label */
@@ -94,7 +97,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
       if (!isControlled) {
         setInternalChecked(e.target.checked);
       }
-      
+
       // thaki-ui compatibility: support both onChange signatures
       // Call with event, but thaki-ui handlers that expect (checked: boolean)
       // will receive the event object. If you need thaki-ui style, use:

@@ -98,11 +98,12 @@ export function Tabs({
 }: TabsProps) {
   // thaki-ui compatibility: support activeTabId as alias for value
   const effectiveControlledValue = controlledValue ?? activeTabId;
-  
+
   // thaki-ui compatibility: support variant aliases
-  const variant: TabVariant = rawVariant in variantAliasMap 
-    ? variantAliasMap[rawVariant as TabVariantAlias] 
-    : rawVariant as TabVariant;
+  const variant: TabVariant =
+    rawVariant in variantAliasMap
+      ? variantAliasMap[rawVariant as TabVariantAlias]
+      : (rawVariant as TabVariant);
 
   const [internalValue, setInternalValue] = useState(defaultValue ?? '');
 

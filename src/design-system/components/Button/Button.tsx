@@ -82,15 +82,7 @@ const buttonVariants = cva(
         ],
       },
       size: {
-        xs: [
-          'h-6',
-          'px-2',
-          'py-1',
-          'gap-1',
-          'min-w-[48px]',
-          'text-[11px]',
-          'leading-4',
-        ],
+        xs: ['h-6', 'px-2', 'py-1', 'gap-1', 'min-w-[48px]', 'text-[11px]', 'leading-4'],
         sm: [
           'h-[var(--button-height-sm)]',
           'px-[var(--button-padding-x-sm)]',
@@ -210,7 +202,14 @@ export type ButtonSize = VariantProps<typeof buttonVariants>['size'];
 
 // thaki-ui compatibility
 export type ButtonAppearance = 'solid' | 'outline' | 'ghost';
-export type ThakiButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'success' | 'error' | 'warning' | 'muted';
+export type ThakiButtonVariant =
+  | 'primary'
+  | 'secondary'
+  | 'tertiary'
+  | 'success'
+  | 'error'
+  | 'warning'
+  | 'muted';
 
 // Map thaki-ui variant + appearance to tds variant
 const resolveThakiVariant = (
@@ -225,11 +224,11 @@ const resolveThakiVariant = (
     if (variant === 'success') return 'primary'; // success maps to primary
     return variant as ButtonVariant;
   }
-  
+
   // Handle appearance combinations
   if (appearance === 'outline') return 'outline';
   if (appearance === 'ghost') return 'ghost';
-  
+
   return variant as ButtonVariant;
 };
 
@@ -289,7 +288,7 @@ export const Button: ButtonComponent = forwardRef(
   ) => {
     // thaki-ui compatibility: resolve variant + appearance combination
     const variant = resolveThakiVariant(rawVariant, appearance);
-    
+
     const Component = as || 'button';
     const isIconOnly = !!icon;
     const isDisabled = disabled || isLoading;

@@ -148,11 +148,7 @@ export const AccordionRoot = forwardRef<HTMLDivElement, AccordionRootProps>(
 
     return (
       <AccordionContext.Provider value={{ expandedItems, toggleItem, allowMultiple, variant }}>
-        <div
-          ref={ref}
-          className={twMerge(variantStyles[variant], className)}
-          {...props}
-        >
+        <div ref={ref} className={twMerge(variantStyles[variant], className)} {...props}>
           {children}
         </div>
       </AccordionContext.Provider>

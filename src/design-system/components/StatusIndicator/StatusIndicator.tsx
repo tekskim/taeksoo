@@ -237,20 +237,27 @@ export const StatusIndicator = memo(function StatusIndicator({
   ...props
 }: StatusIndicatorProps) {
   // thaki-ui compatibility: map layout aliases
-  const layout: StatusLayout = rawLayout === 'leftIcon' ? 'default' 
-    : rawLayout === 'iconOnly' ? 'icon-only' 
-    : rawLayout as StatusLayout;
+  const layout: StatusLayout =
+    rawLayout === 'leftIcon'
+      ? 'default'
+      : rawLayout === 'iconOnly'
+        ? 'icon-only'
+        : (rawLayout as StatusLayout);
 
   const config = statusConfig[status];
-  
+
   // thaki-ui compatibility: use customIcon if provided
   const displayIcon = customIcon ?? config.icon;
   const displayLabel = label ?? config.label;
-  
+
   // thaki-ui compatibility: warn about deprecated props
   if (process.env.NODE_ENV === 'development') {
-    if (colorScheme) console.warn('[StatusIndicator] colorScheme prop is deprecated. Use status prop instead.');
-    if (tooltip) console.warn('[StatusIndicator] tooltip prop is deprecated. Wrap with Tooltip component instead.');
+    if (colorScheme)
+      console.warn('[StatusIndicator] colorScheme prop is deprecated. Use status prop instead.');
+    if (tooltip)
+      console.warn(
+        '[StatusIndicator] tooltip prop is deprecated. Wrap with Tooltip component instead.'
+      );
   }
 
   // Size-based icon sizes for icon-only layout

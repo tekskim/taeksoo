@@ -8,7 +8,10 @@ import { IconEye, IconEyeOff } from '@tabler/icons-react';
 
 export type PasswordSize = 'sm' | 'md';
 
-export interface PasswordProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type' | 'size'> {
+export interface PasswordProps extends Omit<
+  InputHTMLAttributes<HTMLInputElement>,
+  'type' | 'size'
+> {
   /** Input size */
   size?: PasswordSize;
   /** Label text */
@@ -27,7 +30,7 @@ export interface PasswordProps extends Omit<InputHTMLAttributes<HTMLInputElement
   hideLabel?: string;
   /** Additional CSS classes */
   className?: string;
-  
+
   // thaki-ui compatibility
   /** @deprecated Use error for validation states */
   success?: boolean;
@@ -141,10 +144,7 @@ export const Password = forwardRef<HTMLInputElement, PasswordProps>(
       <div className={wrapperClasses}>
         {/* Label */}
         {label && (
-          <label
-            htmlFor={inputId}
-            className="text-label-sm text-[var(--color-text-default)]"
-          >
+          <label htmlFor={inputId} className="text-label-sm text-[var(--color-text-default)]">
             {label}
             {required && <span className="text-[var(--color-state-danger)] ml-0.5">*</span>}
           </label>

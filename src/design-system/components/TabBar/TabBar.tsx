@@ -153,7 +153,7 @@ export const TabBar: React.FC<TabBarProps> = ({
           const isActive = tab.id === activeTab;
           // thaki-ui compatibility: title alias for label, fixed alias for !closable
           const tabLabel = tab.label ?? tab.title ?? '';
-          const closable = tab.fixed ? false : (tab.closable !== false);
+          const closable = tab.fixed ? false : tab.closable !== false;
           const isDragging = draggedTabId === tab.id;
           const isDragOver = dragOverTabId === tab.id;
 

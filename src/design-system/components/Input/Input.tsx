@@ -86,9 +86,14 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
   ) => {
     // thaki-ui compatibility: warn about deprecated props in development
     if (process.env.NODE_ENV === 'development') {
-      if (filter) console.warn('[Input] filter prop is deprecated. Implement filtering in onChange handler.');
-      if (showPasswordToggle) console.warn('[Input] showPasswordToggle is deprecated. Use type="password" with a custom rightElement.');
-      if (success) console.warn('[Input] success prop is deprecated. Use error={false} for valid state.');
+      if (filter)
+        console.warn('[Input] filter prop is deprecated. Implement filtering in onChange handler.');
+      if (showPasswordToggle)
+        console.warn(
+          '[Input] showPasswordToggle is deprecated. Use type="password" with a custom rightElement.'
+        );
+      if (success)
+        console.warn('[Input] success prop is deprecated. Use error={false} for valid state.');
     }
     const inputId = id || `input-${Math.random().toString(36).substr(2, 9)}`;
 
