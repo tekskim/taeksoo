@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Button,
@@ -23,6 +23,8 @@ import {
   IconX,
   IconCheck,
   IconCirclePlus,
+  IconFile,
+  IconCopy,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -214,7 +216,19 @@ function SummarySidebar({
    ---------------------------------------- */
 export default function CreateIngressPage() {
   const navigate = useNavigate();
-  const { tabs, selectTab, closeTab } = useTabs();
+  const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel, moveTab, addNewTab } =
+    useTabs();
+
+  // Update tab label
+  useEffect(() => {
+    updateActiveTabLabel('Create Ingress');
+  }, [updateActiveTabLabel]);
+
+  const tabBarTabs = tabs.map((tab) => ({
+    id: tab.id,
+    label: tab.label,
+    closable: tab.closable,
+  }));
 
   // Sidebar state
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -382,12 +396,6 @@ export default function CreateIngressPage() {
     setAnnotations((prev) => prev.map((a) => (a.id === id ? { ...a, [field]: value } : a)));
   }, []);
 
-  const breadcrumbItems = [
-    { label: 'Service Discovery', href: '/container/services' },
-    { label: 'Ingresses', href: '/container/ingresses' },
-    { label: 'Create' },
-  ];
-
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       {/* Sidebar */}
@@ -398,32 +406,50 @@ export default function CreateIngressPage() {
         className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
         style={{ left: `${sidebarWidth}px` }}
       >
-        {/* TabBar */}
+        {/* Tab Bar */}
         <TabBar
-          tabs={tabs.map((t) => ({
-            id: t.id,
-            label: t.label,
-            closable: t.closable,
-          }))}
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
           onTabChange={selectTab}
           onTabClose={closeTab}
+          onTabReorder={moveTab}
+          onTabAdd={addNewTab}
         />
 
-        {/* TopBar */}
+        {/* Top Bar */}
         <TopBar
-          leftSlot={<Breadcrumb items={breadcrumbItems} />}
-          rightSlot={
-            <HStack gap={2} align="center">
-              <button className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-              </button>
-              <button className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={
+            <Breadcrumb
+              items={[
+                { label: 'Service Discovery', href: '/container/services' },
+                { label: 'Ingresses', href: '/container/ingresses' },
+                { label: 'Create Ingress' },
+              ]}
+            />
+          }
+          actions={
+            <>
+              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
-              <button className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
-            </HStack>
+            </>
           }
         />
 
