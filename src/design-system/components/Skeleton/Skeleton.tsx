@@ -96,12 +96,7 @@ export const Skeleton = forwardRef<HTMLDivElement, SkeletonProps>(
     // Render multiple skeletons if count > 1
     if (count > 1) {
       return (
-        <div
-          ref={ref}
-          className={twMerge('flex flex-col', className)}
-          style={{ gap }}
-          {...props}
-        >
+        <div ref={ref} className={twMerge('flex flex-col', className)} style={{ gap }} {...props}>
           {Array.from({ length: count }).map((_, index) => (
             <div
               key={index}
@@ -214,13 +209,7 @@ export interface SkeletonImageProps extends Omit<SkeletonProps, 'variant'> {
 export const SkeletonImage = forwardRef<HTMLDivElement, SkeletonImageProps>(
   ({ aspectRatio = '16/9', width = '100%', ...props }, ref) => {
     return (
-      <Skeleton
-        ref={ref}
-        variant="rounded"
-        width={width}
-        style={{ aspectRatio }}
-        {...props}
-      />
+      <Skeleton ref={ref} variant="rounded" width={width} style={{ aspectRatio }} {...props} />
     );
   }
 );

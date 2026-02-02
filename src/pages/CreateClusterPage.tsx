@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { IconPlus } from '@tabler/icons-react';
+import { IconX, IconCirclePlus } from '@tabler/icons-react';
 import {
   Button,
   Breadcrumb,
@@ -44,6 +44,16 @@ interface FlavorRow {
   vcpu: number;
   ram: string;
   disk: string;
+}
+
+interface Label {
+  key: string;
+  value: string;
+}
+
+interface Annotation {
+  key: string;
+  value: string;
 }
 
 /* ----------------------------------------
@@ -138,9 +148,50 @@ export function CreateClusterPage() {
   const [nodeFlavorFilter, setNodeFlavorFilter] = useState('vcpu');
 
   // Labels & Annotations
-  const [labels, setLabels] = useState('');
-  const [addAnnotation, setAddAnnotation] = useState(false);
-  const [annotations, setAnnotations] = useState('');
+  const [labels, setLabels] = useState<Label[]>([]);
+  const [annotations, setAnnotations] = useState<Annotation[]>([]);
+
+  // Label management
+  const addLabel = useCallback(() => {
+    setLabels([...labels, { key: '', value: '' }]);
+  }, [labels]);
+
+  const removeLabel = useCallback(
+    (index: number) => {
+      setLabels(labels.filter((_, i) => i !== index));
+    },
+    [labels]
+  );
+
+  const updateLabel = useCallback(
+    (index: number, field: 'key' | 'value', value: string) => {
+      const newLabels = [...labels];
+      newLabels[index][field] = value;
+      setLabels(newLabels);
+    },
+    [labels]
+  );
+
+  // Annotation management
+  const addAnnotation = useCallback(() => {
+    setAnnotations([...annotations, { key: '', value: '' }]);
+  }, [annotations]);
+
+  const removeAnnotation = useCallback(
+    (index: number) => {
+      setAnnotations(annotations.filter((_, i) => i !== index));
+    },
+    [annotations]
+  );
+
+  const updateAnnotation = useCallback(
+    (index: number, field: 'key' | 'value', value: string) => {
+      const newAnnotations = [...annotations];
+      newAnnotations[index][field] = value;
+      setAnnotations(newAnnotations);
+    },
+    [annotations]
+  );
 
   const sidebarWidth = sidebarOpen ? 240 : 40;
 
@@ -759,33 +810,147 @@ export function CreateClusterPage() {
                     <VStack gap={6}>
                       {/* Labels */}
                       <VStack gap={3}>
-                        <VStack gap={1}>
-                          <span className="text-[14px] leading-5 font-medium text-[var(--color-text-default)]">
+                        <VStack gap={1.5}>
+                          <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
                             Labels
                           </span>
-                          <span className="text-[12px] leading-4 text-[var(--color-text-subtle)]">
+                          <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
                             Specify the labels used to identify and categorize the resource.
-                          </span>
+                          </p>
                         </VStack>
-                        <Button variant="secondary" size="sm" leftIcon={<IconPlus size={12} />}>
-                          Add Label
-                        </Button>
+
+                        {/* Bordered container for labels */}
+                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                          <VStack gap={3}>
+                            {labels.map((label, index) => (
+                              <div
+                                key={index}
+                                className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                              >
+                                <div className="flex gap-2 items-start w-full">
+                                  <VStack gap={2} className="flex-1">
+                                    <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                      Key
+                                    </span>
+                                    <Input
+                                      placeholder="label key"
+                                      value={label.key}
+                                      onChange={(e) => updateLabel(index, 'key', e.target.value)}
+                                      fullWidth
+                                    />
+                                  </VStack>
+                                  <VStack gap={2} className="flex-1">
+                                    <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                      Value
+                                    </span>
+                                    <Input
+                                      placeholder="label value"
+                                      value={label.value}
+                                      onChange={(e) => updateLabel(index, 'value', e.target.value)}
+                                      fullWidth
+                                    />
+                                  </VStack>
+                                  <button
+                                    onClick={() => removeLabel(index)}
+                                    className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors mt-6"
+                                  >
+                                    <IconX
+                                      size={12}
+                                      className="text-[var(--color-text-muted)]"
+                                      stroke={1.5}
+                                    />
+                                  </button>
+                                </div>
+                              </div>
+                            ))}
+
+                            <div className="w-fit">
+                              <Button
+                                variant="secondary"
+                                size="sm"
+                                leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                onClick={addLabel}
+                              >
+                                Add Label
+                              </Button>
+                            </div>
+                          </VStack>
+                        </div>
                       </VStack>
 
                       {/* Annotations */}
                       <VStack gap={3}>
-                        <VStack gap={1}>
-                          <span className="text-[14px] leading-5 font-medium text-[var(--color-text-default)]">
+                        <VStack gap={1.5}>
+                          <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
                             Annotations
                           </span>
-                          <span className="text-[12px] leading-4 text-[var(--color-text-subtle)]">
+                          <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
                             Specify the annotations used to provide additional metadata for the
                             resource.
-                          </span>
+                          </p>
                         </VStack>
-                        <Button variant="secondary" size="sm" leftIcon={<IconPlus size={12} />}>
-                          Add Annotation
-                        </Button>
+
+                        {/* Bordered container for annotations */}
+                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                          <VStack gap={3}>
+                            {annotations.map((annotation, index) => (
+                              <div
+                                key={index}
+                                className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                              >
+                                <div className="flex gap-2 items-start w-full">
+                                  <VStack gap={2} className="flex-1">
+                                    <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                      Key
+                                    </span>
+                                    <Input
+                                      placeholder="annotation key"
+                                      value={annotation.key}
+                                      onChange={(e) =>
+                                        updateAnnotation(index, 'key', e.target.value)
+                                      }
+                                      fullWidth
+                                    />
+                                  </VStack>
+                                  <VStack gap={2} className="flex-1">
+                                    <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                      Value
+                                    </span>
+                                    <Input
+                                      placeholder="annotation value"
+                                      value={annotation.value}
+                                      onChange={(e) =>
+                                        updateAnnotation(index, 'value', e.target.value)
+                                      }
+                                      fullWidth
+                                    />
+                                  </VStack>
+                                  <button
+                                    onClick={() => removeAnnotation(index)}
+                                    className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors mt-6"
+                                  >
+                                    <IconX
+                                      size={12}
+                                      className="text-[var(--color-text-muted)]"
+                                      stroke={1.5}
+                                    />
+                                  </button>
+                                </div>
+                              </div>
+                            ))}
+
+                            <div className="w-fit">
+                              <Button
+                                variant="secondary"
+                                size="sm"
+                                leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                onClick={addAnnotation}
+                              >
+                                Add Annotation
+                              </Button>
+                            </div>
+                          </VStack>
+                        </div>
                       </VStack>
                     </VStack>
                   </SectionCard.Content>

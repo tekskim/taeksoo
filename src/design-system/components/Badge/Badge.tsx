@@ -121,9 +121,10 @@ export const Badge = memo(function Badge({
   const leftIcon = layout === 'left-icon' && icon ? icon : rawLeftIcon;
   const rightIcon = layout === 'right-icon' && icon ? icon : rawRightIcon;
   // Support legacy variant prop and thaki-ui theme aliases
-  const normalizedTheme = theme && theme in themeAliasMap 
-    ? themeAliasMap[theme as BadgeThemeAlias] 
-    : theme as BadgeTheme | undefined;
+  const normalizedTheme =
+    theme && theme in themeAliasMap
+      ? themeAliasMap[theme as BadgeThemeAlias]
+      : (theme as BadgeTheme | undefined);
   const resolvedTheme = normalizedTheme ?? (variant ? variantToTheme[variant] : 'blue');
   // Legacy variants use subtle type by default
   const resolvedType = variant && !theme ? 'subtle' : type;

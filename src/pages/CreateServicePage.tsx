@@ -8,11 +8,15 @@ import {
   TabBar,
   TopBar,
   Input,
+  NumberInput,
   Select,
   Disclosure,
   SectionCard,
   Radio,
   RadioGroup,
+  Table,
+  TableLink,
+  Pagination,
 } from '@/design-system';
 import type { WizardSectionState } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
@@ -23,9 +27,9 @@ import {
   IconFile,
   IconCopy,
   IconSearch,
-  IconPlus,
   IconX,
   IconCheck,
+  IconCirclePlus,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -127,6 +131,21 @@ interface ExternalIP {
   value: string;
 }
 
+interface MatchingPod {
+  id: string;
+  name: string;
+  createdAt: string;
+}
+
+// Mock data for matching pods
+const MOCK_MATCHING_PODS: MatchingPod[] = [
+  {
+    id: '1',
+    name: 'deploymentName-77f6bb9c69-4ww7f',
+    createdAt: '2025-11-10 12:57',
+  },
+];
+
 /* ----------------------------------------
    Summary Status Icon Component
    ---------------------------------------- */
@@ -225,7 +244,7 @@ function SummarySidebar({
             disabled={isCreateDisabled}
             className="flex-1"
           >
-            Create Service
+            Create
           </Button>
         </HStack>
       </div>
@@ -262,7 +281,7 @@ export function CreateServicePage() {
 
   // Session Affinity state
   const [sessionAffinity, setSessionAffinity] = useState<'None' | 'ClientIP'>('None');
-  const [sessionAffinityTimeout, setSessionAffinityTimeout] = useState('10800');
+  const [sessionAffinityTimeout, setSessionAffinityTimeout] = useState(10800);
 
   // Labels & Annotations state
   const [labels, setLabels] = useState<Label[]>([]);
@@ -530,7 +549,7 @@ export function CreateServicePage() {
                 {/* Form Content */}
                 <VStack gap={3} className="flex-1">
                   {/* Basic Information Section */}
-                  <SectionCard isActive={sectionStatus['basic-info'] === 'active'}>
+                  <SectionCard>
                     <SectionCard.Header title="Basic Information" showDivider />
                     <SectionCard.Content>
                       <VStack gap={4}>
@@ -588,13 +607,18 @@ export function CreateServicePage() {
                         </VStack>
 
                         {/* Description (Collapsible) */}
-                        <Disclosure title="Description" defaultOpen={false}>
-                          <Input
-                            placeholder="Description"
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
-                            fullWidth
-                          />
+                        <Disclosure>
+                          <Disclosure.Trigger>Description</Disclosure.Trigger>
+                          <Disclosure.Panel>
+                            <div className="pt-2">
+                              <Input
+                                placeholder="Description"
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
+                                fullWidth
+                              />
+                            </div>
+                          </Disclosure.Panel>
                         </Disclosure>
                       </VStack>
                     </SectionCard.Content>
@@ -602,421 +626,533 @@ export function CreateServicePage() {
 
                   {/* Service Ports Section */}
                   <SectionCard>
-                    <Disclosure title="Service Ports" defaultOpen={true}>
-                      <VStack gap={4} className="py-3">
-                        {/* Port Fields */}
-                        {ports.map((port, index) => (
-                          <div
-                            key={port.id}
-                            className={`grid gap-2 w-full items-end ${
-                              showNodePort
-                                ? 'grid-cols-[1fr_1fr_1fr_1fr_1fr_32px]'
-                                : 'grid-cols-[1fr_1fr_1fr_1fr_32px]'
-                            }`}
+                    <SectionCard.Header title="Service Ports" />
+                    <SectionCard.Content>
+                      <VStack gap={6}>
+                        {ports.length === 0 ? (
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                            onClick={addPort}
                           >
-                            <VStack gap={1}>
-                              {index === 0 && (
-                                <label className="text-label-sm text-[var(--color-text-default)]">
-                                  Port Name{' '}
-                                  <span className="text-[var(--color-state-danger)]">*</span>
-                                </label>
-                              )}
-                              <Input
-                                placeholder="e.g. myport"
-                                value={port.name}
-                                onChange={(e) => updatePort(port.id, 'name', e.target.value)}
-                                fullWidth
-                              />
-                            </VStack>
-                            <VStack gap={1}>
-                              {index === 0 && (
-                                <label className="text-label-sm text-[var(--color-text-default)]">
-                                  Listening Port{' '}
-                                  <span className="text-[var(--color-state-danger)]">*</span>
-                                </label>
-                              )}
-                              <Input
-                                placeholder="e.g. 8080"
-                                value={port.listeningPort}
-                                onChange={(e) =>
-                                  updatePort(port.id, 'listeningPort', e.target.value)
-                                }
-                                fullWidth
-                              />
-                            </VStack>
-                            <VStack gap={1}>
-                              {index === 0 && (
-                                <label className="text-label-sm text-[var(--color-text-default)]">
-                                  Protocol
-                                </label>
-                              )}
-                              <Select
-                                options={PROTOCOL_OPTIONS}
-                                value={port.protocol}
-                                onChange={(value) => updatePort(port.id, 'protocol', value)}
-                                fullWidth
-                              />
-                            </VStack>
-                            <VStack gap={1}>
-                              {index === 0 && (
-                                <label className="text-label-sm text-[var(--color-text-default)]">
-                                  Target Port{' '}
-                                  <span className="text-[var(--color-state-danger)]">*</span>
-                                </label>
-                              )}
-                              <Input
-                                placeholder="e.g. 80 or http"
-                                value={port.targetPort}
-                                onChange={(e) => updatePort(port.id, 'targetPort', e.target.value)}
-                                fullWidth
-                              />
-                            </VStack>
-                            {showNodePort && (
-                              <VStack gap={1}>
-                                {index === 0 && (
-                                  <label className="text-label-sm text-[var(--color-text-default)]">
-                                    Node Port
-                                  </label>
-                                )}
-                                <Input
-                                  placeholder="e.g. 30000"
-                                  value={port.nodePort || ''}
-                                  onChange={(e) => updatePort(port.id, 'nodePort', e.target.value)}
-                                  fullWidth
-                                />
-                              </VStack>
-                            )}
-                            <div className={index === 0 ? 'mt-auto' : ''}>
-                              <button
-                                onClick={() => removePort(port.id)}
-                                className="w-8 h-9 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                disabled={ports.length <= 1}
-                              >
-                                <IconX
-                                  size={14}
-                                  className={
-                                    ports.length <= 1
-                                      ? 'text-[var(--color-text-disabled)]'
-                                      : 'text-[var(--color-text-muted)]'
-                                  }
-                                  stroke={1.5}
-                                />
-                              </button>
-                            </div>
-                          </div>
-                        ))}
+                            Add Port
+                          </Button>
+                        ) : (
+                          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                            <VStack gap={2}>
+                              {/* Port Fields */}
+                              {ports.map((port) => (
+                                <div
+                                  key={port.id}
+                                  className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                >
+                                  <div
+                                    className={`grid gap-2 w-full items-start ${
+                                      showNodePort
+                                        ? 'grid-cols-[1fr_1fr_1fr_1fr_1fr_16px]'
+                                        : 'grid-cols-[1fr_1fr_1fr_1fr_16px]'
+                                    }`}
+                                  >
+                                    <VStack gap={2}>
+                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                        Port Name <span className="text-[#ea580c]">*</span>
+                                      </label>
+                                      <Input
+                                        placeholder="e.g. myport"
+                                        value={port.name}
+                                        onChange={(e) =>
+                                          updatePort(port.id, 'name', e.target.value)
+                                        }
+                                        fullWidth
+                                      />
+                                    </VStack>
+                                    <VStack gap={2}>
+                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                        Listening Port <span className="text-[#ea580c]">*</span>
+                                      </label>
+                                      <Input
+                                        placeholder="e.g. 8080"
+                                        value={port.listeningPort}
+                                        onChange={(e) =>
+                                          updatePort(port.id, 'listeningPort', e.target.value)
+                                        }
+                                        fullWidth
+                                      />
+                                    </VStack>
+                                    <VStack gap={2}>
+                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                        Protocol
+                                      </label>
+                                      <Select
+                                        options={PROTOCOL_OPTIONS}
+                                        value={port.protocol}
+                                        onChange={(value) => updatePort(port.id, 'protocol', value)}
+                                        fullWidth
+                                      />
+                                    </VStack>
+                                    <VStack gap={2}>
+                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                        Target Port <span className="text-[#ea580c]">*</span>
+                                      </label>
+                                      <Input
+                                        placeholder="e.g. 80 or http"
+                                        value={port.targetPort}
+                                        onChange={(e) =>
+                                          updatePort(port.id, 'targetPort', e.target.value)
+                                        }
+                                        fullWidth
+                                      />
+                                    </VStack>
+                                    {showNodePort && (
+                                      <VStack gap={2}>
+                                        <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                          Node Port
+                                        </label>
+                                        <Input
+                                          placeholder="e.g. 30000"
+                                          value={port.nodePort || ''}
+                                          onChange={(e) =>
+                                            updatePort(port.id, 'nodePort', e.target.value)
+                                          }
+                                          fullWidth
+                                        />
+                                      </VStack>
+                                    )}
+                                    <button
+                                      onClick={() => removePort(port.id)}
+                                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                      disabled={ports.length <= 1}
+                                    >
+                                      <IconX
+                                        size={12}
+                                        className={
+                                          ports.length <= 1
+                                            ? 'text-[var(--color-text-disabled)]'
+                                            : 'text-[var(--color-text-muted)]'
+                                        }
+                                        stroke={1.5}
+                                      />
+                                    </button>
+                                  </div>
+                                </div>
+                              ))}
 
-                        {/* Add Port Button */}
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          leftIcon={<IconPlus size={12} stroke={1.5} />}
-                          onClick={addPort}
-                        >
-                          Add Port
-                        </Button>
+                              {/* Add Port Button */}
+                              <div className="w-fit">
+                                <Button
+                                  variant="secondary"
+                                  size="sm"
+                                  leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                  onClick={addPort}
+                                >
+                                  Add Port
+                                </Button>
+                              </div>
+                            </VStack>
+                          </div>
+                        )}
                       </VStack>
-                    </Disclosure>
+                    </SectionCard.Content>
                   </SectionCard>
 
                   {/* IP Addresses Section */}
                   <SectionCard>
-                    <Disclosure title="IP Addresses" defaultOpen={true}>
-                      <VStack gap={4} className="py-3">
+                    <SectionCard.Header title="IP Addresses" />
+                    <SectionCard.Content>
+                      <VStack gap={6}>
                         {/* Cluster IP */}
-                        <VStack gap={2} className="max-w-[50%]">
-                          <label className="text-label-sm text-[var(--color-text-default)]">
+                        <VStack gap={2}>
+                          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
                             Cluster IP
                           </label>
                           <Input
-                            placeholder="e.g. 10.0.0.1"
+                            placeholder="e.g. 1.1.1.1"
                             value={clusterIP}
                             onChange={(e) => setClusterIP(e.target.value)}
-                            fullWidth
+                            className="w-[320px]"
                           />
                         </VStack>
 
-                        {/* Load Balancer IP (only for LoadBalancer type) */}
-                        {serviceType === 'LoadBalancer' && (
-                          <VStack gap={2} className="max-w-[50%]">
-                            <label className="text-label-sm text-[var(--color-text-default)]">
-                              Load Balancer IP
-                            </label>
-                            <Input
-                              placeholder="e.g. 203.0.113.1"
-                              value={loadBalancerIP}
-                              onChange={(e) => setLoadBalancerIP(e.target.value)}
-                              fullWidth
-                            />
-                          </VStack>
-                        )}
+                        {/* Load Balancer IP */}
+                        <VStack gap={2}>
+                          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                            Load Balancer IP
+                          </label>
+                          <Input
+                            placeholder="e.g. 1.1.1.1"
+                            value={loadBalancerIP}
+                            onChange={(e) => setLoadBalancerIP(e.target.value)}
+                            className="w-[320px]"
+                          />
+                        </VStack>
 
                         {/* External IPs */}
                         <VStack gap={2}>
-                          <label className="text-label-sm text-[var(--color-text-default)]">
+                          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
                             External IPs
                           </label>
-                          {externalIPs.map((ip) => (
-                            <div key={ip.id} className="flex gap-2 items-center">
-                              <Input
-                                placeholder="e.g. 203.0.113.1"
-                                value={ip.value}
-                                onChange={(e) => updateExternalIP(ip.id, e.target.value)}
-                                className="flex-1 max-w-[50%]"
-                              />
-                              <button
-                                onClick={() => removeExternalIP(ip.id)}
-                                className="w-8 h-9 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                              >
-                                <IconX
-                                  size={14}
-                                  className="text-[var(--color-text-muted)]"
-                                  stroke={1.5}
-                                />
-                              </button>
-                            </div>
-                          ))}
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            leftIcon={<IconPlus size={12} stroke={1.5} />}
-                            onClick={addExternalIP}
-                          >
-                            Add IP
-                          </Button>
+                          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                            <VStack gap={2}>
+                              {externalIPs.map((ip) => (
+                                <div
+                                  key={ip.id}
+                                  className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-2 flex gap-2 items-center w-[368px]"
+                                >
+                                  <Input
+                                    placeholder="e.g. 1.1.1.1"
+                                    value={ip.value}
+                                    onChange={(e) => updateExternalIP(ip.id, e.target.value)}
+                                    className="w-[320px]"
+                                  />
+                                  <button
+                                    onClick={() => removeExternalIP(ip.id)}
+                                    className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                  >
+                                    <IconX
+                                      size={12}
+                                      className="text-[var(--color-text-muted)]"
+                                      stroke={1.5}
+                                    />
+                                  </button>
+                                </div>
+                              ))}
+                              <div className="w-fit">
+                                <Button
+                                  variant="secondary"
+                                  size="sm"
+                                  leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                  onClick={addExternalIP}
+                                >
+                                  Add IP
+                                </Button>
+                              </div>
+                            </VStack>
+                          </div>
                         </VStack>
                       </VStack>
-                    </Disclosure>
+                    </SectionCard.Content>
                   </SectionCard>
 
                   {/* Selectors Section */}
                   <SectionCard>
-                    <Disclosure title="Selectors" defaultOpen={true}>
-                      <VStack gap={4} className="py-3">
-                        {selectors.length > 0 && (
-                          <>
-                            {/* Selector Header */}
-                            <div className="grid grid-cols-[1fr_1fr_32px] gap-4 w-full">
-                              <span className="text-label-sm text-[var(--color-text-default)]">
-                                Key
-                              </span>
-                              <span className="text-label-sm text-[var(--color-text-default)]">
-                                Value
-                              </span>
-                              <div />
-                            </div>
-
-                            {selectors.map((selector, index) => (
-                              <div
-                                key={index}
-                                className="grid grid-cols-[1fr_1fr_32px] gap-4 w-full items-center"
+                    <SectionCard.Header title="Selectors" showDivider={false} />
+                    <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+                      Selector keys and values are intended to match labels and values on existing
+                      pods.
+                    </p>
+                    <div className="h-px w-full bg-[var(--color-border-subtle)]" />
+                    <SectionCard.Content>
+                      <VStack gap={6}>
+                        {selectors.length === 0 ? (
+                          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                            <HStack gap={2}>
+                              <Button
+                                variant="secondary"
+                                size="sm"
+                                leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                onClick={addSelector}
                               >
-                                <Input
-                                  placeholder="Key"
-                                  value={selector.key}
-                                  onChange={(e) => updateSelector(index, 'key', e.target.value)}
-                                  fullWidth
-                                />
-                                <Input
-                                  placeholder="Value"
-                                  value={selector.value}
-                                  onChange={(e) => updateSelector(index, 'value', e.target.value)}
-                                  fullWidth
-                                />
-                                <button
-                                  onClick={() => removeSelector(index)}
-                                  className="w-8 h-8 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                Add Rule
+                              </Button>
+                              <Button variant="secondary" size="sm">
+                                Read from File
+                              </Button>
+                            </HStack>
+                          </div>
+                        ) : (
+                          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                            <VStack gap={2}>
+                              {selectors.map((selector, index) => (
+                                <div
+                                  key={index}
+                                  className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
                                 >
-                                  <IconX
-                                    size={14}
-                                    className="text-[var(--color-text-muted)]"
-                                    stroke={1.5}
-                                  />
-                                </button>
-                              </div>
-                            ))}
-                          </>
+                                  <div className="grid grid-cols-[1fr_1fr_16px] gap-2 w-full items-start">
+                                    <VStack gap={2}>
+                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                        Key
+                                      </label>
+                                      <Input
+                                        placeholder="e.g. key"
+                                        value={selector.key}
+                                        onChange={(e) =>
+                                          updateSelector(index, 'key', e.target.value)
+                                        }
+                                        fullWidth
+                                      />
+                                    </VStack>
+                                    <VStack gap={2}>
+                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                        Value
+                                      </label>
+                                      <Input
+                                        placeholder="e.g. value"
+                                        value={selector.value}
+                                        onChange={(e) =>
+                                          updateSelector(index, 'value', e.target.value)
+                                        }
+                                        fullWidth
+                                      />
+                                    </VStack>
+                                    <button
+                                      onClick={() => removeSelector(index)}
+                                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                    >
+                                      <IconX
+                                        size={12}
+                                        className="text-[var(--color-text-muted)]"
+                                        stroke={1.5}
+                                      />
+                                    </button>
+                                  </div>
+                                </div>
+                              ))}
+
+                              <HStack gap={2}>
+                                <Button
+                                  variant="secondary"
+                                  size="sm"
+                                  leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                  onClick={addSelector}
+                                >
+                                  Add Rule
+                                </Button>
+                                <Button variant="secondary" size="sm">
+                                  Read from File
+                                </Button>
+                              </HStack>
+                            </VStack>
+                          </div>
                         )}
 
-                        <HStack gap={2}>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            leftIcon={<IconPlus size={12} stroke={1.5} />}
-                            onClick={addSelector}
-                          >
-                            Add Rule
-                          </Button>
-                          <Button variant="outline" size="sm">
-                            Read from File
-                          </Button>
-                        </HStack>
+                        {/* Matching Pods Table */}
+                        <VStack gap={3}>
+                          <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                            Matching Pods (1/10)
+                          </span>
+                          <Pagination
+                            currentPage={1}
+                            totalPages={1}
+                            onPageChange={() => {}}
+                            totalItems={1}
+                            showSettings
+                            onSettingsClick={() => {}}
+                          />
+                          <Table<MatchingPod>
+                            columns={[
+                              {
+                                key: 'name',
+                                label: 'Name',
+                                sortable: true,
+                                render: (value) => (
+                                  <TableLink href={`/container/pods/${value}`}>{value}</TableLink>
+                                ),
+                              },
+                              {
+                                key: 'createdAt',
+                                label: 'Created At',
+                                sortable: true,
+                              },
+                            ]}
+                            data={MOCK_MATCHING_PODS}
+                            rowKey="id"
+                          />
+                        </VStack>
                       </VStack>
-                    </Disclosure>
+                    </SectionCard.Content>
                   </SectionCard>
 
                   {/* Session Affinity Section */}
                   <SectionCard>
-                    <Disclosure title="Session Affinity" defaultOpen={true}>
-                      <VStack gap={3} className="py-3">
-                        <RadioGroup
-                          value={sessionAffinity}
-                          onChange={(value) => setSessionAffinity(value as 'None' | 'ClientIP')}
-                        >
-                          <Radio value="None" label="There is no session affinity configured" />
-                          <Radio value="ClientIP" label="Client IP" />
-                        </RadioGroup>
+                    <SectionCard.Header title="Session Affinity" />
+                    <SectionCard.Content>
+                      <VStack gap={6}>
+                        <VStack gap={3}>
+                          <RadioGroup
+                            value={sessionAffinity}
+                            onChange={(value) => setSessionAffinity(value as 'None' | 'ClientIP')}
+                          >
+                            <Radio value="None" label="There is no session affinity configured" />
+                            <Radio value="ClientIP" label="Client IP" />
+                          </RadioGroup>
+                        </VStack>
 
                         {sessionAffinity === 'ClientIP' && (
-                          <VStack gap={2} className="pl-6 max-w-[374px]">
-                            <label className="text-label-sm text-[var(--color-text-default)]">
-                              Timeout Seconds
+                          <VStack gap={3}>
+                            <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                              Session Sticky Time
                             </label>
-                            <div className="flex items-center gap-2">
-                              <Input
+                            <HStack gap={2} align="center">
+                              <NumberInput
                                 value={sessionAffinityTimeout}
-                                onChange={(e) => setSessionAffinityTimeout(e.target.value)}
-                                className="flex-1"
+                                onChange={setSessionAffinityTimeout}
+                                min={0}
+                                className="w-[312px]"
                               />
-                              <span className="text-body-md text-[var(--color-text-default)]">
+                              <span className="text-[12px] text-[var(--color-text-default)]">
                                 Seconds
                               </span>
-                            </div>
+                            </HStack>
                           </VStack>
                         )}
                       </VStack>
-                    </Disclosure>
+                    </SectionCard.Content>
                   </SectionCard>
 
                   {/* Labels & Annotations Section */}
                   <SectionCard>
-                    <Disclosure title="Labels & Annotations" defaultOpen={true}>
-                      <VStack gap={6} className="py-3">
+                    <SectionCard.Header title="Labels & Annotations" />
+                    <SectionCard.Content>
+                      <VStack gap={6}>
                         {/* Labels */}
                         <VStack gap={3}>
-                          <span className="text-label-lg text-[var(--color-text-default)]">
-                            Labels
-                          </span>
+                          <VStack gap={1.5}>
+                            <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                              Labels
+                            </span>
+                            <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+                              Specify the labels used to identify and categorize the resource.
+                            </p>
+                          </VStack>
 
-                          {labels.length > 0 && (
-                            <>
-                              {/* Label Header */}
-                              <div className="grid grid-cols-[1fr_1fr_32px] gap-4 w-full">
-                                <span className="text-label-sm text-[var(--color-text-default)]">
-                                  Key
-                                </span>
-                                <span className="text-label-sm text-[var(--color-text-default)]">
-                                  Value
-                                </span>
-                                <div />
-                              </div>
-
+                          {/* Bordered container for labels */}
+                          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                            <VStack gap={3}>
                               {labels.map((label, index) => (
                                 <div
                                   key={index}
-                                  className="grid grid-cols-[1fr_1fr_32px] gap-4 w-full items-center"
+                                  className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
                                 >
-                                  <Input
-                                    placeholder="Key"
-                                    value={label.key}
-                                    onChange={(e) => updateLabel(index, 'key', e.target.value)}
-                                    fullWidth
-                                  />
-                                  <Input
-                                    placeholder="Value"
-                                    value={label.value}
-                                    onChange={(e) => updateLabel(index, 'value', e.target.value)}
-                                    fullWidth
-                                  />
-                                  <button
-                                    onClick={() => removeLabel(index)}
-                                    className="w-8 h-8 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                  >
-                                    <IconX
-                                      size={14}
-                                      className="text-[var(--color-text-muted)]"
-                                      stroke={1.5}
-                                    />
-                                  </button>
+                                  <div className="flex gap-2 items-start w-full">
+                                    <VStack gap={2} className="flex-1">
+                                      <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                        Key
+                                      </span>
+                                      <Input
+                                        placeholder="label key"
+                                        value={label.key}
+                                        onChange={(e) => updateLabel(index, 'key', e.target.value)}
+                                        fullWidth
+                                      />
+                                    </VStack>
+                                    <VStack gap={2} className="flex-1">
+                                      <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                        Value
+                                      </span>
+                                      <Input
+                                        placeholder="label value"
+                                        value={label.value}
+                                        onChange={(e) =>
+                                          updateLabel(index, 'value', e.target.value)
+                                        }
+                                        fullWidth
+                                      />
+                                    </VStack>
+                                    <button
+                                      onClick={() => removeLabel(index)}
+                                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                    >
+                                      <IconX
+                                        size={12}
+                                        className="text-[var(--color-text-muted)]"
+                                        stroke={1.5}
+                                      />
+                                    </button>
+                                  </div>
                                 </div>
                               ))}
-                            </>
-                          )}
 
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            leftIcon={<IconPlus size={12} stroke={1.5} />}
-                            onClick={addLabel}
-                          >
-                            Add Label
-                          </Button>
+                              <div className="w-fit">
+                                <Button
+                                  variant="secondary"
+                                  size="sm"
+                                  leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                  onClick={addLabel}
+                                >
+                                  Add Label
+                                </Button>
+                              </div>
+                            </VStack>
+                          </div>
                         </VStack>
 
                         {/* Annotations */}
                         <VStack gap={3}>
-                          <span className="text-label-lg text-[var(--color-text-default)]">
-                            Annotations
-                          </span>
+                          <VStack gap={1.5}>
+                            <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                              Annotations
+                            </span>
+                            <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+                              Specify the annotations used to provide additional metadata for the
+                              resource.
+                            </p>
+                          </VStack>
 
-                          {annotations.length > 0 && (
-                            <>
-                              {/* Annotation Header */}
-                              <div className="grid grid-cols-[1fr_1fr_32px] gap-4 w-full">
-                                <span className="text-label-sm text-[var(--color-text-default)]">
-                                  Key
-                                </span>
-                                <span className="text-label-sm text-[var(--color-text-default)]">
-                                  Value
-                                </span>
-                                <div />
-                              </div>
-
+                          {/* Bordered container for annotations */}
+                          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                            <VStack gap={3}>
                               {annotations.map((annotation, index) => (
                                 <div
                                   key={index}
-                                  className="grid grid-cols-[1fr_1fr_32px] gap-4 w-full items-center"
+                                  className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
                                 >
-                                  <Input
-                                    placeholder="Key"
-                                    value={annotation.key}
-                                    onChange={(e) => updateAnnotation(index, 'key', e.target.value)}
-                                    fullWidth
-                                  />
-                                  <Input
-                                    placeholder="Value"
-                                    value={annotation.value}
-                                    onChange={(e) =>
-                                      updateAnnotation(index, 'value', e.target.value)
-                                    }
-                                    fullWidth
-                                  />
-                                  <button
-                                    onClick={() => removeAnnotation(index)}
-                                    className="w-8 h-8 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                  >
-                                    <IconX
-                                      size={14}
-                                      className="text-[var(--color-text-muted)]"
-                                      stroke={1.5}
-                                    />
-                                  </button>
+                                  <div className="flex gap-2 items-start w-full">
+                                    <VStack gap={2} className="flex-1">
+                                      <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                        Key
+                                      </span>
+                                      <Input
+                                        placeholder="annotation key"
+                                        value={annotation.key}
+                                        onChange={(e) =>
+                                          updateAnnotation(index, 'key', e.target.value)
+                                        }
+                                        fullWidth
+                                      />
+                                    </VStack>
+                                    <VStack gap={2} className="flex-1">
+                                      <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                        Value
+                                      </span>
+                                      <Input
+                                        placeholder="annotation value"
+                                        value={annotation.value}
+                                        onChange={(e) =>
+                                          updateAnnotation(index, 'value', e.target.value)
+                                        }
+                                        fullWidth
+                                      />
+                                    </VStack>
+                                    <button
+                                      onClick={() => removeAnnotation(index)}
+                                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                    >
+                                      <IconX
+                                        size={12}
+                                        className="text-[var(--color-text-muted)]"
+                                        stroke={1.5}
+                                      />
+                                    </button>
+                                  </div>
                                 </div>
                               ))}
-                            </>
-                          )}
 
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            leftIcon={<IconPlus size={12} stroke={1.5} />}
-                            onClick={addAnnotation}
-                          >
-                            Add Annotation
-                          </Button>
+                              <div className="w-fit">
+                                <Button
+                                  variant="secondary"
+                                  size="sm"
+                                  leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                  onClick={addAnnotation}
+                                >
+                                  Add Annotation
+                                </Button>
+                              </div>
+                            </VStack>
+                          </div>
                         </VStack>
                       </VStack>
-                    </Disclosure>
+                    </SectionCard.Content>
                   </SectionCard>
                 </VStack>
 

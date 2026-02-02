@@ -81,7 +81,7 @@ export interface DropdownOptionProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
 }
 
-export interface DropdownDividerProps extends HTMLAttributes<HTMLDivElement> {}
+export type DropdownDividerProps = HTMLAttributes<HTMLDivElement>;
 
 export interface DropdownGroupProps extends HTMLAttributes<HTMLDivElement> {
   /** Group label */

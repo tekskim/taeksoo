@@ -41,8 +41,7 @@ export interface TagProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'childre
 const variantStyles: Record<TagVariant, { solid: string; outline: string }> = {
   default: {
     solid: 'bg-[var(--color-surface-muted)] text-[var(--color-text-default)] border-transparent',
-    outline:
-      'bg-transparent text-[var(--color-text-default)] border-[var(--color-border-default)]',
+    outline: 'bg-transparent text-[var(--color-text-default)] border-[var(--color-border-default)]',
   },
   primary: {
     solid: 'bg-[var(--color-action-primary)] text-white border-transparent',

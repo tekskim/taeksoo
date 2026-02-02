@@ -1,5 +1,4 @@
-import { useState, useRef } from 'react';
-import { createPortal } from 'react-dom';
+import { useState } from 'react';
 import {
   VStack,
   HStack,
@@ -32,7 +31,6 @@ import {
   IconDotsCircleHorizontal,
   IconTrash,
   IconChevronDown,
-  IconStar,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -103,81 +101,6 @@ const hpaData: HPARow[] = [
 ];
 
 /* ----------------------------------------
-   Create HPA Dropdown Component
-   ---------------------------------------- */
-
-interface CreateHPADropdownProps {
-  onCreateForm: () => void;
-  onCreateYaml: () => void;
-}
-
-function CreateHPADropdown({ onCreateForm, onCreateYaml }: CreateHPADropdownProps) {
-  const [isOpen, setIsOpen] = useState(false);
-  const buttonRef = useRef<HTMLButtonElement>(null);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  const getDropdownPosition = () => {
-    if (!buttonRef.current) return { top: 0, right: 0 };
-    const rect = buttonRef.current.getBoundingClientRect();
-    return {
-      top: rect.bottom + 4,
-      right: window.innerWidth - rect.right,
-    };
-  };
-
-  return (
-    <div className="relative">
-      <Button
-        ref={buttonRef}
-        variant="primary"
-        size="sm"
-        rightIcon={<IconChevronDown size={12} stroke={1.5} />}
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        Create Horizontal Pod Autoscaler
-      </Button>
-
-      {isOpen &&
-        createPortal(
-          <>
-            {/* Backdrop */}
-            <div className="fixed inset-0 z-[99]" onClick={() => setIsOpen(false)} />
-            {/* Dropdown */}
-            <div
-              ref={dropdownRef}
-              className="fixed z-[100] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg shadow-lg py-1 min-w-[140px]"
-              style={{
-                top: getDropdownPosition().top,
-                right: getDropdownPosition().right,
-              }}
-            >
-              <button
-                className="w-full px-3 py-2 text-left text-body-md text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] transition-colors"
-                onClick={() => {
-                  setIsOpen(false);
-                  onCreateForm();
-                }}
-              >
-                Create as Form
-              </button>
-              <button
-                className="w-full px-3 py-2 text-left text-body-md text-[var(--color-text-default)] hover:bg-[var(--color-surface-subtle)] transition-colors"
-                onClick={() => {
-                  setIsOpen(false);
-                  onCreateYaml();
-                }}
-              >
-                Create as YAML
-              </button>
-            </div>
-          </>,
-          document.body
-        )}
-    </div>
-  );
-}
-
-/* ----------------------------------------
    Component
    ---------------------------------------- */
 
@@ -188,6 +111,20 @@ export function ContainerHPAPage() {
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [filters, setFilters] = useState<{ key: string; value: string }[]>([]);
   const navigate = useNavigate();
+
+  // Create menu items
+  const createDropdownItems: ContextMenuItem[] = [
+    {
+      id: 'create-form',
+      label: 'Create as Form',
+      onClick: () => navigate('/container/hpa/create'),
+    },
+    {
+      id: 'create-yaml',
+      label: 'Create as YAML',
+      onClick: () => navigate('/container/hpa/create-yaml'),
+    },
+  ];
 
   // Shell Panel state
   const shellPanel = useShellPanel();
@@ -427,18 +364,18 @@ export function ContainerHPAPage() {
             <VStack gap={3}>
               {/* Header */}
               <HStack justify="between" align="center" className="w-full min-h-8">
-                <HStack gap={2} align="center">
-                  <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-                    Horizontal Pod Autoscalers
-                  </h1>
-                  <button className="p-1 hover:bg-[var(--color-surface-subtle)] rounded transition-colors">
-                    <IconStar size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
-                  </button>
-                </HStack>
-                <CreateHPADropdown
-                  onCreateForm={handleCreateForm}
-                  onCreateYaml={handleCreateYaml}
-                />
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
+                  Horizontal Pod Autoscalers
+                </h1>
+                <ContextMenu items={createDropdownItems} trigger="click" align="right">
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    rightIcon={<IconChevronDown size={12} stroke={1.5} />}
+                  >
+                    Create Horizontal Pod Autoscaler
+                  </Button>
+                </ContextMenu>
               </HStack>
 
               {/* Action Bar */}

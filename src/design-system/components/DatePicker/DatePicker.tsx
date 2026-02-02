@@ -205,10 +205,22 @@ export const DatePicker: React.FC<DatePickerProps> = ({
 }) => {
   // thaki-ui compatibility: warn about deprecated props
   if (process.env.NODE_ENV === 'development') {
-    if (onApply) console.warn('[DatePicker] onApply prop is deprecated. Selection is applied immediately via onChange/onRangeChange.');
-    if (onCancel) console.warn('[DatePicker] onCancel prop is deprecated. Handle cancellation in parent component.');
-    if (numberOfMonths && numberOfMonths > 1) console.warn('[DatePicker] numberOfMonths > 1 is not supported. Only single month view is available.');
-    if (isLoading) console.warn('[DatePicker] isLoading prop is deprecated. Handle loading state in parent component.');
+    if (onApply)
+      console.warn(
+        '[DatePicker] onApply prop is deprecated. Selection is applied immediately via onChange/onRangeChange.'
+      );
+    if (onCancel)
+      console.warn(
+        '[DatePicker] onCancel prop is deprecated. Handle cancellation in parent component.'
+      );
+    if (numberOfMonths && numberOfMonths > 1)
+      console.warn(
+        '[DatePicker] numberOfMonths > 1 is not supported. Only single month view is available.'
+      );
+    if (isLoading)
+      console.warn(
+        '[DatePicker] isLoading prop is deprecated. Handle loading state in parent component.'
+      );
   }
   // Initialize view month from value or today
   const initialDate = value || rangeValue.start || new Date();
