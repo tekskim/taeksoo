@@ -733,19 +733,19 @@ export function CreatePersistentVolumeClaimPage() {
           actions={
             <>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                <IconTerminal2 size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                <IconFile size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                <IconCopy size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                <IconSearch size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                <IconBell size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
             </>
           }

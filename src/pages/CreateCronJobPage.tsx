@@ -1764,19 +1764,19 @@ export function CreateCronJobPage() {
           actions={
             <>
               <button className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                <IconTerminal2 size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                <IconFile size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                <IconCopy size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                <IconSearch size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                <IconBell size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
             </>
           }
@@ -1835,7 +1835,7 @@ export function CreateCronJobPage() {
                           onClick={addContainerTab}
                           className="flex items-center justify-center h-[20px] px-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors text-[var(--color-text-muted)] shrink-0"
                         >
-                          <IconPlus size={16} stroke={1.5} />
+                          <IconPlus size={12} stroke={1.5} />
                         </button>
                       </div>
                     </Tabs>
@@ -2488,7 +2488,7 @@ export function CreateCronJobPage() {
                                               className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                             >
                                               <IconX
-                                                size={16}
+                                                size={12}
                                                 className="text-[var(--color-text-muted)]"
                                                 stroke={1.5}
                                               />
@@ -2731,7 +2731,7 @@ export function CreateCronJobPage() {
                                         className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                       >
                                         <IconX
-                                          size={16}
+                                          size={12}
                                           className="text-[var(--color-text-muted)]"
                                           stroke={1.5}
                                         />
@@ -2999,7 +2999,7 @@ export function CreateCronJobPage() {
                                               className="mt-6 size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                             >
                                               <IconX
-                                                size={16}
+                                                size={12}
                                                 className="text-[var(--color-text-muted)]"
                                                 stroke={1.5}
                                               />
@@ -3317,7 +3317,7 @@ export function CreateCronJobPage() {
                                       className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                     >
                                       <IconX
-                                        size={16}
+                                        size={12}
                                         className="text-[var(--color-text-muted)]"
                                         stroke={1.5}
                                       />
@@ -3766,7 +3766,7 @@ export function CreateCronJobPage() {
                                     className="absolute top-3 right-3 size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                   >
                                     <IconX
-                                      size={16}
+                                      size={12}
                                       className="text-[var(--color-text-muted)]"
                                       stroke={1.5}
                                     />
