@@ -2649,13 +2649,13 @@ function AdvancedSection({
                       placeholder="Key"
                       value={tag.key}
                       onChange={(e) => handleTagChange(index, 'key', e.target.value)}
-                      className="flex-1"
+                      fullWidth
                     />
                     <Input
                       placeholder="Value"
                       value={tag.value}
                       onChange={(e) => handleTagChange(index, 'value', e.target.value)}
-                      className="flex-1"
+                      fullWidth
                     />
                     <button
                       onClick={() => handleRemoveTag(index)}
