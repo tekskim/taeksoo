@@ -966,8 +966,8 @@ export function CreatePodPage() {
     imagePullPolicy: string;
     pullSecrets: string;
     // Commands
-    command: string;
-    args: string;
+    command: string[];
+    args: string[];
     workingDir: string;
     // Ports
     ports: { name: string; containerPort: string; protocol: string }[];
@@ -3725,7 +3725,154 @@ export function CreatePodPage() {
                             </SectionCard.Content>
                           </SectionCard>
 
-                          {/* 3. Environment Variables Section */}
+                          {/* 3. Command Section */}
+                          <SectionCard>
+                            <SectionCard.Header title="Command" />
+                            <SectionCard.Content>
+                              <VStack gap={6}>
+                                {/* Command (Entrypoint) */}
+                                <VStack gap={3}>
+                                  <VStack gap={1}>
+                                    <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                      Command
+                                    </span>
+                                    <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                      The command to run when the container starts. This overrides
+                                      the default entrypoint.
+                                    </span>
+                                  </VStack>
+                                  <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                                    <VStack gap={2}>
+                                      {(config.command || ['']).map((cmd, index) => (
+                                        <div
+                                          key={index}
+                                          className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                        >
+                                          <div className="flex gap-2 items-start">
+                                            <Input
+                                              placeholder="/bin/sh"
+                                              value={cmd}
+                                              onChange={(e) => {
+                                                const newCommand = [...(config.command || [''])];
+                                                newCommand[index] = e.target.value;
+                                                updateContainerConfig(containerId, {
+                                                  command: newCommand,
+                                                });
+                                              }}
+                                              fullWidth
+                                            />
+                                            <button
+                                              onClick={() => {
+                                                const newCommand = (config.command || ['']).filter(
+                                                  (_, i) => i !== index
+                                                );
+                                                updateContainerConfig(containerId, {
+                                                  command:
+                                                    newCommand.length > 0 ? newCommand : [''],
+                                                });
+                                              }}
+                                              className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
+                                            >
+                                              <IconX
+                                                size={16}
+                                                className="text-[var(--color-text-muted)]"
+                                                stroke={1.5}
+                                              />
+                                            </button>
+                                          </div>
+                                        </div>
+                                      ))}
+                                      <div className="w-fit">
+                                        <Button
+                                          variant="secondary"
+                                          size="sm"
+                                          leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                          onClick={() => {
+                                            updateContainerConfig(containerId, {
+                                              command: [...(config.command || ['']), ''],
+                                            });
+                                          }}
+                                        >
+                                          Add Command
+                                        </Button>
+                                      </div>
+                                    </VStack>
+                                  </div>
+                                </VStack>
+
+                                {/* Args */}
+                                <VStack gap={3}>
+                                  <VStack gap={1}>
+                                    <span className="text-[14px] font-medium text-[var(--color-text-default)]">
+                                      Arguments
+                                    </span>
+                                    <span className="text-[12px] text-[var(--color-text-subtle)]">
+                                      Arguments to pass to the command. These are appended after the
+                                      command.
+                                    </span>
+                                  </VStack>
+                                  <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                                    <VStack gap={2}>
+                                      {(config.args || ['']).map((arg, index) => (
+                                        <div
+                                          key={index}
+                                          className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                        >
+                                          <div className="flex gap-2 items-start">
+                                            <Input
+                                              placeholder="-c"
+                                              value={arg}
+                                              onChange={(e) => {
+                                                const newArgs = [...(config.args || [''])];
+                                                newArgs[index] = e.target.value;
+                                                updateContainerConfig(containerId, {
+                                                  args: newArgs,
+                                                });
+                                              }}
+                                              fullWidth
+                                            />
+                                            <button
+                                              onClick={() => {
+                                                const newArgs = (config.args || ['']).filter(
+                                                  (_, i) => i !== index
+                                                );
+                                                updateContainerConfig(containerId, {
+                                                  args: newArgs.length > 0 ? newArgs : [''],
+                                                });
+                                              }}
+                                              className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
+                                            >
+                                              <IconX
+                                                size={16}
+                                                className="text-[var(--color-text-muted)]"
+                                                stroke={1.5}
+                                              />
+                                            </button>
+                                          </div>
+                                        </div>
+                                      ))}
+                                      <div className="w-fit">
+                                        <Button
+                                          variant="secondary"
+                                          size="sm"
+                                          leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                          onClick={() => {
+                                            updateContainerConfig(containerId, {
+                                              args: [...(config.args || ['']), ''],
+                                            });
+                                          }}
+                                        >
+                                          Add Argument
+                                        </Button>
+                                      </div>
+                                    </VStack>
+                                  </div>
+                                </VStack>
+                              </VStack>
+                            </SectionCard.Content>
+                          </SectionCard>
+
+                          {/* 4. Environment Variables Section */}
                           <SectionCard>
                             <SectionCard.Header title="Environment Variables" />
                             <SectionCard.Content>
