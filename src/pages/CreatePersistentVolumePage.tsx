@@ -534,7 +534,7 @@ function StorageConfigSection({
                       </div>
                       <button
                         onClick={() => removeNodeSelector(selectorIndex)}
-                        className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0 mt-8"
+                        className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0 self-start"
                       >
                         <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
                       </button>
