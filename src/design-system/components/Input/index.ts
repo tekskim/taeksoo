@@ -2,7 +2,7 @@ export { Input } from './Input';
 export type { InputProps, InputSize, InputVariant } from './Input';
 
 export { Textarea } from './Textarea';
-export type { TextareaProps, TextareaVariant } from './Textarea';
+export type { TextareaProps, TextareaVariant, TextareaResize } from './Textarea';
 
 export { NumberInput } from './NumberInput';
 export type { NumberInputProps } from './NumberInput';

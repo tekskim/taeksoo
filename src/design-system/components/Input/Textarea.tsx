@@ -1,4 +1,4 @@
-import { forwardRef, type TextareaHTMLAttributes } from 'react';
+import { forwardRef, useRef, useEffect, type TextareaHTMLAttributes } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 /* ----------------------------------------
@@ -6,6 +6,7 @@ import { twMerge } from 'tailwind-merge';
    ---------------------------------------- */
 
 export type TextareaVariant = 'default' | 'code';
+export type TextareaResize = 'none' | 'vertical' | 'horizontal' | 'both';
 
 export interface TextareaProps extends Omit<
   TextareaHTMLAttributes<HTMLTextAreaElement>,
@@ -27,6 +28,20 @@ export interface TextareaProps extends Omit<
   maxLength?: number;
   /** Required field indicator */
   required?: boolean;
+  /** Resize behavior */
+  resize?: TextareaResize;
+  /** Auto-resize based on content */
+  autoResize?: boolean;
+  /** Minimum rows (when autoResize is true) */
+  minRows?: number;
+  /** Maximum rows (when autoResize is true) */
+  maxRows?: number;
+  
+  // thaki-ui compatibility
+  /** @deprecated Use error for validation */
+  success?: boolean;
+  /** @deprecated Use autoResize instead */
+  autosize?: boolean;
 }
 
 /* ----------------------------------------
@@ -50,14 +65,76 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       value,
       defaultValue,
       required = false,
+      resize = 'vertical',
+      autoResize = false,
+      minRows = 3,
+      maxRows,
+      success,
+      autosize,
+      onChange,
       ...props
     },
     ref
   ) => {
     const inputId = id || `textarea-${Math.random().toString(36).substr(2, 9)}`;
+    const internalRef = useRef<HTMLTextAreaElement>(null);
+    const textareaRef = (ref as React.RefObject<HTMLTextAreaElement>) || internalRef;
+
+    // thaki-ui compatibility: autosize -> autoResize
+    const shouldAutoResize = autoResize || autosize;
+
+    // Dev warnings for deprecated props
+    if (process.env.NODE_ENV === 'development') {
+      if (success) {
+        console.warn('[Textarea] success prop is deprecated. Use error={false} for valid state.');
+      }
+      if (autosize) {
+        console.warn('[Textarea] autosize prop is deprecated. Use autoResize instead.');
+      }
+    }
 
     // Calculate character count
     const currentLength = String(value ?? defaultValue ?? '').length;
+
+    // Auto-resize functionality
+    const adjustHeight = () => {
+      const textarea = textareaRef.current;
+      if (!textarea || !shouldAutoResize) return;
+
+      // Reset height to calculate scrollHeight properly
+      textarea.style.height = 'auto';
+
+      // Calculate line height (approximate)
+      const lineHeight = parseInt(getComputedStyle(textarea).lineHeight) || 20;
+      const paddingY = parseInt(getComputedStyle(textarea).paddingTop) + parseInt(getComputedStyle(textarea).paddingBottom) || 16;
+
+      const minHeight = lineHeight * minRows + paddingY;
+      const maxHeight = maxRows ? lineHeight * maxRows + paddingY : Infinity;
+
+      const newHeight = Math.min(Math.max(textarea.scrollHeight, minHeight), maxHeight);
+      textarea.style.height = `${newHeight}px`;
+    };
+
+    useEffect(() => {
+      if (shouldAutoResize) {
+        adjustHeight();
+      }
+    }, [value, shouldAutoResize]);
+
+    const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      onChange?.(e);
+      if (shouldAutoResize) {
+        adjustHeight();
+      }
+    };
+
+    // Resize styles
+    const resizeStyles: Record<TextareaResize, string> = {
+      none: 'resize-none',
+      vertical: 'resize-y',
+      horizontal: 'resize-x',
+      both: 'resize',
+    };
 
     // Base styles
     const baseStyles = [
@@ -74,7 +151,6 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       'transition-all duration-[var(--duration-fast)]',
       'placeholder:text-[var(--color-text-subtle)]',
       'focus:outline-none',
-      'resize-y',
     ];
 
     // Focus styles (not applied for readOnly)
@@ -95,6 +171,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     // Border color based on state
     const getBorderColor = () => {
       if (error) return 'border-[var(--input-border-error)]';
+      if (success) return 'border-[var(--color-state-success)]';
       if (readOnly) return 'border-[var(--input-border-readonly)]';
       return 'border-[var(--input-border)]';
     };
@@ -114,6 +191,8 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       getBorderColor(),
       disabledStyles,
       readOnlyStyles,
+      !disabled && !shouldAutoResize && resizeStyles[resize],
+      shouldAutoResize && 'resize-none overflow-hidden',
       className
     );
 
@@ -137,7 +216,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
 
         <div className="relative h-fit">
           <textarea
-            ref={ref}
+            ref={textareaRef}
             id={inputId}
             className={textareaClasses}
             disabled={disabled}
@@ -145,13 +224,29 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
             maxLength={maxLength}
             value={value}
             defaultValue={defaultValue}
+            rows={shouldAutoResize ? minRows : props.rows}
             aria-invalid={!!error}
             aria-describedby={
               error ? `${inputId}-error` : helperText ? `${inputId}-helper` : undefined
             }
+            onChange={handleChange}
             {...props}
           />
+
+          {/* Character count */}
+          {showCount && maxLength && (
+            <div className="absolute bottom-2 right-2 text-body-sm text-[var(--color-text-subtle)]">
+              {currentLength}/{maxLength}
+            </div>
+          )}
         </div>
+
+        {/* Error message */}
+        {error && (
+          <p id={`${inputId}-error`} className="text-body-sm text-[var(--color-state-danger)]">
+            {error}
+          </p>
+        )}
       </div>
     );
   }

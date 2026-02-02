@@ -7,6 +7,7 @@ import {
   type ChangeEvent,
 } from 'react';
 import { twMerge } from 'tailwind-merge';
+import { Radio } from './Radio';
 
 /* ----------------------------------------
    RadioGroup Context
@@ -27,13 +28,27 @@ export const useRadioGroup = () => useContext(RadioGroupContext);
    RadioGroup Types
    ---------------------------------------- */
 
+/** Option type for array-based usage (thaki-ui compatibility) */
+export interface RadioOption {
+  /** Option value */
+  value: string;
+  /** Option label */
+  label: ReactNode;
+  /** Option description */
+  description?: ReactNode;
+  /** Disabled state */
+  disabled?: boolean;
+}
+
 export interface RadioGroupProps {
   /** Group label */
   label?: ReactNode;
   /** Description for the group */
   description?: ReactNode;
-  /** Children (Radio components) */
-  children: ReactNode;
+  /** Children (Radio components) - use this OR options */
+  children?: ReactNode;
+  /** Options array (thaki-ui compatible) - use this OR children */
+  options?: RadioOption[];
   /** Form field name */
   name?: string;
   /** Controlled value */
@@ -62,6 +77,7 @@ export function RadioGroup({
   label,
   description,
   children,
+  options,
   name,
   value: controlledValue,
   defaultValue,
@@ -91,6 +107,22 @@ export function RadioGroup({
       setInternalValue(newValue);
     }
     onChange?.(newValue);
+  };
+
+  // Render content: either children or options-based Radio components
+  const renderContent = () => {
+    if (options && options.length > 0) {
+      return options.map((option) => (
+        <Radio
+          key={option.value}
+          value={option.value}
+          label={option.label}
+          description={option.description}
+          disabled={option.disabled}
+        />
+      ));
+    }
+    return children;
   };
 
   return (
@@ -139,7 +171,7 @@ export function RadioGroup({
               : 'flex-row flex-wrap gap-[var(--radio-group-item-gap-horizontal)]'
           )}
         >
-          {children}
+          {renderContent()}
         </div>
 
         {/* Error message */}
