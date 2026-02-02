@@ -12,16 +12,28 @@ import {
    ---------------------------------------- */
 
 export type InlineMessageVariant = 'success' | 'warning' | 'error' | 'info';
+// thaki-ui compatibility: type alias
+export type ThakiInlineMessageType = InlineMessageVariant;
 
 export interface InlineMessageProps extends HTMLAttributes<HTMLDivElement> {
-  /** Message variant */
+  /** Message variant (also accepts thaki-ui 'type') */
   variant?: InlineMessageVariant;
   /** Message content */
-  children: ReactNode;
+  children?: ReactNode;
   /** Hide icon */
   hideIcon?: boolean;
   /** Custom icon */
   icon?: ReactNode;
+  /** @deprecated thaki-ui compatibility - use variant instead */
+  type?: ThakiInlineMessageType;
+  /** @deprecated thaki-ui compatibility - use children instead */
+  message?: ReactNode;
+  /** @deprecated thaki-ui compatibility - close button (not implemented, handle in parent) */
+  closable?: boolean;
+  /** @deprecated thaki-ui compatibility - close callback */
+  onClose?: () => void;
+  /** @deprecated thaki-ui compatibility - expandable content (not implemented) */
+  expandable?: boolean;
 }
 
 /* ----------------------------------------
@@ -76,13 +88,31 @@ const variantStyles: Record<InlineMessageVariant, { bg: string; icon: ReactNode 
    ---------------------------------------- */
 
 export function InlineMessage({
-  variant = 'info',
+  variant: rawVariant,
   children,
   hideIcon = false,
   icon,
   className = '',
+  // thaki-ui compatibility props
+  type,
+  message,
+  closable,
+  onClose,
+  expandable,
   ...props
 }: InlineMessageProps) {
+  // thaki-ui compatibility: type alias for variant
+  const variant = rawVariant ?? type ?? 'info';
+  
+  // thaki-ui compatibility: message alias for children
+  const content = children ?? message;
+  
+  // thaki-ui compatibility: warn about deprecated props
+  if (process.env.NODE_ENV === 'development') {
+    if (closable) console.warn('[InlineMessage] closable prop is deprecated. Implement close button in parent component.');
+    if (expandable) console.warn('[InlineMessage] expandable prop is deprecated. Implement expandable content in parent component.');
+  }
+
   const styles = variantStyles[variant];
 
   return (
@@ -102,7 +132,7 @@ export function InlineMessage({
 
       {/* Message Content */}
       <p className="text-[length:var(--inline-message-font-size)] leading-[var(--inline-message-line-height)] text-[var(--inline-message-text)]">
-        {children}
+        {content}
       </p>
     </div>
   );

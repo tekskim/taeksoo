@@ -9,11 +9,17 @@ export interface TabBarItem {
   /** Unique identifier */
   id: string;
   /** Tab label */
-  label: string;
+  label?: string;
+  /** @deprecated thaki-ui compatibility - use label instead */
+  title?: string;
   /** Icon (optional) */
   icon?: React.ReactNode;
   /** Whether the tab can be closed */
   closable?: boolean;
+  /** @deprecated thaki-ui compatibility - whether tab is draggable */
+  draggable?: boolean;
+  /** @deprecated thaki-ui compatibility - whether tab is fixed (not closable) */
+  fixed?: boolean;
 }
 
 export interface TabBarProps {
@@ -145,7 +151,9 @@ export const TabBar: React.FC<TabBarProps> = ({
       >
         {tabs.map((tab) => {
           const isActive = tab.id === activeTab;
-          const closable = tab.closable !== false;
+          // thaki-ui compatibility: title alias for label, fixed alias for !closable
+          const tabLabel = tab.label ?? tab.title ?? '';
+          const closable = tab.fixed ? false : (tab.closable !== false);
           const isDragging = draggedTabId === tab.id;
           const isDragOver = dragOverTabId === tab.id;
 
@@ -211,7 +219,7 @@ export const TabBar: React.FC<TabBarProps> = ({
                   }
                 `}
               >
-                {tab.label}
+                {tabLabel}
               </span>
 
               {/* Close Button */}
@@ -231,7 +239,7 @@ export const TabBar: React.FC<TabBarProps> = ({
                         : 'opacity-0 group-hover:opacity-100 text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] hover:bg-[var(--color-border-default)]'
                     }
                   `}
-                  aria-label={`Close ${tab.label}`}
+                  aria-label={`Close ${tabLabel}`}
                 >
                   <IconX size={12} stroke={1} />
                 </button>

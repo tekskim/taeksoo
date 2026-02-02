@@ -7,6 +7,12 @@ import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
 
 export type DatePickerMode = 'single' | 'range';
 
+// thaki-ui compatibility type
+export interface ThakiDatePickerValue {
+  start: Date | null;
+  end: Date | null;
+}
+
 export interface DatePickerProps {
   /** Selection mode */
   mode?: DatePickerMode;
@@ -30,6 +36,14 @@ export interface DatePickerProps {
   firstDayOfWeek?: 0 | 1;
   /** Custom class name */
   className?: string;
+  /** @deprecated thaki-ui compatibility - use onChange/onRangeChange instead */
+  onApply?: (value: ThakiDatePickerValue) => void;
+  /** @deprecated thaki-ui compatibility - cancel handler */
+  onCancel?: () => void;
+  /** @deprecated thaki-ui compatibility - number of visible months */
+  numberOfMonths?: number;
+  /** @deprecated thaki-ui compatibility - loading state */
+  isLoading?: boolean;
 }
 
 /* ----------------------------------------
@@ -183,7 +197,19 @@ export const DatePicker: React.FC<DatePickerProps> = ({
   disabled = false,
   firstDayOfWeek = 0,
   className = '',
+  // thaki-ui compatibility props
+  onApply,
+  onCancel,
+  numberOfMonths,
+  isLoading,
 }) => {
+  // thaki-ui compatibility: warn about deprecated props
+  if (process.env.NODE_ENV === 'development') {
+    if (onApply) console.warn('[DatePicker] onApply prop is deprecated. Selection is applied immediately via onChange/onRangeChange.');
+    if (onCancel) console.warn('[DatePicker] onCancel prop is deprecated. Handle cancellation in parent component.');
+    if (numberOfMonths && numberOfMonths > 1) console.warn('[DatePicker] numberOfMonths > 1 is not supported. Only single month view is available.');
+    if (isLoading) console.warn('[DatePicker] isLoading prop is deprecated. Handle loading state in parent component.');
+  }
   // Initialize view month from value or today
   const initialDate = value || rangeValue.start || new Date();
   const [viewYear, setViewYear] = useState(initialDate.getFullYear());
