@@ -397,6 +397,18 @@ export default function CreateHPAPage() {
         className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
         style={{ left: `${sidebarWidth}px` }}
       >
+        {/* Tab Bar */}
+        <TabBar
+          tabs={tabs.map((tab) => ({
+            id: tab.id,
+            label: tab.label,
+            closable: tab.closable,
+          }))}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+        />
+
         {/* Top Bar */}
         <TopBar
           breadcrumb={
@@ -421,18 +433,6 @@ export default function CreateHPAPage() {
               </button>
             </HStack>
           }
-        />
-
-        {/* Tab Bar */}
-        <TabBar
-          tabs={tabs.map((tab) => ({
-            id: tab.id,
-            label: tab.label,
-            closable: tab.closable,
-          }))}
-          activeTab={activeTabId}
-          onTabChange={selectTab}
-          onTabClose={closeTab}
         />
 
         {/* Page Content */}
