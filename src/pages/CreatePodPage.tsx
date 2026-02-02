@@ -1720,16 +1720,6 @@ export function CreatePodPage() {
                   {/* Pod Config Tab */}
                   {activeTab === 'pod-config' && (
                     <>
-                      <BasicInfoSection
-                        namespace={namespace}
-                        onNamespaceChange={setNamespace}
-                        name={name}
-                        onNameChange={setName}
-                        nameError={nameError}
-                        onNameErrorChange={setNameError}
-                        description={description}
-                        onDescriptionChange={setDescription}
-                      />
                       <LabelsAnnotationsSection
                         labels={labels}
                         onAddLabel={addLabel}
@@ -1764,6 +1754,17 @@ export function CreatePodPage() {
                   {/* Pod Tab */}
                   {activeTab === 'pod' && (
                     <>
+                      <BasicInfoSection
+                        namespace={namespace}
+                        onNamespaceChange={setNamespace}
+                        name={name}
+                        onNameChange={setName}
+                        nameError={nameError}
+                        onNameErrorChange={setNameError}
+                        description={description}
+                        onDescriptionChange={setDescription}
+                      />
+
                       {/* Labels & Annotations */}
                       <SectionCard>
                         <SectionCard.Header title="Labels & Annotations" />
