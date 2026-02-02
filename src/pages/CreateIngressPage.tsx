@@ -629,16 +629,18 @@ export default function CreateIngressPage() {
                           </div>
                         ))}
 
-                        {/* Add Rule button */}
-                        <div className="w-fit">
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                            onClick={addRule}
-                          >
-                            Add Rule
-                          </Button>
+                        {/* Add Rule button in subtle container */}
+                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                          <div className="w-fit">
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                              onClick={addRule}
+                            >
+                              Add Rule
+                            </Button>
+                          </div>
                         </div>
                       </VStack>
                     </SectionCard.Content>
@@ -742,16 +744,18 @@ export default function CreateIngressPage() {
                           </div>
                         ))}
 
-                        {/* Add Certificate button */}
-                        <div className="w-fit">
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                            onClick={addCertificate}
-                          >
-                            Add Certificate
-                          </Button>
+                        {/* Add Certificate button in subtle container */}
+                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                          <div className="w-fit">
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                              onClick={addCertificate}
+                            >
+                              Add Certificate
+                            </Button>
+                          </div>
                         </div>
                       </VStack>
                     </SectionCard.Content>
@@ -791,67 +795,64 @@ export default function CreateIngressPage() {
                             </span>
                           </VStack>
 
-                          {labels.length > 0 && (
-                            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-                              <VStack gap={2}>
-                                {labels.map((label) => (
-                                  <div
-                                    key={label.id}
-                                    className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
-                                  >
-                                    <div className="grid grid-cols-[1fr_1fr_16px] gap-2 w-full items-start">
-                                      <VStack gap={2}>
-                                        <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                          Key
-                                        </label>
-                                        <Input
-                                          placeholder="Input Key"
-                                          value={label.key}
-                                          onChange={(e) =>
-                                            updateLabel(label.id, 'key', e.target.value)
-                                          }
-                                          fullWidth
-                                        />
-                                      </VStack>
-                                      <VStack gap={2}>
-                                        <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                          Value
-                                        </label>
-                                        <Input
-                                          placeholder="Input Value"
-                                          value={label.value}
-                                          onChange={(e) =>
-                                            updateLabel(label.id, 'value', e.target.value)
-                                          }
-                                          fullWidth
-                                        />
-                                      </VStack>
-                                      <button
-                                        onClick={() => removeLabel(label.id)}
-                                        className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors self-center mt-5"
-                                      >
-                                        <IconX
-                                          size={12}
-                                          className="text-[var(--color-text-muted)]"
-                                          stroke={1.5}
-                                        />
-                                      </button>
-                                    </div>
+                          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                            <VStack gap={2}>
+                              {labels.map((label) => (
+                                <div
+                                  key={label.id}
+                                  className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                >
+                                  <div className="grid grid-cols-[1fr_1fr_16px] gap-2 w-full items-start">
+                                    <VStack gap={2}>
+                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                        Key
+                                      </label>
+                                      <Input
+                                        placeholder="Input Key"
+                                        value={label.key}
+                                        onChange={(e) =>
+                                          updateLabel(label.id, 'key', e.target.value)
+                                        }
+                                        fullWidth
+                                      />
+                                    </VStack>
+                                    <VStack gap={2}>
+                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                        Value
+                                      </label>
+                                      <Input
+                                        placeholder="Input Value"
+                                        value={label.value}
+                                        onChange={(e) =>
+                                          updateLabel(label.id, 'value', e.target.value)
+                                        }
+                                        fullWidth
+                                      />
+                                    </VStack>
+                                    <button
+                                      onClick={() => removeLabel(label.id)}
+                                      className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors self-center mt-5"
+                                    >
+                                      <IconX
+                                        size={12}
+                                        className="text-[var(--color-text-muted)]"
+                                        stroke={1.5}
+                                      />
+                                    </button>
                                   </div>
-                                ))}
-                              </VStack>
-                            </div>
-                          )}
-
-                          <div className="w-fit">
-                            <Button
-                              variant="secondary"
-                              size="sm"
-                              leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                              onClick={addLabel}
-                            >
-                              Add Label
-                            </Button>
+                                </div>
+                              ))}
+                              <div className="w-fit">
+                                <Button
+                                  variant="secondary"
+                                  size="sm"
+                                  leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                  onClick={addLabel}
+                                >
+                                  Add Label
+                                </Button>
+                              </div>
+                            </VStack>
                           </div>
                         </VStack>
 
@@ -867,67 +868,64 @@ export default function CreateIngressPage() {
                             </span>
                           </VStack>
 
-                          {annotations.length > 0 && (
-                            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-                              <VStack gap={2}>
-                                {annotations.map((annotation) => (
-                                  <div
-                                    key={annotation.id}
-                                    className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
-                                  >
-                                    <div className="grid grid-cols-[1fr_1fr_16px] gap-2 w-full items-start">
-                                      <VStack gap={2}>
-                                        <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                          Key
-                                        </label>
-                                        <Input
-                                          placeholder="Input Key"
-                                          value={annotation.key}
-                                          onChange={(e) =>
-                                            updateAnnotation(annotation.id, 'key', e.target.value)
-                                          }
-                                          fullWidth
-                                        />
-                                      </VStack>
-                                      <VStack gap={2}>
-                                        <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                          Value
-                                        </label>
-                                        <Input
-                                          placeholder="Input Value"
-                                          value={annotation.value}
-                                          onChange={(e) =>
-                                            updateAnnotation(annotation.id, 'value', e.target.value)
-                                          }
-                                          fullWidth
-                                        />
-                                      </VStack>
-                                      <button
-                                        onClick={() => removeAnnotation(annotation.id)}
-                                        className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors self-center mt-5"
-                                      >
-                                        <IconX
-                                          size={12}
-                                          className="text-[var(--color-text-muted)]"
-                                          stroke={1.5}
-                                        />
-                                      </button>
-                                    </div>
+                          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                            <VStack gap={2}>
+                              {annotations.map((annotation) => (
+                                <div
+                                  key={annotation.id}
+                                  className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                >
+                                  <div className="grid grid-cols-[1fr_1fr_16px] gap-2 w-full items-start">
+                                    <VStack gap={2}>
+                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                        Key
+                                      </label>
+                                      <Input
+                                        placeholder="Input Key"
+                                        value={annotation.key}
+                                        onChange={(e) =>
+                                          updateAnnotation(annotation.id, 'key', e.target.value)
+                                        }
+                                        fullWidth
+                                      />
+                                    </VStack>
+                                    <VStack gap={2}>
+                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                        Value
+                                      </label>
+                                      <Input
+                                        placeholder="Input Value"
+                                        value={annotation.value}
+                                        onChange={(e) =>
+                                          updateAnnotation(annotation.id, 'value', e.target.value)
+                                        }
+                                        fullWidth
+                                      />
+                                    </VStack>
+                                    <button
+                                      onClick={() => removeAnnotation(annotation.id)}
+                                      className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors self-center mt-5"
+                                    >
+                                      <IconX
+                                        size={12}
+                                        className="text-[var(--color-text-muted)]"
+                                        stroke={1.5}
+                                      />
+                                    </button>
                                   </div>
-                                ))}
-                              </VStack>
-                            </div>
-                          )}
-
-                          <div className="w-fit">
-                            <Button
-                              variant="secondary"
-                              size="sm"
-                              leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                              onClick={addAnnotation}
-                            >
-                              Add Annotation
-                            </Button>
+                                </div>
+                              ))}
+                              <div className="w-fit">
+                                <Button
+                                  variant="secondary"
+                                  size="sm"
+                                  leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                  onClick={addAnnotation}
+                                >
+                                  Add Annotation
+                                </Button>
+                              </div>
+                            </VStack>
                           </div>
                         </VStack>
                       </VStack>
