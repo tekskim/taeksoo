@@ -323,7 +323,13 @@ export const FilterTags: Story = {
         <div className="text-label-sm text-[var(--color-text-subtle)]">Active Filters</div>
         <TagGroup>
           {filters.map((filter) => (
-            <Tag key={filter} variant="primary" outline closable onClose={() => removeFilter(filter)}>
+            <Tag
+              key={filter}
+              variant="primary"
+              outline
+              closable
+              onClose={() => removeFilter(filter)}
+            >
               {filter}
             </Tag>
           ))}

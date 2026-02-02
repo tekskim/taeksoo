@@ -69,9 +69,10 @@ export const Pagination: React.FC<PaginationProps> = ({
 }) => {
   // thaki-ui compatibility: support currentAt as alias for currentPage
   const currentPage = rawCurrentPage ?? currentAt ?? 1;
-  
+
   // thaki-ui compatibility: calculate totalPages from totalCount + size
-  const totalPages = rawTotalPages ?? (totalCount && pageSize ? Math.ceil(totalCount / pageSize) : 0);
+  const totalPages =
+    rawTotalPages ?? (totalCount && pageSize ? Math.ceil(totalCount / pageSize) : 0);
   // Generate pagination range with dots
   const paginationRange = useMemo(() => {
     // Total page numbers to show = siblingCount + firstPage + lastPage + currentPage + 2*DOTS

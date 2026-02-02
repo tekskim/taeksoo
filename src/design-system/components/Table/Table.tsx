@@ -65,9 +65,9 @@ export function Table<T extends Record<string, any>>({
 }: TableProps<T>) {
   // thaki-ui compatibility: support rows prop as alias for data
   const tableData = data ?? rows ?? [];
-  
+
   // thaki-ui compatibility: support header prop as alias for label
-  const columns = rawColumns.map(col => ({
+  const columns = rawColumns.map((col) => ({
     ...col,
     label: col.label || col.header || '',
   }));

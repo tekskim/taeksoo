@@ -140,11 +140,12 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
 }) => {
   // thaki-ui compatibility: map thakiVariant to status
   const status = rawStatus ?? (thakiVariant ? thakiVariantToStatus[thakiVariant] : undefined);
-  
+
   // thaki-ui compatibility: warn about deprecated props
   if (process.env.NODE_ENV === 'development') {
     if (color) console.warn('[ProgressBar] color prop is deprecated. Use status prop instead.');
-    if (pendingColor) console.warn('[ProgressBar] pendingColor prop is deprecated. Use status prop instead.');
+    if (pendingColor)
+      console.warn('[ProgressBar] pendingColor prop is deprecated. Use status prop instead.');
   }
   const [showTooltip, setShowTooltip] = useState(false);
 

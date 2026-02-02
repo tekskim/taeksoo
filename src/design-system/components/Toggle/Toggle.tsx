@@ -54,7 +54,7 @@ export const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
     // Use controlled value if provided, otherwise use internal state
     const isControlled = checked !== undefined;
     const isChecked = isControlled ? checked : internalChecked;
-    
+
     // thaki-ui compatibility: support checkedLabel/uncheckedLabel
     const label = rawLabel ?? (isChecked ? checkedLabel : uncheckedLabel);
 

@@ -103,14 +103,20 @@ export function InlineMessage({
 }: InlineMessageProps) {
   // thaki-ui compatibility: type alias for variant
   const variant = rawVariant ?? type ?? 'info';
-  
+
   // thaki-ui compatibility: message alias for children
   const content = children ?? message;
-  
+
   // thaki-ui compatibility: warn about deprecated props
   if (process.env.NODE_ENV === 'development') {
-    if (closable) console.warn('[InlineMessage] closable prop is deprecated. Implement close button in parent component.');
-    if (expandable) console.warn('[InlineMessage] expandable prop is deprecated. Implement expandable content in parent component.');
+    if (closable)
+      console.warn(
+        '[InlineMessage] closable prop is deprecated. Implement close button in parent component.'
+      );
+    if (expandable)
+      console.warn(
+        '[InlineMessage] expandable prop is deprecated. Implement expandable content in parent component.'
+      );
   }
 
   const styles = variantStyles[variant];
