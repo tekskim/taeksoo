@@ -360,10 +360,12 @@ function SummarySidebar({
   const isPodTab = activeTab === 'pod';
   const activeContainerId = containerTabs.find((c) => c.id === activeTab)?.id;
 
-  // Pod section items matching Figma design
+  // Pod section items matching actual sections
   const podSections = [
+    'Basic Information',
     'Labels & Annotations',
     'Scaling and Upgrade Policy',
+    'Networking',
     'Node Scheduling',
     'Pod Scheduling',
     'Resources',
