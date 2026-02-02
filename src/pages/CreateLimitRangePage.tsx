@@ -136,7 +136,7 @@ function SummarySidebar({
             disabled={isCreateDisabled}
             className="flex-1"
           >
-            Create Limit Range
+            Create
           </Button>
         </HStack>
       </div>
