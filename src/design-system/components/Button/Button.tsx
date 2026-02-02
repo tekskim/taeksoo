@@ -82,6 +82,15 @@ const buttonVariants = cva(
         ],
       },
       size: {
+        xs: [
+          'h-6',
+          'px-2',
+          'py-1',
+          'gap-1',
+          'min-w-[48px]',
+          'text-[11px]',
+          'leading-4',
+        ],
         sm: [
           'h-[var(--button-height-sm)]',
           'px-[var(--button-padding-x-sm)]',
@@ -121,6 +130,11 @@ const buttonVariants = cva(
       // Icon-only size overrides - using ! to ensure these override size variant classes
       {
         iconOnly: true,
+        size: 'xs',
+        className: '!w-6 !min-w-0 !px-0 !py-0',
+      },
+      {
+        iconOnly: true,
         size: 'sm',
         className: '!w-[var(--button-height-sm)] !min-w-0 !px-0 !py-0',
       },
@@ -135,6 +149,11 @@ const buttonVariants = cva(
         className: '!w-[var(--button-height-lg)] !min-w-0 !px-0 !py-0',
       },
       // Link variant - remove size constraints
+      {
+        variant: 'link',
+        size: 'xs',
+        className: 'h-auto min-w-0 px-0 py-0 text-[11px]',
+      },
       {
         variant: 'link',
         size: 'sm',
@@ -189,11 +208,38 @@ type PolymorphicComponentPropWithRef<
 export type ButtonVariant = VariantProps<typeof buttonVariants>['variant'];
 export type ButtonSize = VariantProps<typeof buttonVariants>['size'];
 
+// thaki-ui compatibility
+export type ButtonAppearance = 'solid' | 'outline' | 'ghost';
+export type ThakiButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'success' | 'error' | 'warning' | 'muted';
+
+// Map thaki-ui variant + appearance to tds variant
+const resolveThakiVariant = (
+  variant?: ButtonVariant | ThakiButtonVariant,
+  appearance?: ButtonAppearance
+): ButtonVariant => {
+  // If no appearance, treat as normal tds variant
+  if (!appearance || appearance === 'solid') {
+    // Map thaki-ui specific variants
+    if (variant === 'error') return 'danger';
+    if (variant === 'tertiary') return 'secondary';
+    if (variant === 'success') return 'primary'; // success maps to primary
+    return variant as ButtonVariant;
+  }
+  
+  // Handle appearance combinations
+  if (appearance === 'outline') return 'outline';
+  if (appearance === 'ghost') return 'ghost';
+  
+  return variant as ButtonVariant;
+};
+
 type ButtonBaseProps = {
   isLoading?: boolean;
   leftIcon?: ReactNode;
   rightIcon?: ReactNode;
   icon?: ReactNode;
+  /** @deprecated thaki-ui compatibility - use variant directly */
+  appearance?: ButtonAppearance;
 } & VariantProps<typeof buttonVariants>;
 
 type IconOnlyProps = {
@@ -225,7 +271,8 @@ export const Button: ButtonComponent = forwardRef(
   <C extends ElementType = 'button'>(
     {
       as,
-      variant = 'primary',
+      variant: rawVariant = 'primary',
+      appearance,
       size = 'md',
       fullWidth,
       isLoading = false,
@@ -240,6 +287,9 @@ export const Button: ButtonComponent = forwardRef(
     }: ButtonProps<C>,
     ref: PolymorphicRef<C>
   ) => {
+    // thaki-ui compatibility: resolve variant + appearance combination
+    const variant = resolveThakiVariant(rawVariant, appearance);
+    
     const Component = as || 'button';
     const isIconOnly = !!icon;
     const isDisabled = disabled || isLoading;
@@ -301,6 +351,7 @@ export const Button: ButtonComponent = forwardRef(
    ---------------------------------------- */
 
 const spinnerSizes: Record<NonNullable<ButtonSize>, string> = {
+  xs: 'size-2.5',
   sm: 'size-3',
   md: 'size-3.5',
   lg: 'size-4',

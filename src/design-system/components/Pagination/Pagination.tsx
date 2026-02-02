@@ -7,9 +7,15 @@ import { IconChevronLeft, IconChevronRight, IconSettings } from '@tabler/icons-r
 
 export interface PaginationProps {
   /** Current active page (1-indexed) */
-  currentPage: number;
-  /** Total number of pages */
-  totalPages: number;
+  currentPage?: number;
+  /** @deprecated thaki-ui compatibility - use currentPage instead */
+  currentAt?: number;
+  /** Total number of pages (provide this OR totalCount+size) */
+  totalPages?: number;
+  /** @deprecated thaki-ui compatibility - use totalPages instead */
+  totalCount?: number;
+  /** @deprecated thaki-ui compatibility - items per page, used with totalCount */
+  size?: number;
   /** Callback when page changes */
   onPageChange: (page: number) => void;
   /** Number of sibling pages to show on each side of current page */
@@ -46,8 +52,11 @@ const DOTS = 'dots';
    ---------------------------------------- */
 
 export const Pagination: React.FC<PaginationProps> = ({
-  currentPage,
-  totalPages,
+  currentPage: rawCurrentPage,
+  currentAt,
+  totalPages: rawTotalPages,
+  totalCount,
+  size: pageSize,
   onPageChange,
   siblingCount = 1,
   // showFirstLast = true, // Reserved for future use
@@ -58,6 +67,11 @@ export const Pagination: React.FC<PaginationProps> = ({
   selectedCount = 0,
   className = '',
 }) => {
+  // thaki-ui compatibility: support currentAt as alias for currentPage
+  const currentPage = rawCurrentPage ?? currentAt ?? 1;
+  
+  // thaki-ui compatibility: calculate totalPages from totalCount + size
+  const totalPages = rawTotalPages ?? (totalCount && pageSize ? Math.ceil(totalCount / pageSize) : 0);
   // Generate pagination range with dots
   const paginationRange = useMemo(() => {
     // Total page numbers to show = siblingCount + firstPage + lastPage + currentPage + 2*DOTS

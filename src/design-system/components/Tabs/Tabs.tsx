@@ -28,18 +28,27 @@ const useTabsContext = () => {
 
 export type TabSize = 'sm' | 'md';
 export type TabVariant = 'underline' | 'boxed';
+// thaki-ui compatibility aliases
+export type TabVariantAlias = 'line' | 'button';
+
+const variantAliasMap: Record<TabVariantAlias, TabVariant> = {
+  line: 'underline',
+  button: 'boxed',
+};
 
 export interface TabsProps {
   /** Default active tab value */
   defaultValue?: string;
   /** Controlled active tab value */
   value?: string;
+  /** @deprecated Use value instead (thaki-ui compatibility) */
+  activeTabId?: string;
   /** Change handler */
   onChange?: (value: string) => void;
   /** Tab size */
   size?: TabSize;
-  /** Tab style variant */
-  variant?: TabVariant;
+  /** Tab style variant (also accepts thaki-ui aliases: line, button) */
+  variant?: TabVariant | TabVariantAlias;
   /** Children (TabList and TabPanels) */
   children: ReactNode;
   /** Additional CSS classes */
@@ -80,16 +89,25 @@ export interface TabPanelProps {
 export function Tabs({
   defaultValue,
   value: controlledValue,
+  activeTabId,
   onChange,
   size = 'sm',
-  variant = 'underline',
+  variant: rawVariant = 'underline',
   children,
   className = '',
 }: TabsProps) {
+  // thaki-ui compatibility: support activeTabId as alias for value
+  const effectiveControlledValue = controlledValue ?? activeTabId;
+  
+  // thaki-ui compatibility: support variant aliases
+  const variant: TabVariant = rawVariant in variantAliasMap 
+    ? variantAliasMap[rawVariant as TabVariantAlias] 
+    : rawVariant as TabVariant;
+
   const [internalValue, setInternalValue] = useState(defaultValue ?? '');
 
-  const isControlled = controlledValue !== undefined;
-  const activeTab = isControlled ? controlledValue : internalValue;
+  const isControlled = effectiveControlledValue !== undefined;
+  const activeTab = isControlled ? effectiveControlledValue : internalValue;
 
   const setActiveTab = (newValue: string) => {
     if (!isControlled) {

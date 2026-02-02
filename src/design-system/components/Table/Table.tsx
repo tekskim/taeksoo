@@ -10,7 +10,10 @@ export type SortDirection = 'asc' | 'desc' | null;
 
 export interface TableColumn<T = any> {
   key: string;
+  /** Column header text */
   label: string;
+  /** @deprecated Use label instead (thaki-ui compatibility) */
+  header?: string;
   width?: string;
   minWidth?: string;
   maxWidth?: string;
@@ -23,7 +26,10 @@ export interface TableColumn<T = any> {
 
 export interface TableProps<T = any> {
   columns: TableColumn<T>[];
-  data: T[];
+  /** Table data */
+  data?: T[];
+  /** @deprecated Use data instead (thaki-ui compatibility) */
+  rows?: T[];
   rowKey: keyof T | ((row: T) => string);
   selectable?: boolean;
   selectedKeys?: string[];
@@ -42,8 +48,9 @@ export interface TableProps<T = any> {
    ---------------------------------------- */
 
 export function Table<T extends Record<string, any>>({
-  columns,
+  columns: rawColumns,
   data,
+  rows,
   rowKey,
   selectable = false,
   selectedKeys = [],
@@ -56,6 +63,14 @@ export function Table<T extends Record<string, any>>({
   className = '',
   rowHeight,
 }: TableProps<T>) {
+  // thaki-ui compatibility: support rows prop as alias for data
+  const tableData = data ?? rows ?? [];
+  
+  // thaki-ui compatibility: support header prop as alias for label
+  const columns = rawColumns.map(col => ({
+    ...col,
+    label: col.label || col.header || '',
+  }));
   const [sortKey, setSortKey] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>(null);
 
@@ -84,9 +99,9 @@ export function Table<T extends Record<string, any>>({
   };
 
   const sortedData = useMemo(() => {
-    if (!sortKey || !sortDirection) return data;
+    if (!sortKey || !sortDirection) return tableData;
 
-    return [...data].sort((a, b) => {
+    return [...tableData].sort((a, b) => {
       const aVal = a[sortKey];
       const bVal = b[sortKey];
 
@@ -97,7 +112,7 @@ export function Table<T extends Record<string, any>>({
       const comparison = aVal < bVal ? -1 : 1;
       return sortDirection === 'asc' ? comparison : -comparison;
     });
-  }, [data, sortKey, sortDirection]);
+  }, [tableData, sortKey, sortDirection]);
 
   const handleSelectRow = (key: string) => {
     if (selectedKeys.includes(key)) {

@@ -6,8 +6,19 @@ import { twMerge } from 'tailwind-merge';
    ---------------------------------------- */
 
 export type BadgeTheme = 'blue' | 'red' | 'green' | 'yellow' | 'gray';
+// thaki-ui compatibility aliases
+export type BadgeThemeAlias = 'blu' | 'gry' | 'gre' | 'ylw';
+
+const themeAliasMap: Record<BadgeThemeAlias, BadgeTheme> = {
+  blu: 'blue',
+  gry: 'gray',
+  gre: 'green',
+  ylw: 'yellow',
+};
 export type BadgeType = 'solid' | 'subtle';
 export type BadgeSize = 'sm' | 'md' | 'lg';
+// thaki-ui compatibility
+export type BadgeLayout = 'text-only' | 'left-icon' | 'right-icon';
 
 // Legacy variant support (backward compatibility)
 export type BadgeVariant = 'default' | 'primary' | 'success' | 'warning' | 'error' | 'info';
@@ -22,8 +33,8 @@ const variantToTheme: Record<BadgeVariant, BadgeTheme> = {
 };
 
 export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
-  /** Color theme */
-  theme?: BadgeTheme;
+  /** Color theme (also accepts thaki-ui aliases: blu, gry, gre, ylw) */
+  theme?: BadgeTheme | BadgeThemeAlias;
   /** Style type */
   type?: BadgeType;
   /** Badge size */
@@ -38,6 +49,10 @@ export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
   children: ReactNode;
   /** @deprecated Use theme prop instead */
   variant?: BadgeVariant;
+  /** @deprecated thaki-ui compatibility - use leftIcon/rightIcon instead */
+  layout?: BadgeLayout;
+  /** @deprecated thaki-ui compatibility - use leftIcon/rightIcon instead */
+  icon?: ReactNode;
 }
 
 /* ----------------------------------------
@@ -92,16 +107,24 @@ export const Badge = memo(function Badge({
   theme,
   type = 'solid',
   size = 'md',
-  leftIcon,
-  rightIcon,
+  leftIcon: rawLeftIcon,
+  rightIcon: rawRightIcon,
   dot = false,
   children,
   className = '',
   variant,
+  layout,
+  icon,
   ...props
 }: BadgeProps) {
-  // Support legacy variant prop
-  const resolvedTheme = theme ?? (variant ? variantToTheme[variant] : 'blue');
+  // thaki-ui compatibility: resolve layout + icon to leftIcon/rightIcon
+  const leftIcon = layout === 'left-icon' && icon ? icon : rawLeftIcon;
+  const rightIcon = layout === 'right-icon' && icon ? icon : rawRightIcon;
+  // Support legacy variant prop and thaki-ui theme aliases
+  const normalizedTheme = theme && theme in themeAliasMap 
+    ? themeAliasMap[theme as BadgeThemeAlias] 
+    : theme as BadgeTheme | undefined;
+  const resolvedTheme = normalizedTheme ?? (variant ? variantToTheme[variant] : 'blue');
   // Legacy variants use subtle type by default
   const resolvedType = variant && !theme ? 'subtle' : type;
 

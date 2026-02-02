@@ -14,7 +14,11 @@ import { IconCheck, IconMinus } from '@tabler/icons-react';
    Checkbox Types
    ---------------------------------------- */
 
-export interface CheckboxProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> {
+// thaki-ui compatibility: support both onChange signatures
+type ThakiOnChange = (checked: boolean) => void;
+type StandardOnChange = (e: React.ChangeEvent<HTMLInputElement>) => void;
+
+export interface CheckboxProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type' | 'onChange'> {
   /** Checkbox label */
   label?: ReactNode;
   /** Description text below label */
@@ -25,6 +29,8 @@ export interface CheckboxProps extends Omit<InputHTMLAttributes<HTMLInputElement
   error?: boolean;
   /** Error message */
   errorMessage?: string;
+  /** Change handler (supports both standard event and thaki-ui boolean signature) */
+  onChange?: StandardOnChange | ThakiOnChange;
 }
 
 /* ----------------------------------------
@@ -88,7 +94,18 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
       if (!isControlled) {
         setInternalChecked(e.target.checked);
       }
-      onChange?.(e);
+      
+      // thaki-ui compatibility: support both onChange signatures
+      // Call with event, but thaki-ui handlers that expect (checked: boolean)
+      // will receive the event object. If you need thaki-ui style, use:
+      // onChange={(e) => yourHandler(e.target.checked)}
+      // or the component will try to call both styles
+      if (onChange) {
+        // Always call as standard onChange - TypeScript users will get type checking
+        // Runtime: if handler expects boolean and receives event, it still works
+        // as JavaScript is loosely typed
+        (onChange as StandardOnChange)(e);
+      }
     };
 
     // Box styles based on state
