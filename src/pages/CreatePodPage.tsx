@@ -342,7 +342,6 @@ function SummarySidebar({
   const containersComplete = containerTabs.length > 0; // At least one container exists
 
   // Determine which section to expand based on active tab
-  const isPodConfigTab = activeTab === 'pod-config';
   const isPodTab = activeTab === 'pod';
   const activeContainerId = containerTabs.find((c) => c.id === activeTab)?.id;
 
@@ -381,33 +380,6 @@ function SummarySidebar({
               <h5 className="text-[16px] leading-6 font-semibold text-[var(--color-text-default)]">
                 Summary
               </h5>
-
-              {/* Deployment Section */}
-              <VStack gap={2}>
-                <SummarySectionHeader
-                  label="Deployment"
-                  status={deploymentComplete ? 'complete' : 'in-progress'}
-                  expanded={isPodConfigTab}
-                  onToggle={() => {}}
-                  hasChildren
-                />
-                {isPodConfigTab && (
-                  <VStack gap={0} className="ml-3">
-                    <SummarySubItem
-                      label="Basic Information"
-                      status={basicInfoComplete ? 'complete' : 'in-progress'}
-                    />
-                    <SummarySubItem
-                      label="Labels & Annotations"
-                      status={labelsComplete ? 'complete' : 'in-progress'}
-                    />
-                    <SummarySubItem
-                      label="Scaling and Upgrade Policy"
-                      status={scalingComplete ? 'complete' : 'in-progress'}
-                    />
-                  </VStack>
-                )}
-              </VStack>
 
               {/* Pod Section */}
               <VStack gap={2}>
@@ -1218,12 +1190,11 @@ export function CreatePodPage() {
     closable: tab.closable,
   }));
 
-  // Active form tab (Pod, Pod Template, Container-X)
-  const [activeTab, setActiveTab] = useState('pod-config');
+  // Active form tab (Pod Template, Container-X)
+  const [activeTab, setActiveTab] = useState('pod');
 
   // Build inner tabs for the form
   const formTabs = [
-    { id: 'pod-config', label: 'Pod' },
     { id: 'pod', label: 'Pod Template' },
     ...containerTabs.map((c) => ({ id: c.id, label: c.name, closable: containerTabs.length > 1 })),
   ];
@@ -1239,7 +1210,7 @@ export function CreatePodPage() {
         return newConfigs;
       });
       if (activeTab === id) {
-        setActiveTab('pod-config');
+        setActiveTab('pod');
       }
     },
     [containerTabs, activeTab]
@@ -1717,41 +1688,7 @@ export function CreatePodPage() {
                       </div>
                     </Tabs>
                   </div>
-                  {/* Pod Config Tab */}
-                  {activeTab === 'pod-config' && (
-                    <>
-                      <LabelsAnnotationsSection
-                        labels={labels}
-                        onAddLabel={addLabel}
-                        onRemoveLabel={removeLabel}
-                        onUpdateLabel={updateLabel}
-                        annotations={annotations}
-                        onAddAnnotation={addAnnotation}
-                        onRemoveAnnotation={removeAnnotation}
-                        onUpdateAnnotation={updateAnnotation}
-                      />
-                      <ScalingPolicySection
-                        strategy={strategy}
-                        onStrategyChange={setStrategy}
-                        maxSurge={maxSurge}
-                        onMaxSurgeChange={setMaxSurge}
-                        maxSurgeUnit={maxSurgeUnit}
-                        onMaxSurgeUnitChange={setMaxSurgeUnit}
-                        maxUnavailable={maxUnavailable}
-                        onMaxUnavailableChange={setMaxUnavailable}
-                        maxUnavailableUnit={maxUnavailableUnit}
-                        onMaxUnavailableUnitChange={setMaxUnavailableUnit}
-                        minReady={minReady}
-                        onMinReadyChange={setMinReady}
-                        revisionHistoryLimit={revisionHistoryLimit}
-                        onRevisionHistoryLimitChange={setRevisionHistoryLimit}
-                        progressDeadline={progressDeadline}
-                        onProgressDeadlineChange={setProgressDeadline}
-                      />
-                    </>
-                  )}
-
-                  {/* Pod Tab */}
+                  {/* Pod Template Tab */}
                   {activeTab === 'pod' && (
                     <>
                       <BasicInfoSection
