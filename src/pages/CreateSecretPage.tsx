@@ -498,7 +498,7 @@ function DataSection({
                     onClick={() => removeDataEntry(index)}
                     className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                   >
-                    <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                    <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
                   </button>
                 </div>
               ))}

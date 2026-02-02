@@ -4176,7 +4176,7 @@ export function CreatePodPage() {
                                                         });
                                                       }}
                                                     >
-                                                      <IconX size={16} />
+                                                      <IconX size={12} />
                                                     </Button>
                                                   </div>
                                                 </div>
@@ -4431,7 +4431,7 @@ export function CreatePodPage() {
                                                         });
                                                       }}
                                                     >
-                                                      <IconX size={16} />
+                                                      <IconX size={12} />
                                                     </Button>
                                                   </div>
                                                 </div>
@@ -4895,7 +4895,7 @@ export function CreatePodPage() {
                                                             });
                                                           }}
                                                         >
-                                                          <IconX size={16} />
+                                                          <IconX size={12} />
                                                         </Button>
                                                       </div>
                                                     </div>

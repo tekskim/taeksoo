@@ -4343,7 +4343,7 @@ export function CreateJobPage() {
                                                         });
                                                       }}
                                                     >
-                                                      <IconX size={16} />
+                                                      <IconX size={12} />
                                                     </Button>
                                                   </div>
                                                 </div>
@@ -4598,7 +4598,7 @@ export function CreateJobPage() {
                                                         });
                                                       }}
                                                     >
-                                                      <IconX size={16} />
+                                                      <IconX size={12} />
                                                     </Button>
                                                   </div>
                                                 </div>
@@ -5062,7 +5062,7 @@ export function CreateJobPage() {
                                                             });
                                                           }}
                                                         >
-                                                          <IconX size={16} />
+                                                          <IconX size={12} />
                                                         </Button>
                                                       </div>
                                                     </div>

@@ -774,7 +774,7 @@ export default function CreateVirtualAdapterPage() {
                                     onClick={() => removeFixedIP(entry.id)}
                                     className="p-1 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] transition-colors"
                                   >
-                                    <IconX size={16} />
+                                    <IconX size={12} />
                                   </button>
                                 </div>
                               ))}
