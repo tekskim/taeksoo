@@ -183,7 +183,7 @@ function SummarySidebar({
             disabled={isCreateDisabled}
             className="flex-1"
           >
-            Create Secret
+            Create
           </Button>
         </HStack>
       </div>

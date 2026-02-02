@@ -136,7 +136,7 @@ function SummarySidebar({
             disabled={isCreateDisabled}
             className="flex-1"
           >
-            Create Resource Quota
+            Create
           </Button>
         </HStack>
       </div>

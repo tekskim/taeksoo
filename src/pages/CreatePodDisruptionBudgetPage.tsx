@@ -159,7 +159,7 @@ function SummarySidebar({
             disabled={isCreateDisabled}
             className="flex-1"
           >
-            Create Pod Disruption Budget
+            Create
           </Button>
         </HStack>
       </div>

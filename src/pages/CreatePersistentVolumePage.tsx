@@ -158,7 +158,7 @@ function SummarySidebar({
             disabled={isCreateDisabled}
             className="flex-1"
           >
-            Create Persistent Volume
+            Create
           </Button>
         </HStack>
       </div>

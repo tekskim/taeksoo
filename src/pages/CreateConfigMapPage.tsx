@@ -164,7 +164,7 @@ function SummarySidebar({
             disabled={isCreateDisabled}
             className="flex-1"
           >
-            Create ConfigMap
+            Create
           </Button>
         </HStack>
       </div>
