@@ -399,133 +399,160 @@ function StorageConfigSection({
           {/* Mount Options */}
           <VStack gap={2}>
             <label className="text-label-lg text-[var(--color-text-default)]">Mount Options</label>
-            {mountOptions.length > 0 && (
-              <VStack gap={2} className="w-full">
-                <label className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
-                  Key
-                </label>
+            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+              <VStack gap={3}>
                 {mountOptions.map((option, index) => (
-                  <HStack key={index} gap={2} className="w-full">
-                    <Input
-                      placeholder="input key"
-                      value={option.key}
-                      onChange={(e) => updateMountOption(index, e.target.value)}
-                      fullWidth
-                    />
-                    <button
-                      onClick={() => removeMountOption(index)}
-                      className="p-2 hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
-                    >
-                      <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                    </button>
-                  </HStack>
+                  <div
+                    key={index}
+                    className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                  >
+                    <HStack gap={2} className="w-full">
+                      <Input
+                        placeholder="input key"
+                        value={option.key}
+                        onChange={(e) => updateMountOption(index, e.target.value)}
+                        fullWidth
+                      />
+                      <button
+                        onClick={() => removeMountOption(index)}
+                        className="p-2 hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
+                      >
+                        <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                      </button>
+                    </HStack>
+                  </div>
                 ))}
+                <div className="w-fit">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconPlus size={12} stroke={1.5} />}
+                    onClick={addMountOption}
+                  >
+                    Add Option
+                  </Button>
+                </div>
               </VStack>
-            )}
-            <Button
-              variant="outline"
-              size="sm"
-              leftIcon={<IconPlus size={12} stroke={1.5} />}
-              onClick={addMountOption}
-            >
-              Add Option
-            </Button>
+            </div>
           </VStack>
 
           {/* Node Selectors */}
           <VStack gap={2}>
             <label className="text-label-lg text-[var(--color-text-default)]">Node Selectors</label>
-            {nodeSelectors.map((selector, selectorIndex) => (
-              <HStack key={selectorIndex} gap={2} align="start" className="w-full">
-                <div className="flex-1 border border-[var(--color-border-default)] rounded-[6px] p-3">
-                  <VStack gap={2}>
-                    {/* Header row */}
-                    <div className="grid grid-cols-[1fr_1fr_1fr_23px] gap-2">
-                      <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
-                        Key
-                      </span>
-                      <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
-                        Operator
-                      </span>
-                      <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
-                        Value
-                      </span>
-                      <div />
-                    </div>
-                    {/* Rule rows */}
-                    {selector.rules.map((rule, ruleIndex) => (
-                      <div
-                        key={ruleIndex}
-                        className="grid grid-cols-[1fr_1fr_1fr_23px] gap-2 items-center"
-                      >
-                        <Input
-                          placeholder="input key"
-                          value={rule.key}
-                          onChange={(e) =>
-                            updateNodeSelectorRule(selectorIndex, ruleIndex, 'key', e.target.value)
-                          }
-                          fullWidth
-                        />
-                        <Select
-                          options={OPERATOR_OPTIONS}
-                          value={rule.operator}
-                          onChange={(value) =>
-                            updateNodeSelectorRule(selectorIndex, ruleIndex, 'operator', value)
-                          }
-                          fullWidth
-                        />
-                        <Input
-                          placeholder="input value"
-                          value={rule.value}
-                          onChange={(e) =>
-                            updateNodeSelectorRule(
-                              selectorIndex,
-                              ruleIndex,
-                              'value',
-                              e.target.value
-                            )
-                          }
-                          fullWidth
-                        />
-                        <button
-                          onClick={() => removeNodeSelectorRule(selectorIndex, ruleIndex)}
-                          className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                        >
-                          <IconX
-                            size={16}
-                            className="text-[var(--color-text-muted)]"
-                            stroke={1.5}
-                          />
-                        </button>
+            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+              <VStack gap={3}>
+                {nodeSelectors.map((selector, selectorIndex) => (
+                  <div
+                    key={selectorIndex}
+                    className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                  >
+                    <HStack gap={2} align="start" className="w-full">
+                      <div className="flex-1">
+                        <VStack gap={2}>
+                          {/* Header row */}
+                          <div className="grid grid-cols-[1fr_1fr_1fr_23px] gap-2">
+                            <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
+                              Key
+                            </span>
+                            <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
+                              Operator
+                            </span>
+                            <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
+                              Value
+                            </span>
+                            <div />
+                          </div>
+                          {/* Rule rows */}
+                          {selector.rules.map((rule, ruleIndex) => (
+                            <div
+                              key={ruleIndex}
+                              className="grid grid-cols-[1fr_1fr_1fr_23px] gap-2 items-center"
+                            >
+                              <Input
+                                placeholder="input key"
+                                value={rule.key}
+                                onChange={(e) =>
+                                  updateNodeSelectorRule(
+                                    selectorIndex,
+                                    ruleIndex,
+                                    'key',
+                                    e.target.value
+                                  )
+                                }
+                                fullWidth
+                              />
+                              <Select
+                                options={OPERATOR_OPTIONS}
+                                value={rule.operator}
+                                onChange={(value) =>
+                                  updateNodeSelectorRule(
+                                    selectorIndex,
+                                    ruleIndex,
+                                    'operator',
+                                    value
+                                  )
+                                }
+                                fullWidth
+                              />
+                              <Input
+                                placeholder="input value"
+                                value={rule.value}
+                                onChange={(e) =>
+                                  updateNodeSelectorRule(
+                                    selectorIndex,
+                                    ruleIndex,
+                                    'value',
+                                    e.target.value
+                                  )
+                                }
+                                fullWidth
+                              />
+                              <button
+                                onClick={() => removeNodeSelectorRule(selectorIndex, ruleIndex)}
+                                className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                              >
+                                <IconX
+                                  size={16}
+                                  className="text-[var(--color-text-muted)]"
+                                  stroke={1.5}
+                                />
+                              </button>
+                            </div>
+                          ))}
+                          {/* Add Rule button */}
+                          <div className="w-fit">
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              leftIcon={<IconPlus size={12} stroke={1.5} />}
+                              onClick={() => addNodeSelectorRule(selectorIndex)}
+                            >
+                              Add Rule
+                            </Button>
+                          </div>
+                        </VStack>
                       </div>
-                    ))}
-                    {/* Add Rule button */}
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      leftIcon={<IconPlus size={12} stroke={1.5} />}
-                      onClick={() => addNodeSelectorRule(selectorIndex)}
-                    >
-                      Add Rule
-                    </Button>
-                  </VStack>
+                      <button
+                        onClick={() => removeNodeSelector(selectorIndex)}
+                        className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0 mt-8"
+                      >
+                        <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                      </button>
+                    </HStack>
+                  </div>
+                ))}
+                <div className="w-fit">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconPlus size={12} stroke={1.5} />}
+                    onClick={addNodeSelector}
+                  >
+                    Add Node Selector
+                  </Button>
                 </div>
-                <button
-                  onClick={() => removeNodeSelector(selectorIndex)}
-                  className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0 mt-8"
-                >
-                  <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                </button>
-              </HStack>
-            ))}
-            <Button
-              variant="outline"
-              size="sm"
-              leftIcon={<IconPlus size={12} stroke={1.5} />}
-              onClick={addNodeSelector}
-            >
-              Add Node Selector
-            </Button>
+              </VStack>
+            </div>
           </VStack>
         </VStack>
       </SectionCard.Content>
@@ -572,37 +599,47 @@ function LabelsAnnotationsSection({
               </p>
             </VStack>
 
-            {labels.map((label, index) => (
-              <HStack gap={2} key={index} className="w-full">
-                <Input
-                  placeholder="Key"
-                  value={label.key}
-                  onChange={(e) => onUpdateLabel(index, 'key', e.target.value)}
-                  className="flex-1"
-                />
-                <Input
-                  placeholder="Value"
-                  value={label.value}
-                  onChange={(e) => onUpdateLabel(index, 'value', e.target.value)}
-                  className="flex-1"
-                />
-                <button
-                  onClick={() => onRemoveLabel(index)}
-                  className="p-2 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                >
-                  <IconX size={14} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                </button>
-              </HStack>
-            ))}
-
-            <Button
-              variant="outline"
-              size="sm"
-              leftIcon={<IconPlus size={12} stroke={1.5} />}
-              onClick={onAddLabel}
-            >
-              Add Label
-            </Button>
+            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+              <VStack gap={3}>
+                {labels.map((label, index) => (
+                  <div
+                    key={index}
+                    className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                  >
+                    <HStack gap={2} className="w-full">
+                      <Input
+                        placeholder="Key"
+                        value={label.key}
+                        onChange={(e) => onUpdateLabel(index, 'key', e.target.value)}
+                        className="flex-1"
+                      />
+                      <Input
+                        placeholder="Value"
+                        value={label.value}
+                        onChange={(e) => onUpdateLabel(index, 'value', e.target.value)}
+                        className="flex-1"
+                      />
+                      <button
+                        onClick={() => onRemoveLabel(index)}
+                        className="p-2 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                      >
+                        <IconX size={14} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                      </button>
+                    </HStack>
+                  </div>
+                ))}
+                <div className="w-fit">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconPlus size={12} stroke={1.5} />}
+                    onClick={onAddLabel}
+                  >
+                    Add Label
+                  </Button>
+                </div>
+              </VStack>
+            </div>
           </VStack>
 
           {/* Annotations */}
@@ -614,37 +651,47 @@ function LabelsAnnotationsSection({
               </p>
             </VStack>
 
-            {annotations.map((annotation, index) => (
-              <HStack gap={2} key={index} className="w-full">
-                <Input
-                  placeholder="Key"
-                  value={annotation.key}
-                  onChange={(e) => onUpdateAnnotation(index, 'key', e.target.value)}
-                  className="flex-1"
-                />
-                <Input
-                  placeholder="Value"
-                  value={annotation.value}
-                  onChange={(e) => onUpdateAnnotation(index, 'value', e.target.value)}
-                  className="flex-1"
-                />
-                <button
-                  onClick={() => onRemoveAnnotation(index)}
-                  className="p-2 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                >
-                  <IconX size={14} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                </button>
-              </HStack>
-            ))}
-
-            <Button
-              variant="outline"
-              size="sm"
-              leftIcon={<IconPlus size={12} stroke={1.5} />}
-              onClick={onAddAnnotation}
-            >
-              Add Annotation
-            </Button>
+            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+              <VStack gap={3}>
+                {annotations.map((annotation, index) => (
+                  <div
+                    key={index}
+                    className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                  >
+                    <HStack gap={2} className="w-full">
+                      <Input
+                        placeholder="Key"
+                        value={annotation.key}
+                        onChange={(e) => onUpdateAnnotation(index, 'key', e.target.value)}
+                        className="flex-1"
+                      />
+                      <Input
+                        placeholder="Value"
+                        value={annotation.value}
+                        onChange={(e) => onUpdateAnnotation(index, 'value', e.target.value)}
+                        className="flex-1"
+                      />
+                      <button
+                        onClick={() => onRemoveAnnotation(index)}
+                        className="p-2 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                      >
+                        <IconX size={14} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                      </button>
+                    </HStack>
+                  </div>
+                ))}
+                <div className="w-fit">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconPlus size={12} stroke={1.5} />}
+                    onClick={onAddAnnotation}
+                  >
+                    Add Annotation
+                  </Button>
+                </div>
+              </VStack>
+            </div>
           </VStack>
         </VStack>
       </SectionCard.Content>
