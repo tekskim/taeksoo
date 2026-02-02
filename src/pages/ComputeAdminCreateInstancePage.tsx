@@ -44,7 +44,7 @@ import {
   IconDots,
   IconEdit,
   IconExternalLink,
-  IconPlus,
+  IconCirclePlus,
   IconProgress,
   IconStar,
   IconStarFilled,
@@ -1443,7 +1443,7 @@ function ImageSection({
             <Button
               variant="outline"
               size="sm"
-              leftIcon={<IconPlus size={12} />}
+              leftIcon={<IconCirclePlus size={12} />}
               onClick={handleAddDataDisk}
             >
               Add Data disk
