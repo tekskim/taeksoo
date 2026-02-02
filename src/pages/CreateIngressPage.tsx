@@ -539,7 +539,7 @@ export default function CreateIngressPage() {
                                       key={path.id}
                                       className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
                                     >
-                                      <div className="grid grid-cols-[1fr_1fr_1fr_16px] gap-2 w-full items-start">
+                                      <div className="grid grid-cols-[2fr_1fr_1fr_16px] gap-2 w-full items-start">
                                         {/* Path */}
                                         <VStack gap={2}>
                                           <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
