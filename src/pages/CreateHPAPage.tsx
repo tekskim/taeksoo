@@ -615,17 +615,19 @@ export default function CreateHPAPage() {
                             {/* Warning Messages */}
                             <div className="border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
                               <VStack gap={6}>
-                                {metric.source === 'External' && (
+                                <VStack gap={2}>
+                                  {metric.source === 'External' && (
+                                    <InlineMessage variant="warning">
+                                      In order to use external metrics with HPA, you need to deploy
+                                      the external metrics server such as prometheus adapter.
+                                    </InlineMessage>
+                                  )}
                                   <InlineMessage variant="warning">
-                                    In order to use external metrics with HPA, you need to deploy
-                                    the external metrics server such as prometheus adapter.
+                                    The selected target reference does not have the correct resource
+                                    requests on the spec. Without this the HPA metric will have no
+                                    effect.
                                   </InlineMessage>
-                                )}
-                                <InlineMessage variant="warning">
-                                  The selected target reference does not have the correct resource
-                                  requests on the spec. Without this the HPA metric will have no
-                                  effect.
-                                </InlineMessage>
+                                </VStack>
 
                                 {/* Source */}
                                 <VStack gap={2}>
