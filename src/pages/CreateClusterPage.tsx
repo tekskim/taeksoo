@@ -852,7 +852,7 @@ export function CreateClusterPage() {
                                   </VStack>
                                   <button
                                     onClick={() => removeLabel(index)}
-                                    className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors mt-6"
+                                    className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors mt-6"
                                   >
                                     <IconX
                                       size={12}
@@ -927,7 +927,7 @@ export function CreateClusterPage() {
                                   </VStack>
                                   <button
                                     onClick={() => removeAnnotation(index)}
-                                    className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors mt-6"
+                                    className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors mt-6"
                                   >
                                     <IconX
                                       size={12}

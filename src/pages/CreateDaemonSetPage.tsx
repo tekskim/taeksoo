@@ -3620,7 +3620,7 @@ export function CreateDaemonSetPage() {
                                 >
                                   <button
                                     onClick={() => removeVolumeClaimTemplate(index)}
-                                    className="absolute top-3 right-3 p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                    className="absolute top-3 right-3 size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                   >
                                     <IconX
                                       size={16}

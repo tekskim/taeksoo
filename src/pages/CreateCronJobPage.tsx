@@ -1763,19 +1763,19 @@ export function CreateCronJobPage() {
           }
           actions={
             <>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+              <button className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+              <button className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+              <button className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+              <button className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+              <button className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
             </>
@@ -1822,7 +1822,7 @@ export function CreateCronJobPage() {
                                       e.stopPropagation();
                                       removeContainerTab(tab.id);
                                     }}
-                                    className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded shrink-0"
+                                    className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
                                   >
                                     <IconX size={12} stroke={1.5} />
                                   </button>
@@ -2485,7 +2485,7 @@ export function CreateCronJobPage() {
                                                   )
                                                 );
                                               }}
-                                              className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                              className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                             >
                                               <IconX
                                                 size={16}
@@ -2728,7 +2728,7 @@ export function CreateCronJobPage() {
                                             podAffinityTerms.filter((_, i) => i !== termIndex)
                                           );
                                         }}
-                                        className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                       >
                                         <IconX
                                           size={16}
@@ -2996,7 +2996,7 @@ export function CreateCronJobPage() {
                                                 };
                                                 setPodAffinityTerms(newTerms);
                                               }}
-                                              className="mt-6 p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                              className="mt-6 size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                             >
                                               <IconX
                                                 size={16}
@@ -3314,7 +3314,7 @@ export function CreateCronJobPage() {
                                     </span>
                                     <button
                                       onClick={() => removeVolume(index)}
-                                      className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                     >
                                       <IconX
                                         size={16}
@@ -3763,7 +3763,7 @@ export function CreateCronJobPage() {
                                 >
                                   <button
                                     onClick={() => removeVolumeClaimTemplate(index)}
-                                    className="absolute top-3 right-3 p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                    className="absolute top-3 right-3 size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                   >
                                     <IconX
                                       size={16}

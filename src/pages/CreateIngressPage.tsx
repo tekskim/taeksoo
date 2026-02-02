@@ -434,19 +434,19 @@ export default function CreateIngressPage() {
           }
           actions={
             <>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+              <button className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+              <button className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+              <button className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+              <button className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
-              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+              <button className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
             </>
@@ -547,7 +547,7 @@ export default function CreateIngressPage() {
                                 </VStack>
                                 <button
                                   onClick={() => removeRule(rule.id)}
-                                  className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors mt-6"
+                                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors mt-6"
                                 >
                                   <IconX
                                     size={16}
@@ -754,7 +754,7 @@ export default function CreateIngressPage() {
                               </VStack>
                               <button
                                 onClick={() => removeCertificate(cert.id)}
-                                className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors mt-5"
+                                className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors mt-5"
                               >
                                 <IconX
                                   size={12}
@@ -853,7 +853,7 @@ export default function CreateIngressPage() {
                                     </VStack>
                                     <button
                                       onClick={() => removeLabel(label.id)}
-                                      className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors self-center mt-5"
+                                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors self-center mt-5"
                                     >
                                       <IconX
                                         size={12}
@@ -926,7 +926,7 @@ export default function CreateIngressPage() {
                                     </VStack>
                                     <button
                                       onClick={() => removeAnnotation(annotation.id)}
-                                      className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors self-center mt-5"
+                                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors self-center mt-5"
                                     >
                                       <IconX
                                         size={12}

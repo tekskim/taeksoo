@@ -486,7 +486,7 @@ function LabelsAnnotationsSection({
                 />
                 <button
                   onClick={() => onRemoveLabel(index)}
-                  className="p-2 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                 >
                   <IconX size={14} className="text-[var(--color-text-muted)]" stroke={1.5} />
                 </button>
@@ -528,7 +528,7 @@ function LabelsAnnotationsSection({
                 />
                 <button
                   onClick={() => onRemoveAnnotation(index)}
-                  className="p-2 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                 >
                   <IconX size={14} className="text-[var(--color-text-muted)]" stroke={1.5} />
                 </button>

@@ -301,7 +301,7 @@ function ParametersSection({ parameters, onParametersChange }: ParametersSection
                   <div className="pt-6">
                     <button
                       onClick={() => removeParameter(index)}
-                      className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                     >
                       <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
                     </button>
@@ -448,7 +448,7 @@ function CustomizeSection({
                       />
                       <button
                         onClick={() => removeMountOption(index)}
-                        className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
+                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
                       >
                         <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
                       </button>
