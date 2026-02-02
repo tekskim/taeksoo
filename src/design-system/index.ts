@@ -11,14 +11,18 @@ export * from './components/Icons';
 
 // Components
 export * from './components/Button';
+export * from './components/CopyButton';
 export * from './components/Input';
+export * from './components/Password';
 export * from './components/Toggle';
 export * from './components/Checkbox';
 export * from './components/Radio';
 export * from './components/Tabs';
 export * from './components/Select';
+export * from './components/Dropdown';
 export * from './components/Slider';
 export * from './components/Chip';
+export * from './components/Tag';
 export * from './components/SelectionIndicator';
 export * from './components/DatePicker';
 export * from './components/WindowControl';
@@ -31,6 +35,7 @@ export * from './components/Table';
 export * from './components/InlineMessage';
 export * from './components/Toast';
 export * from './components/Disclosure';
+export * from './components/Accordion';
 export * from './components/Badge';
 export * from './components/Breadcrumb';
 export * from './components/StatusIndicator';
