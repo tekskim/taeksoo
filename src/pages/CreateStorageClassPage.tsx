@@ -267,58 +267,62 @@ function ParametersSection({ parameters, onParametersChange }: ParametersSection
     <SectionCard>
       <SectionCard.Header title="Parameters" showDivider />
       <SectionCard.Content>
-        <VStack gap={1.5}>
-          {/* Parameters */}
-          {parameters.length > 0 && (
-            <VStack gap={2} className="w-full">
-              {/* Header row */}
-              <div className="grid grid-cols-[1fr_1fr_23px] gap-2">
-                <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
-                  Key
-                </span>
-                <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
-                  Value
-                </span>
-                <div />
-              </div>
-              {/* Parameter rows */}
-              {parameters.map((param, index) => (
-                <div key={index} className="grid grid-cols-[1fr_1fr_23px] gap-2 items-center">
-                  <Input
-                    placeholder="e.g. foo"
-                    value={param.key}
-                    onChange={(e) => updateParameter(index, 'key', e.target.value)}
-                    fullWidth
-                  />
-                  <Input
-                    placeholder="e.g. bar"
-                    value={param.value}
-                    onChange={(e) => updateParameter(index, 'value', e.target.value)}
-                    fullWidth
-                  />
-                  <button
-                    onClick={() => removeParameter(index)}
-                    className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                  >
-                    <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                  </button>
+        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+          <VStack gap={3}>
+            {/* Parameter rows */}
+            {parameters.map((param, index) => (
+              <div
+                key={index}
+                className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+              >
+                <div className="grid grid-cols-[1fr_1fr_auto] gap-2 items-start">
+                  <VStack gap={2}>
+                    <span className="text-[12px] font-medium text-[var(--color-text-default)]">
+                      Key
+                    </span>
+                    <Input
+                      placeholder="e.g. foo"
+                      value={param.key}
+                      onChange={(e) => updateParameter(index, 'key', e.target.value)}
+                      fullWidth
+                    />
+                  </VStack>
+                  <VStack gap={2}>
+                    <span className="text-[12px] font-medium text-[var(--color-text-default)]">
+                      Value
+                    </span>
+                    <Input
+                      placeholder="e.g. bar"
+                      value={param.value}
+                      onChange={(e) => updateParameter(index, 'value', e.target.value)}
+                      fullWidth
+                    />
+                  </VStack>
+                  <div className="pt-6">
+                    <button
+                      onClick={() => removeParameter(index)}
+                      className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                    >
+                      <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                    </button>
+                  </div>
                 </div>
-              ))}
-            </VStack>
-          )}
+              </div>
+            ))}
 
-          {/* Add Parameter button */}
-          <div className="pt-3">
-            <Button
-              variant="outline"
-              size="sm"
-              leftIcon={<IconPlus size={12} stroke={1.5} />}
-              onClick={addParameter}
-            >
-              Add Parameter
-            </Button>
-          </div>
-        </VStack>
+            {/* Add Parameter button */}
+            <div className="w-fit">
+              <Button
+                variant="secondary"
+                size="sm"
+                leftIcon={<IconPlus size={12} stroke={1.5} />}
+                onClick={addParameter}
+              >
+                Add Parameter
+              </Button>
+            </div>
+          </VStack>
+        </div>
       </SectionCard.Content>
     </SectionCard>
   );
@@ -424,32 +428,45 @@ function CustomizeSection({
           </VStack>
 
           {/* Mount Options */}
-          <VStack gap={2}>
-            <label className="text-label-lg text-[var(--color-text-default)]">Mount Options</label>
-            {mountOptions.map((option, index) => (
-              <HStack key={index} gap={2} className="w-full">
-                <Input
-                  placeholder="e.g. bar"
-                  value={option.value}
-                  onChange={(e) => updateMountOption(index, e.target.value)}
-                  fullWidth
-                />
-                <button
-                  onClick={() => removeMountOption(index)}
-                  className="p-2 hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
-                >
-                  <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                </button>
-              </HStack>
-            ))}
-            <Button
-              variant="outline"
-              size="sm"
-              leftIcon={<IconPlus size={12} stroke={1.5} />}
-              onClick={addMountOption}
-            >
-              Add Option
-            </Button>
+          <VStack gap={3}>
+            <label className="text-[14px] font-medium text-[var(--color-text-default)]">
+              Mount Options
+            </label>
+            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+              <VStack gap={3}>
+                {mountOptions.map((option, index) => (
+                  <div
+                    key={index}
+                    className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                  >
+                    <div className="flex gap-2 items-start">
+                      <Input
+                        placeholder="e.g. bar"
+                        value={option.value}
+                        onChange={(e) => updateMountOption(index, e.target.value)}
+                        fullWidth
+                      />
+                      <button
+                        onClick={() => removeMountOption(index)}
+                        className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
+                      >
+                        <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+                <div className="w-fit">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconPlus size={12} stroke={1.5} />}
+                    onClick={addMountOption}
+                  >
+                    Add Option
+                  </Button>
+                </div>
+              </VStack>
+            </div>
           </VStack>
         </VStack>
       </SectionCard.Content>
