@@ -1,8 +1,9 @@
 import type { StorybookConfig } from '@storybook/react-vite';
 import { mergeConfig } from 'vite';
-import tailwindcss from '@tailwindcss/vite';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import tailwindcss from 'tailwindcss';
+import autoprefixer from 'autoprefixer';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -21,10 +22,14 @@ const config: StorybookConfig = {
   framework: '@storybook/react-vite',
   async viteFinal(config) {
     return mergeConfig(config, {
-      plugins: [tailwindcss()],
       resolve: {
         alias: {
           '@': path.resolve(__dirname, '../src'),
+        },
+      },
+      css: {
+        postcss: {
+          plugins: [tailwindcss, autoprefixer],
         },
       },
     });
