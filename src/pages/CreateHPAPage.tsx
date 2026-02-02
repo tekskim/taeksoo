@@ -135,21 +135,30 @@ interface Metric {
 /* ----------------------------------------
    Summary Status Icon Component
    ---------------------------------------- */
-function SummaryStatusIcon({ state }: { state: WizardSectionState }) {
-  if (state === 'done') {
+function SummaryStatusIcon({ status }: { status: WizardSectionState }) {
+  // done → success (green check)
+  if (status === 'done') {
     return (
-      <div className="w-4 h-4 rounded-full bg-[var(--color-state-success)] flex items-center justify-center">
-        <IconCheck size={10} className="text-white" stroke={2} />
+      <div className="size-4 rounded-full border border-[var(--color-state-success)] bg-[var(--color-state-success)] shrink-0 flex items-center justify-center">
+        <IconCheck size={10} stroke={2} className="text-white" />
       </div>
     );
   }
-  if (state === 'active' || state === 'writing') {
+  // active → dashed circle with spinning animation
+  if (status === 'active') {
     return (
-      <div className="w-4 h-4 rounded-full border-2 border-[var(--color-action-primary)] bg-transparent" />
+      <div
+        className="size-4 rounded-full border border-[var(--color-text-muted)] shrink-0 animate-spin"
+        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
+      />
     );
   }
+  // pre/default → empty dashed circle
   return (
-    <div className="w-4 h-4 rounded-full border-2 border-[var(--color-border-default)] bg-transparent" />
+    <div
+      className="size-4 rounded-full border border-[var(--color-border-default)] shrink-0"
+      style={{ borderStyle: 'dashed' }}
+    />
   );
 }
 
@@ -174,33 +183,40 @@ function SummarySidebar({
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
       <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
-        <VStack gap={4}>
-          <span className="text-[14px] font-semibold text-[var(--color-text-default)]">
-            Summary
-          </span>
+        {/* Summary Content */}
+        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
           <VStack gap={3}>
-            {sections.map((section) => (
-              <HStack key={section} gap={2} align="center">
-                <SummaryStatusIcon state={sectionStates[section]} />
-                <span
-                  className={`text-[12px] ${
-                    sectionStates[section] === 'active' || sectionStates[section] === 'writing'
-                      ? 'text-[var(--color-text-default)] font-medium'
-                      : 'text-[var(--color-text-muted)]'
-                  }`}
-                >
-                  {sectionLabels[section]}
-                </span>
-              </HStack>
-            ))}
-          </VStack>
-        </VStack>
+            {/* Title */}
+            <span className="text-heading-h5 text-[var(--color-text-default)]">Summary</span>
 
+            <VStack gap={0}>
+              {sections.map((section) => {
+                const status = sectionStates[section];
+                return (
+                  <HStack key={section} justify="between" align="center" className="py-1">
+                    <span className="text-body-md text-[var(--color-text-default)]">
+                      {sectionLabels[section]}
+                    </span>
+                    {status === 'writing' ? (
+                      <span className="text-body-sm text-[var(--color-text-subtle)]">
+                        Writing...
+                      </span>
+                    ) : (
+                      <SummaryStatusIcon status={status} />
+                    )}
+                  </HStack>
+                );
+              })}
+            </VStack>
+          </VStack>
+        </div>
+
+        {/* Action Buttons */}
         <HStack gap={2}>
-          <Button variant="secondary" size="sm" onClick={onCancel} className="flex-1">
+          <Button variant="secondary" onClick={onCancel} className="w-[80px]">
             Cancel
           </Button>
-          <Button variant="primary" size="sm" onClick={onSubmit} className="flex-1">
+          <Button variant="primary" onClick={onSubmit} className="flex-1">
             Create
           </Button>
         </HStack>
