@@ -200,15 +200,24 @@ const statusConfig: Record<StatusType, StatusConfig> = {
    StatusIndicator Props
    ---------------------------------------- */
 
+// thaki-ui compatibility: color scheme type
+export type ThakiColorScheme = 'success' | 'danger' | 'warning' | 'info' | 'muted';
+
 export interface StatusIndicatorProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'children'> {
   /** Status type */
   status: StatusType;
-  /** Layout variant */
-  layout?: StatusLayout;
+  /** Layout variant (also accepts thaki-ui 'leftIcon', 'iconOnly') */
+  layout?: StatusLayout | 'leftIcon' | 'iconOnly';
   /** Size variant (only applies to icon-only layout) */
   size?: StatusSize;
   /** Custom label (overrides default) */
   label?: string;
+  /** @deprecated thaki-ui compatibility - custom color scheme */
+  colorScheme?: ThakiColorScheme;
+  /** @deprecated thaki-ui compatibility - custom icon */
+  customIcon?: ReactNode;
+  /** @deprecated thaki-ui compatibility - tooltip text */
+  tooltip?: string;
 }
 
 /* ----------------------------------------
@@ -217,14 +226,32 @@ export interface StatusIndicatorProps extends Omit<HTMLAttributes<HTMLSpanElemen
 
 export const StatusIndicator = memo(function StatusIndicator({
   status,
-  layout = 'icon-only',
+  layout: rawLayout = 'icon-only',
   size = 'md',
   label,
   className = '',
+  // thaki-ui compatibility props
+  colorScheme,
+  customIcon,
+  tooltip,
   ...props
 }: StatusIndicatorProps) {
+  // thaki-ui compatibility: map layout aliases
+  const layout: StatusLayout = rawLayout === 'leftIcon' ? 'default' 
+    : rawLayout === 'iconOnly' ? 'icon-only' 
+    : rawLayout as StatusLayout;
+
   const config = statusConfig[status];
+  
+  // thaki-ui compatibility: use customIcon if provided
+  const displayIcon = customIcon ?? config.icon;
   const displayLabel = label ?? config.label;
+  
+  // thaki-ui compatibility: warn about deprecated props
+  if (process.env.NODE_ENV === 'development') {
+    if (colorScheme) console.warn('[StatusIndicator] colorScheme prop is deprecated. Use status prop instead.');
+    if (tooltip) console.warn('[StatusIndicator] tooltip prop is deprecated. Wrap with Tooltip component instead.');
+  }
 
   // Size-based icon sizes for icon-only layout
   const iconSizes: Record<StatusSize, number> = {
@@ -246,9 +273,9 @@ export const StatusIndicator = memo(function StatusIndicator({
     const containerSize = sizeStyles[size];
 
     // Clone the icon with the appropriate size
-    const clonedIcon = isValidElement(config.icon)
-      ? cloneElement(config.icon as React.ReactElement<{ size?: number }>, { size: iconSize })
-      : config.icon;
+    const clonedIcon = isValidElement(displayIcon)
+      ? cloneElement(displayIcon as React.ReactElement<{ size?: number }>, { size: iconSize })
+      : displayIcon;
 
     const classes = twMerge(
       'inline-flex items-center justify-center',
@@ -283,7 +310,7 @@ export const StatusIndicator = memo(function StatusIndicator({
 
     return (
       <span className={classes} role="status" aria-label={displayLabel} {...props}>
-        <span className="shrink-0">{config.icon}</span>
+        <span className="shrink-0">{displayIcon}</span>
         <span>{displayLabel}</span>
       </span>
     );
@@ -306,7 +333,7 @@ export const StatusIndicator = memo(function StatusIndicator({
 
   return (
     <span className={classes} role="status" aria-label={displayLabel} {...props}>
-      <span className="shrink-0">{config.icon}</span>
+      <span className="shrink-0">{displayIcon}</span>
       <span>{displayLabel}</span>
     </span>
   );

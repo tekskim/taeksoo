@@ -6,8 +6,17 @@ import { IconAlertCircle, IconInfinity } from '@tabler/icons-react';
    ---------------------------------------- */
 
 export type ProgressBarVariant = 'default' | 'quota';
+// thaki-ui compatibility: color variant
+export type ThakiProgressBarVariant = 'success' | 'error' | 'warning';
 
 export type ProgressBarStatus = 'success' | 'warning' | 'danger' | 'info' | 'neutral';
+
+// Map thaki-ui variant to tds status
+const thakiVariantToStatus: Record<ThakiProgressBarVariant, ProgressBarStatus> = {
+  success: 'success',
+  error: 'danger',
+  warning: 'warning',
+};
 
 export interface ProgressBarProps {
   /** Current value (Used) */
@@ -34,6 +43,12 @@ export interface ProgressBarProps {
   className?: string;
   /** Size variant */
   size?: 'sm' | 'md';
+  /** @deprecated thaki-ui compatibility - use status instead */
+  thakiVariant?: ThakiProgressBarVariant;
+  /** @deprecated thaki-ui compatibility - custom bar color */
+  color?: string;
+  /** @deprecated thaki-ui compatibility - custom pending bar color */
+  pendingColor?: string;
 }
 
 /* ----------------------------------------
@@ -115,10 +130,22 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   error = false,
   errorMessage,
   statusText,
-  status,
+  status: rawStatus,
   className = '',
   size = 'md',
+  // thaki-ui compatibility props
+  thakiVariant,
+  color,
+  pendingColor,
 }) => {
+  // thaki-ui compatibility: map thakiVariant to status
+  const status = rawStatus ?? (thakiVariant ? thakiVariantToStatus[thakiVariant] : undefined);
+  
+  // thaki-ui compatibility: warn about deprecated props
+  if (process.env.NODE_ENV === 'development') {
+    if (color) console.warn('[ProgressBar] color prop is deprecated. Use status prop instead.');
+    if (pendingColor) console.warn('[ProgressBar] pendingColor prop is deprecated. Use status prop instead.');
+  }
   const [showTooltip, setShowTooltip] = useState(false);
 
   const isUnlimited = max === undefined || max === Infinity;

@@ -16,6 +16,10 @@ export interface ToggleProps extends Omit<InputHTMLAttributes<HTMLInputElement>,
   defaultChecked?: boolean;
   /** Disabled state */
   disabled?: boolean;
+  /** @deprecated thaki-ui compatibility - label when checked */
+  checkedLabel?: string;
+  /** @deprecated thaki-ui compatibility - label when unchecked */
+  uncheckedLabel?: string;
 }
 
 /* ----------------------------------------
@@ -25,7 +29,7 @@ export interface ToggleProps extends Omit<InputHTMLAttributes<HTMLInputElement>,
 export const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
   (
     {
-      label,
+      label: rawLabel,
       description,
       checked,
       defaultChecked,
@@ -33,6 +37,9 @@ export const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
       onChange,
       className = '',
       id,
+      // thaki-ui compatibility props
+      checkedLabel,
+      uncheckedLabel,
       ...props
     },
     ref
@@ -47,6 +54,9 @@ export const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
     // Use controlled value if provided, otherwise use internal state
     const isControlled = checked !== undefined;
     const isChecked = isControlled ? checked : internalChecked;
+    
+    // thaki-ui compatibility: support checkedLabel/uncheckedLabel
+    const label = rawLabel ?? (isChecked ? checkedLabel : uncheckedLabel);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       if (!isControlled) {

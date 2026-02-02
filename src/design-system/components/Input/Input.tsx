@@ -6,11 +6,16 @@ import { twMerge } from 'tailwind-merge';
    ---------------------------------------- */
 
 export type InputSize = 'sm' | 'md';
+// thaki-ui compatibility: support xs and lg sizes
+export type InputSizeAlias = 'xs' | 'lg';
 export type InputVariant = 'default' | 'search' | 'code';
 
+// thaki-ui compatibility types
+type FilterProp = RegExp | ((value: string) => string);
+
 export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
-  /** Input field size */
-  size?: InputSize;
+  /** Input field size (also accepts thaki-ui xs, lg) */
+  size?: InputSize | InputSizeAlias;
   /** Input variant */
   variant?: InputVariant;
   /** Label text */
@@ -27,15 +32,23 @@ export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 
   rightElement?: ReactNode;
   /** Required field indicator */
   required?: boolean;
+  /** @deprecated thaki-ui compatibility - success state (use error={false} instead) */
+  success?: boolean;
+  /** @deprecated thaki-ui compatibility - input filter (implement in onChange instead) */
+  filter?: FilterProp;
+  /** @deprecated thaki-ui compatibility - show password toggle (use type="password" with rightElement) */
+  showPasswordToggle?: boolean;
 }
 
 /* ----------------------------------------
    Size Styles (using design tokens)
    ---------------------------------------- */
 
-const sizes: Record<InputSize, string> = {
+const sizes: Record<InputSize | InputSizeAlias, string> = {
+  xs: 'h-6 text-[11px]', // thaki-ui compatibility
   sm: 'h-[var(--input-height-sm)] text-[length:var(--input-font-size-sm)]',
   md: 'h-[var(--input-height-md)] text-[length:var(--input-font-size)]',
+  lg: 'h-10 text-[14px]', // thaki-ui compatibility
 };
 
 const labelSizes: Record<InputSize, string> = {
@@ -63,10 +76,20 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       disabled,
       readOnly,
       required = false,
+      // thaki-ui compatibility props (deprecated but supported)
+      success,
+      filter,
+      showPasswordToggle,
       ...props
     },
     ref
   ) => {
+    // thaki-ui compatibility: warn about deprecated props in development
+    if (process.env.NODE_ENV === 'development') {
+      if (filter) console.warn('[Input] filter prop is deprecated. Implement filtering in onChange handler.');
+      if (showPasswordToggle) console.warn('[Input] showPasswordToggle is deprecated. Use type="password" with a custom rightElement.');
+      if (success) console.warn('[Input] success prop is deprecated. Use error={false} for valid state.');
+    }
     const inputId = id || `input-${Math.random().toString(36).substr(2, 9)}`;
 
     // Base styles
@@ -103,6 +126,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     // Border color based on state
     const getBorderColor = () => {
       if (error) return 'border-[var(--input-border-error)]';
+      // thaki-ui compatibility: success state shows green border
+      if (success) return 'border-[var(--color-state-success)]';
       if (readOnly) return 'border-[var(--input-border-readonly)]';
       return 'border-[var(--input-border)]';
     };
