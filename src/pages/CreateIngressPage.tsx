@@ -146,29 +146,17 @@ function SummaryStatusIcon({ status }: { status: WizardSectionState }) {
   if (status === 'active') {
     return (
       <div
-        className="size-4 shrink-0"
-        style={{
-          animation: 'spin 2s linear infinite',
-        }}
-      >
-        <svg viewBox="0 0 16 16" className="size-4">
-          <circle
-            cx="8"
-            cy="8"
-            r="6"
-            fill="none"
-            stroke="var(--color-action-primary)"
-            strokeWidth="1.5"
-            strokeDasharray="4 3"
-            strokeLinecap="round"
-          />
-        </svg>
-      </div>
+        className="size-4 rounded-full border border-[var(--color-text-muted)] shrink-0 animate-spin"
+        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
+      />
     );
   }
-  // default (pending) → gray outline circle
+  // pre/default → empty dashed circle
   return (
-    <div className="size-4 rounded-full border border-[var(--color-border-default)] shrink-0" />
+    <div
+      className="size-4 rounded-full border border-[var(--color-border-default)] shrink-0"
+      style={{ borderStyle: 'dashed' }}
+    />
   );
 }
 
