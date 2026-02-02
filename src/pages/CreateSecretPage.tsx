@@ -593,11 +593,11 @@ function LabelsAnnotationsSection({
         }
       />
       <SectionCard.Content>
-        <VStack gap={4}>
+        <VStack gap={6}>
           {/* Labels */}
-          <VStack gap={4}>
+          <VStack gap={6}>
             <VStack gap={1}>
-              <span className="text-label-sm text-[var(--color-text-default)]">Labels</span>
+              <span className="text-label-lg text-[var(--color-text-default)]">Labels</span>
               <p className="text-body-md text-[var(--color-text-subtle)]">
                 Specify the labels used to identify and categorize the resource.
               </p>
@@ -637,9 +637,9 @@ function LabelsAnnotationsSection({
           </VStack>
 
           {/* Annotations */}
-          <VStack gap={4}>
+          <VStack gap={6}>
             <VStack gap={1}>
-              <span className="text-label-sm text-[var(--color-text-default)]">Annotations</span>
+              <span className="text-label-lg text-[var(--color-text-default)]">Annotations</span>
               <p className="text-body-md text-[var(--color-text-subtle)]">
                 Specify the annotations used to provide additional metadata for the resource.
               </p>

@@ -8,9 +8,11 @@ import {
   TabBar,
   TopBar,
   Input,
+  NumberInput,
   Select,
   Checkbox,
   SectionCard,
+  Disclosure,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -175,6 +177,8 @@ interface BasicInfoSectionProps {
   onNamespaceNameChange: (value: string) => void;
   pvNameError: string | null;
   onNamespaceNameErrorChange: (error: string | null) => void;
+  capacity: number;
+  onCapacityChange: (value: number) => void;
   description: string;
   onDescriptionChange: (value: string) => void;
 }
@@ -184,6 +188,8 @@ function BasicInfoSection({
   onNamespaceNameChange,
   pvNameError,
   onNamespaceNameErrorChange,
+  capacity,
+  onCapacityChange,
   description,
   onDescriptionChange,
 }: BasicInfoSectionProps) {
@@ -191,7 +197,7 @@ function BasicInfoSection({
     <SectionCard>
       <SectionCard.Header title="Basic Information" showDivider />
       <SectionCard.Content>
-        <VStack gap={4}>
+        <VStack gap={6}>
           {/* Name */}
           <VStack gap={2}>
             <label className="text-label-lg text-[var(--color-text-default)]">
@@ -212,16 +218,31 @@ function BasicInfoSection({
             )}
           </VStack>
 
-          {/* Description */}
+          {/* Capacity */}
           <VStack gap={2}>
-            <label className="text-label-lg text-[var(--color-text-default)]">Description</label>
-            <Input
-              placeholder="Enter a description (optional)"
-              value={description}
-              onChange={(e) => onDescriptionChange(e.target.value)}
-              fullWidth
-            />
+            <label className="text-label-lg text-[var(--color-text-default)]">
+              Capacity<span className="text-[var(--color-state-danger)]"> *</span>
+            </label>
+            <HStack gap={2} align="center">
+              <NumberInput value={capacity} onChange={onCapacityChange} min={1} step={1} />
+              <span className="text-body-md text-[var(--color-text-default)]">GiB</span>
+            </HStack>
           </VStack>
+
+          {/* Description */}
+          <Disclosure>
+            <Disclosure.Trigger>Description</Disclosure.Trigger>
+            <Disclosure.Panel>
+              <div className="pt-2">
+                <Input
+                  placeholder="Enter a description (optional)"
+                  value={description}
+                  onChange={(e) => onDescriptionChange(e.target.value)}
+                  fullWidth
+                />
+              </div>
+            </Disclosure.Panel>
+          </Disclosure>
         </VStack>
       </SectionCard.Content>
     </SectionCard>
@@ -385,7 +406,7 @@ function StorageConfigSection({
 
           {/* Assign to Storage Class */}
           <VStack gap={2}>
-            <label className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
+            <label className="text-label-lg text-[var(--color-text-default)]">
               Assign to Storage Class
             </label>
             <Select
@@ -589,11 +610,11 @@ function LabelsAnnotationsSection({
     <SectionCard>
       <SectionCard.Header title="Labels & Annotations" showDivider />
       <SectionCard.Content>
-        <VStack gap={4}>
+        <VStack gap={6}>
           {/* Labels */}
-          <VStack gap={4}>
+          <VStack gap={6}>
             <VStack gap={1}>
-              <span className="text-label-sm text-[var(--color-text-default)]">Labels</span>
+              <span className="text-label-lg text-[var(--color-text-default)]">Labels</span>
               <p className="text-body-md text-[var(--color-text-subtle)]">
                 Specify the labels used to identify and categorize the resource.
               </p>
@@ -643,9 +664,9 @@ function LabelsAnnotationsSection({
           </VStack>
 
           {/* Annotations */}
-          <VStack gap={4}>
+          <VStack gap={6}>
             <VStack gap={1}>
-              <span className="text-label-sm text-[var(--color-text-default)]">Annotations</span>
+              <span className="text-label-lg text-[var(--color-text-default)]">Annotations</span>
               <p className="text-body-md text-[var(--color-text-subtle)]">
                 Specify the annotations used to provide additional metadata for the resource.
               </p>
@@ -709,6 +730,7 @@ export function CreatePersistentVolumePage() {
 
   // Basic information state
   const [pvName, setNamespaceName] = useState('');
+  const [capacity, setCapacity] = useState<number>(1);
   const [description, setDescription] = useState('');
 
   // Storage Configuration state
@@ -792,6 +814,7 @@ export function CreatePersistentVolumePage() {
 
     console.log('Creating persistent volume:', {
       pvName,
+      capacity,
       description,
       storageConfig: {
         accessModes,
@@ -805,6 +828,7 @@ export function CreatePersistentVolumePage() {
     navigate('/container/persistent-volumes');
   }, [
     pvName,
+    capacity,
     description,
     accessModes,
     storageClassName,
@@ -938,6 +962,8 @@ export function CreatePersistentVolumePage() {
                     onNamespaceNameChange={setNamespaceName}
                     pvNameError={pvNameError}
                     onNamespaceNameErrorChange={setNamespaceNameError}
+                    capacity={capacity}
+                    onCapacityChange={setCapacity}
                     description={description}
                     onDescriptionChange={setDescription}
                   />
