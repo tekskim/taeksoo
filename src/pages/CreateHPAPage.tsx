@@ -617,23 +617,38 @@ export default function CreateHPAPage() {
                             className="border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
                           >
                             <VStack gap={6}>
-                              <VStack gap={2} className="items-start">
-                                {metric.source === 'External' && (
+                              <HStack justify="between" align="start" className="w-full">
+                                <VStack gap={2} className="items-start">
+                                  {metric.source === 'External' && (
+                                    <div className="w-fit">
+                                      <InlineMessage variant="warning">
+                                        In order to use external metrics with HPA, you need to
+                                        deploy the external metrics server such as prometheus
+                                        adapter.
+                                      </InlineMessage>
+                                    </div>
+                                  )}
                                   <div className="w-fit">
                                     <InlineMessage variant="warning">
-                                      In order to use external metrics with HPA, you need to deploy
-                                      the external metrics server such as prometheus adapter.
+                                      The selected target reference does not have the correct
+                                      resource requests on the spec. Without this the HPA metric
+                                      will have no effect.
                                     </InlineMessage>
                                   </div>
+                                </VStack>
+                                {metrics.length > 1 && (
+                                  <button
+                                    onClick={() => removeMetric(metric.id)}
+                                    className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                  >
+                                    <IconX
+                                      size={12}
+                                      className="text-[var(--color-text-muted)]"
+                                      stroke={1.5}
+                                    />
+                                  </button>
                                 )}
-                                <div className="w-fit">
-                                  <InlineMessage variant="warning">
-                                    The selected target reference does not have the correct resource
-                                    requests on the spec. Without this the HPA metric will have no
-                                    effect.
-                                  </InlineMessage>
-                                </div>
-                              </VStack>
+                              </HStack>
 
                               {/* Source */}
                               <VStack gap={2}>
