@@ -636,18 +636,16 @@ export default function CreateHPAPage() {
                                     </InlineMessage>
                                   </div>
                                 </VStack>
-                                {metrics.length > 1 && (
-                                  <button
-                                    onClick={() => removeMetric(metric.id)}
-                                    className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                  >
-                                    <IconX
-                                      size={12}
-                                      className="text-[var(--color-text-muted)]"
-                                      stroke={1.5}
-                                    />
-                                  </button>
-                                )}
+                                <button
+                                  onClick={() => removeMetric(metric.id)}
+                                  className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                >
+                                  <IconX
+                                    size={12}
+                                    className="text-[var(--color-text-muted)]"
+                                    stroke={1.5}
+                                  />
+                                </button>
                               </HStack>
 
                               {/* Source */}
