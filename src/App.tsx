@@ -293,6 +293,7 @@ import { ModalsPage } from '@/pages/ModalsPage';
 import { GradientShowcasePage } from '@/pages/GradientShowcasePage';
 import ColorPalettePage from '@/pages/ColorPalettePage';
 import MetallicPalettePage from '@/pages/MetallicPalettePage';
+import { ProductionComparisonPage } from '@/pages/ProductionComparisonPage';
 
 // Pages - Desktop
 import { DesktopPage } from '@/pages/DesktopPage';
@@ -774,6 +775,7 @@ function AppRoutes() {
       <Route path="/design/gradients" element={<GradientShowcasePage />} />
       <Route path="/design/colors" element={<ColorPalettePage />} />
       <Route path="/design/metallic" element={<MetallicPalettePage />} />
+      <Route path="/design/comparison" element={<ProductionComparisonPage />} />
 
       {/* Desktop Routes */}
       <Route path="/desktop" element={<DesktopPage />} />

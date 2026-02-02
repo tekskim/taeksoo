@@ -18,6 +18,7 @@ const GradientShowcasePage = lazy(() =>
 );
 const ColorPalettePage = lazy(() => import('@/pages/ColorPalettePage'));
 const MetallicPalettePage = lazy(() => import('@/pages/MetallicPalettePage'));
+const ProductionComparisonPage = lazy(() => import('@/pages/ProductionComparisonPage'));
 
 export const designRoutes = (
   <>
@@ -30,5 +31,6 @@ export const designRoutes = (
     <Route path="/design/gradients" element={<GradientShowcasePage />} />
     <Route path="/design/colors" element={<ColorPalettePage />} />
     <Route path="/design/metallic" element={<MetallicPalettePage />} />
+    <Route path="/design/comparison" element={<ProductionComparisonPage />} />
   </>
 );
