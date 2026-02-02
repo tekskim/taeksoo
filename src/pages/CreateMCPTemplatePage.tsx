@@ -67,10 +67,10 @@ export function CreateMCPTemplatePage() {
   const [tagInput, setTagInput] = useState('');
   const [category, setCategory] = useState('');
   const [authType, setAuthType] = useState('config-required');
-  
+
   // Template Type Settings
   const [templateType, setTemplateType] = useState<'stdio' | 'http'>('stdio');
-  
+
   // Container Settings
   const [dockerImage, setDockerImage] = useState('');
   const [port, setPort] = useState(8000);
@@ -80,7 +80,7 @@ export function CreateMCPTemplatePage() {
   const [memoryLimit, setMemoryLimit] = useState('');
   const [containerTransportType, setContainerTransportType] = useState('streamable-http');
   const [destinationNamespace, setDestinationNamespace] = useState('');
-  
+
   // HTTP Settings
   const [httpUrl, setHttpUrl] = useState('');
   const [headers, setHeaders] = useState('');
@@ -97,7 +97,7 @@ export function CreateMCPTemplatePage() {
       secret: false,
     },
   ]);
-  
+
   const [availableTools, setAvailableTools] = useState<AvailableTool[]>([
     {
       id: 'tool-1',
@@ -114,7 +114,7 @@ export function CreateMCPTemplatePage() {
       ],
     },
   ]);
-  
+
   // Publishing settings
   const [visibility, setVisibility] = useState<'visible' | 'hidden'>('visible');
   const [addOfficialBadge, setAddOfficialBadge] = useState(false);
@@ -149,12 +149,12 @@ export function CreateMCPTemplatePage() {
     setEnvVariables(envVariables.filter((env) => env.id !== id));
   };
 
-  const handleUpdateEnvVariable = (id: string, field: keyof EnvironmentVariable, value: string | boolean) => {
-    setEnvVariables(
-      envVariables.map((env) =>
-        env.id === id ? { ...env, [field]: value } : env
-      )
-    );
+  const handleUpdateEnvVariable = (
+    id: string,
+    field: keyof EnvironmentVariable,
+    value: string | boolean
+  ) => {
+    setEnvVariables(envVariables.map((env) => (env.id === id ? { ...env, [field]: value } : env)));
   };
 
   const handleAddTool = () => {
@@ -384,24 +384,30 @@ export function CreateMCPTemplatePage() {
                         <SectionCard.Content>
                           <VStack gap={2} className="w-full">
                             {/* STDIO Option */}
-                            <div 
+                            <div
                               className={`w-full p-4 border rounded-lg cursor-pointer transition-colors ${
-                                templateType === 'stdio' 
-                                  ? 'border-[var(--color-action-primary)] bg-[var(--color-state-info-bg)]' 
+                                templateType === 'stdio'
+                                  ? 'border-[var(--color-action-primary)] bg-[var(--color-state-info-bg)]'
                                   : 'border-[var(--color-border-default)] hover:bg-[var(--color-surface-subtle)]'
                               }`}
                               onClick={() => setTemplateType('stdio')}
                             >
                               <HStack gap={3}>
-                                <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
-                                  templateType === 'stdio' ? 'border-[var(--color-action-primary)]' : 'border-[var(--color-border-default)]'
-                                }`}>
+                                <div
+                                  className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
+                                    templateType === 'stdio'
+                                      ? 'border-[var(--color-action-primary)]'
+                                      : 'border-[var(--color-border-default)]'
+                                  }`}
+                                >
                                   {templateType === 'stdio' && (
                                     <div className="w-2 h-2 rounded-full bg-[var(--color-action-primary)]" />
                                   )}
                                 </div>
                                 <VStack gap={0.5}>
-                                  <span className="text-label-md text-[var(--color-text-default)]">STDIO (Container)</span>
+                                  <span className="text-label-md text-[var(--color-text-default)]">
+                                    STDIO (Container)
+                                  </span>
                                   <span className="text-body-sm text-[var(--color-text-subtle)]">
                                     A containerized MCP server deployed on Kubernetes
                                   </span>
@@ -410,24 +416,30 @@ export function CreateMCPTemplatePage() {
                             </div>
 
                             {/* HTTP Option */}
-                            <div 
+                            <div
                               className={`w-full p-4 border rounded-lg cursor-pointer transition-colors ${
-                                templateType === 'http' 
-                                  ? 'border-[var(--color-action-primary)] bg-[var(--color-state-info-bg)]' 
+                                templateType === 'http'
+                                  ? 'border-[var(--color-action-primary)] bg-[var(--color-state-info-bg)]'
                                   : 'border-[var(--color-border-default)] hover:bg-[var(--color-surface-subtle)]'
                               }`}
                               onClick={() => setTemplateType('http')}
                             >
                               <HStack gap={3}>
-                                <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
-                                  templateType === 'http' ? 'border-[var(--color-action-primary)]' : 'border-[var(--color-border-default)]'
-                                }`}>
+                                <div
+                                  className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
+                                    templateType === 'http'
+                                      ? 'border-[var(--color-action-primary)]'
+                                      : 'border-[var(--color-border-default)]'
+                                  }`}
+                                >
                                   {templateType === 'http' && (
                                     <div className="w-2 h-2 rounded-full bg-[var(--color-action-primary)]" />
                                   )}
                                 </div>
                                 <VStack gap={0.5}>
-                                  <span className="text-label-md text-[var(--color-text-default)]">HTTP (Remote)</span>
+                                  <span className="text-label-md text-[var(--color-text-default)]">
+                                    HTTP (Remote)
+                                  </span>
                                   <span className="text-body-sm text-[var(--color-text-subtle)]">
                                     External HTTP MCP server endpoint
                                   </span>
@@ -459,12 +471,7 @@ export function CreateMCPTemplatePage() {
                               <label className="text-label-lg text-[var(--color-text-default)]">
                                 Port
                               </label>
-                              <NumberInput
-                                value={port}
-                                onChange={setPort}
-                                min={1}
-                                max={65535}
-                              />
+                              <NumberInput value={port} onChange={setPort} min={1} max={65535} />
                               <p className="text-body-sm text-[var(--color-text-subtle)]">
                                 The port on which the container listens for incoming requests.
                               </p>
@@ -517,7 +524,10 @@ export function CreateMCPTemplatePage() {
                                 value={containerTransportType}
                                 onChange={setContainerTransportType}
                                 options={[
-                                  { value: 'streamable-http', label: 'Streamable HTTP (SSE-05-1B) - incp' },
+                                  {
+                                    value: 'streamable-http',
+                                    label: 'Streamable HTTP (SSE-05-1B) - incp',
+                                  },
                                   { value: 'http', label: 'HTTP' },
                                   { value: 'websocket', label: 'WebSocket' },
                                 ]}
@@ -580,7 +590,10 @@ export function CreateMCPTemplatePage() {
                                 value={httpTransportType}
                                 onChange={setHttpTransportType}
                                 options={[
-                                  { value: 'streamable-http', label: 'Streamable HTTP (SSE-05-1B)' },
+                                  {
+                                    value: 'streamable-http',
+                                    label: 'Streamable HTTP (SSE-05-1B)',
+                                  },
                                   { value: 'http', label: 'HTTP' },
                                   { value: 'websocket', label: 'WebSocket' },
                                 ]}
@@ -617,10 +630,10 @@ export function CreateMCPTemplatePage() {
                             <p className="text-body-sm text-[var(--color-text-subtle)]">
                               Configure environment variables for the server runtime.
                             </p>
-                            
-                            <Button 
-                              variant="outline" 
-                              size="sm" 
+
+                            <Button
+                              variant="outline"
+                              size="sm"
                               leftIcon={<IconPlus size={12} />}
                               onClick={handleAddEnvVariable}
                             >
@@ -628,32 +641,45 @@ export function CreateMCPTemplatePage() {
                             </Button>
 
                             {envVariables.map((env, index) => (
-                              <div key={env.id} className="w-full border border-[var(--color-border-default)] rounded-lg p-4">
+                              <div
+                                key={env.id}
+                                className="w-full border border-[var(--color-border-default)] rounded-lg p-4"
+                              >
                                 <VStack gap={4}>
                                   <div className="grid grid-cols-2 gap-4">
                                     <Input
                                       label="Key"
                                       placeholder="e.g. token"
                                       value={env.key}
-                                      onChange={(e) => handleUpdateEnvVariable(env.id, 'key', e.target.value)}
+                                      onChange={(e) =>
+                                        handleUpdateEnvVariable(env.id, 'key', e.target.value)
+                                      }
                                       fullWidth
                                     />
                                     <Input
                                       label="Value"
                                       placeholder="e.g. token"
                                       value={env.value}
-                                      onChange={(e) => handleUpdateEnvVariable(env.id, 'value', e.target.value)}
+                                      onChange={(e) =>
+                                        handleUpdateEnvVariable(env.id, 'value', e.target.value)
+                                      }
                                       fullWidth
                                     />
                                   </div>
-                                  
+
                                   <div className="flex items-start gap-4 w-full">
                                     <div className="flex-1">
                                       <Input
                                         label="Description"
                                         placeholder="Add an description"
                                         value={env.description}
-                                        onChange={(e) => handleUpdateEnvVariable(env.id, 'description', e.target.value)}
+                                        onChange={(e) =>
+                                          handleUpdateEnvVariable(
+                                            env.id,
+                                            'description',
+                                            e.target.value
+                                          )
+                                        }
                                         fullWidth
                                       />
                                     </div>
@@ -674,19 +700,35 @@ export function CreateMCPTemplatePage() {
                                       <input
                                         type="checkbox"
                                         checked={env.required}
-                                        onChange={(e) => handleUpdateEnvVariable(env.id, 'required', e.target.checked)}
+                                        onChange={(e) =>
+                                          handleUpdateEnvVariable(
+                                            env.id,
+                                            'required',
+                                            e.target.checked
+                                          )
+                                        }
                                         className="w-4 h-4 rounded border-[var(--color-border-default)]"
                                       />
-                                      <span className="text-label-sm text-[var(--color-text-default)]">Req</span>
+                                      <span className="text-label-sm text-[var(--color-text-default)]">
+                                        Req
+                                      </span>
                                     </label>
                                     <label className="flex items-center gap-2 cursor-pointer">
                                       <input
                                         type="checkbox"
                                         checked={env.secret}
-                                        onChange={(e) => handleUpdateEnvVariable(env.id, 'secret', e.target.checked)}
+                                        onChange={(e) =>
+                                          handleUpdateEnvVariable(
+                                            env.id,
+                                            'secret',
+                                            e.target.checked
+                                          )
+                                        }
                                         className="w-4 h-4 rounded border-[var(--color-border-default)]"
                                       />
-                                      <span className="text-label-sm text-[var(--color-text-default)]">Secret</span>
+                                      <span className="text-label-sm text-[var(--color-text-default)]">
+                                        Secret
+                                      </span>
                                     </label>
                                   </HStack>
                                 </VStack>
@@ -706,12 +748,13 @@ export function CreateMCPTemplatePage() {
                         <Disclosure.Panel>
                           <VStack gap={4} className="pl-6 mt-4">
                             <p className="text-body-sm text-[var(--color-text-subtle)]">
-                              Configure the tools provided by this MCP server, along with their metadata and input schemas.
+                              Configure the tools provided by this MCP server, along with their
+                              metadata and input schemas.
                             </p>
-                            
-                            <Button 
-                              variant="outline" 
-                              size="sm" 
+
+                            <Button
+                              variant="outline"
+                              size="sm"
                               leftIcon={<IconPlus size={12} />}
                               onClick={handleAddTool}
                             >
@@ -719,7 +762,10 @@ export function CreateMCPTemplatePage() {
                             </Button>
 
                             {availableTools.map((tool) => (
-                              <div key={tool.id} className="w-full border border-[var(--color-border-default)] rounded-lg p-4">
+                              <div
+                                key={tool.id}
+                                className="w-full border border-[var(--color-border-default)] rounded-lg p-4"
+                              >
                                 <VStack gap={4}>
                                   {/* Tool Tags */}
                                   <div className="flex gap-1.5 flex-wrap">
@@ -757,7 +803,9 @@ export function CreateMCPTemplatePage() {
                                     onChange={(e) => {
                                       setAvailableTools(
                                         availableTools.map((t) =>
-                                          t.id === tool.id ? { ...t, description: e.target.value } : t
+                                          t.id === tool.id
+                                            ? { ...t, description: e.target.value }
+                                            : t
                                         )
                                       );
                                     }}
@@ -780,11 +828,7 @@ export function CreateMCPTemplatePage() {
                                     />
                                     <div className="flex flex-wrap gap-2">
                                       {tool.tags.map((tag, index) => (
-                                        <Chip
-                                          key={index}
-                                          value={tag}
-                                          onRemove={() => {}}
-                                        />
+                                        <Chip key={index} value={tag} onRemove={() => {}} />
                                       ))}
                                     </div>
                                   </VStack>
@@ -799,7 +843,10 @@ export function CreateMCPTemplatePage() {
                                     </p>
 
                                     {tool.parameters.map((param, paramIndex) => (
-                                      <div key={paramIndex} className="w-full bg-[var(--color-surface-subtle)] rounded-lg p-4">
+                                      <div
+                                        key={paramIndex}
+                                        className="w-full bg-[var(--color-surface-subtle)] rounded-lg p-4"
+                                      >
                                         <VStack gap={3}>
                                           <div className="grid grid-cols-2 gap-4">
                                             <Input
@@ -831,19 +878,18 @@ export function CreateMCPTemplatePage() {
                                             fullWidth
                                           />
                                           <label className="flex items-center gap-2 cursor-pointer">
-                                            <Toggle
-                                              checked={param.required}
-                                              onChange={() => {}}
-                                            />
-                                            <span className="text-label-sm text-[var(--color-text-default)]">Req</span>
+                                            <Toggle checked={param.required} onChange={() => {}} />
+                                            <span className="text-label-sm text-[var(--color-text-default)]">
+                                              Req
+                                            </span>
                                           </label>
                                         </VStack>
                                       </div>
                                     ))}
 
-                                    <Button 
-                                      variant="outline" 
-                                      size="sm" 
+                                    <Button
+                                      variant="outline"
+                                      size="sm"
                                       leftIcon={<IconPlus size={12} />}
                                       onClick={() => handleAddParameter(tool.id)}
                                     >
@@ -858,7 +904,7 @@ export function CreateMCPTemplatePage() {
                                     </label>
                                     <div className="w-full bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-3 font-mono text-body-sm text-[var(--color-text-subtle)]">
                                       <pre className="whitespace-pre-wrap">
-{`{
+                                        {`{
   "tool": 10,
   "query": "현재는 분기 GDP 성장률 전년 동기대 및 전분기대
   "top_k": 20,"threshold":0.0577,02537,M_i94c&bPdW",
@@ -886,7 +932,8 @@ export function CreateMCPTemplatePage() {
                               <span className="text-[var(--color-state-danger)] ml-0.5">*</span>
                             </label>
                             <p className="text-body-sm text-[var(--color-text-subtle)]">
-                              Control whether this template appears in the templates catalog and is available to all users.
+                              Control whether this template appears in the templates catalog and is
+                              available to all users.
                             </p>
                             <RadioGroup
                               value={visibility}
@@ -904,13 +951,11 @@ export function CreateMCPTemplatePage() {
                               <span className="text-[var(--color-state-danger)] ml-0.5">*</span>
                             </label>
                             <p className="text-body-sm text-[var(--color-text-subtle)]">
-                              Add a official badge to indicate that this MCP server is an official template provided by your organization.
+                              Add a official badge to indicate that this MCP server is an official
+                              template provided by your organization.
                             </p>
                             <HStack gap={2}>
-                              <Toggle
-                                checked={addOfficialBadge}
-                                onChange={setAddOfficialBadge}
-                              />
+                              <Toggle checked={addOfficialBadge} onChange={setAddOfficialBadge} />
                               <span className="text-label-sm text-[var(--color-text-default)]">
                                 {addOfficialBadge ? 'On' : 'Off'}
                               </span>

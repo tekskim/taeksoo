@@ -341,9 +341,7 @@ export function AgentPage() {
       flex: 1,
       minWidth: columnMinWidths.updatedAt,
       sortable: true,
-      render: (value: string) => (
-        <span className="whitespace-nowrap">{value}</span>
-      ),
+      render: (value: string) => <span className="whitespace-nowrap">{value}</span>,
     },
     {
       key: 'createdAt',
@@ -351,9 +349,7 @@ export function AgentPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
-      render: (value: string) => (
-        <span className="whitespace-nowrap">{value}</span>
-      ),
+      render: (value: string) => <span className="whitespace-nowrap">{value}</span>,
     },
     {
       key: 'actions',
