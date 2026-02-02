@@ -1258,40 +1258,15 @@ export function CreatePodPage() {
       return;
     }
 
-    console.log('Creating deployment:', {
+    console.log('Creating pod:', {
       namespace,
       name,
-      replicas,
       description,
       labels,
       annotations,
-      strategy,
-      maxSurge,
-      maxSurgeUnit,
-      maxUnavailable,
-      maxUnavailableUnit,
-      minReady,
-      revisionHistoryLimit,
-      progressDeadline,
     });
-    navigate('/container/deployments');
-  }, [
-    namespace,
-    name,
-    replicas,
-    description,
-    labels,
-    annotations,
-    strategy,
-    maxSurge,
-    maxSurgeUnit,
-    maxUnavailable,
-    maxUnavailableUnit,
-    minReady,
-    revisionHistoryLimit,
-    progressDeadline,
-    navigate,
-  ]);
+    navigate('/container/pods');
+  }, [namespace, name, description, labels, annotations, navigate]);
 
   // Label management
   const addLabel = useCallback(() => {
