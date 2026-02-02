@@ -374,7 +374,7 @@ function ResourceQuotasSection({ quotaItems, onQuotaItemsChange }: ResourceQuota
                       onClick={() => removeQuotaItem(item.id)}
                       className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                     >
-                      <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                      <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
                     </button>
                   </div>
                 );

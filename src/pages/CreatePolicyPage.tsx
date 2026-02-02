@@ -778,7 +778,7 @@ function PolicyEditorSection({
                   className="absolute top-3 right-3 p-1 rounded hover:bg-[var(--color-surface-subtle)] text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] transition-colors"
                   aria-label="Remove permission"
                 >
-                  <IconX size={16} stroke={1.5} />
+                  <IconX size={12} stroke={1.5} />
                 </button>
               )}
               <VStack gap={6}>

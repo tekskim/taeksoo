@@ -2209,7 +2209,7 @@ function NetworkSection({
                   className="ml-auto p-1 hover:bg-[var(--color-surface-subtle)] rounded"
                   onClick={() => removeVirtualLAN(vlan.id)}
                 >
-                  <IconX size={16} className="text-[var(--color-text-subtle)]" />
+                  <IconX size={12} className="text-[var(--color-text-subtle)]" />
                 </button>
               </div>
             ))}
@@ -2661,7 +2661,7 @@ function AdvancedSection({
                       onClick={() => handleRemoveTag(index)}
                       className="p-1 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]"
                     >
-                      <IconX size={16} />
+                      <IconX size={12} />
                     </button>
                   </HStack>
                 ))}
