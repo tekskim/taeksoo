@@ -14,6 +14,7 @@ import {
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
+  columnMinWidths,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { ShellPanel, useShellPanel, type ShellTab } from '@/components/ShellPanel';

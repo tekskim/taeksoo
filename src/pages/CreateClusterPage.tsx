@@ -852,7 +852,7 @@ export function CreateClusterPage() {
                                   </VStack>
                                   <button
                                     onClick={() => removeLabel(index)}
-                                    className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors mt-6"
+                                    className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors mt-6"
                                   >
                                     <IconX
                                       size={12}
@@ -927,7 +927,7 @@ export function CreateClusterPage() {
                                   </VStack>
                                   <button
                                     onClick={() => removeAnnotation(index)}
-                                    className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors mt-6"
+                                    className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors mt-6"
                                   >
                                     <IconX
                                       size={12}
@@ -958,48 +958,40 @@ export function CreateClusterPage() {
               </div>
 
               {/* Right Column - Summary (Floating Card Style) */}
-              <div className="w-[280px] shrink-0">
-                <div className="sticky top-4">
-                  <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[8px] shadow-[var(--shadow-md)] overflow-hidden flex flex-col gap-6 pt-3 pb-4 px-3">
-                    {/* Summary Content Area */}
-                    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[8px] px-4 py-4">
-                      <VStack gap={4}>
-                        {/* Summary Title */}
-                        <h5 className="text-[16px] leading-6 font-semibold text-[var(--color-text-default)]">
-                          Summary
-                        </h5>
+              <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
+                <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
+                  {/* Summary Content Area */}
+                  <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
+                    <VStack gap={4}>
+                      {/* Summary Title */}
+                      <h5 className="text-[16px] leading-6 font-semibold text-[var(--color-text-default)]">
+                        Summary
+                      </h5>
 
-                        {/* Summary Items */}
-                        <VStack gap={0}>
-                          <SummaryItem label="Basic Information" status="in-progress" />
-                          <SummaryItem label="Networking" status="in-progress" />
-                          <SummaryItem label="Node Configuration" status="complete" />
-                          <SummaryItem label="Labels & Annotations" status="complete" />
-                        </VStack>
+                      {/* Summary Items */}
+                      <VStack gap={0}>
+                        <SummaryItem label="Basic Information" status="in-progress" />
+                        <SummaryItem label="Networking" status="in-progress" />
+                        <SummaryItem label="Node Configuration" status="complete" />
+                        <SummaryItem label="Labels & Annotations" status="complete" />
                       </VStack>
-                    </div>
-
-                    {/* Button Container */}
-                    <HStack gap={2} className="w-full justify-end">
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        onClick={handleCancel}
-                        className="w-[80px]"
-                      >
-                        Cancel
-                      </Button>
-                      <Button
-                        variant="primary"
-                        size="sm"
-                        onClick={handleCreate}
-                        className="flex-1 min-w-[80px]"
-                        disabled
-                      >
-                        Create
-                      </Button>
-                    </HStack>
+                    </VStack>
                   </div>
+
+                  {/* Button Container */}
+                  <HStack gap={2} className="w-full justify-end">
+                    <Button variant="secondary" onClick={handleCancel} className="w-[80px]">
+                      Cancel
+                    </Button>
+                    <Button
+                      variant="primary"
+                      onClick={handleCreate}
+                      className="flex-1 min-w-[80px]"
+                      disabled
+                    >
+                      Create
+                    </Button>
+                  </HStack>
                 </div>
               </div>
             </div>

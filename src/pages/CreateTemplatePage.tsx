@@ -45,7 +45,7 @@ import {
   IconDownload,
   IconEdit,
   IconExternalLink,
-  IconPlus,
+  IconCirclePlus,
   IconProgress,
   IconUpload,
   IconX,
@@ -433,7 +433,7 @@ function SectionStatusIcon({ status }: { status: SectionState }) {
     return (
       <div className="w-4 h-4 shrink-0">
         <IconProgress
-          size={16}
+          size={12}
           stroke={1.5}
           className="text-[var(--color-text-subtle)] animate-spin"
         />
@@ -1172,7 +1172,7 @@ function ImageSection({
             <Button
               variant="outline"
               size="sm"
-              leftIcon={<IconPlus size={12} />}
+              leftIcon={<IconCirclePlus size={12} />}
               onClick={handleAddDataDisk}
             >
               Add Data disk
@@ -1306,7 +1306,7 @@ function FlavorSection({
             </a>
             <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
             {row.hasWarning && (
-              <IconAlertCircle size={16} className="text-[var(--color-state-danger)]" />
+              <IconAlertCircle size={12} className="text-[var(--color-state-danger)]" />
             )}
           </HStack>
           <span className="text-body-sm text-[var(--color-text-muted)]">ID: {row.id}</span>
@@ -1915,7 +1915,7 @@ function NetworkSection({
                   className="ml-auto p-1 hover:bg-[var(--color-surface-subtle)] rounded"
                   onClick={() => removeVirtualLAN(vlan.id)}
                 >
-                  <IconX size={16} className="text-[var(--color-text-subtle)]" />
+                  <IconX size={12} className="text-[var(--color-text-subtle)]" />
                 </button>
               </div>
             ))}
@@ -1925,7 +1925,7 @@ function NetworkSection({
               className="flex items-center gap-1.5 h-8 px-3 text-label-md text-[var(--color-text-default)] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md hover:bg-[var(--color-surface-subtle)] w-fit"
               onClick={addVirtualLAN}
             >
-              <IconPlus size={12} />
+              <IconCirclePlus size={12} />
               Add virtual LAN
             </button>
           </VStack>
@@ -2355,19 +2355,19 @@ function AdvancedSection({
                       placeholder="Key"
                       value={tag.key}
                       onChange={(e) => handleTagChange(index, 'key', e.target.value)}
-                      className="flex-1"
+                      fullWidth
                     />
                     <Input
                       placeholder="Value"
                       value={tag.value}
                       onChange={(e) => handleTagChange(index, 'value', e.target.value)}
-                      className="flex-1"
+                      fullWidth
                     />
                     <button
                       onClick={() => handleRemoveTag(index)}
                       className="p-1 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)]"
                     >
-                      <IconX size={16} />
+                      <IconX size={12} />
                     </button>
                   </HStack>
                 ))}
@@ -2380,7 +2380,7 @@ function AdvancedSection({
                 disabled={tags.length >= MAX_TAGS}
                 className="flex items-center gap-1.5 h-8 px-3 text-label-md text-[var(--color-text-default)] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md hover:bg-[var(--color-surface-subtle)] disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <IconPlus size={12} />
+                <IconCirclePlus size={12} />
                 Add tag
               </button>
               <span className="text-body-md text-[var(--color-text-subtle)]">
@@ -2707,7 +2707,7 @@ export function CreateTemplatePage() {
             }
             actions={
               <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
+                icon={<IconBell size={12} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />

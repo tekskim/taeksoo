@@ -9,10 +9,8 @@ import {
   TopBar,
   Input,
   Select,
-  WizardSummary,
   SectionCard,
 } from '@/design-system';
-import type { WizardSummaryItem, WizardSectionState } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
@@ -21,9 +19,9 @@ import {
   IconFile,
   IconCopy,
   IconSearch,
-  IconPlus,
+  IconCirclePlus,
   IconX,
-  IconEdit,
+  IconCheck,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -31,7 +29,6 @@ import {
    ---------------------------------------- */
 
 type SectionStep = 'basic-info' | 'data' | 'labels-annotations';
-type SectionState = 'pre' | 'active' | 'done' | 'writing';
 
 // Section labels for display
 const SECTION_LABELS: Record<SectionStep, string> = {
@@ -40,7 +37,7 @@ const SECTION_LABELS: Record<SectionStep, string> = {
   'labels-annotations': 'Labels & Annotations',
 };
 
-// Section order for navigation
+// Section order for display
 const SECTION_ORDER: SectionStep[] = ['basic-info', 'data', 'labels-annotations'];
 
 // Namespace options
@@ -61,66 +58,33 @@ interface Annotation {
 }
 
 /* ----------------------------------------
-   PreSection Component
+   Summary Status Icon Component
    ---------------------------------------- */
 
-interface PreSectionProps {
-  title: string;
-}
-
-function PreSection({ title }: PreSectionProps) {
-  return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
-      <div className="h-8 flex items-center">
-        <h5 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h5>
+function SummaryStatusIcon({ status }: { status: 'done' | 'active' | 'pending' }) {
+  // done → success (green check)
+  if (status === 'done') {
+    return (
+      <div className="size-4 rounded-full border border-[var(--color-state-success)] bg-[var(--color-state-success)] shrink-0 flex items-center justify-center">
+        <IconCheck size={10} stroke={2} className="text-white" />
       </div>
-    </div>
-  );
-}
-
-/* ----------------------------------------
-   WritingSection Component
-   ---------------------------------------- */
-
-interface WritingSectionProps {
-  title: string;
-}
-
-function WritingSection({ title }: WritingSectionProps) {
-  return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
-      <div className="h-8 flex items-center justify-between">
-        <h5 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h5>
-        <span className="text-body-sm text-[var(--color-text-subtle)]">Writing...</span>
-      </div>
-    </div>
-  );
-}
-
-/* ----------------------------------------
-   DoneSection Component
-   ---------------------------------------- */
-
-interface DoneSectionProps {
-  title: string;
-  onEdit: () => void;
-  children: React.ReactNode;
-}
-
-function DoneSection({ title, onEdit, children }: DoneSectionProps) {
-  return (
-    <SectionCard>
-      <SectionCard.Header
-        title={title}
-        showDivider
-        actions={
-          <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />} onClick={onEdit}>
-            Edit
-          </Button>
-        }
+    );
+  }
+  // active → dashed circle with spinning animation
+  if (status === 'active') {
+    return (
+      <div
+        className="size-4 rounded-full border border-[var(--color-text-muted)] shrink-0 animate-spin"
+        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
       />
-      <SectionCard.Content>{children}</SectionCard.Content>
-    </SectionCard>
+    );
+  }
+  // pre/default → empty dashed circle
+  return (
+    <div
+      className="size-4 rounded-full border border-[var(--color-border-default)] shrink-0"
+      style={{ borderStyle: 'dashed' }}
+    />
   );
 }
 
@@ -129,7 +93,7 @@ function DoneSection({ title, onEdit, children }: DoneSectionProps) {
    ---------------------------------------- */
 
 interface SummarySidebarProps {
-  sectionStatus: Record<SectionStep, SectionState>;
+  sectionStatus: Record<SectionStep, 'done' | 'active' | 'pending'>;
   onCancel: () => void;
   onCreate: () => void;
   isCreateDisabled: boolean;
@@ -141,26 +105,27 @@ function SummarySidebar({
   onCreate,
   isCreateDisabled,
 }: SummarySidebarProps) {
-  // Map SectionState to WizardSectionState
-  const mapState = (state: SectionState): WizardSectionState => {
-    if (state === 'pre') return 'pending';
-    if (state === 'active') return 'active';
-    if (state === 'writing') return 'writing';
-    return 'done';
-  };
-
-  const summaryItems: WizardSummaryItem[] = SECTION_ORDER.map((key) => ({
-    key,
-    label: SECTION_LABELS[key],
-    status: mapState(sectionStatus[key]),
-  }));
-
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
       <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
-        <WizardSummary items={summaryItems} />
+        {/* Inner subtle-bg container */}
+        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
+          <VStack gap={4}>
+            <span className="text-heading-h5">Summary</span>
+            <VStack gap={0}>
+              {SECTION_ORDER.map((step) => (
+                <HStack key={step} justify="between" className="py-1">
+                  <span className="text-body-md text-[var(--color-text-default)]">
+                    {SECTION_LABELS[step]}
+                  </span>
+                  <SummaryStatusIcon status={sectionStatus[step]} />
+                </HStack>
+              ))}
+            </VStack>
+          </VStack>
+        </div>
 
-        {/* Action Buttons */}
+        {/* Button row */}
         <HStack gap={2}>
           <Button variant="secondary" onClick={onCancel} className="w-[80px]">
             Cancel
@@ -171,7 +136,7 @@ function SummarySidebar({
             disabled={isCreateDisabled}
             className="flex-1"
           >
-            Create Resource Quota
+            Create
           </Button>
         </HStack>
       </div>
@@ -192,10 +157,6 @@ interface BasicInfoSectionProps {
   onNamespaceChange: (value: string) => void;
   description: string;
   onDescriptionChange: (value: string) => void;
-  onNext: () => void;
-  isEditing: boolean;
-  onEditCancel: () => void;
-  onEditDone: () => void;
 }
 
 function BasicInfoSection({
@@ -207,47 +168,10 @@ function BasicInfoSection({
   onNamespaceChange,
   description,
   onDescriptionChange,
-  onNext,
-  isEditing,
-  onEditCancel,
-  onEditDone,
 }: BasicInfoSectionProps) {
-  const handleNext = () => {
-    if (!resourceQuotaName.trim()) {
-      onResourceQuotaNameErrorChange('Limit range name is required.');
-      return;
-    }
-    onResourceQuotaNameErrorChange(null);
-    onNext();
-  };
-
-  const handleDone = () => {
-    if (!resourceQuotaName.trim()) {
-      onResourceQuotaNameErrorChange('Limit range name is required.');
-      return;
-    }
-    onResourceQuotaNameErrorChange(null);
-    onEditDone();
-  };
-
   return (
-    <SectionCard isActive>
-      <SectionCard.Header
-        title="Basic Information"
-        showDivider
-        actions={
-          isEditing ? (
-            <HStack gap={2}>
-              <Button variant="secondary" size="sm" onClick={onEditCancel}>
-                Cancel
-              </Button>
-              <Button variant="primary" size="sm" onClick={handleDone}>
-                Done
-              </Button>
-            </HStack>
-          ) : undefined
-        }
-      />
+    <SectionCard>
+      <SectionCard.Header title="Basic Information" showDivider />
       <SectionCard.Content>
         <VStack gap={4}>
           {/* Namespace */}
@@ -295,15 +219,6 @@ function BasicInfoSection({
               fullWidth
             />
           </VStack>
-
-          {/* Next Button */}
-          {!isEditing && (
-            <div className="flex justify-end pt-2">
-              <Button variant="primary" size="sm" onClick={handleNext}>
-                Next
-              </Button>
-            </div>
-          )}
         </VStack>
       </SectionCard.Content>
     </SectionCard>
@@ -373,20 +288,9 @@ const getResourcePlaceholder = (resourceType: string): string => {
 interface ResourceQuotasSectionProps {
   quotaItems: ResourceQuotaItem[];
   onQuotaItemsChange: (items: ResourceQuotaItem[]) => void;
-  onNext: () => void;
-  isEditing: boolean;
-  onEditCancel: () => void;
-  onEditDone: () => void;
 }
 
-function ResourceQuotasSection({
-  quotaItems,
-  onQuotaItemsChange,
-  onNext,
-  isEditing,
-  onEditCancel,
-  onEditDone,
-}: ResourceQuotasSectionProps) {
+function ResourceQuotasSection({ quotaItems, onQuotaItemsChange }: ResourceQuotasSectionProps) {
   const addQuotaItem = () => {
     const newItem: ResourceQuotaItem = {
       id: `quota-${Date.now()}`,
@@ -407,23 +311,8 @@ function ResourceQuotasSection({
   };
 
   return (
-    <SectionCard isActive>
-      <SectionCard.Header
-        title="Resource Quotas"
-        showDivider
-        actions={
-          isEditing ? (
-            <HStack gap={2}>
-              <Button variant="secondary" size="sm" onClick={onEditCancel}>
-                Cancel
-              </Button>
-              <Button variant="primary" size="sm" onClick={onEditDone}>
-                Done
-              </Button>
-            </HStack>
-          ) : undefined
-        }
-      />
+    <SectionCard>
+      <SectionCard.Header title="Resource Quotas" showDivider />
       <SectionCard.Content>
         <VStack gap={5}>
           {/* Header Labels */}
@@ -485,7 +374,7 @@ function ResourceQuotasSection({
                       onClick={() => removeQuotaItem(item.id)}
                       className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                     >
-                      <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                      <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
                     </button>
                   </div>
                 );
@@ -497,20 +386,11 @@ function ResourceQuotasSection({
           <Button
             variant="outline"
             size="sm"
-            leftIcon={<IconPlus size={12} stroke={1.5} />}
+            leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
             onClick={addQuotaItem}
           >
             Add Resource
           </Button>
-
-          {/* Next Button */}
-          {!isEditing && (
-            <div className="flex justify-end pt-2">
-              <Button variant="primary" size="sm" onClick={onNext}>
-                Next
-              </Button>
-            </div>
-          )}
         </VStack>
       </SectionCard.Content>
     </SectionCard>
@@ -530,10 +410,6 @@ interface LabelsAnnotationsSectionProps {
   onAddAnnotation: () => void;
   onRemoveAnnotation: (index: number) => void;
   onUpdateAnnotation: (index: number, field: 'key' | 'value', value: string) => void;
-  onNext: () => void;
-  isEditing: boolean;
-  onEditCancel: () => void;
-  onEditDone: () => void;
 }
 
 function LabelsAnnotationsSection({
@@ -545,29 +421,10 @@ function LabelsAnnotationsSection({
   onAddAnnotation,
   onRemoveAnnotation,
   onUpdateAnnotation,
-  onNext,
-  isEditing,
-  onEditCancel,
-  onEditDone,
 }: LabelsAnnotationsSectionProps) {
   return (
-    <SectionCard isActive>
-      <SectionCard.Header
-        title="Labels & Annotations"
-        showDivider
-        actions={
-          isEditing ? (
-            <HStack gap={2}>
-              <Button variant="secondary" size="sm" onClick={onEditCancel}>
-                Cancel
-              </Button>
-              <Button variant="primary" size="sm" onClick={onEditDone}>
-                Done
-              </Button>
-            </HStack>
-          ) : undefined
-        }
-      />
+    <SectionCard>
+      <SectionCard.Header title="Labels & Annotations" showDivider />
       <SectionCard.Content>
         <VStack gap={4}>
           {/* Labels */}
@@ -580,24 +437,24 @@ function LabelsAnnotationsSection({
             </VStack>
 
             {labels.map((label, index) => (
-              <HStack gap={2} key={index} className="w-full">
+              <HStack gap={2} key={index} className="w-full items-center">
                 <Input
                   placeholder="Key"
                   value={label.key}
                   onChange={(e) => onUpdateLabel(index, 'key', e.target.value)}
-                  className="flex-1"
+                  fullWidth
                 />
                 <Input
                   placeholder="Value"
                   value={label.value}
                   onChange={(e) => onUpdateLabel(index, 'value', e.target.value)}
-                  className="flex-1"
+                  fullWidth
                 />
                 <button
                   onClick={() => onRemoveLabel(index)}
-                  className="p-2 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
                 >
-                  <IconX size={14} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                  <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
                 </button>
               </HStack>
             ))}
@@ -605,7 +462,7 @@ function LabelsAnnotationsSection({
             <Button
               variant="outline"
               size="sm"
-              leftIcon={<IconPlus size={12} stroke={1.5} />}
+              leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
               onClick={onAddLabel}
             >
               Add Label
@@ -622,24 +479,24 @@ function LabelsAnnotationsSection({
             </VStack>
 
             {annotations.map((annotation, index) => (
-              <HStack gap={2} key={index} className="w-full">
+              <HStack gap={2} key={index} className="w-full items-center">
                 <Input
                   placeholder="Key"
                   value={annotation.key}
                   onChange={(e) => onUpdateAnnotation(index, 'key', e.target.value)}
-                  className="flex-1"
+                  fullWidth
                 />
                 <Input
                   placeholder="Value"
                   value={annotation.value}
                   onChange={(e) => onUpdateAnnotation(index, 'value', e.target.value)}
-                  className="flex-1"
+                  fullWidth
                 />
                 <button
                   onClick={() => onRemoveAnnotation(index)}
-                  className="p-2 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
                 >
-                  <IconX size={14} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                  <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
                 </button>
               </HStack>
             ))}
@@ -647,21 +504,12 @@ function LabelsAnnotationsSection({
             <Button
               variant="outline"
               size="sm"
-              leftIcon={<IconPlus size={12} stroke={1.5} />}
+              leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
               onClick={onAddAnnotation}
             >
               Add Annotation
             </Button>
           </VStack>
-
-          {/* Done Button (last section) */}
-          {!isEditing && (
-            <div className="flex justify-end pt-2">
-              <Button variant="primary" size="sm" onClick={onNext}>
-                Done
-              </Button>
-            </div>
-          )}
         </VStack>
       </SectionCard.Content>
     </SectionCard>
@@ -688,16 +536,6 @@ export function CreateResourceQuotaPage() {
   const [labels, setLabels] = useState<Label[]>([]);
   const [annotations, setAnnotations] = useState<Annotation[]>([]);
 
-  // Section states
-  const [sectionStatus, setSectionStatus] = useState<Record<SectionStep, SectionState>>({
-    'basic-info': 'active',
-    data: 'pre',
-    'labels-annotations': 'pre',
-  });
-
-  // Editing state
-  const [editingSection, setEditingSection] = useState<SectionStep | null>(null);
-
   // Validation errors
   const [resourceQuotaNameError, setResourceQuotaNameError] = useState<string | null>(null);
 
@@ -719,111 +557,29 @@ export function CreateResourceQuotaPage() {
   // Sidebar width calculation
   const sidebarWidth = sidebarOpen ? 240 : 40;
 
-  // Handle section navigation
-  const handleNext = useCallback((currentSection: SectionStep) => {
-    const currentIndex = SECTION_ORDER.indexOf(currentSection);
-    const nextSection = SECTION_ORDER[currentIndex + 1];
+  // Calculate section status based on data
+  const getSectionStatus = (): Record<SectionStep, 'done' | 'active' | 'pending'> => {
+    const basicInfoDone = resourceQuotaName.trim().length > 0;
+    const dataDone =
+      quotaItems.length > 0 && quotaItems.some((item) => item.resourceType && item.limit);
+    const labelsAnnotationsDone = labels.length > 0 || annotations.length > 0;
 
-    setSectionStatus((prev) => ({
-      ...prev,
-      [currentSection]: 'done',
-      ...(nextSection && { [nextSection]: 'active' }),
-    }));
-  }, []);
+    return {
+      'basic-info': basicInfoDone
+        ? 'done'
+        : resourceQuotaName.trim().length > 0
+          ? 'active'
+          : 'pending',
+      data: dataDone ? 'done' : quotaItems.length > 0 ? 'active' : 'pending',
+      'labels-annotations': labelsAnnotationsDone
+        ? 'done'
+        : labels.length > 0 || annotations.length > 0
+          ? 'active'
+          : 'pending',
+    };
+  };
 
-  // Handle edit - when editing a previous section, subsequent sections become 'writing'
-  const handleEdit = useCallback((section: SectionStep) => {
-    setEditingSection(section);
-    const sectionIndex = SECTION_ORDER.indexOf(section);
-
-    setSectionStatus((prev) => {
-      const newStatus = { ...prev };
-
-      // Set all sections to their appropriate state
-      SECTION_ORDER.forEach((key, index) => {
-        if (index < sectionIndex) {
-          newStatus[key] = 'done';
-        } else if (index === sectionIndex) {
-          newStatus[key] = 'active';
-        } else if (prev[key] === 'done' || prev[key] === 'active') {
-          // Subsequent sections that were done/active become 'writing'
-          newStatus[key] = 'writing';
-        }
-      });
-
-      return newStatus;
-    });
-  }, []);
-
-  // Handle edit cancel
-  const handleEditCancel = useCallback(() => {
-    if (!editingSection) return;
-
-    setSectionStatus((prev) => {
-      const newStatus = { ...prev };
-      newStatus[editingSection] = 'done';
-
-      // Find next writing section to activate
-      const editIndex = SECTION_ORDER.indexOf(editingSection);
-      let nextWritingFound = false;
-      for (let i = editIndex + 1; i < SECTION_ORDER.length; i++) {
-        if (newStatus[SECTION_ORDER[i]] === 'writing') {
-          newStatus[SECTION_ORDER[i]] = 'active';
-          nextWritingFound = true;
-          break;
-        }
-      }
-
-      // If no writing section, activate first pre section
-      if (!nextWritingFound) {
-        for (const key of SECTION_ORDER) {
-          if (newStatus[key] === 'pre') {
-            newStatus[key] = 'active';
-            break;
-          }
-        }
-      }
-
-      return newStatus;
-    });
-
-    setEditingSection(null);
-  }, [editingSection]);
-
-  // Handle edit done
-  const handleEditDone = useCallback(() => {
-    if (!editingSection) return;
-
-    setSectionStatus((prev) => {
-      const newStatus = { ...prev };
-      newStatus[editingSection] = 'done';
-
-      // Find next writing section to activate
-      const editIndex = SECTION_ORDER.indexOf(editingSection);
-      let nextWritingFound = false;
-      for (let i = editIndex + 1; i < SECTION_ORDER.length; i++) {
-        if (newStatus[SECTION_ORDER[i]] === 'writing') {
-          newStatus[SECTION_ORDER[i]] = 'active';
-          nextWritingFound = true;
-          break;
-        }
-      }
-
-      // If no writing section, activate first pre section
-      if (!nextWritingFound) {
-        for (const key of SECTION_ORDER) {
-          if (newStatus[key] === 'pre') {
-            newStatus[key] = 'active';
-            break;
-          }
-        }
-      }
-
-      return newStatus;
-    });
-
-    setEditingSection(null);
-  }, [editingSection]);
+  const sectionStatus = getSectionStatus();
 
   const handleCancel = useCallback(() => {
     navigate('/container/resource-quotas');
@@ -833,10 +589,6 @@ export function CreateResourceQuotaPage() {
     // Validate basic info first
     if (!resourceQuotaName.trim()) {
       setResourceQuotaNameError('Limit range name is required.');
-      setSectionStatus((prev) => ({
-        ...prev,
-        'basic-info': 'active',
-      }));
       return;
     }
 
@@ -896,17 +648,6 @@ export function CreateResourceQuotaPage() {
   // Check if create button should be disabled
   const isCreateDisabled = !resourceQuotaName.trim();
 
-  // Get display values for done sections
-  const getLabelsDisplay = () => {
-    if (labels.length === 0) return 'None';
-    return labels.map((l) => `${l.key}: ${l.value}`).join(', ');
-  };
-
-  const getAnnotationsDisplay = () => {
-    if (annotations.length === 0) return 'None';
-    return annotations.map((a) => `${a.key}: ${a.value}`).join(', ');
-  };
-
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       {/* Sidebar */}
@@ -946,19 +687,19 @@ export function CreateResourceQuotaPage() {
           actions={
             <>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                <IconTerminal2 size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                <IconFile size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                <IconCopy size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                <IconSearch size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                <IconBell size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
             </>
           }
@@ -980,108 +721,34 @@ export function CreateResourceQuotaPage() {
                 {/* Form Content */}
                 <VStack gap={4} className="flex-1">
                   {/* Basic Information Section */}
-                  {sectionStatus['basic-info'] === 'pre' && (
-                    <PreSection title={SECTION_LABELS['basic-info']} />
-                  )}
-                  {sectionStatus['basic-info'] === 'writing' && (
-                    <WritingSection title={SECTION_LABELS['basic-info']} />
-                  )}
-                  {sectionStatus['basic-info'] === 'active' && (
-                    <BasicInfoSection
-                      resourceQuotaName={resourceQuotaName}
-                      onResourceQuotaNameChange={setResourceQuotaName}
-                      resourceQuotaNameError={resourceQuotaNameError}
-                      onResourceQuotaNameErrorChange={setResourceQuotaNameError}
-                      namespace={namespace}
-                      onNamespaceChange={setNamespace}
-                      description={description}
-                      onDescriptionChange={setDescription}
-                      onNext={() => handleNext('basic-info')}
-                      isEditing={editingSection === 'basic-info'}
-                      onEditCancel={handleEditCancel}
-                      onEditDone={handleEditDone}
-                    />
-                  )}
-                  {sectionStatus['basic-info'] === 'done' && (
-                    <DoneSection
-                      title={SECTION_LABELS['basic-info']}
-                      onEdit={() => handleEdit('basic-info')}
-                    >
-                      <SectionCard.DataRow
-                        label="Namespace"
-                        value={namespace || '-'}
-                        showDivider={false}
-                      />
-                      <SectionCard.DataRow label="Resource Quota Name" value={resourceQuotaName} />
-                      <SectionCard.DataRow label="Description" value={description || '-'} />
-                    </DoneSection>
-                  )}
+                  <BasicInfoSection
+                    resourceQuotaName={resourceQuotaName}
+                    onResourceQuotaNameChange={setResourceQuotaName}
+                    resourceQuotaNameError={resourceQuotaNameError}
+                    onResourceQuotaNameErrorChange={setResourceQuotaNameError}
+                    namespace={namespace}
+                    onNamespaceChange={setNamespace}
+                    description={description}
+                    onDescriptionChange={setDescription}
+                  />
 
-                  {/* Data Section */}
-                  {sectionStatus['data'] === 'pre' && <PreSection title={SECTION_LABELS['data']} />}
-                  {sectionStatus['data'] === 'writing' && (
-                    <WritingSection title={SECTION_LABELS['data']} />
-                  )}
-                  {sectionStatus['data'] === 'active' && (
-                    <ResourceQuotasSection
-                      quotaItems={quotaItems}
-                      onQuotaItemsChange={setQuotaItems}
-                      onNext={() => handleNext('data')}
-                      isEditing={editingSection === 'data'}
-                      onEditCancel={handleEditCancel}
-                      onEditDone={handleEditDone}
-                    />
-                  )}
-                  {sectionStatus['data'] === 'done' && (
-                    <DoneSection title={SECTION_LABELS['data']} onEdit={() => handleEdit('data')}>
-                      <SectionCard.DataRow
-                        label="Resource Quotas"
-                        value={
-                          quotaItems.length > 0
-                            ? `${quotaItems.length} quota(s) configured`
-                            : 'No quotas configured'
-                        }
-                        showDivider={false}
-                      />
-                    </DoneSection>
-                  )}
+                  {/* Resource Quotas Section */}
+                  <ResourceQuotasSection
+                    quotaItems={quotaItems}
+                    onQuotaItemsChange={setQuotaItems}
+                  />
 
                   {/* Labels & Annotations Section */}
-                  {sectionStatus['labels-annotations'] === 'pre' && (
-                    <PreSection title={SECTION_LABELS['labels-annotations']} />
-                  )}
-                  {sectionStatus['labels-annotations'] === 'writing' && (
-                    <WritingSection title={SECTION_LABELS['labels-annotations']} />
-                  )}
-                  {sectionStatus['labels-annotations'] === 'active' && (
-                    <LabelsAnnotationsSection
-                      labels={labels}
-                      onAddLabel={addLabel}
-                      onRemoveLabel={removeLabel}
-                      onUpdateLabel={updateLabel}
-                      annotations={annotations}
-                      onAddAnnotation={addAnnotation}
-                      onRemoveAnnotation={removeAnnotation}
-                      onUpdateAnnotation={updateAnnotation}
-                      onNext={() => handleNext('labels-annotations')}
-                      isEditing={editingSection === 'labels-annotations'}
-                      onEditCancel={handleEditCancel}
-                      onEditDone={handleEditDone}
-                    />
-                  )}
-                  {sectionStatus['labels-annotations'] === 'done' && (
-                    <DoneSection
-                      title={SECTION_LABELS['labels-annotations']}
-                      onEdit={() => handleEdit('labels-annotations')}
-                    >
-                      <SectionCard.DataRow
-                        label="Labels"
-                        value={getLabelsDisplay()}
-                        showDivider={false}
-                      />
-                      <SectionCard.DataRow label="Annotations" value={getAnnotationsDisplay()} />
-                    </DoneSection>
-                  )}
+                  <LabelsAnnotationsSection
+                    labels={labels}
+                    onAddLabel={addLabel}
+                    onRemoveLabel={removeLabel}
+                    onUpdateLabel={updateLabel}
+                    annotations={annotations}
+                    onAddAnnotation={addAnnotation}
+                    onRemoveAnnotation={removeAnnotation}
+                    onUpdateAnnotation={updateAnnotation}
+                  />
                 </VStack>
 
                 {/* Summary Sidebar */}
