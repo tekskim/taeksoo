@@ -31,7 +31,7 @@ export function WizardSectionStatusIcon({ status }: WizardSectionStatusIconProps
   // active → spinning progress (currently working)
   if (status === 'active') {
     return (
-      <div className="w-4 h-4 shrink-0">
+      <div className="w-4 h-4 shrink-0 flex items-center justify-center">
         <IconProgress
           size={16}
           stroke={1.5}
@@ -44,7 +44,7 @@ export function WizardSectionStatusIcon({ status }: WizardSectionStatusIconProps
   // writing → spinning progress
   if (status === 'writing') {
     return (
-      <div className="w-4 h-4 shrink-0">
+      <div className="w-4 h-4 shrink-0 flex items-center justify-center">
         <IconProgress
           size={16}
           stroke={1.5}
@@ -57,7 +57,7 @@ export function WizardSectionStatusIcon({ status }: WizardSectionStatusIconProps
   // skipped → minus icon
   if (status === 'skipped') {
     return (
-      <div className="w-4 h-4 shrink-0">
+      <div className="w-4 h-4 shrink-0 flex items-center justify-center">
         <IconMinus size={16} stroke={1.5} className="text-[var(--color-text-subtle)]" />
       </div>
     );

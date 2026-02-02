@@ -280,6 +280,8 @@ import {
   IconLayoutSidebarLeftCollapse,
   IconDisc,
   IconStopwatch,
+  IconCheck,
+  IconChevronDown,
 } from '@tabler/icons-react';
 
 // Custom Icons from design-system
@@ -3549,8 +3551,8 @@ export function DesignSystemPage() {
                     {/* Red (Danger) */}
                     <VStack gap={2}>
                       <Label>Red (Danger)</Label>
-                      <div className="grid grid-cols-5 md:grid-cols-10 gap-2">
-                        {[50, 100, 500, 600, 700, 800].map((shade) => (
+                      <div className="grid grid-cols-5 md:grid-cols-10 gap-2 overflow-x-auto">
+                        {[50, 100, 200, 300, 400, 500, 600, 700, 800, 900].map((shade) => (
                           <ColorSwatch
                             key={shade}
                             name={`${shade}`}
@@ -3564,8 +3566,8 @@ export function DesignSystemPage() {
                     {/* Green (Success) */}
                     <VStack gap={2}>
                       <Label>Green (Success)</Label>
-                      <div className="grid grid-cols-5 md:grid-cols-10 gap-2">
-                        {[50, 100, 500, 600, 700, 800].map((shade) => (
+                      <div className="grid grid-cols-5 md:grid-cols-10 gap-2 overflow-x-auto">
+                        {[50, 100, 200, 300, 400, 500, 600, 700, 800, 900].map((shade) => (
                           <ColorSwatch
                             key={shade}
                             name={`${shade}`}
@@ -3579,8 +3581,8 @@ export function DesignSystemPage() {
                     {/* Orange (Warning) */}
                     <VStack gap={2}>
                       <Label>Orange (Warning)</Label>
-                      <div className="grid grid-cols-5 md:grid-cols-10 gap-2">
-                        {[50, 100, 500, 600, 700, 800].map((shade) => (
+                      <div className="grid grid-cols-5 md:grid-cols-10 gap-2 overflow-x-auto">
+                        {[50, 100, 200, 300, 400, 500, 600, 700, 800, 900].map((shade) => (
                           <ColorSwatch
                             key={shade}
                             name={`${shade}`}
@@ -5418,6 +5420,132 @@ outline: 2px solid var(--color-border-focus);`}
                       </div>
                     </VStack>
 
+                    {/* Dropdown Menu Preview */}
+                    <VStack gap={3}>
+                      <Label>Dropdown Menu (Expanded)</Label>
+                      <div className="flex gap-6 items-start flex-wrap">
+                        {/* Default dropdown */}
+                        <VStack gap={1}>
+                          <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                            Default
+                          </span>
+                          <VStack gap={1} className="w-[200px]">
+                            <button className="flex items-center justify-between gap-2 w-full h-[var(--input-height-md)] px-[var(--select-padding-x)] text-[length:var(--select-font-size)] leading-[var(--select-line-height)] bg-[var(--select-bg)] border border-solid border-[var(--select-border-focus)] rounded-[var(--select-radius)] cursor-pointer">
+                              <span className="text-body-md text-[var(--color-text-muted)]">
+                                Select status
+                              </span>
+                              <IconChevronDown
+                                size={16}
+                                stroke={1.5}
+                                className="text-[var(--color-text-default)] rotate-180"
+                              />
+                            </button>
+                            <div className="w-full bg-[var(--select-menu-bg)] border border-[var(--select-menu-border)] rounded-[var(--select-menu-radius)] shadow-[var(--select-menu-shadow)] overflow-hidden">
+                              <div className="flex items-center justify-between px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)] text-[length:var(--select-item-font-size)] leading-[var(--select-item-line-height)] font-medium text-[var(--color-text-default)] hover:bg-[var(--select-item-hover-bg)] cursor-pointer border-b border-[var(--color-border-subtle)]">
+                                Active
+                              </div>
+                              <div className="flex items-center justify-between px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)] text-[length:var(--select-item-font-size)] leading-[var(--select-item-line-height)] font-medium text-[var(--color-text-default)] hover:bg-[var(--select-item-hover-bg)] cursor-pointer border-b border-[var(--color-border-subtle)]">
+                                Shutoff
+                              </div>
+                              <div className="flex items-center justify-between px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)] text-[length:var(--select-item-font-size)] leading-[var(--select-item-line-height)] font-medium text-[var(--color-text-default)] hover:bg-[var(--select-item-hover-bg)] cursor-pointer">
+                                Building
+                              </div>
+                            </div>
+                          </VStack>
+                        </VStack>
+                        {/* With selected item */}
+                        <VStack gap={1}>
+                          <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                            With Selection
+                          </span>
+                          <VStack gap={1} className="w-[200px]">
+                            <button className="flex items-center justify-between gap-2 w-full h-[var(--input-height-md)] px-[var(--select-padding-x)] text-[length:var(--select-font-size)] leading-[var(--select-line-height)] bg-[var(--select-bg)] border border-solid border-[var(--select-border-focus)] rounded-[var(--select-radius)] cursor-pointer">
+                              <span className="text-body-md text-[var(--color-text-default)]">
+                                Active
+                              </span>
+                              <IconChevronDown
+                                size={16}
+                                stroke={1.5}
+                                className="text-[var(--color-text-default)] rotate-180"
+                              />
+                            </button>
+                            <div className="w-full bg-[var(--select-menu-bg)] border border-[var(--select-menu-border)] rounded-[var(--select-menu-radius)] shadow-[var(--select-menu-shadow)] overflow-hidden">
+                              <div className="flex items-center justify-between px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)] text-[length:var(--select-item-font-size)] leading-[var(--select-item-line-height)] font-medium bg-[var(--select-item-selected-bg)] text-[var(--select-item-selected-text)] cursor-pointer border-b border-[var(--color-border-subtle)]">
+                                Active <IconCheck size={14} className="shrink-0" />
+                              </div>
+                              <div className="flex items-center justify-between px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)] text-[length:var(--select-item-font-size)] leading-[var(--select-item-line-height)] font-medium text-[var(--color-text-default)] hover:bg-[var(--select-item-hover-bg)] cursor-pointer border-b border-[var(--color-border-subtle)]">
+                                Shutoff
+                              </div>
+                              <div className="flex items-center justify-between px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)] text-[length:var(--select-item-font-size)] leading-[var(--select-item-line-height)] font-medium text-[var(--color-text-default)] hover:bg-[var(--select-item-hover-bg)] cursor-pointer">
+                                Building
+                              </div>
+                            </div>
+                          </VStack>
+                        </VStack>
+                        {/* With hover state */}
+                        <VStack gap={1}>
+                          <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                            Hover State
+                          </span>
+                          <VStack gap={1} className="w-[200px]">
+                            <button className="flex items-center justify-between gap-2 w-full h-[var(--input-height-md)] px-[var(--select-padding-x)] text-[length:var(--select-font-size)] leading-[var(--select-line-height)] bg-[var(--select-bg)] border border-solid border-[var(--select-border-focus)] rounded-[var(--select-radius)] cursor-pointer">
+                              <span className="text-body-md text-[var(--color-text-muted)]">
+                                Select status
+                              </span>
+                              <IconChevronDown
+                                size={16}
+                                stroke={1.5}
+                                className="text-[var(--color-text-default)] rotate-180"
+                              />
+                            </button>
+                            <div className="w-full bg-[var(--select-menu-bg)] border border-[var(--select-menu-border)] rounded-[var(--select-menu-radius)] shadow-[var(--select-menu-shadow)] overflow-hidden">
+                              <div className="flex items-center justify-between px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)] text-[length:var(--select-item-font-size)] leading-[var(--select-item-line-height)] font-medium text-[var(--color-text-default)] cursor-pointer border-b border-[var(--color-border-subtle)]">
+                                Active
+                              </div>
+                              <div className="flex items-center justify-between px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)] text-[length:var(--select-item-font-size)] leading-[var(--select-item-line-height)] font-medium bg-[var(--select-item-hover-bg)] text-[var(--color-text-default)] cursor-pointer border-b border-[var(--color-border-subtle)]">
+                                Shutoff
+                              </div>
+                              <div className="flex items-center justify-between px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)] text-[length:var(--select-item-font-size)] leading-[var(--select-item-line-height)] font-medium text-[var(--color-text-default)] cursor-pointer">
+                                Building
+                              </div>
+                            </div>
+                          </VStack>
+                        </VStack>
+                        {/* With disabled options */}
+                        <VStack gap={1}>
+                          <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                            Disabled Items
+                          </span>
+                          <VStack gap={1} className="w-[200px]">
+                            <button className="flex items-center justify-between gap-2 w-full h-[var(--input-height-md)] px-[var(--select-padding-x)] text-[length:var(--select-font-size)] leading-[var(--select-line-height)] bg-[var(--select-bg)] border border-solid border-[var(--select-border-focus)] rounded-[var(--select-radius)] cursor-pointer">
+                              <span className="text-body-md text-[var(--color-text-default)]">
+                                Medium
+                              </span>
+                              <IconChevronDown
+                                size={16}
+                                stroke={1.5}
+                                className="text-[var(--color-text-default)] rotate-180"
+                              />
+                            </button>
+                            <div className="w-full bg-[var(--select-menu-bg)] border border-[var(--select-menu-border)] rounded-[var(--select-menu-radius)] shadow-[var(--select-menu-shadow)] overflow-hidden">
+                              <div className="flex items-center justify-between px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)] text-[length:var(--select-item-font-size)] leading-[var(--select-item-line-height)] font-medium text-[var(--color-text-default)] hover:bg-[var(--select-item-hover-bg)] cursor-pointer border-b border-[var(--color-border-subtle)]">
+                                Small (2 vCPU)
+                              </div>
+                              <div className="flex items-center justify-between px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)] text-[length:var(--select-item-font-size)] leading-[var(--select-item-line-height)] font-medium bg-[var(--select-item-selected-bg)] text-[var(--select-item-selected-text)] cursor-pointer border-b border-[var(--color-border-subtle)]">
+                                Medium (4 vCPU) <IconCheck size={14} className="shrink-0" />
+                              </div>
+                              <div className="flex items-center justify-between px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)] text-[length:var(--select-item-font-size)] leading-[var(--select-item-line-height)] font-medium text-[var(--color-text-subtle)] cursor-not-allowed border-b border-[var(--color-border-subtle)]">
+                                Large (8 vCPU)
+                              </div>
+                              <div className="flex items-center justify-between px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)] text-[length:var(--select-item-font-size)] leading-[var(--select-item-line-height)] font-medium text-[var(--color-text-subtle)] cursor-not-allowed">
+                                X-Large (16 vCPU)
+                              </div>
+                            </div>
+                          </VStack>
+                        </VStack>
+                      </div>
+                    </VStack>
+
                     {/* Status */}
                     <VStack gap={3}>
                       <Label>Status</Label>
@@ -6026,6 +6154,41 @@ outline: 2px solid var(--color-border-focus);`}
                         description="Automatically scale instances based on demand"
                         defaultChecked
                       />
+                    </VStack>
+
+                    {/* Mini Toggle (Chart Controls) */}
+                    <VStack gap={3}>
+                      <Label>Mini Toggle (Chart Controls)</Label>
+                      <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)] mb-2">
+                        <code>size: 24×12px</code> · <code>thumb: 8×8px</code> ·{' '}
+                        <code>border: 1px</code> · <code>radius: 6px</code>
+                      </div>
+                      <div className="flex gap-8 items-center">
+                        <VStack gap={2}>
+                          <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                            Off
+                          </span>
+                          <span className="toggleSwitch" />
+                        </VStack>
+                        <VStack gap={2}>
+                          <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                            On
+                          </span>
+                          <span className="toggleSwitch toggleSwitchActive" />
+                        </VStack>
+                        <VStack gap={2}>
+                          <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                            Usage Example
+                          </span>
+                          <div className="flex items-center gap-2 text-body-sm text-[var(--color-text-default)]">
+                            <span>CPU</span>
+                            <span className="toggleSwitch toggleSwitchActive" />
+                            <span className="text-[var(--color-border-default)]">|</span>
+                            <span>Memory</span>
+                            <span className="toggleSwitch" />
+                          </div>
+                        </VStack>
+                      </div>
                     </VStack>
                   </VStack>
                 </Section>
@@ -6975,10 +7138,13 @@ outline: 2px solid var(--color-border-focus);`}
                           <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                             Active
                           </span>
-                          <div className="flex flex-wrap gap-2 items-center">
-                            <Tooltip content="active">
+                          <div className="flex flex-wrap gap-4 items-start">
+                            <VStack gap={1} align="center">
                               <StatusIndicator status="active" layout="icon-only" />
-                            </Tooltip>
+                              <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                                active
+                              </span>
+                            </VStack>
                           </div>
                         </VStack>
                         {/* Error */}
@@ -6986,10 +7152,13 @@ outline: 2px solid var(--color-border-focus);`}
                           <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                             Error
                           </span>
-                          <div className="flex flex-wrap gap-2 items-center">
-                            <Tooltip content="error">
+                          <div className="flex flex-wrap gap-4 items-start">
+                            <VStack gap={1} align="center">
                               <StatusIndicator status="error" layout="icon-only" />
-                            </Tooltip>
+                              <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                                error
+                              </span>
+                            </VStack>
                           </div>
                         </VStack>
                         {/* Action */}
@@ -6997,13 +7166,19 @@ outline: 2px solid var(--color-border-focus);`}
                           <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                             Action
                           </span>
-                          <div className="flex flex-wrap gap-2 items-center">
-                            <Tooltip content="building">
+                          <div className="flex flex-wrap gap-4 items-start">
+                            <VStack gap={1} align="center">
                               <StatusIndicator status="building" layout="icon-only" />
-                            </Tooltip>
-                            <Tooltip content="deleting">
+                              <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                                building
+                              </span>
+                            </VStack>
+                            <VStack gap={1} align="center">
                               <StatusIndicator status="deleting" layout="icon-only" />
-                            </Tooltip>
+                              <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                                deleting
+                              </span>
+                            </VStack>
                           </div>
                         </VStack>
                         {/* Warning */}
@@ -7011,16 +7186,25 @@ outline: 2px solid var(--color-border-focus);`}
                           <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                             Warning
                           </span>
-                          <div className="flex flex-wrap gap-2 items-center">
-                            <Tooltip content="verify-resized">
+                          <div className="flex flex-wrap gap-4 items-start">
+                            <VStack gap={1} align="center">
                               <StatusIndicator status="verify-resized" layout="icon-only" />
-                            </Tooltip>
-                            <Tooltip content="degraded">
+                              <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                                verify-resized
+                              </span>
+                            </VStack>
+                            <VStack gap={1} align="center">
                               <StatusIndicator status="degraded" layout="icon-only" />
-                            </Tooltip>
-                            <Tooltip content="no-monitor">
+                              <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                                degraded
+                              </span>
+                            </VStack>
+                            <VStack gap={1} align="center">
                               <StatusIndicator status="no-monitor" layout="icon-only" />
-                            </Tooltip>
+                              <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                                no-monitor
+                              </span>
+                            </VStack>
                           </div>
                         </VStack>
                         {/* Muted */}
@@ -7028,40 +7212,73 @@ outline: 2px solid var(--color-border-focus);`}
                           <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                             Muted
                           </span>
-                          <div className="flex flex-wrap gap-2 items-center">
-                            <Tooltip content="suspended">
+                          <div className="flex flex-wrap gap-4 items-start">
+                            <VStack gap={1} align="center">
                               <StatusIndicator status="suspended" layout="icon-only" />
-                            </Tooltip>
-                            <Tooltip content="shelved-offloaded">
+                              <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                                suspended
+                              </span>
+                            </VStack>
+                            <VStack gap={1} align="center">
                               <StatusIndicator status="shelved-offloaded" layout="icon-only" />
-                            </Tooltip>
-                            <Tooltip content="mounted">
+                              <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                                shelved
+                              </span>
+                            </VStack>
+                            <VStack gap={1} align="center">
                               <StatusIndicator status="mounted" layout="icon-only" />
-                            </Tooltip>
-                            <Tooltip content="shutoff">
+                              <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                                mounted
+                              </span>
+                            </VStack>
+                            <VStack gap={1} align="center">
                               <StatusIndicator status="shutoff" layout="icon-only" />
-                            </Tooltip>
-                            <Tooltip content="paused">
+                              <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                                shutoff
+                              </span>
+                            </VStack>
+                            <VStack gap={1} align="center">
                               <StatusIndicator status="paused" layout="icon-only" />
-                            </Tooltip>
-                            <Tooltip content="pending">
+                              <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                                paused
+                              </span>
+                            </VStack>
+                            <VStack gap={1} align="center">
                               <StatusIndicator status="pending" layout="icon-only" />
-                            </Tooltip>
-                            <Tooltip content="draft">
+                              <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                                pending
+                              </span>
+                            </VStack>
+                            <VStack gap={1} align="center">
                               <StatusIndicator status="draft" layout="icon-only" />
-                            </Tooltip>
-                            <Tooltip content="deactivated">
+                              <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                                draft
+                              </span>
+                            </VStack>
+                            <VStack gap={1} align="center">
                               <StatusIndicator status="deactivated" layout="icon-only" />
-                            </Tooltip>
-                            <Tooltip content="in-use">
+                              <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                                deactivated
+                              </span>
+                            </VStack>
+                            <VStack gap={1} align="center">
                               <StatusIndicator status="in-use" layout="icon-only" />
-                            </Tooltip>
-                            <Tooltip content="maintenance">
+                              <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                                in-use
+                              </span>
+                            </VStack>
+                            <VStack gap={1} align="center">
                               <StatusIndicator status="maintenance" layout="icon-only" />
-                            </Tooltip>
-                            <Tooltip content="down">
+                              <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                                maintenance
+                              </span>
+                            </VStack>
+                            <VStack gap={1} align="center">
                               <StatusIndicator status="down" layout="icon-only" />
-                            </Tooltip>
+                              <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                                down
+                              </span>
+                            </VStack>
                           </div>
                         </VStack>
                       </VStack>

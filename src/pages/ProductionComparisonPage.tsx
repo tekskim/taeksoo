@@ -16,7 +16,15 @@ import {
   Toggle,
   Chip,
 } from '@/design-system';
-import { IconExternalLink, IconCheck, IconX, IconMinus, IconRefresh } from '@tabler/icons-react';
+import {
+  IconExternalLink,
+  IconCheck,
+  IconX,
+  IconMinus,
+  IconRefresh,
+  IconArrowLeft,
+} from '@tabler/icons-react';
+import { useNavigate } from 'react-router-dom';
 
 /* ----------------------------------------
    Types
@@ -50,71 +58,173 @@ interface GuidelineItem {
    ---------------------------------------- */
 
 const tokenComparisons: TokenComparison[] = [
-  // Colors
+  // Primary Colors
   {
-    category: 'Color',
+    category: 'Primary',
     token: '--color-action-primary',
     tdsValue: '#2563EB',
     productionValue: '#2563EB',
     status: 'match',
   },
   {
-    category: 'Color',
+    category: 'Primary',
+    token: '--color-action-primary-hover',
+    tdsValue: '#1D4ED8',
+    productionValue: '#1D4ED8',
+    status: 'match',
+  },
+  {
+    category: 'Primary',
+    token: '--color-action-primary-pressed',
+    tdsValue: '#1E40AF',
+    productionValue: '#1E40AF',
+    status: 'match',
+  },
+  // State Colors
+  {
+    category: 'State',
     token: '--color-state-success',
     tdsValue: '#16A34A',
     productionValue: '#22C55E',
     status: 'different',
   },
   {
-    category: 'Color',
+    category: 'State',
+    token: '--color-state-success-subtle',
+    tdsValue: '#F0FDF4',
+    productionValue: '#DCFCE7',
+    status: 'different',
+  },
+  {
+    category: 'State',
     token: '--color-state-danger',
     tdsValue: '#DC2626',
     productionValue: '#EF4444',
     status: 'different',
   },
   {
-    category: 'Color',
+    category: 'State',
+    token: '--color-state-danger-subtle',
+    tdsValue: '#FEF2F2',
+    productionValue: '#FEE2E2',
+    status: 'different',
+  },
+  {
+    category: 'State',
     token: '--color-state-warning',
     tdsValue: '#D97706',
     productionValue: '#F59E0B',
     status: 'different',
   },
   {
-    category: 'Color',
+    category: 'State',
+    token: '--color-state-warning-subtle',
+    tdsValue: '#FFFBEB',
+    productionValue: '#FEF3C7',
+    status: 'different',
+  },
+  {
+    category: 'State',
+    token: '--color-state-info',
+    tdsValue: '#2563EB',
+    productionValue: '#3B82F6',
+    status: 'different',
+  },
+  // Surface Colors
+  {
+    category: 'Surface',
     token: '--color-surface-default',
     tdsValue: '#FFFFFF',
     productionValue: '#FFFFFF',
     status: 'match',
   },
   {
-    category: 'Color',
+    category: 'Surface',
     token: '--color-surface-subtle',
     tdsValue: '#F8FAFC',
     productionValue: '#F9FAFB',
     status: 'different',
   },
   {
-    category: 'Color',
+    category: 'Surface',
+    token: '--color-surface-muted',
+    tdsValue: '#F1F5F9',
+    productionValue: '#F3F4F6',
+    status: 'different',
+  },
+  {
+    category: 'Surface',
+    token: '--color-surface-disabled',
+    tdsValue: '#E2E8F0',
+    productionValue: '#E5E7EB',
+    status: 'different',
+  },
+  // Text Colors
+  {
+    category: 'Text',
     token: '--color-text-default',
     tdsValue: '#0F172A',
     productionValue: '#111827',
     status: 'different',
   },
   {
-    category: 'Color',
+    category: 'Text',
     token: '--color-text-muted',
     tdsValue: '#64748B',
     productionValue: '#6B7280',
     status: 'different',
   },
   {
-    category: 'Color',
+    category: 'Text',
+    token: '--color-text-subtle',
+    tdsValue: '#94A3B8',
+    productionValue: '#9CA3AF',
+    status: 'different',
+  },
+  {
+    category: 'Text',
+    token: '--color-text-disabled',
+    tdsValue: '#CBD5E1',
+    productionValue: '#D1D5DB',
+    status: 'different',
+  },
+  {
+    category: 'Text',
+    token: '--color-text-inverse',
+    tdsValue: '#FFFFFF',
+    productionValue: '#FFFFFF',
+    status: 'match',
+  },
+  // Border Colors
+  {
+    category: 'Border',
     token: '--color-border-default',
     tdsValue: '#E2E8F0',
     productionValue: '#E5E7EB',
     status: 'different',
   },
+  {
+    category: 'Border',
+    token: '--color-border-subtle',
+    tdsValue: '#F1F5F9',
+    productionValue: '#F3F4F6',
+    status: 'different',
+  },
+  {
+    category: 'Border',
+    token: '--color-border-strong',
+    tdsValue: '#CBD5E1',
+    productionValue: '#D1D5DB',
+    status: 'different',
+  },
   // Spacing
+  {
+    category: 'Spacing',
+    token: '--spacing-0',
+    tdsValue: '0',
+    productionValue: '0',
+    status: 'match',
+  },
   {
     category: 'Spacing',
     token: '--spacing-1',
@@ -150,29 +260,143 @@ const tokenComparisons: TokenComparison[] = [
     productionValue: '24px',
     status: 'match',
   },
-  // Typography
+  {
+    category: 'Spacing',
+    token: '--spacing-8',
+    tdsValue: '2rem',
+    productionValue: '32px',
+    status: 'match',
+  },
+  {
+    category: 'Spacing',
+    token: '--spacing-10',
+    tdsValue: '2.5rem',
+    productionValue: '40px',
+    status: 'match',
+  },
+  {
+    category: 'Spacing',
+    token: '--spacing-12',
+    tdsValue: '3rem',
+    productionValue: '48px',
+    status: 'match',
+  },
+  // Typography - Font Size
   {
     category: 'Typography',
-    token: '--font-size-body-md',
+    token: '--font-size-10',
+    tdsValue: '0.625rem',
+    productionValue: '10px',
+    status: 'match',
+  },
+  {
+    category: 'Typography',
+    token: '--font-size-11',
+    tdsValue: '0.6875rem',
+    productionValue: '11px',
+    status: 'match',
+  },
+  {
+    category: 'Typography',
+    token: '--font-size-12',
     tdsValue: '0.75rem',
     productionValue: '12px',
     status: 'match',
   },
   {
     category: 'Typography',
-    token: '--font-size-heading-h5',
+    token: '--font-size-14',
+    tdsValue: '0.875rem',
+    productionValue: '14px',
+    status: 'match',
+  },
+  {
+    category: 'Typography',
+    token: '--font-size-16',
     tdsValue: '1rem',
     productionValue: '16px',
     status: 'match',
   },
   {
     category: 'Typography',
-    token: '--line-height-body-md',
+    token: '--font-size-18',
     tdsValue: '1.125rem',
     productionValue: '18px',
     status: 'match',
   },
+  {
+    category: 'Typography',
+    token: '--font-size-24',
+    tdsValue: '1.5rem',
+    productionValue: '24px',
+    status: 'match',
+  },
+  {
+    category: 'Typography',
+    token: '--font-size-32',
+    tdsValue: '2rem',
+    productionValue: '32px',
+    status: 'match',
+  },
+  // Typography - Line Height
+  {
+    category: 'Typography',
+    token: '--line-height-16',
+    tdsValue: '1rem',
+    productionValue: '16px',
+    status: 'match',
+  },
+  {
+    category: 'Typography',
+    token: '--line-height-18',
+    tdsValue: '1.125rem',
+    productionValue: '18px',
+    status: 'match',
+  },
+  {
+    category: 'Typography',
+    token: '--line-height-20',
+    tdsValue: '1.25rem',
+    productionValue: '20px',
+    status: 'match',
+  },
+  {
+    category: 'Typography',
+    token: '--line-height-24',
+    tdsValue: '1.5rem',
+    productionValue: '24px',
+    status: 'match',
+  },
+  // Typography - Font Weight
+  {
+    category: 'Typography',
+    token: '--font-weight-regular',
+    tdsValue: '400',
+    productionValue: '400',
+    status: 'match',
+  },
+  {
+    category: 'Typography',
+    token: '--font-weight-medium',
+    tdsValue: '500',
+    productionValue: '500',
+    status: 'match',
+  },
+  {
+    category: 'Typography',
+    token: '--font-weight-semibold',
+    tdsValue: '600',
+    productionValue: '600',
+    status: 'match',
+  },
   // Radius
+  {
+    category: 'Radius',
+    token: '--radius-none',
+    tdsValue: '0',
+    productionValue: '0',
+    status: 'match',
+  },
   {
     category: 'Radius',
     token: '--radius-sm',
@@ -194,9 +418,68 @@ const tokenComparisons: TokenComparison[] = [
     productionValue: '8px',
     status: 'match',
   },
+  {
+    category: 'Radius',
+    token: '--radius-xl',
+    tdsValue: '1rem',
+    productionValue: '16px',
+    status: 'match',
+  },
+  {
+    category: 'Radius',
+    token: '--radius-full',
+    tdsValue: '9999px',
+    productionValue: '9999px',
+    status: 'match',
+  },
+  // Shadow
+  {
+    category: 'Shadow',
+    token: '--shadow-sm',
+    tdsValue: '0 1px 2px rgba(0,0,0,0.05)',
+    productionValue: '0 1px 2px rgba(0,0,0,0.05)',
+    status: 'match',
+  },
+  {
+    category: 'Shadow',
+    token: '--shadow-md',
+    tdsValue: '0 4px 6px rgba(0,0,0,0.1)',
+    productionValue: '0 4px 6px rgba(0,0,0,0.07)',
+    status: 'different',
+  },
+  {
+    category: 'Shadow',
+    token: '--shadow-lg',
+    tdsValue: '0 10px 15px rgba(0,0,0,0.1)',
+    productionValue: '0 10px 15px rgba(0,0,0,0.1)',
+    status: 'match',
+  },
+  // Duration
+  {
+    category: 'Duration',
+    token: '--duration-fast',
+    tdsValue: '150ms',
+    productionValue: '150ms',
+    status: 'match',
+  },
+  {
+    category: 'Duration',
+    token: '--duration-normal',
+    tdsValue: '200ms',
+    productionValue: '200ms',
+    status: 'match',
+  },
+  {
+    category: 'Duration',
+    token: '--duration-slow',
+    tdsValue: '300ms',
+    productionValue: '300ms',
+    status: 'match',
+  },
 ];
 
 const componentComparisons: ComponentComparison[] = [
+  // Form Controls
   {
     name: 'Button',
     tdsStatus: 'available',
@@ -209,40 +492,26 @@ const componentComparisons: ComponentComparison[] = [
     productionStatus: 'available',
     notes: 'fullWidth prop 추가됨',
   },
-  { name: 'Select', tdsStatus: 'available', productionStatus: 'available', notes: '동일한 API' },
+  { name: 'Textarea', tdsStatus: 'available', productionStatus: 'available', notes: '동일한 API' },
+  {
+    name: 'Select (Dropdown)',
+    tdsStatus: 'available',
+    productionStatus: 'available',
+    notes: 'TDS: Select, Prod: Dropdown',
+  },
   { name: 'Checkbox', tdsStatus: 'available', productionStatus: 'available', notes: '동일한 API' },
   { name: 'Toggle', tdsStatus: 'available', productionStatus: 'available', notes: '동일한 API' },
   {
-    name: 'Table',
+    name: 'Radio',
     tdsStatus: 'available',
     productionStatus: 'available',
-    notes: 'selectable, sortable 지원',
+    notes: 'TDS: Radio, Prod: RadioButton',
   },
-  { name: 'Modal', tdsStatus: 'available', productionStatus: 'available', notes: 'size prop 추가' },
   {
-    name: 'Drawer',
+    name: 'Slider (Range)',
     tdsStatus: 'available',
     productionStatus: 'available',
-    notes: 'footer prop 추가',
-  },
-  {
-    name: 'Tabs',
-    tdsStatus: 'available',
-    productionStatus: 'available',
-    notes: 'variant: underline/boxed',
-  },
-  {
-    name: 'Badge',
-    tdsStatus: 'available',
-    productionStatus: 'available',
-    notes: 'theme prop 추가',
-  },
-  { name: 'Tooltip', tdsStatus: 'available', productionStatus: 'available', notes: '동일한 API' },
-  {
-    name: 'Accordion',
-    tdsStatus: 'available',
-    productionStatus: 'partial',
-    notes: 'TDS에서 더 많은 variant 지원',
+    notes: 'TDS: Slider, Prod: Range',
   },
   {
     name: 'DatePicker',
@@ -251,25 +520,226 @@ const componentComparisons: ComponentComparison[] = [
     notes: 'mode: single/range',
   },
   {
+    name: 'FormField',
+    tdsStatus: 'available',
+    productionStatus: 'available',
+    notes: '동일한 compound 패턴',
+  },
+  // Data Display
+  {
+    name: 'Table',
+    tdsStatus: 'available',
+    productionStatus: 'available',
+    notes: 'selectable, sortable 지원',
+  },
+  {
+    name: 'Badge',
+    tdsStatus: 'available',
+    productionStatus: 'available',
+    notes: 'theme prop 추가',
+  },
+  { name: 'Tag', tdsStatus: 'available', productionStatus: 'available', notes: '동일한 API' },
+  { name: 'Chip', tdsStatus: 'available', productionStatus: 'missing', notes: 'TDS 전용 컴포넌트' },
+  {
+    name: 'StatusIndicator',
+    tdsStatus: 'available',
+    productionStatus: 'available',
+    notes: '동일한 API',
+  },
+  {
+    name: 'Pagination',
+    tdsStatus: 'available',
+    productionStatus: 'available',
+    notes: '동일한 API',
+  },
+  {
+    name: 'ProgressBar',
+    tdsStatus: 'available',
+    productionStatus: 'available',
+    notes: '동일한 API',
+  },
+  { name: 'Tooltip', tdsStatus: 'available', productionStatus: 'available', notes: '동일한 API' },
+  {
+    name: 'Typography',
+    tdsStatus: 'missing',
+    productionStatus: 'available',
+    notes: 'TDS는 유틸리티 클래스 사용',
+  },
+  // Overlay / Feedback
+  {
+    name: 'Modal (Overlay)',
+    tdsStatus: 'available',
+    productionStatus: 'available',
+    notes: 'size prop 추가',
+  },
+  {
+    name: 'Drawer',
+    tdsStatus: 'available',
+    productionStatus: 'available',
+    notes: 'footer prop 추가',
+  },
+  { name: 'Toast', tdsStatus: 'available', productionStatus: 'available', notes: '동일한 API' },
+  { name: 'Popover', tdsStatus: 'available', productionStatus: 'available', notes: '동일한 API' },
+  {
+    name: 'ContextMenu',
+    tdsStatus: 'available',
+    productionStatus: 'available',
+    notes: '동일한 API',
+  },
+  // Navigation
+  {
+    name: 'Tabs',
+    tdsStatus: 'available',
+    productionStatus: 'available',
+    notes: 'variant: underline/boxed',
+  },
+  {
+    name: 'TabBar',
+    tdsStatus: 'available',
+    productionStatus: 'available',
+    notes: '브라우저 스타일 탭',
+  },
+  {
+    name: 'Breadcrumb',
+    tdsStatus: 'available',
+    productionStatus: 'available',
+    notes: '동일한 API',
+  },
+  { name: 'Sidebar', tdsStatus: 'available', productionStatus: 'available', notes: '동일한 API' },
+  // Layout
+  {
+    name: 'Accordion',
+    tdsStatus: 'available',
+    productionStatus: 'available',
+    notes: '동일한 compound 패턴',
+  },
+  {
+    name: 'Disclosure',
+    tdsStatus: 'available',
+    productionStatus: 'available',
+    notes: '동일한 API',
+  },
+  {
+    name: 'CardList',
+    tdsStatus: 'missing',
+    productionStatus: 'available',
+    notes: 'Prod 전용 컴포넌트',
+  },
+  {
+    name: 'DetailCard',
+    tdsStatus: 'missing',
+    productionStatus: 'available',
+    notes: 'Prod 전용 컴포넌트',
+  },
+  // TDS 전용 컴포넌트
+  {
     name: 'SectionCard',
     tdsStatus: 'available',
     productionStatus: 'missing',
-    notes: 'TDS 전용 컴포넌트',
+    notes: 'TDS 전용 - 상세페이지 섹션',
   },
   {
     name: 'DetailHeader',
     tdsStatus: 'available',
     productionStatus: 'missing',
-    notes: 'TDS 전용 컴포넌트',
+    notes: 'TDS 전용 - 상세페이지 헤더',
   },
   {
     name: 'ListToolbar',
     tdsStatus: 'available',
     productionStatus: 'missing',
-    notes: 'TDS 전용 컴포넌트',
+    notes: 'TDS 전용 - 리스트 툴바',
   },
   {
     name: 'FilterSearchInput',
+    tdsStatus: 'available',
+    productionStatus: 'available',
+    notes: '동일한 API',
+  },
+  {
+    name: 'SearchInput',
+    tdsStatus: 'available',
+    productionStatus: 'missing',
+    notes: 'TDS 전용 컴포넌트',
+  },
+  {
+    name: 'NumberInput',
+    tdsStatus: 'available',
+    productionStatus: 'missing',
+    notes: 'TDS 전용 컴포넌트',
+  },
+  // Utility
+  {
+    name: 'Loading',
+    tdsStatus: 'available',
+    productionStatus: 'available',
+    notes: 'TDS: Loading, Prod: LoadingSpinner',
+  },
+  { name: 'Skeleton', tdsStatus: 'available', productionStatus: 'available', notes: '동일한 API' },
+  {
+    name: 'Portal',
+    tdsStatus: 'missing',
+    productionStatus: 'available',
+    notes: 'Prod 전용 컴포넌트',
+  },
+  {
+    name: 'ErrorBoundary',
+    tdsStatus: 'missing',
+    productionStatus: 'available',
+    notes: 'Prod 전용 컴포넌트',
+  },
+  // TDS 추가 컴포넌트
+  {
+    name: 'CopyButton',
+    tdsStatus: 'available',
+    productionStatus: 'missing',
+    notes: 'TDS 전용 컴포넌트',
+  },
+  {
+    name: 'Password',
+    tdsStatus: 'available',
+    productionStatus: 'missing',
+    notes: 'TDS 전용 컴포넌트',
+  },
+  {
+    name: 'InlineMessage',
+    tdsStatus: 'available',
+    productionStatus: 'missing',
+    notes: 'TDS 전용 컴포넌트',
+  },
+  { name: 'Menu', tdsStatus: 'available', productionStatus: 'missing', notes: 'TDS 전용 컴포넌트' },
+  {
+    name: 'MonitoringToolbar',
+    tdsStatus: 'available',
+    productionStatus: 'missing',
+    notes: 'TDS 전용 컴포넌트',
+  },
+  {
+    name: 'NotificationCenter',
+    tdsStatus: 'available',
+    productionStatus: 'missing',
+    notes: 'TDS 전용 컴포넌트',
+  },
+  {
+    name: 'SelectionIndicator',
+    tdsStatus: 'available',
+    productionStatus: 'missing',
+    notes: 'TDS 전용 컴포넌트',
+  },
+  {
+    name: 'TopBar',
+    tdsStatus: 'available',
+    productionStatus: 'missing',
+    notes: 'TDS 전용 컴포넌트',
+  },
+  {
+    name: 'WindowControl',
+    tdsStatus: 'available',
+    productionStatus: 'missing',
+    notes: 'TDS 전용 컴포넌트',
+  },
+  {
+    name: 'Wizard',
     tdsStatus: 'available',
     productionStatus: 'missing',
     notes: 'TDS 전용 컴포넌트',
@@ -340,6 +810,7 @@ const guidelines: GuidelineItem[] = [
    ---------------------------------------- */
 
 export function ProductionComparisonPage() {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('tokens');
   const [tokenFilter, setTokenFilter] = useState<string>('all');
   const [componentFilter, setComponentFilter] = useState<string>('all');
@@ -414,12 +885,21 @@ export function ProductionComparisonPage() {
         <VStack gap={6} className="max-w-7xl mx-auto pb-20">
           {/* Header */}
           <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-heading-h3 text-[var(--color-text-default)]">프로덕션 비교</h1>
-              <p className="text-body-md text-[var(--color-text-muted)] mt-1">
-                TDS와 프로덕션(thaki-ui) 디자인 시스템 비교 분석
-              </p>
-            </div>
+            <HStack gap={4} align="center">
+              <Button
+                variant="ghost"
+                size="sm"
+                icon={<IconArrowLeft size={16} />}
+                onClick={() => navigate('/')}
+                aria-label="뒤로가기"
+              />
+              <div>
+                <h1 className="text-heading-h3 text-[var(--color-text-default)]">프로덕션 비교</h1>
+                <p className="text-body-md text-[var(--color-text-muted)] mt-1">
+                  TDS와 프로덕션(thaki-ui) 디자인 시스템 비교 분석
+                </p>
+              </div>
+            </HStack>
             <HStack gap={2}>
               <Button
                 variant="secondary"

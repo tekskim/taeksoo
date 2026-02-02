@@ -50,16 +50,18 @@ export function WizardSummary({ title = 'Summary', items, onItemClick }: WizardS
               key={item.key}
               justify="between"
               align="center"
-              className={`py-1 ${onItemClick ? 'cursor-pointer hover:bg-[var(--color-surface-muted)] rounded px-1 -mx-1' : ''}`}
+              className={`py-1.5 ${onItemClick ? 'cursor-pointer hover:bg-[var(--color-surface-muted)] rounded px-1 -mx-1' : ''}`}
               onClick={() => onItemClick?.(item.key)}
             >
               <span className="text-body-md text-[var(--color-text-default)]">{item.label}</span>
 
-              {item.status === 'writing' ? (
-                <span className="text-body-sm text-[var(--color-text-subtle)]">Writing...</span>
-              ) : (
-                <WizardSectionStatusIcon status={item.status} />
-              )}
+              <div className="w-16 flex justify-end items-center">
+                {item.status === 'writing' ? (
+                  <span className="text-body-sm text-[var(--color-text-subtle)]">Writing...</span>
+                ) : (
+                  <WizardSectionStatusIcon status={item.status} />
+                )}
+              </div>
             </HStack>
           ))}
         </VStack>
