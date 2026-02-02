@@ -60,7 +60,7 @@ export default defineConfig({
             loader: 'postcss-loader',
             options: {
               postcssOptions: {
-                plugins: ['@tailwindcss/postcss'],
+                plugins: ['tailwindcss', 'autoprefixer'],
               },
             },
           },
