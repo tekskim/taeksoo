@@ -18,7 +18,7 @@ import {
   IconEdit,
   IconCheck,
   IconProgress,
-  IconPlus,
+  IconCirclePlus,
   IconChevronDown,
   IconChevronRight,
   IconSearch,
@@ -1030,7 +1030,7 @@ function PolicyEditorSection({
           {/* Add Permission Button */}
           <Button
             variant="secondary"
-            leftIcon={<IconPlus size={12} />}
+            leftIcon={<IconCirclePlus size={12} />}
             onClick={addPermission}
             className="text-[var(--color-action-primary)]"
           >

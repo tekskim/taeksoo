@@ -20,7 +20,7 @@ import {
   IconFile,
   IconCopy,
   IconSearch,
-  IconPlus,
+  IconCirclePlus,
   IconX,
   IconCheck,
 } from '@tabler/icons-react';
@@ -426,7 +426,7 @@ function StorageConfigSection({
                   <Button
                     variant="secondary"
                     size="sm"
-                    leftIcon={<IconPlus size={12} stroke={1.5} />}
+                    leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
                     onClick={addMountOption}
                   >
                     Add Option
@@ -524,7 +524,7 @@ function StorageConfigSection({
                             <Button
                               variant="secondary"
                               size="sm"
-                              leftIcon={<IconPlus size={12} stroke={1.5} />}
+                              leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
                               onClick={() => addNodeSelectorRule(selectorIndex)}
                             >
                               Add Rule
@@ -545,7 +545,7 @@ function StorageConfigSection({
                   <Button
                     variant="secondary"
                     size="sm"
-                    leftIcon={<IconPlus size={12} stroke={1.5} />}
+                    leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
                     onClick={addNodeSelector}
                   >
                     Add Node Selector
@@ -632,7 +632,7 @@ function LabelsAnnotationsSection({
                   <Button
                     variant="secondary"
                     size="sm"
-                    leftIcon={<IconPlus size={12} stroke={1.5} />}
+                    leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
                     onClick={onAddLabel}
                   >
                     Add Label
@@ -684,7 +684,7 @@ function LabelsAnnotationsSection({
                   <Button
                     variant="secondary"
                     size="sm"
-                    leftIcon={<IconPlus size={12} stroke={1.5} />}
+                    leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
                     onClick={onAddAnnotation}
                   >
                     Add Annotation

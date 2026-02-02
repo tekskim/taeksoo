@@ -22,7 +22,7 @@ import {
   Toggle,
   Badge,
 } from '@/design-system';
-import { IconBell, IconPalette, IconPlus, IconTrash } from '@tabler/icons-react';
+import { IconBell, IconPalette, IconCirclePlus, IconTrash } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 
 /* ----------------------------------------
@@ -634,7 +634,7 @@ export function CreateMCPTemplatePage() {
                             <Button
                               variant="outline"
                               size="sm"
-                              leftIcon={<IconPlus size={12} />}
+                              leftIcon={<IconCirclePlus size={12} />}
                               onClick={handleAddEnvVariable}
                             >
                               Add variable
@@ -755,7 +755,7 @@ export function CreateMCPTemplatePage() {
                             <Button
                               variant="outline"
                               size="sm"
-                              leftIcon={<IconPlus size={12} />}
+                              leftIcon={<IconCirclePlus size={12} />}
                               onClick={handleAddTool}
                             >
                               Add tool
@@ -890,7 +890,7 @@ export function CreateMCPTemplatePage() {
                                     <Button
                                       variant="outline"
                                       size="sm"
-                                      leftIcon={<IconPlus size={12} />}
+                                      leftIcon={<IconCirclePlus size={12} />}
                                       onClick={() => handleAddParameter(tool.id)}
                                     >
                                       Add variable

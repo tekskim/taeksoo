@@ -21,7 +21,7 @@ import {
   IconFile,
   IconCopy,
   IconSearch,
-  IconPlus,
+  IconCirclePlus,
   IconX,
   IconEdit,
   IconChevronDown,
@@ -509,7 +509,7 @@ function DataSection({
             <Button
               variant="outline"
               size="sm"
-              leftIcon={<IconPlus size={12} stroke={1.5} />}
+              leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
               onClick={addDataEntry}
             >
               Add Data Entry
@@ -629,7 +629,7 @@ function LabelsAnnotationsSection({
             <Button
               variant="outline"
               size="sm"
-              leftIcon={<IconPlus size={12} stroke={1.5} />}
+              leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
               onClick={onAddLabel}
             >
               Add Label
@@ -671,7 +671,7 @@ function LabelsAnnotationsSection({
             <Button
               variant="outline"
               size="sm"
-              leftIcon={<IconPlus size={12} stroke={1.5} />}
+              leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
               onClick={onAddAnnotation}
             >
               Add Annotation

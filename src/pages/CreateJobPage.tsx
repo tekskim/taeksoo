@@ -32,7 +32,7 @@ import {
   IconFile,
   IconCopy,
   IconSearch,
-  IconPlus,
+  IconCirclePlus,
   IconX,
   IconCirclePlus,
   IconChevronRight,
@@ -1710,7 +1710,7 @@ export function CreateJobPage() {
                           onClick={addContainerTab}
                           className="flex items-center justify-center h-[20px] px-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors text-[var(--color-text-muted)] shrink-0"
                         >
-                          <IconPlus size={12} stroke={1.5} />
+                          <IconCirclePlus size={12} stroke={1.5} />
                         </button>
                       </div>
                     </Tabs>
