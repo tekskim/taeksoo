@@ -1,11 +1,9 @@
 import { useState, useEffect, useMemo } from 'react';
 import {
   Button,
-  Tooltip,
   Tabs,
   TabList,
   Tab,
-  Select,
   Table,
   SearchInput,
   Pagination,
@@ -508,8 +506,8 @@ export function MCPToolsPage() {
       minWidth: columnMinWidths.name,
       sortable: true,
       render: (value: string, row) => (
-        <span 
-          className="text-[var(--color-action-primary)] font-medium hover:underline cursor-pointer truncate block" 
+        <span
+          className="text-[var(--color-action-primary)] font-medium hover:underline cursor-pointer truncate block"
           title={value}
           onClick={() => navigate(`/mcp-tools/${row.id}`)}
         >
@@ -540,7 +538,9 @@ export function MCPToolsPage() {
               }}
             />
           </div>
-          <span className="truncate" title={row.mcpServer.label}>{row.mcpServer.label}</span>
+          <span className="truncate" title={row.mcpServer.label}>
+            {row.mcpServer.label}
+          </span>
         </div>
       ),
     },
@@ -560,10 +560,14 @@ export function MCPToolsPage() {
       render: (_, row) => (
         <div className="flex gap-1 items-center overflow-hidden">
           {row.tags.slice(0, 2).map((tag, idx) => (
-            <Badge key={idx} theme="gray" type="subtle" size="sm">{tag}</Badge>
+            <Badge key={idx} theme="gray" type="subtle" size="sm">
+              {tag}
+            </Badge>
           ))}
           {row.tags.length > 2 && (
-            <span className="text-body-sm text-[var(--color-text-subtle)]">+{row.tags.length - 2}</span>
+            <span className="text-body-sm text-[var(--color-text-subtle)]">
+              +{row.tags.length - 2}
+            </span>
           )}
         </div>
       ),
@@ -574,9 +578,7 @@ export function MCPToolsPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
-      render: (value: string) => (
-        <span className="whitespace-nowrap">{value}</span>
-      ),
+      render: (value: string) => <span className="whitespace-nowrap">{value}</span>,
     },
     {
       key: 'actions',
@@ -625,7 +627,10 @@ export function MCPToolsPage() {
               Official
             </Badge>
           )}
-          <span className="text-[var(--color-action-primary)] font-medium hover:underline cursor-pointer truncate" title={row.title}>
+          <span
+            className="text-[var(--color-action-primary)] font-medium hover:underline cursor-pointer truncate"
+            title={row.title}
+          >
             {row.title}
           </span>
         </div>
@@ -664,9 +669,7 @@ export function MCPToolsPage() {
       flex: 1,
       minWidth: columnMinWidths.updatedAt,
       sortable: true,
-      render: (value: string) => (
-        <span className="whitespace-nowrap">{value}</span>
-      ),
+      render: (value: string) => <span className="whitespace-nowrap">{value}</span>,
     },
     {
       key: 'createdAt',
@@ -674,9 +677,7 @@ export function MCPToolsPage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
-      render: (value: string) => (
-        <span className="whitespace-nowrap">{value}</span>
-      ),
+      render: (value: string) => <span className="whitespace-nowrap">{value}</span>,
     },
     {
       key: 'actions',

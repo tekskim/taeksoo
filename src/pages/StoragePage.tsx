@@ -25,7 +25,6 @@ import {
   IconTarget,
 } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
-import { useProject } from '@/contexts/ProjectContext';
 
 /* ----------------------------------------
    Status Card Component
@@ -286,9 +285,7 @@ export function StoragePage() {
       flex: 1,
       minWidth: columnMinWidths.size,
       sortable: true,
-      render: (value: string) => (
-        <span className="whitespace-nowrap">{value ?? '-'}</span>
-      ),
+      render: (value: string) => <span className="whitespace-nowrap">{value ?? '-'}</span>,
     },
     {
       key: 'createdAt',
@@ -296,9 +293,7 @@ export function StoragePage() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
-      render: (value: string) => (
-        <span className="whitespace-nowrap">{value}</span>
-      ),
+      render: (value: string) => <span className="whitespace-nowrap">{value}</span>,
     },
     {
       key: 'actions',

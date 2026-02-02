@@ -109,24 +109,17 @@ function MCPToolHeader({
           <Button
             variant="secondary"
             size="sm"
-            leftIcon={status === 'active' ? <IconPlayerPause size={12} /> : <IconPlayerPlay size={12} />}
+            leftIcon={
+              status === 'active' ? <IconPlayerPause size={12} /> : <IconPlayerPlay size={12} />
+            }
             onClick={onDeactivate}
           >
             {status === 'active' ? 'Deactivate' : 'Activate'}
           </Button>
-          <Button
-            variant="secondary"
-            size="sm"
-            leftIcon={<IconCode size={12} />}
-          >
+          <Button variant="secondary" size="sm" leftIcon={<IconCode size={12} />}>
             View code
           </Button>
-          <Button
-            variant="danger"
-            size="sm"
-            leftIcon={<IconTrash size={12} />}
-            onClick={onDelete}
-          >
+          <Button variant="danger" size="sm" leftIcon={<IconTrash size={12} />} onClick={onDelete}>
             Delete
           </Button>
         </div>
@@ -162,13 +155,22 @@ function DetailsTabContent() {
         />
         <SectionCard.Content>
           <SectionCard.DataRow label="Name" value="send_slack_message" />
-          <SectionCard.DataRow label="Description" value="Send a message to a Slack channel or user" />
+          <SectionCard.DataRow
+            label="Description"
+            value="Send a message to a Slack channel or user"
+          />
           <SectionCard.DataRow label="Category" value="Communication" />
           <SectionCard.DataRow label="Tags">
             <div className="flex gap-1">
-              <Badge theme="gray" type="subtle" size="sm">messaging</Badge>
-              <Badge theme="gray" type="subtle" size="sm">team</Badge>
-              <Badge theme="gray" type="subtle" size="sm">real-time</Badge>
+              <Badge theme="gray" type="subtle" size="sm">
+                messaging
+              </Badge>
+              <Badge theme="gray" type="subtle" size="sm">
+                team
+              </Badge>
+              <Badge theme="gray" type="subtle" size="sm">
+                real-time
+              </Badge>
             </div>
           </SectionCard.DataRow>
         </SectionCard.Content>
@@ -272,9 +274,7 @@ function ExecutionLogsTabContent() {
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
-      render: (value: string) => (
-        <span className="whitespace-nowrap">{value}</span>
-      ),
+      render: (value: string) => <span className="whitespace-nowrap">{value}</span>,
     },
     {
       key: 'agent',
@@ -284,7 +284,10 @@ function ExecutionLogsTabContent() {
       sortable: true,
       render: (value: string) => (
         <div className="min-w-0">
-          <span className="text-[var(--color-action-primary)] font-medium hover:underline cursor-pointer truncate block" title={value}>
+          <span
+            className="text-[var(--color-action-primary)] font-medium hover:underline cursor-pointer truncate block"
+            title={value}
+          >
             {value}
           </span>
         </div>
@@ -296,9 +299,7 @@ function ExecutionLogsTabContent() {
       flex: 1,
       minWidth: columnMinWidths.size,
       sortable: true,
-      render: (value: string) => (
-        <span className="whitespace-nowrap">{value}</span>
-      ),
+      render: (value: string) => <span className="whitespace-nowrap">{value}</span>,
     },
     {
       key: 'input',
@@ -353,11 +354,7 @@ function ExecutionLogsTabContent() {
           />
         </div>
         <div className="h-4 w-px bg-[var(--color-border-default)]" />
-        <Button
-          variant="muted"
-          size="sm"
-          leftIcon={<IconRefresh size={12} />}
-        >
+        <Button variant="muted" size="sm" leftIcon={<IconRefresh size={12} />}>
           Refresh
         </Button>
       </div>
@@ -406,9 +403,15 @@ function SettingsTabContent() {
           <SectionCard.DataRow label="Visibility" value="All agents" />
           <SectionCard.DataRow label="Allowed agents">
             <div className="flex gap-1 flex-wrap">
-              <Badge theme="blue" type="subtle" size="sm">Customer Support Agent</Badge>
-              <Badge theme="blue" type="subtle" size="sm">Sales Agent</Badge>
-              <Badge theme="blue" type="subtle" size="sm">Marketing Agent</Badge>
+              <Badge theme="blue" type="subtle" size="sm">
+                Customer Support Agent
+              </Badge>
+              <Badge theme="blue" type="subtle" size="sm">
+                Sales Agent
+              </Badge>
+              <Badge theme="blue" type="subtle" size="sm">
+                Marketing Agent
+              </Badge>
             </div>
           </SectionCard.DataRow>
           <SectionCard.DataRow label="Rate limit per agent" value="50 requests/minute" />
@@ -458,7 +461,8 @@ function SettingsTabContent() {
             <div>
               <p className="text-label-md text-[var(--color-text-default)]">Delete this tool</p>
               <p className="text-body-sm text-[var(--color-text-subtle)]">
-                Once deleted, this tool cannot be recovered. All execution logs will also be deleted.
+                Once deleted, this tool cannot be recovered. All execution logs will also be
+                deleted.
               </p>
             </div>
             <Button variant="danger" size="sm" leftIcon={<IconTrash size={12} />}>
@@ -483,7 +487,8 @@ export function MCPToolDetailPage() {
   const toolData = {
     id: id || 'tool-1',
     name: 'send_slack_message',
-    description: 'Send a message to a Slack channel or user. Supports rich text formatting and attachments.',
+    description:
+      'Send a message to a Slack channel or user. Supports rich text formatting and attachments.',
     tags: ['messaging', 'team', 'real-time'],
     status: 'active' as const,
     mcpServer: 'Slack',
@@ -495,10 +500,7 @@ export function MCPToolDetailPage() {
   return (
     <AgentPageLayout
       title={toolData.name}
-      breadcrumbItems={[
-        { label: 'MCP tools', href: '/mcp-tools' },
-        { label: toolData.name },
-      ]}
+      breadcrumbItems={[{ label: 'MCP tools', href: '/mcp-tools' }, { label: toolData.name }]}
       sidebar={<AgentSidebar />}
     >
       <div className="flex flex-col gap-6 w-full">
