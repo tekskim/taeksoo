@@ -256,3 +256,129 @@ export function ExamplePage() {
 # 문제 발생 시
 git checkout v1.0.0-before-migration
 ```
+
+---
+
+## 전체 컴포넌트 분석
+
+### 컴포넌트 분류
+
+#### 공통 컴포넌트 (21개) - API 비교 필요
+| 컴포넌트 | API 호환성 | 조치 |
+|----------|-----------|------|
+| Badge | ⚠️ theme 약어 | alias 추가 |
+| Button | ⚠️ appearance 분리 | 호환 레이어 |
+| Checkbox | ⚠️ onChange 시그니처 | 오버로드 |
+| Table | ⚠️ rows→data, header→label | alias 추가 |
+| Tabs | ❌ 구조 다름 | 변환 가이드 |
+| Modal | ⚠️ actionConfig vs props | 호환 레이어 |
+| Input | ⚠️ filter 제거, variant 추가 | 호환 레이어 |
+| Tooltip | ✅ 유사 | 거의 호환 |
+| Toast | ⚠️ Provider 패턴 | 구조 다름 |
+| Pagination | ⚠️ totalCount→totalPages | 호환 레이어 |
+| Breadcrumb | ✅ 유사 | 거의 호환 |
+| ProgressBar | ⚠️ variant 변경 | 호환 레이어 |
+| StatusIndicator | ✅ 유사 | 거의 호환 |
+| Toggle | ✅ 유사 | 거의 호환 |
+| Disclosure | ⚠️ Compound 패턴 | 구조 다름 |
+| FormField | ⚠️ Compound 패턴 | 구조 다름 |
+| ContextMenu | ✅ 유사 | 거의 호환 |
+| DatePicker | 확인 필요 | - |
+| FloatingCard | ⚠️ 사용 사례 다름 | 확인 필요 |
+| InlineMessage | ✅ 유사 | 거의 호환 |
+| MonitoringToolbar | ✅ 유사 | 거의 호환 |
+
+#### thaki-ui에만 있는 컴포넌트 (26개)
+| 컴포넌트 | tds 추가 필요 | 비고 |
+|----------|---------------|------|
+| **Dropdown** | 🔴 필수 | Portal, 키보드 네비게이션 |
+| **Skeleton** | 🟡 권장 | 로딩 상태 UI |
+| **Typography/Title** | ⚪ 불필요 | tds는 유틸리티 클래스 사용 |
+| **Accordion** | 🟡 권장 | 다중 열림 모드 |
+| **Password** | 🟡 권장 | 비밀번호 전용 |
+| **Tag** | 🟡 권장 | Chip과 차별화 |
+| **CopyButton** | 🟡 권장 | 클립보드 유틸리티 |
+| **ErrorBoundary/Error** | 🟡 권장 | 에러 처리 |
+| **Fieldset** | 🟡 권장 | 폼 그룹화 |
+| **Portal** | 🟡 권장 | 스크롤/리사이즈 대응 |
+| **Overlay/Dim** | ⚪ 불필요 | Modal/Drawer에 통합 |
+| **AppLayout/Layout/CreateLayout** | ⚪ 불필요 | 도메인 특화 |
+| **Sidebar/ToolBar** | ⚪ 불필요 | 도메인 특화 |
+| **Icon** | ⚪ 불필요 | Tabler Icons 사용 |
+| **FilterSearch** | ⚪ 불필요 | FilterSearchInput 있음 |
+| **InfoContainer** | ⚪ 불필요 | SectionCard로 대체 |
+| **Editor/Terminal** | ⚪ 불필요 | 도메인 특화 |
+| **TabContainer/TabSelector** | ⚪ 불필요 | Tabs에 통합 |
+| **NavigationControls/FrameControls** | ⚪ 불필요 | TopBar에 통합 |
+| **LangButton** | ⚪ 불필요 | 도메인 특화 |
+| **MultiItemDisplay** | ⚪ 불필요 | 도메인 특화 |
+| **RefreshButton** | ⚪ 불필요 | Button으로 구현 |
+| **TableSettingDrawer** | ⚪ 불필요 | 도메인 특화 |
+| **DeleteResourceModal/ActionModal/ResourceActionModal** | ⚪ 불필요 | ConfirmModal로 대체 |
+
+#### tds에만 있는 컴포넌트 (19개) - 프로덕션에 추가 검토
+| 컴포넌트 | thaki-ui 유사 | 프로덕션 추가 |
+|----------|---------------|---------------|
+| **Drawer** | Sheet/SidePanel | 🟡 권장 |
+| **Modal/ConfirmModal** | Dialog | 🟡 권장 (ConfirmModal) |
+| **Select** | Dropdown | ✅ 매핑 가능 |
+| **Slider/RangeSlider** | Range | 🟡 권장 |
+| **ListToolbar** | Toolbar | 🟡 권장 (Compound) |
+| **SectionCard** | Card/Section | 🟡 권장 (Compound) |
+| **DetailHeader** | PageHeader | 🟡 권장 (Compound) |
+| **Chip** | Tag/Badge | 🟡 권장 |
+| **NotificationCenter** | Notification | 🟡 권장 |
+| **Wizard** | Stepper | 🟡 권장 |
+| **SNBMenuItem** | NavItem | 🟡 권장 |
+| **TopBar** | Header | 🟡 권장 |
+| **SelectionIndicator** | - | 🟡 권장 |
+| **CardTitle** | - | ⚪ tds 특화 |
+| **Menu (compound)** | Menu | ⚪ 구조 다름 |
+| **Loading** | Spinner | ⚪ 기능 다름 |
+| **WindowControl** | - | ⚪ 데스크톱 전용 |
+| **Icons (custom)** | - | ⚪ tds 전용 |
+
+---
+
+## 수정된 Phase 2 계획
+
+### 우선순위 1: 빠른 호환 (이름 변경만)
+- Badge theme alias
+- Table props alias
+- Tabs variant alias
+- Button size='xs' 추가
+
+### 우선순위 2: 호환 레이어 추가
+- Button appearance prop
+- Badge layout prop  
+- Checkbox onChange 오버로드
+- Input 호환 props
+- Pagination totalCount 지원
+
+### 우선순위 3: tds에 추가할 컴포넌트
+- Dropdown (thaki-ui 방식)
+- Skeleton
+- Password
+- Tag
+- Accordion
+
+### 우선순위 4: 문서화
+- Tabs 구조 변환 가이드
+- Toast Provider 패턴 가이드
+- Compound Component 사용 가이드
+
+---
+
+## 결론
+
+### 호환성 수준
+- **완전 호환**: 7개 (Tooltip, Breadcrumb, StatusIndicator, Toggle, ContextMenu, InlineMessage, MonitoringToolbar)
+- **alias 추가 필요**: 5개 (Badge, Table, Tabs variant, Button size, Pagination)
+- **호환 레이어 필요**: 6개 (Button, Checkbox, Input, ProgressBar, FormField, Disclosure)
+- **구조적 차이**: 3개 (Tabs, Toast, Modal)
+
+### 예상 작업량
+- 우선순위 1: 2-3시간
+- 우선순위 2: 4-6시간
+- 우선순위 3: 1-2일
+- 우선순위 4: 0.5일
