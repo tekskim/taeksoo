@@ -1190,12 +1190,12 @@ export function CreatePodPage() {
     closable: tab.closable,
   }));
 
-  // Active form tab (Pod Template, Container-X)
+  // Active form tab (Pod, Container-X)
   const [activeTab, setActiveTab] = useState('pod');
 
   // Build inner tabs for the form
   const formTabs = [
-    { id: 'pod', label: 'Pod Template' },
+    { id: 'pod', label: 'Pod' },
     ...containerTabs.map((c) => ({ id: c.id, label: c.name, closable: containerTabs.length > 1 })),
   ];
 
@@ -1688,7 +1688,7 @@ export function CreatePodPage() {
                       </div>
                     </Tabs>
                   </div>
-                  {/* Pod Template Tab */}
+                  {/* Pod Tab */}
                   {activeTab === 'pod' && (
                     <>
                       <BasicInfoSection
