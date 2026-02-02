@@ -762,175 +762,94 @@ function LabelsAnnotationsSection({
    ---------------------------------------- */
 
 interface ScalingPolicySectionProps {
-  strategy: 'rolling-update' | 'on-delete';
-  onStrategyChange: (value: 'rolling-update' | 'on-delete') => void;
-  maxSurge: number;
-  onMaxSurgeChange: (value: number) => void;
-  maxSurgeUnit: string;
-  onMaxSurgeUnitChange: (value: string) => void;
-  maxUnavailable: number;
-  onMaxUnavailableChange: (value: number) => void;
-  maxUnavailableUnit: string;
-  onMaxUnavailableUnitChange: (value: string) => void;
-  minReady: number;
-  onMinReadyChange: (value: number) => void;
-  revisionHistoryLimit: number;
-  onRevisionHistoryLimitChange: (value: number) => void;
-  progressDeadline: number;
-  onProgressDeadlineChange: (value: number) => void;
+  completions: number;
+  onCompletionsChange: (value: number) => void;
+  parallelism: number;
+  onParallelismChange: (value: number) => void;
+  backOffLimit: number;
+  onBackOffLimitChange: (value: number) => void;
+  activeDeadline: number;
+  onActiveDeadlineChange: (value: number) => void;
 }
 
 function ScalingPolicySection({
-  strategy,
-  onStrategyChange,
-  maxSurge,
-  onMaxSurgeChange,
-  maxSurgeUnit,
-  onMaxSurgeUnitChange,
-  maxUnavailable,
-  onMaxUnavailableChange,
-  maxUnavailableUnit,
-  onMaxUnavailableUnitChange,
-  minReady,
-  onMinReadyChange,
-  revisionHistoryLimit,
-  onRevisionHistoryLimitChange,
-  progressDeadline,
-  onProgressDeadlineChange,
+  completions,
+  onCompletionsChange,
+  parallelism,
+  onParallelismChange,
+  backOffLimit,
+  onBackOffLimitChange,
+  activeDeadline,
+  onActiveDeadlineChange,
 }: ScalingPolicySectionProps) {
   return (
     <SectionCard>
       <SectionCard.Header title="Scaling and Upgrade Policy" />
       <SectionCard.Content>
         <VStack gap={6}>
-          {/* Strategy Selection */}
+          {/* Completions */}
           <VStack gap={3}>
-            <Radio
-              checked={strategy === 'rolling-update'}
-              onChange={() => onStrategyChange('rolling-update')}
-              label="Rolling Update"
-            />
-            <Radio
-              checked={strategy === 'on-delete'}
-              onChange={() => onStrategyChange('on-delete')}
-              label="On Delete"
-            />
-          </VStack>
-
-          {/* Max Surge */}
-          <VStack gap={3}>
-            <VStack gap={1}>
-              <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
-                Max Surge
-              </span>
-              <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-                The maximum number of additional pods that can be created during an update.
-              </p>
-            </VStack>
-            <HStack gap={2}>
-              <NumberInput
-                value={maxSurge}
-                onChange={onMaxSurgeChange}
-                min={0}
-                className="w-[320px]"
-              />
-              <Select
-                options={UNIT_OPTIONS}
-                value={maxSurgeUnit}
-                onChange={(value) => onMaxSurgeUnitChange(value)}
-                className="w-[80px]"
-              />
-            </HStack>
-          </VStack>
-
-          {/* Max Unavailable */}
-          <VStack gap={3}>
-            <VStack gap={1}>
-              <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
-                Max Unavailable
-              </span>
-              <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-                The maximum number of pods that can be unavailable during an update.
-              </p>
-            </VStack>
-            <HStack gap={2}>
-              <NumberInput
-                value={maxUnavailable}
-                onChange={onMaxUnavailableChange}
-                min={0}
-                className="w-[320px]"
-              />
-              <Select
-                options={UNIT_OPTIONS}
-                value={maxUnavailableUnit}
-                onChange={(value) => onMaxUnavailableUnitChange(value)}
-                className="w-[80px]"
-              />
-            </HStack>
-          </VStack>
-
-          {/* Minimum Ready */}
-          <VStack gap={3}>
-            <VStack gap={1}>
-              <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
-                Minimum Ready
-              </span>
-              <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-                The minimum time a pod must remain in a ready state before it is considered
-                available.
-              </p>
-            </VStack>
+            <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+              Completions
+            </span>
             <HStack gap={2} align="center">
               <NumberInput
-                value={minReady}
-                onChange={onMinReadyChange}
+                value={completions}
+                onChange={onCompletionsChange}
                 min={0}
                 className="w-[320px]"
               />
               <span className="text-[12px] text-[var(--color-text-default)] whitespace-nowrap">
-                Seconds
+                Times
               </span>
             </HStack>
           </VStack>
 
-          {/* Revision History Limit */}
+          {/* Parallelism */}
           <VStack gap={3}>
-            <VStack gap={1}>
-              <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
-                Revision History Limit
-              </span>
-              <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-                The maximum number of revision histories to retain for the Deployment.
-              </p>
-            </VStack>
+            <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+              Parallelism
+            </span>
             <HStack gap={2} align="center">
               <NumberInput
-                value={revisionHistoryLimit}
-                onChange={onRevisionHistoryLimitChange}
+                value={parallelism}
+                onChange={onParallelismChange}
                 min={0}
                 className="w-[320px]"
               />
               <span className="text-[12px] text-[var(--color-text-default)] whitespace-nowrap">
-                Revisions
+                Times
               </span>
             </HStack>
           </VStack>
 
-          {/* Progress Deadline */}
+          {/* Back Off Limit */}
           <VStack gap={3}>
-            <VStack gap={1}>
-              <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
-                Progress Deadline
-              </span>
-              <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-                The maximum time allowed for a Deployment to progress before it is considered
-                failed.
-              </p>
-            </VStack>
+            <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+              Back Off Limit
+            </span>
             <HStack gap={2} align="center">
               <NumberInput
-                value={progressDeadline}
-                onChange={onProgressDeadlineChange}
+                value={backOffLimit}
+                onChange={onBackOffLimitChange}
+                min={0}
+                className="w-[320px]"
+              />
+              <span className="text-[12px] text-[var(--color-text-default)] whitespace-nowrap">
+                Times
+              </span>
+            </HStack>
+          </VStack>
+
+          {/* Active Deadline */}
+          <VStack gap={3}>
+            <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+              Active Deadline
+            </span>
+            <HStack gap={2} align="center">
+              <NumberInput
+                value={activeDeadline}
+                onChange={onActiveDeadlineChange}
                 min={0}
                 className="w-[320px]"
               />
@@ -968,15 +887,11 @@ export function CreateJobPage() {
   const [labels, setLabels] = useState<Label[]>([]);
   const [annotations, setAnnotations] = useState<Annotation[]>([]);
 
-  // Scaling & Upgrade Policy state
-  const [strategy, setStrategy] = useState<'rolling-update' | 'on-delete'>('rolling-update');
-  const [maxSurge, setMaxSurge] = useState(25);
-  const [maxSurgeUnit, setMaxSurgeUnit] = useState('%');
-  const [maxUnavailable, setMaxUnavailable] = useState(25);
-  const [maxUnavailableUnit, setMaxUnavailableUnit] = useState('%');
-  const [minReady, setMinReady] = useState(0);
-  const [revisionHistoryLimit, setRevisionHistoryLimit] = useState(10);
-  const [progressDeadline, setProgressDeadline] = useState(600);
+  // Scaling & Upgrade Policy state (Job-specific)
+  const [completions, setCompletions] = useState(1);
+  const [parallelism, setParallelism] = useState(1);
+  const [backOffLimit, setBackOffLimit] = useState(6);
+  const [activeDeadline, setActiveDeadline] = useState(0);
 
   // No section status state needed - all sections are always visible
 
@@ -1297,38 +1212,28 @@ export function CreateJobPage() {
       return;
     }
 
-    console.log('Creating deployment:', {
+    console.log('Creating job:', {
       namespace,
       name,
-      replicas,
       description,
       labels,
       annotations,
-      strategy,
-      maxSurge,
-      maxSurgeUnit,
-      maxUnavailable,
-      maxUnavailableUnit,
-      minReady,
-      revisionHistoryLimit,
-      progressDeadline,
+      completions,
+      parallelism,
+      backOffLimit,
+      activeDeadline,
     });
-    navigate('/container/deployments');
+    navigate('/container/jobs');
   }, [
     namespace,
     name,
-    replicas,
     description,
     labels,
     annotations,
-    strategy,
-    maxSurge,
-    maxSurgeUnit,
-    maxUnavailable,
-    maxUnavailableUnit,
-    minReady,
-    revisionHistoryLimit,
-    progressDeadline,
+    completions,
+    parallelism,
+    backOffLimit,
+    activeDeadline,
     navigate,
   ]);
 
@@ -1837,22 +1742,14 @@ export function CreateJobPage() {
                         onUpdateAnnotation={updateAnnotation}
                       />
                       <ScalingPolicySection
-                        strategy={strategy}
-                        onStrategyChange={setStrategy}
-                        maxSurge={maxSurge}
-                        onMaxSurgeChange={setMaxSurge}
-                        maxSurgeUnit={maxSurgeUnit}
-                        onMaxSurgeUnitChange={setMaxSurgeUnit}
-                        maxUnavailable={maxUnavailable}
-                        onMaxUnavailableChange={setMaxUnavailable}
-                        maxUnavailableUnit={maxUnavailableUnit}
-                        onMaxUnavailableUnitChange={setMaxUnavailableUnit}
-                        minReady={minReady}
-                        onMinReadyChange={setMinReady}
-                        revisionHistoryLimit={revisionHistoryLimit}
-                        onRevisionHistoryLimitChange={setRevisionHistoryLimit}
-                        progressDeadline={progressDeadline}
-                        onProgressDeadlineChange={setProgressDeadline}
+                        completions={completions}
+                        onCompletionsChange={setCompletions}
+                        parallelism={parallelism}
+                        onParallelismChange={setParallelism}
+                        backOffLimit={backOffLimit}
+                        onBackOffLimitChange={setBackOffLimit}
+                        activeDeadline={activeDeadline}
+                        onActiveDeadlineChange={setActiveDeadline}
                       />
                     </>
                   )}
