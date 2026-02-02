@@ -28,7 +28,7 @@ import {
   IconBell,
   IconEdit,
   IconExternalLink,
-  IconPlus,
+  IconCirclePlus,
   IconMinus,
   IconChevronRight,
   IconChevronDown,
@@ -851,7 +851,7 @@ export function ComputeAdminCreateFlavorPage() {
                                     }}
                                     className="flex items-center justify-center w-7 h-7 rounded-md border border-[var(--color-border-default)] hover:bg-[var(--color-surface-subtle)]"
                                   >
-                                    <IconPlus
+                                    <IconCirclePlus
                                       size={12}
                                       className="text-[var(--color-text-muted)]"
                                     />
@@ -928,7 +928,7 @@ export function ComputeAdminCreateFlavorPage() {
                                             }}
                                             className="flex items-center justify-center w-7 h-7 rounded-md border border-[var(--color-border-strong)] hover:bg-[var(--color-surface-subtle)]"
                                           >
-                                            <IconPlus
+                                            <IconCirclePlus
                                               size={12}
                                               className="text-[var(--color-text-default)]"
                                             />
@@ -974,7 +974,7 @@ export function ComputeAdminCreateFlavorPage() {
                                                   }}
                                                   className="flex items-center justify-center w-7 h-7 rounded-md border border-[var(--color-border-strong)] hover:bg-[var(--color-surface-subtle)]"
                                                 >
-                                                  <IconPlus
+                                                  <IconCirclePlus
                                                     size={12}
                                                     className="text-[var(--color-text-default)]"
                                                   />
