@@ -627,18 +627,16 @@ export default function CreateIngressPage() {
                           </div>
                         ))}
 
-                        {/* Add Rule button in subtle container */}
-                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-                          <div className="w-fit">
-                            <Button
-                              variant="secondary"
-                              size="sm"
-                              leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                              onClick={addRule}
-                            >
-                              Add Rule
-                            </Button>
-                          </div>
+                        {/* Add Rule button */}
+                        <div className="w-fit">
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                            onClick={addRule}
+                          >
+                            Add Rule
+                          </Button>
                         </div>
                       </VStack>
                     </SectionCard.Content>
