@@ -22,7 +22,6 @@ import {
   IconPlus,
   IconX,
   IconCheck,
-  IconMinus,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -63,30 +62,29 @@ interface Annotation {
    ---------------------------------------- */
 
 function SummaryStatusIcon({ status }: { status: 'done' | 'active' | 'pending' }) {
+  // done → success (green check)
   if (status === 'done') {
     return (
-      <div className="size-5 rounded-full bg-[var(--color-state-success)] flex items-center justify-center">
-        <IconCheck size={12} className="text-white" stroke={2} />
+      <div className="size-4 rounded-full border border-[var(--color-state-success)] bg-[var(--color-state-success)] shrink-0 flex items-center justify-center">
+        <IconCheck size={10} stroke={2} className="text-white" />
       </div>
     );
   }
+  // active → dashed circle with spinning animation
   if (status === 'active') {
     return (
       <div
-        className="size-5 rounded-full flex items-center justify-center"
-        style={{ border: '1.5px dashed var(--color-action-primary)' }}
-      >
-        <IconMinus size={10} className="text-[var(--color-action-primary)]" stroke={2} />
-      </div>
+        className="size-4 rounded-full border border-[var(--color-text-muted)] shrink-0 animate-spin"
+        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
+      />
     );
   }
+  // pre/default → empty dashed circle
   return (
     <div
-      className="size-5 rounded-full flex items-center justify-center"
-      style={{ border: '1.5px dashed var(--color-border-default)' }}
-    >
-      <IconMinus size={10} className="text-[var(--color-text-muted)]" stroke={2} />
-    </div>
+      className="size-4 rounded-full border border-[var(--color-border-default)] shrink-0"
+      style={{ borderStyle: 'dashed' }}
+    />
   );
 }
 
@@ -110,19 +108,24 @@ function SummarySidebar({
   return (
     <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
       <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
-        {/* Section Status List */}
-        <VStack gap={3}>
-          {SECTION_ORDER.map((key) => (
-            <div key={key} className="flex items-center gap-3">
-              <SummaryStatusIcon status={sectionStatus[key]} />
-              <span className="text-body-md text-[var(--color-text-default)]">
-                {SECTION_LABELS[key]}
-              </span>
-            </div>
-          ))}
-        </VStack>
+        {/* Inner subtle-bg container */}
+        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
+          <VStack gap={4}>
+            <span className="text-heading-h5">Summary</span>
+            <VStack gap={0}>
+              {SECTION_ORDER.map((step) => (
+                <HStack key={step} justify="between" className="py-1">
+                  <span className="text-body-md text-[var(--color-text-default)]">
+                    {SECTION_LABELS[step]}
+                  </span>
+                  <SummaryStatusIcon status={sectionStatus[step]} />
+                </HStack>
+              ))}
+            </VStack>
+          </VStack>
+        </div>
 
-        {/* Action Buttons */}
+        {/* Button row */}
         <HStack gap={2}>
           <Button variant="secondary" onClick={onCancel} className="w-[80px]">
             Cancel

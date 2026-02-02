@@ -23,7 +23,6 @@ import {
   IconPlus,
   IconX,
   IconCheck,
-  IconMinus,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -60,34 +59,29 @@ interface Annotation {
 type SummaryStatus = 'done' | 'active' | 'pending';
 
 function SummaryStatusIcon({ status }: { status: SummaryStatus }) {
+  // done → success (green check)
   if (status === 'done') {
     return (
-      <div className="size-5 rounded-full bg-[var(--color-state-success)] flex items-center justify-center">
-        <IconCheck size={12} className="text-white" stroke={2} />
+      <div className="size-4 rounded-full border border-[var(--color-state-success)] bg-[var(--color-state-success)] shrink-0 flex items-center justify-center">
+        <IconCheck size={10} stroke={2} className="text-white" />
       </div>
     );
   }
+  // active → dashed circle with spinning animation
   if (status === 'active') {
     return (
       <div
-        className="size-5 rounded-full flex items-center justify-center"
-        style={{
-          border: '1.5px dashed var(--color-action-primary)',
-        }}
-      >
-        <IconMinus size={10} className="text-[var(--color-action-primary)]" stroke={2} />
-      </div>
+        className="size-4 rounded-full border border-[var(--color-text-muted)] shrink-0 animate-spin"
+        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
+      />
     );
   }
+  // pending → empty dashed circle
   return (
     <div
-      className="size-5 rounded-full flex items-center justify-center"
-      style={{
-        border: '1.5px dashed var(--color-border-default)',
-      }}
-    >
-      <IconMinus size={10} className="text-[var(--color-text-muted)]" stroke={2} />
-    </div>
+      className="size-4 rounded-full border border-[var(--color-border-default)] shrink-0"
+      style={{ borderStyle: 'dashed' }}
+    />
   );
 }
 
@@ -127,43 +121,34 @@ function SummarySidebar({
   ];
 
   return (
-    <div className="w-[280px] shrink-0 self-stretch pt-[45px]">
-      <div className="sticky top-4">
-        <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[8px] overflow-hidden flex flex-col gap-3 pt-3 pb-4 px-3">
-          {/* Scrollable content area */}
-          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[8px] pl-4 pr-1 py-4 max-h-[calc(100vh-200px)] overflow-y-auto">
-            <VStack gap={4} className="pr-2">
-              <h5 className="text-[16px] leading-6 font-semibold text-[var(--color-text-default)]">
-                Summary
-              </h5>
-
-              {/* Sections */}
-              <VStack gap={2}>
-                {sections.map((section) => (
-                  <div
-                    key={section.label}
-                    className="flex items-center justify-between px-2 py-1 w-full"
-                  >
-                    <span className="text-[12px] leading-5 text-[var(--color-text-default)]">
-                      {section.label}
-                    </span>
-                    <SummaryStatusIcon status={section.status} />
-                  </div>
-                ))}
-              </VStack>
+    <div className="w-[var(--wizard-summary-width)] shrink-0 sticky top-4 self-start">
+      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4 flex flex-col gap-6">
+        {/* Inner subtle-bg container */}
+        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
+          <VStack gap={4}>
+            <span className="text-heading-h5">Summary</span>
+            <VStack gap={0}>
+              {sections.map((section) => (
+                <HStack key={section.label} justify="between" className="py-1">
+                  <span className="text-body-md text-[var(--color-text-default)]">
+                    {section.label}
+                  </span>
+                  <SummaryStatusIcon status={section.status} />
+                </HStack>
+              ))}
             </VStack>
-          </div>
-
-          {/* Action Buttons */}
-          <HStack gap={2} className="w-full pt-3">
-            <Button variant="secondary" size="sm" onClick={onCancel} className="w-[80px]">
-              Cancel
-            </Button>
-            <Button variant="primary" size="sm" onClick={onSave} className="flex-1 min-w-[80px]">
-              Save
-            </Button>
-          </HStack>
+          </VStack>
         </div>
+
+        {/* Button row */}
+        <HStack gap={2}>
+          <Button variant="secondary" onClick={onCancel} className="w-[80px]">
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={onSave} className="flex-1">
+            Save
+          </Button>
+        </HStack>
       </div>
     </div>
   );
