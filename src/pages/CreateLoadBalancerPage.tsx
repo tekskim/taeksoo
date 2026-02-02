@@ -41,7 +41,7 @@ import {
   IconEdit,
   IconExternalLink,
   IconInfoCircle,
-  IconPlus,
+  IconCirclePlus,
   IconAlertCircle,
   IconTrash,
 } from '@tabler/icons-react';
@@ -2009,7 +2009,7 @@ export default function CreateLoadBalancerPage() {
                                   <Button
                                     variant="secondary"
                                     size="sm"
-                                    leftIcon={<IconPlus size={12} />}
+                                    leftIcon={<IconCirclePlus size={12} />}
                                     onClick={() => setAllowedCidrs([...allowedCidrs, ''])}
                                   >
                                     Add CIDR
@@ -2433,7 +2433,7 @@ export default function CreateLoadBalancerPage() {
                                   <Button
                                     variant="secondary"
                                     size="sm"
-                                    leftIcon={<IconPlus size={12} />}
+                                    leftIcon={<IconCirclePlus size={12} />}
                                     disabled={port.ipAddresses.length === 0}
                                     onClick={() => {
                                       const selectedIp =
@@ -2488,7 +2488,7 @@ export default function CreateLoadBalancerPage() {
                           <Button
                             variant="secondary"
                             size="sm"
-                            leftIcon={<IconPlus size={12} />}
+                            leftIcon={<IconCirclePlus size={12} />}
                             onClick={() => {
                               setExternalMembers((prev) => [
                                 ...prev,

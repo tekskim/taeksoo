@@ -19,7 +19,7 @@ import {
   IconFile,
   IconCopy,
   IconSearch,
-  IconPlus,
+  IconCirclePlus,
   IconX,
   IconCheck,
 } from '@tabler/icons-react';
@@ -423,7 +423,7 @@ function LabelsAnnotationsSection({
             <Button
               variant="outline"
               size="sm"
-              leftIcon={<IconPlus size={12} stroke={1.5} />}
+              leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
               onClick={onAddLabel}
             >
               Add Label
@@ -465,7 +465,7 @@ function LabelsAnnotationsSection({
             <Button
               variant="outline"
               size="sm"
-              leftIcon={<IconPlus size={12} stroke={1.5} />}
+              leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
               onClick={onAddAnnotation}
             >
               Add Annotation

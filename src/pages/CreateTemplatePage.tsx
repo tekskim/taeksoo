@@ -45,7 +45,7 @@ import {
   IconDownload,
   IconEdit,
   IconExternalLink,
-  IconPlus,
+  IconCirclePlus,
   IconProgress,
   IconUpload,
   IconX,
@@ -1172,7 +1172,7 @@ function ImageSection({
             <Button
               variant="outline"
               size="sm"
-              leftIcon={<IconPlus size={12} />}
+              leftIcon={<IconCirclePlus size={12} />}
               onClick={handleAddDataDisk}
             >
               Add Data disk
@@ -1925,7 +1925,7 @@ function NetworkSection({
               className="flex items-center gap-1.5 h-8 px-3 text-label-md text-[var(--color-text-default)] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md hover:bg-[var(--color-surface-subtle)] w-fit"
               onClick={addVirtualLAN}
             >
-              <IconPlus size={12} />
+              <IconCirclePlus size={12} />
               Add virtual LAN
             </button>
           </VStack>
@@ -2380,7 +2380,7 @@ function AdvancedSection({
                 disabled={tags.length >= MAX_TAGS}
                 className="flex items-center gap-1.5 h-8 px-3 text-label-md text-[var(--color-text-default)] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md hover:bg-[var(--color-surface-subtle)] disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <IconPlus size={12} />
+                <IconCirclePlus size={12} />
                 Add tag
               </button>
               <span className="text-body-md text-[var(--color-text-subtle)]">

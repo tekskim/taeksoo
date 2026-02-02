@@ -20,7 +20,7 @@ import {
   IconFile,
   IconCopy,
   IconSearch,
-  IconPlus,
+  IconCirclePlus,
   IconX,
   IconCheck,
 } from '@tabler/icons-react';
@@ -315,7 +315,7 @@ function ParametersSection({ parameters, onParametersChange }: ParametersSection
               <Button
                 variant="secondary"
                 size="sm"
-                leftIcon={<IconPlus size={12} stroke={1.5} />}
+                leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
                 onClick={addParameter}
               >
                 Add Parameter
@@ -459,7 +459,7 @@ function CustomizeSection({
                   <Button
                     variant="secondary"
                     size="sm"
-                    leftIcon={<IconPlus size={12} stroke={1.5} />}
+                    leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
                     onClick={addMountOption}
                   >
                     Add Option
