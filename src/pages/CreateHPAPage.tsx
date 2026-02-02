@@ -216,6 +216,12 @@ export default function CreateHPAPage() {
   const navigate = useNavigate();
   const { tabs, activeTabId, selectTab, closeTab } = useTabs();
 
+  // Sidebar state
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  // Sidebar width calculation: 40px icon sidebar + 200px menu sidebar when open
+  const sidebarWidth = sidebarOpen ? 240 : 40;
+
   // Form state
   const [namespace, setNamespace] = useState('default');
   const [name, setName] = useState('');
@@ -384,12 +390,12 @@ export default function CreateHPAPage() {
   return (
     <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
       {/* Sidebar */}
-      <ContainerSidebar />
+      <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
 
       {/* Main Content */}
       <main
         className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: 'var(--layout-sidebar-width)' }}
+        style={{ left: `${sidebarWidth}px` }}
       >
         {/* Top Bar */}
         <TopBar
