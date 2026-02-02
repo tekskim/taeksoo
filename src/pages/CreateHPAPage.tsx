@@ -254,20 +254,7 @@ export default function CreateHPAPage() {
   const [scaleUpBehavior, setScaleUpBehavior] = useState(false);
 
   // Metrics state
-  const [metrics, setMetrics] = useState<Metric[]>([
-    {
-      id: '1',
-      source: 'Resource',
-      resourceName: 'CPU',
-      type: 'AverageUtilization',
-      quantity: 1,
-      metricName: '',
-      referentApiVersion: '',
-      referentKind: '',
-      referentName: '',
-      selectors: [],
-    },
-  ]);
+  const [metrics, setMetrics] = useState<Metric[]>([]);
 
   // Labels & Annotations state
   const [labels, setLabels] = useState<Label[]>([]);
