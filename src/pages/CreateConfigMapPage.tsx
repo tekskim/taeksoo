@@ -642,7 +642,7 @@ function LabelsAnnotationsSection({
             </VStack>
 
             {labels.map((label, index) => (
-              <HStack gap={2} key={index} className="w-full">
+              <HStack gap={2} key={index} className="w-full items-center">
                 <Input
                   placeholder="Key"
                   value={label.key}
@@ -657,9 +657,9 @@ function LabelsAnnotationsSection({
                 />
                 <button
                   onClick={() => onRemoveLabel(index)}
-                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
                 >
-                  <IconX size={14} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                  <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
                 </button>
               </HStack>
             ))}
@@ -684,7 +684,7 @@ function LabelsAnnotationsSection({
             </VStack>
 
             {annotations.map((annotation, index) => (
-              <HStack gap={2} key={index} className="w-full">
+              <HStack gap={2} key={index} className="w-full items-center">
                 <Input
                   placeholder="Key"
                   value={annotation.key}
@@ -699,9 +699,9 @@ function LabelsAnnotationsSection({
                 />
                 <button
                   onClick={() => onRemoveAnnotation(index)}
-                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
                 >
-                  <IconX size={14} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                  <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
                 </button>
               </HStack>
             ))}
