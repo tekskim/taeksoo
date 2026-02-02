@@ -20,7 +20,7 @@ import {
   IconFile,
   IconCopy,
   IconSearch,
-  IconPlus,
+  IconCirclePlus,
   IconX,
   IconCheck,
 } from '@tabler/icons-react';
@@ -450,7 +450,7 @@ export function EditNodeConfigPage() {
                               <Button
                                 variant="secondary"
                                 size="sm"
-                                leftIcon={<IconPlus size={12} stroke={1.5} />}
+                                leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
                                 onClick={addTaint}
                               >
                                 Add Taint
@@ -529,7 +529,7 @@ export function EditNodeConfigPage() {
                                 <Button
                                   variant="secondary"
                                   size="sm"
-                                  leftIcon={<IconPlus size={12} stroke={1.5} />}
+                                  leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
                                   onClick={addLabel}
                                 >
                                   Add Label
@@ -603,7 +603,7 @@ export function EditNodeConfigPage() {
                                 <Button
                                   variant="secondary"
                                   size="sm"
-                                  leftIcon={<IconPlus size={12} stroke={1.5} />}
+                                  leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
                                   onClick={addAnnotation}
                                 >
                                   Add Annotation

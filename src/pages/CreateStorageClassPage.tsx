@@ -191,7 +191,7 @@ function BasicInfoSection({
     <SectionCard>
       <SectionCard.Header title="Basic Information" showDivider />
       <SectionCard.Content>
-        <VStack gap={4}>
+        <VStack gap={6}>
           {/* Name */}
           <VStack gap={2}>
             <label className="text-label-lg text-[var(--color-text-default)]">

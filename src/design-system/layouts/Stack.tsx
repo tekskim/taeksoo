@@ -75,7 +75,7 @@ export function Stack({
   direction = 'column',
   align = 'stretch',
   justify = 'start',
-  gap = 4,
+  gap = 6,
   wrap = false,
   children,
   className = '',

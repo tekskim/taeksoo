@@ -18,7 +18,7 @@ export function SectionCard({ children, isActive = false, className, ...props }:
     <div
       className={twMerge(
         'flex flex-col items-start',
-        'gap-3',
+        'gap-6',
         'bg-[var(--color-surface-default)]',
         'rounded-[var(--radius-md)]',
         isActive
@@ -65,7 +65,7 @@ function SectionCardHeader({
       >
         <div className="flex items-center gap-2">
           {statusIcon}
-          <h5 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h5>
+          <h5 className="text-heading-h5 text-[var(--color-text-default)] h-7">{title}</h5>
         </div>
         {actions && <div className="flex items-center gap-2">{actions}</div>}
       </div>
