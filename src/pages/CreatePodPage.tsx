@@ -481,8 +481,6 @@ interface BasicInfoSectionProps {
   onNameChange: (value: string) => void;
   nameError: string | null;
   onNameErrorChange: (error: string | null) => void;
-  replicas: number;
-  onReplicasChange: (value: number) => void;
   description: string;
   onDescriptionChange: (value: string) => void;
 }
@@ -494,8 +492,6 @@ function BasicInfoSection({
   onNameChange,
   nameError,
   onNameErrorChange,
-  replicas,
-  onReplicasChange,
   description,
   onDescriptionChange,
 }: BasicInfoSectionProps) {
@@ -537,23 +533,6 @@ function BasicInfoSection({
                 {nameError}
               </span>
             )}
-          </VStack>
-
-          {/* Replicas */}
-          <VStack gap={2}>
-            <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-[20px]">
-              Replicas<span className="text-[var(--color-state-danger)]"> *</span>
-            </label>
-            <p className="text-[11px] text-[var(--color-text-subtle)] leading-[16px]">
-              Select the number of pod replicas to create.
-            </p>
-            <NumberInput
-              value={replicas}
-              onChange={onReplicasChange}
-              min={1}
-              max={100}
-              className="w-[320px]"
-            />
           </VStack>
 
           {/* Description (Collapsible) */}
@@ -947,7 +926,6 @@ export function CreatePodPage() {
   // Basic information state
   const [namespace, setNamespace] = useState('default');
   const [name, setName] = useState('');
-  const [replicas, setReplicas] = useState(1);
   const [description, setDescription] = useState('');
 
   // Labels & Annotations state
@@ -1774,8 +1752,6 @@ export function CreatePodPage() {
                         onNameChange={setName}
                         nameError={nameError}
                         onNameErrorChange={setNameError}
-                        replicas={replicas}
-                        onReplicasChange={setReplicas}
                         description={description}
                         onDescriptionChange={setDescription}
                       />
