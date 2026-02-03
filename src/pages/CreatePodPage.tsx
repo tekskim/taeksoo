@@ -1787,63 +1787,65 @@ export function CreatePodPage() {
                                 </p>
                               </VStack>
 
-                              <VStack gap={3}>
-                                {podAnnotations.length > 0 && (
-                                  <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                      Key
-                                    </label>
-                                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                      Value
-                                    </label>
-                                    <div />
-                                  </div>
-                                )}
-                                {podAnnotations.map((annotation, index) => (
-                                  <div
-                                    key={index}
-                                    className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
-                                  >
-                                    <Input
-                                      placeholder="annotation key"
-                                      value={annotation.key}
-                                      onChange={(e) =>
-                                        updatePodAnnotation(index, 'key', e.target.value)
-                                      }
-                                      fullWidth
-                                    />
-                                    <Input
-                                      placeholder="annotation value"
-                                      value={annotation.value}
-                                      onChange={(e) =>
-                                        updatePodAnnotation(index, 'value', e.target.value)
-                                      }
-                                      fullWidth
-                                    />
-                                    <button
-                                      onClick={() => removePodAnnotation(index)}
-                                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                                <VStack gap={2}>
+                                  {podAnnotations.length > 0 && (
+                                    <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                        Key
+                                      </label>
+                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                        Value
+                                      </label>
+                                      <div />
+                                    </div>
+                                  )}
+                                  {podAnnotations.map((annotation, index) => (
+                                    <div
+                                      key={index}
+                                      className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                                     >
-                                      <IconX
-                                        size={12}
-                                        className="text-[var(--color-text-muted)]"
-                                        stroke={1.5}
+                                      <Input
+                                        placeholder="annotation key"
+                                        value={annotation.key}
+                                        onChange={(e) =>
+                                          updatePodAnnotation(index, 'key', e.target.value)
+                                        }
+                                        fullWidth
                                       />
-                                    </button>
-                                  </div>
-                                ))}
+                                      <Input
+                                        placeholder="annotation value"
+                                        value={annotation.value}
+                                        onChange={(e) =>
+                                          updatePodAnnotation(index, 'value', e.target.value)
+                                        }
+                                        fullWidth
+                                      />
+                                      <button
+                                        onClick={() => removePodAnnotation(index)}
+                                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                      >
+                                        <IconX
+                                          size={12}
+                                          className="text-[var(--color-text-muted)]"
+                                          stroke={1.5}
+                                        />
+                                      </button>
+                                    </div>
+                                  ))}
 
-                                <div className="w-fit">
-                                  <Button
-                                    variant="secondary"
-                                    size="sm"
-                                    leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                                    onClick={addPodAnnotation}
-                                  >
-                                    Add Annotation
-                                  </Button>
-                                </div>
-                              </VStack>
+                                  <div className="w-fit">
+                                    <Button
+                                      variant="secondary"
+                                      size="sm"
+                                      leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                      onClick={addPodAnnotation}
+                                    >
+                                      Add Annotation
+                                    </Button>
+                                  </div>
+                                </VStack>
+                              </div>
                             </VStack>
                           </VStack>
                         </SectionCard.Content>
