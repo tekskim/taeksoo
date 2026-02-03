@@ -18,12 +18,12 @@ export function SectionCard({ children, isActive = false, className, ...props }:
     <div
       className={twMerge(
         'flex flex-col items-start',
-        'gap-6',
+        'gap-[24px]',
         'bg-[var(--color-surface-default)]',
         'rounded-[var(--radius-md)]',
         isActive
           ? 'border-2 border-[var(--color-action-primary)] pt-[11px] pb-[15px] px-[15px]'
-          : 'border border-[var(--color-border-default)] pt-3 pb-4 px-4',
+          : 'border border-[var(--color-border-default)] pt-[12px] pb-[16px] px-[16px]',
         'w-full',
         className
       )}

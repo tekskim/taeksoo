@@ -304,7 +304,7 @@ function VolumeClaimSection({
           {/* Storage Class - only show when using storage class source */}
           {sourceType === 'storage-class' && (
             <VStack gap={2}>
-              <label className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
+              <label className="text-label-lg text-[var(--color-text-default)]">
                 Storage Class
               </label>
               <Select
@@ -470,37 +470,47 @@ function LabelsAnnotationsSection({
               </p>
             </VStack>
 
-            {labels.map((label, index) => (
-              <HStack gap={2} key={index} className="w-full items-center">
-                <Input
-                  placeholder="Key"
-                  value={label.key}
-                  onChange={(e) => onUpdateLabel(index, 'key', e.target.value)}
-                  fullWidth
-                />
-                <Input
-                  placeholder="Value"
-                  value={label.value}
-                  onChange={(e) => onUpdateLabel(index, 'value', e.target.value)}
-                  fullWidth
-                />
-                <button
-                  onClick={() => onRemoveLabel(index)}
-                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
-                >
-                  <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                </button>
-              </HStack>
-            ))}
-
-            <Button
-              variant="outline"
-              size="sm"
-              leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-              onClick={onAddLabel}
-            >
-              Add Label
-            </Button>
+            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+              <VStack gap={3}>
+                {labels.map((label, index) => (
+                  <div
+                    key={index}
+                    className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                  >
+                    <HStack gap={2} className="w-full items-center">
+                      <Input
+                        placeholder="Key"
+                        value={label.key}
+                        onChange={(e) => onUpdateLabel(index, 'key', e.target.value)}
+                        fullWidth
+                      />
+                      <Input
+                        placeholder="Value"
+                        value={label.value}
+                        onChange={(e) => onUpdateLabel(index, 'value', e.target.value)}
+                        fullWidth
+                      />
+                      <button
+                        onClick={() => onRemoveLabel(index)}
+                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
+                      >
+                        <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                      </button>
+                    </HStack>
+                  </div>
+                ))}
+                <div className="w-fit">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                    onClick={onAddLabel}
+                  >
+                    Add Label
+                  </Button>
+                </div>
+              </VStack>
+            </div>
           </VStack>
 
           {/* Annotations */}
@@ -512,37 +522,47 @@ function LabelsAnnotationsSection({
               </p>
             </VStack>
 
-            {annotations.map((annotation, index) => (
-              <HStack gap={2} key={index} className="w-full items-center">
-                <Input
-                  placeholder="Key"
-                  value={annotation.key}
-                  onChange={(e) => onUpdateAnnotation(index, 'key', e.target.value)}
-                  fullWidth
-                />
-                <Input
-                  placeholder="Value"
-                  value={annotation.value}
-                  onChange={(e) => onUpdateAnnotation(index, 'value', e.target.value)}
-                  fullWidth
-                />
-                <button
-                  onClick={() => onRemoveAnnotation(index)}
-                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
-                >
-                  <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                </button>
-              </HStack>
-            ))}
-
-            <Button
-              variant="outline"
-              size="sm"
-              leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-              onClick={onAddAnnotation}
-            >
-              Add Annotation
-            </Button>
+            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+              <VStack gap={3}>
+                {annotations.map((annotation, index) => (
+                  <div
+                    key={index}
+                    className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                  >
+                    <HStack gap={2} className="w-full items-center">
+                      <Input
+                        placeholder="Key"
+                        value={annotation.key}
+                        onChange={(e) => onUpdateAnnotation(index, 'key', e.target.value)}
+                        fullWidth
+                      />
+                      <Input
+                        placeholder="Value"
+                        value={annotation.value}
+                        onChange={(e) => onUpdateAnnotation(index, 'value', e.target.value)}
+                        fullWidth
+                      />
+                      <button
+                        onClick={() => onRemoveAnnotation(index)}
+                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
+                      >
+                        <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                      </button>
+                    </HStack>
+                  </div>
+                ))}
+                <div className="w-fit">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                    onClick={onAddAnnotation}
+                  >
+                    Add Annotation
+                  </Button>
+                </div>
+              </VStack>
+            </div>
           </VStack>
         </VStack>
       </SectionCard.Content>
@@ -756,11 +776,18 @@ export function CreatePersistentVolumeClaimPage() {
           <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
             <VStack gap={3}>
               {/* Page Header */}
-              <div className="flex items-center justify-between h-8">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-                  Create Persistent Volume Claim
-                </h1>
-              </div>
+              <VStack gap={2}>
+                <div className="flex items-center justify-between h-8">
+                  <h1 className="text-heading-h5 text-[var(--color-text-default)]">
+                    Create Persistent Volume Claim
+                  </h1>
+                </div>
+                <p className="text-body-md text-[var(--color-text-subtle)]">
+                  Persistent Volume Claim is a user request for persistent storage that defines the
+                  required capacity and access properties, allowing Kubernetes to bind or
+                  dynamically provision a suitable PersistentVolume.
+                </p>
+              </VStack>
 
               {/* Main Content with Sidebar */}
               <HStack gap={6} align="start" className="w-full">
