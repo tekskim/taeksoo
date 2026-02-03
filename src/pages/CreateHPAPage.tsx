@@ -620,200 +620,204 @@ export default function CreateHPAPage() {
 
                         {/* Metric rows */}
                         {metrics.length > 0 && (
-                          <VStack gap={2} className="w-full">
-                            {/* Header row */}
-                            <div className="grid grid-cols-[1fr_1fr_1fr_1fr_23px] gap-2">
-                              <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
-                                Source
-                              </span>
-                              <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
-                                Resource Name
-                              </span>
-                              <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
-                                Type
-                              </span>
-                              <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
-                                Quantity
-                              </span>
-                              <div />
-                            </div>
-                            {metrics.map((metric) => (
-                              <VStack key={metric.id} gap={2} className="w-full">
-                                <div className="grid grid-cols-[1fr_1fr_1fr_1fr_23px] gap-2 items-center">
-                                  <Select
-                                    options={METRIC_SOURCE_OPTIONS}
-                                    value={metric.source}
-                                    onChange={(value) => updateMetric(metric.id, 'source', value)}
-                                    fullWidth
-                                  />
-                                  {metric.source === 'Resource' ? (
+                          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                            <VStack gap={2} className="w-full">
+                              {/* Header row */}
+                              <div className="grid grid-cols-[1fr_1fr_1fr_1fr_23px] gap-2">
+                                <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
+                                  Source
+                                </span>
+                                <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
+                                  Resource Name
+                                </span>
+                                <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
+                                  Type
+                                </span>
+                                <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
+                                  Quantity
+                                </span>
+                                <div />
+                              </div>
+                              {metrics.map((metric) => (
+                                <VStack key={metric.id} gap={2} className="w-full">
+                                  <div className="grid grid-cols-[1fr_1fr_1fr_1fr_23px] gap-2 items-center">
                                     <Select
-                                      options={RESOURCE_NAME_OPTIONS}
-                                      value={metric.resourceName}
-                                      onChange={(value) =>
-                                        updateMetric(metric.id, 'resourceName', value)
-                                      }
+                                      options={METRIC_SOURCE_OPTIONS}
+                                      value={metric.source}
+                                      onChange={(value) => updateMetric(metric.id, 'source', value)}
                                       fullWidth
                                     />
-                                  ) : (
-                                    <div className="text-body-sm text-[var(--color-text-subtle)]">
-                                      -
-                                    </div>
-                                  )}
-                                  <Select
-                                    options={TYPE_OPTIONS}
-                                    value={metric.type}
-                                    onChange={(value) => updateMetric(metric.id, 'type', value)}
-                                    fullWidth
-                                  />
-                                  <HStack gap={2} align="center" className="w-full">
-                                    <Input
-                                      value={metric.quantity.toString()}
-                                      onChange={(e) =>
-                                        updateMetric(
-                                          metric.id,
-                                          'quantity',
-                                          parseInt(e.target.value) || 0
-                                        )
-                                      }
-                                      fullWidth
-                                    />
-                                    {metric.type === 'AverageUtilization' && (
-                                      <span className="text-[12px] text-[var(--color-text-default)] whitespace-nowrap">
-                                        %
-                                      </span>
-                                    )}
-                                  </HStack>
-                                  <button
-                                    onClick={() => removeMetric(metric.id)}
-                                    className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                  >
-                                    <IconX
-                                      size={12}
-                                      className="text-[var(--color-text-muted)]"
-                                      stroke={1.5}
-                                    />
-                                  </button>
-                                </div>
-
-                                {/* External metrics specific fields */}
-                                {metric.source === 'External' && (
-                                  <VStack gap={2} className="pl-0">
-                                    <VStack gap={2}>
-                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                        Metric Name{' '}
-                                        <span className="text-[var(--color-state-danger)]">*</span>
-                                      </label>
-                                      <Input
-                                        placeholder="e.g. packet-per-second"
-                                        value={metric.metricName}
-                                        onChange={(e) =>
-                                          updateMetric(metric.id, 'metricName', e.target.value)
+                                    {metric.source === 'Resource' ? (
+                                      <Select
+                                        options={RESOURCE_NAME_OPTIONS}
+                                        value={metric.resourceName}
+                                        onChange={(value) =>
+                                          updateMetric(metric.id, 'resourceName', value)
                                         }
                                         fullWidth
                                       />
-                                    </VStack>
-
-                                    {/* Metric Selector */}
-                                    <VStack gap={2}>
-                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                        Metric Selector
-                                      </label>
-                                      <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-                                        <VStack gap={2}>
-                                          {metric.selectors.length > 0 && (
-                                            <VStack gap={2} className="w-full">
-                                              {/* Header row */}
-                                              <div className="grid grid-cols-[1fr_1fr_1fr_23px] gap-2">
-                                                <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
-                                                  Key
-                                                </span>
-                                                <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
-                                                  Operator
-                                                </span>
-                                                <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
-                                                  Value
-                                                </span>
-                                                <div />
-                                              </div>
-                                              {metric.selectors.map((selector) => (
-                                                <div
-                                                  key={selector.id}
-                                                  className="grid grid-cols-[1fr_1fr_1fr_23px] gap-2 items-center"
-                                                >
-                                                  <Input
-                                                    placeholder="Input Key"
-                                                    value={selector.key}
-                                                    onChange={(e) =>
-                                                      updateMetricSelector(
-                                                        metric.id,
-                                                        selector.id,
-                                                        'key',
-                                                        e.target.value
-                                                      )
-                                                    }
-                                                    fullWidth
-                                                  />
-                                                  <Select
-                                                    options={OPERATOR_OPTIONS}
-                                                    value={selector.operator}
-                                                    onChange={(value) =>
-                                                      updateMetricSelector(
-                                                        metric.id,
-                                                        selector.id,
-                                                        'operator',
-                                                        value
-                                                      )
-                                                    }
-                                                    fullWidth
-                                                  />
-                                                  <Input
-                                                    placeholder="input value"
-                                                    value={selector.value}
-                                                    onChange={(e) =>
-                                                      updateMetricSelector(
-                                                        metric.id,
-                                                        selector.id,
-                                                        'value',
-                                                        e.target.value
-                                                      )
-                                                    }
-                                                    fullWidth
-                                                  />
-                                                  <button
-                                                    onClick={() =>
-                                                      removeMetricSelector(metric.id, selector.id)
-                                                    }
-                                                    className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                                  >
-                                                    <IconX
-                                                      size={12}
-                                                      className="text-[var(--color-text-muted)]"
-                                                      stroke={1.5}
-                                                    />
-                                                  </button>
-                                                </div>
-                                              ))}
-                                            </VStack>
-                                          )}
-                                          <div className="w-fit">
-                                            <Button
-                                              variant="secondary"
-                                              size="sm"
-                                              leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                                              onClick={() => addMetricSelector(metric.id)}
-                                            >
-                                              Add Rule
-                                            </Button>
-                                          </div>
-                                        </VStack>
+                                    ) : (
+                                      <div className="text-body-sm text-[var(--color-text-subtle)]">
+                                        -
                                       </div>
+                                    )}
+                                    <Select
+                                      options={TYPE_OPTIONS}
+                                      value={metric.type}
+                                      onChange={(value) => updateMetric(metric.id, 'type', value)}
+                                      fullWidth
+                                    />
+                                    <HStack gap={2} align="center" className="w-full">
+                                      <Input
+                                        value={metric.quantity.toString()}
+                                        onChange={(e) =>
+                                          updateMetric(
+                                            metric.id,
+                                            'quantity',
+                                            parseInt(e.target.value) || 0
+                                          )
+                                        }
+                                        fullWidth
+                                      />
+                                      {metric.type === 'AverageUtilization' && (
+                                        <span className="text-[12px] text-[var(--color-text-default)] whitespace-nowrap">
+                                          %
+                                        </span>
+                                      )}
+                                    </HStack>
+                                    <button
+                                      onClick={() => removeMetric(metric.id)}
+                                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                    >
+                                      <IconX
+                                        size={12}
+                                        className="text-[var(--color-text-muted)]"
+                                        stroke={1.5}
+                                      />
+                                    </button>
+                                  </div>
+
+                                  {/* External metrics specific fields */}
+                                  {metric.source === 'External' && (
+                                    <VStack gap={2} className="pl-0">
+                                      <VStack gap={2}>
+                                        <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                          Metric Name{' '}
+                                          <span className="text-[var(--color-state-danger)]">
+                                            *
+                                          </span>
+                                        </label>
+                                        <Input
+                                          placeholder="e.g. packet-per-second"
+                                          value={metric.metricName}
+                                          onChange={(e) =>
+                                            updateMetric(metric.id, 'metricName', e.target.value)
+                                          }
+                                          fullWidth
+                                        />
+                                      </VStack>
+
+                                      {/* Metric Selector */}
+                                      <VStack gap={2}>
+                                        <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                          Metric Selector
+                                        </label>
+                                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                                          <VStack gap={2}>
+                                            {metric.selectors.length > 0 && (
+                                              <VStack gap={2} className="w-full">
+                                                {/* Header row */}
+                                                <div className="grid grid-cols-[1fr_1fr_1fr_23px] gap-2">
+                                                  <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
+                                                    Key
+                                                  </span>
+                                                  <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
+                                                    Operator
+                                                  </span>
+                                                  <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
+                                                    Value
+                                                  </span>
+                                                  <div />
+                                                </div>
+                                                {metric.selectors.map((selector) => (
+                                                  <div
+                                                    key={selector.id}
+                                                    className="grid grid-cols-[1fr_1fr_1fr_23px] gap-2 items-center"
+                                                  >
+                                                    <Input
+                                                      placeholder="Input Key"
+                                                      value={selector.key}
+                                                      onChange={(e) =>
+                                                        updateMetricSelector(
+                                                          metric.id,
+                                                          selector.id,
+                                                          'key',
+                                                          e.target.value
+                                                        )
+                                                      }
+                                                      fullWidth
+                                                    />
+                                                    <Select
+                                                      options={OPERATOR_OPTIONS}
+                                                      value={selector.operator}
+                                                      onChange={(value) =>
+                                                        updateMetricSelector(
+                                                          metric.id,
+                                                          selector.id,
+                                                          'operator',
+                                                          value
+                                                        )
+                                                      }
+                                                      fullWidth
+                                                    />
+                                                    <Input
+                                                      placeholder="input value"
+                                                      value={selector.value}
+                                                      onChange={(e) =>
+                                                        updateMetricSelector(
+                                                          metric.id,
+                                                          selector.id,
+                                                          'value',
+                                                          e.target.value
+                                                        )
+                                                      }
+                                                      fullWidth
+                                                    />
+                                                    <button
+                                                      onClick={() =>
+                                                        removeMetricSelector(metric.id, selector.id)
+                                                      }
+                                                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                                    >
+                                                      <IconX
+                                                        size={12}
+                                                        className="text-[var(--color-text-muted)]"
+                                                        stroke={1.5}
+                                                      />
+                                                    </button>
+                                                  </div>
+                                                ))}
+                                              </VStack>
+                                            )}
+                                            <div className="w-fit">
+                                              <Button
+                                                variant="secondary"
+                                                size="sm"
+                                                leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                                onClick={() => addMetricSelector(metric.id)}
+                                              >
+                                                Add Rule
+                                              </Button>
+                                            </div>
+                                          </VStack>
+                                        </div>
+                                      </VStack>
                                     </VStack>
-                                  </VStack>
-                                )}
-                              </VStack>
-                            ))}
-                          </VStack>
+                                  )}
+                                </VStack>
+                              ))}
+                            </VStack>
+                          </div>
                         )}
 
                         {/* Add a new row button */}

@@ -1975,50 +1975,52 @@ export function CreatePodPage() {
                                 </p>
                               </VStack>
 
-                              <VStack gap={2}>
-                                {nameservers.length > 0 && (
-                                  <div className="grid grid-cols-[1fr_20px] gap-2 w-full">
-                                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                      Value
-                                    </label>
-                                    <div />
-                                  </div>
-                                )}
-                                {nameservers.map((ns, index) => (
-                                  <div
-                                    key={index}
-                                    className="grid grid-cols-[1fr_20px] gap-2 w-full items-center"
-                                  >
-                                    <Input
-                                      placeholder="e.g. 8.8.8.8"
-                                      value={ns}
-                                      onChange={(e) => updateNameserver(index, e.target.value)}
-                                      fullWidth
-                                    />
-                                    <button
-                                      onClick={() => removeNameserver(index)}
-                                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                                <VStack gap={2}>
+                                  {nameservers.length > 0 && (
+                                    <div className="grid grid-cols-[1fr_20px] gap-2 w-full">
+                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                        Value
+                                      </label>
+                                      <div />
+                                    </div>
+                                  )}
+                                  {nameservers.map((ns, index) => (
+                                    <div
+                                      key={index}
+                                      className="grid grid-cols-[1fr_20px] gap-2 w-full items-center"
                                     >
-                                      <IconX
-                                        size={12}
-                                        className="text-[var(--color-text-muted)]"
-                                        stroke={1.5}
+                                      <Input
+                                        placeholder="e.g. 8.8.8.8"
+                                        value={ns}
+                                        onChange={(e) => updateNameserver(index, e.target.value)}
+                                        fullWidth
                                       />
-                                    </button>
-                                  </div>
-                                ))}
+                                      <button
+                                        onClick={() => removeNameserver(index)}
+                                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                      >
+                                        <IconX
+                                          size={12}
+                                          className="text-[var(--color-text-muted)]"
+                                          stroke={1.5}
+                                        />
+                                      </button>
+                                    </div>
+                                  ))}
 
-                                <div className="w-fit">
-                                  <Button
-                                    variant="secondary"
-                                    size="sm"
-                                    leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                                    onClick={addNameserver}
-                                  >
-                                    Add Nameserver
-                                  </Button>
-                                </div>
-                              </VStack>
+                                  <div className="w-fit">
+                                    <Button
+                                      variant="secondary"
+                                      size="sm"
+                                      leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                      onClick={addNameserver}
+                                    >
+                                      Add Nameserver
+                                    </Button>
+                                  </div>
+                                </VStack>
+                              </div>
                             </VStack>
 
                             {/* Search Domains */}
@@ -2032,50 +2034,52 @@ export function CreatePodPage() {
                                 </p>
                               </VStack>
 
-                              <VStack gap={2}>
-                                {searchDomains.length > 0 && (
-                                  <div className="grid grid-cols-[1fr_20px] gap-2 w-full">
-                                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                      Value
-                                    </label>
-                                    <div />
-                                  </div>
-                                )}
-                                {searchDomains.map((sd, index) => (
-                                  <div
-                                    key={index}
-                                    className="grid grid-cols-[1fr_20px] gap-2 w-full items-center"
-                                  >
-                                    <Input
-                                      placeholder="e.g. example.com"
-                                      value={sd}
-                                      onChange={(e) => updateSearchDomain(index, e.target.value)}
-                                      fullWidth
-                                    />
-                                    <button
-                                      onClick={() => removeSearchDomain(index)}
-                                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                                <VStack gap={2}>
+                                  {searchDomains.length > 0 && (
+                                    <div className="grid grid-cols-[1fr_20px] gap-2 w-full">
+                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                        Value
+                                      </label>
+                                      <div />
+                                    </div>
+                                  )}
+                                  {searchDomains.map((sd, index) => (
+                                    <div
+                                      key={index}
+                                      className="grid grid-cols-[1fr_20px] gap-2 w-full items-center"
                                     >
-                                      <IconX
-                                        size={12}
-                                        className="text-[var(--color-text-muted)]"
-                                        stroke={1.5}
+                                      <Input
+                                        placeholder="e.g. example.com"
+                                        value={sd}
+                                        onChange={(e) => updateSearchDomain(index, e.target.value)}
+                                        fullWidth
                                       />
-                                    </button>
-                                  </div>
-                                ))}
+                                      <button
+                                        onClick={() => removeSearchDomain(index)}
+                                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                      >
+                                        <IconX
+                                          size={12}
+                                          className="text-[var(--color-text-muted)]"
+                                          stroke={1.5}
+                                        />
+                                      </button>
+                                    </div>
+                                  ))}
 
-                                <div className="w-fit">
-                                  <Button
-                                    variant="secondary"
-                                    size="sm"
-                                    leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                                    onClick={addSearchDomain}
-                                  >
-                                    Add Search Domain
-                                  </Button>
-                                </div>
-                              </VStack>
+                                  <div className="w-fit">
+                                    <Button
+                                      variant="secondary"
+                                      size="sm"
+                                      leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                      onClick={addSearchDomain}
+                                    >
+                                      Add Search Domain
+                                    </Button>
+                                  </div>
+                                </VStack>
+                              </div>
                             </VStack>
 
                             {/* Resolver Options */}
@@ -2084,63 +2088,65 @@ export function CreatePodPage() {
                                 Resolver Options
                               </span>
 
-                              <VStack gap={2}>
-                                {resolverOptions.length > 0 && (
-                                  <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                      Key
-                                    </label>
-                                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                      Value
-                                    </label>
-                                    <div />
-                                  </div>
-                                )}
-                                {resolverOptions.map((opt, index) => (
-                                  <div
-                                    key={index}
-                                    className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
-                                  >
-                                    <Input
-                                      placeholder="input name"
-                                      value={opt.name}
-                                      onChange={(e) =>
-                                        updateResolverOption(index, 'name', e.target.value)
-                                      }
-                                      fullWidth
-                                    />
-                                    <Input
-                                      placeholder="input value"
-                                      value={opt.value}
-                                      onChange={(e) =>
-                                        updateResolverOption(index, 'value', e.target.value)
-                                      }
-                                      fullWidth
-                                    />
-                                    <button
-                                      onClick={() => removeResolverOption(index)}
-                                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                                <VStack gap={2}>
+                                  {resolverOptions.length > 0 && (
+                                    <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                        Key
+                                      </label>
+                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                        Value
+                                      </label>
+                                      <div />
+                                    </div>
+                                  )}
+                                  {resolverOptions.map((opt, index) => (
+                                    <div
+                                      key={index}
+                                      className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                                     >
-                                      <IconX
-                                        size={12}
-                                        className="text-[var(--color-text-muted)]"
-                                        stroke={1.5}
+                                      <Input
+                                        placeholder="input name"
+                                        value={opt.name}
+                                        onChange={(e) =>
+                                          updateResolverOption(index, 'name', e.target.value)
+                                        }
+                                        fullWidth
                                       />
-                                    </button>
-                                  </div>
-                                ))}
+                                      <Input
+                                        placeholder="input value"
+                                        value={opt.value}
+                                        onChange={(e) =>
+                                          updateResolverOption(index, 'value', e.target.value)
+                                        }
+                                        fullWidth
+                                      />
+                                      <button
+                                        onClick={() => removeResolverOption(index)}
+                                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                      >
+                                        <IconX
+                                          size={12}
+                                          className="text-[var(--color-text-muted)]"
+                                          stroke={1.5}
+                                        />
+                                      </button>
+                                    </div>
+                                  ))}
 
-                                <div className="w-fit">
-                                  <Button
-                                    variant="secondary"
-                                    size="sm"
-                                    leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                                    onClick={addResolverOption}
-                                  >
-                                    Add Option
-                                  </Button>
-                                </div>
-                              </VStack>
+                                  <div className="w-fit">
+                                    <Button
+                                      variant="secondary"
+                                      size="sm"
+                                      leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                      onClick={addResolverOption}
+                                    >
+                                      Add Option
+                                    </Button>
+                                  </div>
+                                </VStack>
+                              </div>
                             </VStack>
 
                             {/* Host Aliases */}
@@ -2149,61 +2155,65 @@ export function CreatePodPage() {
                                 Host Aliases
                               </span>
 
-                              <VStack gap={2}>
-                                {hostAliases.length > 0 && (
-                                  <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                      IP
-                                    </label>
-                                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                      Hostnames
-                                    </label>
-                                    <div />
-                                  </div>
-                                )}
-                                {hostAliases.map((alias, index) => (
-                                  <div
-                                    key={index}
-                                    className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
-                                  >
-                                    <Input
-                                      placeholder="e.g. 127.0.0.1"
-                                      value={alias.ip}
-                                      onChange={(e) => updateHostAlias(index, 'ip', e.target.value)}
-                                      fullWidth
-                                    />
-                                    <Input
-                                      placeholder="e.g. foo.company.com"
-                                      value={alias.hostname}
-                                      onChange={(e) =>
-                                        updateHostAlias(index, 'hostname', e.target.value)
-                                      }
-                                      fullWidth
-                                    />
-                                    <button
-                                      onClick={() => removeHostAlias(index)}
-                                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                                <VStack gap={2}>
+                                  {hostAliases.length > 0 && (
+                                    <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                        IP
+                                      </label>
+                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                        Hostnames
+                                      </label>
+                                      <div />
+                                    </div>
+                                  )}
+                                  {hostAliases.map((alias, index) => (
+                                    <div
+                                      key={index}
+                                      className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                                     >
-                                      <IconX
-                                        size={12}
-                                        className="text-[var(--color-text-muted)]"
-                                        stroke={1.5}
+                                      <Input
+                                        placeholder="e.g. 127.0.0.1"
+                                        value={alias.ip}
+                                        onChange={(e) =>
+                                          updateHostAlias(index, 'ip', e.target.value)
+                                        }
+                                        fullWidth
                                       />
-                                    </button>
-                                  </div>
-                                ))}
+                                      <Input
+                                        placeholder="e.g. foo.company.com"
+                                        value={alias.hostname}
+                                        onChange={(e) =>
+                                          updateHostAlias(index, 'hostname', e.target.value)
+                                        }
+                                        fullWidth
+                                      />
+                                      <button
+                                        onClick={() => removeHostAlias(index)}
+                                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                      >
+                                        <IconX
+                                          size={12}
+                                          className="text-[var(--color-text-muted)]"
+                                          stroke={1.5}
+                                        />
+                                      </button>
+                                    </div>
+                                  ))}
 
-                                <div className="w-fit">
-                                  <Button
-                                    variant="secondary"
-                                    size="sm"
-                                    leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                                    onClick={addHostAlias}
-                                  >
-                                    Add Alias
-                                  </Button>
-                                </div>
-                              </VStack>
+                                  <div className="w-fit">
+                                    <Button
+                                      variant="secondary"
+                                      size="sm"
+                                      leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                      onClick={addHostAlias}
+                                    >
+                                      Add Alias
+                                    </Button>
+                                  </div>
+                                </VStack>
+                              </div>
                             </VStack>
                           </VStack>
                         </SectionCard.Content>
@@ -2901,102 +2911,108 @@ export function CreatePodPage() {
                                 Tolerations
                               </span>
 
-                              <VStack gap={2}>
-                                {tolerations.length > 0 && (
-                                  <div className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_20px] gap-2 w-full">
-                                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                      Key
-                                    </label>
-                                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                      Operator
-                                    </label>
-                                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                      Value
-                                    </label>
-                                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                      Effect
-                                    </label>
-                                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                      Toleration Seconds
-                                    </label>
-                                    <div />
-                                  </div>
-                                )}
-                                {tolerations.map((toleration, index) => (
-                                  <div
-                                    key={index}
-                                    className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_20px] gap-2 w-full items-center"
-                                  >
-                                    <Input
-                                      placeholder="Key"
-                                      value={toleration.key}
-                                      onChange={(e) =>
-                                        updateToleration(index, 'key', e.target.value)
-                                      }
-                                      fullWidth
-                                    />
-                                    <Select
-                                      options={[
-                                        { value: 'Equal', label: 'Equal' },
-                                        { value: 'Exists', label: 'Exists' },
-                                      ]}
-                                      value={toleration.operator}
-                                      onChange={(val) => updateToleration(index, 'operator', val)}
-                                      fullWidth
-                                    />
-                                    <Input
-                                      placeholder="Value"
-                                      value={toleration.value}
-                                      onChange={(e) =>
-                                        updateToleration(index, 'value', e.target.value)
-                                      }
-                                      fullWidth
-                                    />
-                                    <Select
-                                      options={[
-                                        { value: 'NoSchedule', label: 'NoSchedule' },
-                                        {
-                                          value: 'PreferNoSchedule',
-                                          label: 'PreferNoSchedule',
-                                        },
-                                        { value: 'NoExecute', label: 'NoExecute' },
-                                      ]}
-                                      value={toleration.effect}
-                                      onChange={(val) => updateToleration(index, 'effect', val)}
-                                      fullWidth
-                                    />
-                                    <Input
-                                      placeholder=""
-                                      value={toleration.tolerationSeconds}
-                                      onChange={(e) =>
-                                        updateToleration(index, 'tolerationSeconds', e.target.value)
-                                      }
-                                      fullWidth
-                                    />
-                                    <button
-                                      onClick={() => removeToleration(index)}
-                                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                                <VStack gap={2}>
+                                  {tolerations.length > 0 && (
+                                    <div className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_20px] gap-2 w-full">
+                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                        Key
+                                      </label>
+                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                        Operator
+                                      </label>
+                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                        Value
+                                      </label>
+                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                        Effect
+                                      </label>
+                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                        Toleration Seconds
+                                      </label>
+                                      <div />
+                                    </div>
+                                  )}
+                                  {tolerations.map((toleration, index) => (
+                                    <div
+                                      key={index}
+                                      className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_20px] gap-2 w-full items-center"
                                     >
-                                      <IconX
-                                        size={12}
-                                        className="text-[var(--color-text-muted)]"
-                                        stroke={1.5}
+                                      <Input
+                                        placeholder="Key"
+                                        value={toleration.key}
+                                        onChange={(e) =>
+                                          updateToleration(index, 'key', e.target.value)
+                                        }
+                                        fullWidth
                                       />
-                                    </button>
-                                  </div>
-                                ))}
+                                      <Select
+                                        options={[
+                                          { value: 'Equal', label: 'Equal' },
+                                          { value: 'Exists', label: 'Exists' },
+                                        ]}
+                                        value={toleration.operator}
+                                        onChange={(val) => updateToleration(index, 'operator', val)}
+                                        fullWidth
+                                      />
+                                      <Input
+                                        placeholder="Value"
+                                        value={toleration.value}
+                                        onChange={(e) =>
+                                          updateToleration(index, 'value', e.target.value)
+                                        }
+                                        fullWidth
+                                      />
+                                      <Select
+                                        options={[
+                                          { value: 'NoSchedule', label: 'NoSchedule' },
+                                          {
+                                            value: 'PreferNoSchedule',
+                                            label: 'PreferNoSchedule',
+                                          },
+                                          { value: 'NoExecute', label: 'NoExecute' },
+                                        ]}
+                                        value={toleration.effect}
+                                        onChange={(val) => updateToleration(index, 'effect', val)}
+                                        fullWidth
+                                      />
+                                      <Input
+                                        placeholder=""
+                                        value={toleration.tolerationSeconds}
+                                        onChange={(e) =>
+                                          updateToleration(
+                                            index,
+                                            'tolerationSeconds',
+                                            e.target.value
+                                          )
+                                        }
+                                        fullWidth
+                                      />
+                                      <button
+                                        onClick={() => removeToleration(index)}
+                                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                      >
+                                        <IconX
+                                          size={12}
+                                          className="text-[var(--color-text-muted)]"
+                                          stroke={1.5}
+                                        />
+                                      </button>
+                                    </div>
+                                  ))}
 
-                                <div className="w-fit">
-                                  <Button
-                                    variant="secondary"
-                                    size="sm"
-                                    leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                                    onClick={addToleration}
-                                  >
-                                    Add Toleration
-                                  </Button>
-                                </div>
-                              </VStack>
+                                  <div className="w-fit">
+                                    <Button
+                                      variant="secondary"
+                                      size="sm"
+                                      leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                      onClick={addToleration}
+                                    >
+                                      Add Toleration
+                                    </Button>
+                                  </div>
+                                </VStack>
+                              </div>
                             </VStack>
 
                             {/* Priority */}
@@ -3763,112 +3779,114 @@ export function CreatePodPage() {
                           <SectionCard>
                             <SectionCard.Header title="Environment Variables" />
                             <SectionCard.Content>
-                              <VStack gap={2}>
-                                {(config.envVars || []).length > 0 && (
-                                  <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
-                                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                      Name
-                                    </label>
-                                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                      Value Type
-                                    </label>
-                                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                      Value/Source
-                                    </label>
-                                    <div />
-                                  </div>
-                                )}
-                                {(config.envVars || []).map((envVar, index) => (
-                                  <div
-                                    key={index}
-                                    className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
-                                  >
-                                    <Input
-                                      placeholder="input variable name"
-                                      fullWidth
-                                      value={envVar.name}
-                                      onChange={(e) => {
-                                        const newEnvVars = [...(config.envVars || [])];
-                                        newEnvVars[index] = {
-                                          ...newEnvVars[index],
-                                          name: e.target.value,
-                                        };
-                                        updateContainerConfig(containerId, {
-                                          envVars: newEnvVars,
-                                        });
-                                      }}
-                                    />
-                                    <Select
-                                      options={[
-                                        { value: 'value', label: 'Key/Value Pair' },
-                                        { value: 'configmap', label: 'ConfigMap' },
-                                        { value: 'secret', label: 'Secret' },
-                                      ]}
-                                      value={envVar.type || 'value'}
-                                      onChange={(val) => {
-                                        const newEnvVars = [...(config.envVars || [])];
-                                        newEnvVars[index] = {
-                                          ...newEnvVars[index],
-                                          type: val as 'value' | 'configmap' | 'secret',
-                                        };
-                                        updateContainerConfig(containerId, {
-                                          envVars: newEnvVars,
-                                        });
-                                      }}
-                                      fullWidth
-                                    />
-                                    <Input
-                                      placeholder="input value"
-                                      fullWidth
-                                      value={envVar.value}
-                                      onChange={(e) => {
-                                        const newEnvVars = [...(config.envVars || [])];
-                                        newEnvVars[index] = {
-                                          ...newEnvVars[index],
-                                          value: e.target.value,
-                                        };
-                                        updateContainerConfig(containerId, {
-                                          envVars: newEnvVars,
-                                        });
-                                      }}
-                                    />
-                                    <button
-                                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                                <VStack gap={2}>
+                                  {(config.envVars || []).length > 0 && (
+                                    <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
+                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                        Name
+                                      </label>
+                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                        Value Type
+                                      </label>
+                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                        Value/Source
+                                      </label>
+                                      <div />
+                                    </div>
+                                  )}
+                                  {(config.envVars || []).map((envVar, index) => (
+                                    <div
+                                      key={index}
+                                      className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
+                                    >
+                                      <Input
+                                        placeholder="input variable name"
+                                        fullWidth
+                                        value={envVar.name}
+                                        onChange={(e) => {
+                                          const newEnvVars = [...(config.envVars || [])];
+                                          newEnvVars[index] = {
+                                            ...newEnvVars[index],
+                                            name: e.target.value,
+                                          };
+                                          updateContainerConfig(containerId, {
+                                            envVars: newEnvVars,
+                                          });
+                                        }}
+                                      />
+                                      <Select
+                                        options={[
+                                          { value: 'value', label: 'Key/Value Pair' },
+                                          { value: 'configmap', label: 'ConfigMap' },
+                                          { value: 'secret', label: 'Secret' },
+                                        ]}
+                                        value={envVar.type || 'value'}
+                                        onChange={(val) => {
+                                          const newEnvVars = [...(config.envVars || [])];
+                                          newEnvVars[index] = {
+                                            ...newEnvVars[index],
+                                            type: val as 'value' | 'configmap' | 'secret',
+                                          };
+                                          updateContainerConfig(containerId, {
+                                            envVars: newEnvVars,
+                                          });
+                                        }}
+                                        fullWidth
+                                      />
+                                      <Input
+                                        placeholder="input value"
+                                        fullWidth
+                                        value={envVar.value}
+                                        onChange={(e) => {
+                                          const newEnvVars = [...(config.envVars || [])];
+                                          newEnvVars[index] = {
+                                            ...newEnvVars[index],
+                                            value: e.target.value,
+                                          };
+                                          updateContainerConfig(containerId, {
+                                            envVars: newEnvVars,
+                                          });
+                                        }}
+                                      />
+                                      <button
+                                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                        onClick={() => {
+                                          const newEnvVars = (config.envVars || []).filter(
+                                            (_, i) => i !== index
+                                          );
+                                          updateContainerConfig(containerId, {
+                                            envVars: newEnvVars,
+                                          });
+                                        }}
+                                      >
+                                        <IconX
+                                          size={12}
+                                          className="text-[var(--color-text-muted)]"
+                                          stroke={1.5}
+                                        />
+                                      </button>
+                                    </div>
+                                  ))}
+
+                                  <div className="w-fit">
+                                    <Button
+                                      variant="secondary"
+                                      size="sm"
+                                      leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
                                       onClick={() => {
-                                        const newEnvVars = (config.envVars || []).filter(
-                                          (_, i) => i !== index
-                                        );
-                                        updateContainerConfig(containerId, {
-                                          envVars: newEnvVars,
-                                        });
+                                        const newEnvVars = [
+                                          ...(config.envVars || []),
+                                          { name: '', value: '', type: 'value' as const },
+                                        ];
+                                        updateContainerConfig(containerId, { envVars: newEnvVars });
                                       }}
                                     >
-                                      <IconX
-                                        size={12}
-                                        className="text-[var(--color-text-muted)]"
-                                        stroke={1.5}
-                                      />
-                                    </button>
+                                      Add Variable
+                                    </Button>
                                   </div>
-                                ))}
-
-                                <div className="w-fit">
-                                  <Button
-                                    variant="secondary"
-                                    size="sm"
-                                    leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                                    onClick={() => {
-                                      const newEnvVars = [
-                                        ...(config.envVars || []),
-                                        { name: '', value: '', type: 'value' as const },
-                                      ];
-                                      updateContainerConfig(containerId, { envVars: newEnvVars });
-                                    }}
-                                  >
-                                    Add Variable
-                                  </Button>
-                                </div>
-                              </VStack>
+                                </VStack>
+                              </div>
                             </SectionCard.Content>
                           </SectionCard>
 

@@ -5948,7 +5948,7 @@ export function CreateStatefulSetPage() {
                                       ) => (
                                         <div
                                           key={volIndex}
-                                          className="border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                          className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
                                         >
                                           <VStack gap={2}>
                                             <span className="text-[14px] font-medium text-[var(--color-text-default)]">
