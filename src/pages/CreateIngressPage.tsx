@@ -560,79 +560,76 @@ export default function CreateIngressPage() {
                               {/* Paths container */}
                               <div className="border border-[var(--color-border-default)] rounded-[6px] w-full">
                                 <VStack gap={2} className="p-3">
+                                  {rule.paths.length > 0 && (
+                                    <div className="grid grid-cols-[2fr_1fr_1fr_16px] gap-2 w-full">
+                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                        Path
+                                      </label>
+                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                        Target Service
+                                      </label>
+                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                        Port
+                                      </label>
+                                      <div />
+                                    </div>
+                                  )}
                                   {rule.paths.map((path) => (
                                     <div
                                       key={path.id}
-                                      className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                      className="grid grid-cols-[2fr_1fr_1fr_16px] gap-2 w-full items-center"
                                     >
-                                      <div className="grid grid-cols-[2fr_1fr_1fr_16px] gap-2 w-full items-start">
-                                        {/* Path */}
-                                        <VStack gap={2}>
-                                          <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                            Path
-                                          </label>
-                                          <HStack gap={2}>
-                                            <Select
-                                              options={PATH_TYPE_OPTIONS}
-                                              value={path.pathType}
-                                              onChange={(value) =>
-                                                updatePath(rule.id, path.id, 'pathType', value)
-                                              }
-                                              className="w-[80px]"
-                                            />
-                                            <Input
-                                              placeholder="e.g. /foo"
-                                              value={path.path}
-                                              onChange={(e) =>
-                                                updatePath(rule.id, path.id, 'path', e.target.value)
-                                              }
-                                              fullWidth
-                                            />
-                                          </HStack>
-                                        </VStack>
+                                      {/* Path */}
+                                      <HStack gap={2}>
+                                        <Select
+                                          options={PATH_TYPE_OPTIONS}
+                                          value={path.pathType}
+                                          onChange={(value) =>
+                                            updatePath(rule.id, path.id, 'pathType', value)
+                                          }
+                                          className="w-[80px]"
+                                        />
+                                        <Input
+                                          placeholder="e.g. /foo"
+                                          value={path.path}
+                                          onChange={(e) =>
+                                            updatePath(rule.id, path.id, 'path', e.target.value)
+                                          }
+                                          fullWidth
+                                        />
+                                      </HStack>
 
-                                        {/* Target Service */}
-                                        <VStack gap={2}>
-                                          <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                            Target Service
-                                          </label>
-                                          <Select
-                                            options={TARGET_SERVICE_OPTIONS}
-                                            value={path.targetService}
-                                            onChange={(value) =>
-                                              updatePath(rule.id, path.id, 'targetService', value)
-                                            }
-                                            fullWidth
-                                          />
-                                        </VStack>
+                                      {/* Target Service */}
+                                      <Select
+                                        options={TARGET_SERVICE_OPTIONS}
+                                        value={path.targetService}
+                                        onChange={(value) =>
+                                          updatePath(rule.id, path.id, 'targetService', value)
+                                        }
+                                        fullWidth
+                                      />
 
-                                        {/* Port */}
-                                        <VStack gap={2}>
-                                          <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                            Port
-                                          </label>
-                                          <Input
-                                            placeholder="e.g. 80 or http"
-                                            value={path.port}
-                                            onChange={(e) =>
-                                              updatePath(rule.id, path.id, 'port', e.target.value)
-                                            }
-                                            fullWidth
-                                          />
-                                        </VStack>
+                                      {/* Port */}
+                                      <Input
+                                        placeholder="e.g. 80 or http"
+                                        value={path.port}
+                                        onChange={(e) =>
+                                          updatePath(rule.id, path.id, 'port', e.target.value)
+                                        }
+                                        fullWidth
+                                      />
 
-                                        {/* Remove path button - aligned with labels */}
-                                        <button
-                                          onClick={() => removePath(rule.id, path.id)}
-                                          className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors self-start"
-                                        >
-                                          <IconX
-                                            size={12}
-                                            className="text-[var(--color-text-muted)]"
-                                            stroke={1.5}
-                                          />
-                                        </button>
-                                      </div>
+                                      {/* Remove path button */}
+                                      <button
+                                        onClick={() => removePath(rule.id, path.id)}
+                                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                      >
+                                        <IconX
+                                          size={12}
+                                          className="text-[var(--color-text-muted)]"
+                                          stroke={1.5}
+                                        />
+                                      </button>
                                     </div>
                                   ))}
 

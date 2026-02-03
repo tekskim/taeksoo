@@ -422,25 +422,28 @@ function StorageConfigSection({
             <label className="text-label-lg text-[var(--color-text-default)]">Mount Options</label>
             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
               <VStack gap={3}>
+                {mountOptions.length > 0 && (
+                  <div className="grid grid-cols-[1fr_23px] gap-2 w-full">
+                    <label className="text-label-sm text-[var(--color-text-default)] leading-4">
+                      Option
+                    </label>
+                    <div />
+                  </div>
+                )}
                 {mountOptions.map((option, index) => (
-                  <div
-                    key={index}
-                    className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
-                  >
-                    <HStack gap={2} className="w-full">
-                      <Input
-                        placeholder="input key"
-                        value={option.key}
-                        onChange={(e) => updateMountOption(index, e.target.value)}
-                        fullWidth
-                      />
-                      <button
-                        onClick={() => removeMountOption(index)}
-                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
-                      >
-                        <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                      </button>
-                    </HStack>
+                  <div key={index} className="grid grid-cols-[1fr_23px] gap-2 w-full items-center">
+                    <Input
+                      placeholder="input key"
+                      value={option.key}
+                      onChange={(e) => updateMountOption(index, e.target.value)}
+                      fullWidth
+                    />
+                    <button
+                      onClick={() => removeMountOption(index)}
+                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
+                    >
+                      <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                    </button>
                   </div>
                 ))}
                 <div className="w-fit">
@@ -674,31 +677,40 @@ function LabelsAnnotationsSection({
 
             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
               <VStack gap={3}>
+                {annotations.length > 0 && (
+                  <div className="grid grid-cols-[1fr_1fr_23px] gap-2 w-full">
+                    <label className="text-label-sm text-[var(--color-text-default)] leading-4">
+                      Key
+                    </label>
+                    <label className="text-label-sm text-[var(--color-text-default)] leading-4">
+                      Value
+                    </label>
+                    <div />
+                  </div>
+                )}
                 {annotations.map((annotation, index) => (
                   <div
                     key={index}
-                    className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                    className="grid grid-cols-[1fr_1fr_23px] gap-2 w-full items-center"
                   >
-                    <HStack gap={2} className="w-full items-center">
-                      <Input
-                        placeholder="Key"
-                        value={annotation.key}
-                        onChange={(e) => onUpdateAnnotation(index, 'key', e.target.value)}
-                        fullWidth
-                      />
-                      <Input
-                        placeholder="Value"
-                        value={annotation.value}
-                        onChange={(e) => onUpdateAnnotation(index, 'value', e.target.value)}
-                        fullWidth
-                      />
-                      <button
-                        onClick={() => onRemoveAnnotation(index)}
-                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
-                      >
-                        <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                      </button>
-                    </HStack>
+                    <Input
+                      placeholder="Key"
+                      value={annotation.key}
+                      onChange={(e) => onUpdateAnnotation(index, 'key', e.target.value)}
+                      fullWidth
+                    />
+                    <Input
+                      placeholder="Value"
+                      value={annotation.value}
+                      onChange={(e) => onUpdateAnnotation(index, 'value', e.target.value)}
+                      fullWidth
+                    />
+                    <button
+                      onClick={() => onRemoveAnnotation(index)}
+                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
+                    >
+                      <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                    </button>
                   </div>
                 ))}
                 <div className="w-fit">

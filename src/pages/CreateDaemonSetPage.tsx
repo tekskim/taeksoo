@@ -2028,37 +2028,36 @@ export function CreateDaemonSetPage() {
                               </VStack>
 
                               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-                                <VStack gap={3}>
+                                <VStack gap={2}>
+                                  {nameservers.length > 0 && (
+                                    <div className="grid grid-cols-[1fr_auto] gap-2 w-full">
+                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                        Nameservers
+                                      </label>
+                                      <div />
+                                    </div>
+                                  )}
                                   {nameservers.map((ns, index) => (
                                     <div
                                       key={index}
-                                      className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                      className="grid grid-cols-[1fr_auto] gap-2 w-full items-center"
                                     >
-                                      <div className="flex gap-2 items-start w-full">
-                                        <VStack gap={2} className="flex-1">
-                                          <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                            Nameservers
-                                          </span>
-                                          <Input
-                                            placeholder="e.g. 8.8.8.8"
-                                            value={ns}
-                                            onChange={(e) =>
-                                              updateNameserver(index, e.target.value)
-                                            }
-                                            fullWidth
-                                          />
-                                        </VStack>
-                                        <button
-                                          onClick={() => removeNameserver(index)}
-                                          className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                        >
-                                          <IconX
-                                            size={12}
-                                            className="text-[var(--color-text-muted)]"
-                                            stroke={1.5}
-                                          />
-                                        </button>
-                                      </div>
+                                      <Input
+                                        placeholder="e.g. 8.8.8.8"
+                                        value={ns}
+                                        onChange={(e) => updateNameserver(index, e.target.value)}
+                                        fullWidth
+                                      />
+                                      <button
+                                        onClick={() => removeNameserver(index)}
+                                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                      >
+                                        <IconX
+                                          size={12}
+                                          className="text-[var(--color-text-muted)]"
+                                          stroke={1.5}
+                                        />
+                                      </button>
                                     </div>
                                   ))}
 
@@ -2088,37 +2087,36 @@ export function CreateDaemonSetPage() {
                               </VStack>
 
                               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-                                <VStack gap={3}>
+                                <VStack gap={2}>
+                                  {searchDomains.length > 0 && (
+                                    <div className="grid grid-cols-[1fr_auto] gap-2 w-full">
+                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                        Search Domains
+                                      </label>
+                                      <div />
+                                    </div>
+                                  )}
                                   {searchDomains.map((sd, index) => (
                                     <div
                                       key={index}
-                                      className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                      className="grid grid-cols-[1fr_auto] gap-2 w-full items-center"
                                     >
-                                      <div className="flex gap-2 items-start w-full">
-                                        <VStack gap={2} className="flex-1">
-                                          <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                            Search Domains
-                                          </span>
-                                          <Input
-                                            placeholder="e.g. example.com"
-                                            value={sd}
-                                            onChange={(e) =>
-                                              updateSearchDomain(index, e.target.value)
-                                            }
-                                            fullWidth
-                                          />
-                                        </VStack>
-                                        <button
-                                          onClick={() => removeSearchDomain(index)}
-                                          className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                        >
-                                          <IconX
-                                            size={12}
-                                            className="text-[var(--color-text-muted)]"
-                                            stroke={1.5}
-                                          />
-                                        </button>
-                                      </div>
+                                      <Input
+                                        placeholder="e.g. example.com"
+                                        value={sd}
+                                        onChange={(e) => updateSearchDomain(index, e.target.value)}
+                                        fullWidth
+                                      />
+                                      <button
+                                        onClick={() => removeSearchDomain(index)}
+                                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                      >
+                                        <IconX
+                                          size={12}
+                                          className="text-[var(--color-text-muted)]"
+                                          stroke={1.5}
+                                        />
+                                      </button>
                                     </div>
                                   ))}
 
@@ -2143,50 +2141,49 @@ export function CreateDaemonSetPage() {
                               </span>
 
                               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-                                <VStack gap={3}>
+                                <VStack gap={2}>
+                                  {resolverOptions.length > 0 && (
+                                    <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full">
+                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                        Name
+                                      </label>
+                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                        Value
+                                      </label>
+                                      <div />
+                                    </div>
+                                  )}
                                   {resolverOptions.map((opt, index) => (
                                     <div
                                       key={index}
-                                      className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                      className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center"
                                     >
-                                      <div className="flex gap-2 items-start w-full">
-                                        <VStack gap={2} className="flex-1">
-                                          <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                            Name
-                                          </span>
-                                          <Input
-                                            placeholder="input name"
-                                            value={opt.name}
-                                            onChange={(e) =>
-                                              updateResolverOption(index, 'name', e.target.value)
-                                            }
-                                            fullWidth
-                                          />
-                                        </VStack>
-                                        <VStack gap={2} className="flex-1">
-                                          <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                            Value
-                                          </span>
-                                          <Input
-                                            placeholder="input value"
-                                            value={opt.value}
-                                            onChange={(e) =>
-                                              updateResolverOption(index, 'value', e.target.value)
-                                            }
-                                            fullWidth
-                                          />
-                                        </VStack>
-                                        <button
-                                          onClick={() => removeResolverOption(index)}
-                                          className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                        >
-                                          <IconX
-                                            size={12}
-                                            className="text-[var(--color-text-muted)]"
-                                            stroke={1.5}
-                                          />
-                                        </button>
-                                      </div>
+                                      <Input
+                                        placeholder="input name"
+                                        value={opt.name}
+                                        onChange={(e) =>
+                                          updateResolverOption(index, 'name', e.target.value)
+                                        }
+                                        fullWidth
+                                      />
+                                      <Input
+                                        placeholder="input value"
+                                        value={opt.value}
+                                        onChange={(e) =>
+                                          updateResolverOption(index, 'value', e.target.value)
+                                        }
+                                        fullWidth
+                                      />
+                                      <button
+                                        onClick={() => removeResolverOption(index)}
+                                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                      >
+                                        <IconX
+                                          size={12}
+                                          className="text-[var(--color-text-muted)]"
+                                          stroke={1.5}
+                                        />
+                                      </button>
                                     </div>
                                   ))}
 
@@ -2211,50 +2208,49 @@ export function CreateDaemonSetPage() {
                               </span>
 
                               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-                                <VStack gap={3}>
+                                <VStack gap={2}>
+                                  {hostAliases.length > 0 && (
+                                    <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full">
+                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                        IP Address
+                                      </label>
+                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                        Hostname
+                                      </label>
+                                      <div />
+                                    </div>
+                                  )}
                                   {hostAliases.map((alias, index) => (
                                     <div
                                       key={index}
-                                      className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                      className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center"
                                     >
-                                      <div className="flex gap-2 items-start w-full">
-                                        <VStack gap={2} className="flex-1">
-                                          <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                            IP Address
-                                          </span>
-                                          <Input
-                                            placeholder="e.g. 127.0.0.1"
-                                            value={alias.ip}
-                                            onChange={(e) =>
-                                              updateHostAlias(index, 'ip', e.target.value)
-                                            }
-                                            fullWidth
-                                          />
-                                        </VStack>
-                                        <VStack gap={2} className="flex-1">
-                                          <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                            Hostname
-                                          </span>
-                                          <Input
-                                            placeholder="e.g. foo.company.com"
-                                            value={alias.hostname}
-                                            onChange={(e) =>
-                                              updateHostAlias(index, 'hostname', e.target.value)
-                                            }
-                                            fullWidth
-                                          />
-                                        </VStack>
-                                        <button
-                                          onClick={() => removeHostAlias(index)}
-                                          className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                        >
-                                          <IconX
-                                            size={12}
-                                            className="text-[var(--color-text-muted)]"
-                                            stroke={1.5}
-                                          />
-                                        </button>
-                                      </div>
+                                      <Input
+                                        placeholder="e.g. 127.0.0.1"
+                                        value={alias.ip}
+                                        onChange={(e) =>
+                                          updateHostAlias(index, 'ip', e.target.value)
+                                        }
+                                        fullWidth
+                                      />
+                                      <Input
+                                        placeholder="e.g. foo.company.com"
+                                        value={alias.hostname}
+                                        onChange={(e) =>
+                                          updateHostAlias(index, 'hostname', e.target.value)
+                                        }
+                                        fullWidth
+                                      />
+                                      <button
+                                        onClick={() => removeHostAlias(index)}
+                                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                      >
+                                        <IconX
+                                          size={12}
+                                          className="text-[var(--color-text-muted)]"
+                                          stroke={1.5}
+                                        />
+                                      </button>
                                     </div>
                                   ))}
 
@@ -2755,109 +2751,106 @@ export function CreateDaemonSetPage() {
                                   {/* Match Expressions / Rules Section */}
                                   <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
                                     <VStack gap={2}>
+                                      {term.matchExpressions.length > 0 && (
+                                        <div className="grid grid-cols-[1fr_140px_1fr_auto] gap-2 w-full">
+                                          <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                            Key
+                                          </label>
+                                          <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                            Operator
+                                          </label>
+                                          <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                            Value
+                                          </label>
+                                          <div />
+                                        </div>
+                                      )}
                                       {term.matchExpressions.map((expr, exprIndex) => (
                                         <div
                                           key={exprIndex}
-                                          className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                          className="grid grid-cols-[1fr_140px_1fr_auto] gap-2 w-full items-center"
                                         >
-                                          <div className="flex gap-2 items-start w-full">
-                                            <VStack gap={2} className="flex-1">
-                                              <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                                Key
-                                              </span>
-                                              <Input
-                                                placeholder="Input Key"
-                                                value={expr.key}
-                                                onChange={(e) => {
-                                                  const newTerms = [...podAffinityTerms];
-                                                  const newExpressions = [
-                                                    ...newTerms[termIndex].matchExpressions,
-                                                  ];
-                                                  newExpressions[exprIndex] = {
-                                                    ...newExpressions[exprIndex],
-                                                    key: e.target.value,
-                                                  };
-                                                  newTerms[termIndex] = {
-                                                    ...newTerms[termIndex],
-                                                    matchExpressions: newExpressions,
-                                                  };
-                                                  setPodAffinityTerms(newTerms);
-                                                }}
-                                                fullWidth
-                                              />
-                                            </VStack>
-                                            <VStack gap={2} className="flex-1">
-                                              <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                                Operator
-                                              </span>
-                                              <Select
-                                                options={OPERATOR_OPTIONS}
-                                                value={expr.operator}
-                                                onChange={(val) => {
-                                                  const newTerms = [...podAffinityTerms];
-                                                  const newExpressions = [
-                                                    ...newTerms[termIndex].matchExpressions,
-                                                  ];
-                                                  newExpressions[exprIndex] = {
-                                                    ...newExpressions[exprIndex],
-                                                    operator: val,
-                                                  };
-                                                  newTerms[termIndex] = {
-                                                    ...newTerms[termIndex],
-                                                    matchExpressions: newExpressions,
-                                                  };
-                                                  setPodAffinityTerms(newTerms);
-                                                }}
-                                                fullWidth
-                                              />
-                                            </VStack>
-                                            <VStack gap={2} className="flex-1">
-                                              <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                                Value
-                                              </span>
-                                              <Input
-                                                placeholder="input value"
-                                                value={expr.value}
-                                                onChange={(e) => {
-                                                  const newTerms = [...podAffinityTerms];
-                                                  const newExpressions = [
-                                                    ...newTerms[termIndex].matchExpressions,
-                                                  ];
-                                                  newExpressions[exprIndex] = {
-                                                    ...newExpressions[exprIndex],
-                                                    value: e.target.value,
-                                                  };
-                                                  newTerms[termIndex] = {
-                                                    ...newTerms[termIndex],
-                                                    matchExpressions: newExpressions,
-                                                  };
-                                                  setPodAffinityTerms(newTerms);
-                                                }}
-                                                fullWidth
-                                              />
-                                            </VStack>
-                                            <button
-                                              onClick={() => {
-                                                const newTerms = [...podAffinityTerms];
-                                                newTerms[termIndex] = {
-                                                  ...newTerms[termIndex],
-                                                  matchExpressions: newTerms[
-                                                    termIndex
-                                                  ].matchExpressions.filter(
-                                                    (_, i) => i !== exprIndex
-                                                  ),
-                                                };
-                                                setPodAffinityTerms(newTerms);
-                                              }}
-                                              className="mt-6 p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                            >
-                                              <IconX
-                                                size={12}
-                                                className="text-[var(--color-text-muted)]"
-                                                stroke={1.5}
-                                              />
-                                            </button>
-                                          </div>
+                                          <Input
+                                            placeholder="Input Key"
+                                            value={expr.key}
+                                            onChange={(e) => {
+                                              const newTerms = [...podAffinityTerms];
+                                              const newExpressions = [
+                                                ...newTerms[termIndex].matchExpressions,
+                                              ];
+                                              newExpressions[exprIndex] = {
+                                                ...newExpressions[exprIndex],
+                                                key: e.target.value,
+                                              };
+                                              newTerms[termIndex] = {
+                                                ...newTerms[termIndex],
+                                                matchExpressions: newExpressions,
+                                              };
+                                              setPodAffinityTerms(newTerms);
+                                            }}
+                                            fullWidth
+                                          />
+                                          <Select
+                                            options={OPERATOR_OPTIONS}
+                                            value={expr.operator}
+                                            onChange={(val) => {
+                                              const newTerms = [...podAffinityTerms];
+                                              const newExpressions = [
+                                                ...newTerms[termIndex].matchExpressions,
+                                              ];
+                                              newExpressions[exprIndex] = {
+                                                ...newExpressions[exprIndex],
+                                                operator: val,
+                                              };
+                                              newTerms[termIndex] = {
+                                                ...newTerms[termIndex],
+                                                matchExpressions: newExpressions,
+                                              };
+                                              setPodAffinityTerms(newTerms);
+                                            }}
+                                            fullWidth
+                                          />
+                                          <Input
+                                            placeholder="input value"
+                                            value={expr.value}
+                                            onChange={(e) => {
+                                              const newTerms = [...podAffinityTerms];
+                                              const newExpressions = [
+                                                ...newTerms[termIndex].matchExpressions,
+                                              ];
+                                              newExpressions[exprIndex] = {
+                                                ...newExpressions[exprIndex],
+                                                value: e.target.value,
+                                              };
+                                              newTerms[termIndex] = {
+                                                ...newTerms[termIndex],
+                                                matchExpressions: newExpressions,
+                                              };
+                                              setPodAffinityTerms(newTerms);
+                                            }}
+                                            fullWidth
+                                          />
+                                          <button
+                                            onClick={() => {
+                                              const newTerms = [...podAffinityTerms];
+                                              newTerms[termIndex] = {
+                                                ...newTerms[termIndex],
+                                                matchExpressions: newTerms[
+                                                  termIndex
+                                                ].matchExpressions.filter(
+                                                  (_, i) => i !== exprIndex
+                                                ),
+                                              };
+                                              setPodAffinityTerms(newTerms);
+                                            }}
+                                            className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                          >
+                                            <IconX
+                                              size={12}
+                                              className="text-[var(--color-text-muted)]"
+                                              stroke={1.5}
+                                            />
+                                          </button>
                                         </div>
                                       ))}
                                       <div className="w-fit">
@@ -2968,108 +2961,97 @@ export function CreateDaemonSetPage() {
                               </span>
 
                               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-                                <VStack gap={3}>
+                                <VStack gap={2}>
+                                  {tolerations.length > 0 && (
+                                    <div className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_auto] gap-2 w-full">
+                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                        Key
+                                      </label>
+                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                        Operator
+                                      </label>
+                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                        Value
+                                      </label>
+                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                        Effect
+                                      </label>
+                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                        Toleration Seconds
+                                      </label>
+                                      <div />
+                                    </div>
+                                  )}
                                   {tolerations.map((toleration, index) => (
                                     <div
                                       key={index}
-                                      className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                      className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_auto] gap-2 w-full items-center"
                                     >
-                                      <div className="flex gap-2 items-start w-full">
-                                        <VStack gap={2} className="flex-1">
-                                          <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                            Key
-                                          </span>
-                                          <Input
-                                            placeholder="Key"
-                                            value={toleration.key}
-                                            onChange={(e) =>
-                                              updateToleration(index, 'key', e.target.value)
-                                            }
-                                            fullWidth
-                                          />
-                                        </VStack>
-                                        <VStack gap={2} className="flex-1">
-                                          <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                            Operator
-                                          </span>
-                                          <Select
-                                            options={[
-                                              { value: 'Equal', label: 'Equal' },
-                                              { value: 'Exists', label: 'Exists' },
-                                            ]}
-                                            value={toleration.operator}
-                                            onChange={(val) =>
-                                              updateToleration(index, 'operator', val)
-                                            }
-                                            fullWidth
-                                          />
-                                        </VStack>
-                                        <VStack gap={2} className="flex-1">
-                                          <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                            Value
-                                          </span>
-                                          <Input
-                                            placeholder="Value"
-                                            value={toleration.value}
-                                            onChange={(e) =>
-                                              updateToleration(index, 'value', e.target.value)
-                                            }
-                                            fullWidth
-                                          />
-                                        </VStack>
-                                        <VStack gap={2} className="flex-1">
-                                          <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                            Effect
-                                          </span>
-                                          <Select
-                                            options={[
-                                              { value: 'NoSchedule', label: 'NoSchedule' },
-                                              {
-                                                value: 'PreferNoSchedule',
-                                                label: 'PreferNoSchedule',
-                                              },
-                                              { value: 'NoExecute', label: 'NoExecute' },
-                                            ]}
-                                            value={toleration.effect}
-                                            onChange={(val) =>
-                                              updateToleration(index, 'effect', val)
-                                            }
-                                            fullWidth
-                                          />
-                                        </VStack>
-                                        <VStack gap={2} className="flex-1">
-                                          <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                            Toleration Seconds
-                                          </span>
-                                          <HStack gap={2} align="center">
-                                            <Input
-                                              placeholder=""
-                                              value={toleration.tolerationSeconds}
-                                              onChange={(e) =>
-                                                updateToleration(
-                                                  index,
-                                                  'tolerationSeconds',
-                                                  e.target.value
-                                                )
-                                              }
-                                              fullWidth
-                                            />
-                                            <span className="text-[var(--color-text-default)] text-[12px] w-[80px] shrink-0">
-                                              Seconds
-                                            </span>
-                                          </HStack>
-                                        </VStack>
-                                        <button
-                                          onClick={() => removeToleration(index)}
-                                          className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                        >
-                                          <IconX
-                                            size={12}
-                                            className="text-[var(--color-text-muted)]"
-                                            stroke={1.5}
-                                          />
-                                        </button>
-                                      </div>
+                                      <Input
+                                        placeholder="Key"
+                                        value={toleration.key}
+                                        onChange={(e) =>
+                                          updateToleration(index, 'key', e.target.value)
+                                        }
+                                        fullWidth
+                                      />
+                                      <Select
+                                        options={[
+                                          { value: 'Equal', label: 'Equal' },
+                                          { value: 'Exists', label: 'Exists' },
+                                        ]}
+                                        value={toleration.operator}
+                                        onChange={(val) => updateToleration(index, 'operator', val)}
+                                        fullWidth
+                                      />
+                                      <Input
+                                        placeholder="Value"
+                                        value={toleration.value}
+                                        onChange={(e) =>
+                                          updateToleration(index, 'value', e.target.value)
+                                        }
+                                        fullWidth
+                                      />
+                                      <Select
+                                        options={[
+                                          { value: 'NoSchedule', label: 'NoSchedule' },
+                                          {
+                                            value: 'PreferNoSchedule',
+                                            label: 'PreferNoSchedule',
+                                          },
+                                          { value: 'NoExecute', label: 'NoExecute' },
+                                        ]}
+                                        value={toleration.effect}
+                                        onChange={(val) => updateToleration(index, 'effect', val)}
+                                        fullWidth
+                                      />
+                                      <HStack gap={2} align="center">
+                                        <Input
+                                          placeholder=""
+                                          value={toleration.tolerationSeconds}
+                                          onChange={(e) =>
+                                            updateToleration(
+                                              index,
+                                              'tolerationSeconds',
+                                              e.target.value
+                                            )
+                                          }
+                                          fullWidth
+                                        />
+                                        <span className="text-[var(--color-text-default)] text-[12px] w-[80px] shrink-0">
+                                          Seconds
+                                        </span>
+                                      </HStack>
+                                      <button
+                                        onClick={() => removeToleration(index)}
+                                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                      >
+                                        <IconX
+                                          size={12}
+                                          className="text-[var(--color-text-muted)]"
+                                          stroke={1.5}
+                                        />
+                                      </button>
                                     </div>
                                   ))}
 
@@ -3966,94 +3948,91 @@ export function CreateDaemonSetPage() {
                             <SectionCard.Content>
                               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
                                 <VStack gap={2}>
+                                  {(config.envVars || []).length > 0 && (
+                                    <div className="grid grid-cols-[1fr_1fr_1fr_auto] gap-2 w-full">
+                                      <label className="text-[12px] font-medium text-[var(--color-text-default)]">
+                                        Type
+                                      </label>
+                                      <label className="text-[12px] font-medium text-[var(--color-text-default)]">
+                                        Variable Name
+                                      </label>
+                                      <label className="text-[12px] font-medium text-[var(--color-text-default)]">
+                                        Value
+                                      </label>
+                                      <div />
+                                    </div>
+                                  )}
                                   {(config.envVars || []).map((envVar, index) => (
                                     <div
                                       key={index}
-                                      className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                      className="grid grid-cols-[1fr_1fr_1fr_auto] gap-2 w-full items-center"
                                     >
-                                      <div className="grid grid-cols-[1fr_1fr_1fr_auto] gap-2 items-start">
-                                        <VStack gap={2}>
-                                          <span className="text-[12px] font-medium text-[var(--color-text-default)]">
-                                            Type
-                                          </span>
-                                          <Select
-                                            options={[
-                                              { value: 'value', label: 'Key/Value Pair' },
-                                              { value: 'configmap', label: 'ConfigMap' },
-                                              { value: 'secret', label: 'Secret' },
-                                            ]}
-                                            value={envVar.type || 'value'}
-                                            onChange={(val) => {
-                                              const newEnvVars = [...(config.envVars || [])];
-                                              newEnvVars[index] = {
-                                                ...newEnvVars[index],
-                                                type: val as 'value' | 'configmap' | 'secret',
-                                              };
-                                              updateContainerConfig(containerId, {
-                                                envVars: newEnvVars,
-                                              });
-                                            }}
-                                            fullWidth
-                                          />
-                                        </VStack>
-                                        <VStack gap={2}>
-                                          <span className="text-[12px] font-medium text-[var(--color-text-default)]">
-                                            Variable Name
-                                          </span>
-                                          <Input
-                                            placeholder="input variable name"
-                                            fullWidth
-                                            value={envVar.name}
-                                            onChange={(e) => {
-                                              const newEnvVars = [...(config.envVars || [])];
-                                              newEnvVars[index] = {
-                                                ...newEnvVars[index],
-                                                name: e.target.value,
-                                              };
-                                              updateContainerConfig(containerId, {
-                                                envVars: newEnvVars,
-                                              });
-                                            }}
-                                          />
-                                        </VStack>
-                                        <VStack gap={2}>
-                                          <span className="text-[12px] font-medium text-[var(--color-text-default)]">
-                                            Value
-                                          </span>
-                                          <Input
-                                            placeholder="input value"
-                                            fullWidth
-                                            value={envVar.value}
-                                            onChange={(e) => {
-                                              const newEnvVars = [...(config.envVars || [])];
-                                              newEnvVars[index] = {
-                                                ...newEnvVars[index],
-                                                value: e.target.value,
-                                              };
-                                              updateContainerConfig(containerId, {
-                                                envVars: newEnvVars,
-                                              });
-                                            }}
-                                          />
-                                        </VStack>
-                                        <button
-                                          className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                          onClick={() => {
-                                            const newEnvVars = (config.envVars || []).filter(
-                                              (_, i) => i !== index
-                                            );
-                                            updateContainerConfig(containerId, {
-                                              envVars: newEnvVars,
-                                            });
-                                          }}
-                                        >
-                                          <IconX
-                                            size={12}
-                                            className="text-[var(--color-text-muted)]"
-                                            stroke={1.5}
-                                          />
-                                        </button>
-                                      </div>
+                                      <Select
+                                        options={[
+                                          { value: 'value', label: 'Key/Value Pair' },
+                                          { value: 'configmap', label: 'ConfigMap' },
+                                          { value: 'secret', label: 'Secret' },
+                                        ]}
+                                        value={envVar.type || 'value'}
+                                        onChange={(val) => {
+                                          const newEnvVars = [...(config.envVars || [])];
+                                          newEnvVars[index] = {
+                                            ...newEnvVars[index],
+                                            type: val as 'value' | 'configmap' | 'secret',
+                                          };
+                                          updateContainerConfig(containerId, {
+                                            envVars: newEnvVars,
+                                          });
+                                        }}
+                                        fullWidth
+                                      />
+                                      <Input
+                                        placeholder="input variable name"
+                                        fullWidth
+                                        value={envVar.name}
+                                        onChange={(e) => {
+                                          const newEnvVars = [...(config.envVars || [])];
+                                          newEnvVars[index] = {
+                                            ...newEnvVars[index],
+                                            name: e.target.value,
+                                          };
+                                          updateContainerConfig(containerId, {
+                                            envVars: newEnvVars,
+                                          });
+                                        }}
+                                      />
+                                      <Input
+                                        placeholder="input value"
+                                        fullWidth
+                                        value={envVar.value}
+                                        onChange={(e) => {
+                                          const newEnvVars = [...(config.envVars || [])];
+                                          newEnvVars[index] = {
+                                            ...newEnvVars[index],
+                                            value: e.target.value,
+                                          };
+                                          updateContainerConfig(containerId, {
+                                            envVars: newEnvVars,
+                                          });
+                                        }}
+                                      />
+                                      <button
+                                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                        onClick={() => {
+                                          const newEnvVars = (config.envVars || []).filter(
+                                            (_, i) => i !== index
+                                          );
+                                          updateContainerConfig(containerId, {
+                                            envVars: newEnvVars,
+                                          });
+                                        }}
+                                      >
+                                        <IconX
+                                          size={12}
+                                          className="text-[var(--color-text-muted)]"
+                                          stroke={1.5}
+                                        />
+                                      </button>
                                     </div>
                                   ))}
 
@@ -4250,91 +4229,94 @@ export function CreateDaemonSetPage() {
                                             {(
                                               config.lifecycleHooks?.postStart?.httpGet
                                                 ?.httpHeaders || []
+                                            ).length > 0 && (
+                                              <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full">
+                                                <label className="text-[12px] font-medium text-[var(--color-text-default)]">
+                                                  Name{' '}
+                                                  <span className="text-[var(--color-state-danger)]">
+                                                    *
+                                                  </span>
+                                                </label>
+                                                <label className="text-[12px] font-medium text-[var(--color-text-default)]">
+                                                  Value
+                                                </label>
+                                                <div />
+                                              </div>
+                                            )}
+                                            {(
+                                              config.lifecycleHooks?.postStart?.httpGet
+                                                ?.httpHeaders || []
                                             ).map((header, index) => (
                                               <div
                                                 key={index}
-                                                className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                                className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center"
                                               >
-                                                <div className="flex gap-2 items-start w-full">
-                                                  <VStack gap={2} className="flex-1">
-                                                    <span className="text-[12px] font-medium text-[var(--color-text-default)]">
-                                                      Name{' '}
-                                                      <span className="text-[var(--color-state-danger)]">
-                                                        *
-                                                      </span>
-                                                    </span>
-                                                    <Input
-                                                      placeholder="e.g. accept-ranges"
-                                                      fullWidth
-                                                      value={header.name}
-                                                      onChange={(e) => {
-                                                        const newHeaders = [
-                                                          ...(config.lifecycleHooks?.postStart
-                                                            ?.httpGet?.httpHeaders || []),
-                                                        ];
-                                                        newHeaders[index] = {
-                                                          ...newHeaders[index],
-                                                          name: e.target.value,
-                                                        };
-                                                        updateLifecycleHook('postStart', {
-                                                          httpGet: {
-                                                            ...config.lifecycleHooks?.postStart
-                                                              ?.httpGet,
-                                                            httpHeaders: newHeaders,
-                                                          },
-                                                        });
-                                                      }}
-                                                    />
-                                                  </VStack>
-                                                  <VStack gap={2} className="flex-1">
-                                                    <span className="text-[12px] font-medium text-[var(--color-text-default)]">
-                                                      Value
-                                                    </span>
-                                                    <Input
-                                                      placeholder="e.g. bytes"
-                                                      fullWidth
-                                                      value={header.value}
-                                                      onChange={(e) => {
-                                                        const newHeaders = [
-                                                          ...(config.lifecycleHooks?.postStart
-                                                            ?.httpGet?.httpHeaders || []),
-                                                        ];
-                                                        newHeaders[index] = {
-                                                          ...newHeaders[index],
-                                                          value: e.target.value,
-                                                        };
-                                                        updateLifecycleHook('postStart', {
-                                                          httpGet: {
-                                                            ...config.lifecycleHooks?.postStart
-                                                              ?.httpGet,
-                                                            httpHeaders: newHeaders,
-                                                          },
-                                                        });
-                                                      }}
-                                                    />
-                                                  </VStack>
-                                                  <div className="pt-5">
-                                                    <Button
-                                                      variant="ghost"
-                                                      size="sm"
-                                                      onClick={() => {
-                                                        const newHeaders = (
-                                                          config.lifecycleHooks?.postStart?.httpGet
-                                                            ?.httpHeaders || []
-                                                        ).filter((_, i) => i !== index);
-                                                        updateLifecycleHook('postStart', {
-                                                          httpGet: {
-                                                            ...config.lifecycleHooks?.postStart
-                                                              ?.httpGet,
-                                                            httpHeaders: newHeaders,
-                                                          },
-                                                        });
-                                                      }}
-                                                    >
-                                                      <IconX size={12} />
-                                                    </Button>
-                                                  </div>
-                                                </div>
+                                                <Input
+                                                  placeholder="e.g. accept-ranges"
+                                                  fullWidth
+                                                  value={header.name}
+                                                  onChange={(e) => {
+                                                    const newHeaders = [
+                                                      ...(config.lifecycleHooks?.postStart?.httpGet
+                                                        ?.httpHeaders || []),
+                                                    ];
+                                                    newHeaders[index] = {
+                                                      ...newHeaders[index],
+                                                      name: e.target.value,
+                                                    };
+                                                    updateLifecycleHook('postStart', {
+                                                      httpGet: {
+                                                        ...config.lifecycleHooks?.postStart
+                                                          ?.httpGet,
+                                                        httpHeaders: newHeaders,
+                                                      },
+                                                    });
+                                                  }}
+                                                />
+                                                <Input
+                                                  placeholder="e.g. bytes"
+                                                  fullWidth
+                                                  value={header.value}
+                                                  onChange={(e) => {
+                                                    const newHeaders = [
+                                                      ...(config.lifecycleHooks?.postStart?.httpGet
+                                                        ?.httpHeaders || []),
+                                                    ];
+                                                    newHeaders[index] = {
+                                                      ...newHeaders[index],
+                                                      value: e.target.value,
+                                                    };
+                                                    updateLifecycleHook('postStart', {
+                                                      httpGet: {
+                                                        ...config.lifecycleHooks?.postStart
+                                                          ?.httpGet,
+                                                        httpHeaders: newHeaders,
+                                                      },
+                                                    });
+                                                  }}
+                                                />
+                                                <button
+                                                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                                  onClick={() => {
+                                                    const newHeaders = (
+                                                      config.lifecycleHooks?.postStart?.httpGet
+                                                        ?.httpHeaders || []
+                                                    ).filter((_, i) => i !== index);
+                                                    updateLifecycleHook('postStart', {
+                                                      httpGet: {
+                                                        ...config.lifecycleHooks?.postStart
+                                                          ?.httpGet,
+                                                        httpHeaders: newHeaders,
+                                                      },
+                                                    });
+                                                  }}
+                                                >
+                                                  <IconX
+                                                    size={12}
+                                                    className="text-[var(--color-text-muted)]"
+                                                    stroke={1.5}
+                                                  />
+                                                </button>
                                               </div>
                                             ))}
                                             <div className="w-fit">
@@ -4505,91 +4487,91 @@ export function CreateDaemonSetPage() {
                                             {(
                                               config.lifecycleHooks?.preStop?.httpGet
                                                 ?.httpHeaders || []
+                                            ).length > 0 && (
+                                              <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full">
+                                                <label className="text-[12px] font-medium text-[var(--color-text-default)]">
+                                                  Name{' '}
+                                                  <span className="text-[var(--color-state-danger)]">
+                                                    *
+                                                  </span>
+                                                </label>
+                                                <label className="text-[12px] font-medium text-[var(--color-text-default)]">
+                                                  Value
+                                                </label>
+                                                <div />
+                                              </div>
+                                            )}
+                                            {(
+                                              config.lifecycleHooks?.preStop?.httpGet
+                                                ?.httpHeaders || []
                                             ).map((header, index) => (
                                               <div
                                                 key={index}
-                                                className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                                className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center"
                                               >
-                                                <div className="flex gap-2 items-start w-full">
-                                                  <VStack gap={2} className="flex-1">
-                                                    <span className="text-[12px] font-medium text-[var(--color-text-default)]">
-                                                      Name{' '}
-                                                      <span className="text-[var(--color-state-danger)]">
-                                                        *
-                                                      </span>
-                                                    </span>
-                                                    <Input
-                                                      placeholder="e.g. accept-ranges"
-                                                      fullWidth
-                                                      value={header.name}
-                                                      onChange={(e) => {
-                                                        const newHeaders = [
-                                                          ...(config.lifecycleHooks?.preStop
-                                                            ?.httpGet?.httpHeaders || []),
-                                                        ];
-                                                        newHeaders[index] = {
-                                                          ...newHeaders[index],
-                                                          name: e.target.value,
-                                                        };
-                                                        updateLifecycleHook('preStop', {
-                                                          httpGet: {
-                                                            ...config.lifecycleHooks?.preStop
-                                                              ?.httpGet,
-                                                            httpHeaders: newHeaders,
-                                                          },
-                                                        });
-                                                      }}
-                                                    />
-                                                  </VStack>
-                                                  <VStack gap={2} className="flex-1">
-                                                    <span className="text-[12px] font-medium text-[var(--color-text-default)]">
-                                                      Value
-                                                    </span>
-                                                    <Input
-                                                      placeholder="e.g. bytes"
-                                                      fullWidth
-                                                      value={header.value}
-                                                      onChange={(e) => {
-                                                        const newHeaders = [
-                                                          ...(config.lifecycleHooks?.preStop
-                                                            ?.httpGet?.httpHeaders || []),
-                                                        ];
-                                                        newHeaders[index] = {
-                                                          ...newHeaders[index],
-                                                          value: e.target.value,
-                                                        };
-                                                        updateLifecycleHook('preStop', {
-                                                          httpGet: {
-                                                            ...config.lifecycleHooks?.preStop
-                                                              ?.httpGet,
-                                                            httpHeaders: newHeaders,
-                                                          },
-                                                        });
-                                                      }}
-                                                    />
-                                                  </VStack>
-                                                  <div className="pt-5">
-                                                    <Button
-                                                      variant="ghost"
-                                                      size="sm"
-                                                      onClick={() => {
-                                                        const newHeaders = (
-                                                          config.lifecycleHooks?.preStop?.httpGet
-                                                            ?.httpHeaders || []
-                                                        ).filter((_, i) => i !== index);
-                                                        updateLifecycleHook('preStop', {
-                                                          httpGet: {
-                                                            ...config.lifecycleHooks?.preStop
-                                                              ?.httpGet,
-                                                            httpHeaders: newHeaders,
-                                                          },
-                                                        });
-                                                      }}
-                                                    >
-                                                      <IconX size={12} />
-                                                    </Button>
-                                                  </div>
-                                                </div>
+                                                <Input
+                                                  placeholder="e.g. accept-ranges"
+                                                  fullWidth
+                                                  value={header.name}
+                                                  onChange={(e) => {
+                                                    const newHeaders = [
+                                                      ...(config.lifecycleHooks?.preStop?.httpGet
+                                                        ?.httpHeaders || []),
+                                                    ];
+                                                    newHeaders[index] = {
+                                                      ...newHeaders[index],
+                                                      name: e.target.value,
+                                                    };
+                                                    updateLifecycleHook('preStop', {
+                                                      httpGet: {
+                                                        ...config.lifecycleHooks?.preStop?.httpGet,
+                                                        httpHeaders: newHeaders,
+                                                      },
+                                                    });
+                                                  }}
+                                                />
+                                                <Input
+                                                  placeholder="e.g. bytes"
+                                                  fullWidth
+                                                  value={header.value}
+                                                  onChange={(e) => {
+                                                    const newHeaders = [
+                                                      ...(config.lifecycleHooks?.preStop?.httpGet
+                                                        ?.httpHeaders || []),
+                                                    ];
+                                                    newHeaders[index] = {
+                                                      ...newHeaders[index],
+                                                      value: e.target.value,
+                                                    };
+                                                    updateLifecycleHook('preStop', {
+                                                      httpGet: {
+                                                        ...config.lifecycleHooks?.preStop?.httpGet,
+                                                        httpHeaders: newHeaders,
+                                                      },
+                                                    });
+                                                  }}
+                                                />
+                                                <button
+                                                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                                  onClick={() => {
+                                                    const newHeaders = (
+                                                      config.lifecycleHooks?.preStop?.httpGet
+                                                        ?.httpHeaders || []
+                                                    ).filter((_, i) => i !== index);
+                                                    updateLifecycleHook('preStop', {
+                                                      httpGet: {
+                                                        ...config.lifecycleHooks?.preStop?.httpGet,
+                                                        httpHeaders: newHeaders,
+                                                      },
+                                                    });
+                                                  }}
+                                                >
+                                                  <IconX
+                                                    size={12}
+                                                    className="text-[var(--color-text-muted)]"
+                                                    stroke={1.5}
+                                                  />
+                                                </button>
                                               </div>
                                             ))}
                                             <div className="w-fit">
@@ -4973,87 +4955,88 @@ export function CreateDaemonSetPage() {
                                             </span>
                                             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
                                               <VStack gap={2}>
+                                                {(config.readinessProbe?.httpGet?.httpHeaders || [])
+                                                  .length > 0 && (
+                                                  <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full">
+                                                    <label className="text-[12px] font-medium text-[var(--color-text-default)]">
+                                                      Name
+                                                    </label>
+                                                    <label className="text-[12px] font-medium text-[var(--color-text-default)]">
+                                                      Value
+                                                    </label>
+                                                    <div />
+                                                  </div>
+                                                )}
                                                 {(
                                                   config.readinessProbe?.httpGet?.httpHeaders || []
                                                 ).map((header, index) => (
                                                   <div
                                                     key={index}
-                                                    className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                                    className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center"
                                                   >
-                                                    <div className="flex gap-2 items-start w-full">
-                                                      <VStack gap={2} className="flex-1">
-                                                        <span className="text-[12px] font-medium text-[var(--color-text-default)]">
-                                                          Name
-                                                        </span>
-                                                        <Input
-                                                          placeholder="Input name"
-                                                          fullWidth
-                                                          value={header.name}
-                                                          onChange={(e) => {
-                                                            const newHeaders = [
-                                                              ...(config.readinessProbe?.httpGet
-                                                                ?.httpHeaders || []),
-                                                            ];
-                                                            newHeaders[index] = {
-                                                              ...newHeaders[index],
-                                                              name: e.target.value,
-                                                            };
-                                                            updateProbe('readinessProbe', {
-                                                              httpGet: {
-                                                                ...config.readinessProbe?.httpGet,
-                                                                httpHeaders: newHeaders,
-                                                              },
-                                                            });
-                                                          }}
-                                                        />
-                                                      </VStack>
-                                                      <VStack gap={2} className="flex-1">
-                                                        <span className="text-[12px] font-medium text-[var(--color-text-default)]">
-                                                          Value
-                                                        </span>
-                                                        <Input
-                                                          placeholder="Input value"
-                                                          fullWidth
-                                                          value={header.value}
-                                                          onChange={(e) => {
-                                                            const newHeaders = [
-                                                              ...(config.readinessProbe?.httpGet
-                                                                ?.httpHeaders || []),
-                                                            ];
-                                                            newHeaders[index] = {
-                                                              ...newHeaders[index],
-                                                              value: e.target.value,
-                                                            };
-                                                            updateProbe('readinessProbe', {
-                                                              httpGet: {
-                                                                ...config.readinessProbe?.httpGet,
-                                                                httpHeaders: newHeaders,
-                                                              },
-                                                            });
-                                                          }}
-                                                        />
-                                                      </VStack>
-                                                      <div className="pt-5">
-                                                        <Button
-                                                          variant="ghost"
-                                                          size="sm"
-                                                          onClick={() => {
-                                                            const newHeaders = (
-                                                              config.readinessProbe?.httpGet
-                                                                ?.httpHeaders || []
-                                                            ).filter((_, i) => i !== index);
-                                                            updateProbe('readinessProbe', {
-                                                              httpGet: {
-                                                                ...config.readinessProbe?.httpGet,
-                                                                httpHeaders: newHeaders,
-                                                              },
-                                                            });
-                                                          }}
-                                                        >
-                                                          <IconX size={12} />
-                                                        </Button>
-                                                      </div>
-                                                    </div>
+                                                    <Input
+                                                      placeholder="Input name"
+                                                      fullWidth
+                                                      value={header.name}
+                                                      onChange={(e) => {
+                                                        const newHeaders = [
+                                                          ...(config.readinessProbe?.httpGet
+                                                            ?.httpHeaders || []),
+                                                        ];
+                                                        newHeaders[index] = {
+                                                          ...newHeaders[index],
+                                                          name: e.target.value,
+                                                        };
+                                                        updateProbe('readinessProbe', {
+                                                          httpGet: {
+                                                            ...config.readinessProbe?.httpGet,
+                                                            httpHeaders: newHeaders,
+                                                          },
+                                                        });
+                                                      }}
+                                                    />
+                                                    <Input
+                                                      placeholder="Input value"
+                                                      fullWidth
+                                                      value={header.value}
+                                                      onChange={(e) => {
+                                                        const newHeaders = [
+                                                          ...(config.readinessProbe?.httpGet
+                                                            ?.httpHeaders || []),
+                                                        ];
+                                                        newHeaders[index] = {
+                                                          ...newHeaders[index],
+                                                          value: e.target.value,
+                                                        };
+                                                        updateProbe('readinessProbe', {
+                                                          httpGet: {
+                                                            ...config.readinessProbe?.httpGet,
+                                                            httpHeaders: newHeaders,
+                                                          },
+                                                        });
+                                                      }}
+                                                    />
+                                                    <button
+                                                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                                      onClick={() => {
+                                                        const newHeaders = (
+                                                          config.readinessProbe?.httpGet
+                                                            ?.httpHeaders || []
+                                                        ).filter((_, i) => i !== index);
+                                                        updateProbe('readinessProbe', {
+                                                          httpGet: {
+                                                            ...config.readinessProbe?.httpGet,
+                                                            httpHeaders: newHeaders,
+                                                          },
+                                                        });
+                                                      }}
+                                                    >
+                                                      <IconX
+                                                        size={12}
+                                                        className="text-[var(--color-text-muted)]"
+                                                        stroke={1.5}
+                                                      />
+                                                    </button>
                                                   </div>
                                                 ))}
                                                 <div className="w-fit">
@@ -5961,6 +5944,23 @@ export function CreateDaemonSetPage() {
                                               {selectedVol.volumeName} ({selectedVol.volumeType})
                                             </span>
                                             {/* Mount rows */}
+                                            {(selectedVol.mounts || []).length > 0 && (
+                                              <div className="grid grid-cols-[1fr_1fr_auto_auto] gap-2 w-full">
+                                                <label className="text-[12px] font-medium text-[var(--color-text-default)]">
+                                                  Mount Point{' '}
+                                                  <span className="text-[var(--color-state-danger)]">
+                                                    *
+                                                  </span>
+                                                </label>
+                                                <label className="text-[12px] font-medium text-[var(--color-text-default)]">
+                                                  Sub Path in Volume
+                                                </label>
+                                                <label className="text-[12px] font-medium text-[var(--color-text-default)]">
+                                                  Read Only
+                                                </label>
+                                                <div />
+                                              </div>
+                                            )}
                                             {(selectedVol.mounts || []).map(
                                               (
                                                 mount: {
@@ -5972,123 +5972,95 @@ export function CreateDaemonSetPage() {
                                               ) => (
                                                 <div
                                                   key={mountIndex}
-                                                  className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                                  className="grid grid-cols-[1fr_1fr_auto_auto] gap-2 w-full items-center"
                                                 >
-                                                  <div className="flex gap-2 items-start">
-                                                    <VStack gap={2} className="flex-1">
-                                                      <span className="text-[12px] font-medium text-[var(--color-text-default)]">
-                                                        Mount Point{' '}
-                                                        <span className="text-[var(--color-state-danger)]">
-                                                          *
-                                                        </span>
-                                                      </span>
-                                                      <Input
-                                                        placeholder=""
-                                                        fullWidth
-                                                        value={mount.mountPath}
-                                                        onChange={(e) => {
-                                                          const newVolumes = [
-                                                            ...(config.selectedVolumes || []),
-                                                          ];
-                                                          newVolumes[volIndex].mounts[mountIndex] =
-                                                            {
-                                                              ...newVolumes[volIndex].mounts[
-                                                                mountIndex
-                                                              ],
-                                                              mountPath: e.target.value,
-                                                            };
-                                                          updateContainerConfig(containerId, {
-                                                            selectedVolumes: newVolumes,
-                                                          });
-                                                        }}
-                                                      />
-                                                    </VStack>
-                                                    <VStack gap={2} className="flex-1">
-                                                      <span className="text-[12px] font-medium text-[var(--color-text-default)]">
-                                                        Sub Path in Volume
-                                                      </span>
-                                                      <Input
-                                                        placeholder=""
-                                                        fullWidth
-                                                        value={mount.subPath}
-                                                        onChange={(e) => {
-                                                          const newVolumes = [
-                                                            ...(config.selectedVolumes || []),
-                                                          ];
-                                                          newVolumes[volIndex].mounts[mountIndex] =
-                                                            {
-                                                              ...newVolumes[volIndex].mounts[
-                                                                mountIndex
-                                                              ],
-                                                              subPath: e.target.value,
-                                                            };
-                                                          updateContainerConfig(containerId, {
-                                                            selectedVolumes: newVolumes,
-                                                          });
-                                                        }}
-                                                      />
-                                                    </VStack>
-                                                    <VStack gap={2}>
-                                                      <span className="text-[12px] font-medium text-[var(--color-text-default)]">
-                                                        Read Only
-                                                      </span>
-                                                      <div className="pt-2">
-                                                        <Checkbox
-                                                          checked={mount.readOnly || false}
-                                                          onChange={(e) => {
-                                                            const newVolumes = [
-                                                              ...(config.selectedVolumes || []),
-                                                            ];
-                                                            newVolumes[volIndex].mounts[
-                                                              mountIndex
-                                                            ] = {
-                                                              ...newVolumes[volIndex].mounts[
-                                                                mountIndex
-                                                              ],
-                                                              readOnly: e.target.checked,
-                                                            };
-                                                            updateContainerConfig(containerId, {
-                                                              selectedVolumes: newVolumes,
-                                                            });
-                                                          }}
-                                                        />
-                                                      </div>
-                                                    </VStack>
-                                                    <button
-                                                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                                      onClick={() => {
+                                                  <Input
+                                                    placeholder=""
+                                                    fullWidth
+                                                    value={mount.mountPath}
+                                                    onChange={(e) => {
+                                                      const newVolumes = [
+                                                        ...(config.selectedVolumes || []),
+                                                      ];
+                                                      newVolumes[volIndex].mounts[mountIndex] = {
+                                                        ...newVolumes[volIndex].mounts[mountIndex],
+                                                        mountPath: e.target.value,
+                                                      };
+                                                      updateContainerConfig(containerId, {
+                                                        selectedVolumes: newVolumes,
+                                                      });
+                                                    }}
+                                                  />
+                                                  <Input
+                                                    placeholder=""
+                                                    fullWidth
+                                                    value={mount.subPath}
+                                                    onChange={(e) => {
+                                                      const newVolumes = [
+                                                        ...(config.selectedVolumes || []),
+                                                      ];
+                                                      newVolumes[volIndex].mounts[mountIndex] = {
+                                                        ...newVolumes[volIndex].mounts[mountIndex],
+                                                        subPath: e.target.value,
+                                                      };
+                                                      updateContainerConfig(containerId, {
+                                                        selectedVolumes: newVolumes,
+                                                      });
+                                                    }}
+                                                  />
+                                                  <div className="flex items-center">
+                                                    <Checkbox
+                                                      checked={mount.readOnly || false}
+                                                      onChange={(e) => {
                                                         const newVolumes = [
                                                           ...(config.selectedVolumes || []),
                                                         ];
-                                                        newVolumes[volIndex].mounts = newVolumes[
-                                                          volIndex
-                                                        ].mounts.filter(
-                                                          (
-                                                            _: {
-                                                              mountPath: string;
-                                                              subPath: string;
-                                                              readOnly: boolean;
-                                                            },
-                                                            i: number
-                                                          ) => i !== mountIndex
-                                                        );
-                                                        if (
-                                                          newVolumes[volIndex].mounts.length === 0
-                                                        ) {
-                                                          newVolumes.splice(volIndex, 1);
-                                                        }
+                                                        newVolumes[volIndex].mounts[mountIndex] = {
+                                                          ...newVolumes[volIndex].mounts[
+                                                            mountIndex
+                                                          ],
+                                                          readOnly: e.target.checked,
+                                                        };
                                                         updateContainerConfig(containerId, {
                                                           selectedVolumes: newVolumes,
                                                         });
                                                       }}
-                                                    >
-                                                      <IconX
-                                                        size={12}
-                                                        className="text-[var(--color-text-muted)]"
-                                                        stroke={1.5}
-                                                      />
-                                                    </button>
+                                                    />
                                                   </div>
+                                                  <button
+                                                    className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                                    onClick={() => {
+                                                      const newVolumes = [
+                                                        ...(config.selectedVolumes || []),
+                                                      ];
+                                                      newVolumes[volIndex].mounts = newVolumes[
+                                                        volIndex
+                                                      ].mounts.filter(
+                                                        (
+                                                          _: {
+                                                            mountPath: string;
+                                                            subPath: string;
+                                                            readOnly: boolean;
+                                                          },
+                                                          i: number
+                                                        ) => i !== mountIndex
+                                                      );
+                                                      if (
+                                                        newVolumes[volIndex].mounts.length === 0
+                                                      ) {
+                                                        newVolumes.splice(volIndex, 1);
+                                                      }
+                                                      updateContainerConfig(containerId, {
+                                                        selectedVolumes: newVolumes,
+                                                      });
+                                                    }}
+                                                  >
+                                                    <IconX
+                                                      size={12}
+                                                      className="text-[var(--color-text-muted)]"
+                                                      stroke={1.5}
+                                                    />
+                                                  </button>
                                                 </div>
                                               )
                                             )}

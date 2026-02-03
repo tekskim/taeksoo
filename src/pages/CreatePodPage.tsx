@@ -1975,53 +1975,50 @@ export function CreatePodPage() {
                                 </p>
                               </VStack>
 
-                              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-                                <VStack gap={3}>
-                                  {nameservers.map((ns, index) => (
-                                    <div
-                                      key={index}
-                                      className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
-                                    >
-                                      <div className="flex gap-2 items-start w-full">
-                                        <VStack gap={2} className="flex-1">
-                                          <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                            Nameservers
-                                          </span>
-                                          <Input
-                                            placeholder="e.g. 8.8.8.8"
-                                            value={ns}
-                                            onChange={(e) =>
-                                              updateNameserver(index, e.target.value)
-                                            }
-                                            fullWidth
-                                          />
-                                        </VStack>
-                                        <button
-                                          onClick={() => removeNameserver(index)}
-                                          className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                        >
-                                          <IconX
-                                            size={12}
-                                            className="text-[var(--color-text-muted)]"
-                                            stroke={1.5}
-                                          />
-                                        </button>
-                                      </div>
-                                    </div>
-                                  ))}
-
-                                  <div className="w-fit">
-                                    <Button
-                                      variant="secondary"
-                                      size="sm"
-                                      leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                                      onClick={addNameserver}
-                                    >
-                                      Add Nameserver
-                                    </Button>
+                              <VStack gap={2}>
+                                {nameservers.length > 0 && (
+                                  <div className="grid grid-cols-[1fr_20px] gap-2 w-full">
+                                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                      Value
+                                    </label>
+                                    <div />
                                   </div>
-                                </VStack>
-                              </div>
+                                )}
+                                {nameservers.map((ns, index) => (
+                                  <div
+                                    key={index}
+                                    className="grid grid-cols-[1fr_20px] gap-2 w-full items-center"
+                                  >
+                                    <Input
+                                      placeholder="e.g. 8.8.8.8"
+                                      value={ns}
+                                      onChange={(e) => updateNameserver(index, e.target.value)}
+                                      fullWidth
+                                    />
+                                    <button
+                                      onClick={() => removeNameserver(index)}
+                                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                    >
+                                      <IconX
+                                        size={12}
+                                        className="text-[var(--color-text-muted)]"
+                                        stroke={1.5}
+                                      />
+                                    </button>
+                                  </div>
+                                ))}
+
+                                <div className="w-fit">
+                                  <Button
+                                    variant="secondary"
+                                    size="sm"
+                                    leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                    onClick={addNameserver}
+                                  >
+                                    Add Nameserver
+                                  </Button>
+                                </div>
+                              </VStack>
                             </VStack>
 
                             {/* Search Domains */}
@@ -2035,53 +2032,50 @@ export function CreatePodPage() {
                                 </p>
                               </VStack>
 
-                              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-                                <VStack gap={3}>
-                                  {searchDomains.map((sd, index) => (
-                                    <div
-                                      key={index}
-                                      className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
-                                    >
-                                      <div className="flex gap-2 items-start w-full">
-                                        <VStack gap={2} className="flex-1">
-                                          <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                            Search Domains
-                                          </span>
-                                          <Input
-                                            placeholder="e.g. example.com"
-                                            value={sd}
-                                            onChange={(e) =>
-                                              updateSearchDomain(index, e.target.value)
-                                            }
-                                            fullWidth
-                                          />
-                                        </VStack>
-                                        <button
-                                          onClick={() => removeSearchDomain(index)}
-                                          className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                        >
-                                          <IconX
-                                            size={12}
-                                            className="text-[var(--color-text-muted)]"
-                                            stroke={1.5}
-                                          />
-                                        </button>
-                                      </div>
-                                    </div>
-                                  ))}
-
-                                  <div className="w-fit">
-                                    <Button
-                                      variant="secondary"
-                                      size="sm"
-                                      leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                                      onClick={addSearchDomain}
-                                    >
-                                      Add Search Domain
-                                    </Button>
+                              <VStack gap={2}>
+                                {searchDomains.length > 0 && (
+                                  <div className="grid grid-cols-[1fr_20px] gap-2 w-full">
+                                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                      Value
+                                    </label>
+                                    <div />
                                   </div>
-                                </VStack>
-                              </div>
+                                )}
+                                {searchDomains.map((sd, index) => (
+                                  <div
+                                    key={index}
+                                    className="grid grid-cols-[1fr_20px] gap-2 w-full items-center"
+                                  >
+                                    <Input
+                                      placeholder="e.g. example.com"
+                                      value={sd}
+                                      onChange={(e) => updateSearchDomain(index, e.target.value)}
+                                      fullWidth
+                                    />
+                                    <button
+                                      onClick={() => removeSearchDomain(index)}
+                                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                    >
+                                      <IconX
+                                        size={12}
+                                        className="text-[var(--color-text-muted)]"
+                                        stroke={1.5}
+                                      />
+                                    </button>
+                                  </div>
+                                ))}
+
+                                <div className="w-fit">
+                                  <Button
+                                    variant="secondary"
+                                    size="sm"
+                                    leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                    onClick={addSearchDomain}
+                                  >
+                                    Add Search Domain
+                                  </Button>
+                                </div>
+                              </VStack>
                             </VStack>
 
                             {/* Resolver Options */}
@@ -2090,66 +2084,63 @@ export function CreatePodPage() {
                                 Resolver Options
                               </span>
 
-                              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-                                <VStack gap={3}>
-                                  {resolverOptions.map((opt, index) => (
-                                    <div
-                                      key={index}
-                                      className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
-                                    >
-                                      <div className="flex gap-2 items-start w-full">
-                                        <VStack gap={2} className="flex-1">
-                                          <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                            Name
-                                          </span>
-                                          <Input
-                                            placeholder="input name"
-                                            value={opt.name}
-                                            onChange={(e) =>
-                                              updateResolverOption(index, 'name', e.target.value)
-                                            }
-                                            fullWidth
-                                          />
-                                        </VStack>
-                                        <VStack gap={2} className="flex-1">
-                                          <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                            Value
-                                          </span>
-                                          <Input
-                                            placeholder="input value"
-                                            value={opt.value}
-                                            onChange={(e) =>
-                                              updateResolverOption(index, 'value', e.target.value)
-                                            }
-                                            fullWidth
-                                          />
-                                        </VStack>
-                                        <button
-                                          onClick={() => removeResolverOption(index)}
-                                          className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                        >
-                                          <IconX
-                                            size={12}
-                                            className="text-[var(--color-text-muted)]"
-                                            stroke={1.5}
-                                          />
-                                        </button>
-                                      </div>
-                                    </div>
-                                  ))}
-
-                                  <div className="w-fit">
-                                    <Button
-                                      variant="secondary"
-                                      size="sm"
-                                      leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                                      onClick={addResolverOption}
-                                    >
-                                      Add Option
-                                    </Button>
+                              <VStack gap={2}>
+                                {resolverOptions.length > 0 && (
+                                  <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                      Key
+                                    </label>
+                                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                      Value
+                                    </label>
+                                    <div />
                                   </div>
-                                </VStack>
-                              </div>
+                                )}
+                                {resolverOptions.map((opt, index) => (
+                                  <div
+                                    key={index}
+                                    className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                                  >
+                                    <Input
+                                      placeholder="input name"
+                                      value={opt.name}
+                                      onChange={(e) =>
+                                        updateResolverOption(index, 'name', e.target.value)
+                                      }
+                                      fullWidth
+                                    />
+                                    <Input
+                                      placeholder="input value"
+                                      value={opt.value}
+                                      onChange={(e) =>
+                                        updateResolverOption(index, 'value', e.target.value)
+                                      }
+                                      fullWidth
+                                    />
+                                    <button
+                                      onClick={() => removeResolverOption(index)}
+                                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                    >
+                                      <IconX
+                                        size={12}
+                                        className="text-[var(--color-text-muted)]"
+                                        stroke={1.5}
+                                      />
+                                    </button>
+                                  </div>
+                                ))}
+
+                                <div className="w-fit">
+                                  <Button
+                                    variant="secondary"
+                                    size="sm"
+                                    leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                    onClick={addResolverOption}
+                                  >
+                                    Add Option
+                                  </Button>
+                                </div>
+                              </VStack>
                             </VStack>
 
                             {/* Host Aliases */}
@@ -2158,66 +2149,61 @@ export function CreatePodPage() {
                                 Host Aliases
                               </span>
 
-                              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-                                <VStack gap={3}>
-                                  {hostAliases.map((alias, index) => (
-                                    <div
-                                      key={index}
-                                      className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
-                                    >
-                                      <div className="flex gap-2 items-start w-full">
-                                        <VStack gap={2} className="flex-1">
-                                          <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                            IP Address
-                                          </span>
-                                          <Input
-                                            placeholder="e.g. 127.0.0.1"
-                                            value={alias.ip}
-                                            onChange={(e) =>
-                                              updateHostAlias(index, 'ip', e.target.value)
-                                            }
-                                            fullWidth
-                                          />
-                                        </VStack>
-                                        <VStack gap={2} className="flex-1">
-                                          <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                            Hostname
-                                          </span>
-                                          <Input
-                                            placeholder="e.g. foo.company.com"
-                                            value={alias.hostname}
-                                            onChange={(e) =>
-                                              updateHostAlias(index, 'hostname', e.target.value)
-                                            }
-                                            fullWidth
-                                          />
-                                        </VStack>
-                                        <button
-                                          onClick={() => removeHostAlias(index)}
-                                          className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                        >
-                                          <IconX
-                                            size={12}
-                                            className="text-[var(--color-text-muted)]"
-                                            stroke={1.5}
-                                          />
-                                        </button>
-                                      </div>
-                                    </div>
-                                  ))}
-
-                                  <div className="w-fit">
-                                    <Button
-                                      variant="secondary"
-                                      size="sm"
-                                      leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                                      onClick={addHostAlias}
-                                    >
-                                      Add Alias
-                                    </Button>
+                              <VStack gap={2}>
+                                {hostAliases.length > 0 && (
+                                  <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                      IP
+                                    </label>
+                                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                      Hostnames
+                                    </label>
+                                    <div />
                                   </div>
-                                </VStack>
-                              </div>
+                                )}
+                                {hostAliases.map((alias, index) => (
+                                  <div
+                                    key={index}
+                                    className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                                  >
+                                    <Input
+                                      placeholder="e.g. 127.0.0.1"
+                                      value={alias.ip}
+                                      onChange={(e) => updateHostAlias(index, 'ip', e.target.value)}
+                                      fullWidth
+                                    />
+                                    <Input
+                                      placeholder="e.g. foo.company.com"
+                                      value={alias.hostname}
+                                      onChange={(e) =>
+                                        updateHostAlias(index, 'hostname', e.target.value)
+                                      }
+                                      fullWidth
+                                    />
+                                    <button
+                                      onClick={() => removeHostAlias(index)}
+                                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                    >
+                                      <IconX
+                                        size={12}
+                                        className="text-[var(--color-text-muted)]"
+                                        stroke={1.5}
+                                      />
+                                    </button>
+                                  </div>
+                                ))}
+
+                                <div className="w-fit">
+                                  <Button
+                                    variant="secondary"
+                                    size="sm"
+                                    leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                    onClick={addHostAlias}
+                                  >
+                                    Add Alias
+                                  </Button>
+                                </div>
+                              </VStack>
                             </VStack>
                           </VStack>
                         </SectionCard.Content>
@@ -2915,124 +2901,102 @@ export function CreatePodPage() {
                                 Tolerations
                               </span>
 
-                              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-                                <VStack gap={3}>
-                                  {tolerations.map((toleration, index) => (
-                                    <div
-                                      key={index}
-                                      className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
-                                    >
-                                      <div className="flex gap-2 items-start w-full">
-                                        <VStack gap={2} className="flex-1">
-                                          <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                            Key
-                                          </span>
-                                          <Input
-                                            placeholder="Key"
-                                            value={toleration.key}
-                                            onChange={(e) =>
-                                              updateToleration(index, 'key', e.target.value)
-                                            }
-                                            fullWidth
-                                          />
-                                        </VStack>
-                                        <VStack gap={2} className="flex-1">
-                                          <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                            Operator
-                                          </span>
-                                          <Select
-                                            options={[
-                                              { value: 'Equal', label: 'Equal' },
-                                              { value: 'Exists', label: 'Exists' },
-                                            ]}
-                                            value={toleration.operator}
-                                            onChange={(val) =>
-                                              updateToleration(index, 'operator', val)
-                                            }
-                                            fullWidth
-                                          />
-                                        </VStack>
-                                        <VStack gap={2} className="flex-1">
-                                          <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                            Value
-                                          </span>
-                                          <Input
-                                            placeholder="Value"
-                                            value={toleration.value}
-                                            onChange={(e) =>
-                                              updateToleration(index, 'value', e.target.value)
-                                            }
-                                            fullWidth
-                                          />
-                                        </VStack>
-                                        <VStack gap={2} className="flex-1">
-                                          <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                            Effect
-                                          </span>
-                                          <Select
-                                            options={[
-                                              { value: 'NoSchedule', label: 'NoSchedule' },
-                                              {
-                                                value: 'PreferNoSchedule',
-                                                label: 'PreferNoSchedule',
-                                              },
-                                              { value: 'NoExecute', label: 'NoExecute' },
-                                            ]}
-                                            value={toleration.effect}
-                                            onChange={(val) =>
-                                              updateToleration(index, 'effect', val)
-                                            }
-                                            fullWidth
-                                          />
-                                        </VStack>
-                                        <VStack gap={2} className="flex-1">
-                                          <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                            Toleration Seconds
-                                          </span>
-                                          <HStack gap={2} align="center">
-                                            <Input
-                                              placeholder=""
-                                              value={toleration.tolerationSeconds}
-                                              onChange={(e) =>
-                                                updateToleration(
-                                                  index,
-                                                  'tolerationSeconds',
-                                                  e.target.value
-                                                )
-                                              }
-                                              fullWidth
-                                            />
-                                            <span className="text-[var(--color-text-default)] text-[12px] w-[80px] shrink-0">
-                                              Seconds
-                                            </span>
-                                          </HStack>
-                                        </VStack>
-                                        <button
-                                          onClick={() => removeToleration(index)}
-                                          className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                        >
-                                          <IconX
-                                            size={12}
-                                            className="text-[var(--color-text-muted)]"
-                                            stroke={1.5}
-                                          />
-                                        </button>
-                                      </div>
-                                    </div>
-                                  ))}
-
-                                  <div className="w-fit">
-                                    <Button
-                                      variant="secondary"
-                                      size="sm"
-                                      leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                                      onClick={addToleration}
-                                    >
-                                      Add Toleration
-                                    </Button>
+                              <VStack gap={2}>
+                                {tolerations.length > 0 && (
+                                  <div className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_20px] gap-2 w-full">
+                                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                      Key
+                                    </label>
+                                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                      Operator
+                                    </label>
+                                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                      Value
+                                    </label>
+                                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                      Effect
+                                    </label>
+                                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                      Toleration Seconds
+                                    </label>
+                                    <div />
                                   </div>
-                                </VStack>
-                              </div>
+                                )}
+                                {tolerations.map((toleration, index) => (
+                                  <div
+                                    key={index}
+                                    className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_20px] gap-2 w-full items-center"
+                                  >
+                                    <Input
+                                      placeholder="Key"
+                                      value={toleration.key}
+                                      onChange={(e) =>
+                                        updateToleration(index, 'key', e.target.value)
+                                      }
+                                      fullWidth
+                                    />
+                                    <Select
+                                      options={[
+                                        { value: 'Equal', label: 'Equal' },
+                                        { value: 'Exists', label: 'Exists' },
+                                      ]}
+                                      value={toleration.operator}
+                                      onChange={(val) => updateToleration(index, 'operator', val)}
+                                      fullWidth
+                                    />
+                                    <Input
+                                      placeholder="Value"
+                                      value={toleration.value}
+                                      onChange={(e) =>
+                                        updateToleration(index, 'value', e.target.value)
+                                      }
+                                      fullWidth
+                                    />
+                                    <Select
+                                      options={[
+                                        { value: 'NoSchedule', label: 'NoSchedule' },
+                                        {
+                                          value: 'PreferNoSchedule',
+                                          label: 'PreferNoSchedule',
+                                        },
+                                        { value: 'NoExecute', label: 'NoExecute' },
+                                      ]}
+                                      value={toleration.effect}
+                                      onChange={(val) => updateToleration(index, 'effect', val)}
+                                      fullWidth
+                                    />
+                                    <Input
+                                      placeholder=""
+                                      value={toleration.tolerationSeconds}
+                                      onChange={(e) =>
+                                        updateToleration(index, 'tolerationSeconds', e.target.value)
+                                      }
+                                      fullWidth
+                                    />
+                                    <button
+                                      onClick={() => removeToleration(index)}
+                                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                    >
+                                      <IconX
+                                        size={12}
+                                        className="text-[var(--color-text-muted)]"
+                                        stroke={1.5}
+                                      />
+                                    </button>
+                                  </div>
+                                ))}
+
+                                <div className="w-fit">
+                                  <Button
+                                    variant="secondary"
+                                    size="sm"
+                                    leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                    onClick={addToleration}
+                                  >
+                                    Add Toleration
+                                  </Button>
+                                </div>
+                              </VStack>
                             </VStack>
 
                             {/* Priority */}
@@ -3799,117 +3763,112 @@ export function CreatePodPage() {
                           <SectionCard>
                             <SectionCard.Header title="Environment Variables" />
                             <SectionCard.Content>
-                              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-                                <VStack gap={2}>
-                                  {(config.envVars || []).map((envVar, index) => (
-                                    <div
-                                      key={index}
-                                      className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
-                                    >
-                                      <div className="grid grid-cols-[1fr_1fr_1fr_auto] gap-2 items-start">
-                                        <VStack gap={2}>
-                                          <span className="text-[12px] font-medium text-[var(--color-text-default)]">
-                                            Type
-                                          </span>
-                                          <Select
-                                            options={[
-                                              { value: 'value', label: 'Key/Value Pair' },
-                                              { value: 'configmap', label: 'ConfigMap' },
-                                              { value: 'secret', label: 'Secret' },
-                                            ]}
-                                            value={envVar.type || 'value'}
-                                            onChange={(val) => {
-                                              const newEnvVars = [...(config.envVars || [])];
-                                              newEnvVars[index] = {
-                                                ...newEnvVars[index],
-                                                type: val as 'value' | 'configmap' | 'secret',
-                                              };
-                                              updateContainerConfig(containerId, {
-                                                envVars: newEnvVars,
-                                              });
-                                            }}
-                                            fullWidth
-                                          />
-                                        </VStack>
-                                        <VStack gap={2}>
-                                          <span className="text-[12px] font-medium text-[var(--color-text-default)]">
-                                            Variable Name
-                                          </span>
-                                          <Input
-                                            placeholder="input variable name"
-                                            fullWidth
-                                            value={envVar.name}
-                                            onChange={(e) => {
-                                              const newEnvVars = [...(config.envVars || [])];
-                                              newEnvVars[index] = {
-                                                ...newEnvVars[index],
-                                                name: e.target.value,
-                                              };
-                                              updateContainerConfig(containerId, {
-                                                envVars: newEnvVars,
-                                              });
-                                            }}
-                                          />
-                                        </VStack>
-                                        <VStack gap={2}>
-                                          <span className="text-[12px] font-medium text-[var(--color-text-default)]">
-                                            Value
-                                          </span>
-                                          <Input
-                                            placeholder="input value"
-                                            fullWidth
-                                            value={envVar.value}
-                                            onChange={(e) => {
-                                              const newEnvVars = [...(config.envVars || [])];
-                                              newEnvVars[index] = {
-                                                ...newEnvVars[index],
-                                                value: e.target.value,
-                                              };
-                                              updateContainerConfig(containerId, {
-                                                envVars: newEnvVars,
-                                              });
-                                            }}
-                                          />
-                                        </VStack>
-                                        <button
-                                          className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                          onClick={() => {
-                                            const newEnvVars = (config.envVars || []).filter(
-                                              (_, i) => i !== index
-                                            );
-                                            updateContainerConfig(containerId, {
-                                              envVars: newEnvVars,
-                                            });
-                                          }}
-                                        >
-                                          <IconX
-                                            size={12}
-                                            className="text-[var(--color-text-muted)]"
-                                            stroke={1.5}
-                                          />
-                                        </button>
-                                      </div>
-                                    </div>
-                                  ))}
-
-                                  <div className="w-fit">
-                                    <Button
-                                      variant="secondary"
-                                      size="sm"
-                                      leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                              <VStack gap={2}>
+                                {(config.envVars || []).length > 0 && (
+                                  <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
+                                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                      Name
+                                    </label>
+                                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                      Value Type
+                                    </label>
+                                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                      Value/Source
+                                    </label>
+                                    <div />
+                                  </div>
+                                )}
+                                {(config.envVars || []).map((envVar, index) => (
+                                  <div
+                                    key={index}
+                                    className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
+                                  >
+                                    <Input
+                                      placeholder="input variable name"
+                                      fullWidth
+                                      value={envVar.name}
+                                      onChange={(e) => {
+                                        const newEnvVars = [...(config.envVars || [])];
+                                        newEnvVars[index] = {
+                                          ...newEnvVars[index],
+                                          name: e.target.value,
+                                        };
+                                        updateContainerConfig(containerId, {
+                                          envVars: newEnvVars,
+                                        });
+                                      }}
+                                    />
+                                    <Select
+                                      options={[
+                                        { value: 'value', label: 'Key/Value Pair' },
+                                        { value: 'configmap', label: 'ConfigMap' },
+                                        { value: 'secret', label: 'Secret' },
+                                      ]}
+                                      value={envVar.type || 'value'}
+                                      onChange={(val) => {
+                                        const newEnvVars = [...(config.envVars || [])];
+                                        newEnvVars[index] = {
+                                          ...newEnvVars[index],
+                                          type: val as 'value' | 'configmap' | 'secret',
+                                        };
+                                        updateContainerConfig(containerId, {
+                                          envVars: newEnvVars,
+                                        });
+                                      }}
+                                      fullWidth
+                                    />
+                                    <Input
+                                      placeholder="input value"
+                                      fullWidth
+                                      value={envVar.value}
+                                      onChange={(e) => {
+                                        const newEnvVars = [...(config.envVars || [])];
+                                        newEnvVars[index] = {
+                                          ...newEnvVars[index],
+                                          value: e.target.value,
+                                        };
+                                        updateContainerConfig(containerId, {
+                                          envVars: newEnvVars,
+                                        });
+                                      }}
+                                    />
+                                    <button
+                                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                       onClick={() => {
-                                        const newEnvVars = [
-                                          ...(config.envVars || []),
-                                          { name: '', value: '', type: 'value' as const },
-                                        ];
-                                        updateContainerConfig(containerId, { envVars: newEnvVars });
+                                        const newEnvVars = (config.envVars || []).filter(
+                                          (_, i) => i !== index
+                                        );
+                                        updateContainerConfig(containerId, {
+                                          envVars: newEnvVars,
+                                        });
                                       }}
                                     >
-                                      Add Variable
-                                    </Button>
+                                      <IconX
+                                        size={12}
+                                        className="text-[var(--color-text-muted)]"
+                                        stroke={1.5}
+                                      />
+                                    </button>
                                   </div>
-                                </VStack>
-                              </div>
+                                ))}
+
+                                <div className="w-fit">
+                                  <Button
+                                    variant="secondary"
+                                    size="sm"
+                                    leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                    onClick={() => {
+                                      const newEnvVars = [
+                                        ...(config.envVars || []),
+                                        { name: '', value: '', type: 'value' as const },
+                                      ];
+                                      updateContainerConfig(containerId, { envVars: newEnvVars });
+                                    }}
+                                  >
+                                    Add Variable
+                                  </Button>
+                                </div>
+                              </VStack>
                             </SectionCard.Content>
                           </SectionCard>
 
@@ -4085,91 +4044,91 @@ export function CreatePodPage() {
                                             {(
                                               config.lifecycleHooks?.postStart?.httpGet
                                                 ?.httpHeaders || []
+                                            ).length > 0 && (
+                                              <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                                                <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                                  Name{' '}
+                                                  <span className="text-[var(--color-state-danger)]">
+                                                    *
+                                                  </span>
+                                                </label>
+                                                <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                                  Value
+                                                </label>
+                                                <div />
+                                              </div>
+                                            )}
+                                            {(
+                                              config.lifecycleHooks?.postStart?.httpGet
+                                                ?.httpHeaders || []
                                             ).map((header, index) => (
                                               <div
                                                 key={index}
-                                                className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                                className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                                               >
-                                                <div className="flex gap-2 items-start w-full">
-                                                  <VStack gap={2} className="flex-1">
-                                                    <span className="text-[12px] font-medium text-[var(--color-text-default)]">
-                                                      Name{' '}
-                                                      <span className="text-[var(--color-state-danger)]">
-                                                        *
-                                                      </span>
-                                                    </span>
-                                                    <Input
-                                                      placeholder="e.g. accept-ranges"
-                                                      fullWidth
-                                                      value={header.name}
-                                                      onChange={(e) => {
-                                                        const newHeaders = [
-                                                          ...(config.lifecycleHooks?.postStart
-                                                            ?.httpGet?.httpHeaders || []),
-                                                        ];
-                                                        newHeaders[index] = {
-                                                          ...newHeaders[index],
-                                                          name: e.target.value,
-                                                        };
-                                                        updateLifecycleHook('postStart', {
-                                                          httpGet: {
-                                                            ...config.lifecycleHooks?.postStart
-                                                              ?.httpGet,
-                                                            httpHeaders: newHeaders,
-                                                          },
-                                                        });
-                                                      }}
-                                                    />
-                                                  </VStack>
-                                                  <VStack gap={2} className="flex-1">
-                                                    <span className="text-[12px] font-medium text-[var(--color-text-default)]">
-                                                      Value
-                                                    </span>
-                                                    <Input
-                                                      placeholder="e.g. bytes"
-                                                      fullWidth
-                                                      value={header.value}
-                                                      onChange={(e) => {
-                                                        const newHeaders = [
-                                                          ...(config.lifecycleHooks?.postStart
-                                                            ?.httpGet?.httpHeaders || []),
-                                                        ];
-                                                        newHeaders[index] = {
-                                                          ...newHeaders[index],
-                                                          value: e.target.value,
-                                                        };
-                                                        updateLifecycleHook('postStart', {
-                                                          httpGet: {
-                                                            ...config.lifecycleHooks?.postStart
-                                                              ?.httpGet,
-                                                            httpHeaders: newHeaders,
-                                                          },
-                                                        });
-                                                      }}
-                                                    />
-                                                  </VStack>
-                                                  <div className="pt-5">
-                                                    <Button
-                                                      variant="ghost"
-                                                      size="sm"
-                                                      onClick={() => {
-                                                        const newHeaders = (
-                                                          config.lifecycleHooks?.postStart?.httpGet
-                                                            ?.httpHeaders || []
-                                                        ).filter((_, i) => i !== index);
-                                                        updateLifecycleHook('postStart', {
-                                                          httpGet: {
-                                                            ...config.lifecycleHooks?.postStart
-                                                              ?.httpGet,
-                                                            httpHeaders: newHeaders,
-                                                          },
-                                                        });
-                                                      }}
-                                                    >
-                                                      <IconX size={12} />
-                                                    </Button>
-                                                  </div>
-                                                </div>
+                                                <Input
+                                                  placeholder="e.g. accept-ranges"
+                                                  fullWidth
+                                                  value={header.name}
+                                                  onChange={(e) => {
+                                                    const newHeaders = [
+                                                      ...(config.lifecycleHooks?.postStart?.httpGet
+                                                        ?.httpHeaders || []),
+                                                    ];
+                                                    newHeaders[index] = {
+                                                      ...newHeaders[index],
+                                                      name: e.target.value,
+                                                    };
+                                                    updateLifecycleHook('postStart', {
+                                                      httpGet: {
+                                                        ...config.lifecycleHooks?.postStart
+                                                          ?.httpGet,
+                                                        httpHeaders: newHeaders,
+                                                      },
+                                                    });
+                                                  }}
+                                                />
+                                                <Input
+                                                  placeholder="e.g. bytes"
+                                                  fullWidth
+                                                  value={header.value}
+                                                  onChange={(e) => {
+                                                    const newHeaders = [
+                                                      ...(config.lifecycleHooks?.postStart?.httpGet
+                                                        ?.httpHeaders || []),
+                                                    ];
+                                                    newHeaders[index] = {
+                                                      ...newHeaders[index],
+                                                      value: e.target.value,
+                                                    };
+                                                    updateLifecycleHook('postStart', {
+                                                      httpGet: {
+                                                        ...config.lifecycleHooks?.postStart
+                                                          ?.httpGet,
+                                                        httpHeaders: newHeaders,
+                                                      },
+                                                    });
+                                                  }}
+                                                />
+                                                <button
+                                                  className="size-5 flex items-center justify-center text-[var(--color-text-default)] hover:text-[var(--color-state-danger)] transition-colors"
+                                                  onClick={() => {
+                                                    const newHeaders = (
+                                                      config.lifecycleHooks?.postStart?.httpGet
+                                                        ?.httpHeaders || []
+                                                    ).filter((_, i) => i !== index);
+                                                    updateLifecycleHook('postStart', {
+                                                      httpGet: {
+                                                        ...config.lifecycleHooks?.postStart
+                                                          ?.httpGet,
+                                                        httpHeaders: newHeaders,
+                                                      },
+                                                    });
+                                                  }}
+                                                  aria-label="Remove header"
+                                                >
+                                                  <IconX size={12} />
+                                                </button>
                                               </div>
                                             ))}
                                             <div className="w-fit">
@@ -4340,91 +4299,88 @@ export function CreatePodPage() {
                                             {(
                                               config.lifecycleHooks?.preStop?.httpGet
                                                 ?.httpHeaders || []
+                                            ).length > 0 && (
+                                              <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                                                <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                                  Name{' '}
+                                                  <span className="text-[var(--color-state-danger)]">
+                                                    *
+                                                  </span>
+                                                </label>
+                                                <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                                  Value
+                                                </label>
+                                                <div />
+                                              </div>
+                                            )}
+                                            {(
+                                              config.lifecycleHooks?.preStop?.httpGet
+                                                ?.httpHeaders || []
                                             ).map((header, index) => (
                                               <div
                                                 key={index}
-                                                className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                                className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                                               >
-                                                <div className="flex gap-2 items-start w-full">
-                                                  <VStack gap={2} className="flex-1">
-                                                    <span className="text-[12px] font-medium text-[var(--color-text-default)]">
-                                                      Name{' '}
-                                                      <span className="text-[var(--color-state-danger)]">
-                                                        *
-                                                      </span>
-                                                    </span>
-                                                    <Input
-                                                      placeholder="e.g. accept-ranges"
-                                                      fullWidth
-                                                      value={header.name}
-                                                      onChange={(e) => {
-                                                        const newHeaders = [
-                                                          ...(config.lifecycleHooks?.preStop
-                                                            ?.httpGet?.httpHeaders || []),
-                                                        ];
-                                                        newHeaders[index] = {
-                                                          ...newHeaders[index],
-                                                          name: e.target.value,
-                                                        };
-                                                        updateLifecycleHook('preStop', {
-                                                          httpGet: {
-                                                            ...config.lifecycleHooks?.preStop
-                                                              ?.httpGet,
-                                                            httpHeaders: newHeaders,
-                                                          },
-                                                        });
-                                                      }}
-                                                    />
-                                                  </VStack>
-                                                  <VStack gap={2} className="flex-1">
-                                                    <span className="text-[12px] font-medium text-[var(--color-text-default)]">
-                                                      Value
-                                                    </span>
-                                                    <Input
-                                                      placeholder="e.g. bytes"
-                                                      fullWidth
-                                                      value={header.value}
-                                                      onChange={(e) => {
-                                                        const newHeaders = [
-                                                          ...(config.lifecycleHooks?.preStop
-                                                            ?.httpGet?.httpHeaders || []),
-                                                        ];
-                                                        newHeaders[index] = {
-                                                          ...newHeaders[index],
-                                                          value: e.target.value,
-                                                        };
-                                                        updateLifecycleHook('preStop', {
-                                                          httpGet: {
-                                                            ...config.lifecycleHooks?.preStop
-                                                              ?.httpGet,
-                                                            httpHeaders: newHeaders,
-                                                          },
-                                                        });
-                                                      }}
-                                                    />
-                                                  </VStack>
-                                                  <div className="pt-5">
-                                                    <Button
-                                                      variant="ghost"
-                                                      size="sm"
-                                                      onClick={() => {
-                                                        const newHeaders = (
-                                                          config.lifecycleHooks?.preStop?.httpGet
-                                                            ?.httpHeaders || []
-                                                        ).filter((_, i) => i !== index);
-                                                        updateLifecycleHook('preStop', {
-                                                          httpGet: {
-                                                            ...config.lifecycleHooks?.preStop
-                                                              ?.httpGet,
-                                                            httpHeaders: newHeaders,
-                                                          },
-                                                        });
-                                                      }}
-                                                    >
-                                                      <IconX size={12} />
-                                                    </Button>
-                                                  </div>
-                                                </div>
+                                                <Input
+                                                  placeholder="e.g. accept-ranges"
+                                                  fullWidth
+                                                  value={header.name}
+                                                  onChange={(e) => {
+                                                    const newHeaders = [
+                                                      ...(config.lifecycleHooks?.preStop?.httpGet
+                                                        ?.httpHeaders || []),
+                                                    ];
+                                                    newHeaders[index] = {
+                                                      ...newHeaders[index],
+                                                      name: e.target.value,
+                                                    };
+                                                    updateLifecycleHook('preStop', {
+                                                      httpGet: {
+                                                        ...config.lifecycleHooks?.preStop?.httpGet,
+                                                        httpHeaders: newHeaders,
+                                                      },
+                                                    });
+                                                  }}
+                                                />
+                                                <Input
+                                                  placeholder="e.g. bytes"
+                                                  fullWidth
+                                                  value={header.value}
+                                                  onChange={(e) => {
+                                                    const newHeaders = [
+                                                      ...(config.lifecycleHooks?.preStop?.httpGet
+                                                        ?.httpHeaders || []),
+                                                    ];
+                                                    newHeaders[index] = {
+                                                      ...newHeaders[index],
+                                                      value: e.target.value,
+                                                    };
+                                                    updateLifecycleHook('preStop', {
+                                                      httpGet: {
+                                                        ...config.lifecycleHooks?.preStop?.httpGet,
+                                                        httpHeaders: newHeaders,
+                                                      },
+                                                    });
+                                                  }}
+                                                />
+                                                <button
+                                                  className="size-5 flex items-center justify-center text-[var(--color-text-default)] hover:text-[var(--color-state-danger)] transition-colors"
+                                                  onClick={() => {
+                                                    const newHeaders = (
+                                                      config.lifecycleHooks?.preStop?.httpGet
+                                                        ?.httpHeaders || []
+                                                    ).filter((_, i) => i !== index);
+                                                    updateLifecycleHook('preStop', {
+                                                      httpGet: {
+                                                        ...config.lifecycleHooks?.preStop?.httpGet,
+                                                        httpHeaders: newHeaders,
+                                                      },
+                                                    });
+                                                  }}
+                                                  aria-label="Remove header"
+                                                >
+                                                  <IconX size={12} />
+                                                </button>
                                               </div>
                                             ))}
                                             <div className="w-fit">
@@ -4808,87 +4764,85 @@ export function CreatePodPage() {
                                             </span>
                                             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
                                               <VStack gap={2}>
+                                                {(config.readinessProbe?.httpGet?.httpHeaders || [])
+                                                  .length > 0 && (
+                                                  <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                                                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                                      Name
+                                                    </label>
+                                                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                                      Value
+                                                    </label>
+                                                    <div />
+                                                  </div>
+                                                )}
                                                 {(
                                                   config.readinessProbe?.httpGet?.httpHeaders || []
                                                 ).map((header, index) => (
                                                   <div
                                                     key={index}
-                                                    className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                                    className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                                                   >
-                                                    <div className="flex gap-2 items-start w-full">
-                                                      <VStack gap={2} className="flex-1">
-                                                        <span className="text-[12px] font-medium text-[var(--color-text-default)]">
-                                                          Name
-                                                        </span>
-                                                        <Input
-                                                          placeholder="Input name"
-                                                          fullWidth
-                                                          value={header.name}
-                                                          onChange={(e) => {
-                                                            const newHeaders = [
-                                                              ...(config.readinessProbe?.httpGet
-                                                                ?.httpHeaders || []),
-                                                            ];
-                                                            newHeaders[index] = {
-                                                              ...newHeaders[index],
-                                                              name: e.target.value,
-                                                            };
-                                                            updateProbe('readinessProbe', {
-                                                              httpGet: {
-                                                                ...config.readinessProbe?.httpGet,
-                                                                httpHeaders: newHeaders,
-                                                              },
-                                                            });
-                                                          }}
-                                                        />
-                                                      </VStack>
-                                                      <VStack gap={2} className="flex-1">
-                                                        <span className="text-[12px] font-medium text-[var(--color-text-default)]">
-                                                          Value
-                                                        </span>
-                                                        <Input
-                                                          placeholder="Input value"
-                                                          fullWidth
-                                                          value={header.value}
-                                                          onChange={(e) => {
-                                                            const newHeaders = [
-                                                              ...(config.readinessProbe?.httpGet
-                                                                ?.httpHeaders || []),
-                                                            ];
-                                                            newHeaders[index] = {
-                                                              ...newHeaders[index],
-                                                              value: e.target.value,
-                                                            };
-                                                            updateProbe('readinessProbe', {
-                                                              httpGet: {
-                                                                ...config.readinessProbe?.httpGet,
-                                                                httpHeaders: newHeaders,
-                                                              },
-                                                            });
-                                                          }}
-                                                        />
-                                                      </VStack>
-                                                      <div className="pt-5">
-                                                        <Button
-                                                          variant="ghost"
-                                                          size="sm"
-                                                          onClick={() => {
-                                                            const newHeaders = (
-                                                              config.readinessProbe?.httpGet
-                                                                ?.httpHeaders || []
-                                                            ).filter((_, i) => i !== index);
-                                                            updateProbe('readinessProbe', {
-                                                              httpGet: {
-                                                                ...config.readinessProbe?.httpGet,
-                                                                httpHeaders: newHeaders,
-                                                              },
-                                                            });
-                                                          }}
-                                                        >
-                                                          <IconX size={12} />
-                                                        </Button>
-                                                      </div>
-                                                    </div>
+                                                    <Input
+                                                      placeholder="Input name"
+                                                      fullWidth
+                                                      value={header.name}
+                                                      onChange={(e) => {
+                                                        const newHeaders = [
+                                                          ...(config.readinessProbe?.httpGet
+                                                            ?.httpHeaders || []),
+                                                        ];
+                                                        newHeaders[index] = {
+                                                          ...newHeaders[index],
+                                                          name: e.target.value,
+                                                        };
+                                                        updateProbe('readinessProbe', {
+                                                          httpGet: {
+                                                            ...config.readinessProbe?.httpGet,
+                                                            httpHeaders: newHeaders,
+                                                          },
+                                                        });
+                                                      }}
+                                                    />
+                                                    <Input
+                                                      placeholder="Input value"
+                                                      fullWidth
+                                                      value={header.value}
+                                                      onChange={(e) => {
+                                                        const newHeaders = [
+                                                          ...(config.readinessProbe?.httpGet
+                                                            ?.httpHeaders || []),
+                                                        ];
+                                                        newHeaders[index] = {
+                                                          ...newHeaders[index],
+                                                          value: e.target.value,
+                                                        };
+                                                        updateProbe('readinessProbe', {
+                                                          httpGet: {
+                                                            ...config.readinessProbe?.httpGet,
+                                                            httpHeaders: newHeaders,
+                                                          },
+                                                        });
+                                                      }}
+                                                    />
+                                                    <button
+                                                      className="size-5 flex items-center justify-center text-[var(--color-text-default)] hover:text-[var(--color-state-danger)] transition-colors"
+                                                      onClick={() => {
+                                                        const newHeaders = (
+                                                          config.readinessProbe?.httpGet
+                                                            ?.httpHeaders || []
+                                                        ).filter((_, i) => i !== index);
+                                                        updateProbe('readinessProbe', {
+                                                          httpGet: {
+                                                            ...config.readinessProbe?.httpGet,
+                                                            httpHeaders: newHeaders,
+                                                          },
+                                                        });
+                                                      }}
+                                                      aria-label="Remove header"
+                                                    >
+                                                      <IconX size={12} />
+                                                    </button>
                                                   </div>
                                                 ))}
                                                 <div className="w-fit">
