@@ -157,7 +157,7 @@ import type { FilterField, AppliedFilter } from '@/design-system';
 .text-body-xs     /* 10px/14px - 0.625rem/0.875rem */
 
 /* Label - medium (500) */
-.text-label-lg    /* 13px/20px - 0.8125rem/1.25rem - Input 라벨 */
+.text-label-lg    /* 13px/18px - 0.8125rem/1.125rem - Input 라벨 */
 .text-label-md    /* 12px/18px - 0.75rem/1.125rem */
 .text-label-sm    /* 11px/16px - 0.6875rem/1rem - 폼 라벨 */
 ```

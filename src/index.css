@@ -2903,7 +2903,7 @@ input[type='search']::-webkit-search-decoration {
 /* Label - All medium (500) */
 .text-label-lg {
   font-size: var(--font-size-13);
-  line-height: var(--line-height-20);
+  line-height: var(--line-height-18);
   font-weight: var(--font-weight-medium);
 }
 

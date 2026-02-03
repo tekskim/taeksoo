@@ -4153,7 +4153,7 @@ export function DesignSystemPage() {
                               {
                                 token: 'lg',
                                 size: '13px',
-                                lh: '20px',
+                                lh: '18px',
                                 weight: '500',
                                 desc: 'Input label',
                               },
