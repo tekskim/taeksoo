@@ -390,7 +390,7 @@ export function Select({
                 className={twMerge(
                   'flex items-center justify-between',
                   'px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)]',
-                  'text-[length:var(--select-item-font-size)] leading-[var(--select-item-line-height)]',
+                  'text-body-md leading-[var(--select-item-line-height)]',
                   'cursor-pointer transition-colors duration-[var(--duration-fast)]',
                   'border-b border-[var(--color-border-subtle)]',
                   'text-[var(--color-text-muted)] hover:bg-[var(--select-item-hover-bg)] hover:text-[var(--color-text-default)]'
@@ -421,8 +421,7 @@ export function Select({
                   className={twMerge(
                     'flex items-center justify-between',
                     'px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)]',
-                    'text-[length:var(--select-item-font-size)] leading-[var(--select-item-line-height)]',
-                    'font-medium',
+                    'text-body-md leading-[var(--select-item-line-height)]',
                     'cursor-pointer transition-colors duration-[var(--duration-fast)]',
                     // Border bottom (except last)
                     index < options.length - 1 && 'border-b border-[var(--color-border-subtle)]',

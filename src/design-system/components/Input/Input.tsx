@@ -45,10 +45,10 @@ export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 
    ---------------------------------------- */
 
 const sizes: Record<InputSize | InputSizeAlias, string> = {
-  xs: 'h-6 text-[11px]', // thaki-ui compatibility
+  xs: 'h-6 text-body-sm', // thaki-ui compatibility
   sm: 'h-[var(--input-height-sm)] text-[length:var(--input-font-size-sm)]',
   md: 'h-[var(--input-height-md)] text-[length:var(--input-font-size)]',
-  lg: 'h-10 text-[14px]', // thaki-ui compatibility
+  lg: 'h-10 text-body-lg', // thaki-ui compatibility
 };
 
 const labelSizes: Record<InputSize, string> = {
@@ -158,7 +158,10 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       className
     );
 
-    const wrapperClasses = ['flex flex-col gap-2', fullWidth ? 'w-full' : 'w-fit'].join(' ');
+    const wrapperClasses = [
+      'flex flex-col gap-[var(--input-label-gap)]',
+      fullWidth ? 'w-full' : 'w-fit',
+    ].join(' ');
 
     return (
       <div className={wrapperClasses}>

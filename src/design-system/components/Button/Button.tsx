@@ -19,9 +19,9 @@ const buttonVariants = cva(
     'font-medium',
     'transition-colors duration-[var(--duration-fast)]',
     'focus-visible:outline-none',
-    'focus-visible:ring-2',
+    'focus-visible:ring-1',
     'focus-visible:ring-[var(--color-border-focus)]',
-    'focus-visible:ring-offset-2',
+    'focus-visible:ring-offset-1',
     'cursor-pointer',
     'disabled:cursor-not-allowed',
     'rounded-[var(--button-radius)]',
@@ -82,7 +82,7 @@ const buttonVariants = cva(
         ],
       },
       size: {
-        xs: ['h-6', 'px-2', 'py-1', 'gap-1', 'min-w-[48px]', 'text-[11px]', 'leading-4'],
+        xs: ['h-6', 'px-2', 'py-1', 'gap-1', 'min-w-[48px]', 'text-body-sm'],
         sm: [
           'h-[var(--button-height-sm)]',
           'px-[var(--button-padding-x-sm)]',
@@ -144,7 +144,7 @@ const buttonVariants = cva(
       {
         variant: 'link',
         size: 'xs',
-        className: 'h-auto min-w-0 px-0 py-0 text-[11px]',
+        className: 'h-auto min-w-0 px-0 py-0 text-body-sm',
       },
       {
         variant: 'link',

@@ -78,7 +78,7 @@ IconExpandOn.displayName = 'IconExpandOn';
  * 시계와 오른쪽 아래 화살표가 결합된 아이콘
  */
 export const IconTimeout = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -109,7 +109,7 @@ IconTimeout.displayName = 'IconTimeout';
  * 시계와 역방향 화살표가 결합된 아이콘
  */
 export const IconHistory2 = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -141,7 +141,7 @@ IconHistory2.displayName = 'IconHistory2';
  * Figma 디자인에 맞는 로봇 아이콘
  */
 export const IconRobotCustom = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -173,7 +173,7 @@ IconRobotCustom.displayName = 'IconRobotCustom';
  * 로봇 아이콘에 더하기 기호가 있는 아이콘
  */
 export const IconAddRobotCustom = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -205,7 +205,7 @@ IconAddRobotCustom.displayName = 'IconAddRobotCustom';
  * Action - 16x16 프레임
  */
 export const IconAction = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -235,7 +235,7 @@ IconAction.displayName = 'IconAction';
  * Active - 16x16 프레임
  */
 export const IconActive2 = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -265,7 +265,7 @@ IconActive2.displayName = 'IconActive2';
  * Add Volume - 16x16 프레임
  */
 export const IconAddVolume2 = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -295,7 +295,7 @@ IconAddVolume2.displayName = 'IconAddVolume2';
  * Add robot - 16x16 프레임
  */
 export const IconAddRobot = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -325,7 +325,7 @@ IconAddRobot.displayName = 'IconAddRobot';
  * Alert - 16x16 프레임
  */
 export const IconAlert2 = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -355,7 +355,7 @@ IconAlert2.displayName = 'IconAlert2';
  * Attach - 16x16 프레임
  */
 export const IconAttach2 = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -385,7 +385,7 @@ IconAttach2.displayName = 'IconAttach2';
  * Backup - 16x16 프레임
  */
 export const IconBackup2 = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -415,7 +415,7 @@ IconBackup2.displayName = 'IconBackup2';
  * Building - 16x16 프레임
  */
 export const IconBuilding = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -447,7 +447,7 @@ IconBuilding.displayName = 'IconBuilding';
  * Certificate - 16x16 프레임
  */
 export const IconCertificate2 = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -477,7 +477,7 @@ IconCertificate2.displayName = 'IconCertificate2';
  * Chart - 16x16 프레임
  */
 export const IconChart2 = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -507,7 +507,7 @@ IconChart2.displayName = 'IconChart2';
  * CheckCircle - 16x16 프레임
  */
 export const IconCheckcircle = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -537,7 +537,7 @@ IconCheckcircle.displayName = 'IconCheckcircle';
  * ChevronDown - 16x16 프레임
  */
 export const IconChevrondown = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -567,7 +567,7 @@ IconChevrondown.displayName = 'IconChevrondown';
  * ChevronLeft - 16x16 프레임
  */
 export const IconChevronleft = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -597,7 +597,7 @@ IconChevronleft.displayName = 'IconChevronleft';
  * ChevronRight - 16x16 프레임
  */
 export const IconChevronright = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -627,7 +627,7 @@ IconChevronright.displayName = 'IconChevronright';
  * ChevronUp - 16x16 프레임
  */
 export const IconChevronup = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -657,7 +657,7 @@ IconChevronup.displayName = 'IconChevronup';
  * CloseSmall - 16x16 프레임
  */
 export const IconClosesmall = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -687,7 +687,7 @@ IconClosesmall.displayName = 'IconClosesmall';
  * Code-Console - 16x16 프레임
  */
 export const IconCodeConsole = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -717,7 +717,7 @@ IconCodeConsole.displayName = 'IconCodeConsole';
  * Copy - 16x16 프레임
  */
 export const IconCopy = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -747,7 +747,7 @@ IconCopy.displayName = 'IconCopy';
  * Dashboards - 16x16 프레임
  */
 export const IconDashboards = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -778,7 +778,7 @@ IconDashboards.displayName = 'IconDashboards';
  * Deactivated - 16x16 프레임
  */
 export const IconDeactivated2 = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -808,7 +808,7 @@ IconDeactivated2.displayName = 'IconDeactivated2';
  * Delete - 16x16 프레임
  */
 export const IconDelete = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -838,7 +838,7 @@ IconDelete.displayName = 'IconDelete';
  * Deleting - 16x16 프레임
  */
 export const IconDeleting2 = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -868,7 +868,7 @@ IconDeleting2.displayName = 'IconDeleting2';
  * Download - 16x16 프레임
  */
 export const IconDownload = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -898,7 +898,7 @@ IconDownload.displayName = 'IconDownload';
  * DrawerClose - 16x16 프레임
  */
 export const IconDrawerclose = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -928,7 +928,7 @@ IconDrawerclose.displayName = 'IconDrawerclose';
  * Edit - 16x16 프레임
  */
 export const IconEdit = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -958,7 +958,7 @@ IconEdit.displayName = 'IconEdit';
  * Error-Warning - 16x16 프레임
  */
 export const IconErrorWarning = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -988,7 +988,7 @@ IconErrorWarning.displayName = 'IconErrorWarning';
  * Error - 16x16 프레임
  */
 export const IconError2 = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -1019,7 +1019,7 @@ IconError2.displayName = 'IconError2';
  * ExternalLink - 16x16 프레임
  */
 export const IconExternallink = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -1049,7 +1049,7 @@ IconExternallink.displayName = 'IconExternallink';
  * FavoriteOff - 16x16 프레임
  */
 export const IconFavoriteoff = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -1079,7 +1079,7 @@ IconFavoriteoff.displayName = 'IconFavoriteoff';
  * FavoriteOn - 16x16 프레임
  */
 export const IconFavoriteon = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -1124,7 +1124,7 @@ IconFavoriteon.displayName = 'IconFavoriteon';
  * File - 16x16 프레임
  */
 export const IconFile2 = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -1154,7 +1154,7 @@ IconFile2.displayName = 'IconFile2';
  * Flavor - 16x16 프레임
  */
 export const IconFlavor = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -1184,7 +1184,7 @@ IconFlavor.displayName = 'IconFlavor';
  * FloatingIp - 16x16 프레임
  */
 export const IconFloatingip = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -1214,7 +1214,7 @@ IconFloatingip.displayName = 'IconFloatingip';
  * Hard_drive - 16x16 프레임
  */
 export const IconHardDrive2 = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -1244,7 +1244,7 @@ IconHardDrive2.displayName = 'IconHardDrive2';
  * Help - 16x16 프레임
  */
 export const IconHelp = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -1274,7 +1274,7 @@ IconHelp.displayName = 'IconHelp';
  * Hide - 16x16 프레임
  */
 export const IconHide = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -1304,7 +1304,7 @@ IconHide.displayName = 'IconHide';
  * Home - 16x16 프레임
  */
 export const IconHome = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -1334,7 +1334,7 @@ IconHome.displayName = 'IconHome';
  * Host Aggregates - 16x16 프레임
  */
 export const IconHostAggregates2 = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -1364,7 +1364,7 @@ IconHostAggregates2.displayName = 'IconHostAggregates2';
  * Hypervisor - 16x16 프레임
  */
 export const IconHypervisor2 = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -1394,7 +1394,7 @@ IconHypervisor2.displayName = 'IconHypervisor2';
  * Images - 16x16 프레임
  */
 export const IconImages2 = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -1424,7 +1424,7 @@ IconImages2.displayName = 'IconImages2';
  * Info - 16x16 프레임
  */
 export const IconInfo = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -1454,7 +1454,7 @@ IconInfo.displayName = 'IconInfo';
  * Instances - 16x16 프레임
  */
 export const IconInstances2 = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -1484,7 +1484,7 @@ IconInstances2.displayName = 'IconInstances2';
  * Inuse - 16x16 프레임
  */
 export const IconInuse2 = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -1514,7 +1514,7 @@ IconInuse2.displayName = 'IconInuse2';
  * Key - 16x16 프레임
  */
 export const IconKey2 = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -1544,7 +1544,7 @@ IconKey2.displayName = 'IconKey2';
  * KeyPairs - 16x16 프레임
  */
 export const IconKeypairs = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -1574,7 +1574,7 @@ IconKeypairs.displayName = 'IconKeypairs';
  * Layers - 16x16 프레임
  */
 export const IconLayers = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -1604,7 +1604,7 @@ IconLayers.displayName = 'IconLayers';
  * LoadBalancer - 16x16 프레임
  */
 export const IconLoadbalancer = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -1634,7 +1634,7 @@ IconLoadbalancer.displayName = 'IconLoadbalancer';
  * Lock - 16x16 프레임
  */
 export const IconLock = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -1664,7 +1664,7 @@ IconLock.displayName = 'IconLock';
  * Maintenance - 16x16 프레임
  */
 export const IconMaintenance2 = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -1709,7 +1709,7 @@ IconMaintenance2.displayName = 'IconMaintenance2';
  * More-kebab - 16x16 프레임
  */
 export const IconMoreKebab = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -1777,7 +1777,7 @@ IconMoreKebab.displayName = 'IconMoreKebab';
  * Network - 16x16 프레임
  */
 export const IconNetwork2 = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -1807,7 +1807,7 @@ IconNetwork2.displayName = 'IconNetwork2';
  * Networks - 16x16 프레임
  */
 export const IconNetworks = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -1837,7 +1837,7 @@ IconNetworks.displayName = 'IconNetworks';
  * NewTab - 16x16 프레임
  */
 export const IconNewtab = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -1867,7 +1867,7 @@ IconNewtab.displayName = 'IconNewtab';
  * Notification-new - 16x16 프레임
  */
 export const IconNotificationNew = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -1905,7 +1905,7 @@ IconNotificationNew.displayName = 'IconNotificationNew';
  * Notification - 16x16 프레임
  */
 export const IconNotification = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -1935,7 +1935,7 @@ IconNotification.displayName = 'IconNotification';
  * Order - 16x16 프레임
  */
 export const IconOrder2 = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -2000,7 +2000,7 @@ IconOrder2.displayName = 'IconOrder2';
  * Paused - 16x16 프레임
  */
 export const IconPaused = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -2039,7 +2039,7 @@ IconPaused.displayName = 'IconPaused';
  * Play - 16x16 프레임
  */
 export const IconPlay = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -2071,7 +2071,7 @@ IconPlay.displayName = 'IconPlay';
  * Plugin - 16x16 프레임
  */
 export const IconPlugin2 = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -2101,7 +2101,7 @@ IconPlugin2.displayName = 'IconPlugin2';
  * Plus-circle - 16x16 프레임
  */
 export const IconPlusCircle = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -2131,7 +2131,7 @@ IconPlusCircle.displayName = 'IconPlusCircle';
  * Ports-1 - 16x16 프레임
  */
 export const IconPorts1 = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -2168,7 +2168,7 @@ IconPorts1.displayName = 'IconPorts1';
  * Ports - 16x16 프레임
  */
 export const IconPorts22 = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -2198,7 +2198,7 @@ IconPorts22.displayName = 'IconPorts22';
  * Publish - 16x16 프레임
  */
 export const IconPublish2 = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -2228,7 +2228,7 @@ IconPublish2.displayName = 'IconPublish2';
  * Reboot - 16x16 프레임
  */
 export const IconReboot2 = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -2258,7 +2258,7 @@ IconReboot2.displayName = 'IconReboot2';
  * Refresh - 16x16 프레임
  */
 export const IconRefresh = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -2290,7 +2290,7 @@ IconRefresh.displayName = 'IconRefresh';
  * Request - 16x16 프레임
  */
 export const IconRequest = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -2378,7 +2378,7 @@ IconRouters1.displayName = 'IconRouters1';
  * Routers - 16x16 프레임
  */
 export const IconRouters2 = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -2408,7 +2408,7 @@ IconRouters2.displayName = 'IconRouters2';
  * Schedule - 16x16 프레임
  */
 export const IconSchedule = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -2453,7 +2453,7 @@ IconSchedule.displayName = 'IconSchedule';
  * Search - 16x16 프레임
  */
 export const IconSearch = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -2483,7 +2483,7 @@ IconSearch.displayName = 'IconSearch';
  * Security - 16x16 프레임
  */
 export const IconSecurity = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -2513,7 +2513,7 @@ IconSecurity.displayName = 'IconSecurity';
  * SecurityError - 16x16 프레임
  */
 export const IconSecurityerror = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -2543,7 +2543,7 @@ IconSecurityerror.displayName = 'IconSecurityerror';
  * SecurityGroup - 16x16 프레임
  */
 export const IconSecuritygroup = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -2573,7 +2573,7 @@ IconSecuritygroup.displayName = 'IconSecuritygroup';
  * Server - 16x16 프레임
  */
 export const IconServer = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -2603,7 +2603,7 @@ IconServer.displayName = 'IconServer';
  * Setting - 16x16 프레임
  */
 export const IconSetting = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -2640,7 +2640,7 @@ IconSetting.displayName = 'IconSetting';
  * Shelved - 16x16 프레임
  */
 export const IconShelved2 = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -2670,7 +2670,7 @@ IconShelved2.displayName = 'IconShelved2';
  * Show - 16x16 프레임
  */
 export const IconShow = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -2707,7 +2707,7 @@ IconShow.displayName = 'IconShow';
  * Sidebar - 16x16 프레임
  */
 export const IconSidebar = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -2737,7 +2737,7 @@ IconSidebar.displayName = 'IconSidebar';
  * Snapshot - 16x16 프레임
  */
 export const IconSnapshot = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -2774,7 +2774,7 @@ IconSnapshot.displayName = 'IconSnapshot';
  * Stop - 16x16 프레임
  */
 export const IconStop = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -2806,7 +2806,7 @@ IconStop.displayName = 'IconStop';
  * Storage - 16x16 프레임
  */
 export const IconStorage = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -2836,7 +2836,7 @@ IconStorage.displayName = 'IconStorage';
  * Suspended - 16x16 프레임
  */
 export const IconSuspended2 = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -2866,7 +2866,7 @@ IconSuspended2.displayName = 'IconSuspended2';
  * Template - 16x16 프레임
  */
 export const IconTemplate = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -2896,7 +2896,7 @@ IconTemplate.displayName = 'IconTemplate';
  * Topology - 16x16 프레임
  */
 export const IconTopology = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -2926,7 +2926,7 @@ IconTopology.displayName = 'IconTopology';
  * Upload - 16x16 프레임
  */
 export const IconUpload = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -2956,7 +2956,7 @@ IconUpload.displayName = 'IconUpload';
  * Verify - 16x16 프레임
  */
 export const IconVerify2 = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -2986,7 +2986,7 @@ IconVerify2.displayName = 'IconVerify2';
  * Volume Search - 16x16 프레임
  */
 export const IconVolumeSearch2 = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -3023,7 +3023,7 @@ IconVolumeSearch2.displayName = 'IconVolumeSearch2';
  * Volume Type - 16x16 프레임
  */
 export const IconVolumeType2 = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -3053,7 +3053,7 @@ IconVolumeType2.displayName = 'IconVolumeType2';
  * Warning - 16x16 프레임
  */
 export const IconWarning2 = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -3083,7 +3083,7 @@ IconWarning2.displayName = 'IconWarning2';
  * activity - 16x16 프레임
  */
 export const IconActivity = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -3113,7 +3113,7 @@ IconActivity.displayName = 'IconActivity';
  * add - 16x16 프레임
  */
 export const IconAdd = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -3143,7 +3143,7 @@ IconAdd.displayName = 'IconAdd';
  * adjustments-alt - 16x16 프레임
  */
 export const IconAdjustmentsAlt = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -3173,7 +3173,7 @@ IconAdjustmentsAlt.displayName = 'IconAdjustmentsAlt';
  * affiliate - 16x16 프레임
  */
 export const IconAffiliate2 = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -3203,7 +3203,7 @@ IconAffiliate2.displayName = 'IconAffiliate2';
  * article-history - 16x16 프레임
  */
 export const IconArticleHistory = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -3233,7 +3233,7 @@ IconArticleHistory.displayName = 'IconArticleHistory';
  * brain - 16x16 프레임
  */
 export const IconBrain = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -3263,7 +3263,7 @@ IconBrain.displayName = 'IconBrain';
  * branch - 16x16 프레임
  */
 export const IconBranch = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -3293,7 +3293,7 @@ IconBranch.displayName = 'IconBranch';
  * cahatbot - 16x16 프레임
  */
 export const IconCahatbot = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -3323,7 +3323,7 @@ IconCahatbot.displayName = 'IconCahatbot';
  * card - 16x16 프레임
  */
 export const IconCard2 = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -3360,7 +3360,7 @@ IconCard2.displayName = 'IconCard2';
  * category - 16x16 프레임
  */
 export const IconCategory = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -3412,7 +3412,7 @@ IconCategory.displayName = 'IconCategory';
  * 채팅 아이콘
  */
 export const IconChat = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -3442,7 +3442,7 @@ IconChat.displayName = 'IconChat';
  * check - 16x16 프레임
  */
 export const IconCheck2 = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -3472,7 +3472,7 @@ IconCheck2.displayName = 'IconCheck2';
  * cloud-computing - 16x16 프레임
  */
 export const IconCloudComputing = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -3502,7 +3502,7 @@ IconCloudComputing.displayName = 'IconCloudComputing';
  * device-desktop-analytics - 16x16 프레임
  */
 export const IconDeviceDesktopAnalytics = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -3532,7 +3532,7 @@ IconDeviceDesktopAnalytics.displayName = 'IconDeviceDesktopAnalytics';
  * dollar-sign - 16x16 프레임
  */
 export const IconDollarSign = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -3562,7 +3562,7 @@ IconDollarSign.displayName = 'IconDollarSign';
  * dot - 16x16 프레임
  */
 export const IconDot = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -3623,7 +3623,7 @@ IconFinetuning2.displayName = 'IconFinetuning2';
  * hourglass-high - 16x16 프레임
  */
 export const IconHourglassHigh = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -3653,7 +3653,7 @@ IconHourglassHigh.displayName = 'IconHourglassHigh';
  * language - 16x16 프레임
  */
 export const IconLanguage2 = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -3683,7 +3683,7 @@ IconLanguage2.displayName = 'IconLanguage2';
  * link - 16x16 프레임
  */
 export const IconLink = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -3713,7 +3713,7 @@ IconLink.displayName = 'IconLink';
  * list - 16x16 프레임
  */
 export const IconList = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -3743,7 +3743,7 @@ IconList.displayName = 'IconList';
  * microsoft - 16x16 프레임
  */
 export const IconMicrosoft = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -3814,7 +3814,7 @@ IconMicrosoft.displayName = 'IconMicrosoft';
  * more-meatball - 16x16 프레임
  */
 export const IconMoreMeatball = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -3882,7 +3882,7 @@ IconMoreMeatball.displayName = 'IconMoreMeatball';
  * newchat - 16x16 프레임
  */
 export const IconNewchat2 = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -3912,7 +3912,7 @@ IconNewchat2.displayName = 'IconNewchat2';
  * other - 16x16 프레임
  */
 export const IconOther = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -3980,7 +3980,7 @@ IconOther.displayName = 'IconOther';
  * pending - 16x16 프레임
  */
 export const IconPending2 = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -4010,7 +4010,7 @@ IconPending2.displayName = 'IconPending2';
  * progress - 16x16 프레임
  */
 export const IconProgress = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -4042,7 +4042,7 @@ IconProgress.displayName = 'IconProgress';
  * puzzle - 16x16 프레임
  */
 export const IconPuzzle2 = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -4072,7 +4072,7 @@ IconPuzzle2.displayName = 'IconPuzzle2';
  * reset-1 - 16x16 프레임
  */
 export const IconReset1 = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -4102,7 +4102,7 @@ IconReset1.displayName = 'IconReset1';
  * reset-2 - 16x16 프레임
  */
 export const IconReset22 = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -4132,7 +4132,7 @@ IconReset22.displayName = 'IconReset22';
  * reset - 16x16 프레임
  */
 export const IconReset2 = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -4162,7 +4162,7 @@ IconReset2.displayName = 'IconReset2';
  * retry - 16x16 프레임
  */
 export const IconRetry2 = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -4192,7 +4192,7 @@ IconRetry2.displayName = 'IconRetry2';
  * robot - 16x16 프레임
  */
 export const IconRobot = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -4222,7 +4222,7 @@ IconRobot.displayName = 'IconRobot';
  * rocky - 16x16 프레임
  */
 export const IconRocky2 = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -4277,7 +4277,7 @@ IconRocky2.displayName = 'IconRocky2';
  * share - 16x16 프레임
  */
 export const IconShare = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -4307,7 +4307,7 @@ IconShare.displayName = 'IconShare';
  * speed - 16x16 프레임
  */
 export const IconSpeed2 = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -4337,7 +4337,7 @@ IconSpeed2.displayName = 'IconSpeed2';
  * study - 16x16 프레임
  */
 export const IconStudy2 = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -4367,7 +4367,7 @@ IconStudy2.displayName = 'IconStudy2';
  * transfer - 16x16 프레임
  */
 export const IconTransfer2 = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -4397,7 +4397,7 @@ IconTransfer2.displayName = 'IconTransfer2';
  * ubuntu - 16x16 프레임
  */
 export const IconUbuntu2 = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -4484,7 +4484,7 @@ IconUbuntu2.displayName = 'IconUbuntu2';
  * unlink - 16x16 프레임
  */
 export const IconUnlink2 = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -4514,7 +4514,7 @@ IconUnlink2.displayName = 'IconUnlink2';
  * user-circle - 16x16 프레임
  */
 export const IconUserCircle = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -4544,7 +4544,7 @@ IconUserCircle.displayName = 'IconUserCircle';
  * zap - 16x16 프레임
  */
 export const IconZap = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -4574,7 +4574,7 @@ IconZap.displayName = 'IconZap';
  * Active - 16x16 프레임
  */
 export const IconActive = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -4605,7 +4605,7 @@ IconActive.displayName = 'IconActive';
  * AddVolume - 16x16 프레임
  */
 export const IconAddVolume = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -4636,7 +4636,7 @@ IconAddVolume.displayName = 'IconAddVolume';
  * Alert - 16x16 프레임
  */
 export const IconAlert = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -4667,7 +4667,7 @@ IconAlert.displayName = 'IconAlert';
  * Attach - 16x16 프레임
  */
 export const IconAttach = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -4698,7 +4698,7 @@ IconAttach.displayName = 'IconAttach';
  * Backup - 16x16 프레임
  */
 export const IconBackup = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -4729,7 +4729,7 @@ IconBackup.displayName = 'IconBackup';
  * Certificate - 16x16 프레임
  */
 export const IconCertificate = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -4760,7 +4760,7 @@ IconCertificate.displayName = 'IconCertificate';
  * Chart - 16x16 프레임
  */
 export const IconChart = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -4791,7 +4791,7 @@ IconChart.displayName = 'IconChart';
  * CheckCircle - 16x16 프레임
  */
 export const IconCheckCircle = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -4822,7 +4822,7 @@ IconCheckCircle.displayName = 'IconCheckCircle';
  * Deactivated - 16x16 프레임
  */
 export const IconDeactivated = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -4853,7 +4853,7 @@ IconDeactivated.displayName = 'IconDeactivated';
  * Deleting - 16x16 프레임
  */
 export const IconDeleting = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -4884,7 +4884,7 @@ IconDeleting.displayName = 'IconDeleting';
  * DrawerClose - 16x16 프레임
  */
 export const IconDrawerClose = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -4915,7 +4915,7 @@ IconDrawerClose.displayName = 'IconDrawerClose';
  * Error - 16x16 프레임
  */
 export const IconError = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -4946,7 +4946,7 @@ IconError.displayName = 'IconError';
  * FavoriteOn - 16x16 프레임
  */
 export const IconFavoriteOn = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -4977,7 +4977,7 @@ IconFavoriteOn.displayName = 'IconFavoriteOn';
  * File - 16x16 프레임
  */
 export const IconFile = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -5008,7 +5008,7 @@ IconFile.displayName = 'IconFile';
  * FloatingIp - 16x16 프레임
  */
 export const IconFloatingIp = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -5039,7 +5039,7 @@ IconFloatingIp.displayName = 'IconFloatingIp';
  * HardDrive - 16x16 프레임
  */
 export const IconHardDrive = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -5070,7 +5070,7 @@ IconHardDrive.displayName = 'IconHardDrive';
  * HostAggregates - 16x16 프레임
  */
 export const IconHostAggregates = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -5101,7 +5101,7 @@ IconHostAggregates.displayName = 'IconHostAggregates';
  * Hypervisor - 16x16 프레임
  */
 export const IconHypervisor = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -5132,7 +5132,7 @@ IconHypervisor.displayName = 'IconHypervisor';
  * Images - 16x16 프레임
  */
 export const IconImages = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -5163,7 +5163,7 @@ IconImages.displayName = 'IconImages';
  * Instances - 16x16 프레임
  */
 export const IconInstances = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -5194,7 +5194,7 @@ IconInstances.displayName = 'IconInstances';
  * Inuse - 16x16 프레임
  */
 export const IconInuse = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -5225,7 +5225,7 @@ IconInuse.displayName = 'IconInuse';
  * Key - 16x16 프레임
  */
 export const IconKey = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -5256,7 +5256,7 @@ IconKey.displayName = 'IconKey';
  * LoadBalancer - 16x16 프레임
  */
 export const IconLoadBalancer = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -5287,7 +5287,7 @@ IconLoadBalancer.displayName = 'IconLoadBalancer';
  * Maintenance - 16x16 프레임
  */
 export const IconMaintenance = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -5318,7 +5318,7 @@ IconMaintenance.displayName = 'IconMaintenance';
  * Morekebab - 16x16 프레임
  */
 export const IconMorekebab = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -5337,7 +5337,7 @@ export const IconMorekebab = forwardRef<SVGSVGElement, CustomIconProps>(
           strokeWidth={stroke}
           strokeLinecap="round"
           strokeLinejoin="round"
-          fill="#0F172A"
+          fill={color}
         />
         <path
           d="M7.33398 12.6666C7.33398 12.8434 7.40422 13.013 7.52925 13.138C7.65427 13.2631 7.82384 13.3333 8.00065 13.3333C8.17746 13.3333 8.34703 13.2631 8.47206 13.138C8.59708 13.013 8.66732 12.8434 8.66732 12.6666C8.66732 12.4898 8.59708 12.3202 8.47206 12.1952C8.34703 12.0702 8.17746 12 8.00065 12C7.82384 12 7.65427 12.0702 7.52925 12.1952C7.40422 12.3202 7.33398 12.4898 7.33398 12.6666Z"
@@ -5345,7 +5345,7 @@ export const IconMorekebab = forwardRef<SVGSVGElement, CustomIconProps>(
           strokeWidth={stroke}
           strokeLinecap="round"
           strokeLinejoin="round"
-          fill="#0F172A"
+          fill={color}
         />
         <path
           d="M7.33398 3.33329C7.33398 3.5101 7.40422 3.67967 7.52925 3.8047C7.65427 3.92972 7.82384 3.99996 8.00065 3.99996C8.17746 3.99996 8.34703 3.92972 8.47206 3.8047C8.59708 3.67967 8.66732 3.5101 8.66732 3.33329C8.66732 3.15648 8.59708 2.98691 8.47206 2.86189C8.34703 2.73686 8.17746 2.66663 8.00065 2.66663C7.82384 2.66663 7.65427 2.73686 7.52925 2.86189C7.40422 2.98691 7.33398 3.15648 7.33398 3.33329Z"
@@ -5353,7 +5353,7 @@ export const IconMorekebab = forwardRef<SVGSVGElement, CustomIconProps>(
           strokeWidth={stroke}
           strokeLinecap="round"
           strokeLinejoin="round"
-          fill="#0F172A"
+          fill={color}
         />
         <path
           d="M7.33398 7.99996C7.33398 8.17677 7.40422 8.34634 7.52925 8.47136C7.65427 8.59639 7.82384 8.66663 8.00065 8.66663C8.17746 8.66663 8.34703 8.59639 8.47206 8.47136C8.59708 8.34634 8.66732 8.17677 8.66732 7.99996C8.66732 7.82315 8.59708 7.65358 8.47206 7.52856C8.34703 7.40353 8.17746 7.33329 8.00065 7.33329C7.82384 7.33329 7.65427 7.40353 7.52925 7.52856C7.40422 7.65358 7.33398 7.82315 7.33398 7.99996Z"
@@ -5389,7 +5389,7 @@ IconMorekebab.displayName = 'IconMorekebab';
  * Network - 16x16 프레임
  */
 export const IconNetwork = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -5420,7 +5420,7 @@ IconNetwork.displayName = 'IconNetwork';
  * Notificationnew - 16x16 프레임
  */
 export const IconNotificationnew = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -5447,7 +5447,7 @@ export const IconNotificationnew = forwardRef<SVGSVGElement, CustomIconProps>(
           strokeWidth={stroke}
           strokeLinecap="round"
           strokeLinejoin="round"
-          fill="#DC2626"
+          fill="var(--color-state-danger)"
         />
       </svg>
     );
@@ -5459,7 +5459,7 @@ IconNotificationnew.displayName = 'IconNotificationnew';
  * Order - 16x16 프레임
  */
 export const IconOrder = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -5530,7 +5530,7 @@ IconOrder.displayName = 'IconOrder';
  * Plugin - 16x16 프레임
  */
 export const IconPlugin = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -5561,7 +5561,7 @@ IconPlugin.displayName = 'IconPlugin';
  * Ports - 16x16 프레임
  */
 export const IconPorts2 = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -5592,7 +5592,7 @@ IconPorts2.displayName = 'IconPorts2';
  * Ports - 16x16 프레임
  */
 export const IconPorts = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -5631,7 +5631,7 @@ IconPorts.displayName = 'IconPorts';
  * Publish - 16x16 프레임
  */
 export const IconPublish = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -5662,7 +5662,7 @@ IconPublish.displayName = 'IconPublish';
  * Reboot - 16x16 프레임
  */
 export const IconReboot = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -5693,7 +5693,7 @@ IconReboot.displayName = 'IconReboot';
  * Routers - 16x16 프레임
  */
 export const IconRouters = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -5756,7 +5756,7 @@ IconRouters.displayName = 'IconRouters';
  * SecurityError - 16x16 프레임
  */
 export const IconSecurityError = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -5787,7 +5787,7 @@ IconSecurityError.displayName = 'IconSecurityError';
  * SecurityGroup - 16x16 프레임
  */
 export const IconSecurityGroup = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -5818,7 +5818,7 @@ IconSecurityGroup.displayName = 'IconSecurityGroup';
  * Shelved - 16x16 프레임
  */
 export const IconShelved = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -5849,7 +5849,7 @@ IconShelved.displayName = 'IconShelved';
  * Suspended - 16x16 프레임
  */
 export const IconSuspended = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -5880,7 +5880,7 @@ IconSuspended.displayName = 'IconSuspended';
  * Verify - 16x16 프레임
  */
 export const IconVerify = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -5911,7 +5911,7 @@ IconVerify.displayName = 'IconVerify';
  * VolumeSearch - 16x16 프레임
  */
 export const IconVolumeSearch = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -5950,7 +5950,7 @@ IconVolumeSearch.displayName = 'IconVolumeSearch';
  * VolumeType - 16x16 프레임
  */
 export const IconVolumeType = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -5981,7 +5981,7 @@ IconVolumeType.displayName = 'IconVolumeType';
  * Warning - 16x16 프레임
  */
 export const IconWarning = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -6012,7 +6012,7 @@ IconWarning.displayName = 'IconWarning';
  * Affiliate - 16x16 프레임
  */
 export const IconAffiliate = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -6043,7 +6043,7 @@ IconAffiliate.displayName = 'IconAffiliate';
  * Articlehistory - 16x16 프레임
  */
 export const IconArticlehistory = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -6074,7 +6074,7 @@ IconArticlehistory.displayName = 'IconArticlehistory';
  * Card - 16x16 프레임
  */
 export const IconCard = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -6113,7 +6113,7 @@ IconCard.displayName = 'IconCard';
  * Check - 16x16 프레임
  */
 export const IconCheck = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -6144,7 +6144,7 @@ IconCheck.displayName = 'IconCheck';
  * Cloudcomputing - 16x16 프레임
  */
 export const IconCloudcomputing = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -6175,7 +6175,7 @@ IconCloudcomputing.displayName = 'IconCloudcomputing';
  * Finetuning - 16x16 프레임
  */
 export const IconFinetuning = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -6206,7 +6206,7 @@ IconFinetuning.displayName = 'IconFinetuning';
  * History - 16x16 프레임
  */
 export const IconHistory = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -6245,7 +6245,7 @@ IconHistory.displayName = 'IconHistory';
  * Language - 16x16 프레임
  */
 export const IconLanguage = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -6276,7 +6276,7 @@ IconLanguage.displayName = 'IconLanguage';
  * Newchat - 16x16 프레임
  */
 export const IconNewchat = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -6307,7 +6307,7 @@ IconNewchat.displayName = 'IconNewchat';
  * Pending - 16x16 프레임
  */
 export const IconPending = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -6338,7 +6338,7 @@ IconPending.displayName = 'IconPending';
  * Puzzle - 16x16 프레임
  */
 export const IconPuzzle = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -6369,7 +6369,7 @@ IconPuzzle.displayName = 'IconPuzzle';
  * Reset - 16x16 프레임
  */
 export const IconReset = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -6400,7 +6400,7 @@ IconReset.displayName = 'IconReset';
  * Retry - 16x16 프레임
  */
 export const IconRetry = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -6470,7 +6470,7 @@ IconRocky.displayName = 'IconRocky';
  * Speed - 16x16 프레임
  */
 export const IconSpeed = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -6501,7 +6501,7 @@ IconSpeed.displayName = 'IconSpeed';
  * Study - 16x16 프레임
  */
 export const IconStudy = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -6532,7 +6532,7 @@ IconStudy.displayName = 'IconStudy';
  * Transfer - 16x16 프레임
  */
 export const IconTransfer = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -6634,7 +6634,7 @@ IconUbuntu.displayName = 'IconUbuntu';
  * Unlink - 16x16 프레임
  */
 export const IconUnlink = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -6667,7 +6667,7 @@ IconUnlink.displayName = 'IconUnlink';
  * Figma 디자인 기반
  */
 export const IconWindowActive = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}
@@ -6699,7 +6699,7 @@ IconWindowActive.displayName = 'IconWindowActive';
  * Figma 디자인 기반
  */
 export const IconWindowMinimized = forwardRef<SVGSVGElement, CustomIconProps>(
-  ({ size = 16, color = 'currentColor', stroke = 1, className, style, ...props }, ref) => {
+  ({ size = 16, color = 'currentColor', stroke = 1.5, className, style, ...props }, ref) => {
     return (
       <svg
         ref={ref}

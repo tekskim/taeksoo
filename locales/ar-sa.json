@@ -1,0 +1,79 @@
+{
+  "tds": {
+    "common": {
+      "save": "حفظ",
+      "cancel": "إلغاء",
+      "confirm": "تأكيد",
+      "delete": "حذف",
+      "edit": "تعديل",
+      "view": "عرض",
+      "create": "إنشاء",
+      "search": "بحث",
+      "filter": "فلتر",
+      "sort": "ترتيب",
+      "apply": "تطبيق",
+      "reset": "إعادة تعيين",
+      "close": "إغلاق",
+      "loading": "جاري التحميل...",
+      "error": "حدث خطأ ما",
+      "success": "نجاح",
+      "warning": "تحذير",
+      "info": "معلومات",
+      "moreActions": "المزيد من الإجراءات",
+      "noData": "لا توجد بيانات",
+      "yes": "نعم",
+      "no": "لا",
+      "all": "الكل",
+      "none": "لا شيء",
+      "select": "اختر",
+      "selected": "محدد",
+      "required": "مطلوب",
+      "optional": "اختياري"
+    },
+    "table": {
+      "empty": {
+        "title": "لم يتم العثور على {{resource}}",
+        "description": "لا يوجد {{resource}} للعرض."
+      },
+      "noResult": {
+        "title": "لا توجد نتائج",
+        "description": "لا يوجد {{resource}} يطابق الفلاتر الحالية."
+      }
+    },
+    "pagination": {
+      "itemsPerPage": "العناصر في الصفحة",
+      "of": "من",
+      "page": "صفحة"
+    },
+    "form": {
+      "validation": {
+        "required": "هذا الحقل مطلوب",
+        "minLength": "الحد الأدنى {{min}} حرف مطلوب",
+        "maxLength": "الحد الأقصى {{max}} حرف مسموح",
+        "email": "يرجى إدخال عنوان بريد إلكتروني صالح",
+        "number": "مسموح بالأرقام فقط"
+      }
+    },
+    "modal": {
+      "unsavedChanges": {
+        "title": "تغييرات غير محفوظة",
+        "message": "لديك تغييرات غير محفوظة. هل تريد المتابعة؟",
+        "stay": "البقاء",
+        "leave": "المغادرة"
+      }
+    },
+    "notification": {
+      "success": "تمت العملية بنجاح",
+      "error": "حدث خطأ أثناء العملية",
+      "warning": "مطلوب الانتباه",
+      "info": "إشعار"
+    },
+    "accessibility": {
+      "closeButton": "زر الإغلاق",
+      "expandButton": "زر التوسيع",
+      "collapseButton": "زر الطي",
+      "menuButton": "زر القائمة",
+      "loading": "جاري التحميل"
+    }
+  }
+}

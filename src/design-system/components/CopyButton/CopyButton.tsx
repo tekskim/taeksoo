@@ -59,15 +59,15 @@ const variantStyles: Record<CopyButtonVariant, string> = {
 
 const sizeStyles: Record<CopyButtonSize, { button: string; icon: number }> = {
   sm: {
-    button: 'h-6 px-1.5 text-[11px] gap-1',
+    button: 'h-6 px-1.5 text-body-sm gap-1',
     icon: 12,
   },
   md: {
-    button: 'h-8 px-2 text-[12px] gap-1.5',
+    button: 'h-8 px-2 text-body-md gap-1.5',
     icon: 14,
   },
   lg: {
-    button: 'h-9 px-2.5 text-[13px] gap-2',
+    button: 'h-9 px-2.5 text-body-md gap-2',
     icon: 16,
   },
 };

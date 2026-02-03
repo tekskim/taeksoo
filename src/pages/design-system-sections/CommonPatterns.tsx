@@ -197,10 +197,9 @@ export function DetailPagePatternDemo() {
   const [activeTab, setActiveTab] = useState('details');
 
   const moreActionsMenuItems = [
-    { label: 'Resize', onClick: () => {} },
-    { label: 'Migrate', onClick: () => {} },
-    { type: 'divider' as const },
-    { label: 'Delete', onClick: () => {}, variant: 'danger' as const },
+    { id: 'resize', label: 'Resize', onClick: () => {} },
+    { id: 'migrate', label: 'Migrate', onClick: () => {}, divider: true },
+    { id: 'delete', label: 'Delete', onClick: () => {}, status: 'danger' as const },
   ];
 
   return (

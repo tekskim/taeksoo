@@ -1,0 +1,79 @@
+{
+  "tds": {
+    "common": {
+      "save": "저장",
+      "cancel": "취소",
+      "confirm": "확인",
+      "delete": "삭제",
+      "edit": "수정",
+      "view": "보기",
+      "create": "생성",
+      "search": "검색",
+      "filter": "필터",
+      "sort": "정렬",
+      "apply": "적용",
+      "reset": "초기화",
+      "close": "닫기",
+      "loading": "로딩 중...",
+      "error": "오류가 발생했습니다",
+      "success": "성공",
+      "warning": "경고",
+      "info": "정보",
+      "moreActions": "추가 작업",
+      "noData": "데이터가 없습니다",
+      "yes": "예",
+      "no": "아니오",
+      "all": "전체",
+      "none": "없음",
+      "select": "선택",
+      "selected": "선택됨",
+      "required": "필수",
+      "optional": "선택사항"
+    },
+    "table": {
+      "empty": {
+        "title": "{{resource}} 목록 없음",
+        "description": "표시할 {{resource}}이(가) 없습니다."
+      },
+      "noResult": {
+        "title": "검색결과 없음",
+        "description": "검색 조건에 맞는 데이터를 찾을 수 없습니다."
+      }
+    },
+    "pagination": {
+      "itemsPerPage": "페이지당 항목",
+      "of": "/ 중",
+      "page": "페이지"
+    },
+    "form": {
+      "validation": {
+        "required": "이 필드는 필수입니다",
+        "minLength": "최소 {{min}}자 이상 입력하세요",
+        "maxLength": "최대 {{max}}자까지 입력 가능합니다",
+        "email": "올바른 이메일 형식을 입력하세요",
+        "number": "숫자만 입력 가능합니다"
+      }
+    },
+    "modal": {
+      "unsavedChanges": {
+        "title": "저장되지 않은 변경사항",
+        "message": "저장되지 않은 변경사항이 있습니다. 계속하시겠습니까?",
+        "stay": "머물기",
+        "leave": "나가기"
+      }
+    },
+    "notification": {
+      "success": "작업이 완료되었습니다",
+      "error": "작업 중 오류가 발생했습니다",
+      "warning": "주의가 필요합니다",
+      "info": "알림"
+    },
+    "accessibility": {
+      "closeButton": "닫기 버튼",
+      "expandButton": "펼치기 버튼",
+      "collapseButton": "접기 버튼",
+      "menuButton": "메뉴 버튼",
+      "loading": "로딩 중"
+    }
+  }
+}

@@ -31,9 +31,9 @@ export interface SNBMenuItemProps {
  * Supports default, hover, and selected states with appropriate styling.
  *
  * Design tokens used:
- * - default: bg-white, icon: #64748b (text-muted)
- * - hover: bg-[#f8fafc] (surface-subtle), icon: #334155 (text-default)
- * - selected: bg-[#eff6ff] (info-weak-bg), icon: #2563eb (primary)
+ * - default: bg-surface-default, icon: text-muted
+ * - hover: bg-surface-subtle, icon: text-default
+ * - selected: bg-info-weak-bg, icon: primary
  */
 export function SNBMenuItem({
   status: propStatus,
@@ -55,7 +55,7 @@ export function SNBMenuItem({
   const bgStyles = {
     default: 'bg-[var(--color-surface-default)]',
     hover: 'bg-[var(--color-surface-subtle)]',
-    selected: 'bg-[var(--color-info-weak-bg,#eff6ff)]',
+    selected: 'bg-[var(--color-info-weak-bg)]',
   };
 
   // Icon color styles based on status

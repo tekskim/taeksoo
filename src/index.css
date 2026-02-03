@@ -219,6 +219,7 @@ html.theme-transition *::after {
   --font-size-10: 10px;
   --font-size-11: 11px;
   --font-size-12: 12px;
+  --font-size-13: 13px;
   --font-size-14: 14px;
   --font-size-16: 16px;
   --font-size-18: 18px;
@@ -914,7 +915,7 @@ html.theme-transition *::after {
   --checkbox-group-label-size: var(--font-size-12);
   --checkbox-group-label-line-height: var(--line-height-16);
   --checkbox-group-label-gap: var(--spacing-2);
-  --checkbox-group-item-gap: var(--spacing-2);
+  --checkbox-group-item-gap: var(--spacing-3);
   --checkbox-group-item-gap-horizontal: var(--spacing-4);
 
   /* ----------------------------------------
@@ -2871,7 +2872,7 @@ input[type='search']::-webkit-search-decoration {
 .text-heading-h6 {
   font-size: var(--font-size-14);
   line-height: var(--line-height-20);
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-medium);
 }
 
 /* Body - All regular (400) */
@@ -2901,7 +2902,7 @@ input[type='search']::-webkit-search-decoration {
 
 /* Label - All medium (500) */
 .text-label-lg {
-  font-size: var(--font-size-14);
+  font-size: var(--font-size-13);
   line-height: var(--line-height-20);
   font-weight: var(--font-weight-medium);
 }

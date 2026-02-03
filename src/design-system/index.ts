@@ -70,3 +70,13 @@ export * from './hooks';
 
 // Presets
 export * from './presets';
+
+// i18n
+export {
+  default as i18n,
+  changeLanguage,
+  getCurrentLanguage,
+  isRTL,
+  SUPPORTED_LANGUAGES,
+  type SupportedLanguage,
+} from '../i18n';

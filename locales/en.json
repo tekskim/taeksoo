@@ -1,0 +1,79 @@
+{
+  "tds": {
+    "common": {
+      "save": "Save",
+      "cancel": "Cancel",
+      "confirm": "Confirm",
+      "delete": "Delete",
+      "edit": "Edit",
+      "view": "View",
+      "create": "Create",
+      "search": "Search",
+      "filter": "Filter",
+      "sort": "Sort",
+      "apply": "Apply",
+      "reset": "Reset",
+      "close": "Close",
+      "loading": "Loading...",
+      "error": "Something went wrong",
+      "success": "Success",
+      "warning": "Warning",
+      "info": "Information",
+      "moreActions": "More Actions",
+      "noData": "No data available",
+      "yes": "Yes",
+      "no": "No",
+      "all": "All",
+      "none": "None",
+      "select": "Select",
+      "selected": "Selected",
+      "required": "Required",
+      "optional": "Optional"
+    },
+    "table": {
+      "empty": {
+        "title": "No {{resource}} found",
+        "description": "There are no {{resource}} to display."
+      },
+      "noResult": {
+        "title": "No results found",
+        "description": "No {{resource}} match your current filters."
+      }
+    },
+    "pagination": {
+      "itemsPerPage": "Items per page",
+      "of": "of",
+      "page": "Page"
+    },
+    "form": {
+      "validation": {
+        "required": "This field is required",
+        "minLength": "Minimum {{min}} characters required",
+        "maxLength": "Maximum {{max}} characters allowed",
+        "email": "Please enter a valid email address",
+        "number": "Only numbers are allowed"
+      }
+    },
+    "modal": {
+      "unsavedChanges": {
+        "title": "Unsaved Changes",
+        "message": "You have unsaved changes. Do you want to continue?",
+        "stay": "Stay",
+        "leave": "Leave"
+      }
+    },
+    "notification": {
+      "success": "Operation completed successfully",
+      "error": "An error occurred during the operation",
+      "warning": "Attention required",
+      "info": "Notification"
+    },
+    "accessibility": {
+      "closeButton": "Close button",
+      "expandButton": "Expand button",
+      "collapseButton": "Collapse button",
+      "menuButton": "Menu button",
+      "loading": "Loading"
+    }
+  }
+}

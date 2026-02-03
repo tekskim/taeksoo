@@ -2,6 +2,8 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import '@fontsource-variable/mona-sans';
 import './index.css';
+// Initialize i18n
+import './i18n';
 import App from './App.tsx';
 
 // Error boundary for debugging

@@ -1,0 +1,54 @@
+key,ko,en,ar-sa
+tds:common.save,저장,Save,حفظ
+tds:common.cancel,취소,Cancel,إلغاء
+tds:common.confirm,확인,Confirm,تأكيد
+tds:common.delete,삭제,Delete,حذف
+tds:common.edit,수정,Edit,تعديل
+tds:common.view,보기,View,عرض
+tds:common.create,생성,Create,إنشاء
+tds:common.search,검색,Search,بحث
+tds:common.filter,필터,Filter,فلتر
+tds:common.sort,정렬,Sort,ترتيب
+tds:common.apply,적용,Apply,تطبيق
+tds:common.reset,초기화,Reset,إعادة تعيين
+tds:common.close,닫기,Close,إغلاق
+tds:common.loading,로딩 중...,Loading...,جاري التحميل...
+tds:common.error,오류가 발생했습니다,Something went wrong,حدث خطأ ما
+tds:common.success,성공,Success,نجاح
+tds:common.warning,경고,Warning,تحذير
+tds:common.info,정보,Information,معلومات
+tds:common.moreActions,추가 작업,More Actions,المزيد من الإجراءات
+tds:common.noData,데이터가 없습니다,No data available,لا توجد بيانات
+tds:common.yes,예,Yes,نعم
+tds:common.no,아니오,No,لا
+tds:common.all,전체,All,الكل
+tds:common.none,없음,None,لا شيء
+tds:common.select,선택,Select,اختر
+tds:common.selected,선택됨,Selected,محدد
+tds:common.required,필수,Required,مطلوب
+tds:common.optional,선택사항,Optional,اختياري
+tds:table.empty.title,{{resource}} 목록 없음,No {{resource}} found,لم يتم العثور على {{resource}}
+tds:table.empty.description,표시할 {{resource}}이(가) 없습니다.,There are no {{resource}} to display.,لا يوجد {{resource}} للعرض.
+tds:table.noResult.title,검색결과 없음,No results found,لا توجد نتائج
+tds:table.noResult.description,검색 조건에 맞는 데이터를 찾을 수 없습니다.,No {{resource}} match your current filters.,لا يوجد {{resource}} يطابق الفلاتر الحالية.
+tds:pagination.itemsPerPage,페이지당 항목,Items per page,العناصر في الصفحة
+tds:pagination.of,/ 중,of,من
+tds:pagination.page,페이지,Page,صفحة
+tds:form.validation.required,이 필드는 필수입니다,This field is required,هذا الحقل مطلوب
+tds:form.validation.minLength,최소 {{min}}자 이상 입력하세요,Minimum {{min}} characters required,الحد الأدنى {{min}} حرف مطلوب
+tds:form.validation.maxLength,최대 {{max}}자까지 입력 가능합니다,Maximum {{max}} characters allowed,الحد الأقصى {{max}} حرف مسموح
+tds:form.validation.email,올바른 이메일 형식을 입력하세요,Please enter a valid email address,يرجى إدخال عنوان بريد إلكتروني صالح
+tds:form.validation.number,숫자만 입력 가능합니다,Only numbers are allowed,مسموح بالأرقام فقط
+tds:modal.unsavedChanges.title,저장되지 않은 변경사항,Unsaved Changes,تغييرات غير محفوظة
+tds:modal.unsavedChanges.message,저장되지 않은 변경사항이 있습니다. 계속하시겠습니까?,You have unsaved changes. Do you want to continue?,لديك تغييرات غير محفوظة. هل تريد المتابعة؟
+tds:modal.unsavedChanges.stay,머물기,Stay,البقاء
+tds:modal.unsavedChanges.leave,나가기,Leave,المغادرة
+tds:notification.success,작업이 완료되었습니다,Operation completed successfully,تمت العملية بنجاح
+tds:notification.error,작업 중 오류가 발생했습니다,An error occurred during the operation,حدث خطأ أثناء العملية
+tds:notification.warning,주의가 필요합니다,Attention required,مطلوب الانتباه
+tds:notification.info,알림,Notification,إشعار
+tds:accessibility.closeButton,닫기 버튼,Close button,زر الإغلاق
+tds:accessibility.expandButton,펼치기 버튼,Expand button,زر التوسيع
+tds:accessibility.collapseButton,접기 버튼,Collapse button,زر الطي
+tds:accessibility.menuButton,메뉴 버튼,Menu button,زر القائمة
+tds:accessibility.loading,로딩 중,Loading,جاري التحميل

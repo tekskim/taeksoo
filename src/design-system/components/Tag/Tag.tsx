@@ -72,17 +72,17 @@ const variantStyles: Record<TagVariant, { solid: string; outline: string }> = {
 
 const sizeStyles: Record<TagSize, { container: string; icon: number; closeIcon: number }> = {
   sm: {
-    container: 'h-5 px-1.5 text-[10px] gap-1',
+    container: 'h-5 px-1.5 text-body-xs gap-1',
     icon: 10,
     closeIcon: 10,
   },
   md: {
-    container: 'h-6 px-2 text-[11px] gap-1.5',
+    container: 'h-6 px-2 text-body-sm gap-1.5',
     icon: 12,
     closeIcon: 12,
   },
   lg: {
-    container: 'h-7 px-2.5 text-[12px] gap-1.5',
+    container: 'h-7 px-2.5 text-body-md gap-1.5',
     icon: 14,
     closeIcon: 14,
   },
