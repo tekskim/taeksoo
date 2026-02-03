@@ -140,7 +140,7 @@ function DatasetCard({
             {tags.map((tag) => (
               <span
                 key={tag}
-                className="px-2 py-0.5 bg-[var(--color-action-primary)]/10 text-[var(--color-action-primary)] text-body-sm rounded"
+                className="px-2 py-0.5 bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] text-body-sm rounded"
               >
                 {tag}
               </span>

@@ -6,6 +6,8 @@ import { IconChevronUp, IconChevronDown } from '@tabler/icons-react';
    NumberInput Types
    ---------------------------------------- */
 
+export type NumberInputWidth = 'sm' | 'md' | 'lg' | 'half' | 'full';
+
 export interface NumberInputProps extends Omit<
   InputHTMLAttributes<HTMLInputElement>,
   'type' | 'onChange' | 'value' | 'defaultValue'
@@ -16,8 +18,10 @@ export interface NumberInputProps extends Omit<
   helperText?: string;
   /** Error message */
   error?: string;
-  /** Full width */
+  /** @deprecated Use width="full" instead */
   fullWidth?: boolean;
+  /** Width variant: sm (160px), md (240px), lg (320px), half (50%), full (100%), or number for custom pixel width */
+  width?: NumberInputWidth | number;
   /** Minimum value */
   min?: number;
   /** Maximum value */
@@ -45,6 +49,7 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
       helperText,
       error,
       fullWidth = false,
+      width,
       min,
       max,
       step = 1,
@@ -151,21 +156,41 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
       error ? 'border-[var(--input-border-error)]' : 'border-[var(--input-border)]',
       disabled
         ? 'bg-[var(--input-bg-disabled)] text-[var(--input-text-disabled)] cursor-not-allowed'
-        : '',
+        : ''
+    );
+
+    // Width-based styles
+    const widthStyles: Record<NumberInputWidth, string> = {
+      sm: 'w-[160px]',
+      md: 'w-[240px]',
+      lg: 'w-[320px]',
+      half: 'w-1/2',
+      full: 'w-full',
+    };
+
+    // Get width class
+    const getWidthClass = () => {
+      if (fullWidth) return 'w-full'; // backward compatibility
+      if (width === undefined) return 'w-fit';
+      if (typeof width === 'number') return `w-[${width}px]`;
+      return widthStyles[width];
+    };
+
+    // Apply className to wrapper so width classes work correctly
+    const wrapperClasses = twMerge(
+      'flex flex-col gap-[var(--input-label-gap)]',
+      getWidthClass(),
       className
     );
 
-    const wrapperClasses = [
-      'flex flex-col gap-[var(--input-label-gap)]',
-      fullWidth ? 'w-full' : 'w-[320px]',
-    ].join(' ');
-
     const buttonClasses = [
       'flex items-center justify-center',
-      'w-[var(--number-input-button-size)]',
-      'h-[var(--number-input-button-size)]',
+      'w-5 h-[14px]',
+      'rounded-[var(--radius-sm)]',
       'text-[var(--color-text-subtle)]',
       'hover:text-[var(--color-text-default)]',
+      'hover:bg-[var(--color-surface-muted)]',
+      'active:bg-[var(--color-border-subtle)]',
       'transition-colors duration-[var(--duration-fast)]',
       disabled ? 'pointer-events-none opacity-50' : 'cursor-pointer',
     ].join(' ');
@@ -200,7 +225,7 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
 
           {/* Stepper buttons */}
           {!hideSteppers && (
-            <div className="absolute right-[var(--input-icon-offset)] top-1/2 -translate-y-1/2 flex flex-col">
+            <div className="absolute right-1 top-1/2 -translate-y-1/2 flex flex-col">
               <button
                 type="button"
                 tabIndex={-1}

@@ -29,20 +29,17 @@ function PercentageBadge({ percentage }: PercentageBadgeProps) {
   const getColors = () => {
     if (percentage >= 100)
       return {
-        bg: 'bg-[var(--color-state-danger)]/15',
-        dot: 'bg-[var(--color-state-danger)]',
-        text: 'text-[var(--color-state-danger)]',
+        bg: 'bg-[var(--color-state-danger-bg)]',
+        text: 'text-[var(--color-state-danger-text)]',
       };
     if (percentage >= 70)
       return {
-        bg: 'bg-[var(--color-state-warning)]/15',
-        dot: 'bg-[var(--color-state-warning)]',
-        text: 'text-[var(--color-state-warning)]',
+        bg: 'bg-[var(--color-state-warning-bg)]',
+        text: 'text-[var(--color-state-warning-text)]',
       };
     return {
-      bg: 'bg-[var(--color-state-success)]/15',
-      dot: 'bg-[var(--color-state-success)]',
-      text: 'text-[var(--color-state-success)]',
+      bg: 'bg-[var(--color-state-success-bg)]',
+      text: 'text-[var(--color-state-success-text)]',
     };
   };
 

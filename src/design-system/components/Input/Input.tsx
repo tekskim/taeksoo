@@ -9,6 +9,7 @@ export type InputSize = 'sm' | 'md';
 // thaki-ui compatibility: support xs and lg sizes
 export type InputSizeAlias = 'xs' | 'lg';
 export type InputVariant = 'default' | 'search' | 'code';
+export type InputWidth = 'sm' | 'md' | 'lg' | 'half' | 'full';
 
 // thaki-ui compatibility types
 type FilterProp = RegExp | ((value: string) => string);
@@ -24,8 +25,10 @@ export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 
   helperText?: string;
   /** Error message */
   error?: string;
-  /** Full width */
+  /** @deprecated Use width="full" instead */
   fullWidth?: boolean;
+  /** Width variant: sm (160px), md (240px), lg (320px), half (50%), full (100%), or number for custom pixel width */
+  width?: InputWidth | number;
   /** Left icon/element */
   leftElement?: ReactNode;
   /** Right icon/element */
@@ -69,6 +72,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       helperText,
       error,
       fullWidth = false,
+      width,
       leftElement,
       rightElement,
       className = '',
@@ -158,10 +162,24 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       className
     );
 
-    const wrapperClasses = [
-      'flex flex-col gap-[var(--input-label-gap)]',
-      fullWidth ? 'w-full' : 'w-fit',
-    ].join(' ');
+    // Width-based styles
+    const widthStyles: Record<InputWidth, string> = {
+      sm: 'w-[160px]',
+      md: 'w-[240px]',
+      lg: 'w-[320px]',
+      half: 'w-1/2',
+      full: 'w-full',
+    };
+
+    // Get width class
+    const getWidthClass = () => {
+      if (fullWidth) return 'w-full'; // backward compatibility
+      if (width === undefined) return 'w-fit';
+      if (typeof width === 'number') return `w-[${width}px]`;
+      return widthStyles[width];
+    };
+
+    const wrapperClasses = twMerge('flex flex-col gap-[var(--input-label-gap)]', getWidthClass());
 
     return (
       <div className={wrapperClasses}>

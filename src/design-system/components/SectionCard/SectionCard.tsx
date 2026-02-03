@@ -99,7 +99,7 @@ function SectionCardContent({ children, className, ...props }: SectionCardConten
   const childArray = Children.toArray(children).filter(isValidElement);
 
   return (
-    <div className={twMerge('flex flex-col w-full gap-6', className)} {...props}>
+    <div className={twMerge('flex flex-col w-full gap-3', className)} {...props}>
       {childArray.map((child, index) => (
         <Fragment key={index}>
           {index > 0 && <DataRowDivider />}

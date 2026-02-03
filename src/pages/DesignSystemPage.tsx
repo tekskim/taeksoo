@@ -5062,6 +5062,7 @@ outline: 2px solid var(--color-border-focus);`}
                               { name: 'padding-y', sm: '6px', md: '8px', lg: '10px' },
                               { name: 'gap', sm: '6px', md: '6px', lg: '8px' },
                               { name: 'font-size', sm: '12px', md: '12px', lg: '14px' },
+                              { name: 'icon-size', sm: '12px', md: '12px', lg: '14px' },
                             ].map(({ name, sm, md, lg }) => (
                               <tr
                                 key={name}
@@ -5157,6 +5158,10 @@ outline: 2px solid var(--color-border-focus);`}
                         <div>
                           <strong>수직 정렬:</strong> 같은 행에 있는 요소는 같은 사이즈 사용 (Input
                           md + Button md ✓)
+                        </div>
+                        <div>
+                          <strong>min-width:</strong> 버튼은 최소 너비가 설정되어 있어 짧은 텍스트도
+                          균일한 크기 유지 (SM: 60px, MD/LG: 80px)
                         </div>
                       </div>
                     </VStack>
@@ -5274,17 +5279,17 @@ outline: 2px solid var(--color-border-focus);`}
                     <VStack gap={3}>
                       <Label>With icons</Label>
                       <div className="flex flex-wrap gap-3">
-                        <Button size="sm" leftIcon={<IconPlus size={14} />}>
+                        <Button size="sm" leftIcon={<IconPlus size={12} />}>
                           Left icon
                         </Button>
-                        <Button size="sm" rightIcon={<IconArrowRight size={14} />}>
+                        <Button size="sm" rightIcon={<IconArrowRight size={12} />}>
                           Right icon
                         </Button>
-                        <Button size="sm" icon={<IconHeart size={14} />} aria-label="Like" />
+                        <Button size="sm" icon={<IconHeart size={12} />} aria-label="Like" />
                         <Button
                           size="sm"
                           variant="secondary"
-                          icon={<IconStar size={14} />}
+                          icon={<IconStar size={12} />}
                           aria-label="Star"
                         />
                       </div>
@@ -5350,6 +5355,70 @@ outline: 2px solid var(--color-border-focus);`}
                             Delete
                           </Button>
                         </div>
+                      </div>
+                    </VStack>
+
+                    {/* Icon Size Guidelines */}
+                    <VStack gap={3}>
+                      <Label>Icon size guidelines</Label>
+                      <div className="overflow-x-auto">
+                        <table className="w-full text-[length:var(--font-size-11)]">
+                          <thead>
+                            <tr className="border-b border-[var(--color-border-default)]">
+                              <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                                Button Size
+                              </th>
+                              <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                                Icon Size
+                              </th>
+                              <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
+                                사용 예시
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr className="border-b border-[var(--color-border-subtle)]">
+                              <td className="py-2 pr-4 font-medium">SM (28px)</td>
+                              <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">
+                                12px
+                              </td>
+                              <td className="py-2 text-[var(--color-text-muted)]">
+                                테이블 툴바 액션 버튼
+                              </td>
+                            </tr>
+                            <tr className="border-b border-[var(--color-border-subtle)]">
+                              <td className="py-2 pr-4 font-medium">MD (32px)</td>
+                              <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">
+                                12px
+                              </td>
+                              <td className="py-2 text-[var(--color-text-muted)]">
+                                모달/드로어 액션, 폼 제출
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div className="flex gap-4 items-end mt-2">
+                        <VStack gap={1}>
+                          <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                            SM + 12px
+                          </span>
+                          <Button size="sm" leftIcon={<IconPlus size={12} />}>
+                            Create
+                          </Button>
+                        </VStack>
+                        <VStack gap={1}>
+                          <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                            MD + 12px
+                          </span>
+                          <Button size="md" leftIcon={<IconPlus size={12} />}>
+                            Create
+                          </Button>
+                        </VStack>
+                      </div>
+                      <div className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)] mt-1">
+                        <strong>참고:</strong> SM/MD 버튼 모두 12px 아이콘을 사용하여 일관성을
+                        유지합니다.
                       </div>
                     </VStack>
 
@@ -5457,22 +5526,63 @@ outline: 2px solid var(--color-border-focus);`}
                       </div>
                     </VStack>
 
-                    {/* Text Input - Sizes */}
+                    {/* Text Input - Sizes (Height) */}
                     <VStack gap={3}>
-                      <Label>Text Input - Sizes</Label>
+                      <Label>Text Input - Sizes (Height)</Label>
                       <div className="flex gap-4 items-start">
                         <VStack gap={1}>
                           <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                             SM (28px)
                           </span>
-                          <Input size="sm" placeholder="Input placeholder" className="w-[200px]" />
+                          <Input size="sm" placeholder="Input placeholder" width="md" />
                         </VStack>
                         <VStack gap={1}>
                           <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                             MD (32px)
                           </span>
-                          <Input size="md" placeholder="Input placeholder" className="w-[200px]" />
+                          <Input size="md" placeholder="Input placeholder" width="md" />
                         </VStack>
+                      </div>
+                    </VStack>
+
+                    {/* Text Input - Width */}
+                    <VStack gap={3}>
+                      <Label>Text Input - Width</Label>
+                      <div className="flex flex-col gap-3">
+                        <div className="flex gap-4 items-end">
+                          <VStack gap={1}>
+                            <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                              SM (160px)
+                            </span>
+                            <Input placeholder="Small" width="sm" />
+                          </VStack>
+                          <VStack gap={1}>
+                            <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                              MD (240px)
+                            </span>
+                            <Input placeholder="Medium" width="md" />
+                          </VStack>
+                          <VStack gap={1}>
+                            <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                              LG (320px)
+                            </span>
+                            <Input placeholder="Large" width="lg" />
+                          </VStack>
+                        </div>
+                        <div className="flex flex-col gap-3 w-full">
+                          <VStack gap={1}>
+                            <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                              Half (50%)
+                            </span>
+                            <Input placeholder="Half width" width="half" />
+                          </VStack>
+                          <VStack gap={1}>
+                            <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                              Full (100%)
+                            </span>
+                            <Input placeholder="Full width" width="full" />
+                          </VStack>
+                        </div>
                       </div>
                     </VStack>
 
@@ -5480,18 +5590,18 @@ outline: 2px solid var(--color-border-focus);`}
                     <VStack gap={3}>
                       <Label>Labels & Validation</Label>
                       <div className="flex flex-wrap gap-4 items-start">
-                        <Input label="Label" placeholder="Enter text..." className="w-[200px]" />
+                        <Input label="Label" placeholder="Enter text..." width="md" />
                         <Input
                           label="With helper"
                           placeholder="Email"
                           helperText="We'll never share your email"
-                          className="w-[200px]"
+                          width="md"
                         />
                         <Input
                           label="With error"
                           placeholder="Username"
                           error="Username is required"
-                          className="w-[200px]"
+                          width="md"
                         />
                       </div>
                     </VStack>
@@ -5503,12 +5613,12 @@ outline: 2px solid var(--color-border-focus);`}
                         <Input
                           placeholder="Search..."
                           leftElement={<IconSearch size={14} />}
-                          className="w-[200px]"
+                          width="md"
                         />
                         <Input
                           placeholder="Email"
                           rightElement={<IconMail size={14} />}
-                          className="w-[200px]"
+                          width="md"
                         />
                       </div>
                     </VStack>
@@ -5522,7 +5632,7 @@ outline: 2px solid var(--color-border-focus);`}
                             Text suffix
                           </span>
                           <HStack gap={2} align="center">
-                            <Input placeholder="0" className="w-[120px]" />
+                            <Input placeholder="0" width="sm" />
                             <span className="text-body-md text-[var(--color-text-default)]">
                               Seconds
                             </span>
@@ -5533,7 +5643,7 @@ outline: 2px solid var(--color-border-focus);`}
                             Unit suffix
                           </span>
                           <HStack gap={2} align="center">
-                            <Input placeholder="100" className="w-[120px]" />
+                            <Input placeholder="100" width="sm" />
                             <span className="text-body-md text-[var(--color-text-default)]">
                               GB
                             </span>
@@ -5544,7 +5654,7 @@ outline: 2px solid var(--color-border-focus);`}
                             Percentage
                           </span>
                           <HStack gap={2} align="center">
-                            <Input placeholder="50" className="w-[120px]" />
+                            <Input placeholder="50" width="sm" />
                             <span className="text-body-md text-[var(--color-text-default)]">%</span>
                           </HStack>
                         </VStack>
@@ -5642,28 +5752,69 @@ outline: 2px solid var(--color-border-focus);`}
                       />
                     </VStack>
 
-                    {/* NumberInput (Stepper) */}
+                    {/* NumberInput (Stepper) - States */}
                     <VStack gap={3}>
-                      <Label>Number Input (Stepper)</Label>
+                      <Label>Number Input - States</Label>
                       <div className="flex gap-4 items-start">
                         <VStack gap={1}>
                           <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                             Default
                           </span>
-                          <NumberInput defaultValue={1} className="w-[200px]" />
+                          <NumberInput defaultValue={1} width="md" />
                         </VStack>
                         <VStack gap={1}>
                           <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                             With Min/Max
                           </span>
-                          <NumberInput defaultValue={5} min={0} max={10} className="w-[200px]" />
+                          <NumberInput defaultValue={5} min={0} max={10} width="md" />
                         </VStack>
                         <VStack gap={1}>
                           <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                             Disabled
                           </span>
-                          <NumberInput defaultValue={1} disabled className="w-[200px]" />
+                          <NumberInput defaultValue={1} disabled width="md" />
                         </VStack>
+                      </div>
+                    </VStack>
+
+                    {/* NumberInput - Width */}
+                    <VStack gap={3}>
+                      <Label>Number Input - Width</Label>
+                      <div className="flex flex-col gap-3">
+                        <div className="flex gap-4 items-end">
+                          <VStack gap={1}>
+                            <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                              SM (160px)
+                            </span>
+                            <NumberInput defaultValue={1} width="sm" />
+                          </VStack>
+                          <VStack gap={1}>
+                            <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                              MD (240px)
+                            </span>
+                            <NumberInput defaultValue={1} width="md" />
+                          </VStack>
+                          <VStack gap={1}>
+                            <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                              LG (320px)
+                            </span>
+                            <NumberInput defaultValue={1} width="lg" />
+                          </VStack>
+                        </div>
+                        <div className="flex flex-col gap-3 w-full">
+                          <VStack gap={1}>
+                            <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                              Half (50%)
+                            </span>
+                            <NumberInput defaultValue={1} width="half" />
+                          </VStack>
+                          <VStack gap={1}>
+                            <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                              Full (100%)
+                            </span>
+                            <NumberInput defaultValue={1} width="full" />
+                          </VStack>
+                        </div>
                       </div>
                     </VStack>
 
@@ -6020,7 +6171,7 @@ outline: 2px solid var(--color-border-focus);`}
                             Default
                           </span>
                           <VStack gap={1} className="w-[200px]">
-                            <button className="flex items-center justify-between gap-2 w-full h-[var(--input-height-md)] px-[var(--select-padding-x)] text-[length:var(--select-font-size)] leading-[var(--select-line-height)] bg-[var(--select-bg)] border border-solid border-[var(--select-border-focus)] rounded-[var(--select-radius)] cursor-pointer">
+                            <button className="flex items-center justify-between gap-2 w-full h-[var(--input-height-md)] px-[var(--select-padding-x)] text-[length:var(--select-font-size)] leading-[var(--select-line-height)] bg-[var(--select-bg)] border border-solid border-[var(--select-border-focus)] shadow-[0_0_0_1px_var(--select-border-focus)] rounded-[var(--select-radius)] cursor-pointer">
                               <span className="text-body-md text-[var(--color-text-muted)]">
                                 Select status
                               </span>
@@ -6049,7 +6200,7 @@ outline: 2px solid var(--color-border-focus);`}
                             With Selection
                           </span>
                           <VStack gap={1} className="w-[200px]">
-                            <button className="flex items-center justify-between gap-2 w-full h-[var(--input-height-md)] px-[var(--select-padding-x)] text-[length:var(--select-font-size)] leading-[var(--select-line-height)] bg-[var(--select-bg)] border border-solid border-[var(--select-border-focus)] rounded-[var(--select-radius)] cursor-pointer">
+                            <button className="flex items-center justify-between gap-2 w-full h-[var(--input-height-md)] px-[var(--select-padding-x)] text-[length:var(--select-font-size)] leading-[var(--select-line-height)] bg-[var(--select-bg)] border border-solid border-[var(--select-border-focus)] shadow-[0_0_0_1px_var(--select-border-focus)] rounded-[var(--select-radius)] cursor-pointer">
                               <span className="text-body-md text-[var(--color-text-default)]">
                                 Active
                               </span>
@@ -6078,7 +6229,7 @@ outline: 2px solid var(--color-border-focus);`}
                             Hover State
                           </span>
                           <VStack gap={1} className="w-[200px]">
-                            <button className="flex items-center justify-between gap-2 w-full h-[var(--input-height-md)] px-[var(--select-padding-x)] text-[length:var(--select-font-size)] leading-[var(--select-line-height)] bg-[var(--select-bg)] border border-solid border-[var(--select-border-focus)] rounded-[var(--select-radius)] cursor-pointer">
+                            <button className="flex items-center justify-between gap-2 w-full h-[var(--input-height-md)] px-[var(--select-padding-x)] text-[length:var(--select-font-size)] leading-[var(--select-line-height)] bg-[var(--select-bg)] border border-solid border-[var(--select-border-focus)] shadow-[0_0_0_1px_var(--select-border-focus)] rounded-[var(--select-radius)] cursor-pointer">
                               <span className="text-body-md text-[var(--color-text-muted)]">
                                 Select status
                               </span>
@@ -6107,7 +6258,7 @@ outline: 2px solid var(--color-border-focus);`}
                             Disabled Items
                           </span>
                           <VStack gap={1} className="w-[200px]">
-                            <button className="flex items-center justify-between gap-2 w-full h-[var(--input-height-md)] px-[var(--select-padding-x)] text-[length:var(--select-font-size)] leading-[var(--select-line-height)] bg-[var(--select-bg)] border border-solid border-[var(--select-border-focus)] rounded-[var(--select-radius)] cursor-pointer">
+                            <button className="flex items-center justify-between gap-2 w-full h-[var(--input-height-md)] px-[var(--select-padding-x)] text-[length:var(--select-font-size)] leading-[var(--select-line-height)] bg-[var(--select-bg)] border border-solid border-[var(--select-border-focus)] shadow-[0_0_0_1px_var(--select-border-focus)] rounded-[var(--select-radius)] cursor-pointer">
                               <span className="text-body-md text-[var(--color-text-default)]">
                                 Medium
                               </span>
@@ -6146,12 +6297,12 @@ outline: 2px solid var(--color-border-focus);`}
                           </span>
                           <Select
                             placeholder="Placeholder"
+                            width="md"
                             options={[
                               { value: 'active', label: 'Active' },
                               { value: 'shutoff', label: 'Shutoff' },
                               { value: 'building', label: 'Building' },
                             ]}
-                            className="w-[200px]"
                           />
                         </VStack>
                         <VStack gap={1}>
@@ -6161,12 +6312,12 @@ outline: 2px solid var(--color-border-focus);`}
                           <Select
                             placeholder="Placeholder"
                             defaultValue="active"
+                            width="md"
                             options={[
                               { value: 'active', label: 'Active' },
                               { value: 'shutoff', label: 'Shutoff' },
                               { value: 'building', label: 'Building' },
                             ]}
-                            className="w-[200px]"
                           />
                         </VStack>
                         <VStack gap={1}>
@@ -6176,12 +6327,12 @@ outline: 2px solid var(--color-border-focus);`}
                           <Select
                             placeholder="Placeholder"
                             disabled
+                            width="md"
                             options={[
                               { value: 'active', label: 'Active' },
                               { value: 'shutoff', label: 'Shutoff' },
                               { value: 'building', label: 'Building' },
                             ]}
-                            className="w-[200px]"
                           />
                         </VStack>
                         <VStack gap={1}>
@@ -6191,12 +6342,12 @@ outline: 2px solid var(--color-border-focus);`}
                           <Select
                             placeholder="Placeholder"
                             error="Please select an option"
+                            width="md"
                             options={[
                               { value: 'active', label: 'Active' },
                               { value: 'shutoff', label: 'Shutoff' },
                               { value: 'building', label: 'Building' },
                             ]}
-                            className="w-[200px]"
                           />
                         </VStack>
                       </div>
@@ -6209,45 +6360,100 @@ outline: 2px solid var(--color-border-focus);`}
                         <Select
                           label="Status"
                           placeholder="Select status"
+                          width="md"
                           options={[
                             { value: 'active', label: 'Active' },
                             { value: 'shutoff', label: 'Shutoff' },
                             { value: 'building', label: 'Building' },
                           ]}
-                          className="w-[200px]"
                         />
                         <Select
                           label="Region"
                           placeholder="Select region"
                           helperText="Choose your preferred region"
+                          width="md"
                           options={[
                             { value: 'kr', label: 'Korea' },
                             { value: 'us', label: 'United States' },
                             { value: 'jp', label: 'Japan' },
                           ]}
-                          className="w-[200px]"
                         />
                       </div>
                     </VStack>
 
-                    {/* Size Variants */}
+                    {/* Width Variants */}
                     <VStack gap={3}>
-                      <Label>Size variants</Label>
-                      <div className="flex gap-4 items-end flex-wrap">
-                        <VStack gap={1}>
-                          <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                            Default
-                          </span>
-                          <Select
-                            placeholder="Select"
-                            defaultValue="active"
-                            options={[
-                              { value: 'active', label: 'Active' },
-                              { value: 'shutoff', label: 'Shutoff' },
-                              { value: 'building', label: 'Building' },
-                            ]}
-                          />
-                        </VStack>
+                      <Label>Width variants</Label>
+                      <div className="flex flex-col gap-3">
+                        <div className="flex gap-4 items-end">
+                          <VStack gap={1}>
+                            <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                              SM (160px)
+                            </span>
+                            <Select
+                              placeholder="Select"
+                              width="sm"
+                              options={[
+                                { value: 'active', label: 'Active' },
+                                { value: 'shutoff', label: 'Shutoff' },
+                              ]}
+                            />
+                          </VStack>
+                          <VStack gap={1}>
+                            <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                              MD (240px)
+                            </span>
+                            <Select
+                              placeholder="Select"
+                              width="md"
+                              options={[
+                                { value: 'active', label: 'Active' },
+                                { value: 'shutoff', label: 'Shutoff' },
+                              ]}
+                            />
+                          </VStack>
+                          <VStack gap={1}>
+                            <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                              LG (320px)
+                            </span>
+                            <Select
+                              placeholder="Select"
+                              width="lg"
+                              options={[
+                                { value: 'active', label: 'Active' },
+                                { value: 'shutoff', label: 'Shutoff' },
+                              ]}
+                            />
+                          </VStack>
+                        </div>
+                        <div className="flex flex-col gap-3 w-full">
+                          <VStack gap={1}>
+                            <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                              Half (50%)
+                            </span>
+                            <Select
+                              placeholder="Select"
+                              width="half"
+                              options={[
+                                { value: 'active', label: 'Active' },
+                                { value: 'shutoff', label: 'Shutoff' },
+                              ]}
+                            />
+                          </VStack>
+                          <VStack gap={1}>
+                            <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                              Full (100%)
+                            </span>
+                            <Select
+                              placeholder="Select"
+                              width="full"
+                              options={[
+                                { value: 'active', label: 'Active' },
+                                { value: 'shutoff', label: 'Shutoff' },
+                              ]}
+                            />
+                          </VStack>
+                        </div>
                       </div>
                     </VStack>
 

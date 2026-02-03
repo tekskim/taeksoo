@@ -647,17 +647,17 @@ const menuItems = [
 
 | 위치 | variant | size | 아이콘 크기 |
 |------|---------|------|------------|
-| 페이지 헤더 Create | `primary` | `md` | - |
+| 페이지 헤더 Create | `primary` | `md` | `12` |
 | Toolbar Primary | `secondary` | `sm` | `12` |
 | Toolbar Bulk | `muted` | `sm` | `12` |
 | Detail Actions | `secondary` | `sm` | `12` |
 | SectionCard Edit | `secondary` | `sm` | `12` |
-| Drawer/Modal Footer | `secondary`/`primary`/`danger` | `md` | - |
+| Drawer/Modal Footer | `secondary`/`primary`/`danger` | `md` | `12` |
 
 ## 일반 규칙
 
 1. **필수 필드 표시**: `<span className="text-[var(--color-state-danger)]">*</span>`
-2. **아이콘 크기**: 버튼 내 아이콘은 `size={12}` (sm), `size={14}` (md)
+2. **아이콘 크기**: 버튼 내 아이콘은 `size={12}` (sm/md), `size={14}` (lg)
 3. **Helper Text**: `text-body-sm text-[var(--color-text-subtle)]`
 4. **Divider**: `<div className="w-full h-px bg-[var(--color-border-subtle)]" />`
 5. **반응형**: Tailwind CSS 클래스 사용 (`sm:`, `md:`, `lg:`)
