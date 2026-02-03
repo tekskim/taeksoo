@@ -125,16 +125,16 @@ function FileSystemCard() {
   const getColors = (percent: number) => {
     if (percent >= 100)
       return {
-        bg: 'bg-[var(--color-status-error)]/15',
+        bg: 'bg-[var(--color-status-error-subtle)]',
         text: 'text-[var(--color-status-error)]',
       };
     if (percent >= 70)
       return {
-        bg: 'bg-[var(--color-status-warning)]/15',
+        bg: 'bg-[var(--color-status-warning-subtle)]',
         text: 'text-[var(--color-status-warning)]',
       };
     return {
-      bg: 'bg-[var(--color-status-success)]/15',
+      bg: 'bg-[var(--color-status-success-subtle)]',
       text: 'text-[var(--color-status-success)]',
     };
   };

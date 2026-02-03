@@ -57,7 +57,7 @@ function AccountInvitationTemplate({
 }: AccountInvitationProps) {
   return (
     <div className="flex flex-col gap-3 items-start w-full max-w-[600px]">
-      <div className="bg-white rounded-lg p-6 w-full flex flex-col gap-6">
+      <div className="bg-white rounded-lg p-6 w-full flex flex-col gap-6 border border-[var(--color-border-default)]">
         <ThakiLogo />
         <div className="text-body-md leading-[18px] mt-4" style={{ color: '#64748b' }}>
           <p className="mb-4">
@@ -146,7 +146,7 @@ function ResetPasswordTemplate({
 }: ResetPasswordProps) {
   return (
     <div className="flex flex-col gap-3 items-start w-full max-w-[600px]">
-      <div className="bg-white rounded-lg p-6 w-full flex flex-col gap-6">
+      <div className="bg-white rounded-lg p-6 w-full flex flex-col gap-6 border border-[var(--color-border-default)]">
         <ThakiLogo />
         <div className="text-body-md leading-[18px] mt-4" style={{ color: '#0f172a' }}>
           <p className="mb-4">
@@ -240,7 +240,7 @@ function EmailMFATemplate({
 
   return (
     <div className="flex flex-col gap-3 items-start w-full max-w-[600px]">
-      <div className="bg-white rounded-lg p-6 w-full flex flex-col gap-6">
+      <div className="bg-white rounded-lg p-6 w-full flex flex-col gap-6 border border-[var(--color-border-default)]">
         <ThakiLogo />
         <div className="text-body-md leading-[18px] mt-4" style={{ color: '#0f172a' }}>
           <p className="mb-4">

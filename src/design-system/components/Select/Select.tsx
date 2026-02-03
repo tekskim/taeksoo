@@ -36,8 +36,8 @@ export interface SelectProps {
   fullWidth?: boolean;
   /** Size variant (height) */
   size?: 'sm' | 'md';
-  /** Width variant: sm (160px), md (240px), lg (320px), or number for custom pixel width */
-  width?: 'sm' | 'md' | 'lg' | number;
+  /** Width variant: sm (160px), md (240px), lg (320px), half (50%), full (100%), or number for custom pixel width */
+  width?: 'sm' | 'md' | 'lg' | 'half' | 'full' | number;
   /** Additional CSS classes */
   className?: string;
   /** Required field indicator */
@@ -244,16 +244,18 @@ export function Select({
     }
   }, [isOpen]);
 
-  // Width-based styles: sm (160px), md (240px), lg (320px)
+  // Width-based styles: sm (160px), md (240px), lg (320px), half (50%), full (100%)
   const widthStyles = {
     sm: 'w-[160px]',
     md: 'w-[240px]',
     lg: 'w-[320px]',
+    half: 'w-1/2',
+    full: 'w-full',
   };
 
   // Get width class or style
   const getWidthClass = () => {
-    if (fullWidth) return 'w-full';
+    if (fullWidth) return 'w-full'; // backward compatibility
     if (typeof width === 'number') return `w-[${width}px]`;
     return widthStyles[width];
   };
@@ -273,14 +275,19 @@ export function Select({
     sizeStyles[size],
     'bg-[var(--select-bg)]',
     'border border-solid rounded-[var(--select-radius)]',
-    'transition-colors duration-[var(--duration-fast)]',
+    'transition-all duration-[var(--duration-fast)]',
     'cursor-pointer',
     // Border color based on state
     error
       ? 'border-[var(--input-border-error)]'
       : isOpen
-        ? 'border-[var(--select-border-focus)]'
+        ? 'border-[var(--select-border-focus)] shadow-[0_0_0_1px_var(--select-border-focus)]'
         : 'border-[var(--select-border)]',
+    // Focus state (keyboard navigation)
+    !isOpen &&
+      !error &&
+      !disabled &&
+      'focus:border-[var(--select-border-focus)] focus:shadow-[0_0_0_1px_var(--select-border-focus)]',
     // Disabled
     disabled &&
       'bg-[var(--select-bg-disabled)] border-[var(--color-border-default)] cursor-not-allowed',
