@@ -52,19 +52,19 @@ const justifyStyles: Record<StackJustify, string> = {
 
 const gapStyles: Record<StackSpacing, string> = {
   0: 'gap-0',
-  1: 'gap-1',
-  1.5: 'gap-1.5',
-  2: 'gap-2',
-  3: 'gap-3',
-  4: 'gap-4',
-  5: 'gap-5',
-  6: 'gap-6',
-  8: 'gap-8',
-  10: 'gap-10',
-  12: 'gap-12',
-  16: 'gap-16',
-  20: 'gap-20',
-  24: 'gap-24',
+  1: 'gap-[4px]',
+  1.5: 'gap-[6px]',
+  2: 'gap-[8px]',
+  3: 'gap-[12px]',
+  4: 'gap-[16px]',
+  5: 'gap-[20px]',
+  6: 'gap-[24px]',
+  8: 'gap-[32px]',
+  10: 'gap-[40px]',
+  12: 'gap-[48px]',
+  16: 'gap-[64px]',
+  20: 'gap-[80px]',
+  24: 'gap-[96px]',
 };
 
 /* ----------------------------------------

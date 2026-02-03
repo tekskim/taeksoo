@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   Button,
   Breadcrumb,
+  Disclosure,
   HStack,
   VStack,
   TabBar,
@@ -215,15 +216,17 @@ function BasicInfoSection({
           </VStack>
 
           {/* Description */}
-          <VStack gap={2}>
-            <label className="text-label-lg text-[var(--color-text-default)]">Description</label>
-            <Input
-              placeholder="Enter a description (optional)"
-              value={description}
-              onChange={(e) => onDescriptionChange(e.target.value)}
-              fullWidth
-            />
-          </VStack>
+          <Disclosure>
+            <Disclosure.Trigger>Description</Disclosure.Trigger>
+            <Disclosure.Panel className="pt-2">
+              <Input
+                placeholder="Enter a description (optional)"
+                value={description}
+                onChange={(e) => onDescriptionChange(e.target.value)}
+                fullWidth
+              />
+            </Disclosure.Panel>
+          </Disclosure>
         </VStack>
       </SectionCard.Content>
     </SectionCard>
@@ -298,14 +301,12 @@ function ParametersSection({ parameters, onParametersChange }: ParametersSection
                       fullWidth
                     />
                   </VStack>
-                  <div className="pt-6">
-                    <button
-                      onClick={() => removeParameter(index)}
-                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                    >
-                      <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                    </button>
-                  </div>
+                  <button
+                    onClick={() => removeParameter(index)}
+                    className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                  >
+                    <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                  </button>
                 </div>
               </div>
             ))}
@@ -373,7 +374,7 @@ function CustomizeSection({
       <SectionCard.Content>
         <VStack gap={3}>
           {/* Reclaim Policy */}
-          <VStack gap={1.5}>
+          <VStack gap={3}>
             <label className="text-label-lg text-[var(--color-text-default)]">Reclaim Policy</label>
             <RadioGroup
               value={reclaimPolicy}
@@ -390,7 +391,7 @@ function CustomizeSection({
           </VStack>
 
           {/* Allow Volume Expansion */}
-          <VStack gap={1.5}>
+          <VStack gap={3}>
             <label className="text-label-lg text-[var(--color-text-default)]">
               Allow Volume Expansion
             </label>
@@ -406,7 +407,7 @@ function CustomizeSection({
           </VStack>
 
           {/* Volume Binding Mode */}
-          <VStack gap={1.5}>
+          <VStack gap={2}>
             <label className="text-label-lg text-[var(--color-text-default)]">
               Volume Binding Mode
             </label>
@@ -620,13 +621,20 @@ export function CreateStorageClassPage() {
         {/* Content Area */}
         <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
           <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
-            <VStack gap={3}>
+            <VStack gap={6}>
               {/* Page Header */}
-              <div className="flex items-center justify-between h-8">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-                  Create Storage Class
-                </h1>
-              </div>
+              <VStack gap={2}>
+                <div className="flex items-center justify-between h-8">
+                  <h1 className="text-heading-h5 text-[var(--color-text-default)]">
+                    Create Storage Class
+                  </h1>
+                </div>
+                <p className="text-body-md text-[var(--color-text-subtle)]">
+                  Storage Class provides a way to describe different classes of storage, allowing
+                  administrators to define storage profiles with specific provisioner, parameters,
+                  and reclaim policies for dynamic volume provisioning.
+                </p>
+              </VStack>
 
               {/* Main Content with Sidebar */}
               <HStack gap={6} align="start" className="w-full">

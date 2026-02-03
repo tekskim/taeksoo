@@ -946,11 +946,18 @@ export function CreatePersistentVolumePage() {
           <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
             <VStack gap={3}>
               {/* Page Header */}
-              <div className="flex items-center justify-between h-8">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-                  Create Persistent Volume
-                </h1>
-              </div>
+              <VStack gap={6}>
+                <div className="flex items-center justify-between h-8">
+                  <h1 className="text-heading-h5 text-[var(--color-text-default)]">
+                    Create Persistent Volume
+                  </h1>
+                </div>
+                <p className="text-body-md text-[var(--color-text-subtle)]">
+                  Persistent Volume is a pre-provisioned and cluster-wide storage resource that
+                  provides reliable and reusable data space for applications or Persistent Volume
+                  Claims.
+                </p>
+              </VStack>
 
               {/* Main Content with Sidebar */}
               <HStack gap={6} align="start" className="w-full">
