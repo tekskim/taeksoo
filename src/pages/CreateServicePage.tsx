@@ -629,129 +629,117 @@ export function CreateServicePage() {
                     <SectionCard.Header title="Service Ports" />
                     <SectionCard.Content>
                       <VStack gap={6}>
-                        {ports.length === 0 ? (
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                            onClick={addPort}
-                          >
-                            Add Port
-                          </Button>
-                        ) : (
-                          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-                            <VStack gap={2}>
-                              {/* Port Fields */}
-                              {ports.map((port) => (
-                                <div
-                                  key={port.id}
-                                  className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
-                                >
-                                  <div
-                                    className={`grid gap-2 w-full items-start ${
-                                      showNodePort
-                                        ? 'grid-cols-[1fr_1fr_1fr_1fr_1fr_16px]'
-                                        : 'grid-cols-[1fr_1fr_1fr_1fr_16px]'
-                                    }`}
-                                  >
-                                    <VStack gap={2}>
-                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                        Port Name <span className="text-[#ea580c]">*</span>
-                                      </label>
-                                      <Input
-                                        placeholder="e.g. myport"
-                                        value={port.name}
-                                        onChange={(e) =>
-                                          updatePort(port.id, 'name', e.target.value)
-                                        }
-                                        fullWidth
-                                      />
-                                    </VStack>
-                                    <VStack gap={2}>
-                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                        Listening Port <span className="text-[#ea580c]">*</span>
-                                      </label>
-                                      <Input
-                                        placeholder="e.g. 8080"
-                                        value={port.listeningPort}
-                                        onChange={(e) =>
-                                          updatePort(port.id, 'listeningPort', e.target.value)
-                                        }
-                                        fullWidth
-                                      />
-                                    </VStack>
-                                    <VStack gap={2}>
-                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                        Protocol
-                                      </label>
-                                      <Select
-                                        options={PROTOCOL_OPTIONS}
-                                        value={port.protocol}
-                                        onChange={(value) => updatePort(port.id, 'protocol', value)}
-                                        fullWidth
-                                      />
-                                    </VStack>
-                                    <VStack gap={2}>
-                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                        Target Port <span className="text-[#ea580c]">*</span>
-                                      </label>
-                                      <Input
-                                        placeholder="e.g. 80 or http"
-                                        value={port.targetPort}
-                                        onChange={(e) =>
-                                          updatePort(port.id, 'targetPort', e.target.value)
-                                        }
-                                        fullWidth
-                                      />
-                                    </VStack>
-                                    {showNodePort && (
-                                      <VStack gap={2}>
-                                        <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                          Node Port
-                                        </label>
-                                        <Input
-                                          placeholder="e.g. 30000"
-                                          value={port.nodePort || ''}
-                                          onChange={(e) =>
-                                            updatePort(port.id, 'nodePort', e.target.value)
-                                          }
-                                          fullWidth
-                                        />
-                                      </VStack>
-                                    )}
-                                    <button
-                                      onClick={() => removePort(port.id)}
-                                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                      disabled={ports.length <= 1}
-                                    >
-                                      <IconX
-                                        size={12}
-                                        className={
-                                          ports.length <= 1
-                                            ? 'text-[var(--color-text-disabled)]'
-                                            : 'text-[var(--color-text-muted)]'
-                                        }
-                                        stroke={1.5}
-                                      />
-                                    </button>
-                                  </div>
-                                </div>
-                              ))}
-
-                              {/* Add Port Button */}
-                              <div className="w-fit">
-                                <Button
-                                  variant="secondary"
-                                  size="sm"
-                                  leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                                  onClick={addPort}
-                                >
-                                  Add Port
-                                </Button>
+                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                          <VStack gap={2}>
+                            {/* Header row */}
+                            {ports.length > 0 && (
+                              <div
+                                className={`grid gap-2 w-full ${
+                                  showNodePort
+                                    ? 'grid-cols-[1fr_1fr_1fr_1fr_1fr_20px]'
+                                    : 'grid-cols-[1fr_1fr_1fr_1fr_20px]'
+                                }`}
+                              >
+                                <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                  Port Name <span className="text-[#ea580c]">*</span>
+                                </label>
+                                <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                  Listening Port <span className="text-[#ea580c]">*</span>
+                                </label>
+                                <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                  Protocol
+                                </label>
+                                <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                  Target Port <span className="text-[#ea580c]">*</span>
+                                </label>
+                                {showNodePort && (
+                                  <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                    Node Port
+                                  </label>
+                                )}
+                                <div />
                               </div>
-                            </VStack>
-                          </div>
-                        )}
+                            )}
+
+                            {/* Port rows */}
+                            {ports.map((port) => (
+                              <div
+                                key={port.id}
+                                className={`grid gap-2 w-full items-center ${
+                                  showNodePort
+                                    ? 'grid-cols-[1fr_1fr_1fr_1fr_1fr_20px]'
+                                    : 'grid-cols-[1fr_1fr_1fr_1fr_20px]'
+                                }`}
+                              >
+                                <Input
+                                  placeholder="e.g. myport"
+                                  value={port.name}
+                                  onChange={(e) => updatePort(port.id, 'name', e.target.value)}
+                                  fullWidth
+                                />
+                                <Input
+                                  placeholder="e.g. 8080"
+                                  value={port.listeningPort}
+                                  onChange={(e) =>
+                                    updatePort(port.id, 'listeningPort', e.target.value)
+                                  }
+                                  fullWidth
+                                />
+                                <Select
+                                  options={PROTOCOL_OPTIONS}
+                                  value={port.protocol}
+                                  onChange={(value) => updatePort(port.id, 'protocol', value)}
+                                  fullWidth
+                                />
+                                <Input
+                                  placeholder="e.g. 80 or http"
+                                  value={port.targetPort}
+                                  onChange={(e) =>
+                                    updatePort(port.id, 'targetPort', e.target.value)
+                                  }
+                                  fullWidth
+                                />
+                                {showNodePort && (
+                                  <Input
+                                    placeholder="e.g. 30000"
+                                    value={port.nodePort || ''}
+                                    onChange={(e) =>
+                                      updatePort(port.id, 'nodePort', e.target.value)
+                                    }
+                                    fullWidth
+                                  />
+                                )}
+                                <button
+                                  onClick={() => removePort(port.id)}
+                                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                  disabled={ports.length <= 1}
+                                >
+                                  <IconX
+                                    size={12}
+                                    className={
+                                      ports.length <= 1
+                                        ? 'text-[var(--color-text-disabled)]'
+                                        : 'text-[var(--color-text-muted)]'
+                                    }
+                                    stroke={1.5}
+                                  />
+                                </button>
+                              </div>
+                            ))}
+
+                            {/* Add Port Button */}
+                            <div className="w-fit">
+                              <Button
+                                variant="secondary"
+                                size="sm"
+                                leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                onClick={addPort}
+                              >
+                                Add Port
+                              </Button>
+                            </div>
+                          </VStack>
+                        </div>
                       </VStack>
                     </SectionCard.Content>
                   </SectionCard>
