@@ -390,60 +390,55 @@ export function EditNodeConfigPage() {
                     <SectionCard.Content>
                       <VStack gap={3}>
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-                          <VStack gap={3}>
+                          <VStack gap={2}>
+                            {taints.length > 0 && (
+                              <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
+                                <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                  Key
+                                </span>
+                                <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                  Value
+                                </span>
+                                <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                  Effect
+                                </span>
+                                <div />
+                              </div>
+                            )}
                             {taints.map((taint, index) => (
                               <div
                                 key={index}
-                                className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
                               >
-                                <div className="grid grid-cols-[1fr_1fr_1fr_auto] gap-2 items-start">
-                                  <VStack gap={2}>
-                                    <span className="text-[12px] font-medium text-[var(--color-text-default)]">
-                                      Key
-                                    </span>
-                                    <Input
-                                      placeholder="input key"
-                                      value={taint.key}
-                                      onChange={(e) => updateTaint(index, 'key', e.target.value)}
-                                      fullWidth
-                                    />
-                                  </VStack>
-                                  <VStack gap={2}>
-                                    <span className="text-[12px] font-medium text-[var(--color-text-default)]">
-                                      Value
-                                    </span>
-                                    <Input
-                                      placeholder="input value"
-                                      value={taint.value}
-                                      onChange={(e) => updateTaint(index, 'value', e.target.value)}
-                                      fullWidth
-                                    />
-                                  </VStack>
-                                  <VStack gap={2}>
-                                    <span className="text-[12px] font-medium text-[var(--color-text-default)]">
-                                      Effect
-                                    </span>
-                                    <Select
-                                      options={TAINT_EFFECT_OPTIONS}
-                                      value={taint.effect}
-                                      onChange={(value) => updateTaint(index, 'effect', value)}
-                                      placeholder="Select effect"
-                                      fullWidth
-                                    />
-                                  </VStack>
-                                  <div className="pt-6">
-                                    <button
-                                      onClick={() => removeTaint(index)}
-                                      className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                    >
-                                      <IconX
-                                        size={16}
-                                        className="text-[var(--color-text-muted)]"
-                                        stroke={1.5}
-                                      />
-                                    </button>
-                                  </div>
-                                </div>
+                                <Input
+                                  placeholder="input key"
+                                  value={taint.key}
+                                  onChange={(e) => updateTaint(index, 'key', e.target.value)}
+                                  fullWidth
+                                />
+                                <Input
+                                  placeholder="input value"
+                                  value={taint.value}
+                                  onChange={(e) => updateTaint(index, 'value', e.target.value)}
+                                  fullWidth
+                                />
+                                <Select
+                                  options={TAINT_EFFECT_OPTIONS}
+                                  value={taint.effect}
+                                  onChange={(value) => updateTaint(index, 'effect', value)}
+                                  placeholder="Select effect"
+                                  fullWidth
+                                />
+                                <button
+                                  onClick={() => removeTaint(index)}
+                                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                >
+                                  <IconX
+                                    size={12}
+                                    className="text-[var(--color-text-muted)]"
+                                    stroke={1.5}
+                                  />
+                                </button>
                               </div>
                             ))}
                             <div className="w-fit">
