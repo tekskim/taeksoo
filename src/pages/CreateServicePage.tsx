@@ -863,49 +863,44 @@ export function CreateServicePage() {
                         ) : (
                           <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
                             <VStack gap={2}>
+                              {selectors.length > 0 && (
+                                <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                                  <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                    Key
+                                  </label>
+                                  <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                    Value
+                                  </label>
+                                  <div />
+                                </div>
+                              )}
                               {selectors.map((selector, index) => (
                                 <div
                                   key={index}
-                                  className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                  className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                                 >
-                                  <div className="grid grid-cols-[1fr_1fr_16px] gap-2 w-full items-start">
-                                    <VStack gap={2}>
-                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                        Key
-                                      </label>
-                                      <Input
-                                        placeholder="e.g. key"
-                                        value={selector.key}
-                                        onChange={(e) =>
-                                          updateSelector(index, 'key', e.target.value)
-                                        }
-                                        fullWidth
-                                      />
-                                    </VStack>
-                                    <VStack gap={2}>
-                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                        Value
-                                      </label>
-                                      <Input
-                                        placeholder="e.g. value"
-                                        value={selector.value}
-                                        onChange={(e) =>
-                                          updateSelector(index, 'value', e.target.value)
-                                        }
-                                        fullWidth
-                                      />
-                                    </VStack>
-                                    <button
-                                      onClick={() => removeSelector(index)}
-                                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                    >
-                                      <IconX
-                                        size={12}
-                                        className="text-[var(--color-text-muted)]"
-                                        stroke={1.5}
-                                      />
-                                    </button>
-                                  </div>
+                                  <Input
+                                    placeholder="e.g. key"
+                                    value={selector.key}
+                                    onChange={(e) => updateSelector(index, 'key', e.target.value)}
+                                    fullWidth
+                                  />
+                                  <Input
+                                    placeholder="e.g. value"
+                                    value={selector.value}
+                                    onChange={(e) => updateSelector(index, 'value', e.target.value)}
+                                    fullWidth
+                                  />
+                                  <button
+                                    onClick={() => removeSelector(index)}
+                                    className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                  >
+                                    <IconX
+                                      size={12}
+                                      className="text-[var(--color-text-muted)]"
+                                      stroke={1.5}
+                                    />
+                                  </button>
                                 </div>
                               ))}
 
