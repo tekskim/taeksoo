@@ -92,7 +92,7 @@ export function ColorSwatch({
     <Tooltip content={`${color}\n${hexValue}`} position="top">
       <div
         ref={ref}
-        className="w-full h-12 rounded-[var(--radius-md)] flex flex-col items-center justify-center border border-[var(--color-border-subtle)] cursor-pointer hover:ring-2 hover:ring-[var(--color-border-focus)] transition-shadow"
+        className="w-full min-w-[60px] h-12 rounded-[var(--radius-md)] flex flex-col items-center justify-center border border-[var(--color-border-subtle)] cursor-pointer hover:ring-2 hover:ring-[var(--color-border-focus)] transition-shadow"
         style={{ backgroundColor: color }}
         onClick={handleCopy}
       >
