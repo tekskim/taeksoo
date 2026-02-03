@@ -855,16 +855,23 @@ export default function CreateHPAPage() {
                           </VStack>
                           <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
                             <VStack gap={3}>
-                              {labels.map((label) => (
-                                <div
-                                  key={label.id}
-                                  className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
-                                >
-                                  <div className="grid grid-cols-[1fr_1fr_16px] gap-2 w-full items-start">
-                                    <VStack gap={2}>
-                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                        Key
-                                      </label>
+                              {labels.length > 0 && (
+                                <VStack gap={2} className="w-full">
+                                  {/* Header row */}
+                                  <div className="grid grid-cols-[1fr_1fr_23px] gap-2">
+                                    <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
+                                      Key
+                                    </span>
+                                    <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
+                                      Value
+                                    </span>
+                                    <div />
+                                  </div>
+                                  {labels.map((label) => (
+                                    <div
+                                      key={label.id}
+                                      className="grid grid-cols-[1fr_1fr_23px] gap-2 items-center"
+                                    >
                                       <Input
                                         placeholder="e.g. key"
                                         value={label.key}
@@ -873,11 +880,6 @@ export default function CreateHPAPage() {
                                         }
                                         fullWidth
                                       />
-                                    </VStack>
-                                    <VStack gap={2}>
-                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                        Value
-                                      </label>
                                       <Input
                                         placeholder="e.g. value"
                                         value={label.value}
@@ -886,20 +888,20 @@ export default function CreateHPAPage() {
                                         }
                                         fullWidth
                                       />
-                                    </VStack>
-                                    <button
-                                      onClick={() => removeLabel(label.id)}
-                                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                    >
-                                      <IconX
-                                        size={12}
-                                        className="text-[var(--color-text-muted)]"
-                                        stroke={1.5}
-                                      />
-                                    </button>
-                                  </div>
-                                </div>
-                              ))}
+                                      <button
+                                        onClick={() => removeLabel(label.id)}
+                                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                      >
+                                        <IconX
+                                          size={12}
+                                          className="text-[var(--color-text-muted)]"
+                                          stroke={1.5}
+                                        />
+                                      </button>
+                                    </div>
+                                  ))}
+                                </VStack>
+                              )}
                               <div className="w-fit">
                                 <Button
                                   variant="secondary"
@@ -927,16 +929,23 @@ export default function CreateHPAPage() {
                           </VStack>
                           <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
                             <VStack gap={3}>
-                              {annotations.map((annotation) => (
-                                <div
-                                  key={annotation.id}
-                                  className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
-                                >
-                                  <div className="grid grid-cols-[1fr_1fr_16px] gap-2 w-full items-start">
-                                    <VStack gap={2}>
-                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                        Key
-                                      </label>
+                              {annotations.length > 0 && (
+                                <VStack gap={2} className="w-full">
+                                  {/* Header row */}
+                                  <div className="grid grid-cols-[1fr_1fr_23px] gap-2">
+                                    <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
+                                      Key
+                                    </span>
+                                    <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
+                                      Value
+                                    </span>
+                                    <div />
+                                  </div>
+                                  {annotations.map((annotation) => (
+                                    <div
+                                      key={annotation.id}
+                                      className="grid grid-cols-[1fr_1fr_23px] gap-2 items-center"
+                                    >
                                       <Input
                                         placeholder="e.g. key"
                                         value={annotation.key}
@@ -945,11 +954,6 @@ export default function CreateHPAPage() {
                                         }
                                         fullWidth
                                       />
-                                    </VStack>
-                                    <VStack gap={2}>
-                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                        Value
-                                      </label>
                                       <Input
                                         placeholder="e.g. value"
                                         value={annotation.value}
@@ -958,20 +962,20 @@ export default function CreateHPAPage() {
                                         }
                                         fullWidth
                                       />
-                                    </VStack>
-                                    <button
-                                      onClick={() => removeAnnotation(annotation.id)}
-                                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                    >
-                                      <IconX
-                                        size={12}
-                                        className="text-[var(--color-text-muted)]"
-                                        stroke={1.5}
-                                      />
-                                    </button>
-                                  </div>
-                                </div>
-                              ))}
+                                      <button
+                                        onClick={() => removeAnnotation(annotation.id)}
+                                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                      >
+                                        <IconX
+                                          size={12}
+                                          className="text-[var(--color-text-muted)]"
+                                          stroke={1.5}
+                                        />
+                                      </button>
+                                    </div>
+                                  ))}
+                                </VStack>
+                              )}
                               <div className="w-fit">
                                 <Button
                                   variant="secondary"

@@ -272,42 +272,40 @@ function ParametersSection({ parameters, onParametersChange }: ParametersSection
       <SectionCard.Content>
         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
           <VStack gap={3}>
+            {/* Header row */}
+            {parameters.length > 0 && (
+              <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full">
+                <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                  Key
+                </label>
+                <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                  Value
+                </label>
+                <div></div>
+              </div>
+            )}
+
             {/* Parameter rows */}
             {parameters.map((param, index) => (
-              <div
-                key={index}
-                className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
-              >
-                <div className="grid grid-cols-[1fr_1fr_auto] gap-2 items-start">
-                  <VStack gap={2}>
-                    <span className="text-[12px] font-medium text-[var(--color-text-default)]">
-                      Key
-                    </span>
-                    <Input
-                      placeholder="e.g. foo"
-                      value={param.key}
-                      onChange={(e) => updateParameter(index, 'key', e.target.value)}
-                      fullWidth
-                    />
-                  </VStack>
-                  <VStack gap={2}>
-                    <span className="text-[12px] font-medium text-[var(--color-text-default)]">
-                      Value
-                    </span>
-                    <Input
-                      placeholder="e.g. bar"
-                      value={param.value}
-                      onChange={(e) => updateParameter(index, 'value', e.target.value)}
-                      fullWidth
-                    />
-                  </VStack>
-                  <button
-                    onClick={() => removeParameter(index)}
-                    className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                  >
-                    <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                  </button>
-                </div>
+              <div key={index} className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center">
+                <Input
+                  placeholder="e.g. foo"
+                  value={param.key}
+                  onChange={(e) => updateParameter(index, 'key', e.target.value)}
+                  fullWidth
+                />
+                <Input
+                  placeholder="e.g. bar"
+                  value={param.value}
+                  onChange={(e) => updateParameter(index, 'value', e.target.value)}
+                  fullWidth
+                />
+                <button
+                  onClick={() => removeParameter(index)}
+                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                >
+                  <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                </button>
               </div>
             ))}
 
@@ -435,25 +433,31 @@ function CustomizeSection({
             </label>
             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
               <VStack gap={3}>
+                {/* Header row */}
+                {mountOptions.length > 0 && (
+                  <div className="grid grid-cols-[1fr_auto] gap-2 w-full">
+                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                      Value
+                    </label>
+                    <div></div>
+                  </div>
+                )}
+
+                {/* Mount option rows */}
                 {mountOptions.map((option, index) => (
-                  <div
-                    key={index}
-                    className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
-                  >
-                    <div className="flex gap-2 items-start">
-                      <Input
-                        placeholder="e.g. bar"
-                        value={option.value}
-                        onChange={(e) => updateMountOption(index, e.target.value)}
-                        fullWidth
-                      />
-                      <button
-                        onClick={() => removeMountOption(index)}
-                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
-                      >
-                        <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                      </button>
-                    </div>
+                  <div key={index} className="grid grid-cols-[1fr_auto] gap-2 w-full items-center">
+                    <Input
+                      placeholder="e.g. bar"
+                      value={option.value}
+                      onChange={(e) => updateMountOption(index, e.target.value)}
+                      fullWidth
+                    />
+                    <button
+                      onClick={() => removeMountOption(index)}
+                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
+                    >
+                      <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                    </button>
                   </div>
                 ))}
                 <div className="w-fit">
