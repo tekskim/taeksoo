@@ -47,6 +47,8 @@ export interface SectionCardHeaderProps extends HTMLAttributes<HTMLDivElement> {
   showDivider?: boolean;
   /** Optional status icon (e.g., for Wizard sections) */
   statusIcon?: ReactNode;
+  /** Optional description text below title, above divider */
+  description?: string;
 }
 
 function SectionCardHeader({
@@ -54,11 +56,12 @@ function SectionCardHeader({
   actions,
   showDivider = true,
   statusIcon,
+  description,
   className,
   ...props
 }: SectionCardHeaderProps) {
   return (
-    <div className="flex flex-col w-full gap-3">
+    <div className="flex flex-col w-full gap-2">
       <div
         className={twMerge('flex items-center justify-between w-full h-[28px]', className)}
         {...props}
@@ -69,6 +72,9 @@ function SectionCardHeader({
         </div>
         {actions && <div className="flex items-center gap-2">{actions}</div>}
       </div>
+      {description && (
+        <span className="text-body-sm text-[var(--color-text-subtle)]">{description}</span>
+      )}
       {showDivider && <div className="h-px w-full bg-[var(--color-border-subtle)]" />}
     </div>
   );
@@ -93,7 +99,7 @@ function SectionCardContent({ children, className, ...props }: SectionCardConten
   const childArray = Children.toArray(children).filter(isValidElement);
 
   return (
-    <div className={twMerge('flex flex-col w-full gap-3', className)} {...props}>
+    <div className={twMerge('flex flex-col w-full gap-6', className)} {...props}>
       {childArray.map((child, index) => (
         <Fragment key={index}>
           {index > 0 && <DataRowDivider />}
