@@ -374,7 +374,7 @@ function CustomizeSection({
       <SectionCard.Content>
         <VStack gap={3}>
           {/* Reclaim Policy */}
-          <VStack gap={3}>
+          <VStack gap={6}>
             <label className="text-label-lg text-[var(--color-text-default)]">Reclaim Policy</label>
             <RadioGroup
               value={reclaimPolicy}
@@ -600,19 +600,19 @@ export function CreateStorageClassPage() {
           actions={
             <>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconTerminal2 size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
             </>
           }
