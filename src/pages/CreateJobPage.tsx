@@ -3143,7 +3143,7 @@ export function CreateJobPage() {
                             {volumes.map((volume, index) => (
                               <div
                                 key={index}
-                                className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                className="border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
                               >
                                 <VStack gap={2}>
                                   {/* Header with type title and close button */}
