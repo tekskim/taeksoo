@@ -658,10 +658,24 @@ function LabelsAnnotationsSection({
               </p>
             </VStack>
 
-            <div className="bg-[var(--color-surface-muted)] rounded-[var(--radius-md)] p-3 border border-[var(--color-border-default)]">
-              <VStack gap={3}>
+            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+              <VStack gap={2}>
+                {annotations.length > 0 && (
+                  <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                      Key
+                    </label>
+                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                      Value
+                    </label>
+                    <div />
+                  </div>
+                )}
                 {annotations.map((annotation, index) => (
-                  <HStack gap={2} key={index} className="w-full items-center">
+                  <div
+                    key={index}
+                    className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                  >
                     <Input
                       placeholder="Key"
                       value={annotation.key}
@@ -676,22 +690,23 @@ function LabelsAnnotationsSection({
                     />
                     <button
                       onClick={() => onRemoveAnnotation(index)}
-                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-hover)] rounded transition-colors shrink-0"
+                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
                     >
                       <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
                     </button>
-                  </HStack>
+                  </div>
                 ))}
 
-                <Button
-                  variant="outline"
-                  size="sm"
-                  leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                  onClick={onAddAnnotation}
-                  className="bg-white w-fit"
-                >
-                  Add Annotation
-                </Button>
+                <div className="w-fit">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                    onClick={onAddAnnotation}
+                  >
+                    Add Annotation
+                  </Button>
+                </div>
               </VStack>
             </div>
           </VStack>
