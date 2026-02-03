@@ -624,32 +624,41 @@ function LabelsAnnotationsSection({
             </VStack>
 
             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-              <VStack gap={3}>
+              <VStack gap={2}>
+                {labels.length > 0 && (
+                  <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                      Key
+                    </label>
+                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                      Value
+                    </label>
+                    <div />
+                  </div>
+                )}
                 {labels.map((label, index) => (
                   <div
                     key={index}
-                    className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                    className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                   >
-                    <HStack gap={2} className="w-full items-center">
-                      <Input
-                        placeholder="Key"
-                        value={label.key}
-                        onChange={(e) => onUpdateLabel(index, 'key', e.target.value)}
-                        fullWidth
-                      />
-                      <Input
-                        placeholder="Value"
-                        value={label.value}
-                        onChange={(e) => onUpdateLabel(index, 'value', e.target.value)}
-                        fullWidth
-                      />
-                      <button
-                        onClick={() => onRemoveLabel(index)}
-                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
-                      >
-                        <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                      </button>
-                    </HStack>
+                    <Input
+                      placeholder="Key"
+                      value={label.key}
+                      onChange={(e) => onUpdateLabel(index, 'key', e.target.value)}
+                      fullWidth
+                    />
+                    <Input
+                      placeholder="Value"
+                      value={label.value}
+                      onChange={(e) => onUpdateLabel(index, 'value', e.target.value)}
+                      fullWidth
+                    />
+                    <button
+                      onClick={() => onRemoveLabel(index)}
+                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
+                    >
+                      <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                    </button>
                   </div>
                 ))}
                 <div className="w-fit">
