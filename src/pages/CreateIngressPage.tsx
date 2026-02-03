@@ -819,49 +819,44 @@ export default function CreateIngressPage() {
 
                           <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
                             <VStack gap={2}>
+                              {labels.length > 0 && (
+                                <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                                  <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                    Key
+                                  </label>
+                                  <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                    Value
+                                  </label>
+                                  <div />
+                                </div>
+                              )}
                               {labels.map((label) => (
                                 <div
                                   key={label.id}
-                                  className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                  className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                                 >
-                                  <div className="grid grid-cols-[1fr_1fr_16px] gap-2 w-full items-start">
-                                    <VStack gap={2}>
-                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                        Key
-                                      </label>
-                                      <Input
-                                        placeholder="Input Key"
-                                        value={label.key}
-                                        onChange={(e) =>
-                                          updateLabel(label.id, 'key', e.target.value)
-                                        }
-                                        fullWidth
-                                      />
-                                    </VStack>
-                                    <VStack gap={2}>
-                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                        Value
-                                      </label>
-                                      <Input
-                                        placeholder="Input Value"
-                                        value={label.value}
-                                        onChange={(e) =>
-                                          updateLabel(label.id, 'value', e.target.value)
-                                        }
-                                        fullWidth
-                                      />
-                                    </VStack>
-                                    <button
-                                      onClick={() => removeLabel(label.id)}
-                                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors self-center mt-5"
-                                    >
-                                      <IconX
-                                        size={12}
-                                        className="text-[var(--color-text-muted)]"
-                                        stroke={1.5}
-                                      />
-                                    </button>
-                                  </div>
+                                  <Input
+                                    placeholder="Input Key"
+                                    value={label.key}
+                                    onChange={(e) => updateLabel(label.id, 'key', e.target.value)}
+                                    fullWidth
+                                  />
+                                  <Input
+                                    placeholder="Input Value"
+                                    value={label.value}
+                                    onChange={(e) => updateLabel(label.id, 'value', e.target.value)}
+                                    fullWidth
+                                  />
+                                  <button
+                                    onClick={() => removeLabel(label.id)}
+                                    className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                  >
+                                    <IconX
+                                      size={12}
+                                      className="text-[var(--color-text-muted)]"
+                                      stroke={1.5}
+                                    />
+                                  </button>
                                 </div>
                               ))}
                               <div className="w-fit">
@@ -892,49 +887,48 @@ export default function CreateIngressPage() {
 
                           <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
                             <VStack gap={2}>
+                              {annotations.length > 0 && (
+                                <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                                  <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                    Key
+                                  </label>
+                                  <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                    Value
+                                  </label>
+                                  <div />
+                                </div>
+                              )}
                               {annotations.map((annotation) => (
                                 <div
                                   key={annotation.id}
-                                  className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                  className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                                 >
-                                  <div className="grid grid-cols-[1fr_1fr_16px] gap-2 w-full items-start">
-                                    <VStack gap={2}>
-                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                        Key
-                                      </label>
-                                      <Input
-                                        placeholder="Input Key"
-                                        value={annotation.key}
-                                        onChange={(e) =>
-                                          updateAnnotation(annotation.id, 'key', e.target.value)
-                                        }
-                                        fullWidth
-                                      />
-                                    </VStack>
-                                    <VStack gap={2}>
-                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                        Value
-                                      </label>
-                                      <Input
-                                        placeholder="Input Value"
-                                        value={annotation.value}
-                                        onChange={(e) =>
-                                          updateAnnotation(annotation.id, 'value', e.target.value)
-                                        }
-                                        fullWidth
-                                      />
-                                    </VStack>
-                                    <button
-                                      onClick={() => removeAnnotation(annotation.id)}
-                                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors self-center mt-5"
-                                    >
-                                      <IconX
-                                        size={12}
-                                        className="text-[var(--color-text-muted)]"
-                                        stroke={1.5}
-                                      />
-                                    </button>
-                                  </div>
+                                  <Input
+                                    placeholder="Input Key"
+                                    value={annotation.key}
+                                    onChange={(e) =>
+                                      updateAnnotation(annotation.id, 'key', e.target.value)
+                                    }
+                                    fullWidth
+                                  />
+                                  <Input
+                                    placeholder="Input Value"
+                                    value={annotation.value}
+                                    onChange={(e) =>
+                                      updateAnnotation(annotation.id, 'value', e.target.value)
+                                    }
+                                    fullWidth
+                                  />
+                                  <button
+                                    onClick={() => removeAnnotation(annotation.id)}
+                                    className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                  >
+                                    <IconX
+                                      size={12}
+                                      className="text-[var(--color-text-muted)]"
+                                      stroke={1.5}
+                                    />
+                                  </button>
                                 </div>
                               ))}
                               <div className="w-fit">

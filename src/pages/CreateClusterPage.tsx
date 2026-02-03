@@ -47,11 +47,13 @@ interface FlavorRow {
 }
 
 interface Label {
+  id: string;
   key: string;
   value: string;
 }
 
 interface Annotation {
+  id: string;
   key: string;
   value: string;
 }
@@ -153,45 +155,29 @@ export function CreateClusterPage() {
 
   // Label management
   const addLabel = useCallback(() => {
-    setLabels([...labels, { key: '', value: '' }]);
-  }, [labels]);
+    setLabels((prev) => [...prev, { id: Date.now().toString(), key: '', value: '' }]);
+  }, []);
 
-  const removeLabel = useCallback(
-    (index: number) => {
-      setLabels(labels.filter((_, i) => i !== index));
-    },
-    [labels]
-  );
+  const removeLabel = useCallback((id: string) => {
+    setLabels((prev) => prev.filter((l) => l.id !== id));
+  }, []);
 
-  const updateLabel = useCallback(
-    (index: number, field: 'key' | 'value', value: string) => {
-      const newLabels = [...labels];
-      newLabels[index][field] = value;
-      setLabels(newLabels);
-    },
-    [labels]
-  );
+  const updateLabel = useCallback((id: string, field: 'key' | 'value', value: string) => {
+    setLabels((prev) => prev.map((l) => (l.id === id ? { ...l, [field]: value } : l)));
+  }, []);
 
   // Annotation management
   const addAnnotation = useCallback(() => {
-    setAnnotations([...annotations, { key: '', value: '' }]);
-  }, [annotations]);
+    setAnnotations((prev) => [...prev, { id: Date.now().toString(), key: '', value: '' }]);
+  }, []);
 
-  const removeAnnotation = useCallback(
-    (index: number) => {
-      setAnnotations(annotations.filter((_, i) => i !== index));
-    },
-    [annotations]
-  );
+  const removeAnnotation = useCallback((id: string) => {
+    setAnnotations((prev) => prev.filter((a) => a.id !== id));
+  }, []);
 
-  const updateAnnotation = useCallback(
-    (index: number, field: 'key' | 'value', value: string) => {
-      const newAnnotations = [...annotations];
-      newAnnotations[index][field] = value;
-      setAnnotations(newAnnotations);
-    },
-    [annotations]
-  );
+  const updateAnnotation = useCallback((id: string, field: 'key' | 'value', value: string) => {
+    setAnnotations((prev) => prev.map((a) => (a.id === id ? { ...a, [field]: value } : a)));
+  }, []);
 
   const sidebarWidth = sidebarOpen ? 240 : 40;
 
@@ -821,46 +807,45 @@ export function CreateClusterPage() {
 
                         {/* Bordered container for labels */}
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-                          <VStack gap={3}>
-                            {labels.map((label, index) => (
+                          <VStack gap={2}>
+                            {labels.length > 0 && (
+                              <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                                <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                  Key
+                                </label>
+                                <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                  Value
+                                </label>
+                                <div />
+                              </div>
+                            )}
+                            {labels.map((label) => (
                               <div
-                                key={index}
-                                className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                key={label.id}
+                                className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                               >
-                                <div className="flex gap-2 items-start w-full">
-                                  <VStack gap={2} className="flex-1">
-                                    <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                      Key
-                                    </span>
-                                    <Input
-                                      placeholder="label key"
-                                      value={label.key}
-                                      onChange={(e) => updateLabel(index, 'key', e.target.value)}
-                                      fullWidth
-                                    />
-                                  </VStack>
-                                  <VStack gap={2} className="flex-1">
-                                    <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                      Value
-                                    </span>
-                                    <Input
-                                      placeholder="label value"
-                                      value={label.value}
-                                      onChange={(e) => updateLabel(index, 'value', e.target.value)}
-                                      fullWidth
-                                    />
-                                  </VStack>
-                                  <button
-                                    onClick={() => removeLabel(index)}
-                                    className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors mt-6"
-                                  >
-                                    <IconX
-                                      size={12}
-                                      className="text-[var(--color-text-muted)]"
-                                      stroke={1.5}
-                                    />
-                                  </button>
-                                </div>
+                                <Input
+                                  placeholder="label key"
+                                  value={label.key}
+                                  onChange={(e) => updateLabel(label.id, 'key', e.target.value)}
+                                  fullWidth
+                                />
+                                <Input
+                                  placeholder="label value"
+                                  value={label.value}
+                                  onChange={(e) => updateLabel(label.id, 'value', e.target.value)}
+                                  fullWidth
+                                />
+                                <button
+                                  onClick={() => removeLabel(label.id)}
+                                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                >
+                                  <IconX
+                                    size={12}
+                                    className="text-[var(--color-text-muted)]"
+                                    stroke={1.5}
+                                  />
+                                </button>
                               </div>
                             ))}
 
@@ -892,50 +877,49 @@ export function CreateClusterPage() {
 
                         {/* Bordered container for annotations */}
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-                          <VStack gap={3}>
-                            {annotations.map((annotation, index) => (
+                          <VStack gap={2}>
+                            {annotations.length > 0 && (
+                              <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                                <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                  Key
+                                </label>
+                                <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                  Value
+                                </label>
+                                <div />
+                              </div>
+                            )}
+                            {annotations.map((annotation) => (
                               <div
-                                key={index}
-                                className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                key={annotation.id}
+                                className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                               >
-                                <div className="flex gap-2 items-start w-full">
-                                  <VStack gap={2} className="flex-1">
-                                    <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                      Key
-                                    </span>
-                                    <Input
-                                      placeholder="annotation key"
-                                      value={annotation.key}
-                                      onChange={(e) =>
-                                        updateAnnotation(index, 'key', e.target.value)
-                                      }
-                                      fullWidth
-                                    />
-                                  </VStack>
-                                  <VStack gap={2} className="flex-1">
-                                    <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                      Value
-                                    </span>
-                                    <Input
-                                      placeholder="annotation value"
-                                      value={annotation.value}
-                                      onChange={(e) =>
-                                        updateAnnotation(index, 'value', e.target.value)
-                                      }
-                                      fullWidth
-                                    />
-                                  </VStack>
-                                  <button
-                                    onClick={() => removeAnnotation(index)}
-                                    className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors mt-6"
-                                  >
-                                    <IconX
-                                      size={12}
-                                      className="text-[var(--color-text-muted)]"
-                                      stroke={1.5}
-                                    />
-                                  </button>
-                                </div>
+                                <Input
+                                  placeholder="annotation key"
+                                  value={annotation.key}
+                                  onChange={(e) =>
+                                    updateAnnotation(annotation.id, 'key', e.target.value)
+                                  }
+                                  fullWidth
+                                />
+                                <Input
+                                  placeholder="annotation value"
+                                  value={annotation.value}
+                                  onChange={(e) =>
+                                    updateAnnotation(annotation.id, 'value', e.target.value)
+                                  }
+                                  fullWidth
+                                />
+                                <button
+                                  onClick={() => removeAnnotation(annotation.id)}
+                                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                >
+                                  <IconX
+                                    size={12}
+                                    className="text-[var(--color-text-muted)]"
+                                    stroke={1.5}
+                                  />
+                                </button>
                               </div>
                             ))}
 
