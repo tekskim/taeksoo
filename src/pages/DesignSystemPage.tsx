@@ -4152,10 +4152,10 @@ export function DesignSystemPage() {
                             {[
                               {
                                 token: 'lg',
-                                size: '14px',
+                                size: '13px',
                                 lh: '20px',
                                 weight: '500',
-                                desc: 'Large label',
+                                desc: 'Input label',
                               },
                               {
                                 token: 'md',
