@@ -399,42 +399,42 @@ function TrafficRulesSection({
                             Targets
                           </label>
 
-                          {activeRule.targets.map((target) => (
-                            <div
-                              key={target.id}
-                              className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
-                            >
-                              <VStack gap={3}>
-                                <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-start">
-                                  <VStack gap={2}>
-                                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                      Rule type
-                                    </label>
-                                    <Select
-                                      options={RULE_TYPE_OPTIONS}
-                                      value={target.ruleType}
-                                      onChange={(value) =>
-                                        updateTarget(target.id, 'ruleType', value)
-                                      }
-                                      fullWidth
-                                    />
-                                  </VStack>
-                                  <VStack gap={2}>
-                                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                      CIDR
-                                    </label>
-                                    <Input
-                                      placeholder="e.g. 1.1.1.0/24"
-                                      value={target.cidr}
-                                      onChange={(e) =>
-                                        updateTarget(target.id, 'cidr', e.target.value)
-                                      }
-                                      fullWidth
-                                    />
-                                  </VStack>
+                          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                            <VStack gap={2}>
+                              {activeRule.targets.length > 0 && (
+                                <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                                  <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                    Rule type
+                                  </label>
+                                  <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                    CIDR
+                                  </label>
+                                  <div />
+                                </div>
+                              )}
+
+                              {activeRule.targets.map((target) => (
+                                <div
+                                  key={target.id}
+                                  className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                                >
+                                  <Select
+                                    options={RULE_TYPE_OPTIONS}
+                                    value={target.ruleType}
+                                    onChange={(value) => updateTarget(target.id, 'ruleType', value)}
+                                    fullWidth
+                                  />
+                                  <Input
+                                    placeholder="e.g. 1.1.1.0/24"
+                                    value={target.cidr}
+                                    onChange={(e) =>
+                                      updateTarget(target.id, 'cidr', e.target.value)
+                                    }
+                                    fullWidth
+                                  />
                                   <button
                                     onClick={() => removeTarget(target.id)}
-                                    className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors self-start"
+                                    className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                   >
                                     <IconX
                                       size={12}
@@ -443,28 +443,19 @@ function TrafficRulesSection({
                                     />
                                   </button>
                                 </div>
-                                <div className="w-fit">
-                                  <Button
-                                    variant="secondary"
-                                    size="sm"
-                                    leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                                  >
-                                    Add exception
-                                  </Button>
-                                </div>
-                              </VStack>
-                            </div>
-                          ))}
+                              ))}
 
-                          <div className="w-fit">
-                            <Button
-                              variant="secondary"
-                              size="sm"
-                              leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                              onClick={addTarget}
-                            >
-                              Add allowed traffic target
-                            </Button>
+                              <div className="w-fit">
+                                <Button
+                                  variant="secondary"
+                                  size="sm"
+                                  leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                  onClick={addTarget}
+                                >
+                                  Add allowed traffic target
+                                </Button>
+                              </div>
+                            </VStack>
                           </div>
                         </VStack>
 
@@ -474,16 +465,25 @@ function TrafficRulesSection({
                             allowedPorts
                           </label>
 
-                          {activeRule.allowedPorts.map((port) => (
-                            <div
-                              key={port.id}
-                              className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
-                            >
-                              <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-start">
-                                <VStack gap={2}>
+                          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                            <VStack gap={2}>
+                              {activeRule.allowedPorts.length > 0 && (
+                                <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                                   <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
                                     Port
                                   </label>
+                                  <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                    Protocol
+                                  </label>
+                                  <div />
+                                </div>
+                              )}
+
+                              {activeRule.allowedPorts.map((port) => (
+                                <div
+                                  key={port.id}
+                                  className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                                >
                                   <Input
                                     placeholder="e.g. 8080"
                                     value={port.port}
@@ -492,11 +492,6 @@ function TrafficRulesSection({
                                     }
                                     fullWidth
                                   />
-                                </VStack>
-                                <VStack gap={2}>
-                                  <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                    Protocol
-                                  </label>
                                   <Select
                                     options={PROTOCOL_OPTIONS}
                                     value={port.protocol}
@@ -505,30 +500,30 @@ function TrafficRulesSection({
                                     }
                                     fullWidth
                                   />
-                                </VStack>
-                                <button
-                                  onClick={() => removeAllowedPort(port.id)}
-                                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors self-start"
-                                >
-                                  <IconX
-                                    size={12}
-                                    className="text-[var(--color-text-muted)]"
-                                    stroke={1.5}
-                                  />
-                                </button>
-                              </div>
-                            </div>
-                          ))}
+                                  <button
+                                    onClick={() => removeAllowedPort(port.id)}
+                                    className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                  >
+                                    <IconX
+                                      size={12}
+                                      className="text-[var(--color-text-muted)]"
+                                      stroke={1.5}
+                                    />
+                                  </button>
+                                </div>
+                              ))}
 
-                          <div className="w-fit">
-                            <Button
-                              variant="secondary"
-                              size="sm"
-                              leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                              onClick={addAllowedPort}
-                            >
-                              Add allowed port
-                            </Button>
+                              <div className="w-fit">
+                                <Button
+                                  variant="secondary"
+                                  size="sm"
+                                  leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                  onClick={addAllowedPort}
+                                >
+                                  Add allowed port
+                                </Button>
+                              </div>
+                            </VStack>
                           </div>
                         </VStack>
                       </VStack>
@@ -797,7 +792,7 @@ export function CreateNetworkPolicyPage() {
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
                           <VStack gap={2}>
                             {selectorRules.length > 0 && (
-                              <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full mb-2">
+                              <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
                                 <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
                                   Key
                                 </label>
@@ -814,44 +809,42 @@ export function CreateNetworkPolicyPage() {
                             {selectorRules.map((rule) => (
                               <div
                                 key={rule.id}
-                                className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
                               >
-                                <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center">
-                                  <Input
-                                    placeholder="input key"
-                                    value={rule.key}
-                                    onChange={(e) =>
-                                      updateSelectorRule(rule.id, 'key', e.target.value)
-                                    }
-                                    fullWidth
+                                <Input
+                                  placeholder="input key"
+                                  value={rule.key}
+                                  onChange={(e) =>
+                                    updateSelectorRule(rule.id, 'key', e.target.value)
+                                  }
+                                  fullWidth
+                                />
+                                <Select
+                                  options={OPERATOR_OPTIONS}
+                                  value={rule.operator}
+                                  onChange={(value) =>
+                                    updateSelectorRule(rule.id, 'operator', value)
+                                  }
+                                  fullWidth
+                                />
+                                <Input
+                                  placeholder="input value"
+                                  value={rule.value}
+                                  onChange={(e) =>
+                                    updateSelectorRule(rule.id, 'value', e.target.value)
+                                  }
+                                  fullWidth
+                                />
+                                <button
+                                  onClick={() => removeSelectorRule(rule.id)}
+                                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                >
+                                  <IconX
+                                    size={12}
+                                    className="text-[var(--color-text-muted)]"
+                                    stroke={1.5}
                                   />
-                                  <Select
-                                    options={OPERATOR_OPTIONS}
-                                    value={rule.operator}
-                                    onChange={(value) =>
-                                      updateSelectorRule(rule.id, 'operator', value)
-                                    }
-                                    fullWidth
-                                  />
-                                  <Input
-                                    placeholder="input value"
-                                    value={rule.value}
-                                    onChange={(e) =>
-                                      updateSelectorRule(rule.id, 'value', e.target.value)
-                                    }
-                                    fullWidth
-                                  />
-                                  <button
-                                    onClick={() => removeSelectorRule(rule.id)}
-                                    className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                  >
-                                    <IconX
-                                      size={12}
-                                      className="text-[var(--color-text-muted)]"
-                                      stroke={1.5}
-                                    />
-                                  </button>
-                                </div>
+                                </button>
                               </div>
                             ))}
 
@@ -915,49 +908,44 @@ export function CreateNetworkPolicyPage() {
 
                           <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
                             <VStack gap={2}>
+                              {labels.length > 0 && (
+                                <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                                  <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                    Key
+                                  </label>
+                                  <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                    Value
+                                  </label>
+                                  <div />
+                                </div>
+                              )}
                               {labels.map((label) => (
                                 <div
                                   key={label.id}
-                                  className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                  className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                                 >
-                                  <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-start">
-                                    <VStack gap={2}>
-                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                        Key
-                                      </label>
-                                      <Input
-                                        placeholder="label key"
-                                        value={label.key}
-                                        onChange={(e) =>
-                                          updateLabel(label.id, 'key', e.target.value)
-                                        }
-                                        fullWidth
-                                      />
-                                    </VStack>
-                                    <VStack gap={2}>
-                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                        Value
-                                      </label>
-                                      <Input
-                                        placeholder="label value"
-                                        value={label.value}
-                                        onChange={(e) =>
-                                          updateLabel(label.id, 'value', e.target.value)
-                                        }
-                                        fullWidth
-                                      />
-                                    </VStack>
-                                    <button
-                                      onClick={() => removeLabel(label.id)}
-                                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors self-start"
-                                    >
-                                      <IconX
-                                        size={12}
-                                        className="text-[var(--color-text-muted)]"
-                                        stroke={1.5}
-                                      />
-                                    </button>
-                                  </div>
+                                  <Input
+                                    placeholder="label key"
+                                    value={label.key}
+                                    onChange={(e) => updateLabel(label.id, 'key', e.target.value)}
+                                    fullWidth
+                                  />
+                                  <Input
+                                    placeholder="label value"
+                                    value={label.value}
+                                    onChange={(e) => updateLabel(label.id, 'value', e.target.value)}
+                                    fullWidth
+                                  />
+                                  <button
+                                    onClick={() => removeLabel(label.id)}
+                                    className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                  >
+                                    <IconX
+                                      size={12}
+                                      className="text-[var(--color-text-muted)]"
+                                      stroke={1.5}
+                                    />
+                                  </button>
                                 </div>
                               ))}
                               <div className="w-fit">
@@ -988,49 +976,48 @@ export function CreateNetworkPolicyPage() {
 
                           <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
                             <VStack gap={2}>
+                              {annotations.length > 0 && (
+                                <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                                  <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                    Key
+                                  </label>
+                                  <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                    Value
+                                  </label>
+                                  <div />
+                                </div>
+                              )}
                               {annotations.map((annotation) => (
                                 <div
                                   key={annotation.id}
-                                  className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                  className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                                 >
-                                  <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-start">
-                                    <VStack gap={2}>
-                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                        Key
-                                      </label>
-                                      <Input
-                                        placeholder="annotation key"
-                                        value={annotation.key}
-                                        onChange={(e) =>
-                                          updateAnnotation(annotation.id, 'key', e.target.value)
-                                        }
-                                        fullWidth
-                                      />
-                                    </VStack>
-                                    <VStack gap={2}>
-                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                        Value
-                                      </label>
-                                      <Input
-                                        placeholder="annotation value"
-                                        value={annotation.value}
-                                        onChange={(e) =>
-                                          updateAnnotation(annotation.id, 'value', e.target.value)
-                                        }
-                                        fullWidth
-                                      />
-                                    </VStack>
-                                    <button
-                                      onClick={() => removeAnnotation(annotation.id)}
-                                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors self-start"
-                                    >
-                                      <IconX
-                                        size={12}
-                                        className="text-[var(--color-text-muted)]"
-                                        stroke={1.5}
-                                      />
-                                    </button>
-                                  </div>
+                                  <Input
+                                    placeholder="annotation key"
+                                    value={annotation.key}
+                                    onChange={(e) =>
+                                      updateAnnotation(annotation.id, 'key', e.target.value)
+                                    }
+                                    fullWidth
+                                  />
+                                  <Input
+                                    placeholder="annotation value"
+                                    value={annotation.value}
+                                    onChange={(e) =>
+                                      updateAnnotation(annotation.id, 'value', e.target.value)
+                                    }
+                                    fullWidth
+                                  />
+                                  <button
+                                    onClick={() => removeAnnotation(annotation.id)}
+                                    className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                  >
+                                    <IconX
+                                      size={12}
+                                      className="text-[var(--color-text-muted)]"
+                                      stroke={1.5}
+                                    />
+                                  </button>
                                 </div>
                               ))}
                               <div className="w-fit">
