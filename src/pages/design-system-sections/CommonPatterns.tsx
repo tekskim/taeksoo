@@ -238,7 +238,7 @@ export function DetailPagePatternDemo() {
       <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
         <TabList>
           <Tab value="details">Details</Tab>
-          <Tab value="volumes">Volumes (3)</Tab>
+          <Tab value="volumes">Volumes</Tab>
           <Tab value="network">Network</Tab>
         </TabList>
 

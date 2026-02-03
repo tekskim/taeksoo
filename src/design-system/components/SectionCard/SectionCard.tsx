@@ -60,7 +60,7 @@ function SectionCardHeader({
   return (
     <div className="flex flex-col w-full gap-3">
       <div
-        className={twMerge('flex items-center justify-between w-full h-7', className)}
+        className={twMerge('flex items-center justify-between w-full h-[28px]', className)}
         {...props}
       >
         <div className="flex items-center gap-2">

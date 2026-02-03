@@ -23,20 +23,38 @@ THAKI Design System (TDS)은 THAKI Cloud 플랫폼을 위한 디자인 시스템
 ### Import
 
 ```tsx
-import { 
-  Button, Input, Select, Checkbox, Radio, Toggle,
-  Table, Badge, StatusIndicator,
-  Modal, Drawer, FormField, SectionCard,
-  VStack, HStack, Container,
+import {
+  Button,
+  Input,
+  Select,
+  Checkbox,
+  Radio,
+  Toggle,
+  Table,
+  Badge,
+  StatusIndicator,
+  Modal,
+  Drawer,
+  FormField,
+  SectionCard,
+  VStack,
+  HStack,
+  Container,
   // Wizard Pattern
-  WizardSection, WizardSummary, DoneSection, DoneSectionRow,
-  PreSection, WritingSection, SkippedSection,
+  WizardSection,
+  WizardSummary,
+  DoneSection,
+  DoneSectionRow,
+  PreSection,
+  WritingSection,
+  SkippedSection,
 } from '@/design-system';
 ```
 
 ### 라이브 문서
 
 디자인 시스템 페이지에서 모든 컴포넌트를 확인할 수 있습니다:
+
 - 로컬: `http://localhost:5173/design`
 - 배포: `https://your-domain/design`
 
@@ -52,43 +70,43 @@ Primitive → Semantic → Component
 
 ### Primitive Tokens
 
-원시 디자인 값입니다.
+원시 디자인 값입니다. **Spacing과 Radius는 px 단위로 정의**되어 브라우저 font-size 설정에 관계없이 일관된 크기를 보장합니다.
 
-| 카테고리 | 예시 |
-|---------|------|
-| Colors | `--color-slate-500`, `--color-blue-600` |
-| Spacing | `--spacing-1` (4px), `--spacing-4` (16px) |
-| Font Size | `--font-size-12` (12px), `--font-size-16` (16px) |
-| Radius | `--radius-sm` (4px), `--radius-md` (6px) |
+| 카테고리  | 예시                                                           | 단위 |
+| --------- | -------------------------------------------------------------- | ---- |
+| Colors    | `--color-slate-500`, `--color-blue-600`                        | -    |
+| Spacing   | `--primitive-spacing-1` (4px), `--primitive-spacing-16` (64px) | px   |
+| Font Size | `--font-size-12` (12px), `--font-size-16` (16px)               | px   |
+| Radius    | `--primitive-radius-sm` (4px), `--primitive-radius-md` (6px)   | px   |
 
 ### Semantic Tokens
 
 목적 기반 토큰입니다.
 
-| 토큰 | 용도 | Light Mode |
-|-----|------|------------|
-| `--color-text-default` | 기본 텍스트 | slate-800 |
-| `--color-text-muted` | 보조 텍스트 | slate-600 |
-| `--color-text-subtle` | 약한 텍스트 | slate-500 |
-| `--color-surface-default` | 기본 배경 | white |
-| `--color-border-default` | 기본 테두리 | slate-200 |
-| `--color-action-primary` | 주요 액션 | blue-600 |
-| `--color-state-danger` | 위험/에러 | red-600 |
-| `--color-state-success` | 성공 | green-600 |
-| `--color-state-warning` | 경고 | orange-600 |
+| 토큰                      | 용도        | Light Mode |
+| ------------------------- | ----------- | ---------- |
+| `--color-text-default`    | 기본 텍스트 | slate-800  |
+| `--color-text-muted`      | 보조 텍스트 | slate-600  |
+| `--color-text-subtle`     | 약한 텍스트 | slate-500  |
+| `--color-surface-default` | 기본 배경   | white      |
+| `--color-border-default`  | 기본 테두리 | slate-200  |
+| `--color-action-primary`  | 주요 액션   | blue-600   |
+| `--color-state-danger`    | 위험/에러   | red-600    |
+| `--color-state-success`   | 성공        | green-600  |
+| `--color-state-warning`   | 경고        | orange-600 |
 
 ### Typography Scale
 
-| 레벨 | Font Size | Line Height | 용도 |
-|-----|-----------|-------------|------|
-| h1 | 40px | 48px | 페이지 타이틀 |
-| h2 | 32px | 40px | 섹션 타이틀 |
-| h3 | 24px | 32px | 서브 섹션 |
-| h4 | 18px | 28px | 카드 타이틀 |
-| h5 | 16px | 24px | 작은 타이틀 |
-| body.lg | 14px | 20px | 큰 본문 |
-| body.md | 12px | 18px | 기본 본문 |
-| body.sm | 11px | 16px | 작은 텍스트 |
+| 레벨    | Font Size | Line Height | 용도          |
+| ------- | --------- | ----------- | ------------- |
+| h1      | 40px      | 48px        | 페이지 타이틀 |
+| h2      | 32px      | 40px        | 섹션 타이틀   |
+| h3      | 24px      | 32px        | 서브 섹션     |
+| h4      | 18px      | 28px        | 카드 타이틀   |
+| h5      | 16px      | 24px        | 작은 타이틀   |
+| body.lg | 14px      | 20px        | 큰 본문       |
+| body.md | 12px      | 18px        | 기본 본문     |
+| body.sm | 11px      | 16px        | 작은 텍스트   |
 
 ---
 
@@ -127,6 +145,7 @@ Primitive → Semantic → Component
 ```
 
 **Variants:**
+
 - `Input` - 기본 텍스트 입력
 - `NumberInput` - 숫자 입력 (증감 버튼 포함)
 - `SearchInput` - 검색 입력 (아이콘 포함)
@@ -157,26 +176,24 @@ Primitive → Semantic → Component
   <FormField.Control>
     <Input placeholder="Enter name" fullWidth />
   </FormField.Control>
-  <FormField.HelperText>
-    이름은 1-128자의 문자열이어야 합니다.
-  </FormField.HelperText>
+  <FormField.HelperText>이름은 1-128자의 문자열이어야 합니다.</FormField.HelperText>
 </FormField>
 ```
 
 **에러 상태:**
+
 ```tsx
 <FormField error>
   <FormField.Label>Password</FormField.Label>
   <FormField.Control>
     <Input type="password" fullWidth />
   </FormField.Control>
-  <FormField.ErrorMessage>
-    비밀번호는 8자 이상이어야 합니다.
-  </FormField.ErrorMessage>
+  <FormField.ErrorMessage>비밀번호는 8자 이상이어야 합니다.</FormField.ErrorMessage>
 </FormField>
 ```
 
 **Label Sizes:**
+
 - `size="md"` (14px) - 기본
 - `size="sm"` (12px) - 작은 라벨
 
@@ -230,7 +247,7 @@ const columns = [
   selectedRows={selected}
   onSelectedRowsChange={setSelected}
   onRowClick={(row) => navigate(`/items/${row.id}`)}
-/>
+/>;
 ```
 
 ##### Table Column Width Presets
@@ -238,63 +255,71 @@ const columns = [
 테이블 컬럼 너비를 일관되게 관리하기 위한 프리셋입니다.
 
 **Import:**
+
 ```tsx
 import { columnWidths } from '@/design-system';
 ```
 
 **기본 사용법:**
+
 ```tsx
 const columns = [
-  { key: 'select', width: columnWidths.select },      // 고정 40px
-  { key: 'status', width: columnWidths.status },      // 고정 64px
-  { key: 'name', flex: 1 },                           // 가변 (남은 공간 채움)
+  { key: 'select', width: columnWidths.select }, // 고정 40px
+  { key: 'status', width: columnWidths.status }, // 고정 64px
+  { key: 'name', flex: 1 }, // 가변 (남은 공간 채움)
   { key: 'createdAt', width: columnWidths.createdAt }, // 고정 140px
-  { key: 'actions', width: columnWidths.actions },    // 고정 64px
+  { key: 'actions', width: columnWidths.actions }, // 고정 64px
 ];
 ```
 
 **주요 프리셋 카테고리:**
 
-| 카테고리 | 프리셋 | 너비 |
-|---------|--------|------|
-| **선택** | `select`, `checkbox` | 40px |
-| **액션** | `actions` | 64px |
-| **상태** | `status` | 64px |
-| **이름** | `name` | 180px |
-| **시간** | `createdAt`, `updatedAt` | 140px |
-| **타입** | `type` | 100px |
-| **IP** | `ip`, `fixedIp`, `floatingIp` | 130px |
-| **설명** | `description` | 200px |
+| 카테고리 | 프리셋                        | 너비  |
+| -------- | ----------------------------- | ----- |
+| **선택** | `select`, `checkbox`          | 40px  |
+| **액션** | `actions`                     | 64px  |
+| **상태** | `status`                      | 64px  |
+| **이름** | `name`                        | 180px |
+| **시간** | `createdAt`, `updatedAt`      | 140px |
+| **타입** | `type`                        | 100px |
+| **IP**   | `ip`, `fixedIp`, `floatingIp` | 130px |
+| **설명** | `description`                 | 200px |
 
 **너비 설정 패턴:**
 
 1. **고정 너비** - 숫자, 날짜, 상태 컬럼에 적합
+
 ```tsx
 { key: 'status', width: columnWidths.status }
 { key: 'createdAt', width: columnWidths.createdAt }
 ```
 
 2. **가변 너비 (flex)** - 이름, 설명 등 콘텐츠 컬럼에 적합
+
 ```tsx
 { key: 'name', flex: 1 }
 { key: 'description', flex: 1 }
 ```
 
 3. **반응형 (flex + minWidth)** - 컬럼이 많은 테이블에서 사용
+
 ```tsx
 { key: 'name', flex: 1, minWidth: columnWidths.name }
 ```
 
 **권장 사항:**
+
 - 하나의 테이블에 최소 1개의 `flex: 1` 컬럼 필요
 - 컬럼 8개 이상 테이블은 `flex + minWidth` 권장
 - 총 고정 너비 800px 초과 시 오버플로우 위험
 - 액션 컬럼에 `minWidth` 추가하여 축소 방지:
+
 ```tsx
 { key: 'actions', width: columnWidths.actions, minWidth: columnWidths.actions }
 ```
 
 **truncate 적용 시:**
+
 ```tsx
 {
   key: 'name',
@@ -331,11 +356,7 @@ const columns = [
 #### Pagination
 
 ```tsx
-<Pagination
-  currentPage={page}
-  totalPages={10}
-  onPageChange={setPage}
-/>
+<Pagination currentPage={page} totalPages={10} onPageChange={setPage} />
 ```
 
 ---
@@ -367,9 +388,13 @@ const columns = [
 
 ```tsx
 <SectionCard>
-  <SectionCard.Header 
-    title="Basic Information" 
-    actions={<Button size="sm" leftIcon={<IconEdit size={12} />}>Edit</Button>} 
+  <SectionCard.Header
+    title="Basic Information"
+    actions={
+      <Button size="sm" leftIcon={<IconEdit size={12} />}>
+        Edit
+      </Button>
+    }
   />
   <SectionCard.Content>
     <SectionCard.DataRow label="Name" value="instance-01" />
@@ -453,22 +478,24 @@ Side Navigation Bar Menu Item - 좁은 사이드바용 메뉴 아이템
 </SNBMenuItem>
 ```
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `status` | `'default' \| 'hover' \| 'selected'` | - | 상태 직접 지정 |
-| `isSelected` | `boolean` | `false` | 선택 상태 (status 대신 사용) |
-| `type` | `'icon' \| 'text'` | `'icon'` | 아이콘 또는 텍스트 |
-| `text` | `string` | - | type="text"일 때 표시할 텍스트 |
-| `onClick` | `() => void` | - | 클릭 핸들러 |
-| `children` | `ReactNode` | - | 아이콘 요소 |
+| Prop         | Type                                 | Default  | Description                    |
+| ------------ | ------------------------------------ | -------- | ------------------------------ |
+| `status`     | `'default' \| 'hover' \| 'selected'` | -        | 상태 직접 지정                 |
+| `isSelected` | `boolean`                            | `false`  | 선택 상태 (status 대신 사용)   |
+| `type`       | `'icon' \| 'text'`                   | `'icon'` | 아이콘 또는 텍스트             |
+| `text`       | `string`                             | -        | type="text"일 때 표시할 텍스트 |
+| `onClick`    | `() => void`                         | -        | 클릭 핸들러                    |
+| `children`   | `ReactNode`                          | -        | 아이콘 요소                    |
 
 **스타일:**
+
 - Size: 38×38px
 - Padding: 8px 6px
 - Border radius: 8px
 - Icon size: 22px
 
 **상태별 색상:**
+
 - Default: 흰색 배경, 회색 아이콘 (`#64748b`)
 - Hover: 연한 배경 (`#f8fafc`), 진한 회색 아이콘 (`#334155`)
 - Selected: 파란 배경 (`#eff6ff`), 파란 아이콘 (`#2563eb`)
@@ -483,16 +510,16 @@ Side Navigation Bar Menu Item - 좁은 사이드바용 메뉴 아이템
 <Modal open={isOpen} onClose={handleClose}>
   <Modal.Header>
     <Modal.Title>Confirm Delete</Modal.Title>
-    <Modal.Description>
-      This action cannot be undone.
-    </Modal.Description>
+    <Modal.Description>This action cannot be undone.</Modal.Description>
   </Modal.Header>
-  <Modal.Content>
-    Are you sure you want to delete this item?
-  </Modal.Content>
+  <Modal.Content>Are you sure you want to delete this item?</Modal.Content>
   <Modal.Footer>
-    <Button variant="secondary" onClick={handleClose}>Cancel</Button>
-    <Button variant="danger" onClick={handleDelete}>Delete</Button>
+    <Button variant="secondary" onClick={handleClose}>
+      Cancel
+    </Button>
+    <Button variant="danger" onClick={handleDelete}>
+      Delete
+    </Button>
   </Modal.Footer>
 </Modal>
 ```
@@ -510,8 +537,12 @@ Side Navigation Bar Menu Item - 좁은 사이드바용 메뉴 아이템
     </FormField>
   </Drawer.Content>
   <Drawer.Footer>
-    <Button variant="secondary" onClick={handleClose}>Cancel</Button>
-    <Button variant="primary" onClick={handleSave}>Save</Button>
+    <Button variant="secondary" onClick={handleClose}>
+      Cancel
+    </Button>
+    <Button variant="primary" onClick={handleSave}>
+      Save
+    </Button>
   </Drawer.Footer>
 </Drawer>
 ```
@@ -540,8 +571,8 @@ Side Navigation Bar Menu Item - 좁은 사이드바용 메뉴 아이템
 <Loading variant="spinner" text="Loading" size="md" />
 
 // Progress bar
-<Loading 
-  variant="progress" 
+<Loading
+  variant="progress"
   text="Loading.."
   description="Create an instance to start using compute resources."
   progress={68}
@@ -552,15 +583,15 @@ Side Navigation Bar Menu Item - 좁은 사이드바용 메뉴 아이템
 <Loading variant="button" buttonLabel="Loading" />
 ```
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `variant` | `'spinner' \| 'progress' \| 'button'` | `'spinner'` | 로딩 스타일 |
-| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | 스피너 크기 |
-| `text` | `string` | `'Loading'` | 로딩 텍스트 |
-| `description` | `string` | - | 설명 텍스트 (progress) |
-| `progress` | `number` | `0` | 진행률 0-100 (progress) |
-| `statusText` | `string` | - | 상태 텍스트 (progress) |
-| `buttonLabel` | `string` | `'Loading'` | 버튼 라벨 (button) |
+| Prop          | Type                                  | Default     | Description             |
+| ------------- | ------------------------------------- | ----------- | ----------------------- |
+| `variant`     | `'spinner' \| 'progress' \| 'button'` | `'spinner'` | 로딩 스타일             |
+| `size`        | `'sm' \| 'md' \| 'lg'`                | `'md'`      | 스피너 크기             |
+| `text`        | `string`                              | `'Loading'` | 로딩 텍스트             |
+| `description` | `string`                              | -           | 설명 텍스트 (progress)  |
+| `progress`    | `number`                              | `0`         | 진행률 0-100 (progress) |
+| `statusText`  | `string`                              | -           | 상태 텍스트 (progress)  |
+| `buttonLabel` | `string`                              | `'Loading'` | 버튼 라벨 (button)      |
 
 ---
 
@@ -571,8 +602,9 @@ Side Navigation Bar Menu Item - 좁은 사이드바용 메뉴 아이템
 리소스 생성 마법사 패턴입니다. 여러 단계를 순차적으로 진행하며, 각 섹션의 상태를 관리합니다.
 
 **Import:**
+
 ```tsx
-import { 
+import {
   WizardSection,
   WizardSummary,
   WizardSectionStatusIcon,
@@ -595,6 +627,7 @@ import type { WizardSectionState, WizardSummaryItem } from '@/design-system';
 | `writing` | 작성 중 (임시 저장) | "Writing..." 텍스트 |
 
 **WizardSummary - 진행 상태 요약:**
+
 ```tsx
 const sections: WizardSummaryItem[] = [
   { key: 'basic-info', label: 'Basic Information', status: 'done' },
@@ -603,32 +636,29 @@ const sections: WizardSummaryItem[] = [
   { key: 'network', label: 'Network', status: 'pre' },
 ];
 
-<WizardSummary 
-  title="Summary" 
-  items={sections}
-  onItemClick={(key) => scrollToSection(key)}
-/>
+<WizardSummary title="Summary" items={sections} onItemClick={(key) => scrollToSection(key)} />;
 ```
 
 **PreSection - 대기 중인 섹션:**
+
 ```tsx
 <PreSection title="Network" />
 ```
 
 **WritingSection - 작성 중인 섹션:**
+
 ```tsx
 <WritingSection title="Image" />
 ```
 
 **SkippedSection - 건너뛴 섹션:**
+
 ```tsx
-<SkippedSection 
-  title="Advanced" 
-  onEdit={() => handleEdit('advanced')} 
-/>
+<SkippedSection title="Advanced" onEdit={() => handleEdit('advanced')} />
 ```
 
 **DoneSection - 완료된 섹션:**
+
 ```tsx
 <DoneSection title="Basic Information" onEdit={() => handleEdit('basic-info')}>
   <DoneSectionRow label="Instance Name" value="my-instance" />
@@ -638,6 +668,7 @@ const sections: WizardSummaryItem[] = [
 ```
 
 **WizardSection - 통합 컴포넌트:**
+
 ```tsx
 <WizardSection
   title="Basic Information"
@@ -666,42 +697,43 @@ const sections: WizardSummaryItem[] = [
 ```
 
 **전체 Create Flow 구조:**
+
 ```tsx
 function CreateResourcePage() {
   // 섹션 상태 관리
   const [sectionStatus, setSectionStatus] = useState<Record<string, WizardSectionState>>({
     'basic-info': 'active',
-    'config': 'pre',
-    'advanced': 'pre',
+    config: 'pre',
+    advanced: 'pre',
   });
-  
+
   // 편집 모드 관리
   const [editingSection, setEditingSection] = useState<string | null>(null);
-  
+
   // 다음 섹션으로 이동
   const handleNext = (currentSection: string) => {
     const nextSection = getNextSection(currentSection);
-    setSectionStatus(prev => ({
+    setSectionStatus((prev) => ({
       ...prev,
       [currentSection]: 'done',
       [nextSection]: 'active',
     }));
   };
-  
+
   // 섹션 건너뛰기
   const handleSkip = (section: string) => {
     const nextSection = getNextSection(section);
-    setSectionStatus(prev => ({
+    setSectionStatus((prev) => ({
       ...prev,
       [section]: 'skipped',
       [nextSection]: 'active',
     }));
   };
-  
+
   // 섹션 편집
   const handleEdit = (section: string) => {
     // 현재 활성 섹션을 'writing' 상태로 변경
-    setSectionStatus(prev => {
+    setSectionStatus((prev) => {
       const newStatus = { ...prev };
       for (const key of Object.keys(newStatus)) {
         if (newStatus[key] === 'active') {
@@ -713,13 +745,13 @@ function CreateResourcePage() {
     });
     setEditingSection(section);
   };
-  
+
   return (
     <HStack gap={6} align="start">
       {/* 메인 콘텐츠 */}
       <VStack gap={4} className="flex-1">
         {/* 각 섹션 렌더링 */}
-        {SECTIONS.map(section => (
+        {SECTIONS.map((section) => (
           <WizardSection
             key={section.key}
             title={section.label}
@@ -731,24 +763,21 @@ function CreateResourcePage() {
           </WizardSection>
         ))}
       </VStack>
-      
+
       {/* 사이드바 */}
       <div className="w-[312px] sticky top-4">
         <WizardSummary
-          items={SECTIONS.map(s => ({
+          items={SECTIONS.map((s) => ({
             key: s.key,
             label: s.label,
             status: sectionStatus[s.key],
           }))}
         />
-        
+
         {/* Create 버튼 */}
         <HStack justify="end" className="mt-4">
           <Button variant="secondary">Cancel</Button>
-          <Button 
-            variant="primary" 
-            disabled={!isAllCompleted}
-          >
+          <Button variant="primary" disabled={!isAllCompleted}>
             Create
           </Button>
         </HStack>
@@ -759,6 +788,7 @@ function CreateResourcePage() {
 ```
 
 **템플릿 적용 패턴:**
+
 ```tsx
 // 템플릿 선택 시 모든 섹션 자동 완료
 const applyTemplate = (template: Template) => {
@@ -766,14 +796,14 @@ const applyTemplate = (template: Template) => {
   setInstanceName(template.config.instanceName);
   setImage(template.config.image);
   // ...
-  
+
   // 첫 번째 섹션만 active, 나머지는 done
   setSectionStatus({
-    'basic-info': 'active',  // 이름만 확인/수정
-    'image': 'done',
-    'flavor': 'done',
-    'network': 'done',
-    'advanced': 'done',
+    'basic-info': 'active', // 이름만 확인/수정
+    image: 'done',
+    flavor: 'done',
+    network: 'done',
+    advanced: 'done',
   });
 };
 ```
@@ -795,9 +825,7 @@ const applyTemplate = (template: Template) => {
 ### Helper Text
 
 ```tsx
-<span className="text-[11px] text-[var(--color-text-subtle)]">
-  도움말 텍스트
-</span>
+<span className="text-[11px] text-[var(--color-text-subtle)]">도움말 텍스트</span>
 ```
 
 ### Divider
@@ -821,6 +849,7 @@ import { IconPlus, IconEdit, IconTrash, IconChevronRight } from '@tabler/icons-r
 ```
 
 **아이콘 크기 가이드:**
+
 - 버튼 (sm): `size={12}`
 - 버튼 (md/lg): `size={14}`
 - 테이블/리스트: `size={16}`
@@ -830,32 +859,34 @@ import { IconPlus, IconEdit, IconTrash, IconChevronRight } from '@tabler/icons-r
 
 ```tsx
 // 텍스트
-className="text-[var(--color-text-default)]"    // 기본
-className="text-[var(--color-text-muted)]"      // 보조
-className="text-[var(--color-text-subtle)]"     // 약함
+className = 'text-[var(--color-text-default)]'; // 기본
+className = 'text-[var(--color-text-muted)]'; // 보조
+className = 'text-[var(--color-text-subtle)]'; // 약함
 
 // 배경
-className="bg-[var(--color-surface-default)]"   // 기본
-className="bg-[var(--color-surface-subtle)]"    // 약함
+className = 'bg-[var(--color-surface-default)]'; // 기본
+className = 'bg-[var(--color-surface-subtle)]'; // 약함
 
 // 테두리
-className="border-[var(--color-border-default)]"
-className="border-[var(--color-border-subtle)]"
+className = 'border-[var(--color-border-default)]';
+className = 'border-[var(--color-border-subtle)]';
 
 // 상태
-className="text-[var(--color-state-danger)]"    // 에러/위험
-className="text-[var(--color-state-success)]"   // 성공
-className="text-[var(--color-action-primary)]"  // 링크/액션
+className = 'text-[var(--color-state-danger)]'; // 에러/위험
+className = 'text-[var(--color-state-success)]'; // 성공
+className = 'text-[var(--color-action-primary)]'; // 링크/액션
 ```
 
 ---
 
 ## 버전
 
-- **Current Version**: 1.2.0
-- **Last Updated**: 2026-01-26
-- **Changes**: 
-  - Table Column Width Presets 가이드 추가
-  - columnWidths 프리셋 값 조정 (gpu, type, protocol, adminState)
-
-
+- **Current Version**: 1.3.0
+- **Last Updated**: 2026-01-30
+- **Changes**:
+  - 디자인 토큰 rem → px 변환 (spacing, radius)
+  - WizardSection 아이콘 사이즈 16px 표준화
+  - SectionCard 헤더 높이 28px 고정
+  - Select 드롭다운 메뉴 프리뷰 추가
+  - Mini Toggle (Chart Controls) 추가
+  - StatusIndicator 이름 표시 개선
