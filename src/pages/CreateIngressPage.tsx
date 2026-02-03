@@ -558,8 +558,8 @@ export default function CreateIngressPage() {
                               </HStack>
 
                               {/* Paths container */}
-                              <div className="border border-[var(--color-border-default)] rounded-[6px] w-full">
-                                <VStack gap={2} className="p-3">
+                              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                                <VStack gap={2}>
                                   {rule.paths.length > 0 && (
                                     <div className="grid grid-cols-[2fr_1fr_1fr_16px] gap-2 w-full">
                                       <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
