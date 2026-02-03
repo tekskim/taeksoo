@@ -18,12 +18,12 @@ export function SectionCard({ children, isActive = false, className, ...props }:
     <div
       className={twMerge(
         'flex flex-col items-start',
-        'gap-3',
+        'gap-[24px]',
         'bg-[var(--color-surface-default)]',
         'rounded-[var(--radius-md)]',
         isActive
           ? 'border-2 border-[var(--color-action-primary)] pt-[11px] pb-[15px] px-[15px]'
-          : 'border border-[var(--color-border-default)] pt-3 pb-4 px-4',
+          : 'border border-[var(--color-border-default)] pt-[12px] pb-[16px] px-[16px]',
         'w-full',
         className
       )}
@@ -47,6 +47,8 @@ export interface SectionCardHeaderProps extends HTMLAttributes<HTMLDivElement> {
   showDivider?: boolean;
   /** Optional status icon (e.g., for Wizard sections) */
   statusIcon?: ReactNode;
+  /** Optional description text below title, above divider */
+  description?: string;
 }
 
 function SectionCardHeader({
@@ -54,21 +56,25 @@ function SectionCardHeader({
   actions,
   showDivider = true,
   statusIcon,
+  description,
   className,
   ...props
 }: SectionCardHeaderProps) {
   return (
-    <div className="flex flex-col w-full gap-3">
+    <div className="flex flex-col w-full gap-2">
       <div
         className={twMerge('flex items-center justify-between w-full h-[28px]', className)}
         {...props}
       >
         <div className="flex items-center gap-2">
           {statusIcon}
-          <h5 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h5>
+          <h5 className="text-heading-h5 text-[var(--color-text-default)] h-7">{title}</h5>
         </div>
         {actions && <div className="flex items-center gap-2">{actions}</div>}
       </div>
+      {description && (
+        <span className="text-body-sm text-[var(--color-text-subtle)]">{description}</span>
+      )}
       {showDivider && <div className="h-px w-full bg-[var(--color-border-subtle)]" />}
     </div>
   );
@@ -93,7 +99,7 @@ function SectionCardContent({ children, className, ...props }: SectionCardConten
   const childArray = Children.toArray(children).filter(isValidElement);
 
   return (
-    <div className={twMerge('flex flex-col w-full gap-3', className)} {...props}>
+    <div className={twMerge('flex flex-col w-full gap-6', className)} {...props}>
       {childArray.map((child, index) => (
         <Fragment key={index}>
           {index > 0 && <DataRowDivider />}
