@@ -4,7 +4,7 @@ import {
   Section,
   Label,
   ColorSwatch,
-  SemanticColorBox,
+  SemanticColorTable,
   SpacingSwatch,
   TokenCard,
   IconDisplayGrid,
@@ -179,6 +179,7 @@ import {
   IconServer,
   IconServer2,
   IconDatabase,
+  IconDatabaseExport,
   IconNetwork,
   IconRouter,
   IconCube,
@@ -285,7 +286,15 @@ import {
 } from '@tabler/icons-react';
 
 // Custom Icons from design-system
-import { IconExpandOff, IconExpandOn } from '@/design-system/components/Icons/CustomIcons';
+import {
+  IconExpandOff,
+  IconExpandOn,
+  IconAction,
+  IconTimeout,
+  IconHistory2,
+  IconRobotCustom,
+  IconAddRobot,
+} from '@/design-system/components/Icons/CustomIcons';
 import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
@@ -306,7 +315,8 @@ const foundationItems = [
 ];
 
 // Component items (UI 컴포넌트)
-// Form Controls - matches actual content order
+
+// Form Controls - 사용자 입력을 받는 컴포넌트
 const formControlItems = [
   { id: 'button', label: 'Button', icon: IconClick },
   { id: 'input', label: 'Input', icon: IconForms },
@@ -314,48 +324,60 @@ const formControlItems = [
   { id: 'select', label: 'Select', icon: IconSelector },
   { id: 'datepicker', label: 'DatePicker', icon: IconCalendar },
   { id: 'slider', label: 'Slider', icon: IconAdjustments },
-  { id: 'chip', label: 'Chip', icon: IconTag },
-  { id: 'selection-indicator', label: 'SelectionIndicator', icon: IconSquareCheck },
-  { id: 'pagination', label: 'Pagination', icon: IconProgress },
-  { id: 'loading', label: 'Loading', icon: IconLoader2 },
   { id: 'toggle', label: 'Toggle', icon: IconToggleRight },
   { id: 'checkbox', label: 'Checkbox', icon: IconSquareCheck },
   { id: 'radio', label: 'Radio', icon: IconCircle },
 ];
 
-// Navigation & Layout - matches actual content order
+// Data Display - 데이터를 표시하는 컴포넌트
+const dataDisplayItems = [
+  { id: 'table', label: 'Table', icon: IconList },
+  { id: 'badge', label: 'Badge', icon: IconTag },
+  { id: 'chip', label: 'Chip', icon: IconTag },
+  { id: 'status-indicator', label: 'Status indicator', icon: IconActivity },
+  { id: 'pagination', label: 'Pagination', icon: IconProgress },
+  { id: 'selection-indicator', label: 'SelectionIndicator', icon: IconSquareCheck },
+];
+
+// Feedback - 사용자에게 피드백을 제공하는 컴포넌트
+const feedbackItems = [
+  { id: 'inline-message', label: 'Inline message', icon: IconInfoCircle },
+  { id: 'loading', label: 'Loading', icon: IconLoader2 },
+];
+
+// Navigation - 네비게이션 관련 컴포넌트
 const navigationItems = [
   { id: 'topbar', label: 'TopBar', icon: IconLayoutNavbar },
   { id: 'tabbar', label: 'TabBar', icon: IconLayoutNavbar },
   { id: 'tabs', label: 'Tabs', icon: IconLayoutNavbar },
-  { id: 'disclosure', label: 'Disclosure', icon: IconSelector },
-  { id: 'inline-message', label: 'Inline message', icon: IconInfoCircle },
-  { id: 'table', label: 'Table', icon: IconList },
-  { id: 'badge', label: 'Badge', icon: IconTag },
   { id: 'breadcrumb', label: 'Breadcrumb', icon: IconChevronRight },
-  { id: 'status-indicator', label: 'Status indicator', icon: IconActivity },
-  { id: 'tooltip', label: 'Tooltip', icon: IconMessage2 },
-  { id: 'window-control', label: 'Window control', icon: IconAppWindow },
-  { id: 'scrollbar', label: 'Scrollbar', icon: IconLayoutSidebar },
 ];
 
-// Patterns - matches actual content order
-const patternItems = [
-  { id: 'common-patterns', label: 'Common patterns', icon: IconTemplate },
-  { id: 'detail-header', label: 'Detail header', icon: IconLayoutNavbar },
-  { id: 'section-card', label: 'Section card', icon: IconLayoutGrid },
-  { id: 'wizard', label: 'Wizard (Create Flow)', icon: IconListNumbers },
+// Overlay - 오버레이 컴포넌트
+const overlayItems = [
+  { id: 'tooltip', label: 'Tooltip', icon: IconMessage2 },
   { id: 'menu', label: 'Menu', icon: IconMenu2 },
   { id: 'context-menu', label: 'Context menu', icon: IconMenu2 },
   { id: 'modal', label: 'Modal', icon: IconLayoutGrid },
   { id: 'drawer', label: 'Drawer', icon: IconLayoutGrid },
-  { id: 'monitoring-toolbar', label: 'Monitoring toolbar', icon: IconRefresh },
   { id: 'notification-center', label: 'Notification center', icon: IconBell },
   { id: 'floating-card', label: 'Floating card', icon: IconLayoutGrid },
+];
+
+// Layout & Structure - 레이아웃 및 구조 컴포넌트
+const layoutItems = [
+  { id: 'disclosure', label: 'Disclosure', icon: IconSelector },
+  { id: 'window-control', label: 'Window control', icon: IconAppWindow },
+  { id: 'scrollbar', label: 'Scrollbar', icon: IconLayoutSidebar },
+  { id: 'common-patterns', label: 'Common patterns', icon: IconTemplate },
+  { id: 'detail-header', label: 'Detail header', icon: IconLayoutNavbar },
+  { id: 'section-card', label: 'Section card', icon: IconLayoutGrid },
+  { id: 'wizard', label: 'Wizard (Create Flow)', icon: IconListNumbers },
+  { id: 'monitoring-toolbar', label: 'Monitoring toolbar', icon: IconRefresh },
   { id: 'layout', label: 'Layout', icon: IconLayoutSidebar },
 ];
 
-// Graphs
+// Graphs - 차트 컴포넌트
 const graphItems = [
   { id: 'bar-chart', label: 'Bar chart', icon: IconChartBar },
   { id: 'area-chart', label: 'Area chart', icon: IconChartBar },
@@ -365,7 +387,15 @@ const graphItems = [
 ];
 
 // All component items
-const componentItems = [...formControlItems, ...navigationItems, ...patternItems, ...graphItems];
+const componentItems = [
+  ...formControlItems,
+  ...dataDisplayItems,
+  ...feedbackItems,
+  ...navigationItems,
+  ...overlayItems,
+  ...layoutItems,
+  ...graphItems,
+];
 
 // All items for intersection observer
 const navItems = [...foundationItems, ...componentItems];
@@ -458,11 +488,7 @@ function OpenSectionDemo() {
 
   return (
     <SectionCard isActive>
-      <SectionCard.Header
-        title="Basic information"
-        statusIcon={<WizardSectionStatusIcon status="active" />}
-        showDivider={false}
-      />
+      <SectionCard.Header title="Basic information" showDivider={false} />
       <SectionCard.Content>
         <VStack gap={0}>
           {/* Instance name */}
@@ -682,11 +708,7 @@ function OpenSectionTableDemo() {
   return (
     <div className="w-[840px]">
       <SectionCard isActive>
-        <SectionCard.Header
-          title="Source"
-          statusIcon={<WizardSectionStatusIcon status="active" />}
-          showDivider={false}
-        />
+        <SectionCard.Header title="Source" showDivider={false} />
         <SectionCard.Content>
           <VStack gap={0}>
             {/* Start Source */}
@@ -3211,12 +3233,116 @@ export function DesignSystemPage() {
               ))}
             </VStack>
 
-            {/* Navigation & Data Display */}
+            {/* Data Display */}
             <VStack gap={1} className="w-[166px]">
               <span className="px-3 py-1 text-[length:var(--font-size-10)] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider">
-                Navigation & Data
+                Data Display
+              </span>
+              {dataDisplayItems.map(({ id, label, icon: Icon }) => (
+                <button
+                  key={id}
+                  onClick={() => scrollToSection(id)}
+                  data-cursor-element-id={`sidebar-nav-${id}`}
+                  className={`
+                    w-full px-3 py-2 rounded-[var(--radius-button)] flex items-center gap-2
+                    text-[length:var(--font-size-11)] text-left transition-colors cursor-pointer
+                    ${
+                      activeSection === id
+                        ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] font-medium'
+                        : 'text-[var(--color-text-muted)] hover:bg-[var(--color-surface-subtle)]'
+                    }
+                  `}
+                >
+                  <Icon size={16} stroke={1.5} />
+                  {label}
+                </button>
+              ))}
+            </VStack>
+
+            {/* Feedback */}
+            <VStack gap={1} className="w-[166px]">
+              <span className="px-3 py-1 text-[length:var(--font-size-10)] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider">
+                Feedback
+              </span>
+              {feedbackItems.map(({ id, label, icon: Icon }) => (
+                <button
+                  key={id}
+                  onClick={() => scrollToSection(id)}
+                  data-cursor-element-id={`sidebar-nav-${id}`}
+                  className={`
+                    w-full px-3 py-2 rounded-[var(--radius-button)] flex items-center gap-2
+                    text-[length:var(--font-size-11)] text-left transition-colors cursor-pointer
+                    ${
+                      activeSection === id
+                        ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] font-medium'
+                        : 'text-[var(--color-text-muted)] hover:bg-[var(--color-surface-subtle)]'
+                    }
+                  `}
+                >
+                  <Icon size={16} stroke={1.5} />
+                  {label}
+                </button>
+              ))}
+            </VStack>
+
+            {/* Navigation */}
+            <VStack gap={1} className="w-[166px]">
+              <span className="px-3 py-1 text-[length:var(--font-size-10)] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider">
+                Navigation
               </span>
               {navigationItems.map(({ id, label, icon: Icon }) => (
+                <button
+                  key={id}
+                  onClick={() => scrollToSection(id)}
+                  data-cursor-element-id={`sidebar-nav-${id}`}
+                  className={`
+                    w-full px-3 py-2 rounded-[var(--radius-button)] flex items-center gap-2
+                    text-[length:var(--font-size-11)] text-left transition-colors cursor-pointer
+                    ${
+                      activeSection === id
+                        ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] font-medium'
+                        : 'text-[var(--color-text-muted)] hover:bg-[var(--color-surface-subtle)]'
+                    }
+                  `}
+                >
+                  <Icon size={16} stroke={1.5} />
+                  {label}
+                </button>
+              ))}
+            </VStack>
+
+            {/* Overlay */}
+            <VStack gap={1} className="w-[166px]">
+              <span className="px-3 py-1 text-[length:var(--font-size-10)] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider">
+                Overlay
+              </span>
+              {overlayItems.map(({ id, label, icon: Icon }) => (
+                <button
+                  key={id}
+                  onClick={() => scrollToSection(id)}
+                  data-cursor-element-id={`sidebar-nav-${id}`}
+                  className={`
+                    w-full px-3 py-2 rounded-[var(--radius-button)] flex items-center gap-2
+                    text-[length:var(--font-size-11)] text-left transition-colors cursor-pointer
+                    ${
+                      activeSection === id
+                        ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] font-medium'
+                        : 'text-[var(--color-text-muted)] hover:bg-[var(--color-surface-subtle)]'
+                    }
+                  `}
+                >
+                  <Icon size={16} stroke={1.5} />
+                  {label}
+                </button>
+              ))}
+            </VStack>
+
+            {/* Layout & Structure */}
+            <VStack gap={1} className="w-[166px]">
+              <span className="px-3 py-1 text-[length:var(--font-size-10)] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider">
+                Layout
+              </span>
+              {layoutItems.map(({ id, label, icon: Icon }) => (
                 <button
                   key={id}
                   onClick={() => scrollToSection(id)}
@@ -3243,32 +3369,6 @@ export function DesignSystemPage() {
                 Graphs
               </span>
               {graphItems.map(({ id, label, icon: Icon }) => (
-                <button
-                  key={id}
-                  onClick={() => scrollToSection(id)}
-                  data-cursor-element-id={`sidebar-nav-${id}`}
-                  className={`
-                    w-full px-3 py-2 rounded-[var(--radius-button)] flex items-center gap-2
-                    text-[length:var(--font-size-11)] text-left transition-colors cursor-pointer
-                    ${
-                      activeSection === id
-                        ? 'bg-[var(--color-state-info-bg)] text-[var(--color-action-primary)] font-medium'
-                        : 'text-[var(--color-text-muted)] hover:bg-[var(--color-surface-subtle)]'
-                    }
-                  `}
-                >
-                  <Icon size={16} stroke={1.5} />
-                  {label}
-                </button>
-              ))}
-            </VStack>
-
-            {/* Patterns */}
-            <VStack gap={1} className="w-[166px]">
-              <span className="px-3 py-1 text-[length:var(--font-size-10)] font-semibold text-[var(--color-text-subtle)] uppercase tracking-wider">
-                Patterns
-              </span>
-              {patternItems.map(({ id, label, icon: Icon }) => (
                 <button
                   key={id}
                   onClick={() => scrollToSection(id)}
@@ -3447,7 +3547,7 @@ export function DesignSystemPage() {
                     {/* Base Colors */}
                     <VStack gap={2}>
                       <Label>Base</Label>
-                      <div className="flex gap-2">
+                      <div className="grid grid-cols-5 md:grid-cols-10 gap-2">
                         <ColorSwatch name="white" color="var(--color-white)" textLight={false} />
                         <ColorSwatch name="black" color="var(--color-black)" textLight={true} />
                       </div>
@@ -3614,127 +3714,208 @@ export function DesignSystemPage() {
                 <Section
                   id="semantic-colors"
                   title="Semantic colors"
-                  description="Purpose-driven color tokens with light/dark theme support"
+                  description="Purpose-driven color tokens with light/dark theme support. Click token or hex to copy."
                 >
-                  <VStack gap={6}>
-                    {/* Action, Text, Surface, Border */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                      <VStack gap={3}>
-                        <Label>Action</Label>
-                        <div className="flex gap-2">
-                          <SemanticColorBox name="primary" color="var(--color-action-primary)" />
-                          <SemanticColorBox
-                            name="hover"
-                            color="var(--color-action-primary-hover)"
-                          />
-                          <SemanticColorBox
-                            name="active"
-                            color="var(--color-action-primary-active)"
-                          />
-                        </div>
-                      </VStack>
-                      <VStack gap={3}>
-                        <Label>Text</Label>
-                        <div className="flex gap-2 flex-wrap">
-                          <SemanticColorBox name="default" color="var(--color-text-default)" />
-                          <SemanticColorBox name="muted" color="var(--color-text-muted)" />
-                          <SemanticColorBox name="subtle" color="var(--color-text-subtle)" />
-                          <SemanticColorBox name="disabled" color="var(--color-text-disabled)" />
-                          <SemanticColorBox
-                            name="inverse"
-                            color="var(--color-text-inverse)"
-                            border
-                          />
-                        </div>
-                      </VStack>
-                      <VStack gap={3}>
-                        <Label>Surface</Label>
-                        <div className="flex gap-2">
-                          <SemanticColorBox
-                            name="default"
-                            color="var(--color-surface-default)"
-                            border
-                          />
-                          <SemanticColorBox
-                            name="subtle"
-                            color="var(--color-surface-subtle)"
-                            border
-                          />
-                          <SemanticColorBox name="muted" color="var(--color-surface-muted)" />
-                          <SemanticColorBox name="inverse" color="var(--color-surface-inverse)" />
-                        </div>
-                      </VStack>
-                      <VStack gap={3}>
-                        <Label>Border</Label>
-                        <div className="flex gap-2">
-                          <SemanticColorBox name="default" color="var(--color-border-default)" />
-                          <SemanticColorBox name="subtle" color="var(--color-border-subtle)" />
-                          <SemanticColorBox name="strong" color="var(--color-border-strong)" />
-                          <SemanticColorBox name="focus" color="var(--color-border-focus)" />
-                        </div>
-                      </VStack>
+                  <VStack gap={8}>
+                    {/* Action & Text */}
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                      <SemanticColorTable
+                        title="Action"
+                        colors={[
+                          {
+                            token: 'action.primary',
+                            cssVar: '--color-action-primary',
+                            primitive: 'blue600',
+                          },
+                          {
+                            token: 'action.primary-hover',
+                            cssVar: '--color-action-primary-hover',
+                            primitive: 'blue700',
+                          },
+                          {
+                            token: 'action.primary-active',
+                            cssVar: '--color-action-primary-active',
+                            primitive: 'blue800',
+                          },
+                        ]}
+                      />
+                      <SemanticColorTable
+                        title="Text"
+                        colors={[
+                          {
+                            token: 'text.default',
+                            cssVar: '--color-text-default',
+                            primitive: 'slate900',
+                          },
+                          {
+                            token: 'text.muted',
+                            cssVar: '--color-text-muted',
+                            primitive: 'slate600',
+                          },
+                          {
+                            token: 'text.subtle',
+                            cssVar: '--color-text-subtle',
+                            primitive: 'slate500',
+                          },
+                          {
+                            token: 'text.disabled',
+                            cssVar: '--color-text-disabled',
+                            primitive: 'slate400',
+                          },
+                          {
+                            token: 'text.inverse',
+                            cssVar: '--color-text-inverse',
+                            primitive: 'white',
+                            border: true,
+                          },
+                        ]}
+                      />
+                    </div>
+
+                    {/* Surface & Border */}
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                      <SemanticColorTable
+                        title="Surface"
+                        colors={[
+                          {
+                            token: 'surface.default',
+                            cssVar: '--color-surface-default',
+                            primitive: 'white',
+                            border: true,
+                          },
+                          {
+                            token: 'surface.subtle',
+                            cssVar: '--color-surface-subtle',
+                            primitive: 'slate50',
+                            border: true,
+                          },
+                          {
+                            token: 'surface.muted',
+                            cssVar: '--color-surface-muted',
+                            primitive: 'slate100',
+                          },
+                          {
+                            token: 'surface.inverse',
+                            cssVar: '--color-surface-inverse',
+                            primitive: 'slate900',
+                          },
+                        ]}
+                      />
+                      <SemanticColorTable
+                        title="Border"
+                        colors={[
+                          {
+                            token: 'border.default',
+                            cssVar: '--color-border-default',
+                            primitive: 'slate200',
+                          },
+                          {
+                            token: 'border.subtle',
+                            cssVar: '--color-border-subtle',
+                            primitive: 'slate100',
+                          },
+                          {
+                            token: 'border.strong',
+                            cssVar: '--color-border-strong',
+                            primitive: 'slate300',
+                          },
+                          {
+                            token: 'border.focus',
+                            cssVar: '--color-border-focus',
+                            primitive: 'blue500',
+                          },
+                        ]}
+                      />
                     </div>
 
                     {/* State Colors */}
-                    <VStack gap={3}>
+                    <VStack gap={4}>
                       <Label>State</Label>
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        {/* Info */}
-                        <VStack gap={2}>
-                          <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                            Info
-                          </span>
-                          <div className="flex gap-2">
-                            <SemanticColorBox name="default" color="var(--color-state-info)" />
-                            <SemanticColorBox name="bg" color="var(--color-state-info-bg)" border />
-                            <SemanticColorBox name="text" color="var(--color-state-info-text)" />
-                          </div>
-                        </VStack>
-                        {/* Success */}
-                        <VStack gap={2}>
-                          <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                            Success
-                          </span>
-                          <div className="flex gap-2">
-                            <SemanticColorBox name="default" color="var(--color-state-success)" />
-                            <SemanticColorBox
-                              name="bg"
-                              color="var(--color-state-success-bg)"
-                              border
-                            />
-                            <SemanticColorBox name="text" color="var(--color-state-success-text)" />
-                          </div>
-                        </VStack>
-                        {/* Warning */}
-                        <VStack gap={2}>
-                          <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                            Warning
-                          </span>
-                          <div className="flex gap-2">
-                            <SemanticColorBox name="default" color="var(--color-state-warning)" />
-                            <SemanticColorBox
-                              name="bg"
-                              color="var(--color-state-warning-bg)"
-                              border
-                            />
-                            <SemanticColorBox name="text" color="var(--color-state-warning-text)" />
-                          </div>
-                        </VStack>
-                        {/* Danger */}
-                        <VStack gap={2}>
-                          <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                            Danger
-                          </span>
-                          <div className="flex gap-2">
-                            <SemanticColorBox name="default" color="var(--color-state-danger)" />
-                            <SemanticColorBox
-                              name="bg"
-                              color="var(--color-state-danger-bg)"
-                              border
-                            />
-                            <SemanticColorBox name="text" color="var(--color-state-danger-text)" />
-                          </div>
-                        </VStack>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <SemanticColorTable
+                          title="Info"
+                          colors={[
+                            {
+                              token: 'state.info',
+                              cssVar: '--color-state-info',
+                              primitive: 'blue600',
+                            },
+                            {
+                              token: 'state.info-bg',
+                              cssVar: '--color-state-info-bg',
+                              primitive: 'blue50',
+                              border: true,
+                            },
+                            {
+                              token: 'state.info-text',
+                              cssVar: '--color-state-info-text',
+                              primitive: 'blue800',
+                            },
+                          ]}
+                        />
+                        <SemanticColorTable
+                          title="Success"
+                          colors={[
+                            {
+                              token: 'state.success',
+                              cssVar: '--color-state-success',
+                              primitive: 'green600',
+                            },
+                            {
+                              token: 'state.success-bg',
+                              cssVar: '--color-state-success-bg',
+                              primitive: 'green50',
+                              border: true,
+                            },
+                            {
+                              token: 'state.success-text',
+                              cssVar: '--color-state-success-text',
+                              primitive: 'green800',
+                            },
+                          ]}
+                        />
+                        <SemanticColorTable
+                          title="Warning"
+                          colors={[
+                            {
+                              token: 'state.warning',
+                              cssVar: '--color-state-warning',
+                              primitive: 'orange600',
+                            },
+                            {
+                              token: 'state.warning-bg',
+                              cssVar: '--color-state-warning-bg',
+                              primitive: 'yellow50',
+                              border: true,
+                            },
+                            {
+                              token: 'state.warning-text',
+                              cssVar: '--color-state-warning-text',
+                              primitive: 'orange800',
+                            },
+                          ]}
+                        />
+                        <SemanticColorTable
+                          title="Danger"
+                          colors={[
+                            {
+                              token: 'state.danger',
+                              cssVar: '--color-state-danger',
+                              primitive: 'red600',
+                            },
+                            {
+                              token: 'state.danger-bg',
+                              cssVar: '--color-state-danger-bg',
+                              primitive: 'red50',
+                              border: true,
+                            },
+                            {
+                              token: 'state.danger-text',
+                              cssVar: '--color-state-danger-text',
+                              primitive: 'red800',
+                            },
+                          ]}
+                        />
                       </div>
                     </VStack>
                   </VStack>
@@ -3754,16 +3935,16 @@ export function DesignSystemPage() {
                         <table className="w-full text-[length:var(--font-size-11)]">
                           <thead>
                             <tr className="border-b border-[var(--color-border-default)]">
-                              <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                              <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)] w-[120px]">
                                 Token
                               </th>
-                              <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                              <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)] w-[60px]">
                                 Size
                               </th>
-                              <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                              <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)] w-[90px]">
                                 Line Height
                               </th>
-                              <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                              <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)] w-[60px]">
                                 Weight
                               </th>
                               <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
@@ -3820,18 +4001,18 @@ export function DesignSystemPage() {
                                 key={token}
                                 className="border-b border-[var(--color-border-subtle)]"
                               >
-                                <td className="py-2 pr-4">
+                                <td className="py-2 pr-4 w-[120px]">
                                   <code className="text-[var(--color-action-primary)] font-mono text-[10px]">
                                     heading.{token}
                                   </code>
                                 </td>
-                                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">
+                                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)] w-[60px]">
                                   {size}
                                 </td>
-                                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">
+                                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)] w-[90px]">
                                   {lh}
                                 </td>
-                                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">
+                                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)] w-[60px]">
                                   {weight}
                                 </td>
                                 <td className="py-2">
@@ -3859,16 +4040,16 @@ export function DesignSystemPage() {
                         <table className="w-full text-[length:var(--font-size-11)]">
                           <thead>
                             <tr className="border-b border-[var(--color-border-default)]">
-                              <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                              <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)] w-[120px]">
                                 Token
                               </th>
-                              <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                              <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)] w-[60px]">
                                 Size
                               </th>
-                              <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                              <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)] w-[90px]">
                                 Line Height
                               </th>
-                              <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                              <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)] w-[60px]">
                                 Weight
                               </th>
                               <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
@@ -3911,18 +4092,18 @@ export function DesignSystemPage() {
                                 key={token}
                                 className="border-b border-[var(--color-border-subtle)]"
                               >
-                                <td className="py-2 pr-4">
+                                <td className="py-2 pr-4 w-[120px]">
                                   <code className="text-[var(--color-action-primary)] font-mono text-[10px]">
                                     body.{token}
                                   </code>
                                 </td>
-                                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">
+                                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)] w-[60px]">
                                   {size}
                                 </td>
-                                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">
+                                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)] w-[90px]">
                                   {lh}
                                 </td>
-                                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">
+                                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)] w-[60px]">
                                   {weight}
                                 </td>
                                 <td className="py-2">
@@ -3950,16 +4131,16 @@ export function DesignSystemPage() {
                         <table className="w-full text-[length:var(--font-size-11)]">
                           <thead>
                             <tr className="border-b border-[var(--color-border-default)]">
-                              <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                              <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)] w-[120px]">
                                 Token
                               </th>
-                              <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                              <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)] w-[60px]">
                                 Size
                               </th>
-                              <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                              <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)] w-[90px]">
                                 Line Height
                               </th>
-                              <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                              <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)] w-[60px]">
                                 Weight
                               </th>
                               <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
@@ -3995,18 +4176,18 @@ export function DesignSystemPage() {
                                 key={token}
                                 className="border-b border-[var(--color-border-subtle)]"
                               >
-                                <td className="py-2 pr-4">
+                                <td className="py-2 pr-4 w-[120px]">
                                   <code className="text-[var(--color-action-primary)] font-mono text-[10px]">
                                     label.{token}
                                   </code>
                                 </td>
-                                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">
+                                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)] w-[60px]">
                                   {size}
                                 </td>
-                                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">
+                                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)] w-[90px]">
                                   {lh}
                                 </td>
-                                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">
+                                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)] w-[60px]">
                                   {weight}
                                 </td>
                                 <td className="py-2">
@@ -4034,16 +4215,16 @@ export function DesignSystemPage() {
                         <table className="w-full text-[length:var(--font-size-11)]">
                           <thead>
                             <tr className="border-b border-[var(--color-border-default)]">
-                              <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                              <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)] w-[120px]">
                                 Token
                               </th>
-                              <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                              <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)] w-[60px]">
                                 Size
                               </th>
-                              <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                              <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)] w-[90px]">
                                 Line Height
                               </th>
-                              <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                              <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)] w-[60px]">
                                 Weight
                               </th>
                               <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
@@ -4079,18 +4260,18 @@ export function DesignSystemPage() {
                                 key={token}
                                 className="border-b border-[var(--color-border-subtle)]"
                               >
-                                <td className="py-2 pr-4">
+                                <td className="py-2 pr-4 w-[120px]">
                                   <code className="text-[var(--color-action-primary)] font-mono text-[10px]">
                                     button.{token}
                                   </code>
                                 </td>
-                                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">
+                                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)] w-[60px]">
                                   {size}
                                 </td>
-                                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">
+                                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)] w-[90px]">
                                   {lh}
                                 </td>
-                                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">
+                                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)] w-[60px]">
                                   {weight}
                                 </td>
                                 <td className="py-2">
@@ -4118,16 +4299,16 @@ export function DesignSystemPage() {
                         <table className="w-full text-[length:var(--font-size-11)]">
                           <thead>
                             <tr className="border-b border-[var(--color-border-default)]">
-                              <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                              <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)] w-[120px]">
                                 Token
                               </th>
-                              <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                              <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)] w-[60px]">
                                 Size
                               </th>
-                              <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                              <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)] w-[90px]">
                                 Line Height
                               </th>
-                              <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)]">
+                              <th className="text-left py-2 pr-4 font-medium text-[var(--color-text-subtle)] w-[60px]">
                                 Font
                               </th>
                               <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
@@ -4154,18 +4335,18 @@ export function DesignSystemPage() {
                                 key={token}
                                 className="border-b border-[var(--color-border-subtle)]"
                               >
-                                <td className="py-2 pr-4">
+                                <td className="py-2 pr-4 w-[120px]">
                                   <code className="text-[var(--color-action-primary)] font-mono text-[10px]">
                                     code.{token}
                                   </code>
                                 </td>
-                                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">
+                                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)] w-[60px]">
                                   {size}
                                 </td>
-                                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">
+                                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)] w-[90px]">
                                   {lh}
                                 </td>
-                                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)]">
+                                <td className="py-2 pr-4 font-mono text-[var(--color-text-muted)] w-[60px]">
                                   mono
                                 </td>
                                 <td className="py-2">
@@ -4786,6 +4967,21 @@ outline: 2px solid var(--color-border-focus);`}
                       ]}
                       searchQuery={iconSearchQuery}
                     />
+
+                    {/* Custom Icons (TDS) */}
+                    <IconDisplayGrid
+                      title="Custom Icons (TDS)"
+                      icons={[
+                        { Icon: IconExpandOff, name: 'Expand Off' },
+                        { Icon: IconExpandOn, name: 'Expand On' },
+                        { Icon: IconAction, name: 'Action' },
+                        { Icon: IconTimeout, name: 'Timeout' },
+                        { Icon: IconHistory2, name: 'History' },
+                        { Icon: IconRobotCustom, name: 'Robot' },
+                        { Icon: IconAddRobot, name: 'Add Robot' },
+                      ]}
+                      searchQuery={iconSearchQuery}
+                    />
                   </VStack>
                 </Section>
 
@@ -4968,28 +5164,109 @@ outline: 2px solid var(--color-border-focus);`}
                     {/* Variants */}
                     <VStack gap={3}>
                       <Label>Variants</Label>
-                      <div className="flex flex-wrap gap-3">
-                        <Button size="sm" variant="primary">
-                          Primary
-                        </Button>
-                        <Button size="sm" variant="secondary">
-                          Secondary
-                        </Button>
-                        <Button size="sm" variant="outline">
-                          Outline
-                        </Button>
-                        <Button size="sm" variant="ghost">
-                          Ghost
-                        </Button>
-                        <Button size="sm" variant="muted">
-                          Muted
-                        </Button>
-                        <Button size="sm" variant="danger">
-                          Danger
-                        </Button>
-                        <Button size="sm" variant="link">
-                          Link
-                        </Button>
+                      <div className="grid grid-cols-7 gap-3">
+                        {/* Default State */}
+                        <VStack gap={1.5} align="center">
+                          <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                            Primary
+                          </span>
+                          <Button size="sm" variant="primary">
+                            Default
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="primary"
+                            className="bg-[var(--color-action-primary-hover)]"
+                          >
+                            Hover
+                          </Button>
+                        </VStack>
+                        <VStack gap={1.5} align="center">
+                          <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                            Secondary
+                          </span>
+                          <Button size="sm" variant="secondary">
+                            Default
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="secondary"
+                            className="bg-[var(--button-secondary-hover-bg)]"
+                          >
+                            Hover
+                          </Button>
+                        </VStack>
+                        <VStack gap={1.5} align="center">
+                          <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                            Outline
+                          </span>
+                          <Button size="sm" variant="outline">
+                            Default
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="bg-[var(--button-secondary-hover-bg)]"
+                          >
+                            Hover
+                          </Button>
+                        </VStack>
+                        <VStack gap={1.5} align="center">
+                          <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                            Ghost
+                          </span>
+                          <Button size="sm" variant="ghost">
+                            Default
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="bg-[var(--button-ghost-hover-bg)]"
+                          >
+                            Hover
+                          </Button>
+                        </VStack>
+                        <VStack gap={1.5} align="center">
+                          <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                            Muted
+                          </span>
+                          <Button size="sm" variant="muted">
+                            Default
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="muted"
+                            className="bg-[var(--color-surface-subtle)] text-[var(--color-text-default)] border-[var(--color-border-strong)]"
+                          >
+                            Hover
+                          </Button>
+                        </VStack>
+                        <VStack gap={1.5} align="center">
+                          <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                            Danger
+                          </span>
+                          <Button size="sm" variant="danger">
+                            Default
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="danger"
+                            className="bg-[var(--color-state-danger-hover)]"
+                          >
+                            Hover
+                          </Button>
+                        </VStack>
+                        <VStack gap={1.5} align="center">
+                          <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                            Link
+                          </span>
+                          <Button size="sm" variant="link">
+                            Default
+                          </Button>
+                          <Button size="sm" variant="link" className="underline underline-offset-4">
+                            Hover
+                          </Button>
+                        </VStack>
                       </div>
                     </VStack>
 
@@ -5133,7 +5410,7 @@ outline: 2px solid var(--color-border-focus);`}
                     {/* Text Input - Status */}
                     <VStack gap={3}>
                       <Label>Text Input - Status</Label>
-                      <div className="grid grid-cols-2 md:grid-cols-5 gap-4 items-start">
+                      <div className="grid grid-cols-2 md:grid-cols-6 gap-4 items-start">
                         <VStack gap={1}>
                           <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                             Placeholder
@@ -5145,6 +5422,15 @@ outline: 2px solid var(--color-border-focus);`}
                             Value
                           </span>
                           <Input defaultValue="Input value" className="w-full" />
+                        </VStack>
+                        <VStack gap={1}>
+                          <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                            Focus
+                          </span>
+                          <Input
+                            defaultValue="Input focus"
+                            className="w-full border-[var(--input-border-focus)] shadow-[0_0_0_1px_var(--input-border-focus)]"
+                          />
                         </VStack>
                         <VStack gap={1}>
                           <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
@@ -5227,6 +5513,109 @@ outline: 2px solid var(--color-border-focus);`}
                       </div>
                     </VStack>
 
+                    {/* With Suffix (Outside) */}
+                    <VStack gap={3}>
+                      <Label>With suffix (outside)</Label>
+                      <div className="flex gap-4 items-end">
+                        <VStack gap={1}>
+                          <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                            Text suffix
+                          </span>
+                          <HStack gap={2} align="center">
+                            <Input placeholder="0" className="w-[120px]" />
+                            <span className="text-body-md text-[var(--color-text-default)]">
+                              Seconds
+                            </span>
+                          </HStack>
+                        </VStack>
+                        <VStack gap={1}>
+                          <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                            Unit suffix
+                          </span>
+                          <HStack gap={2} align="center">
+                            <Input placeholder="100" className="w-[120px]" />
+                            <span className="text-body-md text-[var(--color-text-default)]">
+                              GB
+                            </span>
+                          </HStack>
+                        </VStack>
+                        <VStack gap={1}>
+                          <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                            Percentage
+                          </span>
+                          <HStack gap={2} align="center">
+                            <Input placeholder="50" className="w-[120px]" />
+                            <span className="text-body-md text-[var(--color-text-default)]">%</span>
+                          </HStack>
+                        </VStack>
+                      </div>
+                    </VStack>
+
+                    {/* With Suffix (Inside) */}
+                    <VStack gap={3}>
+                      <Label>With suffix (inside)</Label>
+                      <div className="flex gap-4 items-end">
+                        <VStack gap={1}>
+                          <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                            Text suffix
+                          </span>
+                          <Input
+                            placeholder="0"
+                            aria-describedby="suffix-seconds"
+                            rightElement={
+                              <span
+                                id="suffix-seconds"
+                                className="text-body-sm text-[var(--color-text-muted)]"
+                              >
+                                Seconds
+                              </span>
+                            }
+                            className="w-[160px]"
+                          />
+                        </VStack>
+                        <VStack gap={1}>
+                          <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                            Unit suffix
+                          </span>
+                          <Input
+                            placeholder="100"
+                            aria-describedby="suffix-gb"
+                            rightElement={
+                              <span
+                                id="suffix-gb"
+                                className="text-body-sm text-[var(--color-text-muted)]"
+                              >
+                                GB
+                              </span>
+                            }
+                            className="w-[120px]"
+                          />
+                        </VStack>
+                        <VStack gap={1}>
+                          <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                            Percentage
+                          </span>
+                          <Input
+                            placeholder="50"
+                            aria-describedby="suffix-percent"
+                            rightElement={
+                              <span
+                                id="suffix-percent"
+                                className="text-body-sm text-[var(--color-text-muted)]"
+                              >
+                                %
+                              </span>
+                            }
+                            className="w-[120px]"
+                          />
+                        </VStack>
+                      </div>
+                      <div className="text-body-xs text-[var(--color-text-subtle)] mt-1 p-2 bg-[var(--color-surface-muted)] rounded-[var(--radius-sm)]">
+                        <code>aria-describedby</code>로 suffix를 연결하면 스크린 리더가 "100 GB"로
+                        읽습니다.
+                      </div>
+                    </VStack>
+
                     {/* Textarea */}
                     <VStack gap={3}>
                       <Label>Textarea</Label>
@@ -5276,6 +5665,28 @@ outline: 2px solid var(--color-border-focus);`}
                           <NumberInput defaultValue={1} disabled className="w-[200px]" />
                         </VStack>
                       </div>
+                    </VStack>
+
+                    {/* NumberInput with Label & Suffix */}
+                    <VStack gap={3}>
+                      <Label>With Label, Helper & Suffix</Label>
+                      <VStack gap={2} className="max-w-[400px]">
+                        <VStack gap={1}>
+                          <span className="text-label-lg font-medium text-[var(--color-text-default)]">
+                            Minimum Ready
+                          </span>
+                          <span className="text-body-sm text-[var(--color-text-muted)]">
+                            The minimum time a pod must remain in a ready state before it is
+                            considered available.
+                          </span>
+                        </VStack>
+                        <HStack gap={2} align="center">
+                          <NumberInput defaultValue={0} min={0} className="w-full" />
+                          <span className="text-body-md text-[var(--color-text-default)] whitespace-nowrap">
+                            Seconds
+                          </span>
+                        </HStack>
+                      </VStack>
                     </VStack>
 
                     {/* SearchInput */}
@@ -5356,6 +5767,185 @@ outline: 2px solid var(--color-border-focus);`}
                         <li>Supports text and select filter types</li>
                         <li>Clear all filters button when filters are applied</li>
                       </ul>
+                    </VStack>
+
+                    {/* Static States */}
+                    <VStack gap={3}>
+                      <Label>States (static preview)</Label>
+                      <div className="grid grid-cols-3 gap-x-6 gap-y-4">
+                        {/* Row 1: Default, Filter Applied, Multiple Filters */}
+                        {/* 1. Default State */}
+                        <VStack gap={1.5}>
+                          <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                            1. Default
+                          </span>
+                          <div className="flex items-center gap-1 h-7 px-3 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
+                            <span className="flex-1 text-body-sm text-[var(--color-text-subtle)]">
+                              Search by attributes
+                            </span>
+                            <IconSearch
+                              size={12}
+                              strokeWidth={2}
+                              className="text-[var(--color-text-subtle)]"
+                            />
+                          </div>
+                        </VStack>
+
+                        {/* 2. Filter Applied */}
+                        <VStack gap={1.5}>
+                          <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                            2. Filter applied
+                          </span>
+                          <VStack gap={2}>
+                            <div className="flex items-center gap-1 h-7 px-3 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
+                              <span className="flex-1 text-body-sm text-[var(--color-text-subtle)]">
+                                Search by attributes
+                              </span>
+                              <IconSearch
+                                size={12}
+                                strokeWidth={2}
+                                className="text-[var(--color-text-subtle)]"
+                              />
+                            </div>
+                            <div className="flex items-center justify-between pl-2 pr-4 py-2 bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)]">
+                              <Chip label="Name" value="instance-01" onRemove={() => {}} />
+                              <button className="text-label-sm font-medium text-[var(--color-action-primary)]">
+                                Clear Filters
+                              </button>
+                            </div>
+                          </VStack>
+                        </VStack>
+
+                        {/* 3. Multiple Filters */}
+                        <VStack gap={1.5}>
+                          <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                            3. Multiple filters
+                          </span>
+                          <VStack gap={2}>
+                            <div className="flex items-center gap-1 h-7 px-3 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
+                              <span className="flex-1 text-body-sm text-[var(--color-text-subtle)]">
+                                Search by attributes
+                              </span>
+                              <IconSearch
+                                size={12}
+                                strokeWidth={2}
+                                className="text-[var(--color-text-subtle)]"
+                              />
+                            </div>
+                            <div className="flex items-center justify-between pl-2 pr-4 py-2 bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)]">
+                              <div className="flex items-center gap-1 flex-wrap">
+                                <Chip label="Name" value="instance-01" onRemove={() => {}} />
+                                <Chip label="Status" value="Running" onRemove={() => {}} />
+                              </div>
+                              <button className="text-label-sm font-medium text-[var(--color-action-primary)] whitespace-nowrap">
+                                Clear Filters
+                              </button>
+                            </div>
+                          </VStack>
+                        </VStack>
+
+                        {/* Row 2: Dropdown states with extra bottom margin */}
+                        {/* 4. Filter Dropdown Open */}
+                        <VStack gap={1.5} className="pb-28">
+                          <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                            4. Filter dropdown
+                          </span>
+                          <div className="relative">
+                            <div className="flex items-center gap-1 h-7 px-3 bg-[var(--color-surface-default)] border border-[var(--input-border-focus)] shadow-[0_0_0_1px_var(--input-border-focus)] rounded-[var(--radius-md)]">
+                              <span className="flex-1 text-body-sm text-[var(--color-text-subtle)]">
+                                Search by attributes
+                              </span>
+                              <IconSearch
+                                size={12}
+                                strokeWidth={2}
+                                className="text-[var(--color-text-subtle)]"
+                              />
+                            </div>
+                            <div className="absolute left-0 top-full mt-1 w-[160px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] shadow-[var(--shadow-md)] overflow-hidden">
+                              <div className="px-3 py-2 text-body-xs font-medium text-[var(--color-text-subtle)] uppercase tracking-wide border-b border-[var(--color-border-subtle)]">
+                                Filter by
+                              </div>
+                              <div>
+                                <div className="px-3 py-2 text-body-sm text-[var(--color-text-default)] bg-[var(--color-surface-subtle)]">
+                                  Name
+                                </div>
+                                <div className="px-3 py-2 text-body-sm text-[var(--color-text-default)]">
+                                  Status
+                                </div>
+                                <div className="px-3 py-2 text-body-sm text-[var(--color-text-default)]">
+                                  Type
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </VStack>
+
+                        {/* 5. Text Input Mode */}
+                        <VStack gap={1.5} className="pb-28">
+                          <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                            5. Text filter input
+                          </span>
+                          <div className="relative">
+                            <div className="flex items-center gap-1 h-7 px-3 bg-[var(--color-surface-default)] border border-[var(--input-border-focus)] shadow-[0_0_0_1px_var(--input-border-focus)] rounded-[var(--radius-md)]">
+                              <span className="flex items-center gap-1 px-2 py-0.5 bg-[var(--color-surface-subtle)] rounded text-body-sm">
+                                <span className="text-label-sm text-[var(--color-text-default)]">
+                                  Name
+                                </span>
+                                <span className="text-[var(--color-border-strong)]">|</span>
+                              </span>
+                              <span className="flex-1 text-body-sm text-[var(--color-text-default)]">
+                                instance-01
+                              </span>
+                              <IconSearch
+                                size={12}
+                                strokeWidth={2}
+                                className="text-[var(--color-text-subtle)]"
+                              />
+                            </div>
+                          </div>
+                        </VStack>
+
+                        {/* 6. Select Options */}
+                        <VStack gap={1.5} className="pb-28">
+                          <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                            6. Select options
+                          </span>
+                          <div className="relative">
+                            <div className="flex items-center gap-1 h-7 px-3 bg-[var(--color-surface-default)] border border-[var(--input-border-focus)] shadow-[0_0_0_1px_var(--input-border-focus)] rounded-[var(--radius-md)]">
+                              <span className="flex items-center gap-1 px-2 py-0.5 bg-[var(--color-surface-subtle)] rounded text-body-sm">
+                                <span className="text-label-sm text-[var(--color-text-default)]">
+                                  Status
+                                </span>
+                                <span className="text-[var(--color-border-strong)]">|</span>
+                              </span>
+                              <span className="flex-1"></span>
+                              <IconSearch
+                                size={12}
+                                strokeWidth={2}
+                                className="text-[var(--color-text-subtle)]"
+                              />
+                            </div>
+                            <div className="absolute left-0 top-full mt-1 w-[160px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] shadow-[var(--shadow-md)] overflow-hidden">
+                              <div className="px-3 py-2 text-body-xs font-medium text-[var(--color-text-subtle)] uppercase tracking-wide border-b border-[var(--color-border-subtle)]">
+                                Status
+                              </div>
+                              <div>
+                                <div className="px-3 py-2 text-body-sm text-[var(--color-text-default)] bg-[var(--color-surface-subtle)]">
+                                  Running
+                                </div>
+                                <div className="px-3 py-2 text-body-sm text-[var(--color-text-default)]">
+                                  Stopped
+                                </div>
+                              </div>
+                              <div className="border-t border-[var(--color-border-subtle)]">
+                                <div className="px-3 py-2 text-body-sm text-[var(--color-text-muted)]">
+                                  ← Back to filters
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </VStack>
+                      </div>
                     </VStack>
 
                     {/* Interactive Demo */}
@@ -5441,13 +6031,13 @@ outline: 2px solid var(--color-border-focus);`}
                               />
                             </button>
                             <div className="w-full bg-[var(--select-menu-bg)] border border-[var(--select-menu-border)] rounded-[var(--select-menu-radius)] shadow-[var(--select-menu-shadow)] overflow-hidden">
-                              <div className="flex items-center justify-between px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)] text-[length:var(--select-item-font-size)] leading-[var(--select-item-line-height)] font-medium text-[var(--color-text-default)] hover:bg-[var(--select-item-hover-bg)] cursor-pointer border-b border-[var(--color-border-subtle)]">
+                              <div className="flex items-center justify-between px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)] text-body-md leading-[var(--select-item-line-height)] text-[var(--color-text-default)] hover:bg-[var(--select-item-hover-bg)] cursor-pointer border-b border-[var(--color-border-subtle)]">
                                 Active
                               </div>
-                              <div className="flex items-center justify-between px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)] text-[length:var(--select-item-font-size)] leading-[var(--select-item-line-height)] font-medium text-[var(--color-text-default)] hover:bg-[var(--select-item-hover-bg)] cursor-pointer border-b border-[var(--color-border-subtle)]">
+                              <div className="flex items-center justify-between px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)] text-body-md leading-[var(--select-item-line-height)] text-[var(--color-text-default)] hover:bg-[var(--select-item-hover-bg)] cursor-pointer border-b border-[var(--color-border-subtle)]">
                                 Shutoff
                               </div>
-                              <div className="flex items-center justify-between px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)] text-[length:var(--select-item-font-size)] leading-[var(--select-item-line-height)] font-medium text-[var(--color-text-default)] hover:bg-[var(--select-item-hover-bg)] cursor-pointer">
+                              <div className="flex items-center justify-between px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)] text-body-md leading-[var(--select-item-line-height)] text-[var(--color-text-default)] hover:bg-[var(--select-item-hover-bg)] cursor-pointer">
                                 Building
                               </div>
                             </div>
@@ -5470,13 +6060,13 @@ outline: 2px solid var(--color-border-focus);`}
                               />
                             </button>
                             <div className="w-full bg-[var(--select-menu-bg)] border border-[var(--select-menu-border)] rounded-[var(--select-menu-radius)] shadow-[var(--select-menu-shadow)] overflow-hidden">
-                              <div className="flex items-center justify-between px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)] text-[length:var(--select-item-font-size)] leading-[var(--select-item-line-height)] font-medium bg-[var(--select-item-selected-bg)] text-[var(--select-item-selected-text)] cursor-pointer border-b border-[var(--color-border-subtle)]">
+                              <div className="flex items-center justify-between px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)] text-body-md leading-[var(--select-item-line-height)] bg-[var(--select-item-selected-bg)] text-[var(--select-item-selected-text)] cursor-pointer border-b border-[var(--color-border-subtle)]">
                                 Active <IconCheck size={14} className="shrink-0" />
                               </div>
-                              <div className="flex items-center justify-between px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)] text-[length:var(--select-item-font-size)] leading-[var(--select-item-line-height)] font-medium text-[var(--color-text-default)] hover:bg-[var(--select-item-hover-bg)] cursor-pointer border-b border-[var(--color-border-subtle)]">
+                              <div className="flex items-center justify-between px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)] text-body-md leading-[var(--select-item-line-height)] text-[var(--color-text-default)] hover:bg-[var(--select-item-hover-bg)] cursor-pointer border-b border-[var(--color-border-subtle)]">
                                 Shutoff
                               </div>
-                              <div className="flex items-center justify-between px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)] text-[length:var(--select-item-font-size)] leading-[var(--select-item-line-height)] font-medium text-[var(--color-text-default)] hover:bg-[var(--select-item-hover-bg)] cursor-pointer">
+                              <div className="flex items-center justify-between px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)] text-body-md leading-[var(--select-item-line-height)] text-[var(--color-text-default)] hover:bg-[var(--select-item-hover-bg)] cursor-pointer">
                                 Building
                               </div>
                             </div>
@@ -5499,13 +6089,13 @@ outline: 2px solid var(--color-border-focus);`}
                               />
                             </button>
                             <div className="w-full bg-[var(--select-menu-bg)] border border-[var(--select-menu-border)] rounded-[var(--select-menu-radius)] shadow-[var(--select-menu-shadow)] overflow-hidden">
-                              <div className="flex items-center justify-between px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)] text-[length:var(--select-item-font-size)] leading-[var(--select-item-line-height)] font-medium text-[var(--color-text-default)] cursor-pointer border-b border-[var(--color-border-subtle)]">
+                              <div className="flex items-center justify-between px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)] text-body-md leading-[var(--select-item-line-height)] text-[var(--color-text-default)] cursor-pointer border-b border-[var(--color-border-subtle)]">
                                 Active
                               </div>
-                              <div className="flex items-center justify-between px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)] text-[length:var(--select-item-font-size)] leading-[var(--select-item-line-height)] font-medium bg-[var(--select-item-hover-bg)] text-[var(--color-text-default)] cursor-pointer border-b border-[var(--color-border-subtle)]">
+                              <div className="flex items-center justify-between px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)] text-body-md leading-[var(--select-item-line-height)] bg-[var(--select-item-hover-bg)] text-[var(--color-text-default)] cursor-pointer border-b border-[var(--color-border-subtle)]">
                                 Shutoff
                               </div>
-                              <div className="flex items-center justify-between px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)] text-[length:var(--select-item-font-size)] leading-[var(--select-item-line-height)] font-medium text-[var(--color-text-default)] cursor-pointer">
+                              <div className="flex items-center justify-between px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)] text-body-md leading-[var(--select-item-line-height)] text-[var(--color-text-default)] cursor-pointer">
                                 Building
                               </div>
                             </div>
@@ -5528,16 +6118,16 @@ outline: 2px solid var(--color-border-focus);`}
                               />
                             </button>
                             <div className="w-full bg-[var(--select-menu-bg)] border border-[var(--select-menu-border)] rounded-[var(--select-menu-radius)] shadow-[var(--select-menu-shadow)] overflow-hidden">
-                              <div className="flex items-center justify-between px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)] text-[length:var(--select-item-font-size)] leading-[var(--select-item-line-height)] font-medium text-[var(--color-text-default)] hover:bg-[var(--select-item-hover-bg)] cursor-pointer border-b border-[var(--color-border-subtle)]">
+                              <div className="flex items-center justify-between px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)] text-body-md leading-[var(--select-item-line-height)] text-[var(--color-text-default)] hover:bg-[var(--select-item-hover-bg)] cursor-pointer border-b border-[var(--color-border-subtle)]">
                                 Small (2 vCPU)
                               </div>
-                              <div className="flex items-center justify-between px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)] text-[length:var(--select-item-font-size)] leading-[var(--select-item-line-height)] font-medium bg-[var(--select-item-selected-bg)] text-[var(--select-item-selected-text)] cursor-pointer border-b border-[var(--color-border-subtle)]">
+                              <div className="flex items-center justify-between px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)] text-body-md leading-[var(--select-item-line-height)] bg-[var(--select-item-selected-bg)] text-[var(--select-item-selected-text)] cursor-pointer border-b border-[var(--color-border-subtle)]">
                                 Medium (4 vCPU) <IconCheck size={14} className="shrink-0" />
                               </div>
-                              <div className="flex items-center justify-between px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)] text-[length:var(--select-item-font-size)] leading-[var(--select-item-line-height)] font-medium text-[var(--color-text-subtle)] cursor-not-allowed border-b border-[var(--color-border-subtle)]">
+                              <div className="flex items-center justify-between px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)] text-body-md leading-[var(--select-item-line-height)] text-[var(--color-text-subtle)] cursor-not-allowed border-b border-[var(--color-border-subtle)]">
                                 Large (8 vCPU)
                               </div>
-                              <div className="flex items-center justify-between px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)] text-[length:var(--select-item-font-size)] leading-[var(--select-item-line-height)] font-medium text-[var(--color-text-subtle)] cursor-not-allowed">
+                              <div className="flex items-center justify-between px-[var(--select-item-padding-x)] py-[var(--select-item-padding-y)] text-body-md leading-[var(--select-item-line-height)] text-[var(--color-text-subtle)] cursor-not-allowed">
                                 X-Large (16 vCPU)
                               </div>
                             </div>
@@ -7064,13 +7654,16 @@ outline: 2px solid var(--color-border-focus);`}
                     </VStack>
 
                     <VStack gap={3}>
-                      <Label>Action</Label>
+                      <Label>Action (Blue)</Label>
                       <div className="flex flex-wrap gap-3 items-center">
                         <Tooltip content="building">
                           <StatusIndicator status="building" />
                         </Tooltip>
                         <Tooltip content="deleting">
                           <StatusIndicator status="deleting" />
+                        </Tooltip>
+                        <Tooltip content="pending">
+                          <StatusIndicator status="pending" />
                         </Tooltip>
                       </div>
                     </VStack>
@@ -7086,6 +7679,12 @@ outline: 2px solid var(--color-border-focus);`}
                         </Tooltip>
                         <Tooltip content="no-monitor">
                           <StatusIndicator status="no-monitor" />
+                        </Tooltip>
+                        <Tooltip content="down">
+                          <StatusIndicator status="down" />
+                        </Tooltip>
+                        <Tooltip content="maintenance">
+                          <StatusIndicator status="maintenance" />
                         </Tooltip>
                       </div>
                     </VStack>
@@ -7108,9 +7707,6 @@ outline: 2px solid var(--color-border-focus);`}
                         <Tooltip content="paused">
                           <StatusIndicator status="paused" />
                         </Tooltip>
-                        <Tooltip content="pending">
-                          <StatusIndicator status="pending" />
-                        </Tooltip>
                         <Tooltip content="draft">
                           <StatusIndicator status="draft" />
                         </Tooltip>
@@ -7119,12 +7715,6 @@ outline: 2px solid var(--color-border-focus);`}
                         </Tooltip>
                         <Tooltip content="in-use">
                           <StatusIndicator status="in-use" />
-                        </Tooltip>
-                        <Tooltip content="maintenance">
-                          <StatusIndicator status="maintenance" />
-                        </Tooltip>
-                        <Tooltip content="down">
-                          <StatusIndicator status="down" />
                         </Tooltip>
                       </div>
                     </VStack>
@@ -7179,6 +7769,12 @@ outline: 2px solid var(--color-border-focus);`}
                                 deleting
                               </span>
                             </VStack>
+                            <VStack gap={1} align="center">
+                              <StatusIndicator status="pending" layout="icon-only" />
+                              <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                                pending
+                              </span>
+                            </VStack>
                           </div>
                         </VStack>
                         {/* Warning */}
@@ -7203,6 +7799,18 @@ outline: 2px solid var(--color-border-focus);`}
                               <StatusIndicator status="no-monitor" layout="icon-only" />
                               <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                                 no-monitor
+                              </span>
+                            </VStack>
+                            <VStack gap={1} align="center">
+                              <StatusIndicator status="down" layout="icon-only" />
+                              <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                                down
+                              </span>
+                            </VStack>
+                            <VStack gap={1} align="center">
+                              <StatusIndicator status="maintenance" layout="icon-only" />
+                              <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                                maintenance
                               </span>
                             </VStack>
                           </div>
@@ -7244,12 +7852,6 @@ outline: 2px solid var(--color-border-focus);`}
                               </span>
                             </VStack>
                             <VStack gap={1} align="center">
-                              <StatusIndicator status="pending" layout="icon-only" />
-                              <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                                pending
-                              </span>
-                            </VStack>
-                            <VStack gap={1} align="center">
                               <StatusIndicator status="draft" layout="icon-only" />
                               <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                                 draft
@@ -7265,18 +7867,6 @@ outline: 2px solid var(--color-border-focus);`}
                               <StatusIndicator status="in-use" layout="icon-only" />
                               <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                                 in-use
-                              </span>
-                            </VStack>
-                            <VStack gap={1} align="center">
-                              <StatusIndicator status="maintenance" layout="icon-only" />
-                              <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                                maintenance
-                              </span>
-                            </VStack>
-                            <VStack gap={1} align="center">
-                              <StatusIndicator status="down" layout="icon-only" />
-                              <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
-                                down
                               </span>
                             </VStack>
                           </div>
@@ -7944,45 +8534,134 @@ outline: 2px solid var(--color-border-focus);`}
                       <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                         <code>item.padding: 8×6px</code> · <code>item.gap: 6px</code> ·{' '}
                         <code>item.radius: 6px (md)</code> · <code>section.padding: 8×4px</code> ·{' '}
+                        <code>section.gap: 16px</code> · <code>section.title-gap: 6px</code> ·{' '}
                         <code>divider.margin: 8px</code>
                       </div>
                     </VStack>
 
-                    {/* Example */}
+                    {/* Example - Compute Admin Sidebar Style */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <VStack gap={3}>
-                        <Label>Menu items</Label>
+                        <Label>Menu items (기본)</Label>
                         <div className="w-full max-w-[200px] p-2 bg-[var(--color-surface-default)] rounded-[var(--radius-card)] border border-[var(--color-border-default)]">
-                          <MenuItem icon={<IconHome size={16} stroke={1.5} />} label="Home" />
                           <MenuItem
-                            icon={<IconServer size={16} stroke={1.5} />}
-                            label="Instances"
+                            icon={<IconHome size={16} stroke={1.5} />}
+                            label="Home"
                             active
                           />
-                          <MenuItem
-                            icon={<IconSettings size={16} stroke={1.5} />}
-                            label="Settings"
-                          />
                           <MenuDivider />
-                          <MenuItem icon={<IconUser size={16} stroke={1.5} />} label="Profile" />
+                          <MenuItem icon={<IconCube size={16} stroke={1.5} />} label="Instances" />
+                          <MenuItem
+                            icon={<IconTemplate size={16} stroke={1.5} />}
+                            label="Instance templates"
+                          />
+                          <MenuItem
+                            icon={<IconCamera size={16} stroke={1.5} />}
+                            label="Instance snapshots"
+                          />
                         </div>
                       </VStack>
 
                       <VStack gap={3}>
-                        <Label>Collapsible section</Label>
+                        <Label>Collapsible sections</Label>
                         <div className="w-full max-w-[200px] p-2 bg-[var(--color-surface-default)] rounded-[var(--radius-card)] border border-[var(--color-border-default)]">
-                          <MenuSection title="Storage">
-                            <MenuItem label="Volumes" />
-                            <MenuItem label="Snapshots" />
-                            <MenuItem label="Backups" />
-                          </MenuSection>
-                          <MenuSection title="Network">
-                            <MenuItem label="Security groups" />
-                            <MenuItem label="Floating IPs" />
-                          </MenuSection>
+                          <VStack gap={4}>
+                            <MenuSection title="Compute" defaultOpen={true}>
+                              <MenuItem
+                                icon={<IconCube size={16} stroke={1.5} />}
+                                label="Instances"
+                                active
+                              />
+                              <MenuItem
+                                icon={<IconTemplate size={16} stroke={1.5} />}
+                                label="Instance templates"
+                              />
+                              <MenuItem icon={<IconDisc size={16} stroke={1.5} />} label="Images" />
+                              <MenuItem icon={<IconCpu size={16} stroke={1.5} />} label="Flavors" />
+                            </MenuSection>
+                            <MenuSection title="Storage" defaultOpen={true}>
+                              <MenuItem
+                                icon={<IconDatabase size={16} stroke={1.5} />}
+                                label="Volumes"
+                              />
+                              <MenuItem
+                                icon={<IconCamera size={16} stroke={1.5} />}
+                                label="Volume Snapshots"
+                              />
+                            </MenuSection>
+                          </VStack>
                         </div>
                       </VStack>
                     </div>
+
+                    {/* Full Sidebar Example */}
+                    <VStack gap={3}>
+                      <Label>Compute Admin 사이드바 예시</Label>
+                      <div className="w-full max-w-[200px] p-2 bg-[var(--color-surface-default)] rounded-[var(--radius-card)] border border-[var(--color-border-default)]">
+                        <VStack gap={4}>
+                          <MenuItem icon={<IconHome size={16} stroke={1.5} />} label="Home" />
+                          <MenuSection title="Compute" defaultOpen={true}>
+                            <MenuItem
+                              icon={<IconCube size={16} stroke={1.5} />}
+                              label="Instances"
+                              active
+                            />
+                            <MenuItem
+                              icon={<IconTemplate size={16} stroke={1.5} />}
+                              label="Instance templates"
+                            />
+                            <MenuItem
+                              icon={<IconCamera size={16} stroke={1.5} />}
+                              label="Instance snapshots"
+                            />
+                            <MenuItem icon={<IconDisc size={16} stroke={1.5} />} label="Images" />
+                            <MenuItem icon={<IconCpu size={16} stroke={1.5} />} label="Flavors" />
+                          </MenuSection>
+                          <MenuSection title="Storage" defaultOpen={true}>
+                            <MenuItem
+                              icon={<IconDatabase size={16} stroke={1.5} />}
+                              label="Volumes"
+                            />
+                            <MenuItem
+                              icon={<IconCamera size={16} stroke={1.5} />}
+                              label="Volume Snapshots"
+                            />
+                            <MenuItem
+                              icon={<IconDatabaseExport size={16} stroke={1.5} />}
+                              label="Volume backups"
+                            />
+                          </MenuSection>
+                          <MenuSection title="Network" defaultOpen={true}>
+                            <MenuItem
+                              icon={<IconNetwork size={16} stroke={1.5} />}
+                              label="Networks"
+                            />
+                            <MenuItem
+                              icon={<IconRouter size={16} stroke={1.5} />}
+                              label="Routers"
+                            />
+                            <MenuItem
+                              icon={<IconWorldWww size={16} stroke={1.5} />}
+                              label="Floating IPs"
+                            />
+                            <MenuItem
+                              icon={<IconShieldLock size={16} stroke={1.5} />}
+                              label="Security groups"
+                            />
+                          </MenuSection>
+                          <MenuSection title="Monitoring" defaultOpen={false}>
+                            <MenuItem
+                              icon={<IconActivity size={16} stroke={1.5} />}
+                              label="Monitor overview"
+                            />
+                            <MenuItem
+                              icon={<IconServer2 size={16} stroke={1.5} />}
+                              label="Physical nodes"
+                            />
+                          </MenuSection>
+                        </VStack>
+                      </div>
+                    </VStack>
                   </VStack>
                 </Section>
 
@@ -7999,6 +8678,95 @@ outline: 2px solid var(--color-border-focus);`}
                       <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
                         <code>min-width: 80px</code> · <code>padding: 12×6px</code> ·{' '}
                         <code>radius: 6px</code> · <code>shadow: md</code>
+                      </div>
+                    </VStack>
+
+                    {/* Static Preview */}
+                    <VStack gap={3}>
+                      <Label>Static preview</Label>
+                      <div className="flex gap-6 items-start">
+                        {/* Basic Menu */}
+                        <VStack gap={2}>
+                          <span className="text-body-xs text-[var(--color-text-subtle)]">
+                            Basic
+                          </span>
+                          <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-[var(--context-menu-radius)] shadow-[var(--shadow-md)] overflow-hidden">
+                            <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-text-default)]">
+                              Edit
+                            </div>
+                            <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-text-default)]">
+                              Duplicate
+                            </div>
+                            <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-text-default)] border-b border-[var(--color-border-subtle)]">
+                              Copy
+                            </div>
+                            <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-state-danger)]">
+                              Delete
+                            </div>
+                          </div>
+                        </VStack>
+
+                        {/* With Submenu */}
+                        <VStack gap={2}>
+                          <span className="text-body-xs text-[var(--color-text-subtle)]">
+                            With Submenu
+                          </span>
+                          <div className="flex gap-1 items-start">
+                            <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-[var(--context-menu-radius)] shadow-[var(--shadow-md)] overflow-hidden">
+                              <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-text-default)] flex items-center justify-between bg-[var(--context-menu-hover-bg)]">
+                                <span>New</span>
+                                <IconChevronRight
+                                  size={12}
+                                  stroke={1}
+                                  className="ml-6 text-[var(--color-text-default)]"
+                                />
+                              </div>
+                              <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-text-default)]">
+                                Open
+                              </div>
+                              <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-text-default)] border-b border-[var(--color-border-subtle)]">
+                                Save
+                              </div>
+                              <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-text-default)] flex items-center justify-between">
+                                <span>Export</span>
+                                <IconChevronRight
+                                  size={12}
+                                  stroke={1}
+                                  className="ml-6 text-[var(--color-text-default)]"
+                                />
+                              </div>
+                            </div>
+                            <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-[var(--context-menu-radius)] shadow-[var(--shadow-md)] overflow-hidden self-start">
+                              <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-text-default)]">
+                                File
+                              </div>
+                              <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-text-default)]">
+                                Folder
+                              </div>
+                            </div>
+                          </div>
+                        </VStack>
+
+                        {/* Status Variants */}
+                        <VStack gap={2}>
+                          <span className="text-body-xs text-[var(--color-text-subtle)]">
+                            Danger Status
+                          </span>
+                          <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-[var(--context-menu-radius)] shadow-[var(--shadow-md)] overflow-hidden">
+                            <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-text-default)]">
+                              Default item
+                            </div>
+                            <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-text-default)] border-b border-[var(--color-border-subtle)]">
+                              Another item
+                            </div>
+                            <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-state-danger)]">
+                              Warning action
+                            </div>
+                            <div className="px-[var(--context-menu-padding-x)] py-[var(--context-menu-padding-y)] text-body-sm text-[var(--color-state-danger)] bg-[var(--color-state-danger-bg)]">
+                              Delete forever
+                            </div>
+                          </div>
+                        </VStack>
                       </div>
                     </VStack>
 
@@ -8169,10 +8937,10 @@ outline: 2px solid var(--color-border-focus);`}
                           <span className="text-[11px] font-medium text-[var(--color-text-subtle)] mb-2 block">
                             Warning Alert
                           </span>
-                          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-start">
+                          <div className="bg-[var(--color-state-danger-bg)] rounded-[var(--radius-md)] p-3 flex gap-2 items-center">
                             <IconAlertCircle
                               size={16}
-                              className="text-[var(--color-state-danger)] shrink-0 mt-0.5"
+                              className="text-[var(--color-state-danger)] shrink-0"
                               stroke={1.5}
                             />
                             <p className="text-[11px] text-[var(--color-text-default)] leading-4">
@@ -9109,6 +9877,41 @@ outline: 2px solid var(--color-border-focus);`}
                 {/* ============================================
                 GRAPHS SECTION
                 ============================================ */}
+
+                {/* Library Info */}
+                <div className="p-4 bg-[var(--color-surface-muted)] rounded-[var(--radius-lg)] border border-[var(--color-border-subtle)]">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-label-sm font-semibold text-[var(--color-text-default)]">
+                      Chart Libraries
+                    </span>
+                  </div>
+                  <div className="text-body-sm text-[var(--color-text-muted)] flex flex-col gap-2">
+                    <div>
+                      <span className="text-[var(--color-text-subtle)]">Bar chart:</span>{' '}
+                      <code className="px-1.5 py-0.5 bg-[var(--color-surface-default)] rounded text-[var(--color-action-primary)]">
+                        ProgressBar
+                      </code>{' '}
+                      - TDS 자체 컴포넌트 (CSS 기반)
+                    </div>
+                    <div>
+                      <span className="text-[var(--color-text-subtle)]">
+                        Area / Pie / Doughnut:
+                      </span>{' '}
+                      <code className="px-1.5 py-0.5 bg-[var(--color-surface-default)] rounded text-[var(--color-action-primary)]">
+                        echarts-for-react
+                      </code>{' '}
+                      - Apache ECharts wrapper for React{' '}
+                      <a
+                        href="https://echarts.apache.org/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[var(--color-action-primary)] hover:underline"
+                      >
+                        Docs →
+                      </a>
+                    </div>
+                  </div>
+                </div>
 
                 {/* Bar chart */}
                 <Section

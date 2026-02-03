@@ -176,7 +176,7 @@ export function FloatingCard({
     'z-[var(--z-popover)]',
     'bg-[var(--color-surface-default)]',
     'border border-[var(--color-border-default)]',
-    'rounded-[8px]',
+    'rounded-[var(--primitive-radius-lg)]',
     'overflow-hidden',
     'flex flex-col',
     'h-fit',
@@ -225,8 +225,8 @@ export function FloatingCard({
             maxHeight: '340px',
             minHeight: '160px',
             padding: '16px',
-            border: '1px solid var(--color-border-default, #E2E8F0)',
-            background: 'var(--color-surface-subtle, #F8FAFC)',
+            border: '1px solid var(--color-border-default)',
+            background: 'var(--color-surface-subtle)',
           }}
         >
           {/* Title - Always required */}
@@ -324,8 +324,8 @@ export function FloatingCard({
             className="shrink-0 m-4 rounded-md"
             style={{
               padding: '16px',
-              border: '1px solid var(--color-border-default, #E2E8F0)',
-              background: 'var(--color-surface-default, #FFF)',
+              border: '1px solid var(--color-border-default)',
+              background: 'var(--color-surface-default)',
             }}
           >
             <div className="flex flex-col items-start gap-3 w-full">

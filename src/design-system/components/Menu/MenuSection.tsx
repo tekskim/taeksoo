@@ -42,7 +42,7 @@ export function MenuSection({
   };
 
   return (
-    <VStack gap={2} className="w-[175px]">
+    <VStack gap={1.5} className="w-[175px]">
       {/* Section Header */}
       {collapsible ? (
         <button

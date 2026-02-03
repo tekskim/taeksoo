@@ -106,7 +106,7 @@ const statusConfig: Record<StatusType, StatusConfig> = {
     icon: <IconAlertTriangle size={ICON_SIZE} strokeWidth={2} />,
     bgColor: 'bg-[var(--status-danger-bg)]',
   },
-  // Info (Blue) - using semantic color
+  // Info (Blue) - using semantic color (transitional states)
   building: {
     label: 'Building...',
     icon: <IconLoader size={ICON_SIZE} strokeWidth={2} className="animate-spin-slow" />,
@@ -115,6 +115,11 @@ const statusConfig: Record<StatusType, StatusConfig> = {
   deleting: {
     label: 'Deleting...',
     icon: <IconDeleting size={ICON_SIZE} strokeWidth={1} />,
+    bgColor: 'bg-[var(--status-info-bg)]',
+  },
+  pending: {
+    label: 'Pending',
+    icon: <IconRotateClockwise2 size={ICON_SIZE} strokeWidth={2} />,
     bgColor: 'bg-[var(--status-info-bg)]',
   },
   // Warning (Orange) - using semantic color
@@ -131,6 +136,16 @@ const statusConfig: Record<StatusType, StatusConfig> = {
   'no-monitor': {
     label: 'No Monitor',
     icon: <IconShieldExclamation size={ICON_SIZE} strokeWidth={2} />,
+    bgColor: 'bg-[var(--status-warning-bg)]',
+  },
+  down: {
+    label: 'Down',
+    icon: <IconCircleX size={ICON_SIZE} strokeWidth={2} />,
+    bgColor: 'bg-[var(--status-warning-bg)]',
+  },
+  maintenance: {
+    label: 'Maintenance',
+    icon: <IconTool size={ICON_SIZE} strokeWidth={2} />,
     bgColor: 'bg-[var(--status-warning-bg)]',
   },
   // Muted (Gray) - using semantic color
@@ -164,11 +179,6 @@ const statusConfig: Record<StatusType, StatusConfig> = {
     icon: <IconPlayerPause size={ICON_SIZE} strokeWidth={2} />,
     bgColor: 'bg-[var(--status-muted-bg)]',
   },
-  pending: {
-    label: 'Pending',
-    icon: <IconRotateClockwise2 size={ICON_SIZE} strokeWidth={2} />,
-    bgColor: 'bg-[var(--status-muted-bg)]',
-  },
   draft: {
     label: 'Draft',
     icon: <IconEdit size={ICON_SIZE} strokeWidth={2} />,
@@ -182,16 +192,6 @@ const statusConfig: Record<StatusType, StatusConfig> = {
   'in-use': {
     label: 'In-use',
     icon: <IconInUse size={ICON_SIZE} />,
-    bgColor: 'bg-[var(--status-muted-bg)]',
-  },
-  maintenance: {
-    label: 'Maintenance',
-    icon: <IconTool size={ICON_SIZE} strokeWidth={2} />,
-    bgColor: 'bg-[var(--status-muted-bg)]',
-  },
-  down: {
-    label: 'Down',
-    icon: <IconCircleX size={ICON_SIZE} strokeWidth={2} />,
     bgColor: 'bg-[var(--status-muted-bg)]',
   },
 };

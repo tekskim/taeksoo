@@ -83,23 +83,23 @@ import type { FilterField, AppliedFilter } from '@/design-system';
 --semantic-color-state-danger-bg: #fef2f2; /* red50 */
 ```
 
-### Spacing (rem 단위, 16px 기준)
+### Spacing (px 단위)
+
+> **Note**: Spacing과 Radius는 px 단위로 정의되어 브라우저 font-size 설정에 관계없이 일관된 크기를 보장합니다.
 
 ```css
---spacing-0: 0;
---spacing-0-5: 0.125rem;  /* 2px */
---spacing-1: 0.25rem;     /* 4px */
---spacing-1-5: 0.375rem;  /* 6px */
---spacing-2: 0.5rem;      /* 8px */
---spacing-2-5: 0.625rem;  /* 10px */
---spacing-3: 0.75rem;     /* 12px */
---spacing-4: 1rem;        /* 16px */
---spacing-5: 1.25rem;     /* 20px */
---spacing-6: 1.5rem;      /* 24px */
---spacing-8: 2rem;        /* 32px */
---spacing-10: 2.5rem;     /* 40px */
---spacing-12: 3rem;       /* 48px */
---spacing-16: 4rem;       /* 64px */
+--primitive-spacing-0: 0;
+--primitive-spacing-1: 4px;
+--primitive-spacing-2: 8px;
+--primitive-spacing-3: 12px;
+--primitive-spacing-4: 16px;
+--primitive-spacing-5: 20px;
+--primitive-spacing-6: 24px;
+--primitive-spacing-7: 28px;
+--primitive-spacing-8: 32px;
+--primitive-spacing-10: 40px;
+--primitive-spacing-12: 48px;
+--primitive-spacing-16: 64px;
 ```
 
 ### Typography
@@ -141,13 +141,13 @@ import type { FilterField, AppliedFilter } from '@/design-system';
 **반드시 유틸리티 클래스 사용** (하드코딩 금지)
 
 ```css
-/* Heading - semibold (600) */
+/* Heading - semibold (600), h6만 medium (500) */
 .text-heading-h1  /* 40px/48px - 2.5rem/3rem */
 .text-heading-h2  /* 32px/40px - 2rem/2.5rem */
 .text-heading-h3  /* 24px/32px - 1.5rem/2rem */
 .text-heading-h4  /* 18px/28px - 1.125rem/1.75rem */
 .text-heading-h5  /* 16px/24px - 1rem/1.5rem - 페이지 타이틀, SectionCard 타이틀 */
-.text-heading-h6  /* 14px/20px - 0.875rem/1.25rem - Drawer 타이틀 */
+.text-heading-h6  /* 14px/20px - 0.875rem/1.25rem - Drawer 타이틀, weight: 500 */
 
 /* Body - regular (400) */
 .text-body-lg     /* 14px/20px - 0.875rem/1.25rem */
@@ -161,15 +161,15 @@ import type { FilterField, AppliedFilter } from '@/design-system';
 .text-label-sm    /* 11px/16px - 0.6875rem/1rem - 폼 라벨 */
 ```
 
-### Border Radius
+### Border Radius (px 단위)
 
 ```css
---radius-none: 0;
---radius-sm: 0.25rem;     /* 4px - field, checkbox */
---radius-md: 0.375rem;    /* 6px - button, badge, menu */
---radius-lg: 0.5rem;      /* 8px - card */
---radius-xl: 1rem;        /* 16px - modal */
---radius-full: 62.4375rem;/* pill, statusIndicator */
+--primitive-radius-none: 0;
+--primitive-radius-sm: 4px;    /* field, checkbox */
+--primitive-radius-md: 6px;    /* button, badge, menu */
+--primitive-radius-lg: 8px;    /* card */
+--primitive-radius-xl: 16px;   /* modal */
+--primitive-radius-full: 9999px; /* pill, statusIndicator */
 ```
 
 ### Transition
@@ -205,7 +205,7 @@ import type { FilterField, AppliedFilter } from '@/design-system';
 ```css
 --input-radius: 0.25rem;      /* 4px */
 --input-icon-offset: 0.75rem; /* 12px */
---input-label-gap: 0.375rem;  /* 6px */
+--input-wrapper-gap: 0;       /* label/input/helper 사이 간격 없음 */
 ```
 
 ### Badge
@@ -281,6 +281,8 @@ import type { FilterField, AppliedFilter } from '@/design-system';
 --menu-item-padding-y: 0.375rem; /* 6px */
 --menu-item-gap: 0.375rem;       /* 6px */
 --menu-item-radius: 0.375rem;    /* 6px */
+--menu-section-gap: 1rem;        /* 16px - 섹션 간 간격 */
+--menu-section-title-gap: 0.375rem; /* 6px - 타이틀과 아이템 간 간격 */
 --menu-divider-margin: 0.5rem;   /* 8px */
 ```
 
@@ -330,10 +332,38 @@ import type { FilterField, AppliedFilter } from '@/design-system';
 - **ConfirmModal**: 확인/삭제용 모달 (`onConfirm`, `infoLabel`, `infoValue`, `confirmVariant`)
 - **Drawer**: 사이드 패널 (`isOpen`, `title`, `width`, `footer`, `children`)
 - **InlineMessage**: 인라인 알림 (`variant="info|success|warning|error"`)
-- **ContextMenu**: 컨텍스트 메뉴
+- **ContextMenu**: 컨텍스트 메뉴 (`items`, `trigger="click|contextmenu"`)
 
 ### Disclosure
 - **Disclosure**: 접기/펼치기 패널
+
+## ContextMenu 사용법
+
+```tsx
+// items 배열에 id 필드 필수
+const menuItems = [
+  { id: 'edit', label: 'Edit', onClick: () => {} },
+  { id: 'duplicate', label: 'Duplicate', onClick: () => {} },
+  { id: 'copy', label: 'Copy', onClick: () => {}, divider: true }, // divider는 속성으로 사용
+  { id: 'delete', label: 'Delete', status: 'danger', onClick: () => {} },
+];
+
+<ContextMenu items={menuItems} trigger="click">
+  <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
+    More Actions
+  </Button>
+</ContextMenu>
+
+// 우클릭 트리거
+<ContextMenu items={menuItems} trigger="contextmenu">
+  <div>Right-click here</div>
+</ContextMenu>
+```
+
+**주의사항:**
+- `{ type: 'divider' }` 형태로 별도 아이템 추가 금지
+- `divider: true` 속성을 사용하여 해당 아이템 아래에 구분선 표시
+- 모든 아이템에 고유한 `id` 필드 필수
 
 ## FormField 사용법
 
@@ -630,8 +660,16 @@ import type { FilterField, AppliedFilter } from '@/design-system';
 3. **Helper Text**: `text-body-sm text-[var(--color-text-subtle)]`
 4. **Divider**: `<div className="w-full h-px bg-[var(--color-border-subtle)]" />`
 5. **반응형**: Tailwind CSS 클래스 사용 (`sm:`, `md:`, `lg:`)
-6. **폰트 크기 하드코딩 금지**: `text-[11px]` 대신 `text-body-sm` 사용
-7. **단위**: rem 사용 (16px 기준)
+6. **단위**: spacing/radius는 px, typography는 rem 사용
+
+### 하드코딩 금지 규칙
+
+| 항목 | 금지 | 권장 |
+|------|------|------|
+| 폰트 사이즈 | `text-[10px]`, `text-[11px]`, `text-[12px]` | `text-body-xs`, `text-body-sm`, `text-body-md` |
+| Border Radius | `rounded-[4px]`, `rounded-[6px]`, `rounded-[8px]` | `rounded-[var(--primitive-radius-sm)]`, `rounded-[var(--primitive-radius-md)]`, `rounded-[var(--primitive-radius-lg)]` |
+| 색상 | `#2563eb`, `bg-blue-500` | `var(--color-action-primary)`, `var(--color-state-*)` |
+| Fallback 색상 | `var(--color-xxx, #ffffff)` | `var(--color-xxx)` (fallback 제거) |
 
 ## 아이콘
 
@@ -645,17 +683,29 @@ import { IconPlus, IconEdit, IconTrash } from '@tabler/icons-react';
 ## CSS 변수 사용 예시
 
 ```tsx
-// 색상
-<div className="text-[var(--semantic-color-text)]">기본 텍스트</div>
-<div className="bg-[var(--semantic-color-surface-muted)]">배경</div>
-<div className="border-[var(--semantic-color-border)]">테두리</div>
+// 색상 (호환성 변수 사용 권장)
+<div className="text-[var(--color-text-default)]">기본 텍스트</div>
+<div className="text-[var(--color-text-muted)]">보조 텍스트</div>
+<div className="text-[var(--color-text-subtle)]">약한 텍스트</div>
+<div className="bg-[var(--color-surface-default)]">기본 배경</div>
+<div className="bg-[var(--color-surface-subtle)]">약한 배경</div>
+<div className="border-[var(--color-border-default)]">테두리</div>
 
-// 간격
+// 상태 색상
+<div className="text-[var(--color-state-danger)]">에러/위험</div>
+<div className="text-[var(--color-state-success)]">성공</div>
+<div className="text-[var(--color-state-warning)]">경고</div>
+<div className="text-[var(--color-state-info)]">정보</div>
+
+// 간격 (px 단위)
 <div className="p-[var(--primitive-spacing-4)]">padding 16px</div>
 <div className="gap-[var(--primitive-spacing-2)]">gap 8px</div>
+<div className="mt-[var(--primitive-spacing-6)]">margin-top 24px</div>
 
-// 반경
-<div className="rounded-[var(--semantic-radius-card)]">card radius</div>
+// 반경 (px 단위)
+<div className="rounded-[var(--primitive-radius-sm)]">4px radius</div>
+<div className="rounded-[var(--primitive-radius-md)]">6px radius</div>
+<div className="rounded-[var(--primitive-radius-lg)]">8px radius</div>
 ```
 
 ## 참고
@@ -663,3 +713,16 @@ import { IconPlus, IconEdit, IconTrash } from '@tabler/icons-react';
 - 디자인 시스템 페이지: `/design`
 - Storybook: `http://localhost:6006`
 - 컴포넌트 문서: `/DESIGN_SYSTEM.md`
+
+## 버전
+
+- **Current Version**: 1.4.0
+- **Last Updated**: 2026-02-03
+- **Changes**:
+  - Menu 섹션 토큰 추가 (section.gap: 16px, section.title-gap: 6px)
+  - ContextMenu 사용법 문서화 (id 필수, divider 속성 사용)
+  - Input 래퍼 gap 제거 (gap-2 → gap-0)
+  - 하드코딩된 폰트 사이즈 제거 (text-body-* 유틸리티 클래스 사용)
+  - 하드코딩된 radius 제거 (--primitive-radius-* 변수 사용)
+  - 하드코딩된 색상값 제거 (CSS 변수로 통일)
+  - NotificationCard 메시지 폰트 변경 (text-body-lg → text-body-md)

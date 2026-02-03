@@ -20,12 +20,11 @@ export function Section({
       id={id}
       gap={6}
       align="stretch"
-      className="p-6 bg-[var(--color-surface-default)] rounded-[var(--radius-xl)] shadow-[var(--shadow-sm)] scroll-mt-6"
+      className="p-6 bg-[var(--color-surface-default)] rounded-[var(--radius-xl)] scroll-mt-6"
+      style={{ boxShadow: 'var(--shadow-md)' }}
     >
       <VStack gap={1} align="start">
-        <h2 className="text-[length:var(--font-size-18)] font-semibold text-[var(--color-text-default)]">
-          {title}
-        </h2>
+        <h2 className="text-heading-h3 text-[var(--color-text-default)]">{title}</h2>
         <p className="text-[length:var(--font-size-12)] text-[var(--color-text-muted)]">
           {description}
         </p>
@@ -164,6 +163,121 @@ export function SemanticColorBox({
         </span>
       </VStack>
     </Tooltip>
+  );
+}
+
+/* ----------------------------------------
+   SemanticColorRow Component
+   ---------------------------------------- */
+export function SemanticColorRow({
+  token,
+  cssVar,
+  primitive,
+  border = false,
+}: {
+  token: string;
+  cssVar: string;
+  primitive: string;
+  border?: boolean;
+}) {
+  const [hexValue, setHexValue] = useState('');
+  const [copied, setCopied] = useState<string | null>(null);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (ref.current) {
+      const computed = getComputedStyle(ref.current).backgroundColor;
+      const match = computed.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+      if (match) {
+        const hex =
+          '#' +
+          [match[1], match[2], match[3]]
+            .map((x) => {
+              const h = parseInt(x).toString(16);
+              return h.length === 1 ? '0' + h : h;
+            })
+            .join('')
+            .toUpperCase();
+        setHexValue(hex);
+      }
+    }
+  }, [cssVar]);
+
+  const handleCopy = (text: string, type: string) => {
+    navigator.clipboard.writeText(text);
+    setCopied(type);
+    setTimeout(() => setCopied(null), 1500);
+  };
+
+  return (
+    <tr className="border-b border-[var(--color-border-subtle)] hover:bg-[var(--color-surface-subtle)] transition-colors">
+      <td className="py-2 pr-3">
+        <div
+          ref={ref}
+          className={`w-8 h-8 rounded-[var(--radius-sm)] ${border ? 'border border-[var(--color-border-default)]' : ''}`}
+          style={{ backgroundColor: `var(${cssVar})` }}
+        />
+      </td>
+      <td className="py-2 pr-3">
+        <button
+          onClick={() => handleCopy(cssVar, 'token')}
+          className="font-mono text-body-sm text-[var(--color-text-default)] hover:text-[var(--color-action-primary)] transition-colors text-left"
+        >
+          {copied === 'token' ? '✓ Copied' : token}
+        </button>
+      </td>
+      <td className="py-2 pr-3">
+        <button
+          onClick={() => handleCopy(hexValue, 'hex')}
+          className="font-mono text-body-sm text-[var(--color-text-muted)] hover:text-[var(--color-action-primary)] transition-colors"
+        >
+          {copied === 'hex' ? '✓ Copied' : hexValue}
+        </button>
+      </td>
+      <td className="py-2">
+        <span className="font-mono text-body-sm text-[var(--color-text-subtle)]">{primitive}</span>
+      </td>
+    </tr>
+  );
+}
+
+/* ----------------------------------------
+   SemanticColorTable Component
+   ---------------------------------------- */
+export function SemanticColorTable({
+  title,
+  colors,
+}: {
+  title: string;
+  colors: Array<{ token: string; cssVar: string; primitive: string; border?: boolean }>;
+}) {
+  return (
+    <VStack gap={3} className="flex-1 min-w-[280px]">
+      <span className="text-label-md text-[var(--color-text-default)] font-medium">{title}</span>
+      <div className="overflow-x-auto">
+        <table className="w-full text-body-sm">
+          <thead>
+            <tr className="border-b border-[var(--color-border-default)]">
+              <th className="text-left py-2 pr-3 font-medium text-[var(--color-text-subtle)] w-10"></th>
+              <th className="text-left py-2 pr-3 font-medium text-[var(--color-text-subtle)]">
+                Token
+              </th>
+              <th className="text-left py-2 pr-3 font-medium text-[var(--color-text-subtle)]">
+                Hex
+              </th>
+              <th className="text-left py-2 font-medium text-[var(--color-text-subtle)]">
+                Primitive
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {colors.map((color) => (
+              <SemanticColorRow key={color.token} {...color} />
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </VStack>
   );
 }
 

@@ -69,7 +69,7 @@ export const AllIcons: Story = {
               title={name}
             >
               <Icon size={20} stroke={1.5} />
-              <span className="text-[10px] text-[var(--color-text-muted)] text-center truncate w-full">
+              <span className="text-body-xs text-[var(--color-text-muted)] text-center truncate w-full">
                 {name}
               </span>
             </div>

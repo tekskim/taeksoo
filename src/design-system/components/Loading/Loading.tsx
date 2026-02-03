@@ -122,7 +122,7 @@ export const Loading: React.FC<LoadingProps> = ({
           className={twMerge(
             'flex items-center justify-center gap-1.5',
             'min-w-[80px] px-3 py-2',
-            'bg-[var(--color-border-strong)] rounded-[6px]',
+            'bg-[var(--color-border-strong)] rounded-[var(--primitive-radius-md)]',
             'cursor-not-allowed'
           )}
         >

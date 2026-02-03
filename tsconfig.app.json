@@ -16,6 +16,9 @@
     "noEmit": true,
     "jsx": "react-jsx",
 
+    /* JSON modules */
+    "resolveJsonModule": true,
+
     /* Path aliases */
     "baseUrl": ".",
     "paths": {
@@ -30,5 +33,5 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src", "global.d.ts"]
+  "include": ["src", "locales", "global.d.ts"]
 }

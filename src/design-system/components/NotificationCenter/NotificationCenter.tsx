@@ -256,7 +256,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
         {/* Content */}
         <div className="flex-1 min-w-0">
           {/* Message */}
-          <p className="text-body-lg text-[var(--color-text-default)] mb-2 pr-6">
+          <p className="text-body-md text-[var(--color-text-default)] mb-2 pr-6">
             {notification.message}
           </p>
 

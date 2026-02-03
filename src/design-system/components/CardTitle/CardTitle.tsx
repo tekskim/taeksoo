@@ -46,11 +46,11 @@ interface StatusDotProps {
 
 function StatusDot({ color = 'success' }: StatusDotProps) {
   const colorClasses = {
-    success: 'bg-[var(--color-success,#4ade80)]',
-    warning: 'bg-[var(--color-warning,#facc15)]',
-    error: 'bg-[var(--color-danger,#ef4444)]',
-    info: 'bg-[var(--color-action-primary,#3b82f6)]',
-    muted: 'bg-[var(--color-text-muted,#64748b)]',
+    success: 'bg-[var(--color-state-success)]',
+    warning: 'bg-[var(--color-state-warning)]',
+    error: 'bg-[var(--color-state-danger)]',
+    info: 'bg-[var(--color-action-primary)]',
+    muted: 'bg-[var(--color-text-muted)]',
   };
 
   return (
