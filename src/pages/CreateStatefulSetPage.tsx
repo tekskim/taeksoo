@@ -2403,81 +2403,80 @@ export function CreateStatefulSetPage() {
                                             <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
                                               Match Expressions
                                             </span>
+                                            {term.matchExpressions.length > 0 && (
+                                              <div className="grid grid-cols-[1fr_140px_1fr_20px] gap-2 w-full">
+                                                <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                                  Key
+                                                </span>
+                                                <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                                  Operator
+                                                </span>
+                                                <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                                  Value
+                                                </span>
+                                                <div />
+                                              </div>
+                                            )}
                                             {term.matchExpressions.map((expr, exprIndex) => (
                                               <div
                                                 key={exprIndex}
-                                                className="flex gap-2 items-start w-full"
+                                                className="grid grid-cols-[1fr_140px_1fr_20px] gap-2 w-full items-center"
                                               >
-                                                <VStack gap={1} className="flex-1">
-                                                  <span className="text-[11px] text-[var(--color-text-subtle)]">
-                                                    Key
-                                                  </span>
-                                                  <Input
-                                                    placeholder="e.g. kubernetes.io/os"
-                                                    value={expr.key}
-                                                    onChange={(e) => {
-                                                      const newTerms = [...nodeAffinityTerms];
-                                                      newTerms[termIndex].matchExpressions[
-                                                        exprIndex
-                                                      ] = {
-                                                        ...expr,
-                                                        key: e.target.value,
-                                                      };
-                                                      setNodeAffinityTerms(newTerms);
-                                                    }}
-                                                    fullWidth
-                                                  />
-                                                </VStack>
-                                                <VStack gap={1} className="w-[140px]">
-                                                  <span className="text-[11px] text-[var(--color-text-subtle)]">
-                                                    Operator
-                                                  </span>
-                                                  <Select
-                                                    options={[
-                                                      { value: 'In', label: 'In' },
-                                                      { value: 'NotIn', label: 'NotIn' },
-                                                      { value: 'Exists', label: 'Exists' },
-                                                      {
-                                                        value: 'DoesNotExist',
-                                                        label: 'DoesNotExist',
-                                                      },
-                                                      { value: 'Gt', label: 'Gt' },
-                                                      { value: 'Lt', label: 'Lt' },
-                                                    ]}
-                                                    value={expr.operator}
-                                                    onChange={(val) => {
-                                                      const newTerms = [...nodeAffinityTerms];
-                                                      newTerms[termIndex].matchExpressions[
-                                                        exprIndex
-                                                      ] = {
-                                                        ...expr,
-                                                        operator: val,
-                                                      };
-                                                      setNodeAffinityTerms(newTerms);
-                                                    }}
-                                                    fullWidth
-                                                  />
-                                                </VStack>
-                                                <VStack gap={1} className="flex-1">
-                                                  <span className="text-[11px] text-[var(--color-text-subtle)]">
-                                                    Value
-                                                  </span>
-                                                  <Input
-                                                    placeholder="e.g. linux"
-                                                    value={expr.value}
-                                                    onChange={(e) => {
-                                                      const newTerms = [...nodeAffinityTerms];
-                                                      newTerms[termIndex].matchExpressions[
-                                                        exprIndex
-                                                      ] = {
-                                                        ...expr,
-                                                        value: e.target.value,
-                                                      };
-                                                      setNodeAffinityTerms(newTerms);
-                                                    }}
-                                                    fullWidth
-                                                  />
-                                                </VStack>
+                                                <Input
+                                                  placeholder="e.g. kubernetes.io/os"
+                                                  value={expr.key}
+                                                  onChange={(e) => {
+                                                    const newTerms = [...nodeAffinityTerms];
+                                                    newTerms[termIndex].matchExpressions[
+                                                      exprIndex
+                                                    ] = {
+                                                      ...expr,
+                                                      key: e.target.value,
+                                                    };
+                                                    setNodeAffinityTerms(newTerms);
+                                                  }}
+                                                  fullWidth
+                                                />
+                                                <Select
+                                                  options={[
+                                                    { value: 'In', label: 'In' },
+                                                    { value: 'NotIn', label: 'NotIn' },
+                                                    { value: 'Exists', label: 'Exists' },
+                                                    {
+                                                      value: 'DoesNotExist',
+                                                      label: 'DoesNotExist',
+                                                    },
+                                                    { value: 'Gt', label: 'Gt' },
+                                                    { value: 'Lt', label: 'Lt' },
+                                                  ]}
+                                                  value={expr.operator}
+                                                  onChange={(val) => {
+                                                    const newTerms = [...nodeAffinityTerms];
+                                                    newTerms[termIndex].matchExpressions[
+                                                      exprIndex
+                                                    ] = {
+                                                      ...expr,
+                                                      operator: val,
+                                                    };
+                                                    setNodeAffinityTerms(newTerms);
+                                                  }}
+                                                  fullWidth
+                                                />
+                                                <Input
+                                                  placeholder="e.g. linux"
+                                                  value={expr.value}
+                                                  onChange={(e) => {
+                                                    const newTerms = [...nodeAffinityTerms];
+                                                    newTerms[termIndex].matchExpressions[
+                                                      exprIndex
+                                                    ] = {
+                                                      ...expr,
+                                                      value: e.target.value,
+                                                    };
+                                                    setNodeAffinityTerms(newTerms);
+                                                  }}
+                                                  fullWidth
+                                                />
                                                 <button
                                                   onClick={() => {
                                                     const newTerms = [...nodeAffinityTerms];
