@@ -1639,20 +1639,20 @@ export function CreateJobPage() {
           }
           actions={
             <>
-              <button className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconTerminal2 size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+                <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
-              <button className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconFile size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+                <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
-              <button className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
-              <button className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconSearch size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
-              <button className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconBell size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
             </>
           }
