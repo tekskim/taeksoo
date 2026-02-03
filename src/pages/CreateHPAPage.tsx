@@ -425,14 +425,14 @@ export default function CreateHPAPage() {
           }
           rightContent={
             <HStack gap={1}>
-              <button className="p-2 hover:bg-[var(--color-surface-subtle)] rounded transition-colors">
-                <IconSearch size={12} className="text-[var(--color-text-muted)]" />
+              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+                <IconSearch size={16} className="text-[var(--color-text-muted)]" />
               </button>
-              <button className="p-2 hover:bg-[var(--color-surface-subtle)] rounded transition-colors">
-                <IconBell size={12} className="text-[var(--color-text-muted)]" />
+              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+                <IconBell size={16} className="text-[var(--color-text-muted)]" />
               </button>
-              <button className="p-2 hover:bg-[var(--color-surface-subtle)] rounded transition-colors">
-                <IconTerminal2 size={12} className="text-[var(--color-text-muted)]" />
+              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+                <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" />
               </button>
             </HStack>
           }

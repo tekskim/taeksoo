@@ -68,7 +68,11 @@ export function AppSwitcher({ currentAppId, onToggleSidebar }: AppSwitcherProps)
     <div className="h-10 px-3 flex items-center gap-2">
       {currentApp && (
         <>
-          <img src={currentApp.icon} alt={currentApp.title} className="w-5 h-5 flex-shrink-0" />
+          <img
+            src={currentApp.icon}
+            alt={currentApp.title}
+            className="w-[24px] h-[24px] flex-shrink-0"
+          />
           <span className="flex-1 text-label-lg leading-[20px] text-[var(--color-text-default)] truncate">
             {currentApp.title}
           </span>

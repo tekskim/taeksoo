@@ -157,7 +157,7 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
 
     const wrapperClasses = [
       'flex flex-col gap-[var(--input-label-gap)]',
-      fullWidth ? 'w-full' : 'w-fit',
+      fullWidth ? 'w-full' : 'w-[320px]',
     ].join(' ');
 
     const buttonClasses = [
