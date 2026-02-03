@@ -650,7 +650,7 @@ function LabelsAnnotationsSection({
 
             {/* Bordered container for labels */}
             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-              <VStack gap={3}>
+              <VStack gap={2}>
                 {labels.length > 0 && (
                   <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                     <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
@@ -715,7 +715,7 @@ function LabelsAnnotationsSection({
 
             {/* Bordered container for annotations */}
             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-              <VStack gap={3}>
+              <VStack gap={2}>
                 {annotations.length > 0 && (
                   <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                     <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
@@ -1775,7 +1775,7 @@ export function CreateStatefulSetPage() {
 
                               {/* Bordered container for labels */}
                               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-                                <VStack gap={3}>
+                                <VStack gap={2}>
                                   {podLabels.length > 0 && (
                                     <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                                       <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
@@ -1849,7 +1849,7 @@ export function CreateStatefulSetPage() {
 
                               {/* Bordered container for annotations */}
                               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-                                <VStack gap={3}>
+                                <VStack gap={2}>
                                   {podAnnotations.length > 0 && (
                                     <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
                                       <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
