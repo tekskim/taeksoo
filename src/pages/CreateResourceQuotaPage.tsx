@@ -10,6 +10,7 @@ import {
   Input,
   Select,
   SectionCard,
+  Disclosure,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -210,15 +211,17 @@ function BasicInfoSection({
           </VStack>
 
           {/* Description */}
-          <VStack gap={2}>
-            <label className="text-label-lg text-[var(--color-text-default)]">Description</label>
-            <Input
-              placeholder="Enter a description (optional)"
-              value={description}
-              onChange={(e) => onDescriptionChange(e.target.value)}
-              fullWidth
-            />
-          </VStack>
+          <Disclosure>
+            <Disclosure.Trigger>Description</Disclosure.Trigger>
+            <Disclosure.Panel className="pt-2">
+              <Input
+                placeholder="Enter a description (optional)"
+                value={description}
+                onChange={(e) => onDescriptionChange(e.target.value)}
+                fullWidth
+              />
+            </Disclosure.Panel>
+          </Disclosure>
         </VStack>
       </SectionCard.Content>
     </SectionCard>
@@ -314,84 +317,87 @@ function ResourceQuotasSection({ quotaItems, onQuotaItemsChange }: ResourceQuota
     <SectionCard>
       <SectionCard.Header title="Resource Quotas" showDivider />
       <SectionCard.Content>
-        <VStack gap={5}>
-          {/* Header Labels */}
-          <div className="flex gap-2 w-full">
-            <div className="flex-1">
-              <VStack gap={1}>
-                <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
-                  Resource Type
-                </span>
-                <span className="text-body-md text-[var(--color-text-subtle)]">
-                  Select the resource type to apply the quota.
-                </span>
-              </VStack>
-            </div>
-            <div className="flex-1">
-              <VStack gap={1}>
-                <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
-                  Limit
-                </span>
-                <span className="text-body-md text-[var(--color-text-subtle)]">
-                  Specify the maximum usage allowed for the selected resource type.
-                </span>
-              </VStack>
-            </div>
-            <div className="w-[16px]" />
-          </div>
-
-          {/* Quota Items */}
-          {quotaItems.length > 0 && (
-            <VStack gap={2} className="w-full">
-              {quotaItems.map((item) => {
-                const unit = getResourceUnit(item.resourceType);
-                const placeholder = getResourcePlaceholder(item.resourceType);
-                return (
-                  <div key={item.id} className="flex gap-2 items-center w-full">
-                    <div className="flex-1">
-                      <Select
-                        options={RESOURCE_TYPE_OPTIONS}
-                        value={item.resourceType}
-                        onChange={(value) => updateQuotaItem(item.id, 'resourceType', value)}
-                        placeholder="Select resource type"
-                        fullWidth
-                      />
-                    </div>
-                    <div className="flex-1 relative">
-                      <Input
-                        placeholder={placeholder}
-                        value={item.limit}
-                        onChange={(e) => updateQuotaItem(item.id, 'limit', e.target.value)}
-                        fullWidth
-                      />
-                      {unit && (
-                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-body-md text-[var(--color-text-default)]">
-                          {unit}
-                        </span>
-                      )}
-                    </div>
-                    <button
-                      onClick={() => removeQuotaItem(item.id)}
-                      className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                    >
-                      <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                    </button>
+        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+          <VStack gap={3}>
+            {/* Quota Items */}
+            {quotaItems.length > 0 && (
+              <VStack gap={2} className="w-full">
+                {/* Header Labels */}
+                <div className="flex gap-2 w-full">
+                  <div className="flex-1">
+                    <VStack gap={1}>
+                      <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
+                        Resource Type
+                      </span>
+                      <span className="text-body-md text-[var(--color-text-subtle)]">
+                        Select the resource type to apply the quota.
+                      </span>
+                    </VStack>
                   </div>
-                );
-              })}
-            </VStack>
-          )}
+                  <div className="flex-1">
+                    <VStack gap={1}>
+                      <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
+                        Limit
+                      </span>
+                      <span className="text-body-md text-[var(--color-text-subtle)]">
+                        Specify the maximum usage allowed for the selected resource type.
+                      </span>
+                    </VStack>
+                  </div>
+                  <div className="w-[16px]" />
+                </div>
 
-          {/* Add Resource Button */}
-          <Button
-            variant="outline"
-            size="sm"
-            leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-            onClick={addQuotaItem}
-          >
-            Add Resource
-          </Button>
-        </VStack>
+                {quotaItems.map((item) => {
+                  const unit = getResourceUnit(item.resourceType);
+                  const placeholder = getResourcePlaceholder(item.resourceType);
+                  return (
+                    <div key={item.id} className="flex gap-2 items-center w-full">
+                      <div className="flex-1">
+                        <Select
+                          options={RESOURCE_TYPE_OPTIONS}
+                          value={item.resourceType}
+                          onChange={(value) => updateQuotaItem(item.id, 'resourceType', value)}
+                          placeholder="Select resource type"
+                          fullWidth
+                        />
+                      </div>
+                      <div className="flex-1 relative">
+                        <Input
+                          placeholder={placeholder}
+                          value={item.limit}
+                          onChange={(e) => updateQuotaItem(item.id, 'limit', e.target.value)}
+                          fullWidth
+                        />
+                        {unit && (
+                          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-body-md text-[var(--color-text-default)]">
+                            {unit}
+                          </span>
+                        )}
+                      </div>
+                      <button
+                        onClick={() => removeQuotaItem(item.id)}
+                        className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                      >
+                        <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                      </button>
+                    </div>
+                  );
+                })}
+              </VStack>
+            )}
+
+            {/* Add Resource Button */}
+            <Button
+              variant="outline"
+              size="sm"
+              leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+              onClick={addQuotaItem}
+              className="self-start bg-white"
+            >
+              Add Resource
+            </Button>
+          </VStack>
+        </div>
       </SectionCard.Content>
     </SectionCard>
   );
@@ -428,7 +434,7 @@ function LabelsAnnotationsSection({
       <SectionCard.Content>
         <VStack gap={6}>
           {/* Labels */}
-          <VStack gap={6}>
+          <VStack gap={3}>
             <VStack gap={1}>
               <span className="text-label-lg text-[var(--color-text-default)]">Labels</span>
               <p className="text-body-md text-[var(--color-text-subtle)]">
@@ -436,41 +442,54 @@ function LabelsAnnotationsSection({
               </p>
             </VStack>
 
-            {labels.map((label, index) => (
-              <HStack gap={2} key={index} className="w-full items-center">
-                <Input
-                  placeholder="Key"
-                  value={label.key}
-                  onChange={(e) => onUpdateLabel(index, 'key', e.target.value)}
-                  fullWidth
-                />
-                <Input
-                  placeholder="Value"
-                  value={label.value}
-                  onChange={(e) => onUpdateLabel(index, 'value', e.target.value)}
-                  fullWidth
-                />
-                <button
-                  onClick={() => onRemoveLabel(index)}
-                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
-                >
-                  <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                </button>
-              </HStack>
-            ))}
+            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+              <VStack gap={3}>
+                {labels.length > 0 && (
+                  <VStack gap={2} className="w-full">
+                    {labels.map((label, index) => (
+                      <HStack gap={2} key={index} className="w-full items-center">
+                        <Input
+                          placeholder="Key"
+                          value={label.key}
+                          onChange={(e) => onUpdateLabel(index, 'key', e.target.value)}
+                          fullWidth
+                        />
+                        <Input
+                          placeholder="Value"
+                          value={label.value}
+                          onChange={(e) => onUpdateLabel(index, 'value', e.target.value)}
+                          fullWidth
+                        />
+                        <button
+                          onClick={() => onRemoveLabel(index)}
+                          className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
+                        >
+                          <IconX
+                            size={12}
+                            className="text-[var(--color-text-muted)]"
+                            stroke={1.5}
+                          />
+                        </button>
+                      </HStack>
+                    ))}
+                  </VStack>
+                )}
 
-            <Button
-              variant="outline"
-              size="sm"
-              leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-              onClick={onAddLabel}
-            >
-              Add Label
-            </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                  onClick={onAddLabel}
+                  className="self-start bg-white"
+                >
+                  Add Label
+                </Button>
+              </VStack>
+            </div>
           </VStack>
 
           {/* Annotations */}
-          <VStack gap={6}>
+          <VStack gap={3}>
             <VStack gap={1}>
               <span className="text-label-lg text-[var(--color-text-default)]">Annotations</span>
               <p className="text-body-md text-[var(--color-text-subtle)]">
@@ -478,37 +497,50 @@ function LabelsAnnotationsSection({
               </p>
             </VStack>
 
-            {annotations.map((annotation, index) => (
-              <HStack gap={2} key={index} className="w-full items-center">
-                <Input
-                  placeholder="Key"
-                  value={annotation.key}
-                  onChange={(e) => onUpdateAnnotation(index, 'key', e.target.value)}
-                  fullWidth
-                />
-                <Input
-                  placeholder="Value"
-                  value={annotation.value}
-                  onChange={(e) => onUpdateAnnotation(index, 'value', e.target.value)}
-                  fullWidth
-                />
-                <button
-                  onClick={() => onRemoveAnnotation(index)}
-                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
-                >
-                  <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                </button>
-              </HStack>
-            ))}
+            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+              <VStack gap={3}>
+                {annotations.length > 0 && (
+                  <VStack gap={2} className="w-full">
+                    {annotations.map((annotation, index) => (
+                      <HStack gap={2} key={index} className="w-full items-center">
+                        <Input
+                          placeholder="Key"
+                          value={annotation.key}
+                          onChange={(e) => onUpdateAnnotation(index, 'key', e.target.value)}
+                          fullWidth
+                        />
+                        <Input
+                          placeholder="Value"
+                          value={annotation.value}
+                          onChange={(e) => onUpdateAnnotation(index, 'value', e.target.value)}
+                          fullWidth
+                        />
+                        <button
+                          onClick={() => onRemoveAnnotation(index)}
+                          className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
+                        >
+                          <IconX
+                            size={12}
+                            className="text-[var(--color-text-muted)]"
+                            stroke={1.5}
+                          />
+                        </button>
+                      </HStack>
+                    ))}
+                  </VStack>
+                )}
 
-            <Button
-              variant="outline"
-              size="sm"
-              leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-              onClick={onAddAnnotation}
-            >
-              Add Annotation
-            </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                  onClick={onAddAnnotation}
+                  className="self-start bg-white"
+                >
+                  Add Annotation
+                </Button>
+              </VStack>
+            </div>
           </VStack>
         </VStack>
       </SectionCard.Content>
@@ -708,13 +740,19 @@ export function CreateResourceQuotaPage() {
         {/* Content Area */}
         <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
           <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
-            <VStack gap={3}>
+            <VStack gap={6}>
               {/* Page Header */}
-              <div className="flex items-center justify-between h-8">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-                  Create Resource Quota
-                </h1>
-              </div>
+              <VStack gap={2}>
+                <div className="flex items-center justify-between h-8">
+                  <h1 className="text-heading-h5 text-[var(--color-text-default)]">
+                    Create Resource Quota
+                  </h1>
+                </div>
+                <p className="text-body-md text-[var(--color-text-subtle)]">
+                  Resource Quotas cap the overall resource usage of a Namespace to maintain fair and
+                  controlled consumption across the cluster.
+                </p>
+              </VStack>
 
               {/* Main Content with Sidebar */}
               <HStack gap={6} align="start" className="w-full">

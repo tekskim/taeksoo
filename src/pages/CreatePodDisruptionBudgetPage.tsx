@@ -233,15 +233,19 @@ function BasicInfoSection({
           </VStack>
 
           {/* Description */}
-          <VStack gap={2}>
-            <label className="text-label-lg text-[var(--color-text-default)]">Description</label>
-            <Input
-              placeholder="Enter a description (optional)"
-              value={description}
-              onChange={(e) => onDescriptionChange(e.target.value)}
-              fullWidth
-            />
-          </VStack>
+          <Disclosure defaultOpen>
+            <Disclosure.Trigger>Description</Disclosure.Trigger>
+            <Disclosure.Panel>
+              <div className="flex flex-col gap-2 pl-0 pt-3">
+                <Input
+                  placeholder="Enter a description (optional)"
+                  value={description}
+                  onChange={(e) => onDescriptionChange(e.target.value)}
+                  fullWidth
+                />
+              </div>
+            </Disclosure.Panel>
+          </Disclosure>
         </VStack>
       </SectionCard.Content>
     </SectionCard>
@@ -280,10 +284,7 @@ const MOCK_MATCHING_PODS: MatchingPod[] = [
 ];
 
 // Budget unit options
-const BUDGET_UNIT_OPTIONS = [
-  { value: 'pods', label: 'Pods' },
-  { value: 'percent', label: '%' },
-];
+const BUDGET_UNIT_OPTIONS = [{ value: 'pods', label: 'Pods' }];
 
 /* ----------------------------------------
    BudgetSection Component
@@ -314,62 +315,57 @@ function BudgetSection({
     <SectionCard>
       <SectionCard.Header title="Budget" showDivider />
       <SectionCard.Content>
-        <VStack gap={3}>
-          {/* Budget Fields */}
-          <Disclosure title="Budget" defaultOpen>
-            <div className="flex gap-3 pl-3">
-              {/* Min. available Pods */}
-              <VStack gap={2} className="flex-1">
-                <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
-                  Min. available Pods
-                </span>
-                <HStack gap={2}>
-                  <div className="flex-1">
-                    <NumberInput
-                      value={minAvailablePods}
-                      onChange={onMinAvailablePodsChange}
-                      min={0}
-                      fullWidth
-                    />
-                  </div>
-                  <div className="w-[103px]">
-                    <Select
-                      options={BUDGET_UNIT_OPTIONS}
-                      value={minAvailableUnit}
-                      onChange={onMinAvailableUnitChange}
-                      fullWidth
-                    />
-                  </div>
-                </HStack>
-              </VStack>
+        <div className="flex gap-3">
+          {/* Min. available Pods */}
+          <VStack gap={2} className="flex-1">
+            <span className="text-label-lg text-[var(--color-text-default)]">
+              Min. available Pods
+            </span>
+            <HStack gap={2}>
+              <div className="flex-1">
+                <NumberInput
+                  value={minAvailablePods}
+                  onChange={onMinAvailablePodsChange}
+                  min={0}
+                  fullWidth
+                />
+              </div>
+              <div className="w-[103px]">
+                <Select
+                  options={BUDGET_UNIT_OPTIONS}
+                  value={minAvailableUnit}
+                  onChange={onMinAvailableUnitChange}
+                  fullWidth
+                />
+              </div>
+            </HStack>
+          </VStack>
 
-              {/* Max. unavailable Pods */}
-              <VStack gap={2} className="flex-1">
-                <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
-                  Max. unavailable Pods
-                </span>
-                <HStack gap={2}>
-                  <div className="flex-1">
-                    <NumberInput
-                      value={maxUnavailablePods}
-                      onChange={onMaxUnavailablePodsChange}
-                      min={0}
-                      fullWidth
-                    />
-                  </div>
-                  <div className="w-[103px]">
-                    <Select
-                      options={BUDGET_UNIT_OPTIONS}
-                      value={maxUnavailableUnit}
-                      onChange={onMaxUnavailableUnitChange}
-                      fullWidth
-                    />
-                  </div>
-                </HStack>
-              </VStack>
-            </div>
-          </Disclosure>
-        </VStack>
+          {/* Max. unavailable Pods */}
+          <VStack gap={2} className="flex-1">
+            <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
+              Max. unavailable Pods
+            </span>
+            <HStack gap={2}>
+              <div className="flex-1">
+                <NumberInput
+                  value={maxUnavailablePods}
+                  onChange={onMaxUnavailablePodsChange}
+                  min={0}
+                  fullWidth
+                />
+              </div>
+              <div className="w-[103px]">
+                <Select
+                  options={BUDGET_UNIT_OPTIONS}
+                  value={maxUnavailableUnit}
+                  onChange={onMaxUnavailableUnitChange}
+                  fullWidth
+                />
+              </div>
+            </HStack>
+          </VStack>
+        </div>
       </SectionCard.Content>
     </SectionCard>
   );
@@ -421,83 +417,89 @@ function SelectorSection({ selectorRules, onSelectorRulesChange }: SelectorSecti
 
   return (
     <SectionCard>
-      <SectionCard.Header title="Selector" showDivider />
+      <SectionCard.Header
+        title="Selector"
+        description="Selector keys and values are intended to match labels and values on existing pods."
+        showDivider
+      />
       <SectionCard.Content>
         <VStack gap={6}>
-          {/* Description */}
-          <span className="text-body-sm text-[var(--color-text-subtle)]">
-            Selector keys and values are intended to match labels and values on existing pods.
-          </span>
+          {/* Selector Rules Container */}
+          <div className="bg-[var(--color-surface-muted)] rounded-[var(--radius-md)] p-3 border border-[var(--color-border-default)]">
+            <VStack gap={3}>
+              {/* Column Headers and Selector Rules - only show when there are rules */}
+              {selectorRules.length > 0 && (
+                <VStack gap={2} className="w-full">
+                  {/* Column Headers */}
+                  <div className="flex gap-2 w-full">
+                    <div className="flex-1">
+                      <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
+                        Key
+                      </span>
+                    </div>
+                    <div className="flex-1">
+                      <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
+                        Operator
+                      </span>
+                    </div>
+                    <div className="flex-1">
+                      <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
+                        Value
+                      </span>
+                    </div>
+                    <div className="w-[23px]" />
+                  </div>
 
-          {/* Column Headers */}
-          <div className="flex gap-2 w-full">
-            <div className="flex-1">
-              <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
-                Key
-              </span>
-            </div>
-            <div className="flex-1">
-              <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
-                Operator
-              </span>
-            </div>
-            <div className="flex-1">
-              <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
-                Value
-              </span>
-            </div>
-            <div className="w-[23px]" />
-          </div>
+                  {/* Selector Rules */}
+                  {selectorRules.map((rule) => (
+                    <div key={rule.id} className="flex gap-2 items-center w-full">
+                      <div className="flex-1">
+                        <Input
+                          placeholder="input key"
+                          value={rule.key}
+                          onChange={(e) => updateRule(rule.id, 'key', e.target.value)}
+                          fullWidth
+                        />
+                      </div>
+                      <div className="flex-1">
+                        <Select
+                          options={OPERATOR_OPTIONS}
+                          value={rule.operator}
+                          onChange={(value) => updateRule(rule.id, 'operator', value)}
+                          fullWidth
+                        />
+                      </div>
+                      <div className="flex-1">
+                        <Input
+                          placeholder="input value"
+                          value={rule.value}
+                          onChange={(e) => updateRule(rule.id, 'value', e.target.value)}
+                          fullWidth
+                        />
+                      </div>
+                      <button
+                        onClick={() => removeRule(rule.id)}
+                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-hover)] rounded transition-colors w-[23px]"
+                      >
+                        <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                      </button>
+                    </div>
+                  ))}
+                </VStack>
+              )}
 
-          {/* Selector Rules */}
-          {selectorRules.length > 0 && (
-            <VStack gap={2} className="w-full">
-              {selectorRules.map((rule) => (
-                <div key={rule.id} className="flex gap-2 items-center w-full">
-                  <div className="flex-1">
-                    <Input
-                      placeholder="input key"
-                      value={rule.key}
-                      onChange={(e) => updateRule(rule.id, 'key', e.target.value)}
-                      fullWidth
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <Select
-                      options={OPERATOR_OPTIONS}
-                      value={rule.operator}
-                      onChange={(value) => updateRule(rule.id, 'operator', value)}
-                      fullWidth
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <Input
-                      placeholder="input value"
-                      value={rule.value}
-                      onChange={(e) => updateRule(rule.id, 'value', e.target.value)}
-                      fullWidth
-                    />
-                  </div>
-                  <button
-                    onClick={() => removeRule(rule.id)}
-                    className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors w-[23px]"
-                  >
-                    <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                  </button>
-                </div>
-              ))}
+              {/* Add Rule Button */}
+              <Button
+                variant="outline"
+                size="sm"
+                leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                onClick={addRule}
+                className="bg-white w-fit"
+              >
+                Add Rule
+              </Button>
             </VStack>
-          )}
-
-          {/* Add Rule Button */}
-          <Button
-            variant="outline"
-            size="sm"
-            leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-            onClick={addRule}
-          >
-            Add Rule
-          </Button>
+          </div>
 
           {/* Matching Pods Section */}
           <VStack gap={2} className="w-full">
@@ -594,37 +596,42 @@ function LabelsAnnotationsSection({
               </p>
             </VStack>
 
-            {labels.map((label, index) => (
-              <HStack gap={2} key={index} className="w-full items-center">
-                <Input
-                  placeholder="Key"
-                  value={label.key}
-                  onChange={(e) => onUpdateLabel(index, 'key', e.target.value)}
-                  fullWidth
-                />
-                <Input
-                  placeholder="Value"
-                  value={label.value}
-                  onChange={(e) => onUpdateLabel(index, 'value', e.target.value)}
-                  fullWidth
-                />
-                <button
-                  onClick={() => onRemoveLabel(index)}
-                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
-                >
-                  <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                </button>
-              </HStack>
-            ))}
+            <div className="bg-[var(--color-surface-muted)] rounded-[var(--radius-md)] p-3 border border-[var(--color-border-default)]">
+              <VStack gap={3}>
+                {labels.map((label, index) => (
+                  <HStack gap={2} key={index} className="w-full items-center">
+                    <Input
+                      placeholder="Key"
+                      value={label.key}
+                      onChange={(e) => onUpdateLabel(index, 'key', e.target.value)}
+                      fullWidth
+                    />
+                    <Input
+                      placeholder="Value"
+                      value={label.value}
+                      onChange={(e) => onUpdateLabel(index, 'value', e.target.value)}
+                      fullWidth
+                    />
+                    <button
+                      onClick={() => onRemoveLabel(index)}
+                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-hover)] rounded transition-colors shrink-0"
+                    >
+                      <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                    </button>
+                  </HStack>
+                ))}
 
-            <Button
-              variant="outline"
-              size="sm"
-              leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-              onClick={onAddLabel}
-            >
-              Add Label
-            </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                  onClick={onAddLabel}
+                  className="bg-white w-fit"
+                >
+                  Add Label
+                </Button>
+              </VStack>
+            </div>
           </VStack>
 
           {/* Annotations */}
@@ -636,37 +643,42 @@ function LabelsAnnotationsSection({
               </p>
             </VStack>
 
-            {annotations.map((annotation, index) => (
-              <HStack gap={2} key={index} className="w-full items-center">
-                <Input
-                  placeholder="Key"
-                  value={annotation.key}
-                  onChange={(e) => onUpdateAnnotation(index, 'key', e.target.value)}
-                  fullWidth
-                />
-                <Input
-                  placeholder="Value"
-                  value={annotation.value}
-                  onChange={(e) => onUpdateAnnotation(index, 'value', e.target.value)}
-                  fullWidth
-                />
-                <button
-                  onClick={() => onRemoveAnnotation(index)}
-                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
-                >
-                  <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                </button>
-              </HStack>
-            ))}
+            <div className="bg-[var(--color-surface-muted)] rounded-[var(--radius-md)] p-3 border border-[var(--color-border-default)]">
+              <VStack gap={3}>
+                {annotations.map((annotation, index) => (
+                  <HStack gap={2} key={index} className="w-full items-center">
+                    <Input
+                      placeholder="Key"
+                      value={annotation.key}
+                      onChange={(e) => onUpdateAnnotation(index, 'key', e.target.value)}
+                      fullWidth
+                    />
+                    <Input
+                      placeholder="Value"
+                      value={annotation.value}
+                      onChange={(e) => onUpdateAnnotation(index, 'value', e.target.value)}
+                      fullWidth
+                    />
+                    <button
+                      onClick={() => onRemoveAnnotation(index)}
+                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-hover)] rounded transition-colors shrink-0"
+                    >
+                      <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                    </button>
+                  </HStack>
+                ))}
 
-            <Button
-              variant="outline"
-              size="sm"
-              leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-              onClick={onAddAnnotation}
-            >
-              Add Annotation
-            </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                  onClick={onAddAnnotation}
+                  className="bg-white w-fit"
+                >
+                  Add Annotation
+                </Button>
+              </VStack>
+            </div>
           </VStack>
         </VStack>
       </SectionCard.Content>
@@ -866,12 +878,18 @@ export function CreatePodDisruptionBudgetPage() {
         {/* Content Area */}
         <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
           <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
-            <VStack gap={3}>
+            <VStack gap={6}>
               {/* Page Header */}
-              <div className="flex items-center justify-between h-8">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-                  Create Pod Disruption Budget
-                </h1>
+              <div className="flex flex-col gap-[9px]">
+                <div className="flex items-center justify-between h-8">
+                  <h1 className="text-heading-h5 text-[var(--color-text-default)]">
+                    Create Pod Disruption Budget
+                  </h1>
+                </div>
+                <p className="text-body-md text-[var(--color-text-muted)]">
+                  Pod Disruption Budget defines the minimum number of pods that must remain
+                  available during voluntary disruptions to ensure application stability.
+                </p>
               </div>
 
               {/* Main Content with Sidebar */}

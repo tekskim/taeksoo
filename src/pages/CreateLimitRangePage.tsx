@@ -10,6 +10,7 @@ import {
   Input,
   Select,
   SectionCard,
+  Disclosure,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -190,7 +191,7 @@ function BasicInfoSection({
           {/* Name */}
           <VStack gap={2}>
             <label className="text-label-lg text-[var(--color-text-default)]">
-              Limit Range Name<span className="text-[var(--color-state-danger)]"> *</span>
+              Name<span className="text-[var(--color-state-danger)]"> *</span>
             </label>
             <Input
               placeholder="Enter a unique name"
@@ -210,15 +211,17 @@ function BasicInfoSection({
           </VStack>
 
           {/* Description */}
-          <VStack gap={2}>
-            <label className="text-label-lg text-[var(--color-text-default)]">Description</label>
-            <Input
-              placeholder="Enter a description (optional)"
-              value={description}
-              onChange={(e) => onDescriptionChange(e.target.value)}
-              fullWidth
-            />
-          </VStack>
+          <Disclosure>
+            <Disclosure.Trigger>Description</Disclosure.Trigger>
+            <Disclosure.Panel className="pt-2">
+              <Input
+                placeholder="Enter a description (optional)"
+                value={description}
+                onChange={(e) => onDescriptionChange(e.target.value)}
+                fullWidth
+              />
+            </Disclosure.Panel>
+          </Disclosure>
         </VStack>
       </SectionCard.Content>
     </SectionCard>
@@ -270,17 +273,17 @@ function ContainerResourceLimitSection({
                   Specify the minimum CPU amount reserved for the container.
                 </span>
               </VStack>
-              <div className="relative w-full">
+              <HStack gap={2} align="center">
                 <Input
                   placeholder="1000"
                   value={resourceLimit.cpuReservation}
                   onChange={(e) => updateField('cpuReservation', e.target.value)}
-                  fullWidth
+                  className="w-[320px]"
                 />
-                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-body-md text-[var(--color-text-default)]">
+                <span className="text-body-md text-[var(--color-text-default)] shrink-0">
                   mCPUs
                 </span>
-              </div>
+              </HStack>
             </VStack>
 
             {/* CPU Limit */}
@@ -293,17 +296,17 @@ function ContainerResourceLimitSection({
                   Specify the maximum CPU amount the container is allowed to use.
                 </span>
               </VStack>
-              <div className="relative w-full">
+              <HStack gap={2} align="center">
                 <Input
                   placeholder="1000"
                   value={resourceLimit.cpuLimit}
                   onChange={(e) => updateField('cpuLimit', e.target.value)}
-                  fullWidth
+                  className="w-[320px]"
                 />
-                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-body-md text-[var(--color-text-default)]">
+                <span className="text-body-md text-[var(--color-text-default)] shrink-0">
                   mCPUs
                 </span>
-              </div>
+              </HStack>
             </VStack>
 
             {/* Memory Reservation */}
@@ -316,17 +319,15 @@ function ContainerResourceLimitSection({
                   Specify the minimum memory capacity reserved for the container.
                 </span>
               </VStack>
-              <div className="relative w-full">
+              <HStack gap={2} align="center">
                 <Input
                   placeholder="128"
                   value={resourceLimit.memoryReservation}
                   onChange={(e) => updateField('memoryReservation', e.target.value)}
-                  fullWidth
+                  className="w-[320px]"
                 />
-                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-body-md text-[var(--color-text-default)]">
-                  GiB
-                </span>
-              </div>
+                <span className="text-body-md text-[var(--color-text-default)] shrink-0">GiB</span>
+              </HStack>
             </VStack>
 
             {/* Memory Limit */}
@@ -339,17 +340,15 @@ function ContainerResourceLimitSection({
                   Specify the maximum memory capacity the container is allowed to use.
                 </span>
               </VStack>
-              <div className="relative w-full">
+              <HStack gap={2} align="center">
                 <Input
                   placeholder="128"
                   value={resourceLimit.memoryLimit}
                   onChange={(e) => updateField('memoryLimit', e.target.value)}
-                  fullWidth
+                  className="w-[320px]"
                 />
-                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-body-md text-[var(--color-text-default)]">
-                  GiB
-                </span>
-              </div>
+                <span className="text-body-md text-[var(--color-text-default)] shrink-0">GiB</span>
+              </HStack>
             </VStack>
           </div>
         </VStack>
@@ -389,7 +388,7 @@ function LabelsAnnotationsSection({
       <SectionCard.Content>
         <VStack gap={6}>
           {/* Labels */}
-          <VStack gap={6}>
+          <VStack gap={3}>
             <VStack gap={1}>
               <span className="text-label-lg text-[var(--color-text-default)]">Labels</span>
               <p className="text-body-md text-[var(--color-text-subtle)]">
@@ -397,41 +396,54 @@ function LabelsAnnotationsSection({
               </p>
             </VStack>
 
-            {labels.map((label, index) => (
-              <HStack gap={2} key={index} className="w-full items-center">
-                <Input
-                  placeholder="Key"
-                  value={label.key}
-                  onChange={(e) => onUpdateLabel(index, 'key', e.target.value)}
-                  fullWidth
-                />
-                <Input
-                  placeholder="Value"
-                  value={label.value}
-                  onChange={(e) => onUpdateLabel(index, 'value', e.target.value)}
-                  fullWidth
-                />
-                <button
-                  onClick={() => onRemoveLabel(index)}
-                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
-                >
-                  <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                </button>
-              </HStack>
-            ))}
+            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+              <VStack gap={3}>
+                {labels.length > 0 && (
+                  <VStack gap={2} className="w-full">
+                    {labels.map((label, index) => (
+                      <HStack gap={2} key={index} className="w-full items-center">
+                        <Input
+                          placeholder="Key"
+                          value={label.key}
+                          onChange={(e) => onUpdateLabel(index, 'key', e.target.value)}
+                          fullWidth
+                        />
+                        <Input
+                          placeholder="Value"
+                          value={label.value}
+                          onChange={(e) => onUpdateLabel(index, 'value', e.target.value)}
+                          fullWidth
+                        />
+                        <button
+                          onClick={() => onRemoveLabel(index)}
+                          className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
+                        >
+                          <IconX
+                            size={12}
+                            className="text-[var(--color-text-muted)]"
+                            stroke={1.5}
+                          />
+                        </button>
+                      </HStack>
+                    ))}
+                  </VStack>
+                )}
 
-            <Button
-              variant="outline"
-              size="sm"
-              leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-              onClick={onAddLabel}
-            >
-              Add Label
-            </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                  onClick={onAddLabel}
+                  className="self-start bg-white"
+                >
+                  Add Label
+                </Button>
+              </VStack>
+            </div>
           </VStack>
 
           {/* Annotations */}
-          <VStack gap={6}>
+          <VStack gap={3}>
             <VStack gap={1}>
               <span className="text-label-lg text-[var(--color-text-default)]">Annotations</span>
               <p className="text-body-md text-[var(--color-text-subtle)]">
@@ -439,37 +451,50 @@ function LabelsAnnotationsSection({
               </p>
             </VStack>
 
-            {annotations.map((annotation, index) => (
-              <HStack gap={2} key={index} className="w-full items-center">
-                <Input
-                  placeholder="Key"
-                  value={annotation.key}
-                  onChange={(e) => onUpdateAnnotation(index, 'key', e.target.value)}
-                  fullWidth
-                />
-                <Input
-                  placeholder="Value"
-                  value={annotation.value}
-                  onChange={(e) => onUpdateAnnotation(index, 'value', e.target.value)}
-                  fullWidth
-                />
-                <button
-                  onClick={() => onRemoveAnnotation(index)}
-                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
-                >
-                  <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                </button>
-              </HStack>
-            ))}
+            <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+              <VStack gap={3}>
+                {annotations.length > 0 && (
+                  <VStack gap={2} className="w-full">
+                    {annotations.map((annotation, index) => (
+                      <HStack gap={2} key={index} className="w-full items-center">
+                        <Input
+                          placeholder="Key"
+                          value={annotation.key}
+                          onChange={(e) => onUpdateAnnotation(index, 'key', e.target.value)}
+                          fullWidth
+                        />
+                        <Input
+                          placeholder="Value"
+                          value={annotation.value}
+                          onChange={(e) => onUpdateAnnotation(index, 'value', e.target.value)}
+                          fullWidth
+                        />
+                        <button
+                          onClick={() => onRemoveAnnotation(index)}
+                          className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
+                        >
+                          <IconX
+                            size={12}
+                            className="text-[var(--color-text-muted)]"
+                            stroke={1.5}
+                          />
+                        </button>
+                      </HStack>
+                    ))}
+                  </VStack>
+                )}
 
-            <Button
-              variant="outline"
-              size="sm"
-              leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-              onClick={onAddAnnotation}
-            >
-              Add Annotation
-            </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                  onClick={onAddAnnotation}
+                  className="self-start bg-white"
+                >
+                  Add Annotation
+                </Button>
+              </VStack>
+            </div>
           </VStack>
         </VStack>
       </SectionCard.Content>
@@ -684,13 +709,20 @@ export function CreateLimitRangePage() {
         {/* Content Area */}
         <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
           <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
-            <VStack gap={3}>
+            <VStack gap={6}>
               {/* Page Header */}
-              <div className="flex items-center justify-between h-8">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-                  Create Limit Range
-                </h1>
-              </div>
+              <VStack gap={2}>
+                <div className="flex items-center justify-between h-8">
+                  <h1 className="text-heading-h5 text-[var(--color-text-default)]">
+                    Create Limit Range
+                  </h1>
+                </div>
+                <p className="text-body-md text-[var(--color-text-subtle)]">
+                  LimitRanges define default resource requests and limits for Pods and containers
+                  within a Namespace, helping enforce fair resource usage and prevent workloads from
+                  consuming excessive CPU or memory.
+                </p>
+              </VStack>
 
               {/* Main Content with Sidebar */}
               <HStack gap={6} align="start" className="w-full">
