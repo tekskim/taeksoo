@@ -633,41 +633,40 @@ function LabelsAnnotationsSection({
             {/* Bordered container for labels */}
             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
               <VStack gap={3}>
+                {labels.length > 0 && (
+                  <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                      Key
+                    </label>
+                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                      Value
+                    </label>
+                    <div />
+                  </div>
+                )}
                 {labels.map((label, index) => (
                   <div
                     key={index}
-                    className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                    className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                   >
-                    <div className="flex gap-2 items-start w-full">
-                      <VStack gap={3} className="flex-1">
-                        <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                          Key
-                        </span>
-                        <Input
-                          placeholder="label key"
-                          value={label.key}
-                          onChange={(e) => onUpdateLabel(index, 'key', e.target.value)}
-                          fullWidth
-                        />
-                      </VStack>
-                      <VStack gap={2} className="flex-1">
-                        <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                          Value
-                        </span>
-                        <Input
-                          placeholder="label value"
-                          value={label.value}
-                          onChange={(e) => onUpdateLabel(index, 'value', e.target.value)}
-                          fullWidth
-                        />
-                      </VStack>
-                      <button
-                        onClick={() => onRemoveLabel(index)}
-                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                      >
-                        <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                      </button>
-                    </div>
+                    <Input
+                      placeholder="label key"
+                      value={label.key}
+                      onChange={(e) => onUpdateLabel(index, 'key', e.target.value)}
+                      fullWidth
+                    />
+                    <Input
+                      placeholder="label value"
+                      value={label.value}
+                      onChange={(e) => onUpdateLabel(index, 'value', e.target.value)}
+                      fullWidth
+                    />
+                    <button
+                      onClick={() => onRemoveLabel(index)}
+                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                    >
+                      <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                    </button>
                   </div>
                 ))}
 
@@ -699,41 +698,40 @@ function LabelsAnnotationsSection({
             {/* Bordered container for annotations */}
             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
               <VStack gap={3}>
+                {annotations.length > 0 && (
+                  <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                      Key
+                    </label>
+                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                      Value
+                    </label>
+                    <div />
+                  </div>
+                )}
                 {annotations.map((annotation, index) => (
                   <div
                     key={index}
-                    className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                    className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                   >
-                    <div className="flex gap-2 items-start w-full">
-                      <VStack gap={2} className="flex-1">
-                        <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                          Key
-                        </span>
-                        <Input
-                          placeholder="annotation key"
-                          value={annotation.key}
-                          onChange={(e) => onUpdateAnnotation(index, 'key', e.target.value)}
-                          fullWidth
-                        />
-                      </VStack>
-                      <VStack gap={2} className="flex-1">
-                        <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                          Value
-                        </span>
-                        <Input
-                          placeholder="annotation value"
-                          value={annotation.value}
-                          onChange={(e) => onUpdateAnnotation(index, 'value', e.target.value)}
-                          fullWidth
-                        />
-                      </VStack>
-                      <button
-                        onClick={() => onRemoveAnnotation(index)}
-                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                      >
-                        <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
-                      </button>
-                    </div>
+                    <Input
+                      placeholder="annotation key"
+                      value={annotation.key}
+                      onChange={(e) => onUpdateAnnotation(index, 'key', e.target.value)}
+                      fullWidth
+                    />
+                    <Input
+                      placeholder="annotation value"
+                      value={annotation.value}
+                      onChange={(e) => onUpdateAnnotation(index, 'value', e.target.value)}
+                      fullWidth
+                    />
+                    <button
+                      onClick={() => onRemoveAnnotation(index)}
+                      className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                    >
+                      <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                    </button>
                   </div>
                 ))}
 
@@ -1767,49 +1765,48 @@ export function CreateDaemonSetPage() {
                               {/* Bordered container for labels */}
                               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
                                 <VStack gap={3}>
+                                  {podLabels.length > 0 && (
+                                    <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                        Key
+                                      </label>
+                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                        Value
+                                      </label>
+                                      <div />
+                                    </div>
+                                  )}
                                   {podLabels.map((label, index) => (
                                     <div
                                       key={index}
-                                      className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                      className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                                     >
-                                      <div className="flex gap-2 items-start w-full">
-                                        <VStack gap={2} className="flex-1">
-                                          <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                            Key
-                                          </span>
-                                          <Input
-                                            placeholder="label key"
-                                            value={label.key}
-                                            onChange={(e) =>
-                                              updatePodLabel(index, 'key', e.target.value)
-                                            }
-                                            fullWidth
-                                          />
-                                        </VStack>
-                                        <VStack gap={2} className="flex-1">
-                                          <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                            Value
-                                          </span>
-                                          <Input
-                                            placeholder="label value"
-                                            value={label.value}
-                                            onChange={(e) =>
-                                              updatePodLabel(index, 'value', e.target.value)
-                                            }
-                                            fullWidth
-                                          />
-                                        </VStack>
-                                        <button
-                                          onClick={() => removePodLabel(index)}
-                                          className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                        >
-                                          <IconX
-                                            size={12}
-                                            className="text-[var(--color-text-muted)]"
-                                            stroke={1.5}
-                                          />
-                                        </button>
-                                      </div>
+                                      <Input
+                                        placeholder="label key"
+                                        value={label.key}
+                                        onChange={(e) =>
+                                          updatePodLabel(index, 'key', e.target.value)
+                                        }
+                                        fullWidth
+                                      />
+                                      <Input
+                                        placeholder="label value"
+                                        value={label.value}
+                                        onChange={(e) =>
+                                          updatePodLabel(index, 'value', e.target.value)
+                                        }
+                                        fullWidth
+                                      />
+                                      <button
+                                        onClick={() => removePodLabel(index)}
+                                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                      >
+                                        <IconX
+                                          size={12}
+                                          className="text-[var(--color-text-muted)]"
+                                          stroke={1.5}
+                                        />
+                                      </button>
                                     </div>
                                   ))}
 
@@ -1842,49 +1839,48 @@ export function CreateDaemonSetPage() {
                               {/* Bordered container for annotations */}
                               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
                                 <VStack gap={3}>
+                                  {podAnnotations.length > 0 && (
+                                    <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                        Key
+                                      </label>
+                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                        Value
+                                      </label>
+                                      <div />
+                                    </div>
+                                  )}
                                   {podAnnotations.map((annotation, index) => (
                                     <div
                                       key={index}
-                                      className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                      className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                                     >
-                                      <div className="flex gap-2 items-start w-full">
-                                        <VStack gap={2} className="flex-1">
-                                          <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                            Key
-                                          </span>
-                                          <Input
-                                            placeholder="annotation key"
-                                            value={annotation.key}
-                                            onChange={(e) =>
-                                              updatePodAnnotation(index, 'key', e.target.value)
-                                            }
-                                            fullWidth
-                                          />
-                                        </VStack>
-                                        <VStack gap={2} className="flex-1">
-                                          <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                            Value
-                                          </span>
-                                          <Input
-                                            placeholder="annotation value"
-                                            value={annotation.value}
-                                            onChange={(e) =>
-                                              updatePodAnnotation(index, 'value', e.target.value)
-                                            }
-                                            fullWidth
-                                          />
-                                        </VStack>
-                                        <button
-                                          onClick={() => removePodAnnotation(index)}
-                                          className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                        >
-                                          <IconX
-                                            size={12}
-                                            className="text-[var(--color-text-muted)]"
-                                            stroke={1.5}
-                                          />
-                                        </button>
-                                      </div>
+                                      <Input
+                                        placeholder="annotation key"
+                                        value={annotation.key}
+                                        onChange={(e) =>
+                                          updatePodAnnotation(index, 'key', e.target.value)
+                                        }
+                                        fullWidth
+                                      />
+                                      <Input
+                                        placeholder="annotation value"
+                                        value={annotation.value}
+                                        onChange={(e) =>
+                                          updatePodAnnotation(index, 'value', e.target.value)
+                                        }
+                                        fullWidth
+                                      />
+                                      <button
+                                        onClick={() => removePodAnnotation(index)}
+                                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                      >
+                                        <IconX
+                                          size={12}
+                                          className="text-[var(--color-text-muted)]"
+                                          stroke={1.5}
+                                        />
+                                      </button>
                                     </div>
                                   ))}
 

@@ -480,49 +480,44 @@ export function EditNodeConfigPage() {
 
                           <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
                             <VStack gap={3}>
+                              {labels.length > 0 && (
+                                <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                                  <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                    Key
+                                  </label>
+                                  <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                    Value
+                                  </label>
+                                  <div />
+                                </div>
+                              )}
                               {labels.map((label, index) => (
                                 <div
                                   key={index}
-                                  className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                  className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                                 >
-                                  <div className="flex gap-2 items-start w-full">
-                                    <VStack gap={2} className="flex-1">
-                                      <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                        Key
-                                      </span>
-                                      <Input
-                                        placeholder="label key"
-                                        value={label.key}
-                                        onChange={(e) => updateLabel(index, 'key', e.target.value)}
-                                        fullWidth
-                                      />
-                                    </VStack>
-                                    <VStack gap={2} className="flex-1">
-                                      <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                        Value
-                                      </span>
-                                      <Input
-                                        placeholder="label value"
-                                        value={label.value}
-                                        onChange={(e) =>
-                                          updateLabel(index, 'value', e.target.value)
-                                        }
-                                        fullWidth
-                                      />
-                                    </VStack>
-                                    <div className="pt-6">
-                                      <button
-                                        onClick={() => removeLabel(index)}
-                                        className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                      >
-                                        <IconX
-                                          size={16}
-                                          className="text-[var(--color-text-muted)]"
-                                          stroke={1.5}
-                                        />
-                                      </button>
-                                    </div>
-                                  </div>
+                                  <Input
+                                    placeholder="label key"
+                                    value={label.key}
+                                    onChange={(e) => updateLabel(index, 'key', e.target.value)}
+                                    fullWidth
+                                  />
+                                  <Input
+                                    placeholder="label value"
+                                    value={label.value}
+                                    onChange={(e) => updateLabel(index, 'value', e.target.value)}
+                                    fullWidth
+                                  />
+                                  <button
+                                    onClick={() => removeLabel(index)}
+                                    className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                  >
+                                    <IconX
+                                      size={12}
+                                      className="text-[var(--color-text-muted)]"
+                                      stroke={1.5}
+                                    />
+                                  </button>
                                 </div>
                               ))}
                               <div className="w-fit">
@@ -552,51 +547,46 @@ export function EditNodeConfigPage() {
 
                           <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
                             <VStack gap={3}>
+                              {annotations.length > 0 && (
+                                <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                                  <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                    Key
+                                  </label>
+                                  <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                    Value
+                                  </label>
+                                  <div />
+                                </div>
+                              )}
                               {annotations.map((annotation, index) => (
                                 <div
                                   key={index}
-                                  className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                  className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                                 >
-                                  <div className="flex gap-2 items-start w-full">
-                                    <VStack gap={2} className="flex-1">
-                                      <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                        Key
-                                      </span>
-                                      <Input
-                                        placeholder="annotation key"
-                                        value={annotation.key}
-                                        onChange={(e) =>
-                                          updateAnnotation(index, 'key', e.target.value)
-                                        }
-                                        fullWidth
-                                      />
-                                    </VStack>
-                                    <VStack gap={2} className="flex-1">
-                                      <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                        Value
-                                      </span>
-                                      <Input
-                                        placeholder="annotation value"
-                                        value={annotation.value}
-                                        onChange={(e) =>
-                                          updateAnnotation(index, 'value', e.target.value)
-                                        }
-                                        fullWidth
-                                      />
-                                    </VStack>
-                                    <div className="pt-6">
-                                      <button
-                                        onClick={() => removeAnnotation(index)}
-                                        className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                      >
-                                        <IconX
-                                          size={16}
-                                          className="text-[var(--color-text-muted)]"
-                                          stroke={1.5}
-                                        />
-                                      </button>
-                                    </div>
-                                  </div>
+                                  <Input
+                                    placeholder="annotation key"
+                                    value={annotation.key}
+                                    onChange={(e) => updateAnnotation(index, 'key', e.target.value)}
+                                    fullWidth
+                                  />
+                                  <Input
+                                    placeholder="annotation value"
+                                    value={annotation.value}
+                                    onChange={(e) =>
+                                      updateAnnotation(index, 'value', e.target.value)
+                                    }
+                                    fullWidth
+                                  />
+                                  <button
+                                    onClick={() => removeAnnotation(index)}
+                                    className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                  >
+                                    <IconX
+                                      size={12}
+                                      className="text-[var(--color-text-muted)]"
+                                      stroke={1.5}
+                                    />
+                                  </button>
                                 </div>
                               ))}
                               <div className="w-fit">
