@@ -278,9 +278,9 @@ describe('NumberInput', () => {
       expect(container.firstChild).toHaveClass('w-full');
     });
 
-    it('applies custom className to input', () => {
-      render(<NumberInput className="custom-class" />);
-      expect(screen.getByRole('spinbutton')).toHaveClass('custom-class');
+    it('applies custom className to wrapper', () => {
+      const { container } = render(<NumberInput className="custom-class" />);
+      expect(container.firstChild).toHaveClass('custom-class');
     });
   });
 
