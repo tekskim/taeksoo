@@ -52,10 +52,10 @@ import { Input } from '@thaki/tds';
   argTypes: {
     size: {
       control: 'select',
-      options: ['sm', 'md'],
-      description: '입력 필드 크기 (sm: 28px, md: 32px)',
+      options: ['xs', 'sm', 'md', 'lg'],
+      description: '입력 필드 크기 (xs: 24px, sm: 32px, md: 40px, lg: 48px)',
       table: {
-        type: { summary: '"sm" | "md"' },
+        type: { summary: '"xs" | "sm" | "md" | "lg"' },
         defaultValue: { summary: '"md"' },
       },
     },
