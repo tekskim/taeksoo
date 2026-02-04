@@ -287,7 +287,7 @@ export default function PoolDetailPage() {
             }}
             className="text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] transition-colors"
           >
-            <IconCopy size={16} stroke={1.5} className="text-[var(--color-action-primary)]" />
+            <IconCopy size={12} stroke={1.5} className="text-[var(--color-action-primary)]" />
           </button>
         </div>
       ),

@@ -497,7 +497,7 @@ export default function SecurityGroupDetailPage() {
                         onClick={() => copyToClipboard(securityGroup.id)}
                         className="p-0.5 rounded hover:bg-[var(--color-surface-muted)] transition-colors"
                       >
-                        <IconCopy size={16} className="text-[var(--color-action-primary)]" />
+                        <IconCopy size={12} className="text-[var(--color-action-primary)]" />
                       </button>
                     </div>
                   </div>

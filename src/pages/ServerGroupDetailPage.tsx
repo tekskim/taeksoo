@@ -221,7 +221,7 @@ function CopyButton({ value }: { value: string }) {
       {copied ? (
         <IconCheck size={16} className="text-[var(--color-state-success)]" />
       ) : (
-        <IconCopy size={16} className="text-[var(--color-text-subtle)]" />
+        <IconCopy size={12} className="text-[var(--color-text-subtle)]" />
       )}
     </button>
   );
