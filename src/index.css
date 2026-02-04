@@ -251,7 +251,8 @@ html.theme-transition *::after {
      Primitive - Font Family
      ---------------------------------------- */
   --font-sans:
-    'Mona Sans Variable', 'Mona Sans', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    'Mona Sans Variable', 'Mona Sans', 'Pretendard Variable', Pretendard, -apple-system,
+    BlinkMacSystemFont, system-ui, sans-serif;
   --font-mono: Menlo, 'Fira Code', Consolas, monospace;
 
   /* ----------------------------------------

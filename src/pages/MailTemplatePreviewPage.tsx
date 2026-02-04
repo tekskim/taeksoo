@@ -46,6 +46,7 @@ interface AccountInvitationProps {
   username: string;
   expiryDays: number;
   actionUrl: string;
+  lang?: 'en' | 'ko';
 }
 
 function AccountInvitationTemplate({
@@ -54,27 +55,66 @@ function AccountInvitationTemplate({
   username,
   expiryDays,
   actionUrl,
+  lang = 'en',
 }: AccountInvitationProps) {
+  const t = {
+    en: {
+      greeting: 'Hello',
+      greetingSuffix: ',',
+      body1: 'Your administrator from',
+      body2: 'in Thaki Cloud has created a new account for you.',
+      body3: 'To get started, please set your password using the secure link below.',
+      usernameLabel: 'Your username',
+      buttonText: 'Get Started',
+      warning: 'This link will expire in',
+      warningDays: 'days.',
+    },
+    ko: {
+      greeting: '안녕하세요',
+      greetingSuffix: ' 님,',
+      body1: '',
+      body2: '조직의 관리자가 Thaki Cloud 계정을 생성했습니다.',
+      body3: '아래의 보안 링크를 통해 비밀번호를 설정하여 사용을 시작해 주세요.',
+      usernameLabel: '사용자 이름',
+      buttonText: '시작하기',
+      warning: '이 링크는',
+      warningDays: '일 후 만료됩니다.',
+    },
+  }[lang];
+
   return (
     <div className="flex flex-col gap-3 items-start w-full max-w-[600px]">
       <div className="bg-white rounded-lg p-6 w-full flex flex-col gap-6 border border-[var(--color-border-default)]">
         <ThakiLogo />
         <div className="text-body-md leading-[18px] mt-4" style={{ color: '#64748b' }}>
           <p className="mb-4">
-            Hello{' '}
+            {t.greeting}{' '}
             <span className="text-label-md " style={{ color: '#0f172a' }}>
               {displayName}
             </span>
-            ,
+            {t.greetingSuffix}
           </p>
           <p className="mb-0">
-            Your administrator from{' '}
-            <span className="text-label-md " style={{ color: '#0f172a' }}>
-              {domainName}
-            </span>{' '}
-            in Thaki Cloud has created a new account for you.
-            <br />
-            To get started, please set your password using the secure link below.
+            {lang === 'en' ? (
+              <>
+                {t.body1}{' '}
+                <span className="text-label-md " style={{ color: '#0f172a' }}>
+                  {domainName}
+                </span>{' '}
+                {t.body2}
+                <br />
+                {t.body3}
+              </>
+            ) : (
+              <>
+                <span className="text-label-md " style={{ color: '#0f172a' }}>
+                  {domainName}
+                </span>{' '}
+                {t.body2}
+                <br />
+                {t.body3}
+              </>
+            )}
           </p>
         </div>
         <div
@@ -82,14 +122,14 @@ function AccountInvitationTemplate({
           style={{ backgroundColor: '#f8fafc' }}
         >
           <span className="text-label-sm leading-4" style={{ color: '#64748b' }}>
-            Your username{' '}
+            {t.usernameLabel}{' '}
           </span>
-          <span className="text-label-lg leading-5" style={{ color: '#0f172a' }}>
+          <span className="text-heading-h3" style={{ color: '#0f172a' }}>
             {username}
           </span>
         </div>
         <Button as="a" href={actionUrl} variant="primary" size="lg" className="self-start">
-          Get Started{' '}
+          {t.buttonText}{' '}
         </Button>
         <div
           className="flex items-start gap-2 p-3 rounded-md w-full"
@@ -112,9 +152,9 @@ function AccountInvitationTemplate({
             <path d="M12 17h.01" />
           </svg>
           <span className="text-body-sm leading-4" style={{ color: '#475569' }}>
-            This link will expire in{' '}
+            {t.warning}{' '}
             <span className="font-medium" style={{ color: '#0f172a' }}>
-              {expiryDays} days.
+              {expiryDays} {t.warningDays}
             </span>
           </span>
         </div>
@@ -135,6 +175,7 @@ interface ResetPasswordProps {
   username: string;
   expiryHours: number;
   actionUrl: string;
+  lang?: 'en' | 'ko';
 }
 
 function ResetPasswordTemplate({
@@ -143,28 +184,67 @@ function ResetPasswordTemplate({
   username,
   expiryHours,
   actionUrl,
+  lang = 'en',
 }: ResetPasswordProps) {
+  const t = {
+    en: {
+      greeting: 'Hello',
+      greetingSuffix: ',',
+      body1: 'Your administrator from',
+      body2: 'in Thaki Cloud has reset your password.',
+      body3:
+        'To regain access to your account, please create a new password using the secure link below.',
+      usernameLabel: 'Your username',
+      buttonText: 'Reset password',
+      warning: 'This temporary password will expire in',
+      warningTime: 'hour.',
+    },
+    ko: {
+      greeting: '안녕하세요',
+      greetingSuffix: '님,',
+      body1: '',
+      body2: '조직의 관리자가 Thaki Cloud 계정의 비밀번호 변경을 요청했습니다.',
+      body3: '계정에 다시 접근하려면 아래의 보안 링크를 통해 새 비밀번호를 설정해 주세요.',
+      usernameLabel: '사용자 이름',
+      buttonText: '비밀번호 재설정',
+      warning: '이 링크는',
+      warningTime: '시간 후 만료됩니다.',
+    },
+  }[lang];
+
   return (
     <div className="flex flex-col gap-3 items-start w-full max-w-[600px]">
       <div className="bg-white rounded-lg p-6 w-full flex flex-col gap-6 border border-[var(--color-border-default)]">
         <ThakiLogo />
         <div className="text-body-md leading-[18px] mt-4" style={{ color: '#0f172a' }}>
           <p className="mb-4">
-            Hello{' '}
+            {t.greeting}{' '}
             <span className="text-label-md " style={{ color: '#0f172a' }}>
               {displayName}
             </span>
-            ,
+            {t.greetingSuffix}
           </p>
           <p className="mb-0">
-            Your administrator from{' '}
-            <span className="text-label-md " style={{ color: '#0f172a' }}>
-              {domainName}
-            </span>{' '}
-            in Thaki Cloud has reset your password.
-            <br />
-            To regain access to your account, please create a new password using the secure link
-            below.
+            {lang === 'en' ? (
+              <>
+                {t.body1}{' '}
+                <span className="text-label-md " style={{ color: '#0f172a' }}>
+                  {domainName}
+                </span>{' '}
+                {t.body2}
+                <br />
+                {t.body3}
+              </>
+            ) : (
+              <>
+                <span className="text-label-md " style={{ color: '#0f172a' }}>
+                  {domainName}
+                </span>{' '}
+                {t.body2}
+                <br />
+                {t.body3}
+              </>
+            )}
           </p>
         </div>
         <div
@@ -172,14 +252,14 @@ function ResetPasswordTemplate({
           style={{ backgroundColor: '#f8fafc' }}
         >
           <span className="text-label-sm leading-4" style={{ color: '#64748b' }}>
-            Your username{' '}
+            {t.usernameLabel}{' '}
           </span>
-          <span className="text-label-lg leading-5" style={{ color: '#0f172a' }}>
+          <span className="text-heading-h3" style={{ color: '#0f172a' }}>
             {username}
           </span>
         </div>
         <Button as="a" href={actionUrl} variant="primary" size="lg" className="self-start">
-          Reset password{' '}
+          {t.buttonText}{' '}
         </Button>
         <div
           className="flex items-start gap-2 p-3 rounded-md w-full"
@@ -202,9 +282,9 @@ function ResetPasswordTemplate({
             <path d="M12 17h.01" />
           </svg>
           <span className="text-body-sm leading-4" style={{ color: '#475569' }}>
-            This temporary password will expire in{' '}
+            {t.warning}{' '}
             <span className="font-medium" style={{ color: '#0f172a' }}>
-              {expiryHours} hour.
+              {expiryHours} {t.warningTime}
             </span>
           </span>
         </div>
@@ -224,6 +304,7 @@ interface EmailMFAProps {
   domainName: string;
   verificationCode: string;
   expirySeconds: number;
+  lang?: 'en' | 'ko';
 }
 
 function EmailMFATemplate({
@@ -231,6 +312,7 @@ function EmailMFATemplate({
   domainName,
   verificationCode,
   expirySeconds,
+  lang = 'en',
 }: EmailMFAProps) {
   // Format code as "123 456" (split in middle)
   const formattedCode =
@@ -238,26 +320,62 @@ function EmailMFATemplate({
       ? `${verificationCode.slice(0, 3)} ${verificationCode.slice(3)}`
       : verificationCode;
 
+  const t = {
+    en: {
+      greeting: 'Hello',
+      greetingSuffix: ',',
+      body1: 'To complete your sign-in to',
+      body2: 'in Thaki Cloud, we need to verify your identity.',
+      body3: 'Please enter the verification code below into the sign-in screen.',
+      codeLabel: 'Verification code',
+      warning: 'This temporary password will expire in',
+      warningTime: 'seconds.',
+    },
+    ko: {
+      greeting: '안녕하세요',
+      greetingSuffix: '님,',
+      body1: '',
+      body2: '조직의 Thaki Cloud에 로그인하기 위해 추가 인증이 필요합니다.',
+      body3: '아래의 인증 코드를 로그인 화면에 입력해 주세요.',
+      codeLabel: '인증 코드',
+      warning: '이 코드는',
+      warningTime: '초 후 만료됩니다.',
+    },
+  }[lang];
+
   return (
     <div className="flex flex-col gap-3 items-start w-full max-w-[600px]">
       <div className="bg-white rounded-lg p-6 w-full flex flex-col gap-6 border border-[var(--color-border-default)]">
         <ThakiLogo />
         <div className="text-body-md leading-[18px] mt-4" style={{ color: '#0f172a' }}>
           <p className="mb-4">
-            Hello{' '}
+            {t.greeting}{' '}
             <span className="text-label-md " style={{ color: '#0f172a' }}>
               {displayName}
             </span>
-            ,
+            {t.greetingSuffix}
           </p>
           <p className="mb-0">
-            To complete your sign-in to{' '}
-            <span className="text-label-md " style={{ color: '#0f172a' }}>
-              {domainName}
-            </span>{' '}
-            in Thaki Cloud, we need to verify your identity.
-            <br />
-            Please enter the verification code below into the sign-in screen.
+            {lang === 'en' ? (
+              <>
+                {t.body1}{' '}
+                <span className="text-label-md " style={{ color: '#0f172a' }}>
+                  {domainName}
+                </span>{' '}
+                {t.body2}
+                <br />
+                {t.body3}
+              </>
+            ) : (
+              <>
+                <span className="text-label-md " style={{ color: '#0f172a' }}>
+                  {domainName}
+                </span>{' '}
+                {t.body2}
+                <br />
+                {t.body3}
+              </>
+            )}
           </p>
         </div>
         <div
@@ -265,9 +383,9 @@ function EmailMFATemplate({
           style={{ backgroundColor: '#f8fafc' }}
         >
           <span className="text-label-sm leading-4" style={{ color: '#64748b' }}>
-            Verification code{' '}
+            {t.codeLabel}{' '}
           </span>
-          <span className="text-label-lg leading-5" style={{ color: '#0f172a' }}>
+          <span className="text-heading-h3" style={{ color: '#0f172a' }}>
             {formattedCode}
           </span>
         </div>
@@ -292,9 +410,9 @@ function EmailMFATemplate({
             <path d="M12 17h.01" />
           </svg>
           <span className="text-body-sm leading-4" style={{ color: '#475569' }}>
-            This temporary password will expire in{' '}
+            {t.warning}{' '}
             <span className="font-medium" style={{ color: '#0f172a' }}>
-              {expirySeconds} seconds.
+              {expirySeconds} {t.warningTime}
             </span>
           </span>
         </div>
@@ -525,6 +643,7 @@ export function MailTemplatePreviewPage() {
   const { templateId } = useParams<{ templateId: string }>();
   const [copied, setCopied] = useState(false);
   const [viewMode, setViewMode] = useState<'preview' | 'code'>('preview');
+  const [lang, setLang] = useState<'en' | 'ko'>('en');
 
   // Account Invitation fields
   const [displayName, setDisplayName] = useState('{DISPLAY_NAME}');
@@ -704,6 +823,7 @@ export function MailTemplatePreviewPage() {
             username={username}
             expiryHours={expiryHours}
             actionUrl={resetUrl}
+            lang={lang}
           />
         );
       case 'email-mfa':
@@ -713,6 +833,7 @@ export function MailTemplatePreviewPage() {
             domainName={domainName}
             verificationCode={verificationCode}
             expirySeconds={mfaExpirySeconds}
+            lang={lang}
           />
         );
       default:
@@ -723,6 +844,7 @@ export function MailTemplatePreviewPage() {
             username={username}
             expiryDays={expiryDays}
             actionUrl={actionUrl}
+            lang={lang}
           />
         );
     }
@@ -779,7 +901,30 @@ export function MailTemplatePreviewPage() {
               <h2 className="text-body-lg font-semibold text-[var(--color-text-default)] mb-4">
                 Template Variables{' '}
               </h2>
-              <VStack gap={4}>{renderVariables()}</VStack>
+              <VStack gap={4}>
+                <VStack gap={1}>
+                  <label className="text-label-sm text-[var(--color-text-subtle)]">Language</label>
+                  <HStack gap={2}>
+                    <Button
+                      variant={lang === 'en' ? 'primary' : 'secondary'}
+                      size="sm"
+                      onClick={() => setLang('en')}
+                      className="flex-1"
+                    >
+                      English
+                    </Button>
+                    <Button
+                      variant={lang === 'ko' ? 'primary' : 'secondary'}
+                      size="sm"
+                      onClick={() => setLang('ko')}
+                      className="flex-1"
+                    >
+                      한국어
+                    </Button>
+                  </HStack>
+                </VStack>
+                {renderVariables()}
+              </VStack>
             </div>
           </div>
 

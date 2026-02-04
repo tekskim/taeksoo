@@ -1,5 +1,5 @@
 /* Auto-generated from tokens - DO NOT EDIT */
-/* Generated at: 2026-02-03T08:25:47.632Z */
+/* Generated at: 2026-02-03T08:27:28.452Z */
 
 @import './light.css';
 @import './dark.css';
@@ -105,6 +105,7 @@
     --primitive-font-size-10: 0.625rem;
     --primitive-font-size-11: 0.6875rem;
     --primitive-font-size-12: 0.75rem;
+    --primitive-font-size-13: 0.8125rem;
     --primitive-font-size-14: 0.875rem;
     --primitive-font-size-16: 1rem;
     --primitive-font-size-18: 1.125rem;
@@ -123,7 +124,7 @@
     --primitive-font-weight-regular: 400;
     --primitive-font-weight-medium: 500;
     --primitive-font-weight-semibold: 600;
-    --primitive-font-family-sans: Mona Sans;
+    --primitive-font-family-sans: Mona Sans, Pretendard;
     --primitive-font-family-mono: Menlo;
     --primitive-radius-none: 0;
     --primitive-radius-sm: 4px;
