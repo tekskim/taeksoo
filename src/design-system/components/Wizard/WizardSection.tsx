@@ -79,8 +79,8 @@ interface PreSectionProps {
 
 export function PreSection({ title }: PreSectionProps) {
   return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
-      <div className="h-8 flex items-center">
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-[12px]">
+      <div className="h-[28px] flex items-center">
         <h5 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h5>
       </div>
     </div>
@@ -98,18 +98,23 @@ interface WritingSectionProps {
 
 export function WritingSection({ title, onEdit }: WritingSectionProps) {
   return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
-      <div className="h-8 flex items-center justify-between">
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-[12px]">
+      <div className="h-[28px] flex items-center justify-between">
         <h5 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h5>
         {onEdit ? (
           <HStack gap={3} align="center">
-            <span className="text-body-sm text-[var(--color-text-subtle)]">Writing...</span>
-            <Button variant="outline" size="sm" leftIcon={<IconEdit size={12} />} onClick={onEdit}>
+            <span className="text-body-md text-[var(--color-text-subtle)]">Writing...</span>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconEdit size={12} />}
+              onClick={onEdit}
+            >
               Edit
             </Button>
           </HStack>
         ) : (
-          <span className="text-body-sm text-[var(--color-text-subtle)]">Writing...</span>
+          <span className="text-body-md text-[var(--color-text-subtle)]">Writing...</span>
         )}
       </div>
     </div>
@@ -127,12 +132,12 @@ interface SkippedSectionProps {
 
 export function SkippedSection({ title, onEdit }: SkippedSectionProps) {
   return (
-    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-3">
-      <div className="flex items-center justify-between h-8">
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 py-[12px]">
+      <div className="flex items-center justify-between h-[28px]">
         <h5 className="text-heading-h5 text-[var(--color-text-default)]">{title}</h5>
         <div className="flex items-center gap-3">
           <span className="text-body-md text-[var(--color-text-muted)]">Not configured</span>
-          <Button variant="outline" size="sm" leftIcon={<IconEdit size={12} />} onClick={onEdit}>
+          <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />} onClick={onEdit}>
             Edit
           </Button>
         </div>

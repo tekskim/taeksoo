@@ -645,51 +645,53 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
                       />
                     )}
                     {/* MFA Setting */}
-                    <div className="flex flex-col gap-1.5 w-full">
-                      <span className="text-label-sm text-[var(--color-text-subtle)]">
-                        MFA Setting
-                      </span>
-                      <p className="text-body-md text-[var(--color-text-subtle)]">
-                        Add an extra layer of security to your account.
-                      </p>
-                    </div>
-                    {/* Authenticator App Card */}
-                    <div className="flex items-center justify-between p-3 border border-[var(--color-border-default)] rounded-md bg-[var(--color-surface-subtle)]">
-                      <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-md bg-[var(--color-surface-default)] border border-[var(--color-border-default)] flex items-center justify-center">
-                          <IconLock size={16} className="text-[var(--color-text-subtle)]" />
-                        </div>
-                        <div className="flex flex-col gap-1">
-                          <span className="text-label-sm text-[var(--color-text-subtle)]">
-                            Authenticator App
-                          </span>
-                          {authenticatorSetup.configured ? (
-                            <div className="flex items-center gap-1.5 text-body-sm text-[var(--color-state-success)]">
-                              <IconCheck size={16} />
-                              <span>Added {authenticatorSetup.addedAt}</span>
-                            </div>
-                          ) : (
-                            <span className="text-body-sm text-[var(--color-text-subtle)]">
-                              Use Google Authenticator, Authy, etc.
-                            </span>
-                          )}
-                        </div>
+                    <div className="flex flex-col gap-3 w-full">
+                      <div className="flex flex-col gap-1.5">
+                        <span className="text-label-sm text-[var(--color-text-subtle)]">
+                          MFA Setting
+                        </span>
+                        <p className="text-body-md text-[var(--color-text-subtle)]">
+                          Add an extra layer of security to your account.
+                        </p>
                       </div>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                          setCurrentSetupMethod('authenticator');
-                          if (authenticatorSetup.configured) {
-                            setSetupStep(1);
-                            setShowPasswordModal(true);
-                          } else {
-                            setShowEnrollmentModal(true);
-                          }
-                        }}
-                      >
-                        {authenticatorSetup.configured ? 'Remove' : 'Set up'}
-                      </Button>
+                      {/* Authenticator App Card */}
+                      <div className="flex items-center justify-between p-3 border border-[var(--color-border-default)] rounded-md bg-[var(--color-surface-subtle)]">
+                        <div className="flex items-center gap-3">
+                          <div className="w-9 h-9 rounded-md bg-[var(--color-surface-default)] border border-[var(--color-border-default)] flex items-center justify-center">
+                            <IconLock size={16} className="text-[var(--color-text-subtle)]" />
+                          </div>
+                          <div className="flex flex-col gap-1">
+                            <span className="text-label-sm text-[var(--color-text-subtle)]">
+                              Authenticator App
+                            </span>
+                            {authenticatorSetup.configured ? (
+                              <div className="flex items-center gap-1.5 text-body-sm text-[var(--color-state-success)]">
+                                <IconCheck size={12} />
+                                <span>Added {authenticatorSetup.addedAt}</span>
+                              </div>
+                            ) : (
+                              <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                Use Google Authenticator, Authy, etc.
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          onClick={() => {
+                            setCurrentSetupMethod('authenticator');
+                            if (authenticatorSetup.configured) {
+                              setSetupStep(1);
+                              setShowPasswordModal(true);
+                            } else {
+                              setShowEnrollmentModal(true);
+                            }
+                          }}
+                        >
+                          {authenticatorSetup.configured ? 'Remove' : 'Set up'}
+                        </Button>
+                      </div>
                     </div>
                   </SectionCard.Content>
                 </SectionCard>

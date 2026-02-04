@@ -22,8 +22,8 @@ export function SectionCard({ children, isActive = false, className, ...props }:
         'bg-[var(--color-surface-default)]',
         'rounded-[var(--radius-md)]',
         isActive
-          ? 'border-2 border-[var(--color-action-primary)] pt-[11px] pb-[15px] px-[15px]'
-          : 'border border-[var(--color-border-default)] pt-[12px] pb-[16px] px-[16px]',
+          ? 'border-2 border-[var(--color-action-primary)] pt-[11px] pb-[11px] px-[15px]'
+          : 'border border-[var(--color-border-default)] pt-[12px] pb-[12px] px-[16px]',
         'w-full',
         className
       )}
