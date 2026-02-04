@@ -25,7 +25,7 @@ function StatCard({ value, label }: StatCardProps) {
 
   return (
     <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg p-4 border-2 border-transparent transition-colors hover:border-[var(--color-action-primary)] cursor-pointer">
-      <div className={`text-[20px] font-medium ${textColor} pb-1`}>{value}</div>
+      <div className={`text-heading-h4 ${textColor} pb-1`}>{value}</div>
       <div className="text-body-sm text-[var(--color-text-subtle)]">{label}</div>
     </div>
   );
@@ -45,8 +45,8 @@ function StatusCard({ label, count, status }: StatusCardProps) {
   let iconBg = 'bg-[var(--color-text-muted)]';
 
   if (status === 'active') {
-    bgColor = 'bg-[#f0fdf4]';
-    iconBg = 'bg-[#4ade80]';
+    bgColor = 'bg-[var(--color-state-success-bg)]';
+    iconBg = 'bg-[var(--primitive-color-green400)]';
   }
 
   const getStatusIcon = () => {

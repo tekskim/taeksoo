@@ -154,22 +154,7 @@ export function CreateImagePage() {
   };
 
   const handleCreate = () => {
-    console.log('Creating image:', {
-      imageName,
-      description,
-      isProtected,
-      sourceType,
-      sourceUrl,
-      diskFormat,
-      os,
-      osVersion,
-      osAdmin,
-      minDisk,
-      minRam,
-      qemuGuestAgent,
-      cpuPolicy,
-      cpuThreadPolicy,
-    });
+    // TODO: API call to create image with form data
     navigate('/compute/images');
   };
 
@@ -233,7 +218,7 @@ export function CreateImagePage() {
             actions={
               <TopBarAction
                 icon={<IconBell size={12} />}
-                onClick={() => console.log('Notifications clicked')}
+                onClick={() => {}}
                 ariaLabel="Notifications"
                 showBadge
               />

@@ -1010,50 +1010,50 @@ export function InstanceDetailPage() {
                           {
                             id: 'soft-reboot',
                             label: 'Soft reboot',
-                            onClick: () => console.log('Soft reboot instance'),
+                            onClick: () => {},
                           },
                           {
                             id: 'pause',
                             label: 'Pause',
-                            onClick: () => console.log('Pause instance'),
+                            onClick: () => {},
                           },
                           {
                             id: 'suspend',
                             label: 'Suspend',
-                            onClick: () => console.log('Suspend instance'),
+                            onClick: () => {},
                           },
                           {
                             id: 'shelve',
                             label: 'Shelve',
-                            onClick: () => console.log('Shelve instance'),
+                            onClick: () => {},
                           },
                           {
                             id: 'unpause',
                             label: 'Unpause',
-                            onClick: () => console.log('Unpause instance'),
+                            onClick: () => {},
                           },
                           {
                             id: 'resume',
                             label: 'Resume',
-                            onClick: () => console.log('Resume instance'),
+                            onClick: () => {},
                           },
                           {
                             id: 'unshelve',
                             label: 'Unshelve',
-                            onClick: () => console.log('Unshelve instance'),
+                            onClick: () => {},
                           },
                         ],
                       },
                       {
                         id: 'storage-snapshot',
                         label: 'Storage & Snapshot',
-                        onClick: () => console.log('Storage & Snapshot'),
+                        onClick: () => {},
                       },
-                      { id: 'network', label: 'Network', onClick: () => console.log('Network') },
+                      { id: 'network', label: 'Network', onClick: () => {} },
                       {
                         id: 'configuration',
                         label: 'Configuration',
-                        onClick: () => console.log('Configuration'),
+                        onClick: () => {},
                       },
                     ]}
                     trigger="click"
@@ -1295,35 +1295,35 @@ export function InstanceDetailPage() {
                                     {
                                       id: 'create-snapshot',
                                       label: 'Create volume snapshot',
-                                      onClick: () => console.log('Create snapshot', row.id),
+                                      onClick: () => {},
                                     },
                                     {
                                       id: 'create-backup',
                                       label: 'Create volume backup',
-                                      onClick: () => console.log('Create backup', row.id),
+                                      onClick: () => {},
                                     },
                                     {
                                       id: 'clone-volume',
                                       label: 'Clone volume',
-                                      onClick: () => console.log('Clone volume', row.id),
+                                      onClick: () => {},
                                     },
                                   ],
                                 },
                                 {
                                   id: 'extend-volume',
                                   label: 'Extend volume',
-                                  onClick: () => console.log('Extend volume', row.id),
+                                  onClick: () => {},
                                 },
                                 {
                                   id: 'bootable',
                                   label: 'Bootable',
-                                  onClick: () => console.log('Toggle bootable', row.id),
+                                  onClick: () => {},
                                 },
                                 {
                                   id: 'detach',
                                   label: 'Detach',
                                   status: 'danger',
-                                  onClick: () => console.log('Detach volume', row.id),
+                                  onClick: () => {},
                                 },
                               ];
                               return (
@@ -1493,7 +1493,7 @@ export function InstanceDetailPage() {
                                   id: 'detach',
                                   label: 'Detach',
                                   status: 'danger',
-                                  onClick: () => console.log('Detach interface', iface.id),
+                                  onClick: () => {},
                                 },
                               ];
                               return (
@@ -1610,7 +1610,7 @@ export function InstanceDetailPage() {
                                   id: 'disassociate',
                                   label: 'Disassociate',
                                   status: 'danger',
-                                  onClick: () => console.log('Disassociate', row.id),
+                                  onClick: () => {},
                                 },
                               ];
                               return (
@@ -1741,7 +1741,7 @@ export function InstanceDetailPage() {
                                   id: 'detach',
                                   label: 'Detach',
                                   status: 'danger',
-                                  onClick: () => console.log('Detach security group', row.id),
+                                  onClick: () => {},
                                 },
                               ];
                               return (
@@ -1879,23 +1879,23 @@ export function InstanceDetailPage() {
                                 {
                                   id: 'edit',
                                   label: 'Edit',
-                                  onClick: () => console.log('Edit snapshot', row.id),
+                                  onClick: () => {},
                                 },
                                 {
                                   id: 'create-instance',
                                   label: 'Create instance',
-                                  onClick: () => console.log('Create instance from', row.id),
+                                  onClick: () => {},
                                 },
                                 {
                                   id: 'create-volume',
                                   label: 'Create volume',
-                                  onClick: () => console.log('Create volume from', row.id),
+                                  onClick: () => {},
                                 },
                                 {
                                   id: 'delete',
                                   label: 'Delete',
                                   status: 'danger',
-                                  onClick: () => console.log('Delete snapshot', row.id),
+                                  onClick: () => {},
                                 },
                               ];
                               return (
