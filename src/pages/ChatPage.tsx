@@ -1,14 +1,25 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { TopBar, TopBarAction, Breadcrumb, Button, Drawer, Input, Textarea } from '@/design-system';
+import {
+  TopBar,
+  TopBarAction,
+  Breadcrumb,
+  Button,
+  Drawer,
+  Input,
+  Textarea,
+  Pagination,
+  SearchInput,
+  SectionCard,
+} from '@/design-system';
 import {
   IconBell,
-  IconSearch,
   IconPlus,
   IconDots,
-  IconPalette,
+  IconSettings,
   IconStar,
   IconStarFilled,
+  IconSearch,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -97,13 +108,13 @@ function ChatSidebar() {
             <p className="text-label-sm text-[var(--color-text-subtle)]">Chats</p>
             <div className="flex gap-1 items-center justify-end relative shrink-0">
               <button className="bg-[var(--color-surface-subtle)] relative rounded-md shrink-0 size-6 hover:bg-[var(--color-surface-muted)] transition-colors flex items-center justify-center">
-                <IconSearch size={12} stroke={1} className="text-[var(--color-text-muted)]" />
+                <IconSearch size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
               </button>
               <button
                 onClick={() => navigate('/chat')}
                 className="bg-[var(--color-surface-subtle)] relative rounded-md shrink-0 size-6 hover:bg-[var(--color-surface-muted)] transition-colors flex items-center justify-center"
               >
-                <IconPlus size={12} stroke={1} className="text-[var(--color-text-muted)]" />
+                <IconPlus size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
               </button>
             </div>
           </div>
@@ -114,7 +125,7 @@ function ChatSidebar() {
           <div className="flex h-6 items-center justify-between overflow-clip pl-1.5 pr-0 py-0 relative rounded-md shrink-0 w-full hover:bg-[var(--color-surface-muted)] transition-colors cursor-pointer">
             <p className="text-label-md text-[var(--color-text-default)]">label 1</p>
             <button className="bg-[var(--color-surface-subtle)] relative rounded-md shrink-0 size-6 hover:bg-[var(--color-surface-muted)] transition-colors flex items-center justify-center">
-              <IconDots size={12} stroke={1} className="text-[var(--color-text-muted)]" />
+              <IconDots size={16} stroke={1.5} className="text-[var(--color-text-default)]" />
             </button>
           </div>
           <div className="flex h-6 items-center overflow-clip px-1.5 py-1 relative rounded-md shrink-0 w-full hover:bg-[var(--color-surface-muted)] transition-colors cursor-pointer">
@@ -314,37 +325,22 @@ function NewChatDrawer({
         </div>
 
         {/* Model Information */}
-        <div className="border border-[var(--color-border-default)] rounded-md p-4 flex flex-col gap-4">
-          <p className="text-label-lg text-[var(--color-text-default)]">Model information</p>
-
-          <div className="flex flex-col gap-3">
-            <div className="flex flex-col gap-1 pb-3 border-b border-[var(--color-border-subtle)]">
-              <p className="text-body-sm text-[var(--color-action-primary)]">Provider</p>
-              <p className="text-label-md text-[var(--color-text-default)]">{agent.provider}</p>
-            </div>
-
-            <div className="flex flex-col gap-1 pb-3 border-b border-[var(--color-border-subtle)]">
-              <p className="text-body-sm text-[var(--color-action-primary)]">Model Name</p>
-              <p className="text-label-md text-[var(--color-text-default)]">{agent.modelName}</p>
-            </div>
-
-            <div className="flex flex-col gap-1 pb-3 border-b border-[var(--color-border-subtle)]">
-              <p className="text-body-sm text-[var(--color-action-primary)]">Temperature</p>
-              <p className="text-label-md text-[var(--color-text-default)]">{agent.temperature}</p>
-            </div>
-
-            <div className="flex flex-col gap-1">
-              <p className="text-body-sm text-[var(--color-action-primary)]">
-                Connected Data sources
-              </p>
-              <p className="text-label-md text-[var(--color-text-default)]">
-                {agent.connectedDataSources.length > 0
+        <SectionCard>
+          <SectionCard.Header title="Model information" />
+          <SectionCard.Content>
+            <SectionCard.DataRow label="Provider" value={agent.provider} />
+            <SectionCard.DataRow label="Model Name" value={agent.modelName} />
+            <SectionCard.DataRow label="Temperature" value={String(agent.temperature)} />
+            <SectionCard.DataRow
+              label="Connected Data sources"
+              value={
+                agent.connectedDataSources.length > 0
                   ? agent.connectedDataSources.join(', ')
-                  : 'No connected data sources'}
-              </p>
-            </div>
-          </div>
-        </div>
+                  : 'No connected data sources'
+              }
+            />
+          </SectionCard.Content>
+        </SectionCard>
 
         {/* System Prompt */}
         <div className="border border-[var(--color-border-default)] rounded-md p-4 flex flex-col gap-3">
@@ -392,8 +388,17 @@ export function ChatPage() {
   const [selectedAgentId, setSelectedAgentId] = useState<string | null>(null);
   const [agents, setAgents] = useState(mockAgents);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 9;
 
   const selectedAgent = agents.find((a) => a.id === selectedAgentId) || null;
+
+  // Pagination
+  const totalPages = Math.ceil(agents.length / itemsPerPage);
+  const paginatedAgents = agents.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   const handleAgentClick = (agentId: string) => {
     setSelectedAgentId(agentId);
@@ -409,12 +414,21 @@ export function ChatPage() {
   };
 
   const handleStartChat = (chatName: string, additionalInstructions: string) => {
-    console.log('Starting chat:', {
-      agent: selectedAgent?.title,
-      chatName,
-      additionalInstructions,
+    // Generate a unique chat ID
+    const chatId = `chat-${Date.now()}`;
+
+    // Navigate to conversation page with agent info
+    navigate(`/chat/${chatId}`, {
+      state: {
+        agentId: selectedAgentId,
+        agentName: selectedAgent?.title,
+        chatName: chatName || 'New Chat',
+        additionalInstructions,
+      },
     });
-    // Here you would typically navigate to the chat or create a new chat session
+
+    // Close the drawer
+    setIsDrawerOpen(false);
   };
 
   return (
@@ -430,13 +444,9 @@ export function ChatPage() {
         breadcrumb={<Breadcrumb items={[{ label: 'Home', href: '/agent' }, { label: 'Chat' }]} />}
         actions={
           <>
+            <TopBarAction icon={<IconSettings size={16} stroke={1.5} />} aria-label="Settings" />
             <TopBarAction
-              icon={<IconPalette size={16} stroke={1} />}
-              aria-label="Design system"
-              onClick={() => navigate('/design-system')}
-            />
-            <TopBarAction
-              icon={<IconBell size={16} stroke={1} />}
+              icon={<IconBell size={16} stroke={1.5} />}
               aria-label="Notifications"
               badge={true}
             />
@@ -461,17 +471,24 @@ export function ChatPage() {
 
           {/* Filters */}
           <div className="flex items-center">
-            <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] flex items-center justify-between w-[var(--search-input-width)] pl-2.5 pr-2 py-1.5 rounded-md">
-              <p className="text-body-sm text-[var(--color-text-subtle)]">
-                Search agent by attributes
-              </p>
-              <IconSearch size={12} stroke={1} className="text-[var(--color-text-muted)]" />
-            </div>
+            <SearchInput
+              placeholder="Search agent by attributes"
+              size="sm"
+              className="w-[var(--search-input-width)]"
+            />
           </div>
 
+          {/* Pagination */}
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            totalItems={agents.length}
+          />
+
           {/* Agent Cards Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2">
-            {agents.map((agent) => (
+          <div className="grid grid-cols-3 gap-2">
+            {paginatedAgents.map((agent) => (
               <AgentCard
                 key={agent.id}
                 title={agent.title}
