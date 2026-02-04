@@ -145,7 +145,7 @@ function SummarySidebar({
 
         {/* Action Buttons */}
         <HStack gap={2}>
-          <Button variant="secondary" onClick={onCancel} className="w-[80px]">
+          <Button variant="secondary" onClick={onCancel}>
             Cancel
           </Button>
           <Button
@@ -315,7 +315,7 @@ export default function CreateVirtualAdapterPage() {
           <VStack gap={0.5} align="start">
             <HStack gap={1.5} align="center">
               <span className="text-[var(--color-action-primary)] text-label-md">{row.name}</span>
-              <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+              <IconExternalLink size={16} className="text-[var(--color-action-primary)]" />
             </HStack>
             <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
           </VStack>
@@ -373,7 +373,7 @@ export default function CreateVirtualAdapterPage() {
           <VStack gap={0.5} align="start">
             <HStack gap={1.5} align="center">
               <span className="text-[var(--color-action-primary)] text-label-md">{row.name}</span>
-              <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+              <IconExternalLink size={16} className="text-[var(--color-action-primary)]" />
             </HStack>
             <span className="text-body-sm text-[var(--color-text-subtle)]">{row.subtitle}</span>
           </VStack>
@@ -774,7 +774,7 @@ export default function CreateVirtualAdapterPage() {
                                     onClick={() => removeFixedIP(entry.id)}
                                     className="p-1 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] transition-colors"
                                   >
-                                    <IconX size={12} />
+                                    <IconX size={16} />
                                   </button>
                                 </div>
                               ))}

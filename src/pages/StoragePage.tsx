@@ -52,15 +52,15 @@ function StatusCard({ label, count, status }: StatusCardProps) {
 
   const getStatusIcon = () => {
     if (status === 'completed') {
-      return <IconTarget size={12} stroke={1} className="text-white" />;
+      return <IconTarget size={16} stroke={1} className="text-white" />;
     } else if (status === 'error') {
-      return <IconAlertTriangle size={12} stroke={1} className="text-white" />;
+      return <IconAlertTriangle size={16} stroke={1} className="text-white" />;
     } else if (status === 'processing') {
-      return <IconLoader2 size={12} stroke={1} className="text-white animate-spin" />;
+      return <IconLoader2 size={16} stroke={1} className="text-white animate-spin" />;
     } else if (status === 'pending') {
-      return <IconRefresh size={12} stroke={1} className="text-white" />;
+      return <IconRefresh size={16} stroke={1} className="text-white" />;
     } else if (status === 'draft') {
-      return <IconPencil size={12} stroke={1} className="text-white" />;
+      return <IconPencil size={16} stroke={1} className="text-white" />;
     }
   };
 

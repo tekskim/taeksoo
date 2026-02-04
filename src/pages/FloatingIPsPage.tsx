@@ -357,7 +357,7 @@ export function FloatingIPsPage() {
                 >
                   <span className="truncate">{row.associatedTo}</span>
                   <IconExternalLink
-                    size={12}
+                    size={16}
                     className="flex-shrink-0 text-[var(--color-action-primary)]"
                   />
                 </Link>
@@ -368,7 +368,7 @@ export function FloatingIPsPage() {
             </div>
             <Tooltip content="Instance" position="top">
               <div className="flex-shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[4px] p-[3px] cursor-default">
-                <IconCube size={12} className="text-[var(--color-text-subtle)]" />
+                <IconCube size={16} className="text-[var(--color-text-subtle)]" />
               </div>
             </Tooltip>
           </div>
@@ -399,7 +399,7 @@ export function FloatingIPsPage() {
             >
               <span className="truncate">{row.network}</span>
               <IconExternalLink
-                size={12}
+                size={16}
                 className="flex-shrink-0 text-[var(--color-action-primary)]"
               />
             </Link>
@@ -494,7 +494,7 @@ export function FloatingIPsPage() {
             }
             actions={
               <TopBarAction
-                icon={<IconBell size={16} stroke={1} />}
+                icon={<IconBell size={12} stroke={1} />}
                 aria-label="Notifications"
                 badge={true}
               />

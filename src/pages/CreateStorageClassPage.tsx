@@ -150,7 +150,7 @@ function SummarySidebar({
 
         {/* Button row */}
         <HStack gap={2}>
-          <Button variant="secondary" onClick={onCancel} className="w-[80px]">
+          <Button variant="secondary" onClick={onCancel}>
             Cancel
           </Button>
           <Button
@@ -274,13 +274,9 @@ function ParametersSection({ parameters, onParametersChange }: ParametersSection
           <VStack gap={3}>
             {/* Header row */}
             {parameters.length > 0 && (
-              <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full">
-                <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                  Key
-                </label>
-                <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                  Value
-                </label>
+              <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center">
+                <label className="text-label-lg text-[var(--color-text-default)]">Key</label>
+                <label className="text-label-lg text-[var(--color-text-default)]">Value</label>
                 <div></div>
               </div>
             )}
@@ -304,7 +300,7 @@ function ParametersSection({ parameters, onParametersChange }: ParametersSection
                   onClick={() => removeParameter(index)}
                   className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                 >
-                  <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                  <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
                 </button>
               </div>
             ))}
@@ -370,7 +366,7 @@ function CustomizeSection({
     <SectionCard>
       <SectionCard.Header title="Customize" showDivider />
       <SectionCard.Content>
-        <VStack gap={3}>
+        <VStack gap={6}>
           {/* Reclaim Policy */}
           <VStack gap={6}>
             <label className="text-label-lg text-[var(--color-text-default)]">Reclaim Policy</label>
@@ -436,9 +432,9 @@ function CustomizeSection({
                 {/* Header row */}
                 {mountOptions.length > 0 && (
                   <div className="grid grid-cols-[1fr_auto] gap-2 w-full">
-                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                    <span className="block text-label-lg text-[var(--color-text-default)]">
                       Value
-                    </label>
+                    </span>
                     <div></div>
                   </div>
                 )}
@@ -456,7 +452,7 @@ function CustomizeSection({
                       onClick={() => removeMountOption(index)}
                       className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
                     >
-                      <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                      <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
                     </button>
                   </div>
                 ))}

@@ -336,7 +336,7 @@ export function ComputeAdminCreateFlavorPage() {
             breadcrumb={<Breadcrumb items={breadcrumbItems} />}
             actions={
               <TopBarAction
-                icon={<IconBell size={16} />}
+                icon={<IconBell size={12} />}
                 onClick={() => console.log('Notifications clicked')}
                 aria-label="Notifications"
                 badge
@@ -472,7 +472,6 @@ export function ComputeAdminCreateFlavorPage() {
                                   value={tenantSearch}
                                   onChange={setTenantSearch}
                                   placeholder="Search tenants by attributes"
-                                  className="w-[280px]"
                                 />
 
                                 {/* Pagination */}
@@ -536,7 +535,7 @@ export function ComputeAdminCreateFlavorPage() {
                                           className="text-label-md text-[var(--color-link)] hover:underline flex items-center gap-1.5"
                                         >
                                           {tenant.name}
-                                          <IconExternalLink size={12} />
+                                          <IconExternalLink size={16} />
                                         </Link>
                                         <span className="text-body-sm text-[var(--color-text-muted)]">
                                           ID: {tenant.id}
@@ -641,7 +640,7 @@ export function ComputeAdminCreateFlavorPage() {
                                 onChange={setVcpu}
                                 min={1}
                                 max={128}
-                                className="w-[100px]"
+                                width="sm"
                               />
                               <span className="text-body-md text-[var(--color-text-default)]">
                                 cores
@@ -666,7 +665,7 @@ export function ComputeAdminCreateFlavorPage() {
                                 onChange={setRam}
                                 min={1}
                                 max={1024}
-                                className="w-[100px]"
+                                width="sm"
                               />
                               <span className="text-body-md text-[var(--color-text-default)]">
                                 GiB
@@ -691,7 +690,7 @@ export function ComputeAdminCreateFlavorPage() {
                                 onChange={setRootDisk}
                                 min={0}
                                 max={10000}
-                                className="w-[100px]"
+                                width="sm"
                               />
                               <span className="text-body-md text-[var(--color-text-default)]">
                                 GiB
@@ -714,7 +713,7 @@ export function ComputeAdminCreateFlavorPage() {
                                 onChange={setEphemeralDisk}
                                 min={0}
                                 max={10000}
-                                className="w-[100px]"
+                                width="sm"
                               />
                               <span className="text-body-md text-[var(--color-text-default)]">
                                 GiB
@@ -736,7 +735,7 @@ export function ComputeAdminCreateFlavorPage() {
                                 onChange={setSwapDisk}
                                 min={0}
                                 max={10000}
-                                className="w-[100px]"
+                                width="sm"
                               />
                               <span className="text-body-md text-[var(--color-text-default)]">
                                 MiB
@@ -852,7 +851,7 @@ export function ComputeAdminCreateFlavorPage() {
                                     className="flex items-center justify-center w-7 h-7 rounded-md border border-[var(--color-border-default)] hover:bg-[var(--color-surface-subtle)]"
                                   >
                                     <IconCirclePlus
-                                      size={12}
+                                      size={16}
                                       className="text-[var(--color-text-muted)]"
                                     />
                                   </button>
@@ -900,12 +899,12 @@ export function ComputeAdminCreateFlavorPage() {
                                           >
                                             {expandedMetadata.has(item.key) ? (
                                               <IconChevronDown
-                                                size={12}
+                                                size={16}
                                                 className="text-[var(--color-text-default)]"
                                               />
                                             ) : (
                                               <IconChevronRight
-                                                size={12}
+                                                size={16}
                                                 className="text-[var(--color-text-default)]"
                                               />
                                             )}
@@ -929,7 +928,7 @@ export function ComputeAdminCreateFlavorPage() {
                                             className="flex items-center justify-center w-7 h-7 rounded-md border border-[var(--color-border-strong)] hover:bg-[var(--color-surface-subtle)]"
                                           >
                                             <IconCirclePlus
-                                              size={12}
+                                              size={16}
                                               className="text-[var(--color-text-default)]"
                                             />
                                           </button>
@@ -975,7 +974,7 @@ export function ComputeAdminCreateFlavorPage() {
                                                   className="flex items-center justify-center w-7 h-7 rounded-md border border-[var(--color-border-strong)] hover:bg-[var(--color-surface-subtle)]"
                                                 >
                                                   <IconCirclePlus
-                                                    size={12}
+                                                    size={16}
                                                     className="text-[var(--color-text-default)]"
                                                   />
                                                 </button>
@@ -1046,7 +1045,7 @@ export function ComputeAdminCreateFlavorPage() {
                                           className="flex items-center justify-center w-7 h-7 rounded-md border border-[var(--color-border-strong)] hover:bg-red-50"
                                         >
                                           <IconMinus
-                                            size={12}
+                                            size={16}
                                             className="text-[var(--color-state-danger)]"
                                           />
                                         </button>

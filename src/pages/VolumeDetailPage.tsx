@@ -431,7 +431,7 @@ export function VolumeDetailPage() {
             onClick={(e) => e.stopPropagation()}
           >
             {row.name}
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+            <IconExternalLink size={16} className="text-[var(--color-action-primary)]" />
           </Link>
           <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
         </div>
@@ -503,7 +503,7 @@ export function VolumeDetailPage() {
             onClick={(e) => e.stopPropagation()}
           >
             {row.name}
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+            <IconExternalLink size={16} className="text-[var(--color-action-primary)]" />
           </Link>
           <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
         </div>
@@ -585,7 +585,7 @@ export function VolumeDetailPage() {
             breadcrumb={<Breadcrumb items={breadcrumbItems} />}
             actions={
               <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
+                icon={<IconBell size={12} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />
@@ -637,7 +637,7 @@ export function VolumeDetailPage() {
                     }
                     trigger="click"
                   >
-                    <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
+                    <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={16} />}>
                       More Actions
                     </Button>
                   </ContextMenu>
@@ -702,7 +702,7 @@ export function VolumeDetailPage() {
                                 >
                                   {volume.attachedTo}
                                   <IconExternalLink
-                                    size={12}
+                                    size={16}
                                     className="text-[var(--color-action-primary)]"
                                   />
                                 </Link>

@@ -15,7 +15,7 @@ import {
   TabPanel,
   SectionCard,
   DetailHeader,
-  DatePicker,
+  MonitoringToolbar,
 } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -23,7 +23,6 @@ import { DataViewDrawer } from '@/components/DataViewDrawer';
 import {
   IconEdit,
   IconBell,
-  IconRefresh,
   IconDotsCircleHorizontal,
   IconArrowsMaximize,
   IconArrowsMinimize,
@@ -924,7 +923,7 @@ function ChartWithFullScreen({
                   setFullScreenChart(null);
                   setContainerReady(false);
                 }}
-                timeControls={<MonitoringTimeControls />}
+                timeControls={<MonitoringToolbar />}
               />
             )}
           </div>
@@ -1225,7 +1224,7 @@ export function StoragePoolDetailPage() {
                     <VStack gap={4} className="pt-4">
                       {/* Monitoring Time Controls */}
                       <div className="flex justify-start w-full">
-                        <MonitoringTimeControls
+                        <MonitoringToolbar
                           onTimeRangeChange={(value) => console.log('Time range changed:', value)}
                           onRefresh={() => console.log('Refresh clicked')}
                         />

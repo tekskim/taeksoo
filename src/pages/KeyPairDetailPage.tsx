@@ -157,9 +157,9 @@ function CopyableDataRow({ label, value }: CopyableValueProps) {
           aria-label="Copy to clipboard"
         >
           {copied ? (
-            <IconCheck size={12} className="text-[var(--color-state-success)]" />
+            <IconCheck size={16} className="text-[var(--color-state-success)]" />
           ) : (
-            <IconCopy size={12} className="text-[var(--color-action-primary)]" />
+            <IconCopy size={16} className="text-[var(--color-action-primary)]" />
           )}
         </button>
       </div>
@@ -240,7 +240,7 @@ export function KeyPairDetailPage() {
             breadcrumb={<Breadcrumb items={breadcrumbItems} />}
             actions={
               <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
+                icon={<IconBell size={12} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />

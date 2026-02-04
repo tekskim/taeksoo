@@ -323,7 +323,7 @@ function SummarySidebar({ sectionStatus, onCancel, onSave, onDelete }: SummarySi
 
         {/* Action Buttons */}
         <HStack gap={2}>
-          <Button variant="secondary" onClick={onCancel} className="w-[80px]">
+          <Button variant="secondary" onClick={onCancel}>
             Cancel
           </Button>
           <Button variant="primary" onClick={onSave} className="flex-1" disabled={!isAllDone}>
@@ -507,7 +507,7 @@ export function ComputeAdminInstanceTemplateDetailPage() {
             breadcrumb={<Breadcrumb items={breadcrumbItems} />}
             actions={
               <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
+                icon={<IconBell size={12} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />

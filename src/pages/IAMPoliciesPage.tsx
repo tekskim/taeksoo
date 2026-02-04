@@ -590,9 +590,9 @@ export default function IAMPoliciesPage() {
                             className={`p-0.5 hover:bg-[var(--color-surface-subtle)] rounded ${!policy.permissions ? 'invisible' : ''}`}
                           >
                             {expandedPolicies.has(policy.id) ? (
-                              <IconChevronDown size={12} stroke={1.5} />
+                              <IconChevronDown size={16} stroke={1.5} />
                             ) : (
-                              <IconChevronRight size={12} stroke={1.5} />
+                              <IconChevronRight size={16} stroke={1.5} />
                             )}
                           </button>
                           <Link

@@ -173,7 +173,7 @@ function SummarySidebar({
 
         {/* Button row */}
         <HStack gap={2}>
-          <Button variant="secondary" onClick={onCancel} className="w-[80px]">
+          <Button variant="secondary" onClick={onCancel}>
             Cancel
           </Button>
           <Button
@@ -283,7 +283,7 @@ function VolumeClaimSection({
     <SectionCard>
       <SectionCard.Header title="Volume Claim" showDivider />
       <SectionCard.Content>
-        <VStack gap={3}>
+        <VStack gap={6}>
           {/* Source */}
           <VStack gap={1.5}>
             <label className="text-label-lg text-[var(--color-text-default)]">Source</label>
@@ -328,10 +328,10 @@ function VolumeClaimSection({
                   onChange={(value) => onRequestStorageChange(value)}
                   min={1}
                   placeholder="10"
-                  fullWidth
+                  width="sm"
                 />
               </div>
-              <div className="w-[100px]">
+              <div>
                 <Select
                   options={STORAGE_UNIT_OPTIONS}
                   value={storageUnit}
@@ -397,7 +397,7 @@ function StorageConfigSection({ accessModes, onAccessModesChange }: StorageConfi
     <SectionCard>
       <SectionCard.Header title="Customize" showDivider />
       <SectionCard.Content>
-        <VStack gap={3}>
+        <VStack gap={6}>
           {/* Access Modes */}
           <VStack gap={1.5}>
             <label className="text-label-lg text-[var(--color-text-default)]">Access Modes</label>
@@ -474,12 +474,12 @@ function LabelsAnnotationsSection({
               <VStack gap={2}>
                 {labels.length > 0 && (
                   <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                    <span className="block text-label-lg text-[var(--color-text-default)]">
                       Key
-                    </label>
-                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                    </span>
+                    <span className="block text-label-lg text-[var(--color-text-default)]">
                       Value
-                    </label>
+                    </span>
                     <div />
                   </div>
                 )}
@@ -504,7 +504,7 @@ function LabelsAnnotationsSection({
                       onClick={() => onRemoveLabel(index)}
                       className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
                     >
-                      <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                      <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
                     </button>
                   </div>
                 ))}
@@ -532,11 +532,11 @@ function LabelsAnnotationsSection({
             </VStack>
 
             <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-              <VStack gap={3}>
+              <VStack gap={6}>
                 {annotations.length > 0 && (
-                  <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full">
-                    <label className="text-label-sm text-[var(--color-text-default)]">Key</label>
-                    <label className="text-label-sm text-[var(--color-text-default)]">Value</label>
+                  <div className="grid grid-cols-[1fr_1fr_auto] gap-2 w-full items-center">
+                    <label className="text-label-lg text-[var(--color-text-default)]">Key</label>
+                    <label className="text-label-lg text-[var(--color-text-default)]">Value</label>
                     <div></div>
                   </div>
                 )}
@@ -561,7 +561,7 @@ function LabelsAnnotationsSection({
                       onClick={() => onRemoveAnnotation(index)}
                       className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
                     >
-                      <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                      <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
                     </button>
                   </div>
                 ))}

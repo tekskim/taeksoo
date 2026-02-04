@@ -28,6 +28,7 @@ import {
   IconPencil,
   IconMessages,
   IconRobotFace,
+  IconArrowLeft,
 } from '@tabler/icons-react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import AgentLogo from '@/assets/icons/agent-logo.svg';
@@ -115,6 +116,22 @@ export function AgentSidebar() {
       <div className="flex flex-col flex-1 items-center justify-between pt-1.5 px-2 w-full min-h-0">
         {/* Top Section - Project & Navigation */}
         <div className="flex flex-col items-center w-full">
+          {/* Back to All Services */}
+          <div className="flex items-center justify-center py-1.5">
+            <Tooltip content="All Services" position="right">
+              <Link
+                to="/"
+                className="size-[38px] rounded-lg bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-muted)] transition-colors flex items-center justify-center shrink-0"
+              >
+                <IconArrowLeft
+                  size={20}
+                  stroke={1.5}
+                  className="text-[var(--color-text-default)]"
+                />
+              </Link>
+            </Tooltip>
+          </div>
+
           {/* Project Selector */}
           <div className="flex items-center justify-center py-1.5">
             <ProjectSelector

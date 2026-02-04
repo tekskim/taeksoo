@@ -623,9 +623,9 @@ export default function NetworkDetailPage() {
             >
               <div className="flex-shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[4px] p-1">
                 {row.attachedTo.type === 'router' ? (
-                  <IconRouter size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
+                  <IconRouter size={16} stroke={1.5} className="text-[var(--color-text-subtle)]" />
                 ) : (
-                  <IconCube size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
+                  <IconCube size={16} stroke={1.5} className="text-[var(--color-text-subtle)]" />
                 )}
               </div>
             </Tooltip>
@@ -799,7 +799,7 @@ export default function NetworkDetailPage() {
             breadcrumb={<Breadcrumb items={breadcrumbItems} />}
             actions={
               <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
+                icon={<IconBell size={12} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />
@@ -927,7 +927,7 @@ export default function NetworkDetailPage() {
                       <div className="flex items-center gap-1">
                         {/* Search */}
                         <div className="flex items-center gap-1">
-                          <div className="w-[280px]">
+                          <div>
                             <SearchInput
                               value={subnetSearchTerm}
                               onChange={(e) => {
@@ -1000,7 +1000,7 @@ export default function NetworkDetailPage() {
                       <div className="flex items-center gap-1">
                         {/* Search */}
                         <div className="flex items-center gap-1">
-                          <div className="w-[280px]">
+                          <div>
                             <SearchInput
                               value={portSearchTerm}
                               onChange={(e) => {
@@ -1075,7 +1075,7 @@ export default function NetworkDetailPage() {
                       <div className="flex items-center gap-1">
                         {/* Search */}
                         <div className="flex items-center gap-1">
-                          <div className="w-[280px]">
+                          <div>
                             <SearchInput
                               value={dhcpAgentSearchTerm}
                               onChange={(e) => {

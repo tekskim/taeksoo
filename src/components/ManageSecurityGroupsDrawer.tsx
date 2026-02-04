@@ -240,14 +240,14 @@ export function ManageSecurityGroupsDrawer({
                 className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
               >
                 <span className="text-label-sm text-[var(--color-text-default)]">Network</span>
-                <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
+                <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
               </div>
               <div
                 style={{ width: '137px', flexShrink: 0 }}
                 className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
               >
                 <span className="text-label-sm text-[var(--color-text-default)]">Port ID</span>
-                <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
+                <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
               </div>
               <div
                 style={{ width: '137px', flexShrink: 0 }}
@@ -315,7 +315,7 @@ export function ManageSecurityGroupsDrawer({
                         {iface.portName}
                       </span>
                       <IconExternalLink
-                        size={12}
+                        size={16}
                         className="shrink-0 text-[var(--color-action-primary)]"
                       />
                     </div>
@@ -333,7 +333,7 @@ export function ManageSecurityGroupsDrawer({
                         {iface.networkName}
                       </span>
                       <IconExternalLink
-                        size={12}
+                        size={16}
                         className="shrink-0 text-[var(--color-action-primary)]"
                       />
                     </div>
@@ -425,21 +425,21 @@ export function ManageSecurityGroupsDrawer({
                 className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
               >
                 <span className="text-label-sm text-[var(--color-text-default)]">Name</span>
-                <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
+                <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
               </div>
               <div
                 style={{ width: '203px', flexShrink: 0 }}
                 className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
               >
                 <span className="text-label-sm text-[var(--color-text-default)]">Description</span>
-                <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
+                <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
               </div>
               <div
                 style={{ width: '202px', flexShrink: 0 }}
                 className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
               >
                 <span className="text-label-sm text-[var(--color-text-default)]">Created At</span>
-                <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
+                <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
               </div>
             </div>
 
@@ -486,7 +486,7 @@ export function ManageSecurityGroupsDrawer({
                         {sg.name}
                       </span>
                       <IconExternalLink
-                        size={12}
+                        size={16}
                         className="shrink-0 text-[var(--color-action-primary)]"
                       />
                     </div>

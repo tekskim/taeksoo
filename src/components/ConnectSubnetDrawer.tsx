@@ -114,7 +114,7 @@ const MOCK_SUBNETS: SubnetItem[] = [
 function SortIcon({ active, direction }: { active: boolean; direction: 'asc' | 'desc' }) {
   return (
     <IconChevronDown
-      size={12}
+      size={16}
       className={`transition-transform ${active && direction === 'asc' ? 'rotate-180' : ''}`}
       stroke={1.5}
     />
@@ -361,7 +361,7 @@ export function ConnectSubnetDrawer({
                         {network.name}
                       </span>
                       <IconExternalLink
-                        size={12}
+                        size={16}
                         className="text-[var(--color-action-primary)]"
                         stroke={1.5}
                       />
@@ -469,7 +469,7 @@ export function ConnectSubnetDrawer({
                         {subnet.name}
                       </span>
                       <IconExternalLink
-                        size={12}
+                        size={16}
                         className="text-[var(--color-action-primary)]"
                         stroke={1.5}
                       />

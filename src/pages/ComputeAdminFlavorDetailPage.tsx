@@ -595,7 +595,7 @@ export function ComputeAdminFlavorDetailPage() {
             breadcrumb={<Breadcrumb items={breadcrumbItems} />}
             actions={
               <TopBarAction
-                icon={<IconBell size={16} stroke={1} />}
+                icon={<IconBell size={12} stroke={1} />}
                 aria-label="Notifications"
                 badge={true}
               />
@@ -693,7 +693,7 @@ export function ComputeAdminFlavorDetailPage() {
                       </h2>
 
                       {/* Search */}
-                      <div className="w-[280px]">
+                      <div>
                         <SearchInput
                           placeholder="Search instance by attributes"
                           value={instanceSearchQuery}

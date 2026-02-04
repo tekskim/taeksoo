@@ -524,7 +524,7 @@ export default function NetworkDetailPage() {
             onClick={(e) => e.stopPropagation()}
           >
             {row.name}
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+            <IconExternalLink size={16} className="text-[var(--color-action-primary)]" />
           </Link>
           <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
         </div>
@@ -612,7 +612,7 @@ export default function NetworkDetailPage() {
             onClick={(e) => e.stopPropagation()}
           >
             {row.name}
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+            <IconExternalLink size={16} className="text-[var(--color-action-primary)]" />
           </Link>
           <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
         </div>
@@ -636,7 +636,7 @@ export default function NetworkDetailPage() {
                 onClick={(e) => e.stopPropagation()}
               >
                 {row.attachedTo.name}
-                <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+                <IconExternalLink size={16} className="text-[var(--color-action-primary)]" />
               </Link>
               <span className="text-body-sm text-[var(--color-text-subtle)]">
                 ID : {row.attachedTo.id}
@@ -649,9 +649,9 @@ export default function NetworkDetailPage() {
             >
               <div className="flex-shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[4px] p-1 cursor-pointer hover:bg-[var(--color-surface-muted)] transition-colors">
                 {row.attachedTo.type === 'router' ? (
-                  <IconRouter size={12} className="text-[var(--color-text-subtle)]" />
+                  <IconRouter size={16} className="text-[var(--color-text-subtle)]" />
                 ) : (
-                  <IconCube size={12} className="text-[var(--color-text-subtle)]" />
+                  <IconCube size={16} className="text-[var(--color-text-subtle)]" />
                 )}
               </div>
             </Tooltip>
@@ -673,7 +673,7 @@ export default function NetworkDetailPage() {
             onClick={(e) => e.stopPropagation()}
           >
             {row.ownedNetwork.name}
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+            <IconExternalLink size={16} className="text-[var(--color-action-primary)]" />
           </Link>
           <span className="text-body-sm text-[var(--color-text-subtle)]">
             ID : {row.ownedNetwork.id}
@@ -745,7 +745,7 @@ export default function NetworkDetailPage() {
             breadcrumb={<Breadcrumb items={breadcrumbItems} />}
             actions={
               <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
+                icon={<IconBell size={12} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />

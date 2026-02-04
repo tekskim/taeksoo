@@ -221,7 +221,7 @@ function CopyButton({ value }: { value: string }) {
       {copied ? (
         <IconCheck size={16} className="text-[var(--color-state-success)]" />
       ) : (
-        <IconCopy size={12} className="text-[var(--color-text-subtle)]" />
+        <IconCopy size={16} className="text-[var(--color-text-subtle)]" />
       )}
     </button>
   );
@@ -336,7 +336,7 @@ export function ServerGroupDetailPage() {
               {row.name}
             </Link>
             <IconExternalLink
-              size={12}
+              size={16}
               className="flex-shrink-0 text-[var(--color-action-primary)]"
             />
           </div>
@@ -460,7 +460,7 @@ export function ServerGroupDetailPage() {
             breadcrumb={<Breadcrumb items={breadcrumbItems} />}
             actions={
               <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
+                icon={<IconBell size={12} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />

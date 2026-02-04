@@ -142,7 +142,7 @@ function SummarySidebar({
 
         {/* Action Buttons */}
         <HStack gap={2}>
-          <Button variant="outline" onClick={onCancel} className="w-[80px]">
+          <Button variant="outline" onClick={onCancel}>
             Cancel
           </Button>
           <Button
@@ -472,7 +472,6 @@ export default function CreateNetworkPage() {
                               setTenantSearch(e.target.value);
                               setTenantPage(1);
                             }}
-                            className="w-[280px]"
                           />
 
                           {/* Tenant Pagination */}
@@ -622,13 +621,14 @@ export default function CreateNetworkPage() {
                             Specifies the MTU value used by the network.
                           </span>
                           <div className="flex items-center gap-2">
-                            <div className="w-[80px]">
+                            <div>
                               <NumberInput
                                 value={mtu}
                                 onChange={setMtu}
                                 min={68}
                                 max={65535}
                                 placeholder=""
+                                width="sm"
                               />
                             </div>
                             <span className="text-body-md text-[var(--color-text-default)]">

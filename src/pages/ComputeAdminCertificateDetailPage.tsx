@@ -272,7 +272,7 @@ export default function CertificateDetailPage() {
             onClick={(e) => e.stopPropagation()}
           >
             {row.name}
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+            <IconExternalLink size={16} className="text-[var(--color-action-primary)]" />
           </Link>
           <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
         </div>
@@ -303,7 +303,7 @@ export default function CertificateDetailPage() {
             onClick={(e) => e.stopPropagation()}
           >
             {row.loadBalancer.name}
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+            <IconExternalLink size={16} className="text-[var(--color-action-primary)]" />
           </Link>
           <span className="text-body-sm text-[var(--color-text-subtle)]">
             ID : {row.loadBalancer.id}
@@ -352,7 +352,7 @@ export default function CertificateDetailPage() {
             onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
             actions={
               <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
+                icon={<IconBell size={12} stroke={1.5} />}
                 onClick={() => {}}
                 aria-label="Notifications"
               />

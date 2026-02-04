@@ -212,7 +212,7 @@ export function FloatingCard({
           "
           aria-label="Close"
         >
-          <IconX size={16} stroke={1} />
+          <IconX size={12} stroke={1} />
         </button>
       )}
 

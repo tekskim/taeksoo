@@ -75,7 +75,7 @@ function FileUploadSection({
       <Button
         variant="secondary"
         onClick={handleUploadClick}
-        leftIcon={<IconUpload size={12} stroke={1} />}
+        leftIcon={<IconUpload size={16} stroke={1} />}
       >
         Upload a File
       </Button>
@@ -138,9 +138,9 @@ function CollapsibleSection({
         className="flex items-center gap-1.5 text-label-lg text-[var(--color-text-default)] leading-5"
       >
         {isExpanded ? (
-          <IconChevronDown size={12} stroke={1} />
+          <IconChevronDown size={16} stroke={1} />
         ) : (
-          <IconChevronRight size={12} stroke={1} />
+          <IconChevronRight size={16} stroke={1} />
         )}
         {label}
       </button>
@@ -158,7 +158,7 @@ function CollapsibleSection({
           <Button
             variant="secondary"
             onClick={handleUploadClick}
-            leftIcon={<IconUpload size={12} stroke={1} />}
+            leftIcon={<IconUpload size={16} stroke={1} />}
           >
             Upload a File
           </Button>

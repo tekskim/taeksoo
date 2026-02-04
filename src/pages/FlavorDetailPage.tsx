@@ -494,7 +494,7 @@ export function FlavorDetailPage() {
               {row.name}
             </Link>
             <IconExternalLink
-              size={12}
+              size={16}
               className="flex-shrink-0 text-[var(--color-action-primary)]"
             />
           </div>
@@ -608,7 +608,7 @@ export function FlavorDetailPage() {
             breadcrumb={<Breadcrumb items={breadcrumbItems} />}
             actions={
               <TopBarAction
-                icon={<IconBell size={16} stroke={1} />}
+                icon={<IconBell size={12} stroke={1} />}
                 aria-label="Notifications"
                 badge={true}
               />

@@ -68,7 +68,7 @@ function SummarySidebar({
 
         {/* Action Buttons */}
         <HStack gap={2}>
-          <Button variant="outline" onClick={onCancel} className="w-[80px]">
+          <Button variant="outline" onClick={onCancel}>
             Cancel
           </Button>
           <Button
@@ -327,13 +327,14 @@ export default function CreateNetworkPage() {
                                   specific requirement.
                                 </span>
                                 <div className="flex items-center gap-2">
-                                  <div className="w-[130px]">
+                                  <div>
                                     <NumberInput
                                       value={mtu}
                                       onChange={setMtu}
                                       min={68}
                                       max={9000}
                                       placeholder=""
+                                      width="sm"
                                     />
                                   </div>
                                   <span className="text-body-md text-[var(--color-text-default)]">

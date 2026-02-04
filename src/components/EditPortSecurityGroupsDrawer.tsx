@@ -70,7 +70,7 @@ function FilterTag({ label, value, onRemove }: FilterTagProps) {
         onClick={onRemove}
         className="flex items-center justify-center hover:bg-[var(--color-surface-subtle)] rounded"
       >
-        <IconX size={12} className="text-[var(--color-text-default)]" />
+        <IconX size={16} className="text-[var(--color-text-default)]" />
       </button>
     </div>
   );
@@ -321,13 +321,13 @@ export function EditPortSecurityGroupsDrawer({
                   <span className="text-label-sm text-[var(--color-text-default)] leading-4">
                     Description
                   </span>
-                  <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
+                  <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
                 </div>
                 <div className="flex-1 flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
                   <span className="text-label-sm text-[var(--color-text-default)] leading-4">
                     Created At
                   </span>
-                  <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
+                  <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
                 </div>
               </div>
 
@@ -359,7 +359,7 @@ export function EditPortSecurityGroupsDrawer({
                         {sg.name}
                       </span>
                       <IconExternalLink
-                        size={12}
+                        size={16}
                         className="shrink-0 text-[var(--color-action-primary)]"
                       />
                     </div>

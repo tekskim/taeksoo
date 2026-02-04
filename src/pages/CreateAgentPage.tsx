@@ -365,12 +365,12 @@ export function CreateAgentPage() {
         actions={
           <>
             <TopBarAction
-              icon={<IconPalette size={16} stroke={1} />}
+              icon={<IconPalette size={12} stroke={1} />}
               onClick={() => navigate('/design-system')}
               aria-label="Design system"
             />
             <TopBarAction
-              icon={<IconBell size={16} stroke={1} />}
+              icon={<IconBell size={12} stroke={1} />}
               aria-label="Notifications"
               badge={true}
             />
@@ -502,7 +502,7 @@ export function CreateAgentPage() {
                         <SectionCard.Content>
                           {/* Model provider */}
                           <VStack gap={2} className="w-full">
-                            <div className="w-[289px]">
+                            <div>
                               <Select
                                 label="Model provider"
                                 value={modelProvider}
@@ -521,7 +521,7 @@ export function CreateAgentPage() {
 
                           {/* Model */}
                           <VStack gap={2} className="w-full">
-                            <div className="w-[289px]">
+                            <div>
                               <Select
                                 label="Model"
                                 value={model}
@@ -580,7 +580,7 @@ export function CreateAgentPage() {
                               Adjust how creative or deterministic the model's responses should be.
                             </p>
                             <div className="flex items-center gap-3 w-fit">
-                              <div className="w-[289px]">
+                              <div>
                                 <Slider
                                   value={maxTokens}
                                   onChange={setMaxTokens}
@@ -644,13 +644,13 @@ export function CreateAgentPage() {
                             <p className="text-body-sm text-[var(--color-text-subtle)]">
                               Limits how many reasoning cycles the agent can run.
                             </p>
-                            <div className="w-[80px]">
+                            <div>
                               <NumberInput
                                 value={maxIteration}
                                 onChange={setMaxIteration}
                                 min={1}
                                 max={10}
-                                fullWidth
+                                width="sm"
                               />
                             </div>
                             <p className="text-body-sm text-[var(--color-text-subtle)]">Max: 10</p>
