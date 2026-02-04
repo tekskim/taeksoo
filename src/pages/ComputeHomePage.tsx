@@ -137,7 +137,7 @@ function InfraQuotaCard({ icon, label, used, total, href }: InfraQuotaCardProps)
         <PercentageBadge percentage={percentage} />
       </div>
       <div className="flex items-baseline mb-3">
-        <span className="text-heading-h3 text-[var(--color-text-default)]">{used}</span>
+        <span className="text-heading-h4 text-[var(--color-text-default)]">{used}</span>
         <span className="text-body-lg text-[var(--color-text-muted)] pt-1.5">/{total}</span>
       </div>
       <div className="h-1 rounded-sm bg-[var(--color-surface-muted)] overflow-hidden">
@@ -199,7 +199,9 @@ function Card({
     <div
       className={`p-4 rounded-2xl border border-[var(--color-border-default)] ${bgColor} ${className}`}
     >
-      <h6 className="text-heading-h6 text-[var(--color-text-muted)] mb-4">{title}</h6>
+      <h6 className="text-heading-h6 !font-semibold text-[var(--color-text-muted)] mb-4">
+        {title}
+      </h6>
       {children}
     </div>
   );
@@ -274,9 +276,9 @@ export function ComputeHomePage() {
           <div className="px-8 py-6">
             {/* Top Row - 4 Cards */}
             <div className="grid grid-cols-4 gap-6 mb-6">
-              {/* PROJECT INFO */}
+              {/* Project Info */}
               <Card
-                title="PROJECT INFO"
+                title="Project Info"
                 bgColor="bg-[var(--color-surface-subtle)]"
                 className="flex flex-col"
               >
@@ -312,8 +314,8 @@ export function ComputeHomePage() {
                 </div>
               </Card>
 
-              {/* COMPUTE QUOTA */}
-              <Card title="COMPUTE QUOTA">
+              {/* Compute Quota */}
+              <Card title="Compute Quota">
                 <div className="space-y-[22px]">
                   <ComputeQuotaBar label="vCPU" used={4} total={8} unit="vCPU" />
                   <ComputeQuotaBar label="RAM" used={22} total={32} unit="GiB" />
@@ -323,8 +325,8 @@ export function ComputeHomePage() {
                 </div>
               </Card>
 
-              {/* INSTANCE SUMMARY */}
-              <Card title="INSTANCE SUMMARY" className="flex flex-col">
+              {/* Instance Summary */}
+              <Card title="Instance Summary" className="flex flex-col">
                 <div className="mb-4">
                   <div className="text-heading-h3 text-[var(--color-text-default)]">13</div>
                   <div className="text-body-md text-[var(--color-text-subtle)]">Total</div>
@@ -341,8 +343,8 @@ export function ComputeHomePage() {
                 </div>
               </Card>
 
-              {/* BARE METAL SUMMARY */}
-              <Card title="BARE METAL SUMMARY" className="flex flex-col">
+              {/* Bare Metal Summary */}
+              <Card title="Bare Metal Summary" className="flex flex-col">
                 <div className="mb-4">
                   <div className="text-heading-h3 text-[var(--color-text-default)]">8</div>
                   <div className="text-body-md text-[var(--color-text-subtle)]">Total</div>
@@ -362,8 +364,8 @@ export function ComputeHomePage() {
 
             {/* Bottom Row - 2 Cards */}
             <div className="grid grid-cols-[1fr_396px] gap-6">
-              {/* INFRASTRUCTURE QUOTA */}
-              <Card title="INFRASTRUCTURE QUOTA">
+              {/* Infrastructure Quota */}
+              <Card title="Infrastructure Quota">
                 <div className="space-y-4 mt-8">
                   <div className="grid grid-cols-4 gap-4">
                     <InfraQuotaCard
@@ -428,8 +430,8 @@ export function ComputeHomePage() {
                 </div>
               </Card>
 
-              {/* RECENT ACTIVITIES */}
-              <Card title="RECENT ACTIVITIES">
+              {/* Recent Activities */}
+              <Card title="Recent Activities">
                 <div>
                   <ActivityItem
                     name="web-server-01"

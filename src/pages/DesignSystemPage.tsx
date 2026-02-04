@@ -8215,7 +8215,7 @@ outline: 2px solid var(--color-border-focus);`}
                         <Tooltip content="Copy to clipboard">
                           <Button
                             variant="secondary"
-                            icon={<IconCopy size={16} />}
+                            icon={<IconCopy size={12} />}
                             aria-label="Copy"
                           />
                         </Tooltip>
