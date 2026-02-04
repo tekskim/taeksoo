@@ -504,7 +504,7 @@ function TemplateSidebar({ onCancel, sectionStatus }: TemplateSidebarProps) {
 
         {/* Action Buttons */}
         <HStack gap={2}>
-          <Button variant="outline" onClick={onCancel} className="w-[80px]">
+          <Button variant="outline" onClick={onCancel}>
             Cancel
           </Button>
           <Button variant="primary" disabled={!isAllCompleted} className="flex-1">
@@ -1138,7 +1138,6 @@ function ImageSection({
                       options={storageTypeOptions}
                       value={storageType}
                       onChange={onStorageTypeChange}
-                      className="w-[120px]"
                     />
                   </HStack>
                   <HStack gap={1.5} align="center">
@@ -1148,7 +1147,7 @@ function ImageSection({
                       onChange={onStorageSizeChange}
                       min={10}
                       max={1000}
-                      className="w-[80px]"
+                      width="sm"
                     />
                     <span className="text-body-md text-[var(--color-text-default)]">GiB</span>
                   </HStack>
@@ -1892,7 +1891,6 @@ function NetworkSection({
                       options={[{ value: 'network', label: 'network' }]}
                       value={vlan.network}
                       onChange={() => {}}
-                      className="w-[120px]"
                     />
                   </HStack>
                   <HStack gap={1.5} align="center">
@@ -1901,14 +1899,12 @@ function NetworkSection({
                       options={[{ value: 'subnet', label: 'subnet' }]}
                       value={vlan.subnet}
                       onChange={() => {}}
-                      className="w-[120px]"
                     />
                   </HStack>
                   <Select
                     options={[{ value: 'Auto-assign', label: 'Auto-assign' }]}
                     value={vlan.autoAssign}
                     onChange={() => {}}
-                    className="w-[120px]"
                   />
                 </HStack>
                 <button

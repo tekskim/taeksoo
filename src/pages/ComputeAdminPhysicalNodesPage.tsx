@@ -296,7 +296,7 @@ function AreaChartCard({
         <div className="flex items-center gap-2">
           <span className="chartTitle">{title}</span>
           {dropdown && dropdownOptions && onDropdownChange && mode !== 'fullscreen' && (
-            <div className="w-[100px]">
+            <div>
               <Select
                 options={dropdownOptions}
                 value={dropdown}
@@ -702,7 +702,7 @@ export default function ComputeAdminPhysicalNodesPage() {
             breadcrumb={<Breadcrumb items={breadcrumbItems} />}
             actions={
               <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
+                icon={<IconBell size={12} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />

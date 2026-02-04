@@ -260,9 +260,9 @@ export default function SubnetDetailPage() {
             >
               <div className="flex-shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[4px] p-1">
                 {row.attachedTo.type === 'router' ? (
-                  <IconRouter size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
+                  <IconRouter size={16} stroke={1.5} className="text-[var(--color-text-subtle)]" />
                 ) : (
-                  <IconCube size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
+                  <IconCube size={16} stroke={1.5} className="text-[var(--color-text-subtle)]" />
                 )}
               </div>
             </Tooltip>
@@ -368,7 +368,7 @@ export default function SubnetDetailPage() {
             onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
             actions={
               <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
+                icon={<IconBell size={12} stroke={1.5} />}
                 onClick={() => {}}
                 hasNotification
               />

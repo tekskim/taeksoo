@@ -251,12 +251,12 @@ export function ResetPasswordDrawer({
                     <HStack key={index} gap={1.5} align="center">
                       {isMet ? (
                         <IconCheck
-                          size={12}
+                          size={16}
                           stroke={2}
                           className="text-[var(--color-state-success)]"
                         />
                       ) : (
-                        <IconX size={12} stroke={2} className="text-[var(--color-text-muted)]" />
+                        <IconX size={16} stroke={2} className="text-[var(--color-text-muted)]" />
                       )}
                       <span
                         className={`text-body-sm leading-4 ${isMet ? 'text-[var(--color-state-success)]' : 'text-[var(--color-text-muted)]'}`}

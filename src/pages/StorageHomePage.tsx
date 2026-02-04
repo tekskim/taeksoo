@@ -1,243 +1,16 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 import ReactECharts from 'echarts-for-react';
-import { TabBar, TopBar, TopBarAction, Breadcrumb, DatePicker } from '@/design-system';
+import { TabBar, TopBar, TopBarAction, Breadcrumb, MonitoringToolbar } from '@/design-system';
+import type { TimeRangeValue } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
-  IconRefresh,
   IconBell,
   IconDotsCircleHorizontal,
   IconArrowsMaximize,
   IconArrowsMinimize,
 } from '@tabler/icons-react';
 import { DataViewDrawer } from '@/components/DataViewDrawer';
-
-/* ----------------------------------------
-   Time Controls Component (Design system Style)
-   ---------------------------------------- */
-type TimeRange = '30m' | '1h' | '6h' | '12h' | '24h';
-
-const timeOptions: { label: string; value: TimeRange }[] = [
-  { label: '30m', value: '30m' },
-  { label: '1h', value: '1h' },
-  { label: '6h', value: '6h' },
-  { label: '12h', value: '12h' },
-  { label: '24h', value: '24h' },
-];
-
-// Icons for time controls
-const CalendarIcon = () => (
-  <svg
-    width="12"
-    height="12"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-    <line x1="16" y1="2" x2="16" y2="6" />
-    <line x1="8" y1="2" x2="8" y2="6" />
-    <line x1="3" y1="10" x2="21" y2="10" />
-  </svg>
-);
-
-const CloseIcon = () => (
-  <svg
-    width="12"
-    height="12"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <line x1="18" y1="6" x2="6" y2="18" />
-    <line x1="6" y1="6" x2="18" y2="18" />
-  </svg>
-);
-
-// Helper function for date formatting
-const formatDateForDisplay = (date: Date | null) => {
-  if (!date) return '';
-  const year = date.getFullYear();
-  const month = (date.getMonth() + 1).toString().padStart(2, '0');
-  const day = date.getDate().toString().padStart(2, '0');
-  return `${year}.${month}.${day}`;
-};
-
-interface TimeControlsProps {
-  value: TimeRange;
-  onChange: (range: TimeRange) => void;
-  onRefresh?: () => void;
-}
-
-function TimeControls({ value, onChange, onRefresh }: TimeControlsProps) {
-  const [customPeriod, setCustomPeriod] = useState<{ start: Date; end: Date } | null>(null);
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  const [tempStartDate, setTempStartDate] = useState<Date | null>(null);
-  const [tempEndDate, setTempEndDate] = useState<Date | null>(null);
-  const [selectingStart, setSelectingStart] = useState(true);
-  const datePickerRef = useRef<HTMLDivElement>(null);
-
-  // Close date picker when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (datePickerRef.current && !datePickerRef.current.contains(event.target as Node)) {
-        setShowDatePicker(false);
-      }
-    };
-
-    if (showDatePicker) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [showDatePicker]);
-
-  const handleTimeRangeClick = (newValue: TimeRange) => {
-    setCustomPeriod(null);
-    onChange(newValue);
-  };
-
-  const handleCustomPeriodClick = () => {
-    if (customPeriod) {
-      setTempStartDate(customPeriod.start);
-      setTempEndDate(customPeriod.end);
-    } else {
-      const now = new Date();
-      const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-      setTempStartDate(oneWeekAgo);
-      setTempEndDate(now);
-    }
-    setSelectingStart(true);
-    setShowDatePicker(true);
-  };
-
-  const handleApplyCustomPeriod = () => {
-    if (tempStartDate && tempEndDate) {
-      setCustomPeriod({ start: tempStartDate, end: tempEndDate });
-      setShowDatePicker(false);
-    }
-  };
-
-  const handleClearCustomPeriod = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setCustomPeriod(null);
-    onChange('30m');
-  };
-
-  const handlePeriodTextClick = () => {
-    if (customPeriod) {
-      setTempStartDate(customPeriod.start);
-      setTempEndDate(customPeriod.end);
-    }
-    setSelectingStart(true);
-    setShowDatePicker(true);
-  };
-
-  const formatCalendarDate = (date: Date | null) => {
-    if (!date) return '';
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const day = date.getDate().toString().padStart(2, '0');
-    return `${year}.${month}.${day}`;
-  };
-
-  return (
-    <div className="fullScreenTimeControls">
-      {/* Time Range Buttons */}
-      <div className="timeSegments">
-        {timeOptions.map((option) => (
-          <button
-            key={option.value}
-            className={`timeSegment ${value === option.value && !customPeriod ? 'timeSegmentActive' : ''}`}
-            onClick={() => handleTimeRangeClick(option.value)}
-          >
-            {option.label}
-          </button>
-        ))}
-      </div>
-
-      {/* Period Selector */}
-      <div className="datePickerContainer" ref={datePickerRef}>
-        {customPeriod ? (
-          <div className="periodTag">
-            <span className="periodTagText" onClick={handlePeriodTextClick}>
-              {formatDateForDisplay(customPeriod.start)}
-              <span className="periodTagDivider">—</span>
-              {formatDateForDisplay(customPeriod.end)}
-            </span>
-            <button className="periodTagClose" onClick={handleClearCustomPeriod}>
-              <CloseIcon />
-            </button>
-          </div>
-        ) : (
-          <button
-            className={`customPeriodBtn ${showDatePicker ? 'customPeriodBtnActive' : ''}`}
-            onClick={handleCustomPeriodClick}
-          >
-            <CalendarIcon />
-            Period
-          </button>
-        )}
-
-        {/* Calendar Date Picker Dropdown */}
-        {showDatePicker && (
-          <div className="calendarDropdown">
-            {/* Date Range Header */}
-            <div className="calendarHeader">
-              <div
-                className={`calendarDateBox ${selectingStart ? 'calendarDateBoxActive' : ''}`}
-                onClick={() => setSelectingStart(true)}
-              >
-                <span className="calendarDateLabel">START</span>
-                <span className="calendarDateValue">{formatCalendarDate(tempStartDate)}</span>
-              </div>
-              <div className="calendarDateSeparator">~</div>
-              <div
-                className={`calendarDateBox ${!selectingStart ? 'calendarDateBoxActive' : ''}`}
-                onClick={() => setSelectingStart(false)}
-              >
-                <span className="calendarDateLabel">END</span>
-                <span className="calendarDateValue">{formatCalendarDate(tempEndDate)}</span>
-              </div>
-            </div>
-
-            {/* DatePicker from Design system */}
-            <DatePicker
-              mode="range"
-              rangeValue={{ start: tempStartDate, end: tempEndDate }}
-              onRangeChange={(range) => {
-                setTempStartDate(range.start);
-                setTempEndDate(range.end);
-                setSelectingStart(!range.start || !!range.end);
-              }}
-              maxDate={new Date()}
-            />
-
-            {/* Actions */}
-            <div className="calendarActions">
-              <button className="calendarCancel" onClick={() => setShowDatePicker(false)}>
-                Cancel
-              </button>
-              <button className="calendarApply" onClick={handleApplyCustomPeriod}>
-                Apply
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Refresh Button */}
-      <button className="refreshButton" onClick={onRefresh}>
-        <IconRefresh size={14} stroke={1.5} />
-      </button>
-    </div>
-  );
-}
 
 /* ----------------------------------------
    Chart Colors (from design system)
@@ -758,7 +531,7 @@ interface FullScreenChartData {
 
 export function StorageHomePage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [timeRange, setTimeRange] = useState<TimeRange>('30m');
+  const [timeRange, setTimeRange] = useState<TimeRangeValue>('30m');
   const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
 
   // Fullscreen chart state
@@ -886,9 +659,9 @@ export function StorageHomePage() {
                 <h6 className="text-heading-h6 text-[var(--color-text-default)]">
                   CLUSTER UTILIZATION
                 </h6>
-                <TimeControls
-                  value={timeRange}
-                  onChange={setTimeRange}
+                <MonitoringToolbar
+                  timeRange={timeRange}
+                  onTimeRangeChange={setTimeRange}
                   onRefresh={() => console.log('Refresh clicked')}
                 />
               </div>
@@ -997,14 +770,16 @@ export function StorageHomePage() {
       {/* Full Screen Chart Overlay */}
       {fullScreenChart && (
         <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-8">
-          <div className="w-full h-full max-w-[90vw] max-h-[90vh]">
+          <div className="w-full max-w-[90vw] h-[70vh] flex items-center justify-center">
             <LineChart
               title={fullScreenChart.title}
               series={fullScreenChart.series}
               timeLabels={fullScreenChart.timeLabels}
               yAxisFormatter={fullScreenChart.yAxisFormatter}
               isFullScreen={true}
-              timeControls={<TimeControls value={timeRange} onChange={setTimeRange} />}
+              timeControls={
+                <MonitoringToolbar timeRange={timeRange} onTimeRangeChange={setTimeRange} />
+              }
               onExitFullScreen={() => setFullScreenChart(null)}
             />
           </div>

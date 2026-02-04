@@ -42,7 +42,7 @@ export function Breadcrumb({ items, separator, className = '', maxItems = 0 }: B
 
   const defaultSeparator = (
     <IconChevronRight
-      size={16}
+      size={12}
       className="text-[var(--breadcrumb-separator-color)] shrink-0"
       strokeWidth={1.5}
     />

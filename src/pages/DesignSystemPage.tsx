@@ -281,8 +281,6 @@ import {
   IconLayoutSidebarLeftCollapse,
   IconDisc,
   IconStopwatch,
-  IconCheck,
-  IconChevronDown,
 } from '@tabler/icons-react';
 
 // Custom Icons from design-system
@@ -5863,7 +5861,7 @@ outline: 2px solid var(--color-border-focus);`}
                           <SearchInput
                             size="sm"
                             placeholder="Search placeholder"
-                            className="w-[200px]"
+                            className="w-[var(--search-input-width)]"
                           />
                         </VStack>
                         <VStack gap={1}>
@@ -5873,7 +5871,7 @@ outline: 2px solid var(--color-border-focus);`}
                           <SearchInput
                             size="md"
                             placeholder="Search placeholder"
-                            className="w-[200px]"
+                            className="w-[var(--search-input-width)]"
                           />
                         </VStack>
                       </div>
@@ -5887,13 +5885,19 @@ outline: 2px solid var(--color-border-focus);`}
                           <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                             Placeholder
                           </span>
-                          <SearchInput placeholder="Search placeholder" className="w-[200px]" />
+                          <SearchInput
+                            placeholder="Search placeholder"
+                            className="w-[var(--search-input-width)]"
+                          />
                         </VStack>
                         <VStack gap={1}>
                           <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                             Value
                           </span>
-                          <SearchInput defaultValue="Search value" className="w-[200px]" />
+                          <SearchInput
+                            defaultValue="Search value"
+                            className="w-[var(--search-input-width)]"
+                          />
                         </VStack>
                       </div>
                     </VStack>
@@ -5938,7 +5942,7 @@ outline: 2px solid var(--color-border-focus);`}
                       <div className="grid grid-cols-3 gap-x-6 gap-y-4">
                         {/* Row 1: Default, Filter Applied, Multiple Filters */}
                         {/* 1. Default State */}
-                        <VStack gap={1.5}>
+                        <VStack gap={1.5} className="w-[var(--search-input-width)]">
                           <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                             1. Default
                           </span>
@@ -5955,7 +5959,7 @@ outline: 2px solid var(--color-border-focus);`}
                         </VStack>
 
                         {/* 2. Filter Applied */}
-                        <VStack gap={1.5}>
+                        <VStack gap={1.5} className="w-[var(--search-input-width)]">
                           <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                             2. Filter applied
                           </span>
@@ -5980,7 +5984,7 @@ outline: 2px solid var(--color-border-focus);`}
                         </VStack>
 
                         {/* 3. Multiple Filters */}
-                        <VStack gap={1.5}>
+                        <VStack gap={1.5} className="w-[var(--search-input-width)]">
                           <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                             3. Multiple filters
                           </span>
@@ -6009,7 +6013,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                         {/* Row 2: Dropdown states with extra bottom margin */}
                         {/* 4. Filter Dropdown Open */}
-                        <VStack gap={1.5} className="pb-28">
+                        <VStack gap={1.5} className="w-[var(--search-input-width)] pb-28">
                           <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                             4. Filter dropdown
                           </span>
@@ -6044,7 +6048,7 @@ outline: 2px solid var(--color-border-focus);`}
                         </VStack>
 
                         {/* 5. Text Input Mode */}
-                        <VStack gap={1.5} className="pb-28">
+                        <VStack gap={1.5} className="w-[var(--search-input-width)] pb-28">
                           <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                             5. Text filter input
                           </span>
@@ -6069,7 +6073,7 @@ outline: 2px solid var(--color-border-focus);`}
                         </VStack>
 
                         {/* 6. Select Options */}
-                        <VStack gap={1.5} className="pb-28">
+                        <VStack gap={1.5} className="w-[var(--search-input-width)] pb-28">
                           <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                             6. Select options
                           </span>
@@ -9560,7 +9564,7 @@ outline: 2px solid var(--color-border-focus);`}
                                 <div className="flex flex-col">
                                   {/* Launch type - done */}
                                   <div className="flex items-center justify-between py-1">
-                                    <span className="text-[12px] leading-5 text-[var(--color-text-default)]">
+                                    <span className="text-body-md text-[var(--color-text-default)]">
                                       Launch type
                                     </span>
                                     <div className="w-4 h-4 shrink-0 rounded-full bg-[var(--color-state-success)] flex items-center justify-center">
@@ -9569,7 +9573,7 @@ outline: 2px solid var(--color-border-focus);`}
                                   </div>
                                   {/* Basic information - done */}
                                   <div className="flex items-center justify-between py-1">
-                                    <span className="text-[12px] leading-5 text-[var(--color-text-default)]">
+                                    <span className="text-body-md text-[var(--color-text-default)]">
                                       Basic information
                                     </span>
                                     <div className="w-4 h-4 shrink-0 rounded-full bg-[var(--color-state-success)] flex items-center justify-center">
@@ -9578,7 +9582,7 @@ outline: 2px solid var(--color-border-focus);`}
                                   </div>
                                   {/* Source - done */}
                                   <div className="flex items-center justify-between py-1">
-                                    <span className="text-[12px] leading-5 text-[var(--color-text-default)]">
+                                    <span className="text-body-md text-[var(--color-text-default)]">
                                       Source
                                     </span>
                                     <div className="w-4 h-4 shrink-0 rounded-full bg-[var(--color-state-success)] flex items-center justify-center">
@@ -9587,7 +9591,7 @@ outline: 2px solid var(--color-border-focus);`}
                                   </div>
                                   {/* Flavor - active */}
                                   <div className="flex items-center justify-between py-1">
-                                    <span className="text-[12px] leading-5 text-[var(--color-text-default)]">
+                                    <span className="text-body-md text-[var(--color-text-default)]">
                                       Flavor
                                     </span>
                                     <div className="w-4 h-4 shrink-0">
@@ -9600,21 +9604,21 @@ outline: 2px solid var(--color-border-focus);`}
                                   </div>
                                   {/* Network - pre */}
                                   <div className="flex items-center justify-between py-1">
-                                    <span className="text-[12px] leading-5 text-[var(--color-text-default)]">
+                                    <span className="text-body-md text-[var(--color-text-default)]">
                                       Network
                                     </span>
                                     <div className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)]" />
                                   </div>
                                   {/* Authentication - pre */}
                                   <div className="flex items-center justify-between py-1">
-                                    <span className="text-[12px] leading-5 text-[var(--color-text-default)]">
+                                    <span className="text-body-md text-[var(--color-text-default)]">
                                       Authentication
                                     </span>
                                     <div className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)]" />
                                   </div>
                                   {/* Advanced - pre */}
                                   <div className="flex items-center justify-between py-1">
-                                    <span className="text-[12px] leading-5 text-[var(--color-text-default)]">
+                                    <span className="text-body-md text-[var(--color-text-default)]">
                                       Advanced
                                     </span>
                                     <div className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)]" />

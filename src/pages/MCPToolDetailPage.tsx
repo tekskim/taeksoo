@@ -110,7 +110,7 @@ function MCPToolHeader({
             variant="secondary"
             size="sm"
             leftIcon={
-              status === 'active' ? <IconPlayerPause size={12} /> : <IconPlayerPlay size={12} />
+              status === 'active' ? <IconPlayerPause size={16} /> : <IconPlayerPlay size={16} />
             }
             onClick={onDeactivate}
           >

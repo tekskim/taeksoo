@@ -443,7 +443,7 @@ export default function RouterDetailPage() {
               {row.name}
             </Link>
             <IconExternalLink
-              size={12}
+              size={16}
               className="flex-shrink-0 text-[var(--color-action-primary)]"
             />
           </div>
@@ -581,7 +581,7 @@ export default function RouterDetailPage() {
             breadcrumb={<Breadcrumb items={breadcrumbItems} />}
             actions={
               <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
+                icon={<IconBell size={12} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />
@@ -615,7 +615,7 @@ export default function RouterDetailPage() {
                     ]}
                     trigger="click"
                   >
-                    <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
+                    <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={16} />}>
                       More Actions
                     </Button>
                   </ContextMenu>
@@ -703,7 +703,7 @@ export default function RouterDetailPage() {
                                 >
                                   {router.network.name}
                                   <IconExternalLink
-                                    size={12}
+                                    size={16}
                                     className="text-[var(--color-action-primary)]"
                                   />
                                 </Link>
@@ -723,7 +723,7 @@ export default function RouterDetailPage() {
                                 >
                                   {router.subnet.name}
                                   <IconExternalLink
-                                    size={12}
+                                    size={16}
                                     className="text-[var(--color-action-primary)]"
                                   />
                                 </Link>

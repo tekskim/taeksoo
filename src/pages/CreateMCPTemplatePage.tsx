@@ -342,7 +342,7 @@ export function CreateMCPTemplatePage() {
                           </VStack>
 
                           {/* Category */}
-                          <div className="w-[289px]">
+                          <div>
                             <Select
                               label="Category"
                               value={category}
@@ -360,7 +360,7 @@ export function CreateMCPTemplatePage() {
                           </div>
 
                           {/* Auth type */}
-                          <div className="w-[289px]">
+                          <div>
                             <Select
                               label="Auth type"
                               value={authType}
@@ -471,7 +471,13 @@ export function CreateMCPTemplatePage() {
                               <label className="text-label-lg text-[var(--color-text-default)]">
                                 Port
                               </label>
-                              <NumberInput value={port} onChange={setPort} min={1} max={65535} />
+                              <NumberInput
+                                value={port}
+                                onChange={setPort}
+                                min={1}
+                                max={65535}
+                                width="sm"
+                              />
                               <p className="text-body-sm text-[var(--color-text-subtle)]">
                                 The port on which the container listens for incoming requests.
                               </p>
@@ -518,7 +524,7 @@ export function CreateMCPTemplatePage() {
                             </div>
 
                             {/* Transport type */}
-                            <div className="w-[289px]">
+                            <div>
                               <Select
                                 label="Transport type"
                                 value={containerTransportType}
@@ -538,7 +544,7 @@ export function CreateMCPTemplatePage() {
                             </div>
 
                             {/* Destination Namespace */}
-                            <div className="w-[289px]">
+                            <div>
                               <Select
                                 label="Destination Namespace"
                                 value={destinationNamespace}
@@ -584,7 +590,7 @@ export function CreateMCPTemplatePage() {
                             />
 
                             {/* Transport type */}
-                            <div className="w-[289px]">
+                            <div>
                               <Select
                                 label="Transport type"
                                 value={httpTransportType}

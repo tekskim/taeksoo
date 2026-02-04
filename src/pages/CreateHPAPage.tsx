@@ -213,7 +213,7 @@ function SummarySidebar({
 
         {/* Action Buttons */}
         <HStack gap={2}>
-          <Button variant="secondary" onClick={onCancel} className="w-[80px]">
+          <Button variant="secondary" onClick={onCancel}>
             Cancel
           </Button>
           <Button variant="primary" onClick={onSubmit} className="flex-1">
@@ -464,7 +464,7 @@ export default function CreateHPAPage() {
                       <VStack gap={6}>
                         {/* Namespace */}
                         <VStack gap={2}>
-                          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                          <label className="text-label-lg text-[var(--color-text-default)]">
                             Namespace <span className="text-[var(--color-state-danger)]">*</span>
                           </label>
                           <Select
@@ -477,7 +477,7 @@ export default function CreateHPAPage() {
 
                         {/* Name */}
                         <VStack gap={2}>
-                          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                          <label className="text-label-lg text-[var(--color-text-default)]">
                             Name <span className="text-[var(--color-state-danger)]">*</span>
                           </label>
                           <Input
@@ -492,7 +492,7 @@ export default function CreateHPAPage() {
                         <VStack gap={2}>
                           <Disclosure defaultOpen={showDescription}>
                             <Disclosure.Trigger className="flex items-center gap-1.5">
-                              <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                              <span className="text-label-lg text-[var(--color-text-default)]">
                                 Description
                               </span>
                             </Disclosure.Trigger>
@@ -517,22 +517,24 @@ export default function CreateHPAPage() {
                       <VStack gap={6}>
                         {/* Target Reference */}
                         <VStack gap={2}>
-                          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                          <label className="text-label-lg text-[var(--color-text-default)]">
                             Target Reference{' '}
                             <span className="text-[var(--color-state-danger)]">*</span>
                           </label>
-                          <Select
-                            options={TARGET_REFERENCE_OPTIONS}
-                            value={targetReference}
-                            onChange={setTargetReference}
-                            fullWidth
-                          />
+                          <div className="w-[240px]">
+                            <Select
+                              options={TARGET_REFERENCE_OPTIONS}
+                              value={targetReference}
+                              onChange={setTargetReference}
+                              fullWidth
+                            />
+                          </div>
                         </VStack>
 
                         {/* Min/Max Replicas */}
-                        <HStack gap={3} className="w-full">
-                          <VStack gap={2} className="flex-1">
-                            <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                        <VStack gap={6}>
+                          <VStack gap={2}>
+                            <label className="text-label-lg text-[var(--color-text-default)]">
                               Minimum Replicas{' '}
                               <span className="text-[var(--color-state-danger)]">*</span>
                             </label>
@@ -540,11 +542,11 @@ export default function CreateHPAPage() {
                               value={minReplicas}
                               onChange={setMinReplicas}
                               min={1}
-                              fullWidth
+                              width="sm"
                             />
                           </VStack>
-                          <VStack gap={2} className="flex-1">
-                            <label className="text-[11px] font-medium text-[var(--color-text-default)] leading-4">
+                          <VStack gap={2}>
+                            <label className="text-label-lg text-[var(--color-text-default)]">
                               Maximum Replicas{' '}
                               <span className="text-[var(--color-state-danger)]">*</span>
                             </label>
@@ -552,10 +554,10 @@ export default function CreateHPAPage() {
                               value={maxReplicas}
                               onChange={setMaxReplicas}
                               min={1}
-                              fullWidth
+                              width="sm"
                             />
                           </VStack>
-                        </HStack>
+                        </VStack>
                       </VStack>
                     </SectionCard.Content>
                   </SectionCard>
@@ -567,7 +569,7 @@ export default function CreateHPAPage() {
                       <VStack gap={6}>
                         {/* Scale down behavior */}
                         <VStack gap={3}>
-                          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                          <label className="text-label-lg text-[var(--color-text-default)]">
                             Scale down behavior
                           </label>
                           <Checkbox
@@ -579,7 +581,7 @@ export default function CreateHPAPage() {
 
                         {/* Scale up behavior */}
                         <VStack gap={3}>
-                          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                          <label className="text-label-lg text-[var(--color-text-default)]">
                             Scale up behavior
                           </label>
                           <Checkbox
@@ -628,7 +630,7 @@ export default function CreateHPAPage() {
                                   className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                 >
                                   <IconX
-                                    size={12}
+                                    size={16}
                                     className="text-[var(--color-text-muted)]"
                                     stroke={1.5}
                                   />
@@ -637,21 +639,23 @@ export default function CreateHPAPage() {
 
                               {/* Source */}
                               <VStack gap={2}>
-                                <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                                <label className="text-label-lg text-[var(--color-text-default)]">
                                   Source
                                 </label>
-                                <Select
-                                  options={METRIC_SOURCE_OPTIONS}
-                                  value={metric.source}
-                                  onChange={(value) => updateMetric(metric.id, 'source', value)}
-                                  fullWidth
-                                />
+                                <div className="w-[80px]">
+                                  <Select
+                                    options={METRIC_SOURCE_OPTIONS}
+                                    value={metric.source}
+                                    onChange={(value) => updateMetric(metric.id, 'source', value)}
+                                    fullWidth
+                                  />
+                                </div>
                               </VStack>
 
                               {/* Resource Name (for Resource source) */}
                               {metric.source === 'Resource' && (
                                 <VStack gap={2}>
-                                  <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                                  <label className="text-label-lg text-[var(--color-text-default)]">
                                     Resource Name
                                   </label>
                                   <Select
@@ -668,7 +672,7 @@ export default function CreateHPAPage() {
                               {/* Type and Quantity */}
                               <HStack gap={3} className="w-full">
                                 <VStack gap={2} className="flex-1">
-                                  <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                                  <label className="text-label-lg text-[var(--color-text-default)]">
                                     Type
                                   </label>
                                   <Select
@@ -679,7 +683,7 @@ export default function CreateHPAPage() {
                                   />
                                 </VStack>
                                 <VStack gap={2} className="flex-1">
-                                  <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                                  <label className="text-label-lg text-[var(--color-text-default)]">
                                     Quantity{' '}
                                     <span className="text-[var(--color-state-danger)]">*</span>
                                   </label>
@@ -708,7 +712,7 @@ export default function CreateHPAPage() {
                               {metric.source === 'External' && (
                                 <>
                                   <VStack gap={2}>
-                                    <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                                    <label className="text-label-lg text-[var(--color-text-default)]">
                                       Metric Name{' '}
                                       <span className="text-[var(--color-state-danger)]">*</span>
                                     </label>
@@ -724,84 +728,81 @@ export default function CreateHPAPage() {
 
                                   {/* Metric Selector */}
                                   <VStack gap={2}>
-                                    <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                                    <label className="text-label-lg text-[var(--color-text-default)]">
                                       Metric Selector
                                     </label>
                                     <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
                                       <VStack gap={2}>
+                                        {metric.selectors.length > 0 && (
+                                          <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
+                                            <label className="text-label-lg text-[var(--color-text-default)]">
+                                              Key
+                                            </label>
+                                            <label className="text-label-lg text-[var(--color-text-default)]">
+                                              Operator
+                                            </label>
+                                            <label className="text-label-lg text-[var(--color-text-default)]">
+                                              Value
+                                            </label>
+                                            <div />
+                                          </div>
+                                        )}
                                         {metric.selectors.map((selector) => (
                                           <div
                                             key={selector.id}
-                                            className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                                            className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
                                           >
-                                            <div className="grid grid-cols-[1fr_1fr_1fr_16px] gap-2 w-full items-start">
-                                              <VStack gap={2}>
-                                                <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                                  Key
-                                                </label>
-                                                <Input
-                                                  placeholder="Input Key"
-                                                  value={selector.key}
-                                                  onChange={(e) =>
-                                                    updateMetricSelector(
-                                                      metric.id,
-                                                      selector.id,
-                                                      'key',
-                                                      e.target.value
-                                                    )
-                                                  }
-                                                  fullWidth
-                                                />
-                                              </VStack>
-                                              <VStack gap={2}>
-                                                <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                                  Operator
-                                                </label>
-                                                <Select
-                                                  options={OPERATOR_OPTIONS}
-                                                  value={selector.operator}
-                                                  onChange={(value) =>
-                                                    updateMetricSelector(
-                                                      metric.id,
-                                                      selector.id,
-                                                      'operator',
-                                                      value
-                                                    )
-                                                  }
-                                                  fullWidth
-                                                />
-                                              </VStack>
-                                              <VStack gap={2}>
-                                                <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
-                                                  Value
-                                                </label>
-                                                <Input
-                                                  placeholder="input value"
-                                                  value={selector.value}
-                                                  onChange={(e) =>
-                                                    updateMetricSelector(
-                                                      metric.id,
-                                                      selector.id,
-                                                      'value',
-                                                      e.target.value
-                                                    )
-                                                  }
-                                                  fullWidth
-                                                />
-                                              </VStack>
-                                              <button
-                                                onClick={() =>
-                                                  removeMetricSelector(metric.id, selector.id)
-                                                }
-                                                className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                              >
-                                                <IconX
-                                                  size={12}
-                                                  className="text-[var(--color-text-muted)]"
-                                                  stroke={1.5}
-                                                />
-                                              </button>
-                                            </div>
+                                            <Input
+                                              placeholder="Input Key"
+                                              value={selector.key}
+                                              onChange={(e) =>
+                                                updateMetricSelector(
+                                                  metric.id,
+                                                  selector.id,
+                                                  'key',
+                                                  e.target.value
+                                                )
+                                              }
+                                              fullWidth
+                                            />
+                                            <Select
+                                              options={OPERATOR_OPTIONS}
+                                              value={selector.operator}
+                                              onChange={(value) =>
+                                                updateMetricSelector(
+                                                  metric.id,
+                                                  selector.id,
+                                                  'operator',
+                                                  value
+                                                )
+                                              }
+                                              fullWidth
+                                            />
+                                            <Input
+                                              placeholder="input value"
+                                              value={selector.value}
+                                              onChange={(e) =>
+                                                updateMetricSelector(
+                                                  metric.id,
+                                                  selector.id,
+                                                  'value',
+                                                  e.target.value
+                                                )
+                                              }
+                                              fullWidth
+                                            />
+                                            <button
+                                              onClick={() =>
+                                                removeMetricSelector(metric.id, selector.id)
+                                              }
+                                              className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                            >
+                                              <IconX
+                                                size={16}
+                                                className="text-[var(--color-text-muted)]"
+                                                stroke={1.5}
+                                              />
+                                            </button>
                                           </div>
                                         ))}
                                         <div className="w-fit">
@@ -846,7 +847,7 @@ export default function CreateHPAPage() {
                         {/* Labels */}
                         <VStack gap={3}>
                           <VStack gap={1}>
-                            <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                            <label className="text-label-lg text-[var(--color-text-default)]">
                               Labels
                             </label>
                             <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
@@ -893,7 +894,7 @@ export default function CreateHPAPage() {
                                         className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                       >
                                         <IconX
-                                          size={12}
+                                          size={16}
                                           className="text-[var(--color-text-muted)]"
                                           stroke={1.5}
                                         />
@@ -919,7 +920,7 @@ export default function CreateHPAPage() {
                         {/* Annotations */}
                         <VStack gap={3}>
                           <VStack gap={1}>
-                            <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                            <label className="text-label-lg text-[var(--color-text-default)]">
                               Annotations
                             </label>
                             <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
@@ -967,7 +968,7 @@ export default function CreateHPAPage() {
                                         className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                       >
                                         <IconX
-                                          size={12}
+                                          size={16}
                                           className="text-[var(--color-text-muted)]"
                                           stroke={1.5}
                                         />

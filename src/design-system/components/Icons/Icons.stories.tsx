@@ -58,7 +58,7 @@ export const AllIcons: Story = {
         <p className="text-body-md text-[var(--color-text-muted)] mb-8">
           사용법:{' '}
           <code className="bg-[var(--color-surface-subtle)] px-2 py-1 rounded">
-            {'<Icons.ChevronDown size={16} />'}
+            {'<Icons.ChevronDown size={12} />'}
           </code>
         </p>
         <div className="grid grid-cols-8 gap-3">
@@ -240,7 +240,7 @@ export const UsageExample: Story = {
       <div>
         <h3 className="text-label-md text-[var(--color-text-muted)] mb-3">In Button</h3>
         <button className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-action-primary)] text-white rounded-md">
-          <Icons.Add size={16} stroke={2} />
+          <Icons.Add size={12} stroke={2} />
           <span>Create New</span>
         </button>
       </div>
@@ -250,13 +250,13 @@ export const UsageExample: Story = {
         <h3 className="text-label-md text-[var(--color-text-muted)] mb-3">Status Indicators</h3>
         <div className="flex items-center gap-4">
           <span className="inline-flex items-center gap-1 text-[var(--color-state-success)]">
-            <Icons.CheckCircle size={16} /> Active
+            <Icons.CheckCircle size={12} /> Active
           </span>
           <span className="inline-flex items-center gap-1 text-[var(--color-state-warning)]">
-            <Icons.Warning size={16} /> Warning
+            <Icons.Warning size={12} /> Warning
           </span>
           <span className="inline-flex items-center gap-1 text-[var(--color-state-danger)]">
-            <Icons.Error size={16} /> Error
+            <Icons.Error size={12} /> Error
           </span>
         </div>
       </div>
@@ -265,10 +265,10 @@ export const UsageExample: Story = {
       <div>
         <h3 className="text-label-md text-[var(--color-text-muted)] mb-3">Navigation</h3>
         <div className="flex items-center gap-2 text-[var(--color-text-muted)]">
-          <Icons.Home size={16} />
-          <Icons.ChevronRight size={16} />
+          <Icons.Home size={12} />
+          <Icons.ChevronRight size={12} />
           <span>Settings</span>
-          <Icons.ChevronRight size={16} />
+          <Icons.ChevronRight size={12} />
           <span className="text-[var(--color-text-default)]">Profile</span>
         </div>
       </div>

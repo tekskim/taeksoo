@@ -273,7 +273,7 @@ export function ComputeAdminHostAggregatesPage() {
             }
             actions={
               <TopBarAction
-                icon={<IconBell size={16} stroke={1} />}
+                icon={<IconBell size={12} stroke={1} />}
                 aria-label="Notifications"
                 badge={true}
               />
@@ -314,7 +314,8 @@ export function ComputeAdminHostAggregatesPage() {
                       appliedFilters={appliedFilters}
                       onFiltersChange={setAppliedFilters}
                       placeholder="Search host aggregates by attributes"
-                      className="w-[280px]"
+                      size="sm"
+                      className="w-[var(--search-input-width)]"
                     />
                     <Button
                       variant="secondary"
@@ -376,13 +377,13 @@ export function ComputeAdminHostAggregatesPage() {
                               >
                                 {isExpanded ? (
                                   <IconChevronDown
-                                    size={12}
+                                    size={16}
                                     stroke={1.5}
                                     className="text-[var(--color-text-default)]"
                                   />
                                 ) : (
                                   <IconChevronRight
-                                    size={12}
+                                    size={16}
                                     stroke={1.5}
                                     className="text-[var(--color-text-default)]"
                                   />
@@ -490,7 +491,8 @@ export function ComputeAdminHostAggregatesPage() {
                       appliedFilters={azAppliedFilters}
                       onFiltersChange={setAzAppliedFilters}
                       placeholder="Search availability zones by attributes"
-                      className="w-[280px]"
+                      size="sm"
+                      className="w-[var(--search-input-width)]"
                     />
                     <Button
                       variant="secondary"
@@ -517,7 +519,7 @@ export function ComputeAdminHostAggregatesPage() {
                       <div className="flex items-center gap-1.5 px-3 py-2 text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] min-w-0 overflow-hidden flex-1">
                         <span>Name</span>
                         <IconChevronDown
-                          size={12}
+                          size={16}
                           stroke={1.5}
                           className="text-[var(--color-text-default)]"
                         />

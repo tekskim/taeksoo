@@ -287,7 +287,7 @@ export default function PoolDetailPage() {
             }}
             className="text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] transition-colors"
           >
-            <IconCopy size={12} stroke={1.5} className="text-[var(--color-action-primary)]" />
+            <IconCopy size={16} stroke={1.5} className="text-[var(--color-action-primary)]" />
           </button>
         </div>
       ),
@@ -305,7 +305,7 @@ export default function PoolDetailPage() {
             onClick={(e) => e.stopPropagation()}
           >
             {row.source.name}
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+            <IconExternalLink size={16} className="text-[var(--color-action-primary)]" />
           </Link>
           <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.source.id}</span>
         </div>
@@ -411,7 +411,7 @@ export default function PoolDetailPage() {
             onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
             actions={
               <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
+                icon={<IconBell size={12} stroke={1.5} />}
                 onClick={() => {}}
                 hasNotification
               />
@@ -459,7 +459,7 @@ export default function PoolDetailPage() {
                     ]}
                     trigger="click"
                   >
-                    <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
+                    <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={16} />}>
                       More Actions
                     </Button>
                   </ContextMenu>

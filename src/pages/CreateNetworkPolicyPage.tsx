@@ -198,7 +198,6 @@ function SummarySidebar({
           <Button
             variant="secondary"
             size="sm"
-            className="w-[80px]"
             onClick={() => navigate('/container/network-policies')}
           >
             Cancel
@@ -217,7 +216,6 @@ function SummarySidebar({
    ---------------------------------------- */
 interface TrafficRulesSectionProps {
   title: string;
-  description: string;
   checkboxLabel: string;
   enabled: boolean;
   onEnabledChange: (enabled: boolean) => void;
@@ -227,7 +225,6 @@ interface TrafficRulesSectionProps {
 
 function TrafficRulesSection({
   title,
-  description,
   checkboxLabel,
   enabled,
   onEnabledChange,
@@ -332,14 +329,11 @@ function TrafficRulesSection({
       <SectionCard.Content>
         <VStack gap={6}>
           {/* Enable checkbox */}
-          <VStack gap={2}>
-            <Checkbox
-              checked={enabled}
-              onChange={(e) => onEnabledChange(e.target.checked)}
-              label={checkboxLabel}
-            />
-            <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">{description}</p>
-          </VStack>
+          <Checkbox
+            checked={enabled}
+            onChange={(e) => onEnabledChange(e.target.checked)}
+            label={checkboxLabel}
+          />
 
           {/* Rules content - only show when enabled */}
           {enabled && (
@@ -370,7 +364,7 @@ function TrafficRulesSection({
                             className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                           >
                             <IconX
-                              size={12}
+                              size={16}
                               className="text-[var(--color-text-muted)]"
                               stroke={1.5}
                             />
@@ -382,7 +376,7 @@ function TrafficRulesSection({
                       onClick={addRule}
                       className="flex items-center gap-1 px-3 py-2 text-[12px] text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] bg-[var(--color-surface-subtle)]"
                     >
-                      <IconCirclePlus size={12} stroke={1.5} />
+                      <IconCirclePlus size={16} stroke={1.5} />
                       Add Rule
                     </button>
                   </div>
@@ -401,12 +395,12 @@ function TrafficRulesSection({
                             <VStack gap={2}>
                               {activeRule.targets.length > 0 && (
                                 <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                                  <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                  <span className="block text-label-lg text-[var(--color-text-default)]">
                                     Rule type
-                                  </label>
-                                  <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                  </span>
+                                  <span className="block text-label-lg text-[var(--color-text-default)]">
                                     CIDR
-                                  </label>
+                                  </span>
                                   <div />
                                 </div>
                               )}
@@ -435,7 +429,7 @@ function TrafficRulesSection({
                                     className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                   >
                                     <IconX
-                                      size={12}
+                                      size={16}
                                       className="text-[var(--color-text-muted)]"
                                       stroke={1.5}
                                     />
@@ -467,12 +461,12 @@ function TrafficRulesSection({
                             <VStack gap={2}>
                               {activeRule.allowedPorts.length > 0 && (
                                 <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                                  <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                  <span className="block text-label-lg text-[var(--color-text-default)]">
                                     Port
-                                  </label>
-                                  <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                  </span>
+                                  <span className="block text-label-lg text-[var(--color-text-default)]">
                                     Protocol
-                                  </label>
+                                  </span>
                                   <div />
                                 </div>
                               )}
@@ -503,7 +497,7 @@ function TrafficRulesSection({
                                     className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                   >
                                     <IconX
-                                      size={12}
+                                      size={16}
                                       className="text-[var(--color-text-muted)]"
                                       stroke={1.5}
                                     />
@@ -757,7 +751,6 @@ export function CreateNetworkPolicyPage() {
                   {/* Ingress Rules Section */}
                   <TrafficRulesSection
                     title="Ingress Rules"
-                    description="If this box is not checked, all ingress traffic will be allowed to all pods."
                     checkboxLabel="Configure ingress rules to restrict incoming traffic"
                     enabled={ingressEnabled}
                     onEnabledChange={setIngressEnabled}
@@ -768,7 +761,6 @@ export function CreateNetworkPolicyPage() {
                   {/* Egress Rules Section */}
                   <TrafficRulesSection
                     title="Egress Rules"
-                    description="If this box is not checked, all egress traffic will be allowed from all pods."
                     checkboxLabel="Configure egress rules to restrict outgoing traffic"
                     enabled={egressEnabled}
                     onEnabledChange={setEgressEnabled}
@@ -790,15 +782,15 @@ export function CreateNetworkPolicyPage() {
                           <VStack gap={2}>
                             {selectorRules.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
-                                <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                <span className="block text-label-lg text-[var(--color-text-default)]">
                                   Key
-                                </label>
-                                <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                </span>
+                                <span className="block text-label-lg text-[var(--color-text-default)]">
                                   Operator
-                                </label>
-                                <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                </span>
+                                <span className="block text-label-lg text-[var(--color-text-default)]">
                                   Value
-                                </label>
+                                </span>
                                 <div />
                               </div>
                             )}
@@ -837,7 +829,7 @@ export function CreateNetworkPolicyPage() {
                                   className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                 >
                                   <IconX
-                                    size={12}
+                                    size={16}
                                     className="text-[var(--color-text-muted)]"
                                     stroke={1.5}
                                   />
@@ -869,7 +861,7 @@ export function CreateNetworkPolicyPage() {
                                 key: 'name',
                                 label: 'Name',
                                 render: (value) => (
-                                  <span className="text-[var(--color-action-primary)]">
+                                  <span className="font-medium text-[var(--color-action-primary)]">
                                     {value}
                                   </span>
                                 ),
@@ -907,12 +899,12 @@ export function CreateNetworkPolicyPage() {
                             <VStack gap={2}>
                               {labels.length > 0 && (
                                 <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                                  <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                  <span className="block text-label-lg text-[var(--color-text-default)]">
                                     Key
-                                  </label>
-                                  <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                  </span>
+                                  <span className="block text-label-lg text-[var(--color-text-default)]">
                                     Value
-                                  </label>
+                                  </span>
                                   <div />
                                 </div>
                               )}
@@ -938,7 +930,7 @@ export function CreateNetworkPolicyPage() {
                                     className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                   >
                                     <IconX
-                                      size={12}
+                                      size={16}
                                       className="text-[var(--color-text-muted)]"
                                       stroke={1.5}
                                     />
@@ -975,12 +967,12 @@ export function CreateNetworkPolicyPage() {
                             <VStack gap={2}>
                               {annotations.length > 0 && (
                                 <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                                  <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                  <span className="block text-label-lg text-[var(--color-text-default)]">
                                     Key
-                                  </label>
-                                  <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                  </span>
+                                  <span className="block text-label-lg text-[var(--color-text-default)]">
                                     Value
-                                  </label>
+                                  </span>
                                   <div />
                                 </div>
                               )}
@@ -1010,7 +1002,7 @@ export function CreateNetworkPolicyPage() {
                                     className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                   >
                                     <IconX
-                                      size={12}
+                                      size={16}
                                       className="text-[var(--color-text-muted)]"
                                       stroke={1.5}
                                     />

@@ -201,7 +201,7 @@ export const Variants: Story = {
   render: () => (
     <div className="flex flex-col gap-4">
       <Input variant="default" placeholder="Default variant" />
-      <Input variant="search" placeholder="Search variant" leftElement={<IconSearch size={16} />} />
+      <Input variant="search" placeholder="Search variant" leftElement={<IconSearch size={12} />} />
       <Input variant="code" placeholder="Code variant" />
     </div>
   ),
@@ -210,22 +210,22 @@ export const Variants: Story = {
 // With Icons
 export const WithLeftIcon: Story = {
   args: {
-    leftElement: <IconMail size={16} />,
+    leftElement: <IconMail size={12} />,
     placeholder: 'Enter email',
   },
 };
 
 export const WithRightIcon: Story = {
   args: {
-    rightElement: <IconSearch size={16} />,
+    rightElement: <IconSearch size={12} />,
     placeholder: 'Search...',
   },
 };
 
 export const WithBothIcons: Story = {
   args: {
-    leftElement: <IconLock size={16} />,
-    rightElement: <IconEye size={16} />,
+    leftElement: <IconLock size={12} />,
+    rightElement: <IconEye size={12} />,
     type: 'password',
     placeholder: 'Enter password',
   },
@@ -241,14 +241,14 @@ export const PasswordToggle: Story = {
         label="Password"
         type={showPassword ? 'text' : 'password'}
         placeholder="Enter password"
-        leftElement={<IconLock size={16} />}
+        leftElement={<IconLock size={12} />}
         rightElement={
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
             className="hover:text-[var(--color-text-default)]"
           >
-            {showPassword ? <IconEyeOff size={16} /> : <IconEye size={16} />}
+            {showPassword ? <IconEyeOff size={12} /> : <IconEye size={12} />}
           </button>
         }
       />
@@ -298,7 +298,7 @@ export const FormExample: Story = {
         label="Email"
         type="email"
         placeholder="john@example.com"
-        leftElement={<IconMail size={16} />}
+        leftElement={<IconMail size={12} />}
         required
         fullWidth
       />
@@ -306,7 +306,7 @@ export const FormExample: Story = {
         label="Password"
         type="password"
         placeholder="Enter password"
-        leftElement={<IconLock size={16} />}
+        leftElement={<IconLock size={12} />}
         helperText="Must be at least 8 characters"
         required
         fullWidth

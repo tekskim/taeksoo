@@ -355,7 +355,7 @@ export function EditNodeConfigPage() {
                       <VStack gap={4}>
                         {/* Node Name (Read-only) */}
                         <VStack gap={2}>
-                          <label className="text-[14px] font-medium text-[var(--color-text-default)]">
+                          <label className="text-label-lg text-[var(--color-text-default)]">
                             Node Name<span className="text-[var(--color-state-danger)]"> *</span>
                           </label>
                           <Input
@@ -393,13 +393,13 @@ export function EditNodeConfigPage() {
                           <VStack gap={2}>
                             {taints.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
-                                <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                <span className="block text-label-lg text-[var(--color-text-default)]">
                                   Key
                                 </span>
-                                <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                <span className="block text-label-lg text-[var(--color-text-default)]">
                                   Value
                                 </span>
-                                <span className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                <span className="block text-label-lg text-[var(--color-text-default)]">
                                   Effect
                                 </span>
                                 <div />
@@ -434,7 +434,7 @@ export function EditNodeConfigPage() {
                                   className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                 >
                                   <IconX
-                                    size={12}
+                                    size={16}
                                     className="text-[var(--color-text-muted)]"
                                     stroke={1.5}
                                   />
@@ -465,7 +465,7 @@ export function EditNodeConfigPage() {
                         {/* Labels */}
                         <VStack gap={3}>
                           <VStack gap={1.5}>
-                            <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                            <span className="text-label-lg text-[var(--color-text-default)]">
                               Labels
                             </span>
                             <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
@@ -477,12 +477,12 @@ export function EditNodeConfigPage() {
                             <VStack gap={3}>
                               {labels.length > 0 && (
                                 <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                                  <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                  <span className="block text-label-lg text-[var(--color-text-default)]">
                                     Key
-                                  </label>
-                                  <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                  </span>
+                                  <span className="block text-label-lg text-[var(--color-text-default)]">
                                     Value
-                                  </label>
+                                  </span>
                                   <div />
                                 </div>
                               )}
@@ -508,7 +508,7 @@ export function EditNodeConfigPage() {
                                     className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                   >
                                     <IconX
-                                      size={12}
+                                      size={16}
                                       className="text-[var(--color-text-muted)]"
                                       stroke={1.5}
                                     />
@@ -532,7 +532,7 @@ export function EditNodeConfigPage() {
                         {/* Annotations */}
                         <VStack gap={3}>
                           <VStack gap={1.5}>
-                            <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                            <span className="text-label-lg text-[var(--color-text-default)]">
                               Annotations
                             </span>
                             <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
@@ -544,12 +544,12 @@ export function EditNodeConfigPage() {
                             <VStack gap={3}>
                               {annotations.length > 0 && (
                                 <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                                  <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                  <span className="block text-label-lg text-[var(--color-text-default)]">
                                     Key
-                                  </label>
-                                  <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                  </span>
+                                  <span className="block text-label-lg text-[var(--color-text-default)]">
                                     Value
-                                  </label>
+                                  </span>
                                   <div />
                                 </div>
                               )}
@@ -577,7 +577,7 @@ export function EditNodeConfigPage() {
                                     className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                   >
                                     <IconX
-                                      size={12}
+                                      size={16}
                                       className="text-[var(--color-text-muted)]"
                                       stroke={1.5}
                                     />

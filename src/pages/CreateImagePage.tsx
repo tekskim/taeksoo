@@ -232,7 +232,7 @@ export function CreateImagePage() {
             breadcrumb={<Breadcrumb items={breadcrumbItems} />}
             actions={
               <TopBarAction
-                icon={<IconBell size={16} />}
+                icon={<IconBell size={12} />}
                 onClick={() => console.log('Notifications clicked')}
                 ariaLabel="Notifications"
                 showBadge
@@ -588,7 +588,7 @@ export function CreateImagePage() {
                                       onChange={setMinDisk}
                                       min={0}
                                       max={500}
-                                      className="w-[80px]"
+                                      width="sm"
                                     />
                                     <span className="text-body-md text-[var(--color-text-default)]">
                                       GiB
@@ -614,7 +614,7 @@ export function CreateImagePage() {
                                       onChange={setMinRam}
                                       min={0}
                                       max={500}
-                                      className="w-[80px]"
+                                      width="sm"
                                     />
                                     <span className="text-body-md text-[var(--color-text-default)]">
                                       GiB

@@ -155,7 +155,7 @@ export function ManageTagsDrawer({
             disabled={tags.length >= maxTags}
             className="w-fit"
           >
-            <IconCirclePlus size={12} className="mr-1.5" />
+            <IconCirclePlus size={16} className="mr-1.5" />
             Add Tag
           </Button>
 

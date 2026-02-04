@@ -292,7 +292,7 @@ function SummarySidebar({
 
         {/* Button row */}
         <HStack gap={2}>
-          <Button variant="secondary" onClick={onCancel} className="w-[80px]">
+          <Button variant="secondary" onClick={onCancel}>
             Cancel
           </Button>
           <Button
@@ -947,12 +947,13 @@ export function CreateVolumePage() {
                                 />
                               </div>
                               <div className="flex items-center gap-1.5">
-                                <div className="w-[80px]">
+                                <div>
                                   <NumberInput
                                     value={volumeCapacity}
                                     onChange={(val) => setVolumeCapacity(val ?? 64)}
                                     min={1}
                                     max={1460}
+                                    width="sm"
                                   />
                                 </div>
                                 <span className="text-body-md text-[var(--color-text-default)]">
@@ -1035,12 +1036,13 @@ export function CreateVolumePage() {
                                 />
                               </div>
                               <div className="flex items-center gap-2">
-                                <div className="w-[80px]">
+                                <div>
                                   <NumberInput
                                     value={volumeCapacity}
                                     onChange={(val) => setVolumeCapacity(val ?? 10)}
                                     min={1}
                                     max={1000}
+                                    width="sm"
                                   />
                                 </div>
                                 <span className="text-body-lg text-[var(--color-text-default)]">

@@ -198,14 +198,14 @@ function YamlEditor({ value, onChange, onCopy, onDownload }: YamlEditorProps) {
           className="flex items-center justify-center w-7 h-7 border border-[var(--color-border-strong)] rounded-[6px] bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-subtle)] transition-colors"
           title="Copy to clipboard"
         >
-          <IconCopy size={12} stroke={1.5} />
+          <IconCopy size={16} stroke={1.5} />
         </button>
         <button
           onClick={onDownload}
           className="flex items-center justify-center w-7 h-7 border border-[var(--color-border-strong)] rounded-[6px] bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-subtle)] transition-colors"
           title="Download YAML"
         >
-          <IconDownload size={12} stroke={1.5} />
+          <IconDownload size={16} stroke={1.5} />
         </button>
       </div>
     </div>

@@ -119,7 +119,7 @@ export const WithCustomIcon: Story = {
     variant: 'info',
     children: 'New feature available! Check out the latest updates.',
     icon: (
-      <IconRocket size={16} className="text-[var(--inline-message-info-icon)]" strokeWidth={1.5} />
+      <IconRocket size={12} className="text-[var(--inline-message-info-icon)]" strokeWidth={1.5} />
     ),
   },
 };
@@ -172,7 +172,7 @@ export const FeatureAnnouncement: Story = {
     <InlineMessage
       variant="info"
       icon={
-        <IconBell size={16} className="text-[var(--inline-message-info-icon)]" strokeWidth={1.5} />
+        <IconBell size={12} className="text-[var(--inline-message-info-icon)]" strokeWidth={1.5} />
       }
     >
       New: Dark mode is now available! Go to Settings to enable it.

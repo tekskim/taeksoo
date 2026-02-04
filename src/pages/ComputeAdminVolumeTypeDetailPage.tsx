@@ -373,7 +373,7 @@ export default function ComputeAdminVolumeTypeDetailPage() {
             breadcrumb={<Breadcrumb items={breadcrumbItems} />}
             actions={
               <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
+                icon={<IconBell size={12} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />
@@ -400,7 +400,7 @@ export default function ComputeAdminVolumeTypeDetailPage() {
                     Delete
                   </Button>
                   <ContextMenu items={moreActionsItems} trigger="click">
-                    <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
+                    <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={16} />}>
                       More Actions
                     </Button>
                   </ContextMenu>
@@ -460,7 +460,8 @@ export default function ComputeAdminVolumeTypeDetailPage() {
                               setAppliedFilters((prev) => prev.filter((f) => f.field !== field))
                             }
                             onClearFilters={() => setAppliedFilters([])}
-                            className="w-[280px]"
+                            size="sm"
+                            className="w-[var(--search-input-width)]"
                           />
                           <Button
                             variant="secondary"

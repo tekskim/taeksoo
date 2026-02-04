@@ -264,7 +264,7 @@ export function ExternalGatewaySettingDrawer({
                       {net.name}
                     </span>
                     <IconExternalLink
-                      size={12}
+                      size={16}
                       stroke={1.5}
                       className="shrink-0 text-[var(--color-action-primary)]"
                     />

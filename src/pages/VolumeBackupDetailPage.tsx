@@ -292,7 +292,7 @@ export function VolumeBackupDetailPage() {
             breadcrumb={<Breadcrumb items={breadcrumbItems} />}
             actions={
               <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
+                icon={<IconBell size={12} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />
@@ -372,7 +372,7 @@ export function VolumeBackupDetailPage() {
                               className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline"
                             >
                               {backup.sourceVolume}
-                              <IconExternalLink size={12} stroke={1.5} />
+                              <IconExternalLink size={16} stroke={1.5} />
                             </Link>
                           </SectionCard.DataRow>
                         </SectionCard.Content>

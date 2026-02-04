@@ -241,7 +241,7 @@ export const AccordionTrigger = forwardRef<HTMLButtonElement, AccordionTriggerPr
 
         {!hideIcon && (
           <IconChevronDown
-            size={16}
+            size={12}
             stroke={1.5}
             className={twMerge(
               'shrink-0 text-[var(--color-text-muted)]',

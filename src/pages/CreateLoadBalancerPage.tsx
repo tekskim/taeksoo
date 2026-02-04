@@ -420,7 +420,7 @@ function SummarySidebar({
 
         {/* Action Buttons */}
         <HStack gap={2}>
-          <Button variant="secondary" onClick={onCancel} className="w-[80px]">
+          <Button variant="secondary" onClick={onCancel}>
             Cancel
           </Button>
           <Button
@@ -1809,7 +1809,7 @@ export default function CreateLoadBalancerPage() {
                               onChange={setProtocolPort}
                               min={1}
                               max={65535}
-                              className="w-[var(--layout-sidebar-width)]"
+                              width="sm"
                             />
                           </FormField.Control>
                           <FormField.HelperText>1-65535</FormField.HelperText>
@@ -1840,7 +1840,7 @@ export default function CreateLoadBalancerPage() {
                                   onChange={setConnectionLimitValue}
                                   disabled={connectionLimitType === 'unlimited'}
                                   min={1}
-                                  className={`w-[var(--layout-sidebar-width)] ${connectionLimitType === 'unlimited' ? 'bg-[var(--color-surface-subtle)]' : ''}`}
+                                  width="sm"
                                 />
                               </HStack>
                             </VStack>
@@ -1919,7 +1919,7 @@ export default function CreateLoadBalancerPage() {
                                     value={clientDataTimeout}
                                     onChange={setClientDataTimeout}
                                     min={0}
-                                    className="w-[var(--layout-sidebar-width)]"
+                                    width="sm"
                                   />
                                 </FormField.Control>
                               </FormField>
@@ -1936,7 +1936,7 @@ export default function CreateLoadBalancerPage() {
                                     value={memberConnectTimeout}
                                     onChange={setMemberConnectTimeout}
                                     min={0}
-                                    className="w-[var(--layout-sidebar-width)]"
+                                    width="sm"
                                   />
                                 </FormField.Control>
                               </FormField>
@@ -1952,7 +1952,7 @@ export default function CreateLoadBalancerPage() {
                                     value={memberDataTimeout}
                                     onChange={setMemberDataTimeout}
                                     min={0}
-                                    className="w-[var(--layout-sidebar-width)]"
+                                    width="sm"
                                   />
                                 </FormField.Control>
                               </FormField>
@@ -1969,7 +1969,7 @@ export default function CreateLoadBalancerPage() {
                                     value={tcpInspectTimeout}
                                     onChange={setTcpInspectTimeout}
                                     min={0}
-                                    className="w-[var(--layout-sidebar-width)]"
+                                    width="sm"
                                   />
                                 </FormField.Control>
                               </FormField>
@@ -2546,7 +2546,7 @@ export default function CreateLoadBalancerPage() {
                                   }}
                                   min={1}
                                   max={65535}
-                                  fullWidth
+                                  width="sm"
                                 />
                               </div>
                               {/* Weights */}
@@ -2753,6 +2753,7 @@ export default function CreateLoadBalancerPage() {
                                   min={1}
                                   max={3600}
                                   fullWidth
+                                  width="sm"
                                 />
                               </FormField.Control>
                               <FormField.HelperText>
@@ -2774,6 +2775,7 @@ export default function CreateLoadBalancerPage() {
                                   min={1}
                                   max={3599}
                                   fullWidth
+                                  width="sm"
                                 />
                               </FormField.Control>
                               <FormField.HelperText>
@@ -2796,6 +2798,7 @@ export default function CreateLoadBalancerPage() {
                                   min={3}
                                   max={10}
                                   fullWidth
+                                  width="sm"
                                 />
                               </FormField.Control>
                               <FormField.HelperText>

@@ -184,7 +184,7 @@ export function ProjectSelector({
                 className="flex-1 bg-transparent text-body-sm text-[var(--color-text-default)] placeholder:text-[var(--color-text-muted)] outline-none"
                 autoFocus
               />
-              <IconSearch size={12} className="text-[var(--color-text-muted)]" />
+              <IconSearch size={16} className="text-[var(--color-text-muted)]" />
             </div>
 
             {/* Project List */}

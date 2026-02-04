@@ -132,7 +132,7 @@ function MemberCard({ member, onPortChange, onWeightChange, onRemove }: MemberCa
 
       {/* Remove Button */}
       <Button variant="secondary" size="sm" onClick={onRemove} className="w-fit">
-        <IconCircleMinus size={12} />
+        <IconCircleMinus size={16} />
         Remove
       </Button>
     </div>
@@ -299,7 +299,7 @@ export function ManageMembersDrawer({
                   Name
                 </span>
                 <IconChevronDown
-                  size={12}
+                  size={16}
                   className={`transition-transform ${sortDirection === 'desc' ? 'rotate-180' : ''}`}
                 />
               </div>
@@ -331,7 +331,7 @@ export function ManageMembersDrawer({
                       <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)]">
                         {item.name}
                       </span>
-                      <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+                      <IconExternalLink size={16} className="text-[var(--color-action-primary)]" />
                     </HStack>
                     <span className="text-body-sm text-[var(--color-text-subtle)] leading-4">
                       ID : {item.id}
@@ -354,7 +354,7 @@ export function ManageMembersDrawer({
                       onClick={() => handleAddMember(item, selectedIp)}
                       className="w-fit"
                     >
-                      <IconCirclePlus size={12} />
+                      <IconCirclePlus size={16} />
                       Add Member
                     </Button>
                   </div>
@@ -371,7 +371,7 @@ export function ManageMembersDrawer({
           </h3>
 
           <Button variant="secondary" onClick={handleAddExternalMember} className="w-fit">
-            <IconCirclePlus size={12} />
+            <IconCirclePlus size={16} />
             Add External Member
           </Button>
 
@@ -432,7 +432,7 @@ export function ManageMembersDrawer({
                       onClick={() => handleRemoveMember(member.id)}
                       className="w-fit"
                     >
-                      <IconCircleMinus size={12} />
+                      <IconCircleMinus size={16} />
                       Remove
                     </Button>
                   </div>
