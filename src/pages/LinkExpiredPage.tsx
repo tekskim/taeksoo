@@ -37,8 +37,10 @@ export function LinkExpiredPage() {
 
         {/* Description */}
         <p className="text-body-md text-[var(--color-text-subtle)] leading-relaxed">
-          This link is no longer valid because it has expired or has already been used. Please
-          contact your administrator to request a new link.
+          <span className="whitespace-nowrap">
+            This link is no longer valid because it has expired or has already been used.
+          </span>{' '}
+          Please contact your administrator to request a new link.
         </p>
       </div>
     </div>
