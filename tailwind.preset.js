@@ -1,5 +1,5 @@
 // Auto-generated from tokens/light.json - DO NOT EDIT
-// Generated at: 2026-02-03T08:09:18.662Z
+// Generated at: 2026-02-03T08:27:28.454Z
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -172,6 +172,7 @@ export default {
         '10': 'var(--primitive-font-size-10)',
         '11': 'var(--primitive-font-size-11)',
         '12': 'var(--primitive-font-size-12)',
+        '13': 'var(--primitive-font-size-13)',
         '14': 'var(--primitive-font-size-14)',
         '16': 'var(--primitive-font-size-16)',
         '18': 'var(--primitive-font-size-18)',
