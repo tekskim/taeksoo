@@ -693,7 +693,7 @@ export function ComputeAdminFlavorDetailPage() {
                       </h2>
 
                       {/* Search */}
-                      <div className="w-[280px]">
+                      <div>
                         <SearchInput
                           placeholder="Search instance by attributes"
                           value={instanceSearchQuery}

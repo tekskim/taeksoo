@@ -61,7 +61,7 @@ function SectionCardHeader({
   ...props
 }: SectionCardHeaderProps) {
   return (
-    <div className="flex flex-col w-full gap-2">
+    <div className="flex flex-col w-full gap-1">
       <div
         className={twMerge('flex items-center justify-between w-full h-[28px]', className)}
         {...props}

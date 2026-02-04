@@ -117,7 +117,7 @@ function SummarySidebar({
 
         {/* Action Buttons */}
         <HStack gap={2}>
-          <Button variant="outline" onClick={onCancel} className="w-[80px]">
+          <Button variant="outline" onClick={onCancel}>
             Cancel
           </Button>
           <Button
@@ -455,7 +455,6 @@ export default function ComputeAdminCreateFirewallRulePage() {
                               setTenantSearch(e.target.value);
                               setTenantPage(1);
                             }}
-                            className="w-[280px]"
                           />
 
                           {/* Tenant Pagination */}
@@ -637,7 +636,7 @@ export default function ComputeAdminCreateFirewallRulePage() {
                           <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
                             Select the protocol to which the rule applies.
                           </span>
-                          <div className="w-[200px]">
+                          <div>
                             <Select
                               options={[
                                 { value: 'tcp', label: 'TCP' },

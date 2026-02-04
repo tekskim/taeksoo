@@ -296,7 +296,7 @@ function AreaChartCard({
         <div className="flex items-center gap-2">
           <span className="chartTitle">{title}</span>
           {dropdown && dropdownOptions && onDropdownChange && mode !== 'fullscreen' && (
-            <div className="w-[100px]">
+            <div>
               <Select
                 options={dropdownOptions}
                 value={dropdown}

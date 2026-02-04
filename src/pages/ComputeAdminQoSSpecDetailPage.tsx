@@ -374,7 +374,6 @@ export default function ComputeAdminQoSSpecDetailPage() {
                               setAppliedFilters((prev) => prev.filter((f) => f.field !== field))
                             }
                             onClearFilters={() => setAppliedFilters([])}
-                            className="w-[280px]"
                           />
                           <Button
                             variant="secondary"

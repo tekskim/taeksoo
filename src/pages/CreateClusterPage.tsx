@@ -436,8 +436,7 @@ export function CreateClusterPage() {
                         <FormField.Control>
                           <VStack gap={3}>
                             <SearchInput
-                              placeholder="Search..."
-                              className="w-[312px]"
+                              placeholder="Search network by attributes"
                               value={externalNetworkSearch}
                               onChange={(e) => setExternalNetworkSearch(e.target.value)}
                             />
@@ -479,8 +478,7 @@ export function CreateClusterPage() {
                         <FormField.Control>
                           <VStack gap={3}>
                             <SearchInput
-                              placeholder="Search..."
-                              className="w-[312px]"
+                              placeholder="Search network by attributes"
                               value={tenantNetworkSearch}
                               onChange={(e) => setTenantNetworkSearch(e.target.value)}
                             />
@@ -594,10 +592,7 @@ export function CreateClusterPage() {
                                     <Tab value="custom">Custom</Tab>
                                   </TabList>
                                 </Tabs>
-                                <SearchInput
-                                  placeholder="Find Flavor with filters"
-                                  className="w-[312px]"
-                                />
+                                <SearchInput placeholder="Find Flavor with filters" />
                                 <Pagination
                                   currentPage={1}
                                   totalPages={5}
@@ -641,7 +636,6 @@ export function CreateClusterPage() {
                                 ]}
                                 value={cpNodeCount}
                                 onChange={setCpNodeCount}
-                                className="w-[280px]"
                               />
                             </FormField.Control>
                           </FormField>
@@ -676,7 +670,7 @@ export function CreateClusterPage() {
                                   onChange={setEtcdVolumeSize}
                                   min={10}
                                   max={100}
-                                  className="w-[280px]"
+                                  width="sm"
                                 />
                                 <div className="px-3 py-[6px] bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] text-[12px] text-[var(--color-text-default)]">
                                   GiB
@@ -731,10 +725,7 @@ export function CreateClusterPage() {
                                     <Tab value="custom">Custom</Tab>
                                   </TabList>
                                 </Tabs>
-                                <SearchInput
-                                  placeholder="Find Flavor with filters"
-                                  className="w-[312px]"
-                                />
+                                <SearchInput placeholder="Find Flavor with filters" />
                                 <Pagination
                                   currentPage={1}
                                   totalPages={5}
@@ -779,7 +770,6 @@ export function CreateClusterPage() {
                                 ]}
                                 value={nodeCount}
                                 onChange={setNodeCount}
-                                className="w-[280px]"
                               />
                             </FormField.Control>
                           </FormField>
@@ -797,7 +787,7 @@ export function CreateClusterPage() {
                       {/* Labels */}
                       <VStack gap={3}>
                         <VStack gap={1.5}>
-                          <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                          <span className="text-label-lg text-[var(--color-text-default)]">
                             Labels
                           </span>
                           <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
@@ -810,12 +800,12 @@ export function CreateClusterPage() {
                           <VStack gap={2}>
                             {labels.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                                <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                <span className="block text-label-lg text-[var(--color-text-default)]">
                                   Key
-                                </label>
-                                <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                </span>
+                                <span className="block text-label-lg text-[var(--color-text-default)]">
                                   Value
-                                </label>
+                                </span>
                                 <div />
                               </div>
                             )}
@@ -866,7 +856,7 @@ export function CreateClusterPage() {
                       {/* Annotations */}
                       <VStack gap={3}>
                         <VStack gap={1.5}>
-                          <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                          <span className="text-label-lg text-[var(--color-text-default)]">
                             Annotations
                           </span>
                           <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
@@ -880,12 +870,12 @@ export function CreateClusterPage() {
                           <VStack gap={2}>
                             {annotations.length > 0 && (
                               <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                                <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                <span className="block text-label-lg text-[var(--color-text-default)]">
                                   Key
-                                </label>
-                                <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                </span>
+                                <span className="block text-label-lg text-[var(--color-text-default)]">
                                   Value
-                                </label>
+                                </span>
                                 <div />
                               </div>
                             )}
@@ -964,7 +954,7 @@ export function CreateClusterPage() {
 
                   {/* Button Container */}
                   <HStack gap={2} className="w-full justify-end">
-                    <Button variant="secondary" onClick={handleCancel} className="w-[80px]">
+                    <Button variant="secondary" onClick={handleCancel}>
                       Cancel
                     </Button>
                     <Button
@@ -996,7 +986,7 @@ function SummaryItem({
 }) {
   return (
     <div className="flex items-center justify-between px-2 py-1 w-full">
-      <span className="text-[12px] leading-5 text-[var(--color-text-default)]">{label}</span>
+      <span className="text-body-md text-[var(--color-text-default)]">{label}</span>
       <div className="w-4 h-4 flex items-center justify-center">
         {status === 'complete' ? (
           <svg

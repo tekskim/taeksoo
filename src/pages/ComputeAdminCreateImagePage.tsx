@@ -482,7 +482,6 @@ export function ComputeAdminCreateImagePage() {
                               value={tenantSearch}
                               onChange={(e) => setTenantSearch(e.target.value)}
                               placeholder="Search tenants by attributes"
-                              className="w-[280px]"
                             />
 
                             {/* Pagination */}
@@ -564,7 +563,6 @@ export function ComputeAdminCreateImagePage() {
                                   value={sharedTenantSearch}
                                   onChange={(e) => setSharedTenantSearch(e.target.value)}
                                   placeholder="Search tenants by attributes"
-                                  className="w-[280px]"
                                 />
 
                                 {/* Pagination */}
@@ -910,7 +908,7 @@ export function ComputeAdminCreateImagePage() {
                                       onChange={setMinDisk}
                                       min={0}
                                       max={500}
-                                      className="w-[80px]"
+                                      width="sm"
                                     />
                                     <span className="text-body-md text-[var(--color-text-default)]">
                                       GiB
@@ -936,7 +934,7 @@ export function ComputeAdminCreateImagePage() {
                                       onChange={setMinRam}
                                       min={0}
                                       max={500}
-                                      className="w-[80px]"
+                                      width="sm"
                                     />
                                     <span className="text-body-md text-[var(--color-text-default)]">
                                       GiB

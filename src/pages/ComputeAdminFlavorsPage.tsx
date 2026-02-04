@@ -565,7 +565,6 @@ export function ComputeAdminFlavorsPage() {
                       appliedFilters={appliedFilters}
                       onFiltersChange={setAppliedFilters}
                       placeholder="Search flavor by attributes"
-                      className="w-[280px]"
                     />
                     <Button
                       variant="secondary"

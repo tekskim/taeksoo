@@ -1256,11 +1256,7 @@ export function ComputeAdminInstanceDetailPage() {
                       </div>
 
                       {/* Search */}
-                      <SearchInput
-                        placeholder="Search volume by attributes"
-                        size="sm"
-                        className="w-[280px]"
-                      />
+                      <SearchInput placeholder="Search volume by attributes" size="sm" />
 
                       {/* Pagination */}
                       <Pagination
@@ -1343,11 +1339,7 @@ export function ComputeAdminInstanceDetailPage() {
                       </div>
 
                       {/* Search */}
-                      <SearchInput
-                        placeholder="Search interface by attributes"
-                        size="sm"
-                        className="w-[280px]"
-                      />
+                      <SearchInput placeholder="Search interface by attributes" size="sm" />
 
                       {/* Pagination */}
                       <Pagination
@@ -1468,11 +1460,7 @@ export function ComputeAdminInstanceDetailPage() {
                       </div>
 
                       {/* Search */}
-                      <SearchInput
-                        placeholder="Search floating IP by attributes"
-                        size="sm"
-                        className="w-[280px]"
-                      />
+                      <SearchInput placeholder="Search floating IP by attributes" size="sm" />
 
                       {/* Pagination */}
                       <Pagination
@@ -1557,11 +1545,7 @@ export function ComputeAdminInstanceDetailPage() {
                       </Tabs>
 
                       {/* Search */}
-                      <SearchInput
-                        placeholder="Search security group by attributes"
-                        size="sm"
-                        className="w-[280px]"
-                      />
+                      <SearchInput placeholder="Search security group by attributes" size="sm" />
 
                       {/* Pagination */}
                       <Pagination
@@ -1636,7 +1620,6 @@ export function ComputeAdminInstanceDetailPage() {
                           setSnapshotCurrentPage(1);
                         }}
                         size="sm"
-                        className="w-[280px]"
                       />
 
                       {/* Pagination */}
@@ -1840,7 +1823,7 @@ export function ComputeAdminInstanceDetailPage() {
                             size="sm"
                             className="!p-2 !w-7 !h-7 !min-w-7 text-[var(--color-text-default)]"
                           >
-                            <IconDownload size={18} stroke={2} className="w-[14px]" />
+                            <IconDownload size={18} stroke={2} />
                           </Button>
                         </div>
                       </div>
@@ -1884,7 +1867,6 @@ export function ComputeAdminInstanceDetailPage() {
                             setActionLogSearchQuery(e.target.value);
                             setActionLogCurrentPage(1);
                           }}
-                          className="w-[280px]"
                         />
                         <Button variant="secondary" size="sm" className="!p-2 !w-7 !h-7 !min-w-7">
                           <IconDownload size={12} stroke={2} className="w-3 h-3" />

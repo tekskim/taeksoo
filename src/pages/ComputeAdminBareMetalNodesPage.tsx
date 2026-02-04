@@ -469,7 +469,6 @@ export function ComputeAdminBareMetalNodesPage() {
                   appliedFilters={appliedFilters}
                   onFiltersChange={setAppliedFilters}
                   placeholder="Search bare metal nodes by attributes"
-                  className="w-[280px]"
                 />
                 <Button
                   variant="secondary"

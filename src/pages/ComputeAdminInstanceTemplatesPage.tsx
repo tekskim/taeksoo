@@ -460,7 +460,6 @@ export function ComputeAdminInstanceTemplatesPage() {
                       appliedFilters={appliedFilters}
                       onFiltersChange={setAppliedFilters}
                       placeholder="Search template by attributes"
-                      className="w-[280px]"
                     />
                     <Button
                       variant="secondary"

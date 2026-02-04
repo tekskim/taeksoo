@@ -235,7 +235,7 @@ function SummarySidebar({
 
         {/* Action Buttons */}
         <HStack gap={2}>
-          <Button variant="secondary" onClick={onCancel} className="w-[80px]">
+          <Button variant="secondary" onClick={onCancel}>
             Cancel
           </Button>
           <Button
@@ -640,22 +640,22 @@ export function CreateServicePage() {
                                     : 'grid-cols-[1fr_1fr_1fr_1fr_20px]'
                                 }`}
                               >
-                                <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                <span className="block text-label-lg text-[var(--color-text-default)]">
                                   Port Name <span className="text-[#ea580c]">*</span>
-                                </label>
-                                <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                </span>
+                                <span className="block text-label-lg text-[var(--color-text-default)]">
                                   Listening Port <span className="text-[#ea580c]">*</span>
-                                </label>
-                                <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                </span>
+                                <span className="block text-label-lg text-[var(--color-text-default)]">
                                   Protocol
-                                </label>
-                                <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                </span>
+                                <span className="block text-label-lg text-[var(--color-text-default)]">
                                   Target Port <span className="text-[#ea580c]">*</span>
-                                </label>
+                                </span>
                                 {showNodePort && (
-                                  <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                  <span className="block text-label-lg text-[var(--color-text-default)]">
                                     Node Port
-                                  </label>
+                                  </span>
                                 )}
                                 <div />
                               </div>
@@ -751,47 +751,48 @@ export function CreateServicePage() {
                       <VStack gap={6}>
                         {/* Cluster IP */}
                         <VStack gap={2}>
-                          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                          <label className="text-label-lg text-[var(--color-text-default)]">
                             Cluster IP
                           </label>
-                          <Input
-                            placeholder="e.g. 1.1.1.1"
-                            value={clusterIP}
-                            onChange={(e) => setClusterIP(e.target.value)}
-                            className="w-[320px]"
-                          />
+                          <div className="w-[320px]">
+                            <Input
+                              placeholder="e.g. 1.1.1.1"
+                              value={clusterIP}
+                              onChange={(e) => setClusterIP(e.target.value)}
+                              fullWidth
+                            />
+                          </div>
                         </VStack>
 
                         {/* Load Balancer IP */}
                         <VStack gap={2}>
-                          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                          <label className="text-label-lg text-[var(--color-text-default)]">
                             Load Balancer IP
                           </label>
-                          <Input
-                            placeholder="e.g. 1.1.1.1"
-                            value={loadBalancerIP}
-                            onChange={(e) => setLoadBalancerIP(e.target.value)}
-                            className="w-[320px]"
-                          />
+                          <div className="w-[320px]">
+                            <Input
+                              placeholder="e.g. 1.1.1.1"
+                              value={loadBalancerIP}
+                              onChange={(e) => setLoadBalancerIP(e.target.value)}
+                              fullWidth
+                            />
+                          </div>
                         </VStack>
 
                         {/* External IPs */}
                         <VStack gap={2}>
-                          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                          <label className="text-label-lg text-[var(--color-text-default)]">
                             External IPs
                           </label>
                           <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
                             <VStack gap={2}>
                               {externalIPs.map((ip) => (
-                                <div
-                                  key={ip.id}
-                                  className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] p-2 flex gap-2 items-center w-[368px]"
-                                >
+                                <div key={ip.id} className="flex gap-2 items-center">
                                   <Input
                                     placeholder="e.g. 1.1.1.1"
                                     value={ip.value}
                                     onChange={(e) => updateExternalIP(ip.id, e.target.value)}
-                                    className="w-[320px]"
+                                    width="lg"
                                   />
                                   <button
                                     onClick={() => removeExternalIP(ip.id)}
@@ -824,12 +825,11 @@ export function CreateServicePage() {
 
                   {/* Selectors Section */}
                   <SectionCard>
-                    <SectionCard.Header title="Selectors" showDivider={false} />
-                    <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
-                      Selector keys and values are intended to match labels and values on existing
-                      pods.
-                    </p>
-                    <div className="h-px w-full bg-[var(--color-border-subtle)]" />
+                    <SectionCard.Header
+                      title="Selectors"
+                      description="Selector keys and values are intended to match labels and values on existing pods."
+                      showDivider
+                    />
                     <SectionCard.Content>
                       <VStack gap={6}>
                         {selectors.length === 0 ? (
@@ -853,12 +853,12 @@ export function CreateServicePage() {
                             <VStack gap={2}>
                               {selectors.length > 0 && (
                                 <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                                  <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                  <span className="block text-label-lg text-[var(--color-text-default)]">
                                     Key
-                                  </label>
-                                  <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                  </span>
+                                  <span className="block text-label-lg text-[var(--color-text-default)]">
                                     Value
-                                  </label>
+                                  </span>
                                   <div />
                                 </div>
                               )}
@@ -911,7 +911,7 @@ export function CreateServicePage() {
 
                         {/* Matching Pods Table */}
                         <VStack gap={3}>
-                          <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                          <span className="text-label-lg text-[var(--color-text-default)]">
                             Matching Pods (1/10)
                           </span>
                           <Pagination
@@ -963,7 +963,7 @@ export function CreateServicePage() {
 
                         {sessionAffinity === 'ClientIP' && (
                           <VStack gap={3}>
-                            <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                            <label className="text-label-lg text-[var(--color-text-default)]">
                               Session Sticky Time
                             </label>
                             <HStack gap={2} align="center">
@@ -971,7 +971,7 @@ export function CreateServicePage() {
                                 value={sessionAffinityTimeout}
                                 onChange={setSessionAffinityTimeout}
                                 min={0}
-                                className="w-[312px]"
+                                width="sm"
                               />
                               <span className="text-[12px] text-[var(--color-text-default)]">
                                 Seconds
@@ -991,7 +991,7 @@ export function CreateServicePage() {
                         {/* Labels */}
                         <VStack gap={3}>
                           <VStack gap={1.5}>
-                            <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                            <span className="text-label-lg text-[var(--color-text-default)]">
                               Labels
                             </span>
                             <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
@@ -1004,12 +1004,12 @@ export function CreateServicePage() {
                             <VStack gap={2}>
                               {labels.length > 0 && (
                                 <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                                  <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                  <span className="block text-label-lg text-[var(--color-text-default)]">
                                     Key
-                                  </label>
-                                  <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                  </span>
+                                  <span className="block text-label-lg text-[var(--color-text-default)]">
                                     Value
-                                  </label>
+                                  </span>
                                   <div />
                                 </div>
                               )}
@@ -1060,7 +1060,7 @@ export function CreateServicePage() {
                         {/* Annotations */}
                         <VStack gap={3}>
                           <VStack gap={1.5}>
-                            <span className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                            <span className="text-label-lg text-[var(--color-text-default)]">
                               Annotations
                             </span>
                             <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
@@ -1074,12 +1074,12 @@ export function CreateServicePage() {
                             <VStack gap={2}>
                               {annotations.length > 0 && (
                                 <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                                  <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                  <span className="block text-label-lg text-[var(--color-text-default)]">
                                     Key
-                                  </label>
-                                  <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                  </span>
+                                  <span className="block text-label-lg text-[var(--color-text-default)]">
                                     Value
-                                  </label>
+                                  </span>
                                   <div />
                                 </div>
                               )}

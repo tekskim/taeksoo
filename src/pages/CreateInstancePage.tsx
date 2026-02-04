@@ -429,13 +429,13 @@ function QuotaSidebar({
             onChange={onNumberOfInstancesChange}
             min={1}
             max={10}
-            fullWidth
+            width="sm"
           />
         </VStack>
 
         {/* Action Buttons */}
         <HStack gap={2}>
-          <Button variant="outline" onClick={onCancel} className="w-[80px]">
+          <Button variant="outline" onClick={onCancel}>
             Cancel
           </Button>
           <Button variant="primary" disabled={!isAllCompleted} className="flex-1">
@@ -1413,7 +1413,13 @@ function ImageSection({
                 <HStack gap={2} align="end">
                   <VStack gap={2}>
                     <label className="text-label-md text-[var(--color-text-default)]">Size</label>
-                    <NumberInput value={storageSize} onChange={setStorageSize} min={1} max={1000} />
+                    <NumberInput
+                      value={storageSize}
+                      onChange={setStorageSize}
+                      min={1}
+                      max={1000}
+                      width="sm"
+                    />
                   </VStack>
                   <span className="text-body-md text-[var(--color-text-default)] pb-2">GiB</span>
                 </HStack>

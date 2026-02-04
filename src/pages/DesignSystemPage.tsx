@@ -281,8 +281,6 @@ import {
   IconLayoutSidebarLeftCollapse,
   IconDisc,
   IconStopwatch,
-  IconCheck,
-  IconChevronDown,
 } from '@tabler/icons-react';
 
 // Custom Icons from design-system
@@ -9535,7 +9533,7 @@ outline: 2px solid var(--color-border-focus);`}
                                 <div className="flex flex-col">
                                   {/* Launch type - done */}
                                   <div className="flex items-center justify-between py-1">
-                                    <span className="text-[12px] leading-5 text-[var(--color-text-default)]">
+                                    <span className="text-body-md text-[var(--color-text-default)]">
                                       Launch type
                                     </span>
                                     <div className="w-4 h-4 shrink-0 rounded-full bg-[var(--color-state-success)] flex items-center justify-center">
@@ -9544,7 +9542,7 @@ outline: 2px solid var(--color-border-focus);`}
                                   </div>
                                   {/* Basic information - done */}
                                   <div className="flex items-center justify-between py-1">
-                                    <span className="text-[12px] leading-5 text-[var(--color-text-default)]">
+                                    <span className="text-body-md text-[var(--color-text-default)]">
                                       Basic information
                                     </span>
                                     <div className="w-4 h-4 shrink-0 rounded-full bg-[var(--color-state-success)] flex items-center justify-center">
@@ -9553,7 +9551,7 @@ outline: 2px solid var(--color-border-focus);`}
                                   </div>
                                   {/* Source - done */}
                                   <div className="flex items-center justify-between py-1">
-                                    <span className="text-[12px] leading-5 text-[var(--color-text-default)]">
+                                    <span className="text-body-md text-[var(--color-text-default)]">
                                       Source
                                     </span>
                                     <div className="w-4 h-4 shrink-0 rounded-full bg-[var(--color-state-success)] flex items-center justify-center">
@@ -9562,7 +9560,7 @@ outline: 2px solid var(--color-border-focus);`}
                                   </div>
                                   {/* Flavor - active */}
                                   <div className="flex items-center justify-between py-1">
-                                    <span className="text-[12px] leading-5 text-[var(--color-text-default)]">
+                                    <span className="text-body-md text-[var(--color-text-default)]">
                                       Flavor
                                     </span>
                                     <div className="w-4 h-4 shrink-0">
@@ -9575,21 +9573,21 @@ outline: 2px solid var(--color-border-focus);`}
                                   </div>
                                   {/* Network - pre */}
                                   <div className="flex items-center justify-between py-1">
-                                    <span className="text-[12px] leading-5 text-[var(--color-text-default)]">
+                                    <span className="text-body-md text-[var(--color-text-default)]">
                                       Network
                                     </span>
                                     <div className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)]" />
                                   </div>
                                   {/* Authentication - pre */}
                                   <div className="flex items-center justify-between py-1">
-                                    <span className="text-[12px] leading-5 text-[var(--color-text-default)]">
+                                    <span className="text-body-md text-[var(--color-text-default)]">
                                       Authentication
                                     </span>
                                     <div className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)]" />
                                   </div>
                                   {/* Advanced - pre */}
                                   <div className="flex items-center justify-between py-1">
-                                    <span className="text-[12px] leading-5 text-[var(--color-text-default)]">
+                                    <span className="text-body-md text-[var(--color-text-default)]">
                                       Advanced
                                     </span>
                                     <div className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)]" />

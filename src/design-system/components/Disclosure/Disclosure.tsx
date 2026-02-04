@@ -110,7 +110,7 @@ export function DisclosureTrigger({ children, className, ...props }: DisclosureT
       onClick={toggle}
       className={twMerge(
         'flex items-center gap-[var(--disclosure-gap)]',
-        'text-[length:var(--disclosure-font-size)] leading-[var(--disclosure-line-height)] font-medium',
+        'text-[13px] leading-[18px] font-medium',
         'text-[var(--color-text-default)]',
         'cursor-pointer select-none',
         'hover:text-[var(--color-text-subtle)]',

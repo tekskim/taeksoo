@@ -151,7 +151,7 @@ function SummarySidebar({
 
         {/* Button row */}
         <HStack gap={2}>
-          <Button variant="secondary" onClick={onCancel} className="w-[80px]">
+          <Button variant="secondary" onClick={onCancel}>
             Cancel
           </Button>
           <Button
@@ -224,7 +224,13 @@ function BasicInfoSection({
               Capacity<span className="text-[var(--color-state-danger)]"> *</span>
             </label>
             <HStack gap={2} align="center">
-              <NumberInput value={capacity} onChange={onCapacityChange} min={1} step={1} />
+              <NumberInput
+                value={capacity}
+                onChange={onCapacityChange}
+                min={1}
+                step={1}
+                width="sm"
+              />
               <span className="text-body-md text-[var(--color-text-default)]">GiB</span>
             </HStack>
           </VStack>
@@ -375,7 +381,7 @@ function StorageConfigSection({
     <SectionCard>
       <SectionCard.Header title="Customize" showDivider />
       <SectionCard.Content>
-        <VStack gap={3}>
+        <VStack gap={6}>
           {/* Access Modes */}
           <VStack gap={1.5}>
             <label className="text-label-lg text-[var(--color-text-default)]">Access Modes</label>
@@ -627,12 +633,12 @@ function LabelsAnnotationsSection({
               <VStack gap={2}>
                 {labels.length > 0 && (
                   <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                    <span className="block text-label-lg text-[var(--color-text-default)]">
                       Key
-                    </label>
-                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                    </span>
+                    <span className="block text-label-lg text-[var(--color-text-default)]">
                       Value
-                    </label>
+                    </span>
                     <div />
                   </div>
                 )}

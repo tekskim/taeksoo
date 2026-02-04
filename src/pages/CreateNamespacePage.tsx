@@ -128,12 +128,7 @@ function SummarySidebar({
 
         {/* Button row */}
         <HStack gap={2}>
-          <Button
-            variant="secondary"
-            size="sm"
-            className="w-[80px]"
-            onClick={() => navigate('/container/namespaces')}
-          >
+          <Button variant="secondary" size="sm" onClick={() => navigate('/container/namespaces')}>
             Cancel
           </Button>
           <Button variant="primary" size="sm" className="flex-1">
@@ -303,7 +298,7 @@ export function CreateNamespacePage() {
                       <VStack gap={6}>
                         {/* Namespace Name */}
                         <VStack gap={2}>
-                          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                          <label className="text-label-lg text-[var(--color-text-default)]">
                             Namespace Name{' '}
                             <span className="text-[var(--color-state-danger)]">*</span>
                           </label>
@@ -433,7 +428,7 @@ export function CreateNamespacePage() {
                         {/* Labels */}
                         <VStack gap={3}>
                           <VStack gap={1}>
-                            <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                            <label className="text-label-lg text-[var(--color-text-default)]">
                               Labels
                             </label>
                             <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
@@ -445,12 +440,12 @@ export function CreateNamespacePage() {
                             <VStack gap={2}>
                               {labels.length > 0 && (
                                 <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                                  <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                  <span className="block text-label-lg text-[var(--color-text-default)]">
                                     Key
-                                  </label>
-                                  <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                  </span>
+                                  <span className="block text-label-lg text-[var(--color-text-default)]">
                                     Value
-                                  </label>
+                                  </span>
                                   <div />
                                 </div>
                               )}
@@ -500,7 +495,7 @@ export function CreateNamespacePage() {
                         {/* Annotations */}
                         <VStack gap={3}>
                           <VStack gap={1}>
-                            <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                            <label className="text-label-lg text-[var(--color-text-default)]">
                               Annotations
                             </label>
                             <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
@@ -513,12 +508,12 @@ export function CreateNamespacePage() {
                             <VStack gap={2}>
                               {annotations.length > 0 && (
                                 <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                                  <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                  <span className="block text-label-lg text-[var(--color-text-default)]">
                                     Key
-                                  </label>
-                                  <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                  </span>
+                                  <span className="block text-label-lg text-[var(--color-text-default)]">
                                     Value
-                                  </label>
+                                  </span>
                                   <div />
                                 </div>
                               )}

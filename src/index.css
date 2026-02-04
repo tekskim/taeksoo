@@ -830,7 +830,7 @@ html.theme-transition *::after {
   --radio-group-label-size: var(--font-size-12);
   --radio-group-label-line-height: var(--line-height-16);
   --radio-group-label-gap: var(--spacing-2);
-  --radio-group-item-gap: var(--spacing-3);
+  --radio-group-item-gap: var(--spacing-2);
   --radio-group-item-gap-horizontal: var(--spacing-4);
 
   /* ----------------------------------------

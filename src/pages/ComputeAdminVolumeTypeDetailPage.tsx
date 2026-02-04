@@ -460,7 +460,6 @@ export default function ComputeAdminVolumeTypeDetailPage() {
                               setAppliedFilters((prev) => prev.filter((f) => f.field !== field))
                             }
                             onClearFilters={() => setAppliedFilters([])}
-                            className="w-[280px]"
                           />
                           <Button
                             variant="secondary"
