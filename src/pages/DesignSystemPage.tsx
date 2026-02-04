@@ -3991,7 +3991,7 @@ export function DesignSystemPage() {
                                 token: 'h6',
                                 size: '14px',
                                 lh: '20px',
-                                weight: '500',
+                                weight: '600',
                                 desc: 'Label heading',
                               },
                             ].map(({ token, size, lh, weight, desc }) => (

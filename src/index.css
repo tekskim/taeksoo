@@ -2874,7 +2874,7 @@ input[type='search']::-webkit-search-decoration {
 .text-heading-h6 {
   font-size: var(--font-size-14);
   line-height: var(--line-height-20);
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-semibold);
 }
 
 /* Body - All regular (400) */

@@ -256,7 +256,7 @@ export function CreateImagePage() {
                     <SectionCard isActive={sectionStatus['basic-info'] === 'active'}>
                       <SectionCard.Header
                         title={SECTION_LABELS['basic-info']}
-                        showDivider={sectionStatus['basic-info'] === 'active'}
+                        showDivider={sectionStatus['basic-info'] !== 'pre'}
                         actions={
                           sectionStatus['basic-info'] === 'done' && (
                             <Button
@@ -357,7 +357,7 @@ export function CreateImagePage() {
                     <SectionCard isActive={sectionStatus['source'] === 'active'}>
                       <SectionCard.Header
                         title={SECTION_LABELS['source']}
-                        showDivider={sectionStatus['source'] === 'active'}
+                        showDivider={sectionStatus['source'] !== 'pre'}
                         actions={
                           sectionStatus['source'] === 'done' && (
                             <Button
@@ -464,7 +464,7 @@ export function CreateImagePage() {
                     <SectionCard isActive={sectionStatus['specification'] === 'active'}>
                       <SectionCard.Header
                         title={SECTION_LABELS['specification']}
-                        showDivider={sectionStatus['specification'] === 'active'}
+                        showDivider={sectionStatus['specification'] !== 'pre'}
                         actions={
                           sectionStatus['specification'] === 'done' && (
                             <HStack gap={3} align="center">
@@ -675,7 +675,7 @@ export function CreateImagePage() {
                     <SectionCard isActive={sectionStatus['advanced'] === 'active'}>
                       <SectionCard.Header
                         title={SECTION_LABELS['advanced']}
-                        showDivider={sectionStatus['advanced'] === 'active'}
+                        showDivider={sectionStatus['advanced'] !== 'pre'}
                         actions={
                           sectionStatus['advanced'] === 'done' && (
                             <HStack gap={3} align="center">
