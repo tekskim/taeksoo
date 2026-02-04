@@ -3085,7 +3085,7 @@ export function ComputeAdminTopologyD3Page() {
               {/* Filters */}
               <div className="flex items-center gap-3 flex-wrap bg-white rounded-lg border border-slate-200 p-3">
                 {/* Search */}
-                <div className="w-[240px]">
+                <div>
                   <SearchInput
                     placeholder="Search subnets, VPCs, CIDRs..."
                     value={searchTerm}

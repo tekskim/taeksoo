@@ -194,12 +194,7 @@ function SummarySidebar({
 
         {/* Button row */}
         <HStack gap={2}>
-          <Button
-            variant="secondary"
-            size="sm"
-            className="w-[80px]"
-            onClick={() => navigate('/container/ingresses')}
-          >
+          <Button variant="secondary" size="sm" onClick={() => navigate('/container/ingresses')}>
             Cancel
           </Button>
           <Button variant="primary" size="sm" className="flex-1">
@@ -478,7 +473,7 @@ export default function CreateIngressPage() {
                       <VStack gap={6}>
                         {/* Namespace */}
                         <VStack gap={2}>
-                          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                          <label className="text-label-lg text-[var(--color-text-default)]">
                             Namespace <span className="text-[var(--color-state-danger)]">*</span>
                           </label>
                           <Select
@@ -491,7 +486,7 @@ export default function CreateIngressPage() {
 
                         {/* Name */}
                         <VStack gap={2}>
-                          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                          <label className="text-label-lg text-[var(--color-text-default)]">
                             Name <span className="text-[var(--color-state-danger)]">*</span>
                           </label>
                           <Input
@@ -535,7 +530,7 @@ export default function CreateIngressPage() {
                               {/* Request Host with close button */}
                               <HStack gap={6} className="w-full" align="start">
                                 <VStack gap={2} className="flex-1">
-                                  <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                                  <label className="text-label-lg text-[var(--color-text-default)]">
                                     Request Host
                                   </label>
                                   <Input
@@ -547,7 +542,7 @@ export default function CreateIngressPage() {
                                 </VStack>
                                 <button
                                   onClick={() => removeRule(rule.id)}
-                                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors mt-6"
+                                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                 >
                                   <IconX
                                     size={12}
@@ -562,15 +557,15 @@ export default function CreateIngressPage() {
                                 <VStack gap={2}>
                                   {rule.paths.length > 0 && (
                                     <div className="grid grid-cols-[2fr_1fr_1fr_16px] gap-2 w-full">
-                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                      <span className="block text-label-lg text-[var(--color-text-default)]">
                                         Path
-                                      </label>
-                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                      </span>
+                                      <span className="block text-label-lg text-[var(--color-text-default)]">
                                         Target Service
-                                      </label>
-                                      <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                      </span>
+                                      <span className="block text-label-lg text-[var(--color-text-default)]">
                                         Port
-                                      </label>
+                                      </span>
                                       <div />
                                     </div>
                                   )}
@@ -587,7 +582,7 @@ export default function CreateIngressPage() {
                                           onChange={(value) =>
                                             updatePath(rule.id, path.id, 'pathType', value)
                                           }
-                                          className="w-[80px]"
+                                          fullWidth
                                         />
                                         <Input
                                           placeholder="e.g. /foo"
@@ -678,7 +673,7 @@ export default function CreateIngressPage() {
                         {/* Target Service and Port */}
                         <HStack gap={3} className="w-full">
                           <VStack gap={2} className="flex-1">
-                            <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                            <label className="text-label-lg text-[var(--color-text-default)]">
                               Target Service
                             </label>
                             <Select
@@ -692,7 +687,7 @@ export default function CreateIngressPage() {
                             />
                           </VStack>
                           <VStack gap={2} className="flex-1">
-                            <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                            <label className="text-label-lg text-[var(--color-text-default)]">
                               Port
                             </label>
                             <Input
@@ -716,12 +711,12 @@ export default function CreateIngressPage() {
                           {/* Header row */}
                           {certificates.length > 0 && (
                             <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                              <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                              <span className="block text-label-lg text-[var(--color-text-default)]">
                                 Secret Name
-                              </label>
-                              <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                              </span>
+                              <span className="block text-label-lg text-[var(--color-text-default)]">
                                 Hosts (comma separated)
-                              </label>
+                              </span>
                               <div />
                             </div>
                           )}
@@ -786,14 +781,14 @@ export default function CreateIngressPage() {
                     <SectionCard.Header title="Ingress Class" />
                     <SectionCard.Content>
                       <VStack gap={2}>
-                        <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                        <label className="text-label-lg text-[var(--color-text-default)]">
                           Ingress Class
                         </label>
                         <Select
                           options={INGRESS_CLASS_OPTIONS}
                           value={ingressClass}
                           onChange={setIngressClass}
-                          fullWidth
+                          width="half"
                         />
                       </VStack>
                     </SectionCard.Content>
@@ -807,7 +802,7 @@ export default function CreateIngressPage() {
                         {/* Labels */}
                         <VStack gap={3}>
                           <VStack gap={1}>
-                            <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                            <label className="text-label-lg text-[var(--color-text-default)]">
                               Labels
                             </label>
                             <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
@@ -819,12 +814,12 @@ export default function CreateIngressPage() {
                             <VStack gap={2}>
                               {labels.length > 0 && (
                                 <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                                  <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                  <span className="block text-label-lg text-[var(--color-text-default)]">
                                     Key
-                                  </label>
-                                  <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                  </span>
+                                  <span className="block text-label-lg text-[var(--color-text-default)]">
                                     Value
-                                  </label>
+                                  </span>
                                   <div />
                                 </div>
                               )}
@@ -874,7 +869,7 @@ export default function CreateIngressPage() {
                         {/* Annotations */}
                         <VStack gap={3}>
                           <VStack gap={1}>
-                            <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                            <label className="text-label-lg text-[var(--color-text-default)]">
                               Annotations
                             </label>
                             <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
@@ -887,12 +882,12 @@ export default function CreateIngressPage() {
                             <VStack gap={2}>
                               {annotations.length > 0 && (
                                 <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                                  <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                  <span className="block text-label-lg text-[var(--color-text-default)]">
                                     Key
-                                  </label>
-                                  <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                                  </span>
+                                  <span className="block text-label-lg text-[var(--color-text-default)]">
                                     Value
-                                  </label>
+                                  </span>
                                   <div />
                                 </div>
                               )}

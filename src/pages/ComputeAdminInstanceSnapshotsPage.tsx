@@ -563,7 +563,6 @@ export function ComputeAdminInstanceSnapshotsPage() {
                       appliedFilters={appliedFilters}
                       onFiltersChange={setAppliedFilters}
                       placeholder="Search snapshot by attributes"
-                      className="w-[280px]"
                     />
                     <Button
                       variant="secondary"

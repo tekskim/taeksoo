@@ -314,7 +314,6 @@ export function ComputeAdminHostAggregatesPage() {
                       appliedFilters={appliedFilters}
                       onFiltersChange={setAppliedFilters}
                       placeholder="Search host aggregates by attributes"
-                      className="w-[280px]"
                     />
                     <Button
                       variant="secondary"
@@ -490,7 +489,6 @@ export function ComputeAdminHostAggregatesPage() {
                       appliedFilters={azAppliedFilters}
                       onFiltersChange={setAzAppliedFilters}
                       placeholder="Search availability zones by attributes"
-                      className="w-[280px]"
                     />
                     <Button
                       variant="secondary"

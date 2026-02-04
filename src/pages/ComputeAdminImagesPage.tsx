@@ -539,7 +539,6 @@ export function ComputeAdminImagesPage() {
                       appliedFilters={appliedFilters}
                       onFiltersChange={setAppliedFilters}
                       placeholder="Search image by attributes"
-                      className="w-[280px]"
                     />
                     <Button
                       variant="secondary"

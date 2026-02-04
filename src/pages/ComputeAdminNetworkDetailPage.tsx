@@ -927,7 +927,7 @@ export default function NetworkDetailPage() {
                       <div className="flex items-center gap-1">
                         {/* Search */}
                         <div className="flex items-center gap-1">
-                          <div className="w-[280px]">
+                          <div>
                             <SearchInput
                               value={subnetSearchTerm}
                               onChange={(e) => {
@@ -1000,7 +1000,7 @@ export default function NetworkDetailPage() {
                       <div className="flex items-center gap-1">
                         {/* Search */}
                         <div className="flex items-center gap-1">
-                          <div className="w-[280px]">
+                          <div>
                             <SearchInput
                               value={portSearchTerm}
                               onChange={(e) => {
@@ -1075,7 +1075,7 @@ export default function NetworkDetailPage() {
                       <div className="flex items-center gap-1">
                         {/* Search */}
                         <div className="flex items-center gap-1">
-                          <div className="w-[280px]">
+                          <div>
                             <SearchInput
                               value={dhcpAgentSearchTerm}
                               onChange={(e) => {

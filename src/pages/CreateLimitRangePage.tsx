@@ -128,7 +128,7 @@ function SummarySidebar({
 
         {/* Button row */}
         <HStack gap={2}>
-          <Button variant="secondary" onClick={onCancel} className="w-[80px]">
+          <Button variant="secondary" onClick={onCancel}>
             Cancel
           </Button>
           <Button
@@ -278,7 +278,6 @@ function ContainerResourceLimitSection({
                   placeholder="1000"
                   value={resourceLimit.cpuReservation}
                   onChange={(e) => updateField('cpuReservation', e.target.value)}
-                  className="w-[320px]"
                 />
                 <span className="text-body-md text-[var(--color-text-default)] shrink-0">
                   mCPUs
@@ -299,7 +298,6 @@ function ContainerResourceLimitSection({
                   placeholder="1000"
                   value={resourceLimit.cpuLimit}
                   onChange={(e) => updateField('cpuLimit', e.target.value)}
-                  className="w-[320px]"
                 />
                 <span className="text-body-md text-[var(--color-text-default)] shrink-0">
                   mCPUs
@@ -322,7 +320,6 @@ function ContainerResourceLimitSection({
                   placeholder="128"
                   value={resourceLimit.memoryReservation}
                   onChange={(e) => updateField('memoryReservation', e.target.value)}
-                  className="w-[320px]"
                 />
                 <span className="text-body-md text-[var(--color-text-default)] shrink-0">GiB</span>
               </HStack>
@@ -341,7 +338,6 @@ function ContainerResourceLimitSection({
                   placeholder="128"
                   value={resourceLimit.memoryLimit}
                   onChange={(e) => updateField('memoryLimit', e.target.value)}
-                  className="w-[320px]"
                 />
                 <span className="text-body-md text-[var(--color-text-default)] shrink-0">GiB</span>
               </HStack>
@@ -396,12 +392,12 @@ function LabelsAnnotationsSection({
               <VStack gap={2}>
                 {labels.length > 0 && (
                   <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                    <span className="block text-label-lg text-[var(--color-text-default)]">
                       Key
-                    </label>
-                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                    </span>
+                    <span className="block text-label-lg text-[var(--color-text-default)]">
                       Value
-                    </label>
+                    </span>
                     <div />
                   </div>
                 )}
@@ -458,12 +454,12 @@ function LabelsAnnotationsSection({
               <VStack gap={2}>
                 {annotations.length > 0 && (
                   <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                    <span className="block text-label-lg text-[var(--color-text-default)]">
                       Key
-                    </label>
-                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                    </span>
+                    <span className="block text-label-lg text-[var(--color-text-default)]">
                       Value
-                    </label>
+                    </span>
                     <div />
                   </div>
                 )}

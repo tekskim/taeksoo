@@ -593,11 +593,7 @@ export function ComputeAdminBareMetalDetailPage() {
                       </div>
 
                       {/* Search */}
-                      <SearchInput
-                        placeholder="Search interface by attributes"
-                        size="sm"
-                        className="w-[280px]"
-                      />
+                      <SearchInput placeholder="Search interface by attributes" size="sm" />
 
                       {/* Pagination */}
                       <Pagination
@@ -723,7 +719,6 @@ export function ComputeAdminBareMetalDetailPage() {
                             setActionLogSearchQuery(e.target.value);
                             setActionLogCurrentPage(1);
                           }}
-                          className="w-[280px]"
                         />
                         <Button variant="secondary" size="sm" className="!p-2 !w-7 !h-7 !min-w-7">
                           <IconDownload size={12} stroke={2} className="w-3 h-3" />

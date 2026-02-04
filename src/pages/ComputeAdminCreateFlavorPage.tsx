@@ -472,7 +472,6 @@ export function ComputeAdminCreateFlavorPage() {
                                   value={tenantSearch}
                                   onChange={setTenantSearch}
                                   placeholder="Search tenants by attributes"
-                                  className="w-[280px]"
                                 />
 
                                 {/* Pagination */}
@@ -641,7 +640,7 @@ export function ComputeAdminCreateFlavorPage() {
                                 onChange={setVcpu}
                                 min={1}
                                 max={128}
-                                className="w-[100px]"
+                                width="sm"
                               />
                               <span className="text-body-md text-[var(--color-text-default)]">
                                 cores
@@ -666,7 +665,7 @@ export function ComputeAdminCreateFlavorPage() {
                                 onChange={setRam}
                                 min={1}
                                 max={1024}
-                                className="w-[100px]"
+                                width="sm"
                               />
                               <span className="text-body-md text-[var(--color-text-default)]">
                                 GiB
@@ -691,7 +690,7 @@ export function ComputeAdminCreateFlavorPage() {
                                 onChange={setRootDisk}
                                 min={0}
                                 max={10000}
-                                className="w-[100px]"
+                                width="sm"
                               />
                               <span className="text-body-md text-[var(--color-text-default)]">
                                 GiB
@@ -714,7 +713,7 @@ export function ComputeAdminCreateFlavorPage() {
                                 onChange={setEphemeralDisk}
                                 min={0}
                                 max={10000}
-                                className="w-[100px]"
+                                width="sm"
                               />
                               <span className="text-body-md text-[var(--color-text-default)]">
                                 GiB
@@ -736,7 +735,7 @@ export function ComputeAdminCreateFlavorPage() {
                                 onChange={setSwapDisk}
                                 min={0}
                                 max={10000}
-                                className="w-[100px]"
+                                width="sm"
                               />
                               <span className="text-body-md text-[var(--color-text-default)]">
                                 MiB

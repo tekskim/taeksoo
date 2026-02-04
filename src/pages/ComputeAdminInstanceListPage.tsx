@@ -1525,7 +1525,6 @@ export function ComputeAdminInstanceListPage() {
                       onFiltersChange={handleFiltersChange}
                       placeholder="Search instance by attributes"
                       size="sm"
-                      className="w-[280px]"
                       hideAppliedFilters
                     />
                     <Button

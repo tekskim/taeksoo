@@ -128,7 +128,7 @@ function SummarySidebar({
 
         {/* Button row */}
         <HStack gap={2}>
-          <Button variant="secondary" onClick={onCancel} className="w-[80px]">
+          <Button variant="secondary" onClick={onCancel}>
             Cancel
           </Button>
           <Button
@@ -342,7 +342,7 @@ function ResourceQuotasSection({ quotaItems, onQuotaItemsChange }: ResourceQuota
                       </span>
                     </VStack>
                   </div>
-                  <div className="w-[16px]" />
+                  <div />
                 </div>
 
                 {quotaItems.map((item) => {
@@ -444,12 +444,12 @@ function LabelsAnnotationsSection({
               <VStack gap={2}>
                 {labels.length > 0 && (
                   <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                    <span className="block text-label-lg text-[var(--color-text-default)]">
                       Key
-                    </label>
-                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                    </span>
+                    <span className="block text-label-lg text-[var(--color-text-default)]">
                       Value
-                    </label>
+                    </span>
                     <div />
                   </div>
                 )}
@@ -506,12 +506,12 @@ function LabelsAnnotationsSection({
               <VStack gap={2}>
                 {annotations.length > 0 && (
                   <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                    <span className="block text-label-lg text-[var(--color-text-default)]">
                       Key
-                    </label>
-                    <label className="text-[12px] font-medium text-[var(--color-text-default)] leading-4">
+                    </span>
+                    <span className="block text-label-lg text-[var(--color-text-default)]">
                       Value
-                    </label>
+                    </span>
                     <div />
                   </div>
                 )}
