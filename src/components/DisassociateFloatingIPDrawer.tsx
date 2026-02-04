@@ -170,21 +170,21 @@ export function DisassociateFloatingIPDrawer({
                 className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
               >
                 <span className="text-label-sm text-[var(--color-text-default)]">Floating IP</span>
-                <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
+                <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
               </div>
               <div
                 style={{ width: '183px', flexShrink: 0 }}
                 className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
               >
                 <span className="text-label-sm text-[var(--color-text-default)]">Fixed IP</span>
-                <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
+                <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
               </div>
               <div
                 style={{ width: '183px', flexShrink: 0 }}
                 className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
               >
                 <span className="text-label-sm text-[var(--color-text-default)]">Created At</span>
-                <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
+                <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
               </div>
             </div>
 
@@ -236,7 +236,7 @@ export function DisassociateFloatingIPDrawer({
                         {fip.floatingIp}
                       </span>
                       <IconExternalLink
-                        size={12}
+                        size={16}
                         className="shrink-0 text-[var(--color-action-primary)]"
                       />
                     </div>

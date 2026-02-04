@@ -200,7 +200,7 @@ export default function IAMTokenPoliciesPage() {
                               onClick={handleResetToDefault}
                               className="flex items-center gap-1.5 text-label-md text-[var(--color-action-primary)] hover:underline"
                             >
-                              <IconRefresh size={12} stroke={1.5} />
+                              <IconRefresh size={16} stroke={1.5} />
                               Reset to default
                             </button>
                             <Button variant="secondary" size="sm" onClick={handleReload}>

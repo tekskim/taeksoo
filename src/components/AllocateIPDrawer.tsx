@@ -160,9 +160,9 @@ export function AllocateIPDrawer({
             className="flex items-center gap-1.5 text-label-lg text-[var(--color-text-default)] leading-5"
           >
             {isExpanded ? (
-              <IconChevronDown size={12} stroke={1} />
+              <IconChevronDown size={16} stroke={1} />
             ) : (
-              <IconChevronRight size={12} stroke={1} />
+              <IconChevronRight size={16} stroke={1} />
             )}
             IP Settings
           </button>

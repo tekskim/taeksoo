@@ -262,14 +262,14 @@ export function CreateVolumeBackupWithSelectionDrawer({
               </div>
               <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
                 Size
-                <IconChevronDown size={12} />
+                <IconChevronDown size={16} />
               </div>
               <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
                 Attach To
               </div>
               <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
                 Disk Tag
-                <IconChevronDown size={12} />
+                <IconChevronDown size={16} />
               </div>
             </div>
 
@@ -306,7 +306,7 @@ export function CreateVolumeBackupWithSelectionDrawer({
                     {vol.name}
                   </span>
                   <IconExternalLink
-                    size={12}
+                    size={16}
                     className="shrink-0 text-[var(--color-action-primary)]"
                   />
                 </div>
@@ -324,7 +324,7 @@ export function CreateVolumeBackupWithSelectionDrawer({
                         {vol.attachedTo}
                       </span>
                       <IconExternalLink
-                        size={12}
+                        size={16}
                         className="shrink-0 text-[var(--color-action-primary)]"
                       />
                     </>

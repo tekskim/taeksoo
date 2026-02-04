@@ -253,7 +253,7 @@ export function ComputeAdminCreateImagePage() {
             >
               {row.name}
             </Link>
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+            <IconExternalLink size={16} className="text-[var(--color-action-primary)]" />
           </div>
           <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
         </div>
@@ -379,7 +379,7 @@ export function ComputeAdminCreateImagePage() {
             breadcrumb={<Breadcrumb items={breadcrumbItems} />}
             actions={
               <TopBarAction
-                icon={<IconBell size={16} />}
+                icon={<IconBell size={12} />}
                 onClick={() => console.log('Notifications clicked')}
                 aria-label="Notifications"
                 badge

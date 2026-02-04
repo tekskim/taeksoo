@@ -285,7 +285,7 @@ function SummarySectionHeader({
       <div className="flex items-center gap-1.5">
         {hasChildren ? (
           <IconChevronRight
-            size={12}
+            size={16}
             stroke={1.5}
             className={`text-[var(--color-text-muted)] transition-transform ${expanded ? 'rotate-90' : ''}`}
           />
@@ -599,7 +599,7 @@ function LabelsAnnotationsSection({
                       onClick={() => onRemoveLabel(index)}
                       className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                     >
-                      <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                      <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
                     </button>
                   </div>
                 ))}
@@ -661,7 +661,7 @@ function LabelsAnnotationsSection({
                       onClick={() => onRemoveAnnotation(index)}
                       className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                     >
-                      <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                      <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
                     </button>
                   </div>
                 ))}
@@ -1646,7 +1646,7 @@ export function CreatePodPage() {
                                 }}
                                 className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
                               >
-                                <IconX size={12} stroke={1.5} />
+                                <IconX size={16} stroke={1.5} />
                               </button>
                             )}
                           </HStack>
@@ -1657,7 +1657,7 @@ export function CreatePodPage() {
                       onClick={addContainerTab}
                       className="flex items-center justify-center h-[20px] px-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors text-[var(--color-text-muted)] shrink-0"
                     >
-                      <IconPlus size={12} stroke={1.5} />
+                      <IconPlus size={16} stroke={1.5} />
                     </button>
                   </div>
                 </Tabs>
@@ -1736,7 +1736,7 @@ export function CreatePodPage() {
                                         className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                       >
                                         <IconX
-                                          size={12}
+                                          size={16}
                                           className="text-[var(--color-text-muted)]"
                                           stroke={1.5}
                                         />
@@ -1809,7 +1809,7 @@ export function CreatePodPage() {
                                         className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                       >
                                         <IconX
-                                          size={12}
+                                          size={16}
                                           className="text-[var(--color-text-muted)]"
                                           stroke={1.5}
                                         />
@@ -1985,7 +1985,7 @@ export function CreatePodPage() {
                                         className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                       >
                                         <IconX
-                                          size={12}
+                                          size={16}
                                           className="text-[var(--color-text-muted)]"
                                           stroke={1.5}
                                         />
@@ -2044,7 +2044,7 @@ export function CreatePodPage() {
                                         className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                       >
                                         <IconX
-                                          size={12}
+                                          size={16}
                                           className="text-[var(--color-text-muted)]"
                                           stroke={1.5}
                                         />
@@ -2111,7 +2111,7 @@ export function CreatePodPage() {
                                         className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                       >
                                         <IconX
-                                          size={12}
+                                          size={16}
                                           className="text-[var(--color-text-muted)]"
                                           stroke={1.5}
                                         />
@@ -2178,7 +2178,7 @@ export function CreatePodPage() {
                                         className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                       >
                                         <IconX
-                                          size={12}
+                                          size={16}
                                           className="text-[var(--color-text-muted)]"
                                           stroke={1.5}
                                         />
@@ -2269,7 +2269,7 @@ export function CreatePodPage() {
                                               className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                             >
                                               <IconX
-                                                size={12}
+                                                size={16}
                                                 className="text-[var(--color-text-muted)]"
                                                 stroke={1.5}
                                               />
@@ -2411,7 +2411,7 @@ export function CreatePodPage() {
                                                   className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                                 >
                                                   <IconX
-                                                    size={12}
+                                                    size={16}
                                                     className="text-[var(--color-text-muted)]"
                                                     stroke={1.5}
                                                   />
@@ -2511,7 +2511,7 @@ export function CreatePodPage() {
                                         className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                       >
                                         <IconX
-                                          size={12}
+                                          size={16}
                                           className="text-[var(--color-text-muted)]"
                                           stroke={1.5}
                                         />
@@ -2776,7 +2776,7 @@ export function CreatePodPage() {
                                               className="mt-6 size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                             >
                                               <IconX
-                                                size={12}
+                                                size={16}
                                                 className="text-[var(--color-text-muted)]"
                                                 stroke={1.5}
                                               />
@@ -2973,7 +2973,7 @@ export function CreatePodPage() {
                                         className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                       >
                                         <IconX
-                                          size={12}
+                                          size={16}
                                           className="text-[var(--color-text-muted)]"
                                           stroke={1.5}
                                         />
@@ -3080,7 +3080,7 @@ export function CreatePodPage() {
                                       className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                     >
                                       <IconX
-                                        size={12}
+                                        size={16}
                                         className="text-[var(--color-text-muted)]"
                                         stroke={1.5}
                                       />
@@ -3847,7 +3847,7 @@ export function CreatePodPage() {
                                         }}
                                       >
                                         <IconX
-                                          size={12}
+                                          size={16}
                                           className="text-[var(--color-text-muted)]"
                                           stroke={1.5}
                                         />
@@ -4131,7 +4131,7 @@ export function CreatePodPage() {
                                                   }}
                                                   aria-label="Remove header"
                                                 >
-                                                  <IconX size={12} />
+                                                  <IconX size={16} />
                                                 </button>
                                               </div>
                                             ))}
@@ -4383,7 +4383,7 @@ export function CreatePodPage() {
                                                   }}
                                                   aria-label="Remove header"
                                                 >
-                                                  <IconX size={12} />
+                                                  <IconX size={16} />
                                                 </button>
                                               </div>
                                             ))}
@@ -4845,7 +4845,7 @@ export function CreatePodPage() {
                                                       }}
                                                       aria-label="Remove header"
                                                     >
-                                                      <IconX size={12} />
+                                                      <IconX size={16} />
                                                     </button>
                                                   </div>
                                                 ))}
@@ -4854,7 +4854,7 @@ export function CreatePodPage() {
                                                     variant="secondary"
                                                     size="sm"
                                                     leftIcon={
-                                                      <IconCirclePlus size={12} stroke={1.5} />
+                                                      <IconCirclePlus size={16} stroke={1.5} />
                                                     }
                                                     onClick={() => {
                                                       const newHeaders = [
@@ -5872,7 +5872,7 @@ export function CreatePodPage() {
                                                       }}
                                                     >
                                                       <IconX
-                                                        size={12}
+                                                        size={16}
                                                         className="text-[var(--color-text-muted)]"
                                                         stroke={1.5}
                                                       />

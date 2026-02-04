@@ -163,7 +163,7 @@ export function DetachVolumeDrawer({
               variant="muted"
               size="sm"
               onClick={onCreateNewNetwork}
-              rightIcon={<IconExternalLink size={12} />}
+              rightIcon={<IconExternalLink size={16} />}
             >
               Create a new network
             </Button>
@@ -217,28 +217,28 @@ export function DetachVolumeDrawer({
                 className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
               >
                 <span className="text-label-sm text-[var(--color-text-default)]">Name</span>
-                <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
+                <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
               </div>
               <div
                 style={{ width: '137px', flexShrink: 0 }}
                 className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
               >
                 <span className="text-label-sm text-[var(--color-text-default)]">Type</span>
-                <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
+                <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
               </div>
               <div
                 style={{ width: '137px', flexShrink: 0 }}
                 className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
               >
                 <span className="text-label-sm text-[var(--color-text-default)]">Size</span>
-                <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
+                <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
               </div>
               <div
                 style={{ width: '138px', flexShrink: 0 }}
                 className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
               >
                 <span className="text-label-sm text-[var(--color-text-default)]">Disk Tag</span>
-                <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
+                <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
               </div>
             </div>
 
@@ -294,7 +294,7 @@ export function DetachVolumeDrawer({
                         {volume.name}
                       </span>
                       <IconExternalLink
-                        size={12}
+                        size={16}
                         className="shrink-0 text-[var(--color-action-primary)]"
                       />
                     </div>

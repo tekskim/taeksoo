@@ -299,7 +299,7 @@ function SummarySectionHeader({
       <div className="flex items-center gap-1.5">
         {hasChildren ? (
           <IconChevronRight
-            size={12}
+            size={16}
             stroke={1.5}
             className={`text-[var(--color-text-muted)] transition-transform ${expanded ? 'rotate-90' : ''}`}
           />
@@ -681,7 +681,7 @@ function LabelsAnnotationsSection({
                       onClick={() => onRemoveLabel(index)}
                       className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                     >
-                      <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                      <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
                     </button>
                   </div>
                 ))}
@@ -744,7 +744,7 @@ function LabelsAnnotationsSection({
                       onClick={() => onRemoveAnnotation(index)}
                       className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                     >
-                      <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                      <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
                     </button>
                   </div>
                 ))}
@@ -1692,7 +1692,7 @@ export function CreateStatefulSetPage() {
                                 }}
                                 className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded shrink-0"
                               >
-                                <IconX size={12} stroke={1.5} />
+                                <IconX size={16} stroke={1.5} />
                               </button>
                             )}
                           </HStack>
@@ -1703,7 +1703,7 @@ export function CreateStatefulSetPage() {
                       onClick={addContainerTab}
                       className="flex items-center justify-center h-[20px] px-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors text-[var(--color-text-muted)] shrink-0"
                     >
-                      <IconPlus size={12} stroke={1.5} />
+                      <IconPlus size={16} stroke={1.5} />
                     </button>
                   </div>
                 </Tabs>
@@ -1810,7 +1810,7 @@ export function CreateStatefulSetPage() {
                                         className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                       >
                                         <IconX
-                                          size={12}
+                                          size={16}
                                           className="text-[var(--color-text-muted)]"
                                           stroke={1.5}
                                         />
@@ -1884,7 +1884,7 @@ export function CreateStatefulSetPage() {
                                         className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                       >
                                         <IconX
-                                          size={12}
+                                          size={16}
                                           className="text-[var(--color-text-muted)]"
                                           stroke={1.5}
                                         />
@@ -2060,7 +2060,7 @@ export function CreateStatefulSetPage() {
                                         className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                       >
                                         <IconX
-                                          size={12}
+                                          size={16}
                                           className="text-[var(--color-text-muted)]"
                                           stroke={1.5}
                                         />
@@ -2119,7 +2119,7 @@ export function CreateStatefulSetPage() {
                                         className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                       >
                                         <IconX
-                                          size={12}
+                                          size={16}
                                           className="text-[var(--color-text-muted)]"
                                           stroke={1.5}
                                         />
@@ -2186,7 +2186,7 @@ export function CreateStatefulSetPage() {
                                         className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                       >
                                         <IconX
-                                          size={12}
+                                          size={16}
                                           className="text-[var(--color-text-muted)]"
                                           stroke={1.5}
                                         />
@@ -2253,7 +2253,7 @@ export function CreateStatefulSetPage() {
                                         className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                       >
                                         <IconX
-                                          size={12}
+                                          size={16}
                                           className="text-[var(--color-text-muted)]"
                                           stroke={1.5}
                                         />
@@ -2344,7 +2344,7 @@ export function CreateStatefulSetPage() {
                                               className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                             >
                                               <IconX
-                                                size={12}
+                                                size={16}
                                                 className="text-[var(--color-text-muted)]"
                                                 stroke={1.5}
                                               />
@@ -2486,7 +2486,7 @@ export function CreateStatefulSetPage() {
                                                   className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                                 >
                                                   <IconX
-                                                    size={12}
+                                                    size={16}
                                                     className="text-[var(--color-text-muted)]"
                                                     stroke={1.5}
                                                   />
@@ -2586,7 +2586,7 @@ export function CreateStatefulSetPage() {
                                         className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                       >
                                         <IconX
-                                          size={12}
+                                          size={16}
                                           className="text-[var(--color-text-muted)]"
                                           stroke={1.5}
                                         />
@@ -2849,7 +2849,7 @@ export function CreateStatefulSetPage() {
                                             className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                           >
                                             <IconX
-                                              size={12}
+                                              size={16}
                                               className="text-[var(--color-text-muted)]"
                                               stroke={1.5}
                                             />
@@ -3045,7 +3045,7 @@ export function CreateStatefulSetPage() {
                                         className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                       >
                                         <IconX
-                                          size={12}
+                                          size={16}
                                           className="text-[var(--color-text-muted)]"
                                           stroke={1.5}
                                         />
@@ -3152,7 +3152,7 @@ export function CreateStatefulSetPage() {
                                       className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                     >
                                       <IconX
-                                        size={12}
+                                        size={16}
                                         className="text-[var(--color-text-muted)]"
                                         stroke={1.5}
                                       />
@@ -3603,7 +3603,7 @@ export function CreateStatefulSetPage() {
                                     className="absolute top-3 right-3 size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                   >
                                     <IconX
-                                      size={12}
+                                      size={16}
                                       className="text-[var(--color-text-muted)]"
                                       stroke={1.5}
                                     />
@@ -4032,7 +4032,7 @@ export function CreateStatefulSetPage() {
                                         }}
                                       >
                                         <IconX
-                                          size={12}
+                                          size={16}
                                           className="text-[var(--color-text-muted)]"
                                           stroke={1.5}
                                         />
@@ -4316,7 +4316,7 @@ export function CreateStatefulSetPage() {
                                                   className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                                 >
                                                   <IconX
-                                                    size={12}
+                                                    size={16}
                                                     className="text-[var(--color-text-muted)]"
                                                     stroke={1.5}
                                                   />
@@ -4571,7 +4571,7 @@ export function CreateStatefulSetPage() {
                                                   className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                                 >
                                                   <IconX
-                                                    size={12}
+                                                    size={16}
                                                     className="text-[var(--color-text-muted)]"
                                                     stroke={1.5}
                                                   />
@@ -5036,7 +5036,7 @@ export function CreateStatefulSetPage() {
                                                       className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                                     >
                                                       <IconX
-                                                        size={12}
+                                                        size={16}
                                                         className="text-[var(--color-text-muted)]"
                                                         stroke={1.5}
                                                       />
@@ -5048,7 +5048,7 @@ export function CreateStatefulSetPage() {
                                                     variant="secondary"
                                                     size="sm"
                                                     leftIcon={
-                                                      <IconCirclePlus size={12} stroke={1.5} />
+                                                      <IconCirclePlus size={16} stroke={1.5} />
                                                     }
                                                     onClick={() => {
                                                       const newHeaders = [
@@ -6056,7 +6056,7 @@ export function CreateStatefulSetPage() {
                                                     }}
                                                   >
                                                     <IconX
-                                                      size={12}
+                                                      size={16}
                                                       className="text-[var(--color-text-muted)]"
                                                       stroke={1.5}
                                                     />

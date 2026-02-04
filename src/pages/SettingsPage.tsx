@@ -506,7 +506,7 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
                           className="gap-1.5"
                           onClick={() => setIsEditingAccount(true)}
                         >
-                          <IconEdit size={12} />
+                          <IconEdit size={16} />
                           Edit
                         </Button>
                       )
@@ -603,9 +603,9 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
                               onClick={() => setShowNewPassword(!showNewPassword)}
                             >
                               {showNewPassword ? (
-                                <IconEye size={12} />
+                                <IconEye size={16} />
                               ) : (
-                                <IconEyeClosed size={12} />
+                                <IconEyeClosed size={16} />
                               )}
                             </button>
                           }
@@ -629,9 +629,9 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
                               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                             >
                               {showConfirmPassword ? (
-                                <IconEye size={12} />
+                                <IconEye size={16} />
                               ) : (
-                                <IconEyeClosed size={12} />
+                                <IconEyeClosed size={16} />
                               )}
                             </button>
                           }
@@ -665,7 +665,7 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
                           </span>
                           {authenticatorSetup.configured ? (
                             <div className="flex items-center gap-1.5 text-body-sm text-[var(--color-state-success)]">
-                              <IconCheck size={12} />
+                              <IconCheck size={16} />
                               <span>Added {authenticatorSetup.addedAt}</span>
                             </div>
                           ) : (
@@ -1239,9 +1239,9 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
                 onClick={() => setShowNewPassword(!showNewPassword)}
               >
                 {showNewPassword ? (
-                  <IconEye size={12} stroke={1.5} />
+                  <IconEye size={16} stroke={1.5} />
                 ) : (
-                  <IconEyeClosed size={12} stroke={1.5} />
+                  <IconEyeClosed size={16} stroke={1.5} />
                 )}
               </button>
             </div>
@@ -1273,9 +1273,9 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               >
                 {showConfirmPassword ? (
-                  <IconEye size={12} stroke={1.5} />
+                  <IconEye size={16} stroke={1.5} />
                 ) : (
-                  <IconEyeClosed size={12} stroke={1.5} />
+                  <IconEyeClosed size={16} stroke={1.5} />
                 )}
               </button>
             </div>

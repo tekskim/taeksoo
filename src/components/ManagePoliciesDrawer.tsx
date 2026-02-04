@@ -268,7 +268,7 @@ export function ManagePoliciesDrawer({
               </div>
               <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
                 Name
-                <IconChevronDown size={12} />
+                <IconChevronDown size={16} />
               </div>
               <div className="w-[100px] flex items-center justify-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
                 Type
@@ -278,11 +278,11 @@ export function ManagePoliciesDrawer({
               </div>
               <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
                 Description
-                <IconChevronDown size={12} />
+                <IconChevronDown size={16} />
               </div>
               <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
                 Edited at
-                <IconChevronDown size={12} />
+                <IconChevronDown size={16} />
               </div>
             </div>
 
@@ -310,14 +310,14 @@ export function ManagePoliciesDrawer({
                 {/* Name with chevron and link */}
                 <div className="flex-1 flex items-center gap-2 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 overflow-hidden">
                   <IconChevronRight
-                    size={12}
+                    size={16}
                     className="shrink-0 text-[var(--color-text-default)]"
                   />
                   <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)] truncate">
                     {policy.name}
                   </span>
                   <IconExternalLink
-                    size={12}
+                    size={16}
                     stroke={1.5}
                     className="shrink-0 text-[var(--color-action-primary)]"
                   />

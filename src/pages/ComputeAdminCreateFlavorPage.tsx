@@ -336,7 +336,7 @@ export function ComputeAdminCreateFlavorPage() {
             breadcrumb={<Breadcrumb items={breadcrumbItems} />}
             actions={
               <TopBarAction
-                icon={<IconBell size={16} />}
+                icon={<IconBell size={12} />}
                 onClick={() => console.log('Notifications clicked')}
                 aria-label="Notifications"
                 badge
@@ -535,7 +535,7 @@ export function ComputeAdminCreateFlavorPage() {
                                           className="text-label-md text-[var(--color-link)] hover:underline flex items-center gap-1.5"
                                         >
                                           {tenant.name}
-                                          <IconExternalLink size={12} />
+                                          <IconExternalLink size={16} />
                                         </Link>
                                         <span className="text-body-sm text-[var(--color-text-muted)]">
                                           ID: {tenant.id}
@@ -851,7 +851,7 @@ export function ComputeAdminCreateFlavorPage() {
                                     className="flex items-center justify-center w-7 h-7 rounded-md border border-[var(--color-border-default)] hover:bg-[var(--color-surface-subtle)]"
                                   >
                                     <IconCirclePlus
-                                      size={12}
+                                      size={16}
                                       className="text-[var(--color-text-muted)]"
                                     />
                                   </button>
@@ -899,12 +899,12 @@ export function ComputeAdminCreateFlavorPage() {
                                           >
                                             {expandedMetadata.has(item.key) ? (
                                               <IconChevronDown
-                                                size={12}
+                                                size={16}
                                                 className="text-[var(--color-text-default)]"
                                               />
                                             ) : (
                                               <IconChevronRight
-                                                size={12}
+                                                size={16}
                                                 className="text-[var(--color-text-default)]"
                                               />
                                             )}
@@ -928,7 +928,7 @@ export function ComputeAdminCreateFlavorPage() {
                                             className="flex items-center justify-center w-7 h-7 rounded-md border border-[var(--color-border-strong)] hover:bg-[var(--color-surface-subtle)]"
                                           >
                                             <IconCirclePlus
-                                              size={12}
+                                              size={16}
                                               className="text-[var(--color-text-default)]"
                                             />
                                           </button>
@@ -974,7 +974,7 @@ export function ComputeAdminCreateFlavorPage() {
                                                   className="flex items-center justify-center w-7 h-7 rounded-md border border-[var(--color-border-strong)] hover:bg-[var(--color-surface-subtle)]"
                                                 >
                                                   <IconCirclePlus
-                                                    size={12}
+                                                    size={16}
                                                     className="text-[var(--color-text-default)]"
                                                   />
                                                 </button>
@@ -1045,7 +1045,7 @@ export function ComputeAdminCreateFlavorPage() {
                                           className="flex items-center justify-center w-7 h-7 rounded-md border border-[var(--color-border-strong)] hover:bg-red-50"
                                         >
                                           <IconMinus
-                                            size={12}
+                                            size={16}
                                             className="text-[var(--color-state-danger)]"
                                           />
                                         </button>

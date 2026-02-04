@@ -127,7 +127,7 @@ function SectionStatusIcon({ status }: { status: SectionState }) {
     return (
       <div className="w-4 h-4 shrink-0">
         <IconProgress
-          size={12}
+          size={16}
           stroke={1.5}
           className="text-[var(--color-text-subtle)] animate-spin"
         />
@@ -778,7 +778,7 @@ function PolicyEditorSection({
                   className="absolute top-3 right-3 p-1 rounded hover:bg-[var(--color-surface-subtle)] text-[var(--color-text-muted)] hover:text-[var(--color-text-default)] transition-colors"
                   aria-label="Remove permission"
                 >
-                  <IconX size={12} stroke={1.5} />
+                  <IconX size={16} stroke={1.5} />
                 </button>
               )}
               <VStack gap={6}>
@@ -891,7 +891,7 @@ function PolicyEditorSection({
                         className="w-full h-8 pl-3 pr-8 text-body-sm bg-white border border-[var(--color-border-strong)] rounded-[6px] placeholder:text-[var(--color-text-subtle)] focus:outline-none focus:border-[var(--color-action-primary)]"
                       />
                       <IconSearch
-                        size={12}
+                        size={16}
                         className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-default)]"
                       />
                     </div>
@@ -1046,9 +1046,9 @@ function PolicyEditorSection({
                 onClick={() => setConditionsExpanded(!conditionsExpanded)}
               >
                 {conditionsExpanded ? (
-                  <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
+                  <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
                 ) : (
-                  <IconChevronRight size={12} className="text-[var(--color-text-default)]" />
+                  <IconChevronRight size={16} className="text-[var(--color-text-default)]" />
                 )}
                 <span className="text-label-lg text-[var(--color-text-default)]">Conditions</span>
               </button>

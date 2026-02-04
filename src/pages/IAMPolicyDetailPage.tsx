@@ -643,7 +643,7 @@ export default function IAMPolicyDetailPage() {
                       <Button
                         variant="secondary"
                         size="sm"
-                        rightIcon={<IconChevronDown size={12} />}
+                        rightIcon={<IconChevronDown size={16} />}
                       >
                         More Actions
                       </Button>
@@ -706,28 +706,28 @@ export default function IAMPolicyDetailPage() {
                           <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
                             App
                             <IconChevronDown
-                              size={12}
+                              size={16}
                               className="text-[var(--color-text-default)]"
                             />
                           </div>
                           <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
                             Partition
                             <IconChevronDown
-                              size={12}
+                              size={16}
                               className="text-[var(--color-text-default)]"
                             />
                           </div>
                           <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
                             Resource
                             <IconChevronDown
-                              size={12}
+                              size={16}
                               className="text-[var(--color-text-default)]"
                             />
                           </div>
                           <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
                             Action class
                             <IconChevronDown
-                              size={12}
+                              size={16}
                               className="text-[var(--color-text-default)]"
                             />
                           </div>
@@ -758,9 +758,9 @@ export default function IAMPolicyDetailPage() {
                                   className="p-0.5 hover:bg-[var(--color-surface-subtle)] rounded"
                                 >
                                   {expandedPermissions.has(perm.id) ? (
-                                    <IconChevronDown size={12} stroke={1.5} />
+                                    <IconChevronDown size={16} stroke={1.5} />
                                   ) : (
-                                    <IconChevronRight size={12} stroke={1.5} />
+                                    <IconChevronRight size={16} stroke={1.5} />
                                   )}
                                 </button>
                                 {perm.app}
@@ -849,28 +849,28 @@ export default function IAMPolicyDetailPage() {
                           <div className="flex-1 flex items-center gap-1.5 px-3 py-0 text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors">
                             Version
                             <IconChevronDown
-                              size={12}
+                              size={16}
                               className="text-[var(--color-text-default)]"
                             />
                           </div>
                           <div className="flex-1 flex items-center gap-1.5 px-3 py-0 text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors">
                             Conditions
                             <IconChevronDown
-                              size={12}
+                              size={16}
                               className="text-[var(--color-text-default)]"
                             />
                           </div>
                           <div className="flex-1 flex items-center gap-1.5 px-3 py-0 text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors">
                             Edited by
                             <IconChevronDown
-                              size={12}
+                              size={16}
                               className="text-[var(--color-text-default)]"
                             />
                           </div>
                           <div className="flex-1 flex items-center gap-1.5 px-3 py-0 text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors">
                             Edited at
                             <IconChevronDown
-                              size={12}
+                              size={16}
                               className="text-[var(--color-text-default)]"
                             />
                           </div>
@@ -912,9 +912,9 @@ export default function IAMPolicyDetailPage() {
                                   className="p-0.5 hover:bg-[var(--color-surface-subtle)] rounded"
                                 >
                                   {expandedVersions.has(version.id) ? (
-                                    <IconChevronDown size={12} stroke={1.5} />
+                                    <IconChevronDown size={16} stroke={1.5} />
                                   ) : (
-                                    <IconChevronRight size={12} stroke={1.5} />
+                                    <IconChevronRight size={16} stroke={1.5} />
                                   )}
                                 </button>
                                 <span className="font-medium">Version {version.version}</span>

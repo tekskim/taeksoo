@@ -150,7 +150,7 @@ export function Drawer({
                 className="p-1 rounded hover:bg-[var(--color-surface-subtle)] transition-colors"
                 aria-label="Close drawer"
               >
-                <IconX size={16} className="text-[var(--color-text-muted)]" />
+                <IconX size={12} className="text-[var(--color-text-muted)]" />
               </button>
             )}
           </div>

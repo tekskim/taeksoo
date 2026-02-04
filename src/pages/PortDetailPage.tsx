@@ -502,7 +502,7 @@ export default function PortDetailPage() {
             onClick={(e) => e.stopPropagation()}
           >
             {row.name}
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+            <IconExternalLink size={16} className="text-[var(--color-action-primary)]" />
           </Link>
           <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
         </div>
@@ -621,7 +621,7 @@ export default function PortDetailPage() {
             breadcrumb={<Breadcrumb items={breadcrumbItems} />}
             actions={
               <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
+                icon={<IconBell size={12} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />
@@ -661,7 +661,7 @@ export default function PortDetailPage() {
                     ]}
                     trigger="click"
                   >
-                    <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
+                    <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={16} />}>
                       More Actions
                     </Button>
                   </ContextMenu>
@@ -732,7 +732,7 @@ export default function PortDetailPage() {
                               >
                                 {port.ownedNetwork.name}
                                 <IconExternalLink
-                                  size={12}
+                                  size={16}
                                   className="text-[var(--color-action-primary)]"
                                 />
                               </Link>
@@ -747,7 +747,7 @@ export default function PortDetailPage() {
                               >
                                 {port.subnet.name}
                                 <IconExternalLink
-                                  size={12}
+                                  size={16}
                                   className="text-[var(--color-action-primary)]"
                                 />
                               </Link>
@@ -764,7 +764,7 @@ export default function PortDetailPage() {
                                   title={copiedMac ? 'Copied!' : 'Copy MAC Address'}
                                 >
                                   <IconCopy
-                                    size={12}
+                                    size={16}
                                     stroke={1.5}
                                     className="text-[var(--color-action-primary)]"
                                   />
@@ -793,7 +793,7 @@ export default function PortDetailPage() {
                                 >
                                   {port.attachedTo.name}
                                   <IconExternalLink
-                                    size={12}
+                                    size={16}
                                     className="text-[var(--color-action-primary)]"
                                   />
                                 </Link>

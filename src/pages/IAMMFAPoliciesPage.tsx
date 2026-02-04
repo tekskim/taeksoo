@@ -208,7 +208,7 @@ export default function IAMMFAPoliciesPage() {
                               onClick={handleResetToDefault}
                               className="flex items-center gap-1.5 text-label-md text-[var(--color-action-primary)] hover:underline"
                             >
-                              <IconRefresh size={12} stroke={1.5} />
+                              <IconRefresh size={16} stroke={1.5} />
                               Reset to default
                             </button>
                             <Button variant="secondary" size="sm" onClick={handleReload}>
@@ -335,11 +335,11 @@ export default function IAMMFAPoliciesPage() {
                               <HStack className="gap-[6px]">
                                 <Chip
                                   value="Google Auth"
-                                  leftIcon={<IconDeviceMobile size={16} stroke={1.5} />}
+                                  leftIcon={<IconDeviceMobile size={12} stroke={1.5} />}
                                 />
                                 <Chip
                                   value="MS Auth"
-                                  leftIcon={<IconDeviceMobile size={16} stroke={1.5} />}
+                                  leftIcon={<IconDeviceMobile size={12} stroke={1.5} />}
                                 />
                               </HStack>
                             </VStack>
@@ -354,7 +354,7 @@ export default function IAMMFAPoliciesPage() {
                                 onClick={handleMethodsResetToDefault}
                                 className="flex items-center gap-1.5 text-label-md text-[var(--color-action-primary)] hover:underline"
                               >
-                                <IconRefresh size={12} stroke={1.5} />
+                                <IconRefresh size={16} stroke={1.5} />
                                 Reset to default
                               </button>
                               <Button variant="secondary" size="sm" onClick={handleMethodsReload}>
@@ -526,7 +526,7 @@ export default function IAMMFAPoliciesPage() {
                                 onClick={handleMethodsResetToDefault}
                                 className="flex items-center gap-1.5 text-label-md text-[var(--color-action-primary)] hover:underline"
                               >
-                                <IconRefresh size={12} stroke={1.5} />
+                                <IconRefresh size={16} stroke={1.5} />
                                 Reset to default
                               </button>
                               <Button variant="secondary" size="sm" onClick={handleMethodsReload}>

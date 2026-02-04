@@ -330,7 +330,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
           "
           aria-label="Previous month"
         >
-          <IconChevronLeft size={16} stroke={1} />
+          <IconChevronLeft size={12} stroke={1} />
         </button>
 
         <span
@@ -359,7 +359,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
           "
           aria-label="Next month"
         >
-          <IconChevronRight size={16} stroke={1} />
+          <IconChevronRight size={12} stroke={1} />
         </button>
       </div>
 

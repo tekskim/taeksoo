@@ -545,7 +545,7 @@ export default function CreateIngressPage() {
                                   className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                 >
                                   <IconX
-                                    size={12}
+                                    size={16}
                                     className="text-[var(--color-text-muted)]"
                                     stroke={1.5}
                                   />
@@ -620,7 +620,7 @@ export default function CreateIngressPage() {
                                         className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                       >
                                         <IconX
-                                          size={12}
+                                          size={16}
                                           className="text-[var(--color-text-muted)]"
                                           stroke={1.5}
                                         />
@@ -752,7 +752,7 @@ export default function CreateIngressPage() {
                                 className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                               >
                                 <IconX
-                                  size={12}
+                                  size={16}
                                   className="text-[var(--color-text-muted)]"
                                   stroke={1.5}
                                 />
@@ -845,7 +845,7 @@ export default function CreateIngressPage() {
                                     className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                   >
                                     <IconX
-                                      size={12}
+                                      size={16}
                                       className="text-[var(--color-text-muted)]"
                                       stroke={1.5}
                                     />
@@ -917,7 +917,7 @@ export default function CreateIngressPage() {
                                     className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                   >
                                     <IconX
-                                      size={12}
+                                      size={16}
                                       className="text-[var(--color-text-muted)]"
                                       stroke={1.5}
                                     />

@@ -304,28 +304,28 @@ export function ResizeInstanceDrawer({
                 className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
               >
                 <span className="text-label-sm text-[var(--color-text-default)]">Name</span>
-                <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
+                <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
               </div>
               <div
                 style={{ width: '80px', flexShrink: 0 }}
                 className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
               >
                 <span className="text-label-sm text-[var(--color-text-default)]">vCPU</span>
-                <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
+                <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
               </div>
               <div
                 style={{ width: '80px', flexShrink: 0 }}
                 className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
               >
                 <span className="text-label-sm text-[var(--color-text-default)]">RAM</span>
-                <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
+                <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
               </div>
               <div
                 style={{ width: '80px', flexShrink: 0 }}
                 className="flex items-center gap-1.5 px-3 border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]"
               >
                 <span className="text-label-sm text-[var(--color-text-default)]">Disk</span>
-                <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
+                <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
               </div>
               <div
                 style={{ width: '108px', flexShrink: 0 }}
@@ -334,7 +334,7 @@ export function ResizeInstanceDrawer({
                 <span className="text-label-sm text-[var(--color-text-default)]">
                   Ephemeral Disk
                 </span>
-                <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
+                <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
               </div>
               <div
                 style={{ width: '140px', flexShrink: 0 }}
@@ -343,7 +343,7 @@ export function ResizeInstanceDrawer({
                 <span className="text-label-sm text-[var(--color-text-default)]">
                   Internal Network Bandwidth
                 </span>
-                <IconChevronDown size={12} className="text-[var(--color-text-default)]" />
+                <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
               </div>
             </div>
 
@@ -389,7 +389,7 @@ export function ResizeInstanceDrawer({
                         {flavor.name}
                       </span>
                       <IconExternalLink
-                        size={12}
+                        size={16}
                         className="shrink-0 text-[var(--color-action-primary)]"
                       />
                     </div>
@@ -551,7 +551,7 @@ export function ResizeInstanceDrawer({
                     {instance.currentFlavor.name}
                   </span>
                   <IconExternalLink
-                    size={12}
+                    size={16}
                     className="shrink-0 text-[var(--color-action-primary)]"
                   />
                 </div>
@@ -620,7 +620,7 @@ export function ResizeInstanceDrawer({
                         {selectedFlavor.name}
                       </span>
                       <IconExternalLink
-                        size={12}
+                        size={16}
                         className="shrink-0 text-[var(--color-action-primary)]"
                       />
                     </div>

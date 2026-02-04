@@ -474,26 +474,26 @@ export default function IAMEventLogsPage() {
                   <div className="flex items-stretch min-h-[40px] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-md">
                     <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)] flex items-center">
                       <span>Event</span>
-                      <IconChevronDown size={12} className="ml-1.5" />
+                      <IconChevronDown size={16} className="ml-1.5" />
                     </div>
                     <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">
                       <span>Time</span>
-                      <IconChevronDown size={12} className="ml-1.5" />
+                      <IconChevronDown size={16} className="ml-1.5" />
                     </div>
                     <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">
                       <span>User</span>
-                      <IconChevronDown size={12} className="ml-1.5" />
+                      <IconChevronDown size={16} className="ml-1.5" />
                     </div>
                     <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">
                       <span>Target</span>
-                      <IconChevronDown size={12} className="ml-1.5" />
+                      <IconChevronDown size={16} className="ml-1.5" />
                     </div>
                     <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">
                       <span>Result</span>
                     </div>
                     <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">
                       <span>IP address</span>
-                      <IconChevronDown size={12} className="ml-1.5" />
+                      <IconChevronDown size={16} className="ml-1.5" />
                     </div>
                   </div>
 
@@ -519,12 +519,12 @@ export default function IAMEventLogsPage() {
                             >
                               {isExpanded ? (
                                 <IconChevronDown
-                                  size={12}
+                                  size={16}
                                   className="text-[var(--color-text-default)]"
                                 />
                               ) : (
                                 <IconChevronRight
-                                  size={12}
+                                  size={16}
                                   className="text-[var(--color-text-default)]"
                                 />
                               )}

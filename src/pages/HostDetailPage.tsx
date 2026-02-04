@@ -20,10 +20,10 @@ import {
   StatusIndicator,
   SearchInput,
   Pagination,
-  DatePicker,
   Drawer,
   Select,
   FormField,
+  MonitoringToolbar,
   type TableColumn,
   fixedColumns,
   columnMinWidths,
@@ -33,7 +33,6 @@ import { useTabs } from '@/contexts/TabContext';
 import { DataViewDrawer } from '@/components/DataViewDrawer';
 import {
   IconBell,
-  IconRefresh,
   IconDotsCircleHorizontal,
   IconArrowsMaximize,
   IconArrowsMinimize,
@@ -746,7 +745,7 @@ function HostChartWithFullScreen({
                   setFullScreenChart(null);
                   setContainerReady(false);
                 }}
-                timeControls={<HostMonitoringTimeControls />}
+                timeControls={<MonitoringToolbar />}
               />
             )}
           </div>
@@ -1867,7 +1866,7 @@ export default function HostDetailPage() {
                     <VStack gap={4} className="pt-4">
                       {/* Monitoring Time Controls */}
                       <div className="flex justify-start w-full">
-                        <HostMonitoringTimeControls
+                        <MonitoringToolbar
                           onTimeRangeChange={(value) => console.log('Time range changed:', value)}
                           onRefresh={() => console.log('Refresh clicked')}
                         />

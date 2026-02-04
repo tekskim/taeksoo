@@ -23,7 +23,7 @@ import {
   SearchInput,
   Pagination,
   Table,
-  DatePicker,
+  MonitoringToolbar,
   columnMinWidths,
   type TableColumn,
 } from '@/design-system';
@@ -32,7 +32,6 @@ import { useTabs } from '@/contexts/TabContext';
 import { DataViewDrawer } from '@/components/DataViewDrawer';
 import {
   IconBell,
-  IconRefresh,
   IconDotsCircleHorizontal,
   IconArrowsMaximize,
   IconArrowsMinimize,
@@ -649,7 +648,7 @@ function OSDChartWithFullScreen({
                   setFullScreenChart(null);
                   setContainerReady(false);
                 }}
-                timeControls={<OSDMonitoringTimeControls />}
+                timeControls={<MonitoringToolbar />}
               />
             )}
           </div>
@@ -1207,7 +1206,7 @@ export function OSDDetailPage() {
                     <VStack gap={4} className="pt-4">
                       {/* Monitoring Time Controls */}
                       <div className="flex justify-start w-full">
-                        <OSDMonitoringTimeControls
+                        <MonitoringToolbar
                           onTimeRangeChange={(value) => console.log('Time range changed:', value)}
                           onRefresh={() => console.log('Refresh clicked')}
                         />

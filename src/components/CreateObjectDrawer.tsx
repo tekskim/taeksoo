@@ -172,7 +172,7 @@ export function CreateObjectDrawer({
             Upload Files
           </label>
           <Button variant="secondary" size="sm" onClick={handleUploadClick} className="w-fit">
-            <IconUpload size={12} className="mr-1.5" />
+            <IconUpload size={16} className="mr-1.5" />
             Upload a File
           </Button>
 
@@ -183,19 +183,19 @@ export function CreateObjectDrawer({
               <div className="flex items-center bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md">
                 <div className="flex-1 px-3 py-2 h-10 flex items-center">
                   <span className="text-label-sm text-[var(--color-text-default)]">Name</span>
-                  <IconChevronDown size={12} className="ml-1.5 text-[var(--color-text-subtle)]" />
+                  <IconChevronDown size={16} className="ml-1.5 text-[var(--color-text-subtle)]" />
                 </div>
                 <div className="flex-1 px-3 py-2 h-10 flex items-center">
                   <span className="text-label-sm text-[var(--color-text-default)]">Type</span>
-                  <IconChevronDown size={12} className="ml-1.5 text-[var(--color-text-subtle)]" />
+                  <IconChevronDown size={16} className="ml-1.5 text-[var(--color-text-subtle)]" />
                 </div>
                 <div className="flex-1 px-3 py-2 h-10 flex items-center">
                   <span className="text-label-sm text-[var(--color-text-default)]">Size</span>
-                  <IconChevronDown size={12} className="ml-1.5 text-[var(--color-text-subtle)]" />
+                  <IconChevronDown size={16} className="ml-1.5 text-[var(--color-text-subtle)]" />
                 </div>
                 <div className="flex-1 px-3 py-2 h-10 flex items-center">
                   <span className="text-label-sm text-[var(--color-text-default)]">Count</span>
-                  <IconChevronDown size={12} className="ml-1.5 text-[var(--color-text-subtle)]" />
+                  <IconChevronDown size={16} className="ml-1.5 text-[var(--color-text-subtle)]" />
                 </div>
                 <div className="w-10 p-3" />
               </div>

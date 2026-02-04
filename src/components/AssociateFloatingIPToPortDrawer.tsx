@@ -296,7 +296,7 @@ export function AssociateFloatingIPToPortDrawer({
               >
                 <span className="text-label-sm text-[var(--color-text-default)]">Fixed IP</span>
                 <IconChevronDown
-                  size={12}
+                  size={16}
                   className={`transition-transform ${fixedIpSortField === 'fixedIp' && fixedIpSortDirection === 'desc' ? 'rotate-180' : ''}`}
                 />
               </div>
@@ -391,7 +391,7 @@ export function AssociateFloatingIPToPortDrawer({
               >
                 <span className="text-label-sm text-[var(--color-text-default)]">Floating IP</span>
                 <IconChevronDown
-                  size={12}
+                  size={16}
                   className={`transition-transform ${floatingIpSortField === 'floatingIp' && floatingIpSortDirection === 'desc' ? 'rotate-180' : ''}`}
                 />
               </div>
@@ -401,7 +401,7 @@ export function AssociateFloatingIPToPortDrawer({
               >
                 <span className="text-label-sm text-[var(--color-text-default)]">Network</span>
                 <IconChevronDown
-                  size={12}
+                  size={16}
                   className={`transition-transform ${floatingIpSortField === 'networkName' && floatingIpSortDirection === 'desc' ? 'rotate-180' : ''}`}
                 />
               </div>
@@ -411,7 +411,7 @@ export function AssociateFloatingIPToPortDrawer({
               >
                 <span className="text-label-sm text-[var(--color-text-default)]">Description</span>
                 <IconChevronDown
-                  size={12}
+                  size={16}
                   className={`transition-transform ${floatingIpSortField === 'description' && floatingIpSortDirection === 'desc' ? 'rotate-180' : ''}`}
                 />
               </div>
@@ -440,7 +440,7 @@ export function AssociateFloatingIPToPortDrawer({
                     <span className="text-label-md text-[var(--color-action-primary)] leading-4">
                       {item.floatingIp}
                     </span>
-                    <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+                    <IconExternalLink size={16} className="text-[var(--color-action-primary)]" />
                   </HStack>
                   <span className="text-body-sm text-[var(--color-text-subtle)] leading-4">
                     ID : {item.id}
@@ -451,7 +451,7 @@ export function AssociateFloatingIPToPortDrawer({
                     <span className="text-label-md text-[var(--color-action-primary)] leading-4">
                       {item.networkName}
                     </span>
-                    <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+                    <IconExternalLink size={16} className="text-[var(--color-action-primary)]" />
                   </HStack>
                   <span className="text-body-sm text-[var(--color-text-subtle)] leading-4">
                     ID : {item.networkId}

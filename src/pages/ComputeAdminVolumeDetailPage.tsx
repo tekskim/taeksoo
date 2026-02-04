@@ -551,7 +551,7 @@ export function ComputeAdminVolumeDetailPage() {
             breadcrumb={<Breadcrumb items={breadcrumbItems} />}
             actions={
               <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
+                icon={<IconBell size={12} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />
@@ -593,7 +593,7 @@ export function ComputeAdminVolumeDetailPage() {
                     }
                     trigger="click"
                   >
-                    <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
+                    <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={16} />}>
                       More Actions
                     </Button>
                   </ContextMenu>

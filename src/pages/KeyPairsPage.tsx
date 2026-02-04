@@ -265,9 +265,9 @@ export function KeyPairsPage() {
             title={copiedId === row.id ? 'Copied!' : 'Copy fingerprint'}
           >
             {copiedId === row.id ? (
-              <IconCheck size={12} className="text-[var(--color-state-success)]" />
+              <IconCheck size={16} className="text-[var(--color-state-success)]" />
             ) : (
-              <IconCopy size={12} className="text-[var(--color-action-primary)]" />
+              <IconCopy size={16} className="text-[var(--color-action-primary)]" />
             )}
           </button>
         </div>
@@ -358,7 +358,7 @@ export function KeyPairsPage() {
             }
             actions={
               <TopBarAction
-                icon={<IconBell size={16} stroke={1} />}
+                icon={<IconBell size={12} stroke={1} />}
                 aria-label="Notifications"
                 badge={true}
               />

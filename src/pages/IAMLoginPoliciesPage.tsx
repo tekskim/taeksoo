@@ -444,7 +444,7 @@ export default function IAMLoginPoliciesPage() {
                               onClick={handleResetPasswordPolicy}
                               className="flex items-center gap-1.5 text-label-md text-[var(--color-action-primary)] hover:underline"
                             >
-                              <IconRefresh size={12} stroke={1.5} />
+                              <IconRefresh size={16} stroke={1.5} />
                               Reset to default
                             </button>
                             <Button
@@ -715,7 +715,7 @@ export default function IAMLoginPoliciesPage() {
                               onClick={handleResetLockoutPolicy}
                               className="flex items-center gap-1.5 text-label-md text-[var(--color-action-primary)] hover:underline"
                             >
-                              <IconRefresh size={12} stroke={1.5} />
+                              <IconRefresh size={16} stroke={1.5} />
                               Reset to default
                             </button>
                             <Button

@@ -223,7 +223,7 @@ export function CreateKeyPairDrawer({
               onClick={() => fileInputRef.current?.click()}
               className="flex items-center gap-1.5 px-3 py-2 text-label-md text-[var(--color-text-default)] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md hover:bg-[var(--color-surface-muted)] transition-colors"
             >
-              <IconUpload size={12} stroke={1} />
+              <IconUpload size={16} stroke={1} />
               Upload a File
             </button>
             {/* Textarea */}

@@ -428,7 +428,7 @@ export function ComputeAdminInstanceTemplatesPage() {
             }
             actions={
               <TopBarAction
-                icon={<IconBell size={16} stroke={1} />}
+                icon={<IconBell size={12} stroke={1} />}
                 aria-label="Notifications"
                 badge={true}
               />
@@ -460,6 +460,9 @@ export function ComputeAdminInstanceTemplatesPage() {
                       appliedFilters={appliedFilters}
                       onFiltersChange={setAppliedFilters}
                       placeholder="Search template by attributes"
+                      size="sm"
+                      className="w-[var(--search-input-width)]"
+                      hideAppliedFilters
                     />
                     <Button
                       variant="secondary"

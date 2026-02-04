@@ -205,7 +205,7 @@ export function AttachVolumeDrawer({
               </div>
               <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
                 Name
-                <IconChevronDown size={12} />
+                <IconChevronDown size={16} />
               </div>
               <div className="w-[62px] flex items-center justify-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
                 Locked
@@ -215,7 +215,7 @@ export function AttachVolumeDrawer({
               </div>
               <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
                 Flavor
-                <IconChevronDown size={12} />
+                <IconChevronDown size={16} />
               </div>
               <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
                 Attached volumes
@@ -256,7 +256,7 @@ export function AttachVolumeDrawer({
                       {inst.name}
                     </span>
                     <IconExternalLink
-                      size={12}
+                      size={16}
                       className="shrink-0 text-[var(--color-action-primary)]"
                     />
                   </HStack>

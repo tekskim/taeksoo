@@ -353,7 +353,7 @@ export function VolumeBackupsPage() {
             onClick={(e) => e.stopPropagation()}
           >
             {row.sourceVolume}
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+            <IconExternalLink size={16} className="text-[var(--color-action-primary)]" />
           </Link>
           <span className="text-body-sm text-[var(--color-text-subtle)]">
             ID : {row.sourceVolumeId}
@@ -470,7 +470,7 @@ export function VolumeBackupsPage() {
             }
             actions={
               <TopBarAction
-                icon={<IconBell size={16} stroke={1} />}
+                icon={<IconBell size={12} stroke={1} />}
                 aria-label="Notifications"
                 badge={true}
               />

@@ -383,9 +383,9 @@ function CopyableValue({ value }: CopyableValueProps) {
         aria-label="Copy to clipboard"
       >
         {copied ? (
-          <IconCheck size={12} className="text-[var(--color-state-success)]" />
+          <IconCheck size={16} className="text-[var(--color-state-success)]" />
         ) : (
-          <IconCopy size={12} className="text-[var(--color-action-primary)]" />
+          <IconCopy size={16} className="text-[var(--color-action-primary)]" />
         )}
       </button>
     </div>
@@ -463,7 +463,7 @@ export function ComputeImageDetailPage() {
             breadcrumb={<Breadcrumb items={breadcrumbItems} />}
             actions={
               <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
+                icon={<IconBell size={12} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />
@@ -510,7 +510,7 @@ export function ComputeImageDetailPage() {
                       <Button
                         variant="secondary"
                         size="sm"
-                        rightIcon={<IconChevronDown size={12} />}
+                        rightIcon={<IconChevronDown size={16} />}
                       >
                         More Actions
                       </Button>

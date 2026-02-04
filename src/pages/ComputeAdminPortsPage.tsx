@@ -476,9 +476,9 @@ export function ComputeAdminPortsPage() {
             <Tooltip content={row.attachedType === 'router' ? 'Router' : 'Instance'} position="top">
               <div className="flex-shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[4px] p-[3px] cursor-default">
                 {row.attachedType === 'router' ? (
-                  <IconRouter size={12} className="text-[var(--color-text-subtle)]" />
+                  <IconRouter size={16} className="text-[var(--color-text-subtle)]" />
                 ) : (
-                  <IconCube size={12} className="text-[var(--color-text-subtle)]" />
+                  <IconCube size={16} className="text-[var(--color-text-subtle)]" />
                 )}
               </div>
             </Tooltip>
@@ -645,7 +645,7 @@ export function ComputeAdminPortsPage() {
             }
             actions={
               <TopBarAction
-                icon={<IconBell size={16} stroke={1} />}
+                icon={<IconBell size={12} stroke={1} />}
                 aria-label="Notifications"
                 badge={true}
               />

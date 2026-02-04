@@ -313,9 +313,9 @@ function BasicInfoSection({
               onClick={() => setDescriptionExpanded(!descriptionExpanded)}
             >
               {descriptionExpanded ? (
-                <IconChevronDown size={12} stroke={1.5} />
+                <IconChevronDown size={16} stroke={1.5} />
               ) : (
-                <IconChevronRight size={12} stroke={1.5} />
+                <IconChevronRight size={16} stroke={1.5} />
               )}
               Description
             </button>
@@ -396,7 +396,7 @@ function DataSection({ dataEntries, onDataEntriesChange }: DataSectionProps) {
                         onClick={() => removeDataEntry(index)}
                         className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                       >
-                        <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                        <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
                       </button>
                     </div>
                   ))}
@@ -507,7 +507,7 @@ function LabelsAnnotationsSection({
                       onClick={() => onRemoveLabel(index)}
                       className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                     >
-                      <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                      <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
                     </button>
                   </div>
                 ))}
@@ -569,7 +569,7 @@ function LabelsAnnotationsSection({
                       onClick={() => onRemoveAnnotation(index)}
                       className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                     >
-                      <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                      <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
                     </button>
                   </div>
                 ))}
