@@ -89,14 +89,18 @@ import type { FilterField, AppliedFilter } from '@/design-system';
 
 ```css
 --primitive-spacing-0: 0;
+--primitive-spacing-0-5: 2px;
 --primitive-spacing-1: 4px;
+--primitive-spacing-1-5: 6px;
 --primitive-spacing-2: 8px;
+--primitive-spacing-2-5: 10px;
 --primitive-spacing-3: 12px;
 --primitive-spacing-4: 16px;
 --primitive-spacing-5: 20px;
 --primitive-spacing-6: 24px;
 --primitive-spacing-7: 28px;
 --primitive-spacing-8: 32px;
+--primitive-spacing-9: 36px;
 --primitive-spacing-10: 40px;
 --primitive-spacing-12: 48px;
 --primitive-spacing-16: 64px;
@@ -118,6 +122,7 @@ import type { FilterField, AppliedFilter } from '@/design-system';
 --font-size-40: 2.5rem;     /* 40px */
 
 /* Line Height */
+--line-height-14: 0.875rem; /* 14px */
 --line-height-16: 1rem;     /* 16px */
 --line-height-18: 1.125rem; /* 18px */
 --line-height-20: 1.25rem;  /* 20px */
@@ -723,9 +728,10 @@ import { IconPlus, IconEdit, IconTrash } from '@tabler/icons-react';
 
 ## 버전
 
-- **Current Version**: 1.5.1
+- **Current Version**: 1.5.2
 - **Last Updated**: 2026-02-04
 - **Changes**:
-  - Modal: size별 너비 차등 적용 (sm=344px, md=480px, lg=640px)
-  - Typography: `text-heading-h6` font-weight 600 (semibold)으로 통일
-  - 코드 정리: console.log 제거, 하드코딩 색상 CSS 변수로 교체
+  - Storybook 불일치 수정: Modal size, radius-xl, Button padding 값 정정
+  - Input/Select: xs, lg, half, full width 옵션 stories에 추가
+  - Button: warning variant DesignSystemPage에 추가
+  - Spacing 토큰 추가: 0.5, 1.5, 2.5, 9

@@ -63,7 +63,7 @@ import { Modal, ConfirmModal } from '@thaki/tds';
     size: {
       control: 'select',
       options: ['sm', 'md', 'lg'],
-      description: '모달 크기 (sm: 400px, md: 480px, lg: 640px)',
+      description: '모달 크기 (sm: 344px, md: 480px, lg: 640px)',
       table: {
         type: { summary: '"sm" | "md" | "lg"' },
         defaultValue: { summary: '"md"' },

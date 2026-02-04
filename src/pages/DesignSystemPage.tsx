@@ -5261,6 +5261,21 @@ outline: 2px solid var(--color-border-focus);`}
                         </VStack>
                         <VStack gap={1.5} align="center">
                           <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                            Warning
+                          </span>
+                          <Button size="sm" variant="warning">
+                            Default
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="warning"
+                            className="bg-[var(--color-orange-700)]"
+                          >
+                            Hover
+                          </Button>
+                        </VStack>
+                        <VStack gap={1.5} align="center">
+                          <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                             Link
                           </span>
                           <Button size="sm" variant="link">

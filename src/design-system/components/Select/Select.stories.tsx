@@ -95,10 +95,11 @@ const options = [
     },
     width: {
       control: 'select',
-      options: ['sm', 'md', 'lg'],
-      description: '셀렉트 고정 너비',
+      options: ['xs', 'sm', 'md', 'lg', 'half', 'full'],
+      description:
+        '셀렉트 고정 너비 (xs: 80px, sm: 160px, md: 240px, lg: 320px, half: 50%, full: 100%)',
       table: {
-        type: { summary: '"sm" | "md" | "lg"' },
+        type: { summary: '"xs" | "sm" | "md" | "lg" | "half" | "full"' },
         defaultValue: { summary: '"md"' },
         category: '크기',
       },
@@ -284,9 +285,12 @@ export const Sizes: Story = {
 export const Widths: Story = {
   render: () => (
     <div className="flex flex-col gap-4">
-      <Select width="sm" options={defaultOptions} placeholder="Small width (160px)" />
-      <Select width="md" options={defaultOptions} placeholder="Medium width (240px)" />
-      <Select width="lg" options={defaultOptions} placeholder="Large width (320px)" />
+      <Select width="xs" options={defaultOptions} placeholder="XS (80px)" />
+      <Select width="sm" options={defaultOptions} placeholder="Small (160px)" />
+      <Select width="md" options={defaultOptions} placeholder="Medium (240px)" />
+      <Select width="lg" options={defaultOptions} placeholder="Large (320px)" />
+      <Select width="half" options={defaultOptions} placeholder="Half (50%)" />
+      <Select width="full" options={defaultOptions} placeholder="Full (100%)" />
     </div>
   ),
 };

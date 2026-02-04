@@ -71,7 +71,7 @@ export const BorderRadius: Story = {
           { name: '--radius-sm', value: '4px' },
           { name: '--radius-md', value: '6px' },
           { name: '--radius-lg', value: '8px' },
-          { name: '--radius-xl', value: '12px' },
+          { name: '--radius-xl', value: '16px' },
           { name: '--radius-full', value: '9999px' },
         ].map(({ name, value }) => (
           <div key={name} className="flex flex-col items-center gap-2">
@@ -131,17 +131,17 @@ export const ComponentSpacing: Story = {
             <tr className="border-b border-[var(--color-border-subtle)]">
               <td className="py-2">sm</td>
               <td className="py-2">28px</td>
-              <td className="py-2">12px</td>
+              <td className="py-2">10px</td>
             </tr>
             <tr className="border-b border-[var(--color-border-subtle)]">
               <td className="py-2">md</td>
               <td className="py-2">32px</td>
-              <td className="py-2">14px</td>
+              <td className="py-2">12px</td>
             </tr>
             <tr className="border-b border-[var(--color-border-subtle)]">
               <td className="py-2">lg</td>
               <td className="py-2">40px</td>
-              <td className="py-2">18px</td>
+              <td className="py-2">12px</td>
             </tr>
           </tbody>
         </table>
