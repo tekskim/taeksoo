@@ -344,9 +344,7 @@ function TrafficRulesSection({
           {/* Rules content - only show when enabled */}
           {enabled && (
             <VStack gap={3}>
-              <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
-                Rules
-              </label>
+              <label className="text-label-lg text-[var(--color-text-default)]">Rules</label>
 
               <div className="border border-[var(--color-border-default)] rounded-[6px] w-full">
                 <div className="flex w-full">
@@ -395,7 +393,7 @@ function TrafficRulesSection({
                       <VStack gap={6}>
                         {/* Targets Section */}
                         <VStack gap={3}>
-                          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                          <label className="text-label-lg text-[var(--color-text-default)]">
                             Targets
                           </label>
 
@@ -461,7 +459,7 @@ function TrafficRulesSection({
 
                         {/* Allowed Ports Section */}
                         <VStack gap={3}>
-                          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                          <label className="text-label-lg text-[var(--color-text-default)]">
                             allowedPorts
                           </label>
 
@@ -714,7 +712,7 @@ export function CreateNetworkPolicyPage() {
                       <VStack gap={6}>
                         {/* Namespace */}
                         <VStack gap={2}>
-                          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                          <label className="text-label-lg text-[var(--color-text-default)]">
                             Namespace <span className="text-[var(--color-state-danger)]">*</span>
                           </label>
                           <Select
@@ -727,7 +725,7 @@ export function CreateNetworkPolicyPage() {
 
                         {/* Name */}
                         <VStack gap={2}>
-                          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                          <label className="text-label-lg text-[var(--color-text-default)]">
                             Name <span className="text-[var(--color-state-danger)]">*</span>
                           </label>
                           <Input
@@ -780,14 +778,13 @@ export function CreateNetworkPolicyPage() {
 
                   {/* Selector Section */}
                   <SectionCard>
-                    <SectionCard.Header title="Selector" />
+                    <SectionCard.Header
+                      title="Selector"
+                      description="Selector keys and values are intended to match labels and values on existing pods."
+                      showDivider
+                    />
                     <SectionCard.Content>
                       <VStack gap={6}>
-                        <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-                          Selector keys and values are intended to match labels and values on
-                          existing pods.
-                        </p>
-
                         {/* Selector Rules */}
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
                           <VStack gap={2}>
@@ -863,7 +860,7 @@ export function CreateNetworkPolicyPage() {
 
                         {/* Matching Pods */}
                         <VStack gap={3}>
-                          <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                          <label className="text-label-lg text-[var(--color-text-default)]">
                             Matching Pods
                           </label>
                           <Table
@@ -898,7 +895,7 @@ export function CreateNetworkPolicyPage() {
                         {/* Labels */}
                         <VStack gap={3}>
                           <VStack gap={1}>
-                            <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                            <label className="text-label-lg text-[var(--color-text-default)]">
                               Labels
                             </label>
                             <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
@@ -965,7 +962,7 @@ export function CreateNetworkPolicyPage() {
                         {/* Annotations */}
                         <VStack gap={3}>
                           <VStack gap={1}>
-                            <label className="text-[14px] font-medium text-[var(--color-text-default)] leading-5">
+                            <label className="text-label-lg text-[var(--color-text-default)]">
                               Annotations
                             </label>
                             <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">

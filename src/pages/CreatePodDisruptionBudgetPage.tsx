@@ -196,7 +196,7 @@ function BasicInfoSection({
     <SectionCard>
       <SectionCard.Header title="Basic Information" showDivider />
       <SectionCard.Content>
-        <VStack gap={4}>
+        <VStack gap={6}>
           {/* Namespace */}
           <VStack gap={2}>
             <label className="text-label-lg text-[var(--color-text-default)]">
@@ -433,19 +433,15 @@ function SelectorSection({ selectorRules, onSelectorRulesChange }: SelectorSecti
                   {/* Column Headers */}
                   <div className="flex gap-2 w-full">
                     <div className="flex-1">
-                      <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
-                        Key
-                      </span>
+                      <span className="text-label-lg text-[var(--color-text-default)]">Key</span>
                     </div>
                     <div className="flex-1">
-                      <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
+                      <span className="text-label-lg text-[var(--color-text-default)]">
                         Operator
                       </span>
                     </div>
                     <div className="flex-1">
-                      <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
-                        Value
-                      </span>
+                      <span className="text-label-lg text-[var(--color-text-default)]">Value</span>
                     </div>
                     <div className="w-[23px]" />
                   </div>

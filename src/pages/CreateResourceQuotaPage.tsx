@@ -174,7 +174,7 @@ function BasicInfoSection({
     <SectionCard>
       <SectionCard.Header title="Basic Information" showDivider />
       <SectionCard.Content>
-        <VStack gap={4}>
+        <VStack gap={6}>
           {/* Namespace */}
           <VStack gap={2}>
             <label className="text-label-lg text-[var(--color-text-default)]">
@@ -326,7 +326,7 @@ function ResourceQuotasSection({ quotaItems, onQuotaItemsChange }: ResourceQuota
                 <div className="flex gap-2 w-full">
                   <div className="flex-1">
                     <VStack gap={1}>
-                      <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
+                      <span className="text-label-lg text-[var(--color-text-default)]">
                         Resource Type
                       </span>
                       <span className="text-body-md text-[var(--color-text-subtle)]">
@@ -336,9 +336,7 @@ function ResourceQuotasSection({ quotaItems, onQuotaItemsChange }: ResourceQuota
                   </div>
                   <div className="flex-1">
                     <VStack gap={1}>
-                      <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
-                        Limit
-                      </span>
+                      <span className="text-label-lg text-[var(--color-text-default)]">Limit</span>
                       <span className="text-body-md text-[var(--color-text-subtle)]">
                         Specify the maximum usage allowed for the selected resource type.
                       </span>

@@ -174,7 +174,7 @@ function BasicInfoSection({
     <SectionCard>
       <SectionCard.Header title="Basic Information" showDivider />
       <SectionCard.Content>
-        <VStack gap={4}>
+        <VStack gap={6}>
           {/* Namespace */}
           <VStack gap={2}>
             <label className="text-label-lg text-[var(--color-text-default)]">
@@ -262,11 +262,11 @@ function ContainerResourceLimitSection({
       <SectionCard.Content>
         <VStack gap={3}>
           {/* Resource Limit Grid */}
-          <div className="grid grid-cols-2 gap-4 w-full">
+          <div className="grid grid-cols-2 gap-x-4 gap-y-6 w-full">
             {/* CPU Reservation */}
             <VStack gap={2}>
               <VStack gap={1}>
-                <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
+                <span className="text-label-lg text-[var(--color-text-default)]">
                   CPU Reservation
                 </span>
                 <span className="text-body-md text-[var(--color-text-subtle)]">
@@ -289,9 +289,7 @@ function ContainerResourceLimitSection({
             {/* CPU Limit */}
             <VStack gap={2}>
               <VStack gap={1}>
-                <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
-                  CPU Limit
-                </span>
+                <span className="text-label-lg text-[var(--color-text-default)]">CPU Limit</span>
                 <span className="text-body-md text-[var(--color-text-subtle)]">
                   Specify the maximum CPU amount the container is allowed to use.
                 </span>
@@ -312,7 +310,7 @@ function ContainerResourceLimitSection({
             {/* Memory Reservation */}
             <VStack gap={2}>
               <VStack gap={1}>
-                <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
+                <span className="text-label-lg text-[var(--color-text-default)]">
                   Memory Reservation
                 </span>
                 <span className="text-body-md text-[var(--color-text-subtle)]">
@@ -333,9 +331,7 @@ function ContainerResourceLimitSection({
             {/* Memory Limit */}
             <VStack gap={2}>
               <VStack gap={1}>
-                <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
-                  Memory Limit
-                </span>
+                <span className="text-label-lg text-[var(--color-text-default)]">Memory Limit</span>
                 <span className="text-body-md text-[var(--color-text-subtle)]">
                   Specify the maximum memory capacity the container is allowed to use.
                 </span>
