@@ -84,7 +84,7 @@ function YamlEditor({ value, onChange, onCopy }: YamlEditorProps) {
           className="flex items-center justify-center w-7 h-7 border border-[var(--color-border-strong)] rounded-[6px] bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-subtle)] transition-colors"
           title="Copy to clipboard"
         >
-          <IconCopy size={16} stroke={1.5} />
+          <IconCopy size={12} stroke={1.5} />
         </button>
       </div>
     </div>
@@ -218,7 +218,7 @@ export function EditDaemonSetYamlPage() {
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                <IconCopy size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />

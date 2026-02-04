@@ -385,7 +385,7 @@ function CopyableValue({ value }: CopyableValueProps) {
         {copied ? (
           <IconCheck size={16} className="text-[var(--color-state-success)]" />
         ) : (
-          <IconCopy size={16} className="text-[var(--color-action-primary)]" />
+          <IconCopy size={12} className="text-[var(--color-action-primary)]" />
         )}
       </button>
     </div>
