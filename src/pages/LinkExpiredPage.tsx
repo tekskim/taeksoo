@@ -9,40 +9,26 @@ export function LinkExpiredPage() {
     <div className="min-h-screen bg-[var(--color-surface-subtle)] flex items-center justify-center p-8">
       <div className="max-w-lg w-full text-center">
         {/* Hourglass */}
-        <div className="mb-10 flex justify-center items-center">
+        <div className="mb-6 flex justify-center items-center">
           <svg
-            width="96"
-            height="96"
-            viewBox="0 0 24 24"
+            width="48"
+            height="57"
+            viewBox="0 0 64 76"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            strokeLinecap="round"
-            strokeLinejoin="round"
           >
-            {/* Top bar */}
-            <path d="M5 2h14" stroke="var(--color-text-subtle)" strokeWidth="1" />
-
-            {/* Bottom bar */}
-            <path d="M5 22h14" stroke="var(--color-text-subtle)" strokeWidth="1" />
-
-            {/* Top glass shape */}
+            <defs>
+              <linearGradient id="hourglassGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="var(--color-text-disabled)" />
+                <stop offset="100%" stopColor="var(--color-text-subtle)" />
+              </linearGradient>
+            </defs>
             <path
-              d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"
-              stroke="var(--color-text-subtle)"
-              strokeWidth="1"
-              fill="none"
+              fillRule="evenodd"
+              clipRule="evenodd"
+              d="M64 4H58L57.998 14C57.998 24.81 51.4005 34.0781 42.0127 38C51.4005 41.9219 57.998 51.19 57.998 62L58 72H64V76H0V72H6L5.99805 62C5.99805 51.1903 12.5951 41.9221 21.9824 38C12.5951 34.0779 5.99805 24.8097 5.99805 14L6 4H0V0H64V4ZM31.998 40C19.8478 40 9.99805 49.8497 9.99805 62L10 72H15L29.4893 55.4404C31.0829 53.6191 33.9171 53.6191 35.5107 55.4404L50 72H54L53.998 62L53.9912 61.4326C53.6903 49.5446 43.9586 40 31.998 40ZM9.99805 14C9.99805 26.1503 19.8478 36 31.998 36C43.9586 36 53.6903 26.4554 53.9912 14.5674L53.998 14L54 4H10L9.99805 14Z"
+              fill="url(#hourglassGradient)"
             />
-
-            {/* Bottom glass shape */}
-            <path
-              d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"
-              stroke="var(--color-text-subtle)"
-              strokeWidth="1"
-              fill="none"
-            />
-
-            {/* Sand pile at bottom - triangle with rounded top corners */}
-            <path d="M8.5 21 Q9 19.5 12 17 Q15 19.5 15.5 21 Z" fill="var(--color-text-disabled)" />
           </svg>
         </div>
 
