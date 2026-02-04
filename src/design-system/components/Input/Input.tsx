@@ -9,7 +9,7 @@ export type InputSize = 'sm' | 'md';
 // thaki-ui compatibility: support xs and lg sizes
 export type InputSizeAlias = 'xs' | 'lg';
 export type InputVariant = 'default' | 'search' | 'code';
-export type InputWidth = 'sm' | 'md' | 'lg' | 'half' | 'full';
+export type InputWidth = 'xs' | 'sm' | 'md' | 'lg' | 'half' | 'full';
 
 // thaki-ui compatibility types
 type FilterProp = RegExp | ((value: string) => string);
@@ -27,7 +27,7 @@ export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 
   error?: string;
   /** @deprecated Use width="full" instead */
   fullWidth?: boolean;
-  /** Width variant: sm (160px), md (240px), lg (320px), half (50%), full (100%), or number for custom pixel width */
+  /** Width variant: xs (80px), sm (160px), md (240px), lg (320px), half (50%), full (100%), or number for custom pixel width */
   width?: InputWidth | number;
   /** Left icon/element */
   leftElement?: ReactNode;
@@ -164,6 +164,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 
     // Width-based styles
     const widthStyles: Record<InputWidth, string> = {
+      xs: 'w-[80px]',
       sm: 'w-[160px]',
       md: 'w-[240px]',
       lg: 'w-[320px]',
