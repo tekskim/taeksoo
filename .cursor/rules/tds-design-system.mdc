@@ -235,6 +235,12 @@ import type { FilterField, AppliedFilter } from '@/design-system';
 
 ### Modal
 
+| Size | Width |
+|------|-------|
+| sm | 344px |
+| md | 480px |
+| lg | 640px |
+
 ```css
 --modal-padding: 1.5rem;  /* 24px */
 --modal-radius: 1rem;     /* 16px */
@@ -717,14 +723,9 @@ import { IconPlus, IconEdit, IconTrash } from '@tabler/icons-react';
 
 ## 버전
 
-- **Current Version**: 1.5.0
-- **Last Updated**: 2026-02-03
+- **Current Version**: 1.5.1
+- **Last Updated**: 2026-02-04
 - **Changes**:
-  - Typography: `--font-size-13` 토큰 추가 (13px)
-  - Typography: `text-label-lg` 크기 변경 (14px → 13px)
-  - Input: label/input/helper 간격 추가 (`--input-label-gap: 6px`)
-  - StatusIndicator: OpenStack 의미 기반 상태 재분류
-    - `suspended` → Muted (사용자 의도적 액션)
-    - `maintenance` → Warning (가용성 영향)
-    - `pending` → Action (전이 상태)
-  - i18n: 다국어 지원 추가 (ko, en, ar-sa)
+  - Modal: size별 너비 차등 적용 (sm=344px, md=480px, lg=640px)
+  - Typography: `text-heading-h6` font-weight 600 (semibold)으로 통일
+  - 코드 정리: console.log 제거, 하드코딩 색상 CSS 변수로 교체

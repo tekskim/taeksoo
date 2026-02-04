@@ -1859,15 +1859,7 @@ export function InstanceListPage() {
           setSelectedInstanceForSnapshot(null);
         }}
         instance={selectedInstanceForSnapshot}
-        onSubmit={(snapshotName, description) => {
-          console.log(
-            'Creating snapshot:',
-            snapshotName,
-            'description:',
-            description,
-            'for instance:',
-            selectedInstanceForSnapshot?.id
-          );
+        onSubmit={() => {
           // TODO: Implement actual snapshot creation API call
         }}
       />
@@ -1880,13 +1872,7 @@ export function InstanceListPage() {
           setSelectedInstanceForLock(null);
         }}
         instance={selectedInstanceForLock}
-        onSubmit={(isLocked) => {
-          console.log(
-            'Setting lock status:',
-            isLocked,
-            'for instance:',
-            selectedInstanceForLock?.id
-          );
+        onSubmit={() => {
           // TODO: Implement actual lock setting API call
         }}
       />
@@ -1899,15 +1885,7 @@ export function InstanceListPage() {
           setSelectedInstanceForEdit(null);
         }}
         instance={selectedInstanceForEdit}
-        onSubmit={(name, description) => {
-          console.log(
-            'Editing instance:',
-            name,
-            'description:',
-            description,
-            'for instance:',
-            selectedInstanceForEdit?.id
-          );
+        onSubmit={() => {
           // TODO: Implement actual edit API call
         }}
       />
@@ -1920,8 +1898,8 @@ export function InstanceListPage() {
           setSelectedInstanceForAttachVolume(null);
         }}
         volume={{ id: 'vol-001', name: 'data-volume-01', size: '100GB', status: 'available' }}
-        onAttach={(instanceId) => {
-          console.log('Attaching volume to instance:', instanceId);
+        onAttach={() => {
+          // TODO: Implement attach volume API call
         }}
       />
 
@@ -1933,13 +1911,8 @@ export function InstanceListPage() {
           setSelectedInstanceForDetachVolume(null);
         }}
         instance={selectedInstanceForDetachVolume || { id: '', name: '' }}
-        onDetach={(volumeId) => {
-          console.log(
-            'Detaching volume:',
-            volumeId,
-            'from instance:',
-            selectedInstanceForDetachVolume?.id
-          );
+        onDetach={() => {
+          // TODO: Implement detach volume API call
         }}
       />
 
@@ -1951,14 +1924,8 @@ export function InstanceListPage() {
           setSelectedInstanceForAttachInterface(null);
         }}
         instance={selectedInstanceForAttachInterface || { id: '', name: '' }}
-        onAttach={(networkId, fixedIp) => {
-          console.log(
-            'Attaching interface:',
-            networkId,
-            fixedIp,
-            'to instance:',
-            selectedInstanceForAttachInterface?.id
-          );
+        onAttach={() => {
+          // TODO: Implement attach interface API call
         }}
       />
 
@@ -1970,13 +1937,8 @@ export function InstanceListPage() {
           setSelectedInstanceForDetachInterface(null);
         }}
         instance={selectedInstanceForDetachInterface || { id: '', name: '' }}
-        onDetach={(interfaceId) => {
-          console.log(
-            'Detaching interface:',
-            interfaceId,
-            'from instance:',
-            selectedInstanceForDetachInterface?.id
-          );
+        onDetach={() => {
+          // TODO: Implement detach interface API call
         }}
       />
 
@@ -1988,8 +1950,8 @@ export function InstanceListPage() {
           setSelectedInstanceForAssociateFloatingIP(null);
         }}
         floatingIP={{ id: 'fip-001', address: '203.0.113.10', status: 'DOWN' }}
-        onSubmit={(data) => {
-          console.log('Associating floating IP:', data);
+        onSubmit={() => {
+          // TODO: Implement associate floating IP API call
         }}
       />
 
@@ -2001,13 +1963,8 @@ export function InstanceListPage() {
           setSelectedInstanceForDisassociateFloatingIP(null);
         }}
         instance={selectedInstanceForDisassociateFloatingIP || { id: '', name: '' }}
-        onDisassociate={(floatingIpId) => {
-          console.log(
-            'Disassociating floating IP:',
-            floatingIpId,
-            'from instance:',
-            selectedInstanceForDisassociateFloatingIP?.id
-          );
+        onDisassociate={() => {
+          // TODO: Implement disassociate floating IP API call
         }}
       />
 
@@ -2019,8 +1976,8 @@ export function InstanceListPage() {
           setSelectedInstanceForManageSecurityGroups(null);
         }}
         instance={selectedInstanceForManageSecurityGroups || { id: '', name: '' }}
-        onSave={(interfaceId, securityGroupIds) => {
-          console.log('Saving security groups:', securityGroupIds, 'for interface:', interfaceId);
+        onSave={() => {
+          // TODO: Implement save security groups API call
         }}
       />
 
@@ -2032,14 +1989,8 @@ export function InstanceListPage() {
           setSelectedInstanceForRebuild(null);
         }}
         instance={selectedInstanceForRebuild || { id: '', name: '', currentImage: '' }}
-        onRebuild={(imageOption, selectedImageId) => {
-          console.log(
-            'Rebuilding instance:',
-            selectedInstanceForRebuild?.id,
-            'with image:',
-            imageOption,
-            selectedImageId
-          );
+        onRebuild={() => {
+          // TODO: Implement rebuild instance API call
         }}
       />
 
@@ -2057,16 +2008,8 @@ export function InstanceListPage() {
             currentFlavor: { id: '', name: '', vcpu: 0, ram: '', disk: '' },
           }
         }
-        onResize={(targetFlavorId, approvalMethod, autoConfirmMinutes, autoConfirmAction) => {
-          console.log(
-            'Resizing instance:',
-            selectedInstanceForResize?.id,
-            'to flavor:',
-            targetFlavorId,
-            approvalMethod,
-            autoConfirmMinutes,
-            autoConfirmAction
-          );
+        onResize={() => {
+          // TODO: Implement resize instance API call
         }}
       />
 
@@ -2078,8 +2021,8 @@ export function InstanceListPage() {
           setSelectedInstanceForManageTags(null);
         }}
         instance={selectedInstanceForManageTags || { id: '', name: '' }}
-        onSave={(tags) => {
-          console.log('Saving tags:', tags, 'for instance:', selectedInstanceForManageTags?.id);
+        onSave={() => {
+          // TODO: Implement save tags API call
         }}
       />
 
@@ -2091,14 +2034,8 @@ export function InstanceListPage() {
           setSelectedInstanceForRescue(null);
         }}
         instance={selectedInstanceForRescue || { id: '', name: '', currentImage: '', protocol: '' }}
-        onRescue={(imageOption, selectedImageId) => {
-          console.log(
-            'Rescuing instance:',
-            selectedInstanceForRescue?.id,
-            'with image:',
-            imageOption,
-            selectedImageId
-          );
+        onRescue={() => {
+          // TODO: Implement rescue instance API call
         }}
       />
 
