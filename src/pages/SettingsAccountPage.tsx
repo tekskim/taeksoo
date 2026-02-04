@@ -144,7 +144,7 @@ export default function SettingsAccountPage() {
                     title="Account Information"
                     actions={
                       <Button variant="outline" size="sm" className="gap-1.5">
-                        <IconEdit size={12} />
+                        <IconEdit size={16} />
                         Edit{' '}
                       </Button>
                     }
@@ -273,7 +273,7 @@ export default function SettingsAccountPage() {
                             </div>
                             {authenticatorSetup.configured ? (
                               <div className="flex items-center gap-1.5 text-body-md text-[var(--color-state-success)]">
-                                <IconCheck size={12} />
+                                <IconCheck size={16} />
                                 <span>Added {authenticatorSetup.addedAt}</span>
                               </div>
                             ) : (

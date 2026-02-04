@@ -235,7 +235,7 @@ export default function SubnetDetailPage() {
             onClick={(e) => e.stopPropagation()}
           >
             {row.name}
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+            <IconExternalLink size={16} className="text-[var(--color-action-primary)]" />
           </Link>
           <span className="text-body-sm text-[var(--color-text-subtle)]">Action</span>
         </div>
@@ -259,7 +259,7 @@ export default function SubnetDetailPage() {
                 onClick={(e) => e.stopPropagation()}
               >
                 {row.attachedTo.name}
-                <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+                <IconExternalLink size={16} className="text-[var(--color-action-primary)]" />
               </Link>
               <span className="text-body-sm text-[var(--color-text-subtle)]">
                 ID : {row.attachedTo.id}
@@ -272,9 +272,9 @@ export default function SubnetDetailPage() {
             >
               <div className="flex items-center justify-center p-1 border border-[var(--color-border-default)] rounded bg-[var(--color-surface-default)] cursor-pointer hover:bg-[var(--color-surface-muted)] transition-colors">
                 {row.attachedTo.type === 'router' ? (
-                  <IconRouter size={12} className="text-[var(--color-text-subtle)]" />
+                  <IconRouter size={16} className="text-[var(--color-text-subtle)]" />
                 ) : (
-                  <IconServer size={12} className="text-[var(--color-text-subtle)]" />
+                  <IconServer size={16} className="text-[var(--color-text-subtle)]" />
                 )}
               </div>
             </Tooltip>
@@ -296,7 +296,7 @@ export default function SubnetDetailPage() {
             onClick={(e) => e.stopPropagation()}
           >
             {row.ownedNetwork.name}
-            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+            <IconExternalLink size={16} className="text-[var(--color-action-primary)]" />
           </Link>
           <span className="text-body-sm text-[var(--color-text-subtle)]">
             ID : {row.ownedNetwork.id}
@@ -371,7 +371,7 @@ export default function SubnetDetailPage() {
             onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
             actions={
               <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
+                icon={<IconBell size={12} stroke={1.5} />}
                 onClick={() => {}}
                 hasNotification
               />
@@ -467,7 +467,7 @@ export default function SubnetDetailPage() {
                               >
                                 {subnet.network.name}
                                 <IconExternalLink
-                                  size={12}
+                                  size={16}
                                   className="text-[var(--color-action-primary)]"
                                 />
                               </Link>

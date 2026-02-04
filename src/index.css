@@ -1771,8 +1771,8 @@ input[type='search']::-webkit-search-decoration {
   transform: translate(-50%, -50%);
   width: calc(100vw - 80px);
   max-width: 1600px;
-  height: calc(100vh - 80px);
-  max-height: 900px;
+  height: 70vh;
+  min-height: 500px;
   z-index: 1000;
   animation: floatIn 0.25s ease-out;
   display: flex;
@@ -1809,7 +1809,8 @@ input[type='search']::-webkit-search-decoration {
 
 /* ============== Full Screen Chart Card ============== */
 .chartCardFullScreen {
-  flex: 1;
+  width: 100%;
+  height: 100%;
   min-height: 0;
   display: flex;
   flex-direction: column;

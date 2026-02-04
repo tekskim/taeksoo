@@ -477,7 +477,7 @@ function SelectorSection({ selectorRules, onSelectorRulesChange }: SelectorSecti
                         onClick={() => removeRule(rule.id)}
                         className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-hover)] rounded transition-colors w-[23px]"
                       >
-                        <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                        <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
                       </button>
                     </div>
                   ))}
@@ -626,7 +626,7 @@ function LabelsAnnotationsSection({
                       onClick={() => onRemoveLabel(index)}
                       className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                     >
-                      <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                      <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
                     </button>
                   </div>
                 ))}
@@ -688,7 +688,7 @@ function LabelsAnnotationsSection({
                       onClick={() => onRemoveAnnotation(index)}
                       className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors shrink-0"
                     >
-                      <IconX size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                      <IconX size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
                     </button>
                   </div>
                 ))}

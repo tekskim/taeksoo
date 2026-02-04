@@ -198,15 +198,15 @@ export function ChangeCACertificateDrawer({
               </div>
               <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
                 Name
-                <IconChevronDown size={12} />
+                <IconChevronDown size={16} />
               </div>
               <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
                 Listeners
-                <IconChevronDown size={12} />
+                <IconChevronDown size={16} />
               </div>
               <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer hover:text-[var(--color-action-primary)]">
                 Expires At
-                <IconChevronDown size={12} />
+                <IconChevronDown size={16} />
               </div>
             </div>
 
@@ -244,7 +244,7 @@ export function ChangeCACertificateDrawer({
                       {cert.name}
                     </span>
                     <IconExternalLink
-                      size={12}
+                      size={16}
                       stroke={1.5}
                       className="shrink-0 text-[var(--color-action-primary)]"
                     />

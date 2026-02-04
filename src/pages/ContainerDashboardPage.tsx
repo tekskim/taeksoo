@@ -198,7 +198,7 @@ function ControlPlaneCard({ name, uptime, status = 'healthy' }: ControlPlaneCard
         }`}
       >
         <IconCheck
-          size={12}
+          size={16}
           className={`${
             status === 'healthy'
               ? 'text-[var(--color-state-success)]'
@@ -434,7 +434,7 @@ export function ContainerDashboardPage() {
                           <span className="flex items-center gap-1">
                             Deployments
                             <IconExternalLink
-                              size={12}
+                              size={16}
                               className="text-[var(--color-action-primary)]"
                             />
                           </span>
@@ -447,7 +447,7 @@ export function ContainerDashboardPage() {
                           <span className="flex items-center gap-1">
                             Nodes
                             <IconExternalLink
-                              size={12}
+                              size={16}
                               className="text-[var(--color-action-primary)]"
                             />
                           </span>

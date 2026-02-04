@@ -365,12 +365,12 @@ export function CreateAgentPage() {
         actions={
           <>
             <TopBarAction
-              icon={<IconPalette size={16} stroke={1} />}
+              icon={<IconPalette size={12} stroke={1} />}
               onClick={() => navigate('/design-system')}
               aria-label="Design system"
             />
             <TopBarAction
-              icon={<IconBell size={16} stroke={1} />}
+              icon={<IconBell size={12} stroke={1} />}
               aria-label="Notifications"
               badge={true}
             />

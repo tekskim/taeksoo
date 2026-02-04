@@ -267,7 +267,7 @@ export function DisconnectSubnetDrawer({
               >
                 <span className="text-label-sm text-[var(--color-text-default)]">Name</span>
                 <IconChevronDown
-                  size={12}
+                  size={16}
                   className={`transition-transform ${sortField === 'name' && sortDirection === 'desc' ? 'rotate-180' : ''}`}
                 />
               </div>
@@ -285,7 +285,7 @@ export function DisconnectSubnetDrawer({
               >
                 <span className="text-label-sm text-[var(--color-text-default)]">Network</span>
                 <IconChevronDown
-                  size={12}
+                  size={16}
                   className={`transition-transform ${sortField === 'networkName' && sortDirection === 'desc' ? 'rotate-180' : ''}`}
                 />
               </div>
@@ -311,7 +311,7 @@ export function DisconnectSubnetDrawer({
                     <span className="text-label-md text-[var(--color-action-primary)] leading-4">
                       {item.name}
                     </span>
-                    <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+                    <IconExternalLink size={16} className="text-[var(--color-action-primary)]" />
                   </HStack>
                   <span className="text-body-sm text-[var(--color-text-subtle)] leading-4">
                     ID : {item.id}
@@ -332,7 +332,7 @@ export function DisconnectSubnetDrawer({
                     <span className="text-label-md text-[var(--color-action-primary)] leading-4">
                       {item.networkName}
                     </span>
-                    <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+                    <IconExternalLink size={16} className="text-[var(--color-action-primary)]" />
                   </HStack>
                   <span className="text-body-sm text-[var(--color-text-subtle)] leading-4">
                     ID : {item.networkId}

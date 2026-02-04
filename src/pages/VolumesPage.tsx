@@ -441,7 +441,7 @@ export function VolumesPage() {
               className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
             >
               {row.attachedTo}
-              <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+              <IconExternalLink size={16} className="text-[var(--color-action-primary)]" />
             </button>
             <span className="text-body-sm text-[var(--color-text-subtle)]">
               ID : {row.attachedToId}
@@ -613,7 +613,7 @@ export function VolumesPage() {
             }
             actions={
               <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
+                icon={<IconBell size={12} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />

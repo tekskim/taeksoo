@@ -306,7 +306,7 @@ export function AllocateFloatingIPDrawer({
                   Name
                 </span>
                 <IconChevronDown
-                  size={12}
+                  size={16}
                   className={`transition-transform ${sortColumn === 'name' && sortDirection === 'desc' ? 'rotate-180' : ''}`}
                 />
               </div>
@@ -357,7 +357,7 @@ export function AllocateFloatingIPDrawer({
                       {network.name}
                     </a>
                     <IconExternalLink
-                      size={12}
+                      size={16}
                       stroke={1.5}
                       className="shrink-0 text-[var(--color-action-primary)]"
                     />

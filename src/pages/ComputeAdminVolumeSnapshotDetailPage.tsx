@@ -181,7 +181,7 @@ export function ComputeAdminVolumeSnapshotDetailPage() {
             breadcrumb={<Breadcrumb items={breadcrumbItems} />}
             actions={
               <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
+                icon={<IconBell size={12} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />
@@ -268,7 +268,7 @@ export function ComputeAdminVolumeSnapshotDetailPage() {
                                 className="inline-flex items-center gap-1.5 text-label-md leading-4 text-[var(--color-action-primary)] hover:underline"
                               >
                                 {snapshot.sourceVolume}
-                                <IconExternalLink size={12} stroke={1.5} />
+                                <IconExternalLink size={16} stroke={1.5} />
                               </Link>
                             </div>
                           </div>

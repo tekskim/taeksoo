@@ -444,7 +444,7 @@ export function ComputeAdminBareMetalNodesPage() {
             }
             actions={
               <TopBarAction
-                icon={<IconBell size={16} stroke={1} />}
+                icon={<IconBell size={12} stroke={1} />}
                 aria-label="Notifications"
                 badge={true}
               />
@@ -469,6 +469,8 @@ export function ComputeAdminBareMetalNodesPage() {
                   appliedFilters={appliedFilters}
                   onFiltersChange={setAppliedFilters}
                   placeholder="Search bare metal nodes by attributes"
+                  size="sm"
+                  className="w-[var(--search-input-width)]"
                 />
                 <Button
                   variant="secondary"

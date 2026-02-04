@@ -509,7 +509,7 @@ export function ComputeAdminImagesPage() {
             }
             actions={
               <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
+                icon={<IconBell size={12} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />
@@ -539,6 +539,9 @@ export function ComputeAdminImagesPage() {
                       appliedFilters={appliedFilters}
                       onFiltersChange={setAppliedFilters}
                       placeholder="Search image by attributes"
+                      size="sm"
+                      className="w-[var(--search-input-width)]"
+                      hideAppliedFilters
                     />
                     <Button
                       variant="secondary"

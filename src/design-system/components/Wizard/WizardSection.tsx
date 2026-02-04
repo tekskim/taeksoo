@@ -33,7 +33,7 @@ export function WizardSectionStatusIcon({ status }: WizardSectionStatusIconProps
     return (
       <div className="w-4 h-4 shrink-0 flex items-center justify-center">
         <IconProgress
-          size={16}
+          size={12}
           stroke={1.5}
           className="text-[var(--color-text-subtle)] animate-spin"
         />
@@ -46,7 +46,7 @@ export function WizardSectionStatusIcon({ status }: WizardSectionStatusIconProps
     return (
       <div className="w-4 h-4 shrink-0 flex items-center justify-center">
         <IconProgress
-          size={16}
+          size={12}
           stroke={1.5}
           className="text-[var(--color-text-subtle)] animate-spin"
         />
@@ -58,7 +58,7 @@ export function WizardSectionStatusIcon({ status }: WizardSectionStatusIconProps
   if (status === 'skipped') {
     return (
       <div className="w-4 h-4 shrink-0 flex items-center justify-center">
-        <IconMinus size={16} stroke={1.5} className="text-[var(--color-text-subtle)]" />
+        <IconMinus size={12} stroke={1.5} className="text-[var(--color-text-subtle)]" />
       </div>
     );
   }

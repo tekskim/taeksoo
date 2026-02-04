@@ -446,9 +446,9 @@ export default function IAMRoleDetailPage() {
             className="p-0.5 hover:bg-[var(--color-surface-subtle)] rounded"
           >
             {expandedPolicies.has(row.id) ? (
-              <IconChevronDown size={12} stroke={1.5} />
+              <IconChevronDown size={16} stroke={1.5} />
             ) : (
-              <IconChevronRight size={12} stroke={1.5} />
+              <IconChevronRight size={16} stroke={1.5} />
             )}
           </button>
           <Link
@@ -655,7 +655,7 @@ export default function IAMRoleDetailPage() {
                     <Button
                       variant="secondary"
                       size="sm"
-                      rightIcon={<IconChevronDown size={12} stroke={1.5} />}
+                      rightIcon={<IconChevronDown size={16} stroke={1.5} />}
                     >
                       More Actions
                     </Button>
@@ -747,9 +747,9 @@ export default function IAMRoleDetailPage() {
                                   className={`p-0.5 hover:bg-[var(--color-surface-subtle)] rounded ${!policy.permissions ? 'invisible' : ''}`}
                                 >
                                   {expandedPolicies.has(policy.id) ? (
-                                    <IconChevronDown size={12} stroke={1.5} />
+                                    <IconChevronDown size={16} stroke={1.5} />
                                   ) : (
-                                    <IconChevronRight size={12} stroke={1.5} />
+                                    <IconChevronRight size={16} stroke={1.5} />
                                   )}
                                 </button>
                                 <Link

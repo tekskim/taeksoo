@@ -50,7 +50,7 @@ export function TabBar({ tabs, onTabClose, onTabClick, onNewTab }: TabBarProps) 
               }}
               className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors cursor-pointer"
             >
-              <IconX size={12} className="text-[var(--color-text-default)]" stroke={1} />
+              <IconX size={16} className="text-[var(--color-text-default)]" stroke={1} />
             </button>
           </div>
         ))}

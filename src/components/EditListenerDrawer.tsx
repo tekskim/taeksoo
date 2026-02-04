@@ -247,9 +247,9 @@ export function EditListenerDrawer({
             className="flex items-center gap-1.5 text-label-lg text-[var(--color-text-default)] leading-5"
           >
             {isAdvancedExpanded ? (
-              <IconChevronDown size={12} stroke={1} />
+              <IconChevronDown size={16} stroke={1} />
             ) : (
-              <IconChevronRight size={12} stroke={1} />
+              <IconChevronRight size={16} stroke={1} />
             )}
             Advanced
             <span className="text-body-md text-[var(--color-text-subtle)] font-normal">
@@ -353,7 +353,7 @@ export function EditListenerDrawer({
                   onClick={handleAddCidr}
                   className="self-start"
                 >
-                  <IconPlus size={12} />
+                  <IconPlus size={16} />
                   Add CIDR
                 </Button>
 

@@ -140,9 +140,9 @@ export function EditNetworkDrawer({ isOpen, onClose, network, onSubmit }: EditNe
           className="flex items-center gap-1.5 text-label-lg text-[var(--color-text-default)] leading-5"
         >
           {isAdvancedExpanded ? (
-            <IconChevronDown size={12} stroke={1} />
+            <IconChevronDown size={16} stroke={1} />
           ) : (
-            <IconChevronRight size={12} stroke={1} />
+            <IconChevronRight size={16} stroke={1} />
           )}
           Lable
         </button>

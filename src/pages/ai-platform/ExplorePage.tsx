@@ -84,22 +84,22 @@ function TemplateCard({
       {/* Resources */}
       <div className="grid grid-cols-2 gap-2 text-body-sm text-[var(--color-text-muted)]">
         <HStack gap={1} align="center">
-          <IconCpu size={12} stroke={1.5} />
+          <IconCpu size={16} stroke={1.5} />
           <span>{cpu}</span>
         </HStack>
         <HStack gap={1} align="center">
-          <IconServer size={12} stroke={1.5} />
+          <IconServer size={16} stroke={1.5} />
           <span>{memory}</span>
         </HStack>
         {gpu && (
           <HStack gap={1} align="center">
-            <IconServer size={12} stroke={1.5} />
+            <IconServer size={16} stroke={1.5} />
             <span>{gpu}</span>
           </HStack>
         )}
         {disk && (
           <HStack gap={1} align="center">
-            <IconDatabase size={12} stroke={1.5} />
+            <IconDatabase size={16} stroke={1.5} />
             <span>{disk}</span>
           </HStack>
         )}
@@ -112,11 +112,11 @@ function TemplateCard({
       <HStack justify="between" align="center">
         <HStack gap={3} className="text-body-sm text-[var(--color-text-subtle)]">
           <HStack gap={1} align="center">
-            <IconDownload size={12} stroke={1.5} />
+            <IconDownload size={16} stroke={1.5} />
             <span>{downloads}</span>
           </HStack>
           <HStack gap={1} align="center">
-            <IconClock size={12} stroke={1.5} />
+            <IconClock size={16} stroke={1.5} />
             <span>{date}</span>
           </HStack>
         </HStack>

@@ -364,7 +364,7 @@ function TrafficRulesSection({
                             className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                           >
                             <IconX
-                              size={12}
+                              size={16}
                               className="text-[var(--color-text-muted)]"
                               stroke={1.5}
                             />
@@ -376,7 +376,7 @@ function TrafficRulesSection({
                       onClick={addRule}
                       className="flex items-center gap-1 px-3 py-2 text-[12px] text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] bg-[var(--color-surface-subtle)]"
                     >
-                      <IconCirclePlus size={12} stroke={1.5} />
+                      <IconCirclePlus size={16} stroke={1.5} />
                       Add Rule
                     </button>
                   </div>
@@ -429,7 +429,7 @@ function TrafficRulesSection({
                                     className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                   >
                                     <IconX
-                                      size={12}
+                                      size={16}
                                       className="text-[var(--color-text-muted)]"
                                       stroke={1.5}
                                     />
@@ -497,7 +497,7 @@ function TrafficRulesSection({
                                     className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                   >
                                     <IconX
-                                      size={12}
+                                      size={16}
                                       className="text-[var(--color-text-muted)]"
                                       stroke={1.5}
                                     />
@@ -829,7 +829,7 @@ export function CreateNetworkPolicyPage() {
                                   className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                 >
                                   <IconX
-                                    size={12}
+                                    size={16}
                                     className="text-[var(--color-text-muted)]"
                                     stroke={1.5}
                                   />
@@ -930,7 +930,7 @@ export function CreateNetworkPolicyPage() {
                                     className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                   >
                                     <IconX
-                                      size={12}
+                                      size={16}
                                       className="text-[var(--color-text-muted)]"
                                       stroke={1.5}
                                     />
@@ -1002,7 +1002,7 @@ export function CreateNetworkPolicyPage() {
                                     className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                   >
                                     <IconX
-                                      size={12}
+                                      size={16}
                                       className="text-[var(--color-text-muted)]"
                                       stroke={1.5}
                                     />

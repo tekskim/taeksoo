@@ -346,7 +346,7 @@ export function ComputeAdminSecurityGroupsPage() {
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getContextMenuItems(row)} trigger="click">
             <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-              <IconTrash size={16} stroke={1.5} className="text-[var(--color-state-danger)]" />
+              <IconTrash size={12} stroke={1.5} className="text-[var(--color-state-danger)]" />
             </button>
           </ContextMenu>
         </div>
@@ -413,7 +413,7 @@ export function ComputeAdminSecurityGroupsPage() {
             }
             actions={
               <TopBarAction
-                icon={<IconBell size={16} stroke={1} />}
+                icon={<IconBell size={12} stroke={1} />}
                 aria-label="Notifications"
                 badge={true}
               />

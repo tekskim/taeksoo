@@ -336,7 +336,7 @@ export function AssociateFloatingIPDrawer({
     sortState: { column: string; direction: 'asc' | 'desc' }
   ) => (
     <IconChevronDown
-      size={12}
+      size={16}
       className={`transition-transform ${sortState.column === column && sortState.direction === 'desc' ? 'rotate-180' : ''}`}
     />
   );
@@ -479,7 +479,7 @@ export function AssociateFloatingIPDrawer({
                           {instance.name}
                         </a>
                         <IconExternalLink
-                          size={12}
+                          size={16}
                           className="text-[var(--color-action-primary)]"
                         />
                         {instance.hasAlert && (
@@ -598,7 +598,7 @@ export function AssociateFloatingIPDrawer({
                           {lb.name}
                         </a>
                         <IconExternalLink
-                          size={12}
+                          size={16}
                           className="text-[var(--color-action-primary)]"
                         />
                         {lb.status === 'error' && (
@@ -708,7 +708,7 @@ export function AssociateFloatingIPDrawer({
                           {va.name}
                         </a>
                         <IconExternalLink
-                          size={12}
+                          size={16}
                           className="text-[var(--color-action-primary)]"
                         />
                       </HStack>

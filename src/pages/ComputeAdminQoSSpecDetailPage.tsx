@@ -301,7 +301,7 @@ export default function ComputeAdminQoSSpecDetailPage() {
             breadcrumb={<Breadcrumb items={breadcrumbItems} />}
             actions={
               <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
+                icon={<IconBell size={12} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />
@@ -374,6 +374,8 @@ export default function ComputeAdminQoSSpecDetailPage() {
                               setAppliedFilters((prev) => prev.filter((f) => f.field !== field))
                             }
                             onClearFilters={() => setAppliedFilters([])}
+                            size="sm"
+                            className="w-[var(--search-input-width)]"
                           />
                           <Button
                             variant="secondary"

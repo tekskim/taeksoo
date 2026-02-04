@@ -183,28 +183,28 @@ function ConnectionCard({
       case 'available':
         return (
           <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-label-sm bg-[var(--color-state-success-bg)] text-[var(--color-state-success)] border border-[var(--color-state-success)]">
-            <IconCircleCheck size={12} />
+            <IconCircleCheck size={16} />
             Available
           </span>
         );
       case 'ready':
         return (
           <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-label-sm bg-[var(--color-state-success-bg)] text-[var(--color-state-success)] border border-[var(--color-state-success)]">
-            <IconCircleCheck size={12} />
+            <IconCircleCheck size={16} />
             Ready
           </span>
         );
       case 'error':
         return (
           <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-label-sm bg-[var(--color-state-danger-bg)] text-[var(--color-state-danger)] border border-[var(--color-state-danger)]">
-            <IconAlertCircle size={12} />
+            <IconAlertCircle size={16} />
             Error
           </span>
         );
       case 'setup-required':
         return (
           <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-label-sm bg-[var(--color-surface-subtle)] text-[var(--color-text-muted)] border border-[var(--color-border-default)]">
-            <IconCircleCheck size={12} />
+            <IconCircleCheck size={16} />
             Available
           </span>
         );
@@ -364,7 +364,7 @@ export function WorkloadDetailPage() {
             }
             actions={
               <TopBarAction
-                icon={<IconBell size={16} stroke={1} />}
+                icon={<IconBell size={12} stroke={1} />}
                 aria-label="Notifications"
                 badge={true}
               />
@@ -404,7 +404,7 @@ export function WorkloadDetailPage() {
                     ]}
                     trigger="click"
                   >
-                    <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
+                    <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={16} />}>
                       More Actions
                     </Button>
                   </ContextMenu>
