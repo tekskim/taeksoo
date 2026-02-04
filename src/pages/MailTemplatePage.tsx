@@ -1,7 +1,14 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, VStack, HStack, SectionCard, Input, Badge } from '@/design-system';
-import { IconArrowLeft, IconPlus, IconMail, IconKey, IconShieldCheck } from '@tabler/icons-react';
+import {
+  IconArrowLeft,
+  IconPlus,
+  IconMail,
+  IconKey,
+  IconShieldCheck,
+  IconHourglass,
+} from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types ---------------------------------------- */
@@ -193,6 +200,55 @@ export function MailTemplatePage() {
               <p className="text-body-lg text-[var(--color-text-subtle)]">No templates found</p>
             </div>
           )}
+
+          {/* Related Pages */}
+          <VStack gap={3} className="mt-4">
+            <span className="text-label-lg text-[var(--color-text-default)]">Related Pages</span>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <SectionCard>
+                <div className="p-4">
+                  <VStack gap={3}>
+                    <HStack justify="between" align="start" className="w-full">
+                      <div className="w-10 h-10 rounded-lg bg-[var(--color-surface-subtle)] flex items-center justify-center">
+                        <IconHourglass
+                          size={20}
+                          className="text-[var(--color-text-muted)]"
+                          stroke={1.5}
+                        />
+                      </div>
+                      <Badge variant="neutral" size="sm">
+                        Static Page
+                      </Badge>
+                    </HStack>
+
+                    <VStack gap={1}>
+                      <span className="text-label-lg text-[var(--color-text-default)]">
+                        Link Expired
+                      </span>
+                      <span className="text-body-md text-[var(--color-text-subtle)]">
+                        Expired or used link error page
+                      </span>
+                    </VStack>
+
+                    <span className="text-body-sm text-[var(--color-text-subtle)] line-clamp-2">
+                      Displayed when a time-limited link (invitation, password reset, MFA) has
+                      expired or already been used
+                    </span>
+
+                    <HStack
+                      justify="end"
+                      align="center"
+                      className="w-full pt-2 border-t border-[var(--color-border-subtle)]"
+                    >
+                      <Button variant="ghost" size="sm" onClick={() => navigate('/link-expired')}>
+                        View
+                      </Button>
+                    </HStack>
+                  </VStack>
+                </div>
+              </SectionCard>
+            </div>
+          </VStack>
         </VStack>
       </main>
     </div>
