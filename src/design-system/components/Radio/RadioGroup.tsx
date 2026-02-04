@@ -145,7 +145,7 @@ export function RadioGroup({
         {label && (
           <legend
             id={labelId}
-            className="text-[length:var(--radio-group-label-size)] leading-[var(--radio-group-label-line-height)] font-medium text-[var(--color-text-default)] mb-[var(--radio-group-label-gap)]"
+            className="text-label-lg text-[var(--color-text-default)] mb-[var(--radio-group-label-gap)]"
           >
             {label}
           </legend>

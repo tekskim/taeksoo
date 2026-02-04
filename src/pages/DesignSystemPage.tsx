@@ -5552,6 +5552,12 @@ outline: 2px solid var(--color-border-focus);`}
                         <div className="flex gap-4 items-end">
                           <VStack gap={1}>
                             <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                              XS (80px)
+                            </span>
+                            <Input placeholder="XS" width="xs" />
+                          </VStack>
+                          <VStack gap={1}>
+                            <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                               SM (160px)
                             </span>
                             <Input placeholder="Small" width="sm" />
@@ -5782,6 +5788,12 @@ outline: 2px solid var(--color-border-focus);`}
                       <Label>Number Input - Width</Label>
                       <div className="flex flex-col gap-3">
                         <div className="flex gap-4 items-end">
+                          <VStack gap={1}>
+                            <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                              XS (80px)
+                            </span>
+                            <NumberInput defaultValue={1} width="xs" />
+                          </VStack>
                           <VStack gap={1}>
                             <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                               SM (160px)
@@ -6386,6 +6398,19 @@ outline: 2px solid var(--color-border-focus);`}
                       <Label>Width variants</Label>
                       <div className="flex flex-col gap-3">
                         <div className="flex gap-4 items-end">
+                          <VStack gap={1}>
+                            <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
+                              XS (80px)
+                            </span>
+                            <Select
+                              placeholder="Select"
+                              width="xs"
+                              options={[
+                                { value: 'active', label: 'Active' },
+                                { value: 'shutoff', label: 'Shutoff' },
+                              ]}
+                            />
+                          </VStack>
                           <VStack gap={1}>
                             <span className="text-[length:var(--font-size-10)] text-[var(--color-text-subtle)]">
                               SM (160px)
