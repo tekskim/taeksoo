@@ -6,7 +6,7 @@ import { IconChevronUp, IconChevronDown } from '@tabler/icons-react';
    NumberInput Types
    ---------------------------------------- */
 
-export type NumberInputWidth = 'sm' | 'md' | 'lg' | 'half' | 'full';
+export type NumberInputWidth = 'xs' | 'sm' | 'md' | 'lg' | 'half' | 'full';
 
 export interface NumberInputProps extends Omit<
   InputHTMLAttributes<HTMLInputElement>,
@@ -20,7 +20,7 @@ export interface NumberInputProps extends Omit<
   error?: string;
   /** @deprecated Use width="full" instead */
   fullWidth?: boolean;
-  /** Width variant: sm (160px), md (240px), lg (320px), half (50%), full (100%), or number for custom pixel width */
+  /** Width variant: xs (80px), sm (160px), md (240px), lg (320px), half (50%), full (100%), or number for custom pixel width */
   width?: NumberInputWidth | number;
   /** Minimum value */
   min?: number;
@@ -161,6 +161,7 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
 
     // Width-based styles
     const widthStyles: Record<NumberInputWidth, string> = {
+      xs: 'w-[80px]',
       sm: 'w-[160px]',
       md: 'w-[240px]',
       lg: 'w-[320px]',

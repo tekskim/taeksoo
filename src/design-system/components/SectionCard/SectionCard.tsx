@@ -18,7 +18,7 @@ export function SectionCard({ children, isActive = false, className, ...props }:
     <div
       className={twMerge(
         'flex flex-col items-start',
-        'gap-[24px]',
+        'gap-3',
         'bg-[var(--color-surface-default)]',
         'rounded-[var(--radius-md)]',
         isActive
@@ -61,7 +61,7 @@ function SectionCardHeader({
   ...props
 }: SectionCardHeaderProps) {
   return (
-    <div className="flex flex-col w-full gap-1">
+    <div className="flex flex-col w-full gap-3">
       <div
         className={twMerge('flex items-center justify-between w-full h-[28px]', className)}
         {...props}

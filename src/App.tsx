@@ -12,6 +12,7 @@ import { SettingsPageWrapper } from '@/pages/SettingsPageWrapper';
 
 // Pages - Mail Template
 import { MailTemplatePage } from '@/pages/MailTemplatePage';
+import { LinkExpiredPage } from '@/pages/LinkExpiredPage';
 import { MailTemplatePreviewPage } from '@/pages/MailTemplatePreviewPage';
 
 // Pages - Compute
@@ -345,6 +346,7 @@ function AppRoutes() {
       <Route path="/settings" element={<SettingsPageWrapper />} />
       <Route path="/mail-template" element={<MailTemplatePage />} />
       <Route path="/mail-template/:templateId" element={<MailTemplatePreviewPage />} />
+      <Route path="/link-expired" element={<LinkExpiredPage />} />
 
       {/* Agent Routes - Shared TabBar via AgentAppLayout */}
       <Route element={<AgentAppLayout />}>

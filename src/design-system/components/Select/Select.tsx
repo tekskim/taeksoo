@@ -36,8 +36,8 @@ export interface SelectProps {
   fullWidth?: boolean;
   /** Size variant (height) */
   size?: 'sm' | 'md';
-  /** Width variant: sm (160px), md (240px), lg (320px), half (50%), full (100%), or number for custom pixel width */
-  width?: 'sm' | 'md' | 'lg' | 'half' | 'full' | number;
+  /** Width variant: xs (80px), sm (160px), md (240px), lg (320px), half (50%), full (100%), or number for custom pixel width */
+  width?: 'xs' | 'sm' | 'md' | 'lg' | 'half' | 'full' | number;
   /** Additional CSS classes */
   className?: string;
   /** Required field indicator */
@@ -244,8 +244,9 @@ export function Select({
     }
   }, [isOpen]);
 
-  // Width-based styles: sm (160px), md (240px), lg (320px), half (50%), full (100%)
+  // Width-based styles: xs (80px), sm (160px), md (240px), lg (320px), half (50%), full (100%)
   const widthStyles = {
+    xs: 'w-[80px]',
     sm: 'w-[160px]',
     md: 'w-[240px]',
     lg: 'w-[320px]',
@@ -265,8 +266,8 @@ export function Select({
 
   // Size-based styles (height) - aligned with Input component
   const sizeStyles = {
-    sm: 'h-[var(--input-height-sm)] px-2 text-body-sm leading-4',
-    md: 'h-[var(--input-height-md)] px-[var(--select-padding-x)] text-[length:var(--select-font-size)] leading-[var(--select-line-height)]',
+    sm: 'h-[var(--input-height-sm)] pl-2 pr-2 text-body-sm leading-4',
+    md: 'h-[var(--input-height-md)] pl-[var(--select-padding-x)] pr-2 text-[length:var(--select-font-size)] leading-[var(--select-line-height)]',
   };
 
   const triggerClasses = twMerge(

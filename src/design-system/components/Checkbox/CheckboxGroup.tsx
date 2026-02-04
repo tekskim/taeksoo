@@ -73,7 +73,7 @@ export function CheckboxGroup({
         {label && (
           <legend
             id={labelId}
-            className="text-[length:var(--checkbox-group-label-size)] leading-[var(--checkbox-group-label-line-height)] font-medium text-[var(--color-text-default)] mb-[var(--checkbox-group-label-gap)]"
+            className="text-label-lg text-[var(--color-text-default)] mb-[var(--checkbox-group-label-gap)]"
           >
             {label}
           </legend>

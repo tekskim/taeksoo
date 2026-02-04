@@ -830,7 +830,7 @@ html.theme-transition *::after {
   --radio-group-gap: var(--spacing-3);
   --radio-group-label-size: var(--font-size-12);
   --radio-group-label-line-height: var(--line-height-16);
-  --radio-group-label-gap: var(--spacing-2);
+  --radio-group-label-gap: var(--spacing-3);
   --radio-group-item-gap: var(--spacing-2);
   --radio-group-item-gap-horizontal: var(--spacing-4);
 
@@ -915,8 +915,8 @@ html.theme-transition *::after {
   --checkbox-group-gap: var(--spacing-3);
   --checkbox-group-label-size: var(--font-size-12);
   --checkbox-group-label-line-height: var(--line-height-16);
-  --checkbox-group-label-gap: var(--spacing-2);
-  --checkbox-group-item-gap: var(--spacing-3);
+  --checkbox-group-label-gap: var(--spacing-3);
+  --checkbox-group-item-gap: var(--spacing-2);
   --checkbox-group-item-gap-horizontal: var(--spacing-4);
 
   /* ----------------------------------------
