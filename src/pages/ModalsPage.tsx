@@ -297,14 +297,14 @@ export function ModalsPage() {
                       </h2>
                       <div className="flex flex-col gap-2">
                         <ModalListItem
-                          title="Delete Snapshot"
+                          title="Delete snapshot"
                           description="Confirm deletion of a snapshot with warning about permanent action."
                           category="Confirm"
                           size="sm"
                           onOpen={() => setIsConfirmDeleteOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Security group"
+                          title="Delete security group"
                           description="Confirm deletion of a single security group with warning."
                           category="Confirm"
                           size="sm"
@@ -318,7 +318,7 @@ export function ModalsPage() {
                           onOpen={() => setIsDeleteSecurityGroupsMultipleOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Rule"
+                          title="Delete rule"
                           description="Confirm deletion of a single security group rule."
                           category="Confirm"
                           size="sm"
@@ -424,7 +424,7 @@ export function ModalsPage() {
                       </h2>
                       <div className="flex flex-col gap-2">
                         <ModalListItem
-                          title="Delete Load balancer"
+                          title="Delete load balancer"
                           description="Delete a single load balancer with warning about associated resources."
                           category="Network"
                           size="sm"
@@ -722,14 +722,14 @@ export function ModalsPage() {
                       </h2>
                       <div className="flex flex-col gap-2">
                         <ModalListItem
-                          title="Delete Cluster"
+                          title="Delete cluster"
                           description="Confirm deletion of a Kubernetes cluster."
                           category="Cluster"
                           size="sm"
                           onOpen={() => setIsDeleteClusterOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Namespace"
+                          title="Delete namespace"
                           description="Confirm deletion of a Kubernetes namespace."
                           category="Namespace"
                           size="sm"
@@ -851,7 +851,7 @@ export function ModalsPage() {
                       </h2>
                       <div className="flex flex-col gap-2">
                         <ModalListItem
-                          title="Delete Bucket"
+                          title="Delete bucket"
                           description="Confirm deletion of a non-empty bucket with warning about permanent data loss."
                           category="Bucket"
                           size="sm"
@@ -929,7 +929,7 @@ export function ModalsPage() {
                           onOpen={() => setIsRevertResizeOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Instance"
+                          title="Delete instance"
                           description="Permanently delete a single instance."
                           category="Instance"
                           size="sm"
@@ -1003,7 +1003,7 @@ export function ModalsPage() {
                           onOpen={() => setIsDeleteInstanceTemplatesOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Image"
+                          title="Delete image"
                           description="Permanently delete a single image."
                           category="Image"
                           size="sm"
@@ -1017,7 +1017,7 @@ export function ModalsPage() {
                           onOpen={() => setIsDeleteImagesOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Snapshot"
+                          title="Delete snapshot"
                           description="Permanently delete a single snapshot."
                           category="Snapshot"
                           size="sm"
@@ -1040,7 +1040,7 @@ export function ModalsPage() {
                       </h2>
                       <div className="flex flex-col gap-2">
                         <ModalListItem
-                          title="Delete Volume"
+                          title="Delete volume"
                           description="Permanently delete a single volume."
                           category="Volume"
                           size="sm"
@@ -1140,7 +1140,7 @@ export function ModalsPage() {
                       </h2>
                       <div className="flex flex-col gap-2">
                         <ModalListItem
-                          title="Delete Network"
+                          title="Delete network"
                           description="Permanently delete a single network with warning."
                           category="Network"
                           size="sm"
@@ -1168,7 +1168,7 @@ export function ModalsPage() {
                           onOpen={() => setIsDeleteSubnetsOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Port"
+                          title="Delete port"
                           description="Permanently delete a single port with warning."
                           category="Port"
                           size="sm"
@@ -1182,7 +1182,7 @@ export function ModalsPage() {
                           onOpen={() => setIsDeletePortsOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Router"
+                          title="Delete router"
                           description="Permanently delete a single router with warning."
                           category="Router"
                           size="sm"
@@ -1303,7 +1303,7 @@ export function ModalsPage() {
                           onOpen={() => setIsDeleteLoadBalancersAdminOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Listener"
+                          title="Delete listener"
                           description="Permanently delete a single listener."
                           category="Listener"
                           size="sm"
@@ -1317,7 +1317,7 @@ export function ModalsPage() {
                           onOpen={() => setIsDeleteListenersOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Pool"
+                          title="Delete pool"
                           description="Permanently delete a single pool."
                           category="Pool"
                           size="sm"
@@ -1331,7 +1331,7 @@ export function ModalsPage() {
                           onOpen={() => setIsDeletePoolsOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Member"
+                          title="Delete member"
                           description="Remove a single member from a pool."
                           category="Member"
                           size="sm"
@@ -1510,7 +1510,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isConfirmDeleteOpen}
         onClose={() => setIsConfirmDeleteOpen(false)}
-        title="Delete Snapshot"
+        title="Delete snapshot"
         description="Removing the selected instances is permanent and cannot be undone."
         size="sm"
       >
@@ -1567,7 +1567,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteSecurityGroupOpen}
         onClose={() => setIsDeleteSecurityGroupOpen(false)}
-        title="Delete Security group"
+        title="Delete security group"
         description="Removing the selected instances is permanent and cannot be undone."
         size="sm"
       >
@@ -1690,7 +1690,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteRuleOpen}
         onClose={() => setIsDeleteRuleOpen(false)}
-        title="Delete Rule"
+        title="Delete rule"
         description="Removing the selected instances is permanent and cannot be undone."
         size="sm"
       >
@@ -2246,7 +2246,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteLoadBalancerOpen}
         onClose={() => setIsDeleteLoadBalancerOpen(false)}
-        title="Delete Load balancer"
+        title="Delete load balancer"
         description="Removing the selected instances is permanent and cannot be undone."
         size="sm"
       >
@@ -4474,7 +4474,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteInstanceOpen}
         onClose={() => setIsDeleteInstanceOpen(false)}
-        title="Delete Instance"
+        title="Delete instance"
         description="Removing the instance is permanent and cannot be undone."
         size="sm"
       >
@@ -4921,7 +4921,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteImageOpen}
         onClose={() => setIsDeleteImageOpen(false)}
-        title="Delete Image"
+        title="Delete image"
         description="Deleting the image is permanent and cannot be undone."
         size="sm"
       >
@@ -5015,7 +5015,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteSnapshotOpen}
         onClose={() => setIsDeleteSnapshotOpen(false)}
-        title="Delete Snapshot"
+        title="Delete snapshot"
         description="Deleting the snapshot is permanent and cannot be undone."
         size="sm"
       >
@@ -5111,7 +5111,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteVolumeOpen}
         onClose={() => setIsDeleteVolumeOpen(false)}
-        title="Delete Volume"
+        title="Delete volume"
         description="Deleting the volume is permanent and cannot be undone."
         size="sm"
       >
@@ -5716,7 +5716,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteNetworkOpen}
         onClose={() => setIsDeleteNetworkOpen(false)}
-        title="Delete Network"
+        title="Delete network"
         description="Deleting the network is permanent and cannot be undone."
         size="sm"
       >
@@ -5937,7 +5937,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeletePortOpen}
         onClose={() => setIsDeletePortOpen(false)}
-        title="Delete Port"
+        title="Delete port"
         description="Deleting the port is permanent and cannot be undone."
         size="sm"
       >
@@ -6038,7 +6038,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteRouterOpen}
         onClose={() => setIsDeleteRouterOpen(false)}
-        title="Delete Router"
+        title="Delete router"
         description="Deleting the router is permanent and cannot be undone."
         size="sm"
       >
@@ -6870,7 +6870,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteListenerOpen}
         onClose={() => setIsDeleteListenerOpen(false)}
-        title="Delete Listener"
+        title="Delete listener"
         description="Removing the listener is permanent and cannot be undone."
         size="sm"
       >
@@ -6966,7 +6966,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeletePoolOpen}
         onClose={() => setIsDeletePoolOpen(false)}
-        title="Delete Pool"
+        title="Delete pool"
         description="Removing the pool is permanent and cannot be undone."
         size="sm"
       >
@@ -7080,7 +7080,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteMemberOpen}
         onClose={() => setIsDeleteMemberOpen(false)}
-        title="Delete Member"
+        title="Delete member"
         description="Removing the member is permanent and cannot be undone."
         size="sm"
       >
@@ -7196,7 +7196,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteSecurityGroupRuleOpen}
         onClose={() => setIsDeleteSecurityGroupRuleOpen(false)}
-        title="Delete Rule"
+        title="Delete rule"
         description="Removing the rule group is permanent and cannot be undone."
         size="sm"
       >

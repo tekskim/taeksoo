@@ -482,7 +482,7 @@ export function ConfirmationModalPatternDemo() {
       <Modal
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
-        title="Delete Instance"
+        title="Delete instance"
         description="This action is permanent and cannot be undone."
         size="sm"
       >
