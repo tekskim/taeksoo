@@ -636,7 +636,7 @@ export function IAMUserDetailPage() {
       width: fixedColumns.actionWide,
       align: 'center',
       render: (_value, row) => (
-        <ContextMenu items={getSessionContextMenuItems(row.id)} trigger="click">
+        <ContextMenu items={getSessionContextMenuItems(row.id)} trigger="click" align="right">
           <button
             type="button"
             className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
@@ -691,7 +691,7 @@ export function IAMUserDetailPage() {
       width: fixedColumns.actionWide,
       align: 'center',
       render: (_value, row) => (
-        <ContextMenu items={getAccessKeyContextMenuItems(row.id)} trigger="click">
+        <ContextMenu items={getAccessKeyContextMenuItems(row.id)} trigger="click" align="right">
           <button
             type="button"
             className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
@@ -751,7 +751,7 @@ export function IAMUserDetailPage() {
       width: fixedColumns.actionWide,
       align: 'center',
       render: (_value, row) => (
-        <ContextMenu items={getRoleContextMenuItems(row.id)} trigger="click">
+        <ContextMenu items={getRoleContextMenuItems(row.id)} trigger="click" align="right">
           <button
             type="button"
             className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
@@ -807,7 +807,7 @@ export function IAMUserDetailPage() {
       width: fixedColumns.actionWide,
       align: 'center',
       render: (_value, row) => (
-        <ContextMenu items={getGroupContextMenuItems(row.id)} trigger="click">
+        <ContextMenu items={getGroupContextMenuItems(row.id)} trigger="click" align="right">
           <button
             type="button"
             className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
@@ -1079,7 +1079,7 @@ export function IAMUserDetailPage() {
                         <Button
                           variant="secondary"
                           size="sm"
-                          icon={<IconRefresh size={16} stroke={1.5} />}
+                          icon={<IconRefresh size={12} stroke={1.5} />}
                           aria-label="Refresh"
                         />
                         <Button variant="secondary" size="sm">

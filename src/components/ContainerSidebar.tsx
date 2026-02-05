@@ -587,7 +587,7 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
                   active={isActive('/container/statefulsets')}
                 />
                 <MenuItem
-                  icon={<IconRefresh size={16} stroke={1.5} />}
+                  icon={<IconRefresh size={12} stroke={1.5} />}
                   label="DaemonSets"
                   href="/container/daemonsets"
                   active={isActive('/container/daemonsets')}

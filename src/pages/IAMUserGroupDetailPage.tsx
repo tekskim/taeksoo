@@ -594,7 +594,7 @@ export default function IAMUserGroupDetailPage() {
             onBack={() => navigate(-1)}
             onForward={() => navigate(1)}
           />
-          <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
+          <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
             <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
               <VStack gap={3}>
                 <h1 className="text-heading-h3 text-[var(--color-text-default)]">
@@ -667,7 +667,7 @@ export default function IAMUserGroupDetailPage() {
                     <Button
                       variant="secondary"
                       size="sm"
-                      rightIcon={<IconChevronDown size={16} stroke={1.5} />}
+                      rightIcon={<IconChevronDown size={12} stroke={1.5} />}
                     >
                       More Actions
                     </Button>

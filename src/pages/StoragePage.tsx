@@ -58,7 +58,7 @@ function StatusCard({ label, count, status }: StatusCardProps) {
     } else if (status === 'processing') {
       return <IconLoader2 size={16} stroke={1} className="text-white animate-spin" />;
     } else if (status === 'pending') {
-      return <IconRefresh size={16} stroke={1} className="text-white" />;
+      return <IconRefresh size={12} stroke={1} className="text-white" />;
     } else if (status === 'draft') {
       return <IconPencil size={16} stroke={1} className="text-white" />;
     }
@@ -315,7 +315,7 @@ export function StoragePage() {
             className="flex gap-1 items-center justify-center"
             onClick={(e) => e.stopPropagation()}
           >
-            <ContextMenu items={menuItems} trigger="click">
+            <ContextMenu items={menuItems} trigger="click" align="right">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
                 <IconDotsCircleHorizontal
                   size={16}

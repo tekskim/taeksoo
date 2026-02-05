@@ -327,11 +327,11 @@ export function SecretDetailPage() {
               <DetailHeader>
                 <DetailHeader.Title>Secret: {secretData.name}</DetailHeader.Title>
                 <DetailHeader.Actions>
-                  <ContextMenu items={moreActionsItems} trigger="click" align="left">
+                  <ContextMenu items={moreActionsItems} trigger="click" align="right">
                     <Button
                       variant="secondary"
-                      size="md"
-                      rightIcon={<IconChevronDown size={16} stroke={1.5} />}
+                      size="sm"
+                      rightIcon={<IconChevronDown size={12} stroke={1.5} />}
                     >
                       More Actions
                     </Button>

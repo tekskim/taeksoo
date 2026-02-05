@@ -144,12 +144,12 @@ export function ContainerHPAPage() {
   // Sidebar width calculation: 40px icon sidebar + 200px menu sidebar when open
   const sidebarWidth = sidebarOpen ? 240 : 40;
 
-  const getStatusType = (status: string): 'active' | 'pending' | 'error' => {
+  const getStatusType = (status: string): 'active' | 'building' | 'error' => {
     switch (status) {
       case 'Running':
         return 'active';
       case 'Pending':
-        return 'pending';
+        return 'building';
       case 'Error':
         return 'error';
       default:
@@ -251,7 +251,7 @@ export function ContainerHPAPage() {
 
         return (
           <div onClick={(e) => e.stopPropagation()}>
-            <ContextMenu items={menuItems} trigger="click">
+            <ContextMenu items={menuItems} trigger="click" align="right">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
                 <IconDotsCircleHorizontal
                   size={16}
@@ -389,7 +389,7 @@ export function ContainerHPAPage() {
                     aria-label="Download"
                     className="!p-0 !w-7 !h-7 !min-w-7"
                   >
-                    <IconDownload size={14} stroke={1.5} />
+                    <IconDownload size={12} stroke={1.5} />
                   </Button>
                 </HStack>
 

@@ -416,7 +416,7 @@ export default function IAMSystemAdminDetailPage() {
         />
 
         {/* Page Content */}
-        <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
+        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
           <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
             <VStack gap={8}>
               {/* Header Card */}
@@ -536,7 +536,7 @@ export default function IAMSystemAdminDetailPage() {
                         <Button
                           variant="secondary"
                           size="sm"
-                          icon={<IconRefresh size={16} stroke={1.5} />}
+                          icon={<IconRefresh size={12} stroke={1.5} />}
                           aria-label="Refresh"
                         />
                       </HStack>

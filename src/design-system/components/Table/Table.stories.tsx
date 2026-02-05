@@ -213,7 +213,7 @@ export const WithActions: Story = {
         key: 'actions',
         label: '',
         width: '100px',
-        align: 'right',
+        align: 'center',
         render: (_value, row) => (
           <div className="flex items-center justify-end gap-1">
             <Button
@@ -286,7 +286,7 @@ export const ColumnAlignment: Story = {
     const alignedColumns: TableColumn<User>[] = [
       { key: 'name', label: 'Name (Left)', align: 'left' },
       { key: 'email', label: 'Email (Center)', align: 'center' },
-      { key: 'role', label: 'Role (Right)', align: 'right' },
+      { key: 'role', label: 'Role (Right)', align: 'center' },
     ];
 
     return <Table columns={alignedColumns} data={sampleUsers} rowKey="id" />;

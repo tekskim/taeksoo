@@ -345,7 +345,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       minWidth: columnMinWidths.action,
       align: 'center',
       render: (_: unknown, row: PodRow) => (
-        <ContextMenu items={createPodMenuItems(row)} trigger="click" align="left">
+        <ContextMenu items={createPodMenuItems(row)} trigger="click" align="right">
           <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
             <IconDotsCircleHorizontal
               size={16}
@@ -506,7 +506,7 @@ function ServicesTab({ services }: ServicesTabProps) {
       width: fixedColumns.actions,
       align: 'center',
       render: (_: unknown, row: ServiceRow) => (
-        <ContextMenu items={createServiceMenuItems(row)} trigger="click" align="left">
+        <ContextMenu items={createServiceMenuItems(row)} trigger="click" align="right">
           <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
             <IconDotsCircleHorizontal
               size={16}
@@ -677,7 +677,7 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
       minWidth: columnMinWidths.action,
       align: 'center',
       render: (_: unknown, row: EventRow) => (
-        <ContextMenu items={createEventMenuItems(row)} trigger="click" align="left">
+        <ContextMenu items={createEventMenuItems(row)} trigger="click" align="right">
           <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
             <IconDotsCircleHorizontal
               size={16}
@@ -894,11 +894,11 @@ export function StatefulSetDetailPage() {
               <DetailHeader>
                 <DetailHeader.Title>StatefulSet: {statefulset.name}</DetailHeader.Title>
                 <DetailHeader.Actions>
-                  <ContextMenu items={moreActionsItems} trigger="click" align="left">
+                  <ContextMenu items={moreActionsItems} trigger="click" align="right">
                     <Button
                       variant="secondary"
-                      size="md"
-                      rightIcon={<IconChevronDown size={16} stroke={1.5} />}
+                      size="sm"
+                      rightIcon={<IconChevronDown size={12} stroke={1.5} />}
                     >
                       More Actions
                     </Button>

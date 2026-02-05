@@ -176,7 +176,7 @@ export default function IAMLoginPoliciesPage() {
         />
 
         {/* Page Content */}
-        <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
+        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
           <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
             <VStack gap={6}>
               {/* Header */}
@@ -352,7 +352,7 @@ export default function IAMLoginPoliciesPage() {
                                   min={1}
                                   max={1095}
                                   step={1}
-                                  className="w-[200px]"
+                                  width="sm"
                                   disabled={!passwordExpirationEnabled}
                                 />
                                 <span className="text-body-md leading-4 text-[var(--color-text-default)]">
@@ -444,7 +444,7 @@ export default function IAMLoginPoliciesPage() {
                               onClick={handleResetPasswordPolicy}
                               className="flex items-center gap-1.5 text-label-md text-[var(--color-action-primary)] hover:underline"
                             >
-                              <IconRefresh size={16} stroke={1.5} />
+                              <IconRefresh size={12} stroke={1.5} />
                               Reset to default
                             </button>
                             <Button
@@ -519,7 +519,7 @@ export default function IAMLoginPoliciesPage() {
                                 min={1}
                                 max={100}
                                 step={1}
-                                className="w-[200px]"
+                                width="sm"
                                 disabled={!lockoutEnabled}
                               />
                               <p className="text-body-sm leading-4 text-[var(--color-text-subtle)]">
@@ -550,7 +550,7 @@ export default function IAMLoginPoliciesPage() {
                                   min={1}
                                   max={100}
                                   step={1}
-                                  className="w-[200px]"
+                                  width="sm"
                                   disabled={!lockoutEnabled}
                                 />
                                 <p className="text-body-sm leading-4 text-[var(--color-text-subtle)]">
@@ -637,7 +637,7 @@ export default function IAMLoginPoliciesPage() {
                                     min={1}
                                     max={60}
                                     step={1}
-                                    className="w-[200px]"
+                                    width="sm"
                                     disabled={!lockoutEnabled}
                                   />
                                   <span className="text-body-md leading-4 text-[var(--color-text-default)]">
@@ -667,7 +667,7 @@ export default function IAMLoginPoliciesPage() {
                                     min={1}
                                     max={1440}
                                     step={1}
-                                    className="w-[200px]"
+                                    width="sm"
                                     disabled={!lockoutEnabled}
                                   />
                                   <span className="text-body-md leading-4 text-[var(--color-text-default)]">
@@ -697,7 +697,7 @@ export default function IAMLoginPoliciesPage() {
                                     min={1}
                                     max={72}
                                     step={1}
-                                    className="w-[200px]"
+                                    width="sm"
                                     disabled={!lockoutEnabled}
                                   />
                                   <span className="text-body-md leading-4 text-[var(--color-text-default)]">
@@ -715,7 +715,7 @@ export default function IAMLoginPoliciesPage() {
                               onClick={handleResetLockoutPolicy}
                               className="flex items-center gap-1.5 text-label-md text-[var(--color-action-primary)] hover:underline"
                             >
-                              <IconRefresh size={16} stroke={1.5} />
+                              <IconRefresh size={12} stroke={1.5} />
                               Reset to default
                             </button>
                             <Button

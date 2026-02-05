@@ -93,7 +93,7 @@ export function WorkloadsPage() {
                   >
                     Refresh
                   </Button>
-                  <Button variant="primary" size="sm" icon={<IconPlus size={14} stroke={1.5} />}>
+                  <Button variant="primary" size="md" icon={<IconPlus size={12} stroke={1.5} />}>
                     Deploy workload
                   </Button>
                 </HStack>

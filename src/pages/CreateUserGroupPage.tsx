@@ -1026,7 +1026,7 @@ export default function CreateUserGroupPage() {
         />
 
         {/* Scrollable content */}
-        <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
+        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
           <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)] min-h-full">
             {/* Main content area */}
             <VStack gap={3} className="min-w-[1176px]">

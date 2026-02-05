@@ -94,7 +94,7 @@ export function MailTemplatePage() {
               <h1 className="text-heading-h5 text-[var(--color-text-default)]">Mail templates </h1>
             </div>
           </HStack>
-          <Button variant="primary" size="sm" icon={<IconPlus size={14} stroke={1.5} />}>
+          <Button variant="primary" size="md" icon={<IconPlus size={12} stroke={1.5} />}>
             Create template{' '}
           </Button>
         </div>

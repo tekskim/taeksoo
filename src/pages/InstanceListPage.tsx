@@ -39,7 +39,6 @@ import {
   IconDownload,
   IconLock,
   IconTerminal2,
-  IconExternalLink,
 } from '@tabler/icons-react';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import {
@@ -1173,22 +1172,6 @@ export function InstanceListPage() {
 
   // Context menu items for instances
   const getInstanceContextMenuItems = (instance: Instance): ContextMenuItem[] => [
-    { id: 'start', label: 'Start' },
-    { id: 'stop', label: 'Stop', status: 'danger' },
-    { id: 'reboot', label: 'Reboot', status: 'danger' },
-    { id: 'soft-reboot', label: 'Soft reboot' },
-    { id: 'pause', label: 'Pause' },
-    { id: 'suspend', label: 'Suspend' },
-    { id: 'shelve', label: 'Shelve' },
-    { id: 'unpause', label: 'Unpause' },
-    { id: 'resume', label: 'Resume' },
-    { id: 'unshelve', label: 'Unshelve' },
-    {
-      id: 'rescue',
-      label: 'Rescue',
-      onClick: () => handleRescue(instance),
-    },
-    { id: 'unrescue', label: 'Unrescue', divider: true },
     {
       id: 'instance-status',
       label: 'Instance status',
@@ -1321,19 +1304,13 @@ export function InstanceListPage() {
       sortable: true,
       render: (_, row) => (
         <div className="flex flex-col gap-0.5 min-w-0">
-          <div className="flex items-center gap-1 flex-nowrap">
-            <Link
-              to={`/compute/instances/${row.id}`}
-              className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {row.name}
-            </Link>
-            <IconExternalLink
-              size={12}
-              className="flex-shrink-0 text-[var(--color-action-primary)]"
-            />
-          </div>
+          <Link
+            to={`/compute/instances/${row.id}`}
+            className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2 truncate"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {row.name}
+          </Link>
           <span className="text-body-sm text-[var(--color-text-subtle)] truncate">
             ID : {row.id}
           </span>
@@ -1460,7 +1437,7 @@ export function InstanceListPage() {
             <IconTerminal2 size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
           </button>
           <div onClick={(e) => e.stopPropagation()}>
-            <ContextMenu items={getInstanceContextMenuItems(row)} trigger="click">
+            <ContextMenu items={getInstanceContextMenuItems(row)} trigger="click" align="right">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
                 <IconDotsCircleHorizontal
                   size={16}
@@ -1676,7 +1653,7 @@ export function InstanceListPage() {
         {/* Scrollable Content Area */}
         <div
           ref={scrollContainerRef}
-          className="flex-1 overflow-auto overscroll-contain sidebar-scroll"
+          className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll"
           style={{ paddingBottom: shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0' }}
         >
           {/* Page Content */}

@@ -218,7 +218,7 @@ export function DetailPagePatternDemo() {
           <Button variant="secondary" size="sm" leftIcon={<IconRefresh size={12} />}>
             Reboot
           </Button>
-          <ContextMenu items={moreActionsMenuItems} trigger="click">
+          <ContextMenu items={moreActionsMenuItems} trigger="click" align="right">
             <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
               More Actions
             </Button>
@@ -425,52 +425,36 @@ export function SelectionDrawerPatternDemo() {
           )}
 
           {/* Selection Table */}
-          <div className="w-full border border-[var(--color-border-default)] rounded-lg overflow-hidden">
-            <table className="w-full">
-              <thead>
-                <tr className="bg-[var(--color-surface-subtle)] border-b border-[var(--color-border-default)]">
-                  <th className="w-10 p-3"></th>
-                  <th className="text-left p-3 text-label-sm text-[var(--color-text-muted)]">
-                    Status
-                  </th>
-                  <th className="text-left p-3 text-label-sm text-[var(--color-text-muted)]">
-                    Name
-                  </th>
-                  <th className="text-left p-3 text-label-sm text-[var(--color-text-muted)]">
-                    CIDR
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {items.map((item) => (
-                  <tr
-                    key={item.id}
-                    className="border-b border-[var(--color-border-subtle)] hover:bg-[var(--color-surface-subtle)] cursor-pointer"
-                    onClick={() => setSelectedId(item.id)}
+          <Table
+            columns={[
+              {
+                key: 'select',
+                label: '',
+                width: fixedColumns.select,
+                render: (_, row) => (
+                  <div
+                    className="flex items-center justify-center"
+                    onClick={(e) => e.stopPropagation()}
                   >
-                    <td className="p-3">
-                      <Radio
-                        checked={selectedId === item.id}
-                        onChange={() => setSelectedId(item.id)}
-                      />
-                    </td>
-                    <td className="p-3">
-                      <StatusIndicator
-                        status={item.status as 'active' | 'error'}
-                        layout="icon-only"
-                      />
-                    </td>
-                    <td className="p-3 text-body-md text-[var(--color-text-default)]">
-                      {item.name}
-                    </td>
-                    <td className="p-3 text-body-md text-[var(--color-text-default)]">
-                      {item.cidr}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                    <Radio checked={selectedId === row.id} onChange={() => setSelectedId(row.id)} />
+                  </div>
+                ),
+              },
+              {
+                key: 'status',
+                label: 'Status',
+                width: fixedColumns.status,
+                render: (_, row) => (
+                  <StatusIndicator status={row.status as 'active' | 'error'} layout="icon-only" />
+                ),
+              },
+              { key: 'name', label: 'Name', flex: 1 },
+              { key: 'cidr', label: 'CIDR', flex: 1 },
+            ]}
+            data={items}
+            rowKey="id"
+            onRowClick={(row) => setSelectedId(row.id)}
+          />
         </VStack>
       </Drawer>
     </>

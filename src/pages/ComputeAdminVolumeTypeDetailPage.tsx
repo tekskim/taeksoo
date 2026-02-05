@@ -280,7 +280,7 @@ export default function ComputeAdminVolumeTypeDetailPage() {
 
         return (
           <div onClick={(e) => e.stopPropagation()}>
-            <ContextMenu items={menuItems} trigger="click">
+            <ContextMenu items={menuItems} trigger="click" align="right">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
                 <IconDotsCircleHorizontal
                   size={16}
@@ -382,7 +382,7 @@ export default function ComputeAdminVolumeTypeDetailPage() {
         </div>
 
         {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
+        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
           {/* Page Content */}
           <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
             <VStack gap={8} className="min-w-[1176px]">
@@ -399,8 +399,8 @@ export default function ComputeAdminVolumeTypeDetailPage() {
                   <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
                     Delete
                   </Button>
-                  <ContextMenu items={moreActionsItems} trigger="click">
-                    <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={16} />}>
+                  <ContextMenu items={moreActionsItems} trigger="click" align="right">
+                    <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
                       More Actions
                     </Button>
                   </ContextMenu>

@@ -1277,7 +1277,7 @@ export function ComputeAdminInstanceListPage() {
             <IconTerminal2 size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
           </button>
           <div onClick={(e) => e.stopPropagation()}>
-            <ContextMenu items={getInstanceContextMenuItems(row)} trigger="click">
+            <ContextMenu items={getInstanceContextMenuItems(row)} trigger="click" align="right">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
                 <IconDotsCircleHorizontal
                   size={16}
@@ -1496,7 +1496,7 @@ export function ComputeAdminInstanceListPage() {
         {/* Scrollable Content Area */}
         <div
           ref={scrollContainerRef}
-          className="flex-1 overflow-auto overscroll-contain sidebar-scroll"
+          className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll"
           style={{ paddingBottom: shellPanel.isExpanded ? '350px' : '0' }}
         >
           {/* Page Content */}

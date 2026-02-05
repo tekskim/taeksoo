@@ -258,7 +258,11 @@ export default function IAMRolesPage() {
       width: fixedColumns.actionWide,
       align: 'center',
       render: (_value, row) => (
-        <ContextMenu items={getContextMenuItems(row.id, row.type === 'Built-in')} trigger="click">
+        <ContextMenu
+          items={getContextMenuItems(row.id, row.type === 'Built-in')}
+          trigger="click"
+          align="right"
+        >
           <button
             type="button"
             className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
@@ -309,7 +313,7 @@ export default function IAMRolesPage() {
                 <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
                   Roles
                 </h1>
-                <Button variant="primary" size="sm" onClick={() => navigate('/iam/roles/create')}>
+                <Button variant="primary" size="md" onClick={() => navigate('/iam/roles/create')}>
                   Create role
                 </Button>
               </HStack>
