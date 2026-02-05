@@ -437,7 +437,7 @@ export function ComputeAdminInstanceTemplatesPage() {
         </div>
 
         {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
+        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
           {/* Page Content */}
           <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
             <VStack gap={3}>
@@ -446,7 +446,10 @@ export function ComputeAdminInstanceTemplatesPage() {
                 <h1 className="text-heading-h5 text-[var(--color-text-default)]">
                   Instance templates
                 </h1>
-                <Button onClick={() => navigate('/compute-admin/instance-templates/create')}>
+                <Button
+                  size="md"
+                  onClick={() => navigate('/compute-admin/instance-templates/create')}
+                >
                   Create template
                 </Button>
               </div>

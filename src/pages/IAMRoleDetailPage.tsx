@@ -655,7 +655,7 @@ export default function IAMRoleDetailPage() {
                     <Button
                       variant="secondary"
                       size="sm"
-                      rightIcon={<IconChevronDown size={16} stroke={1.5} />}
+                      rightIcon={<IconChevronDown size={12} stroke={1.5} />}
                     >
                       More Actions
                     </Button>

@@ -302,7 +302,7 @@ export default function IAMSystemAdministratorsPage() {
                 </h1>
                 <Button
                   variant="primary"
-                  size="sm"
+                  size="md"
                   onClick={() => navigate('/iam/system-administrators/create')}
                 >
                   Create account

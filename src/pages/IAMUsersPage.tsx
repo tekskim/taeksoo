@@ -371,7 +371,7 @@ export function IAMUsersPage() {
                 <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
                   Users
                 </h1>
-                <Button variant="primary" size="sm" onClick={() => navigate('/iam/users/create')}>
+                <Button variant="primary" size="md" onClick={() => navigate('/iam/users/create')}>
                   Create user
                 </Button>
               </HStack>

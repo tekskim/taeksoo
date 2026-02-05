@@ -148,7 +148,7 @@ export default function IAMMFAPoliciesPage() {
         />
 
         {/* Page Content */}
-        <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
+        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
           <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
             <VStack gap={6}>
               {/* Header */}
@@ -208,7 +208,7 @@ export default function IAMMFAPoliciesPage() {
                               onClick={handleResetToDefault}
                               className="flex items-center gap-1.5 text-label-md text-[var(--color-action-primary)] hover:underline"
                             >
-                              <IconRefresh size={16} stroke={1.5} />
+                              <IconRefresh size={12} stroke={1.5} />
                               Reset to default
                             </button>
                             <Button variant="secondary" size="sm" onClick={handleReload}>
@@ -288,7 +288,7 @@ export default function IAMMFAPoliciesPage() {
                                   min={0}
                                   max={2}
                                   step={1}
-                                  className="w-[200px]"
+                                  width="sm"
                                   disabled={!otpEnabled}
                                 />
                                 <p className="text-body-sm leading-4 text-[var(--color-text-subtle)]">
@@ -354,7 +354,7 @@ export default function IAMMFAPoliciesPage() {
                                 onClick={handleMethodsResetToDefault}
                                 className="flex items-center gap-1.5 text-label-md text-[var(--color-action-primary)] hover:underline"
                               >
-                                <IconRefresh size={16} stroke={1.5} />
+                                <IconRefresh size={12} stroke={1.5} />
                                 Reset to default
                               </button>
                               <Button variant="secondary" size="sm" onClick={handleMethodsReload}>
@@ -405,7 +405,7 @@ export default function IAMMFAPoliciesPage() {
                                     min={1}
                                     max={600}
                                     step={1}
-                                    className="w-[200px]"
+                                    width="sm"
                                     disabled={!emailEnabled}
                                   />
                                   <span className="text-body-md leading-4 text-[var(--color-text-default)]">
@@ -443,7 +443,7 @@ export default function IAMMFAPoliciesPage() {
                                     min={1}
                                     max={120}
                                     step={1}
-                                    className="w-[200px]"
+                                    width="sm"
                                     disabled={!emailEnabled}
                                   />
                                   <span className="text-body-md leading-4 text-[var(--color-text-default)]">
@@ -526,7 +526,7 @@ export default function IAMMFAPoliciesPage() {
                                 onClick={handleMethodsResetToDefault}
                                 className="flex items-center gap-1.5 text-label-md text-[var(--color-action-primary)] hover:underline"
                               >
-                                <IconRefresh size={16} stroke={1.5} />
+                                <IconRefresh size={12} stroke={1.5} />
                                 Reset to default
                               </button>
                               <Button variant="secondary" size="sm" onClick={handleMethodsReload}>

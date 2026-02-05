@@ -1079,7 +1079,7 @@ export function IAMUserDetailPage() {
                         <Button
                           variant="secondary"
                           size="sm"
-                          icon={<IconRefresh size={16} stroke={1.5} />}
+                          icon={<IconRefresh size={12} stroke={1.5} />}
                           aria-label="Refresh"
                         />
                         <Button variant="secondary" size="sm">

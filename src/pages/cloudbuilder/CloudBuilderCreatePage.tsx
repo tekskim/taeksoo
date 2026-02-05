@@ -204,7 +204,9 @@ export function CloudBuilderCreatePage() {
                     <Button variant="secondary" onClick={() => navigate(`/cloudbuilder/${slug}`)}>
                       Cancel{' '}
                     </Button>
-                    <Button onClick={() => setConfirmOpen(true)}>Create</Button>
+                    <Button size="md" onClick={() => setConfirmOpen(true)}>
+                      Create
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -322,7 +324,9 @@ export function CloudBuilderCreatePage() {
                 <Button variant="secondary" onClick={() => navigate(`/cloudbuilder/${slug}`)}>
                   Cancel{' '}
                 </Button>
-                <Button onClick={() => setConfirmOpen(true)}>Create</Button>
+                <Button size="md" onClick={() => setConfirmOpen(true)}>
+                  Create
+                </Button>
               </div>
             </>
           ) : (

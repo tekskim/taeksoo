@@ -373,7 +373,7 @@ function DataSourcesTab() {
       align: 'center',
       render: () => (
         <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
-          <IconRefresh size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
+          <IconRefresh size={12} stroke={1.5} className="text-[var(--color-text-muted)]" />
         </button>
       ),
     },
@@ -573,7 +573,7 @@ function MCPServersTab() {
       align: 'center',
       render: () => (
         <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
-          <IconRefresh size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
+          <IconRefresh size={12} stroke={1.5} className="text-[var(--color-text-muted)]" />
         </button>
       ),
     },

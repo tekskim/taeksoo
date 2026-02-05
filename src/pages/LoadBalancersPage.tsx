@@ -528,7 +528,7 @@ export function LoadBalancersPage() {
         </div>
 
         {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
+        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
           {/* Main Content */}
           <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
             <VStack gap={3}>
