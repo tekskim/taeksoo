@@ -504,8 +504,8 @@ export function TableStyleGuidePage() {
 { key: 'name', label: 'Name', flex: 1, minWidth: columnMinWidths.name }
 { key: 'count', label: 'Count', flex: 1, minWidth: columnMinWidths.count }
 
-// 연관 리소스 - 오른쪽 정렬
-{ key: 'attachedTo', label: 'Attached to', flex: 1, align: 'center' }`}
+// 연관 리소스 - 왼쪽 정렬 (기본값)
+{ key: 'attachedTo', label: 'Attached to', flex: 1, minWidth: columnMinWidths.attachedTo }`}
                 />
               </div>
             </SectionCard.Content>

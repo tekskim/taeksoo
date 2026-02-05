@@ -426,7 +426,6 @@ export function PortsPage() {
       label: 'Attached to',
       flex: 1,
       minWidth: columnMinWidths.attachedTo,
-      align: 'center',
       render: (_, row) =>
         row.attachedTo ? (
           <div className="flex items-center gap-2 justify-between w-full">
