@@ -315,7 +315,7 @@ export function StoragePage() {
             className="flex gap-1 items-center justify-center"
             onClick={(e) => e.stopPropagation()}
           >
-            <ContextMenu items={menuItems} trigger="click">
+            <ContextMenu items={menuItems} trigger="click" align="right">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
                 <IconDotsCircleHorizontal
                   size={16}

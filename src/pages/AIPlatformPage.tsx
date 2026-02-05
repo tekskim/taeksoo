@@ -1275,7 +1275,7 @@ function WorkloadsContent() {
       align: 'center' as const,
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
-          <ContextMenu items={getWorkloadContextMenuItems(row)} trigger="click">
+          <ContextMenu items={getWorkloadContextMenuItems(row)} trigger="click" align="right">
             <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
               <IconDotsCircleHorizontal
                 size={16}

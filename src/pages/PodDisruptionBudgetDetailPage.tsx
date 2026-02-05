@@ -486,7 +486,7 @@ export function PodDisruptionBudgetDetailPage() {
               <DetailHeader>
                 <DetailHeader.Title>Pod Disruption Budget: {pdbData.name}</DetailHeader.Title>
                 <DetailHeader.Actions>
-                  <ContextMenu items={moreActionsItems} trigger="click" align="left">
+                  <ContextMenu items={moreActionsItems} trigger="click" align="right">
                     <Button
                       variant="secondary"
                       size="md"

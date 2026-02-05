@@ -261,7 +261,7 @@ export default function L7PolicyDetailPage() {
         ];
         return (
           <div onClick={(e) => e.stopPropagation()}>
-            <ContextMenu items={ruleMenuItems} trigger="click">
+            <ContextMenu items={ruleMenuItems} trigger="click" align="right">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
                 <IconTrash size={16} stroke={1.5} className="text-[var(--color-state-danger)]" />
               </button>

@@ -347,12 +347,12 @@ export function ContainerHPADetailPage() {
     console.log('Open in new tab:', tab);
   };
 
-  const getStatusType = (status: string): 'active' | 'pending' | 'error' => {
+  const getStatusType = (status: string): 'active' | 'building' | 'error' => {
     switch (status) {
       case 'Active':
         return 'active';
       case 'Pending':
-        return 'pending';
+        return 'building';
       case 'Error':
         return 'error';
       default:
@@ -449,7 +449,7 @@ export function ContainerHPADetailPage() {
               <DetailHeader>
                 <DetailHeader.Title>Horizontal Pod Autoscaler: {hpa.name}</DetailHeader.Title>
                 <DetailHeader.Actions>
-                  <ContextMenu items={moreActionsItems} trigger="click" align="left">
+                  <ContextMenu items={moreActionsItems} trigger="click" align="right">
                     <Button
                       variant="secondary"
                       size="md"

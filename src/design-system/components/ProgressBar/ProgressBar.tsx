@@ -218,23 +218,32 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
           {/* Tooltip */}
           {showTooltip && newValue > 0 && (
             <div className="absolute left-1/2 -translate-x-1/2 -top-2 -translate-y-full z-10">
-              <div className="bg-[var(--tooltip-bg)] text-[var(--tooltip-text)] text-body-sm px-2 py-1 rounded-[var(--radius-sm)] shadow-[var(--shadow-md)]">
+              <div className="relative bg-[var(--tooltip-bg)] text-[var(--tooltip-text)] text-body-sm px-2 py-1 rounded-[var(--radius-sm)] shadow-[var(--shadow-md)]">
                 <div className="flex flex-col gap-1">
                   <div className="flex items-center gap-1">
                     <span
                       className="w-[6px] h-[6px] rounded-full"
-                      style={{ backgroundColor: getStatusColor(newStatus, true) }}
+                      style={{ backgroundColor: getStatusColor(usedStatus) }}
                     />
                     <span>Used: {value}</span>
                   </div>
                   <div className="flex items-center gap-1">
                     <span
                       className="w-[6px] h-[6px] rounded-full"
-                      style={{ backgroundColor: getStatusColor(usedStatus) }}
+                      style={{ backgroundColor: getStatusColor(newStatus, true) }}
                     />
                     <span>New: {newValue}</span>
                   </div>
                 </div>
+                {/* Pointer arrow */}
+                <div
+                  className="absolute left-1/2 -translate-x-1/2 -bottom-1 w-0 h-0"
+                  style={{
+                    borderLeft: '4px solid transparent',
+                    borderRight: '4px solid transparent',
+                    borderTop: '4px solid var(--tooltip-bg)',
+                  }}
+                />
               </div>
             </div>
           )}

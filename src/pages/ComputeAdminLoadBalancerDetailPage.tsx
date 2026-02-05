@@ -332,7 +332,7 @@ export function ComputeAdminLoadBalancerDetailPage() {
         ];
         return (
           <div onClick={(e) => e.stopPropagation()}>
-            <ContextMenu items={listenerMenuItems} trigger="click">
+            <ContextMenu items={listenerMenuItems} trigger="click" align="right">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
                 <IconDotsCircleHorizontal
                   size={16}
@@ -444,7 +444,7 @@ export function ComputeAdminLoadBalancerDetailPage() {
         ];
         return (
           <div onClick={(e) => e.stopPropagation()}>
-            <ContextMenu items={poolMenuItems} trigger="click">
+            <ContextMenu items={poolMenuItems} trigger="click" align="right">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
                 <IconTrash size={16} stroke={1.5} className="text-[var(--color-state-danger)]" />
               </button>

@@ -151,7 +151,7 @@ export function ContainerHomePage() {
       sortable: true,
       render: (value: string) => (
         <StatusIndicator
-          status={value === 'Running' ? 'active' : value === 'Error' ? 'error' : 'muted'}
+          status={value === 'Running' ? 'active' : value === 'Creating' ? 'building' : 'suspended'}
         />
       ),
     },
@@ -223,7 +223,7 @@ export function ContainerHomePage() {
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
@@ -243,7 +243,7 @@ export function ContainerHomePage() {
               <SectionCard className="bg-[var(--color-surface-subtle)]">
                 <SectionCard.Content>
                   <VStack gap={2}>
-                    <h1 className="text-heading-h3 text-[var(--color-text-default)]">
+                    <h1 className="text-heading-h4 text-[var(--color-text-default)]">
                       Welcome to Thaki Cloud Container
                     </h1>
                     <p className="text-body-lg text-[var(--color-text-muted)]">
@@ -286,7 +286,7 @@ export function ContainerHomePage() {
                 <SectionCard className="w-[var(--search-input-width)] shrink-0">
                   <SectionCard.Content>
                     <VStack gap={4}>
-                      <h3 className="text-body-lg font-semibold text-[var(--color-text-default)]">
+                      <h3 className="text-heading-h5 text-[var(--color-text-default)]">
                         Create a Cluster
                       </h3>
                       <p className="text-body-md text-[var(--color-text-muted)] leading-relaxed">

@@ -1328,7 +1328,11 @@ export function InstanceDetailPage() {
                               ];
                               return (
                                 <div onClick={(e) => e.stopPropagation()}>
-                                  <ContextMenu items={volumeMenuItems} trigger="click">
+                                  <ContextMenu
+                                    items={volumeMenuItems}
+                                    trigger="click"
+                                    align="right"
+                                  >
                                     <button className="p-1.5 rounded hover:bg-[var(--color-surface-muted)] transition-colors group">
                                       <IconDotsCircleHorizontal
                                         size={16}
@@ -1498,7 +1502,11 @@ export function InstanceDetailPage() {
                               ];
                               return (
                                 <div onClick={(e) => e.stopPropagation()}>
-                                  <ContextMenu items={interfaceMenuItems} trigger="click">
+                                  <ContextMenu
+                                    items={interfaceMenuItems}
+                                    trigger="click"
+                                    align="right"
+                                  >
                                     <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
                                       <IconDotsCircleHorizontal
                                         size={16}
@@ -1615,7 +1623,11 @@ export function InstanceDetailPage() {
                               ];
                               return (
                                 <div onClick={(e) => e.stopPropagation()}>
-                                  <ContextMenu items={floatingIpMenuItems} trigger="click">
+                                  <ContextMenu
+                                    items={floatingIpMenuItems}
+                                    trigger="click"
+                                    align="right"
+                                  >
                                     <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
                                       <IconDotsCircleHorizontal
                                         size={16}
@@ -1746,7 +1758,11 @@ export function InstanceDetailPage() {
                               ];
                               return (
                                 <div onClick={(e) => e.stopPropagation()}>
-                                  <ContextMenu items={securityGroupMenuItems} trigger="click">
+                                  <ContextMenu
+                                    items={securityGroupMenuItems}
+                                    trigger="click"
+                                    align="right"
+                                  >
                                     <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
                                       <IconDotsCircleHorizontal
                                         size={16}
@@ -1900,7 +1916,11 @@ export function InstanceDetailPage() {
                               ];
                               return (
                                 <div onClick={(e) => e.stopPropagation()}>
-                                  <ContextMenu items={snapshotMenuItems} trigger="click">
+                                  <ContextMenu
+                                    items={snapshotMenuItems}
+                                    trigger="click"
+                                    align="right"
+                                  >
                                     <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
                                       <IconDotsCircleHorizontal
                                         size={16}

@@ -426,7 +426,7 @@ export default function PortDetailPage() {
         ];
         return (
           <div onClick={(e) => e.stopPropagation()}>
-            <ContextMenu items={fixedIpMenuItems} trigger="click">
+            <ContextMenu items={fixedIpMenuItems} trigger="click" align="right">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
                 <IconDotsCircleHorizontal
                   size={16}
@@ -471,7 +471,7 @@ export default function PortDetailPage() {
         ];
         return (
           <div onClick={(e) => e.stopPropagation()}>
-            <ContextMenu items={pairMenuItems} trigger="click">
+            <ContextMenu items={pairMenuItems} trigger="click" align="right">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
                 <IconDotsCircleHorizontal
                   size={16}
@@ -541,7 +541,7 @@ export default function PortDetailPage() {
         ];
         return (
           <div onClick={(e) => e.stopPropagation()}>
-            <ContextMenu items={sgMenuItems} trigger="click">
+            <ContextMenu items={sgMenuItems} trigger="click" align="right">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
                 <IconDotsCircleHorizontal
                   size={16}

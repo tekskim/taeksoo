@@ -267,7 +267,7 @@ export const RightAligned: Story = {
   args: {
     items: basicItems,
     trigger: 'click',
-    align: 'right',
+    align: 'center',
     children: <Button variant="secondary">Right-aligned menu</Button>,
   },
 };
@@ -319,7 +319,7 @@ export const TableRowMenu: Story = {
                 <td className="px-4 py-2">{item}</td>
                 <td className="px-4 py-2">Active</td>
                 <td className="px-4 py-2">
-                  <ContextMenu items={rowMenuItems} trigger="click">
+                  <ContextMenu items={rowMenuItems} trigger="click" align="right">
                     <button className="p-1 hover:bg-gray-100 rounded">⋮</button>
                   </ContextMenu>
                 </td>

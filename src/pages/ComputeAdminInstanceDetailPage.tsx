@@ -1717,7 +1717,11 @@ export function ComputeAdminInstanceDetailPage() {
                               ];
                               return (
                                 <div onClick={(e) => e.stopPropagation()}>
-                                  <ContextMenu items={snapshotMenuItems} trigger="click">
+                                  <ContextMenu
+                                    items={snapshotMenuItems}
+                                    trigger="click"
+                                    align="right"
+                                  >
                                     <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
                                       <IconDotsCircleHorizontal
                                         size={16}

@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Button,
@@ -347,9 +347,9 @@ export function CreateVolumePage() {
   const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel } = useTabs();
 
   // Update tab label
-  useState(() => {
+  useEffect(() => {
     updateActiveTabLabel('Create volume');
-  });
+  }, [updateActiveTabLabel]);
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,

@@ -362,7 +362,7 @@ export function ComputeAdminInstanceTemplatesPage() {
 
         return (
           <div onClick={(e) => e.stopPropagation()}>
-            <ContextMenu items={menuItems} trigger="click">
+            <ContextMenu items={menuItems} trigger="click" align="right">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
                 <IconDotsCircleHorizontal
                   size={16}

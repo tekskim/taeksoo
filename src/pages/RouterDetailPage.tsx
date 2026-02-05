@@ -487,7 +487,7 @@ export default function RouterDetailPage() {
         ];
         return (
           <div onClick={(e) => e.stopPropagation()}>
-            <ContextMenu items={portMenuItems} trigger="click">
+            <ContextMenu items={portMenuItems} trigger="click" align="right">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
                 <IconDotsCircleHorizontal
                   size={16}
@@ -533,7 +533,7 @@ export default function RouterDetailPage() {
         ];
         return (
           <div onClick={(e) => e.stopPropagation()}>
-            <ContextMenu items={routeMenuItems} trigger="click">
+            <ContextMenu items={routeMenuItems} trigger="click" align="right">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
                 <IconDotsCircleHorizontal
                   size={16}

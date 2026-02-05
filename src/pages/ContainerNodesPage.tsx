@@ -223,7 +223,7 @@ export function ContainerNodesPage() {
       align: 'center',
       render: (value: string) => (
         <StatusIndicator
-          status={value === 'Ready' ? 'active' : value === 'NotReady' ? 'error' : 'muted'}
+          status={value === 'Ready' ? 'active' : value === 'NotReady' ? 'building' : 'suspended'}
         />
       ),
     },
@@ -348,7 +348,7 @@ export function ContainerNodesPage() {
 
         return (
           <div onClick={(e) => e.stopPropagation()}>
-            <ContextMenu items={menuItems} trigger="click">
+            <ContextMenu items={menuItems} trigger="click" align="right">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
                 <IconDotsCircleHorizontal
                   size={16}
@@ -470,7 +470,7 @@ export function ContainerNodesPage() {
                     aria-label="Download"
                     className="!p-0 !w-7 !h-7 !min-w-7"
                   >
-                    <IconDownload size={14} stroke={1.5} />
+                    <IconDownload size={12} stroke={1.5} />
                   </Button>
                 </HStack>
 

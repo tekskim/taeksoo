@@ -280,7 +280,7 @@ export default function ComputeAdminVolumeTypeDetailPage() {
 
         return (
           <div onClick={(e) => e.stopPropagation()}>
-            <ContextMenu items={menuItems} trigger="click">
+            <ContextMenu items={menuItems} trigger="click" align="right">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
                 <IconDotsCircleHorizontal
                   size={16}
@@ -399,7 +399,7 @@ export default function ComputeAdminVolumeTypeDetailPage() {
                   <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
                     Delete
                   </Button>
-                  <ContextMenu items={moreActionsItems} trigger="click">
+                  <ContextMenu items={moreActionsItems} trigger="click" align="right">
                     <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={16} />}>
                       More Actions
                     </Button>

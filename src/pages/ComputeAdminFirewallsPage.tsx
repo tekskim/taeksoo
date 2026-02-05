@@ -417,7 +417,7 @@ export default function ComputeAdminFirewallsPage() {
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
-          <ContextMenu items={getFirewallMenuItems(row)} trigger="click">
+          <ContextMenu items={getFirewallMenuItems(row)} trigger="click" align="right">
             <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
               <IconDotsCircleHorizontal
                 size={16}
@@ -518,7 +518,7 @@ export default function ComputeAdminFirewallsPage() {
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
-          <ContextMenu items={getPolicyMenuItems(row)} trigger="click">
+          <ContextMenu items={getPolicyMenuItems(row)} trigger="click" align="right">
             <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
               <IconDotsCircleHorizontal
                 size={16}
@@ -618,7 +618,7 @@ export default function ComputeAdminFirewallsPage() {
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
-          <ContextMenu items={getRuleMenuItems(row)} trigger="click">
+          <ContextMenu items={getRuleMenuItems(row)} trigger="click" align="right">
             <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
               <IconDotsCircleHorizontal
                 size={16}

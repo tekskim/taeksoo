@@ -165,7 +165,7 @@ export default function ComputeAdminTenantsPage() {
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
-          <ContextMenu items={getTenantMenuItems(row)} trigger="click">
+          <ContextMenu items={getTenantMenuItems(row)} trigger="click" align="right">
             <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
               <IconDotsCircleHorizontal
                 size={16}

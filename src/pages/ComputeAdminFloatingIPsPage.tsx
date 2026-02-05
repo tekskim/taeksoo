@@ -382,7 +382,7 @@ export function ComputeAdminFloatingIPsPage() {
       label: 'Associated to',
       flex: 1,
       minWidth: columnMinWidths.associatedTo,
-      align: 'right',
+      align: 'center',
       render: (_, row) =>
         row.associatedTo ? (
           <div className="flex items-center gap-2 justify-between w-full">
@@ -454,7 +454,7 @@ export function ComputeAdminFloatingIPsPage() {
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
-          <ContextMenu items={getContextMenuItems(row)} trigger="click">
+          <ContextMenu items={getContextMenuItems(row)} trigger="click" align="right">
             <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
               <IconDotsCircleHorizontal
                 size={16}

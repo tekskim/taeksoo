@@ -257,7 +257,7 @@ describe('Table', () => {
       const alignedColumns: TableColumn<TestData>[] = [
         { key: 'name', label: 'Name', align: 'left' },
         { key: 'email', label: 'Email', align: 'center' },
-        { key: 'status', label: 'Status', align: 'right' },
+        { key: 'status', label: 'Status', align: 'center' },
       ];
 
       render(<Table columns={alignedColumns} data={testData} rowKey="id" />);

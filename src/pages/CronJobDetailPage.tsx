@@ -275,7 +275,7 @@ function JobsTab({ jobs }: JobsTabProps) {
       minWidth: columnMinWidths.action,
       align: 'center',
       render: (_: unknown, row: JobRow) => (
-        <ContextMenu items={createJobMenuItems(row)} trigger="click" align="left">
+        <ContextMenu items={createJobMenuItems(row)} trigger="click" align="right">
           <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
             <IconDotsCircleHorizontal
               size={16}
@@ -407,7 +407,7 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
       minWidth: columnMinWidths.action,
       align: 'center',
       render: (_: unknown, row: EventRow) => (
-        <ContextMenu items={createEventMenuItems(row)} trigger="click" align="left">
+        <ContextMenu items={createEventMenuItems(row)} trigger="click" align="right">
           <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
             <IconDotsCircleHorizontal
               size={16}
@@ -603,7 +603,7 @@ export function CronJobDetailPage() {
               <DetailHeader>
                 <DetailHeader.Title>CronJob: {cronjob.name}</DetailHeader.Title>
                 <DetailHeader.Actions>
-                  <ContextMenu items={moreActionsItems} trigger="click" align="left">
+                  <ContextMenu items={moreActionsItems} trigger="click" align="right">
                     <Button
                       variant="secondary"
                       size="md"
