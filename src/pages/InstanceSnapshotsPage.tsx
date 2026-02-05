@@ -617,7 +617,7 @@ export function InstanceSnapshotsPage() {
         isOpen={deleteModalOpen}
         onClose={handleDeleteCancel}
         onConfirm={handleDeleteConfirm}
-        title="Delete Snapshot"
+        title="Delete snapshot"
         description="Removing the selected instances is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"

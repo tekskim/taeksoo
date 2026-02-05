@@ -36,7 +36,7 @@ export function DeleteNamespaceModal({
     <ConfirmModal
       isOpen={isOpen}
       onClose={onClose}
-      title="Delete Namespace"
+      title="Delete namespace"
       description="Removing the selected instances is permanent and cannot be undone."
       infoLabel="Namespace name"
       infoValue={namespace?.name ?? ''}

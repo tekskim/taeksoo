@@ -604,7 +604,7 @@ export function ComputeAdminNetworksPage() {
           setDeleteModalOpen(false);
           setNetworkToDelete(null);
         }}
-        title="Delete Network"
+        title="Delete network"
         description="Removing the selected instances is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"

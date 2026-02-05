@@ -729,7 +729,7 @@ export function ComputeAdminPortsPage() {
           setDeleteModalOpen(false);
           setPortToDelete(null);
         }}
-        title="Delete Port"
+        title="Delete port"
         description="Removing the selected instances is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"

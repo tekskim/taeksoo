@@ -509,7 +509,7 @@ export function ComputeAdminCertificatesPage() {
           setDeleteModalOpen(false);
           setCertToDelete(null);
         }}
-        title="Delete Certificate"
+        title="Delete certificate"
         description="Removing the selected instances is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"
