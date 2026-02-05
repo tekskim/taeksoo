@@ -580,7 +580,7 @@ export default function SecurityGroupDetailPage() {
           setDeleteModalOpen(false);
           setRuleToDelete(null);
         }}
-        title="Delete Rule"
+        title="Delete rule"
         description="Removing the selected instances is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"
