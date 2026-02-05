@@ -192,6 +192,7 @@ import type { FilterField, AppliedFilter } from '@/design-system';
 
 | Size | Height | Padding X | Padding Y | Font Size | Gap | Icon Size |
 |------|--------|-----------|-----------|-----------|-----|-----------|
+| xs | 1.5rem (24px) | 0.5rem (8px) | 0.25rem (4px) | 0.6875rem (11px) | 0.25rem (4px) | 12px |
 | sm | 1.75rem (28px) | 0.625rem (10px) | 0.375rem (6px) | 0.75rem (12px) | 0.375rem (6px) | 12px |
 | md | 2rem (32px) | 0.75rem (12px) | 0.5rem (8px) | 0.75rem (12px) | 0.375rem (6px) | 12px |
 | lg | 2.5rem (40px) | 0.75rem (12px) | 0.625rem (10px) | 0.875rem (14px) | 0.5rem (8px) | 14px |
@@ -750,6 +751,20 @@ const menuItems = [
 5. **반응형**: Tailwind CSS 클래스 사용 (`sm:`, `md:`, `lg:`)
 6. **단위**: spacing/radius는 px, typography는 rem 사용
 
+### Table 컬럼 정렬 규칙
+
+| 컬럼 유형 | 정렬 | 예시 |
+|----------|------|------|
+| 텍스트/이름 | 왼쪽 (기본값) | Name, Description |
+| 연관 리소스 | 왼쪽 | Associated to, Attached to, Network |
+| 숫자/크기 | 오른쪽 | Size, Count, vCPU |
+| 날짜/시간 | 오른쪽 | Created at, Updated at |
+| 상태 | 중앙 | Status (StatusIndicator) |
+| 액션 | 중앙 | Actions (ContextMenu) |
+| 체크박스 | 중앙 | 선택 컬럼 |
+
+> **주의**: `align: 'center'`는 Status, Actions, Checkbox 컬럼에만 사용. 연관 리소스 컬럼(attachedTo, associatedTo 등)은 왼쪽 정렬 유지.
+
 ### 하드코딩 금지 규칙
 
 | 항목 | 금지 | 권장 |
@@ -763,9 +778,13 @@ const menuItems = [
 
 Tabler Icons 사용:
 ```tsx
-import { IconPlus, IconEdit, IconTrash } from '@tabler/icons-react';
+import { IconPlus, IconEdit, IconTrash, IconStar, IconStarFilled } from '@tabler/icons-react';
 
 <IconPlus size={16} stroke={1.5} />
+
+// 즐겨찾기 Star 아이콘 - yellow400 사용
+<IconStarFilled size={16} className="text-[var(--primitive-color-yellow400)]" />
+<IconStar size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
 ```
 
 ## CSS 변수 사용 예시
@@ -804,10 +823,11 @@ import { IconPlus, IconEdit, IconTrash } from '@tabler/icons-react';
 
 ## 버전
 
-- **Current Version**: 1.6.0
+- **Current Version**: 1.6.1
 - **Last Updated**: 2026-02-05
 - **Changes**:
-  - FormField Simple API 추가: label, description, helperText, errorMessage props
-  - Input/Select/NumberInput의 label, helperText props deprecated
-  - FormField가 children에 id, error, disabled 자동 주입
+  - Button xs size 추가 (24px height)
+  - Star(즐겨찾기) 아이콘 색상: yellow400 사용
+  - Table 컬럼 정렬 규칙 추가 (연관 리소스는 왼쪽 정렬)
+  - FormField Simple API: label, description, helperText, errorMessage props
   - Compound API도 여전히 지원 (복잡한 레이아웃용)
