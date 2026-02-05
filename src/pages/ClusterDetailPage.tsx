@@ -287,7 +287,7 @@ export function ClusterDetailPage() {
                   </h1>
 
                   {/* More Actions Button */}
-                  <ContextMenu items={moreActionsItems} trigger="click">
+                  <ContextMenu items={moreActionsItems} trigger="click" align="right">
                     <Button
                       variant="secondary"
                       size="sm"

@@ -471,7 +471,7 @@ export default function IAMPoliciesPage() {
                 </h1>
                 <Button
                   variant="primary"
-                  size="sm"
+                  size="md"
                   onClick={() => navigate('/iam/policies/create')}
                 >
                   Create policy

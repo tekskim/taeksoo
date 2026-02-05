@@ -184,7 +184,7 @@ export function ViewPreferencesDrawer({
               onClick={handleResetToDefault}
               className="flex items-center gap-1.5 text-label-md text-[var(--color-action-primary)] hover:text-[var(--color-action-primary-hover)] transition-colors"
             >
-              <IconRefresh size={16} stroke={1} />
+              <IconRefresh size={12} stroke={1} />
               <span>Reset to default</span>
             </button>
           </div>

@@ -169,7 +169,7 @@ export default function ComputeAdminMetadataDefinitionsPage() {
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
-          <ContextMenu items={getMetadataMenuItems(row)} trigger="click">
+          <ContextMenu items={getMetadataMenuItems(row)} trigger="click" align="right">
             <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-subtle)] transition-colors">
               <IconDotsCircleHorizontal
                 size={16}
@@ -225,7 +225,7 @@ export default function ComputeAdminMetadataDefinitionsPage() {
         </div>
 
         {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
+        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
           <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
             <VStack gap={3}>
               {/* Page Header */}

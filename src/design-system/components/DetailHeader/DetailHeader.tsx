@@ -1,7 +1,8 @@
 import { useState, type ReactNode, type HTMLAttributes } from 'react';
 import { twMerge } from 'tailwind-merge';
-import { IconCopy, IconCheck } from '@tabler/icons-react';
+import { IconCopy, IconCheck, IconHelpCircle } from '@tabler/icons-react';
 import { StatusIndicator, type StatusType } from '../StatusIndicator';
+import { Tooltip } from '../Tooltip';
 
 /* ----------------------------------------
    DetailHeader - Main Container
@@ -100,6 +101,8 @@ export interface DetailHeaderInfoCardProps extends Omit<
   copyable?: boolean;
   /** Show status indicator instead of value */
   status?: StatusType;
+  /** Tooltip text for help icon next to label */
+  tooltip?: string;
 }
 
 function DetailHeaderInfoCard({
@@ -107,6 +110,7 @@ function DetailHeaderInfoCard({
   value,
   copyable = false,
   status,
+  tooltip,
   className,
   ...props
 }: DetailHeaderInfoCardProps) {
@@ -142,8 +146,13 @@ function DetailHeaderInfoCard({
       )}
 
       <div className={twMerge('flex flex-col gap-1.5 min-w-0', status && 'pr-6')}>
-        <span className="text-label-sm leading-4 text-[var(--color-text-subtle)] whitespace-nowrap">
+        <span className="text-label-sm leading-4 text-[var(--color-text-subtle)] whitespace-nowrap flex items-center gap-1">
           {label}
+          {tooltip && (
+            <Tooltip content={tooltip} position="top">
+              <IconHelpCircle size={12} className="text-[var(--color-text-subtle)] cursor-help" />
+            </Tooltip>
+          )}
         </span>
         <div className="flex items-center gap-1 min-w-0 min-h-[26px]">
           {isStringValue ? (

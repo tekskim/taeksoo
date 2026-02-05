@@ -525,7 +525,7 @@ export default function IAMPolicyDetailPage() {
           },
         ];
         return (
-          <ContextMenu items={menuItems} trigger="click">
+          <ContextMenu items={menuItems} trigger="click" align="right">
             <button
               type="button"
               className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
@@ -639,11 +639,11 @@ export default function IAMPolicyDetailPage() {
                     <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
                       Delete
                     </Button>
-                    <ContextMenu items={moreActionsItems} trigger="click">
+                    <ContextMenu items={moreActionsItems} trigger="click" align="right">
                       <Button
                         variant="secondary"
                         size="sm"
-                        rightIcon={<IconChevronDown size={16} />}
+                        rightIcon={<IconChevronDown size={12} />}
                       >
                         More Actions
                       </Button>

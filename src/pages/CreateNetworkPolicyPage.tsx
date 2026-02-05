@@ -202,7 +202,7 @@ function SummarySidebar({
           >
             Cancel
           </Button>
-          <Button variant="primary" size="sm" className="flex-1">
+          <Button variant="primary" size="md" className="flex-1">
             Create
           </Button>
         </HStack>

@@ -445,7 +445,7 @@ export function ComputeAdminImagesPage() {
 
         return (
           <div onClick={(e) => e.stopPropagation()}>
-            <ContextMenu items={menuItems} trigger="click">
+            <ContextMenu items={menuItems} trigger="click" align="right">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
                 <IconDotsCircleHorizontal
                   size={16}
@@ -518,14 +518,14 @@ export function ComputeAdminImagesPage() {
         </div>
 
         {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
+        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
           {/* Page Content */}
           <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
             <VStack gap={3}>
               {/* Page Header */}
               <div className="flex items-center justify-between h-8">
                 <h1 className="text-heading-h5 text-[var(--color-text-default)]">Images</h1>
-                <Button onClick={() => navigate('/compute-admin/images/create')}>
+                <Button size="md" onClick={() => navigate('/compute-admin/images/create')}>
                   Create image
                 </Button>
               </div>

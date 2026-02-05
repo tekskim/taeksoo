@@ -319,7 +319,7 @@ export function IAMUsersPage() {
           },
         ];
         return (
-          <ContextMenu items={menuItems} trigger="click">
+          <ContextMenu items={menuItems} trigger="click" align="right">
             <button
               type="button"
               className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
@@ -371,7 +371,7 @@ export function IAMUsersPage() {
                 <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
                   Users
                 </h1>
-                <Button variant="primary" size="sm" onClick={() => navigate('/iam/users/create')}>
+                <Button variant="primary" size="md" onClick={() => navigate('/iam/users/create')}>
                   Create user
                 </Button>
               </HStack>

@@ -305,7 +305,7 @@ export function IAMUserGroupsPage() {
       width: fixedColumns.actionWide,
       align: 'center',
       render: (_value, row) => (
-        <ContextMenu items={getContextMenuItems(row)} trigger="click">
+        <ContextMenu items={getContextMenuItems(row)} trigger="click" align="right">
           <button
             type="button"
             className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
@@ -360,7 +360,7 @@ export function IAMUserGroupsPage() {
                 </h1>
                 <Button
                   variant="primary"
-                  size="sm"
+                  size="md"
                   onClick={() => navigate('/iam/user-groups/create')}
                 >
                   Create user group

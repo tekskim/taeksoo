@@ -597,7 +597,7 @@ export function MCPToolsPage() {
 
         return (
           <div onClick={(e) => e.stopPropagation()}>
-            <ContextMenu items={menuItems} trigger="click">
+            <ContextMenu items={menuItems} trigger="click" align="right">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
                 <IconDotsCircleHorizontal
                   size={16}
@@ -706,7 +706,7 @@ export function MCPToolsPage() {
 
         return (
           <div onClick={(e) => e.stopPropagation()}>
-            <ContextMenu items={menuItems} trigger="click">
+            <ContextMenu items={menuItems} trigger="click" align="right">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
                 <IconDotsCircleHorizontal
                   size={16}
@@ -824,7 +824,7 @@ export function MCPToolsPage() {
                 </ListToolbar.Actions>
               }
             />
-            <Button size="sm" variant="primary" onClick={() => navigate('/mcp-tools/create')}>
+            <Button size="md" variant="primary" onClick={() => navigate('/mcp-tools/create')}>
               Create template
             </Button>
           </div>
