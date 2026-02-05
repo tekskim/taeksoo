@@ -23,13 +23,13 @@ function ConnectionStatusIndicator({ status }: { status: ConnectionStatus }) {
       label: 'Connected',
     },
     connecting: {
-      color: 'text-amber-500',
-      bgColor: 'bg-amber-500',
+      color: 'text-[var(--semantic-color-state-warning)]',
+      bgColor: 'bg-[var(--primitive-color-yellow500)]',
       label: 'Connecting',
     },
     disconnected: {
-      color: 'text-red-500',
-      bgColor: 'bg-red-500',
+      color: 'text-[var(--semantic-color-state-danger)]',
+      bgColor: 'bg-[var(--primitive-color-red500)]',
       label: 'Disconnected',
     },
   };

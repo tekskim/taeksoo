@@ -83,7 +83,7 @@ function FileUploadSection({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="w-full min-h-[80px] px-[10px] py-2 text-body-md leading-4 text-[var(--color-text-default)] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[var(--color-action-primary)] focus:border-transparent"
+        className="w-full min-h-[80px] px-2.5 py-2 text-body-md leading-4 text-[var(--color-text-default)] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[var(--color-action-primary)] focus:border-transparent"
       />
       <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
         ({sizeKB.toFixed(1)}/{maxSizeKB} KB)
@@ -166,7 +166,7 @@ function CollapsibleSection({
             value={value}
             onChange={(e) => onChange(e.target.value)}
             placeholder="e.g. -----BEGIN CERTIFICATE----- ..."
-            className="w-full min-h-[80px] px-[10px] py-2 text-body-md leading-4 text-[var(--color-text-default)] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[var(--color-action-primary)] focus:border-transparent"
+            className="w-full min-h-[80px] px-2.5 py-2 text-body-md leading-4 text-[var(--color-text-default)] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[var(--color-action-primary)] focus:border-transparent"
           />
           <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
             ({sizeKB.toFixed(1)}/64 KB)

@@ -2802,7 +2802,7 @@ input[type='search']::-webkit-search-decoration {
 }
 
 .monitoring-toolbar-dropdown-apply:hover {
-  background: var(--color-action-primary-hover, #1d4ed8);
+  background: var(--color-action-primary-hover);
 }
 
 .monitoring-toolbar-dropdown-apply:disabled {

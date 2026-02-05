@@ -618,7 +618,7 @@ export function PersistentVolumeClaimDetailPage() {
                 {/* Volume Claim Tab */}
                 <TabPanel value="volume-claim">
                   {/* Content Box */}
-                  <div className="w-full border border-[var(--color-border-default)] rounded-[8px] p-4">
+                  <div className="w-full border border-[var(--color-border-default)] rounded-[var(--primitive-radius-lg)] p-4">
                     <VStack gap={4}>
                       {/* Title */}
                       <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
@@ -686,7 +686,7 @@ export function PersistentVolumeClaimDetailPage() {
                 {/* Customize Tab */}
                 <TabPanel value="customize">
                   {/* Content Box */}
-                  <div className="w-full border border-[var(--color-border-default)] rounded-[8px] p-4">
+                  <div className="w-full border border-[var(--color-border-default)] rounded-[var(--primitive-radius-lg)] p-4">
                     <VStack gap={4}>
                       {/* Title */}
                       <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
@@ -781,7 +781,7 @@ export function PersistentVolumeClaimDetailPage() {
                 {/* Labels & Annotations Tab */}
                 <TabPanel value="labels-annotations">
                   {/* Content Box */}
-                  <div className="w-full border border-[var(--color-border-default)] rounded-[8px] p-4">
+                  <div className="w-full border border-[var(--color-border-default)] rounded-[var(--primitive-radius-lg)] p-4">
                     <VStack gap={4}>
                       {/* Title */}
                       <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
@@ -798,7 +798,7 @@ export function PersistentVolumeClaimDetailPage() {
                                   <label className="text-label-sm text-[var(--color-text-default)] mb-2 block">
                                     Key
                                   </label>
-                                  <div className="w-full h-[36px] px-[10px] py-[8px] bg-[var(--color-border-default)] border border-[var(--color-border-strong)] rounded-[6px] text-body-md text-[var(--color-text-default)]">
+                                  <div className="w-full h-[36px] px-2.5 py-2 bg-[var(--color-border-default)] border border-[var(--color-border-strong)] rounded-[var(--primitive-radius-md)] text-body-md text-[var(--color-text-default)]">
                                     {key}
                                   </div>
                                 </div>
@@ -806,7 +806,7 @@ export function PersistentVolumeClaimDetailPage() {
                                   <label className="text-label-sm text-[var(--color-text-default)] mb-2 block">
                                     Value
                                   </label>
-                                  <div className="w-full h-[36px] px-[10px] py-[8px] bg-[var(--color-border-default)] border border-[var(--color-border-strong)] rounded-[6px] text-body-md text-[var(--color-text-default)]">
+                                  <div className="w-full h-[36px] px-2.5 py-2 bg-[var(--color-border-default)] border border-[var(--color-border-strong)] rounded-[var(--primitive-radius-md)] text-body-md text-[var(--color-text-default)]">
                                     {val}
                                   </div>
                                 </div>
@@ -833,7 +833,7 @@ export function PersistentVolumeClaimDetailPage() {
                                   <label className="text-label-sm text-[var(--color-text-default)] mb-2 block">
                                     Key
                                   </label>
-                                  <div className="w-full h-[36px] px-[10px] py-[8px] bg-[var(--color-border-default)] border border-[var(--color-border-strong)] rounded-[6px] text-body-md text-[var(--color-text-default)]">
+                                  <div className="w-full h-[36px] px-2.5 py-2 bg-[var(--color-border-default)] border border-[var(--color-border-strong)] rounded-[var(--primitive-radius-md)] text-body-md text-[var(--color-text-default)]">
                                     {key}
                                   </div>
                                 </div>
@@ -841,7 +841,7 @@ export function PersistentVolumeClaimDetailPage() {
                                   <label className="text-label-sm text-[var(--color-text-default)] mb-2 block">
                                     Value
                                   </label>
-                                  <div className="w-full h-[36px] px-[10px] py-[8px] bg-[var(--color-border-default)] border border-[var(--color-border-strong)] rounded-[6px] text-body-md text-[var(--color-text-default)]">
+                                  <div className="w-full h-[36px] px-2.5 py-2 bg-[var(--color-border-default)] border border-[var(--color-border-strong)] rounded-[var(--primitive-radius-md)] text-body-md text-[var(--color-text-default)]">
                                     {val}
                                   </div>
                                 </div>

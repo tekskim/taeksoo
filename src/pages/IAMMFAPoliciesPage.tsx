@@ -231,7 +231,7 @@ export default function IAMMFAPoliciesPage() {
                         <button
                           type="button"
                           onClick={() => setActiveMethodTab('otp')}
-                          className={`flex items-center justify-center min-w-[200px] px-[24px] text-label-lg leading-5 text-center rounded-md transition-colors cursor-pointer ${
+                          className={`flex items-center justify-center min-w-[200px] px-6 text-label-lg leading-5 text-center rounded-md transition-colors cursor-pointer ${
                             activeMethodTab === 'otp'
                               ? 'bg-[var(--color-surface-default)] border border-[var(--color-border-default)] text-[var(--color-action-primary)]'
                               : 'bg-transparent text-[var(--color-text-default)]'
@@ -242,7 +242,7 @@ export default function IAMMFAPoliciesPage() {
                         <button
                           type="button"
                           onClick={() => setActiveMethodTab('email')}
-                          className={`flex items-center justify-center min-w-[200px] px-[24px] text-label-lg leading-5 text-center rounded-md transition-colors cursor-pointer ${
+                          className={`flex items-center justify-center min-w-[200px] px-6 text-label-lg leading-5 text-center rounded-md transition-colors cursor-pointer ${
                             activeMethodTab === 'email'
                               ? 'bg-[var(--color-surface-default)] border border-[var(--color-border-default)] text-[var(--color-action-primary)]'
                               : 'bg-transparent text-[var(--color-text-default)]'

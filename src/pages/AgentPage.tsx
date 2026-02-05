@@ -45,12 +45,12 @@ interface StatusCardProps {
 }
 
 function StatusCard({ label, count, status }: StatusCardProps) {
-  let bgColor = 'bg-[var(--color-surface-subtle,#f8fafc)]';
-  let iconBg = 'bg-[var(--color-text-muted,#475569)]';
+  let bgColor = 'bg-[var(--color-surface-subtle)]';
+  let iconBg = 'bg-[var(--color-text-muted)]';
 
   if (status === 'active') {
-    bgColor = 'bg-[var(--color-state-success-bg,#f0fdf4)]';
-    iconBg = 'bg-[var(--color-success,#4ade80)]';
+    bgColor = 'bg-[var(--color-state-success-bg)]';
+    iconBg = 'bg-[var(--color-success)]';
   }
 
   const getStatusIcon = () => {

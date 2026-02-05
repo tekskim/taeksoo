@@ -339,10 +339,10 @@ export function CreateClusterPage() {
           <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
             {/* Header */}
             <VStack gap={2} className="mb-6">
-              <h1 className="text-[18px] leading-7 font-semibold text-[var(--color-text-default)]">
+              <h1 className="text-heading-h4 leading-7 font-semibold text-[var(--color-text-default)]">
                 Create Cluster
               </h1>
-              <p className="text-[11px] leading-4 text-[var(--color-text-subtle)]">
+              <p className="text-body-sm leading-4 text-[var(--color-text-subtle)]">
                 Cluster is a group of machines that work together to run containerized applications
                 with automated scaling, scheduling, and management.
               </p>
@@ -550,7 +550,7 @@ export function CreateClusterPage() {
 
                       {/* Control Planes */}
                       <div className="border-t border-[var(--color-border-subtle)] pt-6">
-                        <h6 className="text-[14px] leading-5 font-medium text-[var(--color-text-default)] mb-4">
+                        <h6 className="text-body-lg leading-5 font-medium text-[var(--color-text-default)] mb-4">
                           Control Planes
                         </h6>
                         <VStack gap={6}>
@@ -859,7 +859,7 @@ export function CreateClusterPage() {
                           <span className="text-label-lg text-[var(--color-text-default)]">
                             Annotations
                           </span>
-                          <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+                          <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
                             Specify the annotations used to provide additional metadata for the
                             resource.
                           </p>
@@ -938,7 +938,7 @@ export function CreateClusterPage() {
                   <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-4">
                     <VStack gap={4}>
                       {/* Summary Title */}
-                      <h5 className="text-[16px] leading-6 font-semibold text-[var(--color-text-default)]">
+                      <h5 className="text-heading-h5 leading-6 font-semibold text-[var(--color-text-default)]">
                         Summary
                       </h5>
 

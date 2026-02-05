@@ -36,18 +36,18 @@ interface StatusCardProps {
 }
 
 function StatusCard({ label, count, status }: StatusCardProps) {
-  let bgColor = 'bg-[var(--color-surface-subtle,#f8fafc)]';
-  let iconBg = 'bg-[var(--color-text-muted,#475569)]';
+  let bgColor = 'bg-[var(--color-surface-subtle)]';
+  let iconBg = 'bg-[var(--color-text-muted)]';
 
   if (status === 'completed') {
-    bgColor = 'bg-[var(--color-state-success-bg,#f0fdf4)]';
-    iconBg = 'bg-[var(--color-success,#4ade80)]';
+    bgColor = 'bg-[var(--color-state-success-bg)]';
+    iconBg = 'bg-[var(--color-success)]';
   } else if (status === 'error') {
-    bgColor = 'bg-[var(--color-state-danger-bg,#fef2f2)]';
-    iconBg = 'bg-[var(--color-danger,#ef4444)]';
+    bgColor = 'bg-[var(--color-state-danger-bg)]';
+    iconBg = 'bg-[var(--color-danger)]';
   } else if (status === 'processing') {
-    bgColor = 'bg-[var(--color-info-weak-bg,#eff6ff)]';
-    iconBg = 'bg-[var(--color-info,#3b82f6)]';
+    bgColor = 'bg-[var(--color-info-weak-bg)]';
+    iconBg = 'bg-[var(--color-info)]';
   }
 
   const getStatusIcon = () => {
@@ -216,7 +216,7 @@ export function StoragePage() {
       sortable: false,
       render: (_, row) =>
         row.favorite ? (
-          <IconStarFilled size={16} className="text-yellow-500" />
+          <IconStarFilled size={16} className="text-[var(--semantic-color-state-warning)]" />
         ) : (
           <IconStar size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
         ),

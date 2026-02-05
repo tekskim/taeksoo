@@ -37,7 +37,7 @@ function QuotaProgressBar({ label, used, limit }: { label: string; used: number;
       <div className="w-full h-1 bg-[var(--color-border-subtle)] rounded-lg overflow-hidden relative">
         {/* Next usage (lighter green) */}
         <div
-          className="absolute h-full bg-[#bbf7d0] rounded-lg transition-all duration-300"
+          className="absolute h-full bg-[var(--primitive-color-green200)] rounded-lg transition-all duration-300"
           style={{ width: `${nextPercent}%` }}
         />
         {/* Current usage (darker green) */}

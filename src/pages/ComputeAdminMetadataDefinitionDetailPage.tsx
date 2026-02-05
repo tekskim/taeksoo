@@ -254,8 +254,8 @@ export default function ComputeAdminMetadataDefinitionDetailPage() {
 
                   {/* Contents Tab */}
                   <TabPanel value="contents" className="pt-6">
-                    <div className="bg-[#1e293b] rounded-lg p-6 font-mono text-[13px] leading-6 overflow-x-auto">
-                      <pre className="text-[#e2e8f0]">
+                    <div className="bg-[var(--primitive-color-blue-gray800)] rounded-lg p-6 font-mono text-[13px] leading-6 overflow-x-auto">
+                      <pre className="text-[var(--primitive-color-blue-gray200)]">
                         <span className="text-[#94a3b8]">{'{'}</span>
                         {'\n'}
                         <span className="text-[#7dd3fc]">{`  "namespace"`}</span>

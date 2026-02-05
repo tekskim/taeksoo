@@ -107,7 +107,7 @@ function StatCard({
         <span className="chartTitle">{title}</span>
       </div>
       <div className="flex items-baseline justify-center gap-1 font-medium">
-        <span className="text-[40px] font-normal leading-[48px] text-[var(--color-text-default)]">
+        <span className="text-heading-h1 font-normal leading-[48px] text-[var(--color-text-default)]">
           {value}
         </span>
         {unit && <span className="text-body-lg text-[var(--color-text-muted)]">{unit}</span>}

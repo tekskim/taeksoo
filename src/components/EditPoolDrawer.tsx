@@ -203,7 +203,7 @@ export function EditPoolDrawer({ isOpen, onClose, pool, onSubmit }: EditPoolDraw
         <FormField>
           <FormField.Label>Protocol</FormField.Label>
           <FormField.Control>
-            <div className="w-full px-[10px] py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-md">
+            <div className="w-full px-2.5 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-md">
               <span className="text-body-md text-[var(--color-text-default)] leading-4">
                 {pool.protocol}
               </span>

@@ -87,7 +87,7 @@ function QuotaProgressBar({ label, used, total, adding = 1 }: QuotaProgressBarPr
           style={{ width: `${Math.min(percentage, 100)}%`, minWidth: percentage > 0 ? '4px' : '0' }}
         />
         <div
-          className="h-1 rounded-lg bg-green-200 -mr-1 z-[2]"
+          className="h-1 rounded-lg bg-[var(--primitive-color-green200)] -mr-1 z-[2]"
           style={{
             width: `${Math.min(addingPercentage, 100 - percentage)}%`,
             minWidth: addingPercentage > 0 ? '4px' : '0',
