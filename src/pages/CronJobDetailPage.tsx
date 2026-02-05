@@ -606,8 +606,8 @@ export function CronJobDetailPage() {
                   <ContextMenu items={moreActionsItems} trigger="click" align="right">
                     <Button
                       variant="secondary"
-                      size="md"
-                      rightIcon={<IconChevronDown size={16} stroke={1.5} />}
+                      size="sm"
+                      rightIcon={<IconChevronDown size={12} stroke={1.5} />}
                     >
                       More Actions
                     </Button>

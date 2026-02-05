@@ -360,7 +360,7 @@ export function IAMUserGroupsPage() {
                 </h1>
                 <Button
                   variant="primary"
-                  size="sm"
+                  size="md"
                   onClick={() => navigate('/iam/user-groups/create')}
                 >
                   Create user group

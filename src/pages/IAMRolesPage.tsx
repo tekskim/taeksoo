@@ -313,7 +313,7 @@ export default function IAMRolesPage() {
                 <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
                   Roles
                 </h1>
-                <Button variant="primary" size="sm" onClick={() => navigate('/iam/roles/create')}>
+                <Button variant="primary" size="md" onClick={() => navigate('/iam/roles/create')}>
                   Create role
                 </Button>
               </HStack>

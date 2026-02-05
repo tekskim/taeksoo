@@ -643,7 +643,7 @@ export default function IAMPolicyDetailPage() {
                       <Button
                         variant="secondary"
                         size="sm"
-                        rightIcon={<IconChevronDown size={16} />}
+                        rightIcon={<IconChevronDown size={12} />}
                       >
                         More Actions
                       </Button>

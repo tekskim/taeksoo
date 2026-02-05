@@ -286,7 +286,7 @@ export default function IAMActiveSessionsPage() {
                     <Button
                       variant="secondary"
                       size="sm"
-                      icon={<IconRefresh size={16} stroke={1.5} />}
+                      icon={<IconRefresh size={12} stroke={1.5} />}
                       aria-label="Refresh"
                     />
                   </HStack>

@@ -261,7 +261,7 @@ export default function IAMDomainsPage() {
                 <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
                   Domains
                 </h1>
-                <Button variant="primary" size="sm">
+                <Button variant="primary" size="md">
                   Create domain
                 </Button>
               </HStack>

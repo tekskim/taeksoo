@@ -824,7 +824,7 @@ export function MCPToolsPage() {
                 </ListToolbar.Actions>
               }
             />
-            <Button size="sm" variant="primary" onClick={() => navigate('/mcp-tools/create')}>
+            <Button size="md" variant="primary" onClick={() => navigate('/mcp-tools/create')}>
               Create template
             </Button>
           </div>

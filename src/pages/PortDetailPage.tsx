@@ -630,7 +630,7 @@ export default function PortDetailPage() {
         </div>
 
         {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto overscroll-contain sidebar-scroll">
+        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
           {/* Main Content */}
           <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
             <VStack gap={8} className="min-w-[1176px]">
@@ -661,7 +661,7 @@ export default function PortDetailPage() {
                     ]}
                     trigger="click"
                   >
-                    <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={16} />}>
+                    <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
                       More Actions
                     </Button>
                   </ContextMenu>
