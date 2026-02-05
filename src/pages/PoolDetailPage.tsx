@@ -305,7 +305,7 @@ export default function PoolDetailPage() {
             onClick={(e) => e.stopPropagation()}
           >
             {row.source.name}
-            <IconExternalLink size={16} className="text-[var(--color-action-primary)]" />
+            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </Link>
           <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.source.id}</span>
         </div>

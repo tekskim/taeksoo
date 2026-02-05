@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import {
   Button,
@@ -190,9 +190,9 @@ export function ComputeAdminCreateFlavorPage() {
   const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel } = useTabs();
 
   // Update tab label
-  useState(() => {
+  useEffect(() => {
     updateActiveTabLabel('Create flavor');
-  });
+  }, []);
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -535,7 +535,7 @@ export function ComputeAdminCreateFlavorPage() {
                                           className="text-label-md text-[var(--color-link)] hover:underline flex items-center gap-1.5"
                                         >
                                           {tenant.name}
-                                          <IconExternalLink size={16} />
+                                          <IconExternalLink size={12} />
                                         </Link>
                                         <span className="text-body-sm text-[var(--color-text-muted)]">
                                           ID: {tenant.id}

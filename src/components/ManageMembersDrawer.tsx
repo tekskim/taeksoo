@@ -331,7 +331,7 @@ export function ManageMembersDrawer({
                       <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-action-primary)]">
                         {item.name}
                       </span>
-                      <IconExternalLink size={16} className="text-[var(--color-action-primary)]" />
+                      <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
                     </HStack>
                     <span className="text-body-sm text-[var(--color-text-subtle)] leading-4">
                       ID : {item.id}

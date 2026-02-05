@@ -25,6 +25,7 @@ import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import { DisassociateFloatingIPDrawer } from '@/components/DisassociateFloatingIPDrawer';
+import { AllocateFloatingIPDrawer } from '@/components/AllocateFloatingIPDrawer';
 import {
   IconDotsCircleHorizontal,
   IconTrash,
@@ -246,6 +247,9 @@ export function ComputeAdminFloatingIPsPage() {
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [floatingIPToDelete, setFloatingIPToDelete] = useState<FloatingIP | null>(null);
+
+  // Allocate floating IP drawer state
+  const [isAllocateDrawerOpen, setIsAllocateDrawerOpen] = useState(false);
 
   // View preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
@@ -543,7 +547,7 @@ export function ComputeAdminFloatingIPsPage() {
               {/* Page Header */}
               <div className="flex justify-between items-center h-8 w-full">
                 <h1 className="text-heading-h5 text-[var(--color-text-default)]">Floating IPs</h1>
-                <Button variant="primary" size="md">
+                <Button variant="primary" size="md" onClick={() => setIsAllocateDrawerOpen(true)}>
                   Allocate Floating IP
                 </Button>
               </div>
@@ -645,6 +649,12 @@ export function ComputeAdminFloatingIPsPage() {
               }
             : { id: '', name: '' }
         }
+      />
+
+      {/* Allocate Floating IP Drawer */}
+      <AllocateFloatingIPDrawer
+        isOpen={isAllocateDrawerOpen}
+        onClose={() => setIsAllocateDrawerOpen(false)}
       />
     </div>
   );

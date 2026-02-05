@@ -524,7 +524,7 @@ export default function NetworkDetailPage() {
             onClick={(e) => e.stopPropagation()}
           >
             {row.name}
-            <IconExternalLink size={16} className="text-[var(--color-action-primary)]" />
+            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </Link>
           <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
         </div>
@@ -612,7 +612,7 @@ export default function NetworkDetailPage() {
             onClick={(e) => e.stopPropagation()}
           >
             {row.name}
-            <IconExternalLink size={16} className="text-[var(--color-action-primary)]" />
+            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </Link>
           <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
         </div>
@@ -636,7 +636,7 @@ export default function NetworkDetailPage() {
                 onClick={(e) => e.stopPropagation()}
               >
                 {row.attachedTo.name}
-                <IconExternalLink size={16} className="text-[var(--color-action-primary)]" />
+                <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
               </Link>
               <span className="text-body-sm text-[var(--color-text-subtle)]">
                 ID : {row.attachedTo.id}
@@ -673,7 +673,7 @@ export default function NetworkDetailPage() {
             onClick={(e) => e.stopPropagation()}
           >
             {row.ownedNetwork.name}
-            <IconExternalLink size={16} className="text-[var(--color-action-primary)]" />
+            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </Link>
           <span className="text-body-sm text-[var(--color-text-subtle)]">
             ID : {row.ownedNetwork.id}

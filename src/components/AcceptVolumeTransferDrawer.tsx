@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input } from '@/design-system';
+import { Drawer, Button, Input, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 
 /* ----------------------------------------
@@ -89,42 +89,38 @@ export function AcceptVolumeTransferDrawer({
         </VStack>
 
         {/* Transfer ID Input */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Transfer ID
-          </label>
-          <Input
-            value={transferId}
-            onChange={(e) => setTransferId(e.target.value)}
-            placeholder="e.g., 4f2a7c9d-xxxx-xxxx-xxxx-9e3d7e0d5a12"
-            fullWidth
-            error={hasAttemptedSubmit && !transferId.trim()}
-          />
+        <FormField required error={hasAttemptedSubmit && !transferId.trim()}>
+          <FormField.Label>Transfer ID</FormField.Label>
+          <FormField.Control>
+            <Input
+              value={transferId}
+              onChange={(e) => setTransferId(e.target.value)}
+              placeholder="e.g., 4f2a7c9d-xxxx-xxxx-xxxx-9e3d7e0d5a12"
+              fullWidth
+              error={hasAttemptedSubmit && !transferId.trim()}
+            />
+          </FormField.Control>
           {hasAttemptedSubmit && !transferId.trim() && (
-            <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
-              Transfer ID is required
-            </p>
+            <FormField.ErrorMessage>Transfer ID is required</FormField.ErrorMessage>
           )}
-        </VStack>
+        </FormField>
 
         {/* Auth Key Input */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Auth Key
-          </label>
-          <Input
-            value={authKey}
-            onChange={(e) => setAuthKey(e.target.value)}
-            placeholder="Enter authorization key"
-            fullWidth
-            error={hasAttemptedSubmit && !authKey.trim()}
-          />
+        <FormField required error={hasAttemptedSubmit && !authKey.trim()}>
+          <FormField.Label>Auth Key</FormField.Label>
+          <FormField.Control>
+            <Input
+              value={authKey}
+              onChange={(e) => setAuthKey(e.target.value)}
+              placeholder="Enter authorization key"
+              fullWidth
+              error={hasAttemptedSubmit && !authKey.trim()}
+            />
+          </FormField.Control>
           {hasAttemptedSubmit && !authKey.trim() && (
-            <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
-              Auth Key is required
-            </p>
+            <FormField.ErrorMessage>Auth Key is required</FormField.ErrorMessage>
           )}
-        </VStack>
+        </FormField>
       </VStack>
     </Drawer>
   );

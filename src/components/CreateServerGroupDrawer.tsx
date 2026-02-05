@@ -189,58 +189,56 @@ export function CreateServerGroupDrawer({
         </VStack>
 
         {/* Server Group Name Input */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Server Group name
-          </label>
-          <Input
-            value={groupName}
-            onChange={(e) => setGroupName(e.target.value)}
-            placeholder="e.g. web-cluster"
-            fullWidth
-            error={hasAttemptedSubmit && !groupName.trim()}
-          />
+        <FormField required error={hasAttemptedSubmit && !groupName.trim()}>
+          <FormField.Label>Server Group name</FormField.Label>
+          <FormField.Control>
+            <Input
+              value={groupName}
+              onChange={(e) => setGroupName(e.target.value)}
+              placeholder="e.g. web-cluster"
+              fullWidth
+              error={hasAttemptedSubmit && !groupName.trim()}
+            />
+          </FormField.Control>
           {hasAttemptedSubmit && !groupName.trim() ? (
-            <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
-              Server Group name is required
-            </p>
+            <FormField.ErrorMessage>Server Group name is required</FormField.ErrorMessage>
           ) : (
-            <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
+            <FormField.HelperText>
               Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-            </p>
+            </FormField.HelperText>
           )}
-        </VStack>
+        </FormField>
 
         {/* Policy Radio */}
-        <VStack gap={3} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Create type
-          </label>
-          <RadioGroup value={policy} onChange={(value) => setPolicy(value as ServerGroupPolicy)}>
-            <VStack gap={3}>
-              <PolicyRadioOption
-                value="anti-affinity"
-                label="Anti-affinity"
-                tooltip={policyDescriptions['anti-affinity']}
-              />
-              <PolicyRadioOption
-                value="affinity"
-                label="Affinity"
-                tooltip={policyDescriptions['affinity']}
-              />
-              <PolicyRadioOption
-                value="soft-anti-affinity"
-                label="Soft-Anti-affinity"
-                tooltip={policyDescriptions['soft-anti-affinity']}
-              />
-              <PolicyRadioOption
-                value="soft-affinity"
-                label="Soft-affinity"
-                tooltip={policyDescriptions['soft-affinity']}
-              />
-            </VStack>
-          </RadioGroup>
-        </VStack>
+        <FormField>
+          <FormField.Label>Create type</FormField.Label>
+          <FormField.Control>
+            <RadioGroup value={policy} onChange={(value) => setPolicy(value as ServerGroupPolicy)}>
+              <VStack gap={3}>
+                <PolicyRadioOption
+                  value="anti-affinity"
+                  label="Anti-affinity"
+                  tooltip={policyDescriptions['anti-affinity']}
+                />
+                <PolicyRadioOption
+                  value="affinity"
+                  label="Affinity"
+                  tooltip={policyDescriptions['affinity']}
+                />
+                <PolicyRadioOption
+                  value="soft-anti-affinity"
+                  label="Soft-Anti-affinity"
+                  tooltip={policyDescriptions['soft-anti-affinity']}
+                />
+                <PolicyRadioOption
+                  value="soft-affinity"
+                  label="Soft-affinity"
+                  tooltip={policyDescriptions['soft-affinity']}
+                />
+              </VStack>
+            </RadioGroup>
+          </FormField.Control>
+        </FormField>
       </VStack>
     </Drawer>
   );

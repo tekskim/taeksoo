@@ -87,6 +87,10 @@ function SectionCardHeader({
 export interface SectionCardContentProps extends HTMLAttributes<HTMLDivElement> {
   /** Content children */
   children: ReactNode;
+  /** Show dividers between children (default: true for DataRow lists, false for forms) */
+  showDividers?: boolean;
+  /** Gap between children (overrides default gap-3) */
+  gap?: number;
 }
 
 // Divider component for between DataRows
@@ -94,9 +98,32 @@ function DataRowDivider() {
   return <div className="h-px w-full bg-[var(--color-border-subtle)]" />;
 }
 
-function SectionCardContent({ children, className, ...props }: SectionCardContentProps) {
+function SectionCardContent({
+  children,
+  className,
+  showDividers = true,
+  gap,
+  ...props
+}: SectionCardContentProps) {
   // Convert children to array and filter valid elements
   const childArray = Children.toArray(children).filter(isValidElement);
+
+  // If showDividers is false, render children without auto-dividers
+  if (!showDividers) {
+    return (
+      <div
+        className={twMerge(
+          'flex flex-col w-full',
+          gap !== undefined ? `gap-[${gap * 4}px]` : 'gap-3',
+          className
+        )}
+        style={gap !== undefined ? { gap: `${gap * 4}px` } : undefined}
+        {...props}
+      >
+        {children}
+      </div>
+    );
+  }
 
   return (
     <div className={twMerge('flex flex-col w-full gap-3', className)} {...props}>

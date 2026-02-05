@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input, Radio, RadioGroup, Tooltip } from '@/design-system';
+import { Drawer, Button, Input, Radio, RadioGroup, Tooltip, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 import { IconHelp } from '@tabler/icons-react';
 
@@ -94,68 +94,68 @@ export function CreateAllowedAddressPairDrawer({
         </VStack>
 
         {/* CIDR Input */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">CIDR</label>
-          <Input
-            value={cidr}
-            onChange={(e) => setCidr(e.target.value)}
-            placeholder="e.g. 192.168.0.0/24"
-            fullWidth
-            error={hasAttemptedSubmit && !cidr.trim()}
-          />
+        <FormField required error={hasAttemptedSubmit && !cidr.trim()}>
+          <FormField.Label>CIDR</FormField.Label>
+          <FormField.Control>
+            <Input
+              value={cidr}
+              onChange={(e) => setCidr(e.target.value)}
+              placeholder="e.g. 192.168.0.0/24"
+              fullWidth
+              error={hasAttemptedSubmit && !cidr.trim()}
+            />
+          </FormField.Control>
           {hasAttemptedSubmit && !cidr.trim() ? (
-            <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
-              CIDR is required
-            </p>
+            <FormField.ErrorMessage>CIDR is required</FormField.ErrorMessage>
           ) : (
-            <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
-              Prefix (/): 24~28
-            </p>
+            <FormField.HelperText>Prefix (/): 24~28</FormField.HelperText>
           )}
-        </VStack>
+        </FormField>
 
         {/* MAC Address Radio Group */}
-        <VStack gap={3} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            MAC Address
-          </label>
-          <RadioGroup
-            value={macAddressType}
-            onChange={(value) => setMacAddressType(value as MacAddressType)}
-          >
-            <VStack gap={3}>
-              <HStack gap={2} className="items-center">
-                <Radio value="from_port" label="From Port" />
-                <Tooltip content="Use the MAC address assigned to this port automatically.">
-                  <IconHelp
-                    size={16}
-                    stroke={1}
-                    className="text-[var(--color-text-subtle)] cursor-help"
-                  />
-                </Tooltip>
-              </HStack>
-              <Radio value="manual" label="Manual" />
-            </VStack>
-          </RadioGroup>
-
+        <FormField
+          required
+          error={macAddressType === 'manual' && hasAttemptedSubmit && !macAddress.trim()}
+        >
+          <FormField.Label>MAC Address</FormField.Label>
+          <FormField.Control>
+            <RadioGroup
+              value={macAddressType}
+              onChange={(value) => setMacAddressType(value as MacAddressType)}
+            >
+              <VStack gap={3}>
+                <HStack gap={2} className="items-center">
+                  <Radio value="from_port" label="From Port" />
+                  <Tooltip content="Use the MAC address assigned to this port automatically.">
+                    <IconHelp
+                      size={16}
+                      stroke={1}
+                      className="text-[var(--color-text-subtle)] cursor-help"
+                    />
+                  </Tooltip>
+                </HStack>
+                <Radio value="manual" label="Manual" />
+              </VStack>
+            </RadioGroup>
+          </FormField.Control>
           {/* Manual MAC Address Input */}
           {macAddressType === 'manual' && (
             <>
-              <Input
-                value={macAddress}
-                onChange={(e) => setMacAddress(e.target.value)}
-                placeholder="e.g. fa:16:3e:ab:cd:ef"
-                fullWidth
-                error={hasAttemptedSubmit && !macAddress.trim()}
-              />
+              <FormField.Control>
+                <Input
+                  value={macAddress}
+                  onChange={(e) => setMacAddress(e.target.value)}
+                  placeholder="e.g. fa:16:3e:ab:cd:ef"
+                  fullWidth
+                  error={hasAttemptedSubmit && !macAddress.trim()}
+                />
+              </FormField.Control>
               {hasAttemptedSubmit && !macAddress.trim() && (
-                <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
-                  MAC address is required
-                </p>
+                <FormField.ErrorMessage>MAC address is required</FormField.ErrorMessage>
               )}
             </>
           )}
-        </VStack>
+        </FormField>
       </VStack>
     </Drawer>
   );

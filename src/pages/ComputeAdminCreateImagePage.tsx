@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import {
   Button,
@@ -178,9 +178,9 @@ export function ComputeAdminCreateImagePage() {
   const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel } = useTabs();
 
   // Update tab label
-  useState(() => {
+  useEffect(() => {
     updateActiveTabLabel('Create image');
-  });
+  }, []);
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -253,7 +253,7 @@ export function ComputeAdminCreateImagePage() {
             >
               {row.name}
             </Link>
-            <IconExternalLink size={16} className="text-[var(--color-action-primary)]" />
+            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </div>
           <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
         </div>
@@ -808,10 +808,10 @@ export function ComputeAdminCreateImagePage() {
                           {/* Disk format */}
                           <FormField required>
                             <FormField.Label>Disk format</FormField.Label>
-                            <FormField.HelperText>
+                            <FormField.Description>
                               Select the disk format for the image. It must match the actual type of
                               the uploaded file.
-                            </FormField.HelperText>
+                            </FormField.Description>
                             <FormField.Control>
                               <Select
                                 value={diskFormat}
@@ -834,9 +834,9 @@ export function ComputeAdminCreateImagePage() {
                           {/* OS */}
                           <FormField required>
                             <FormField.Label>OS</FormField.Label>
-                            <FormField.HelperText>
+                            <FormField.Description>
                               Select the operating system type for the image.
-                            </FormField.HelperText>
+                            </FormField.Description>
                             <FormField.Control>
                               <Select
                                 value={os}
@@ -858,9 +858,9 @@ export function ComputeAdminCreateImagePage() {
                           {/* OS Version */}
                           <FormField required>
                             <FormField.Label>OS version</FormField.Label>
-                            <FormField.HelperText>
+                            <FormField.Description>
                               This metadata helps categorize image.
-                            </FormField.HelperText>
+                            </FormField.Description>
                             <FormField.Control>
                               <Input
                                 value={osVersion}

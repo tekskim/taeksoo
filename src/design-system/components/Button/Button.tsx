@@ -274,6 +274,7 @@ export const Button: ButtonComponent = forwardRef(
       appearance,
       size = 'md',
       fullWidth,
+      iconOnly: _iconOnly, // Extract to prevent passing to DOM
       isLoading = false,
       leftIcon,
       rightIcon,

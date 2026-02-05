@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import ReactECharts from 'echarts-for-react';
 import { TabBar, TopBar, TopBarAction, Breadcrumb, MonitoringToolbar } from '@/design-system';
 import type { TimeRangeValue } from '@/design-system';
@@ -77,7 +77,7 @@ function LineChart({
   const [showDataView, setShowDataView] = useState(false);
 
   // Detect dark mode changes
-  useState(() => {
+  useEffect(() => {
     const checkDarkMode = () => {
       setIsDarkMode(document.documentElement.classList.contains('dark'));
     };
@@ -87,7 +87,7 @@ function LineChart({
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
 
     return () => observer.disconnect();
-  });
+  }, []);
 
   const allVisible = Object.values(visibleSeries).every((v) => v);
   const toggleAll = () => {

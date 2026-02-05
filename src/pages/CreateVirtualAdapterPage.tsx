@@ -315,7 +315,7 @@ export default function CreateVirtualAdapterPage() {
           <VStack gap={0.5} align="start">
             <HStack gap={1.5} align="center">
               <span className="text-[var(--color-action-primary)] text-label-md">{row.name}</span>
-              <IconExternalLink size={16} className="text-[var(--color-action-primary)]" />
+              <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
             </HStack>
             <span className="text-body-sm text-[var(--color-text-subtle)]">ID: {row.id}</span>
           </VStack>
@@ -373,7 +373,7 @@ export default function CreateVirtualAdapterPage() {
           <VStack gap={0.5} align="start">
             <HStack gap={1.5} align="center">
               <span className="text-[var(--color-action-primary)] text-label-md">{row.name}</span>
-              <IconExternalLink size={16} className="text-[var(--color-action-primary)]" />
+              <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
             </HStack>
             <span className="text-body-sm text-[var(--color-text-subtle)]">{row.subtitle}</span>
           </VStack>
@@ -635,9 +635,9 @@ export default function CreateVirtualAdapterPage() {
                         <VStack gap={4} align="stretch">
                           <FormField required>
                             <FormField.Label>Owned network</FormField.Label>
-                            <FormField.HelperText>
+                            <FormField.Description>
                               Select the network to which the virtual adaptor will be attached.
-                            </FormField.HelperText>
+                            </FormField.Description>
                           </FormField>
 
                           {/* Network Tabs */}
@@ -705,10 +705,10 @@ export default function CreateVirtualAdapterPage() {
                         <VStack gap={3} align="stretch">
                           <FormField>
                             <FormField.Label>Fixed IP</FormField.Label>
-                            <FormField.HelperText>
+                            <FormField.Description>
                               Select a subnet and choose whether to auto-allocate fixed IP or enter
                               one manually.
-                            </FormField.HelperText>
+                            </FormField.Description>
                           </FormField>
 
                           {/* Fixed IP Entries */}
@@ -797,9 +797,9 @@ export default function CreateVirtualAdapterPage() {
                         <VStack gap={3} align="stretch">
                           <FormField required>
                             <FormField.Label>MAC address</FormField.Label>
-                            <FormField.HelperText>
+                            <FormField.Description>
                               Choose whether to auto-allocate a MAC address or enter one manually.
-                            </FormField.HelperText>
+                            </FormField.Description>
                           </FormField>
                           <RadioGroup
                             value={macAddressMode}
@@ -891,10 +891,10 @@ export default function CreateVirtualAdapterPage() {
                         <VStack gap={3} align="stretch">
                           <FormField required>
                             <FormField.Label>Port security</FormField.Label>
-                            <FormField.HelperText>
+                            <FormField.Description>
                               Indicates whether to enable security features on the port, including
                               security groups.
-                            </FormField.HelperText>
+                            </FormField.Description>
                           </FormField>
                           <HStack gap={2} align="center">
                             <Toggle

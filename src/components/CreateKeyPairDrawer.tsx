@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { Drawer, Button, Input, Radio, RadioGroup } from '@/design-system';
+import { Drawer, Button, Input, Radio, RadioGroup, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 import { IconInfinity, IconUpload } from '@tabler/icons-react';
 
@@ -165,80 +165,76 @@ export function CreateKeyPairDrawer({
         </VStack>
 
         {/* Create Type Radio */}
-        <VStack gap={3} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Create type
-          </label>
-          <RadioGroup
-            value={createType}
-            onChange={(value) => setCreateType(value as 'create' | 'import')}
-          >
-            <VStack gap={3}>
-              <Radio value="create" label="Create Key Pair" />
-              <Radio value="import" label="Import Key Pair" />
-            </VStack>
-          </RadioGroup>
-        </VStack>
+        <FormField>
+          <FormField.Label>Create type</FormField.Label>
+          <FormField.Control>
+            <RadioGroup
+              value={createType}
+              onChange={(value) => setCreateType(value as 'create' | 'import')}
+            >
+              <VStack gap={3}>
+                <Radio value="create" label="Create Key Pair" />
+                <Radio value="import" label="Import Key Pair" />
+              </VStack>
+            </RadioGroup>
+          </FormField.Control>
+        </FormField>
 
         {/* Key Pair Name Input */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Key pair name
-          </label>
-          <Input
-            value={keyPairName}
-            onChange={(e) => setKeyPairName(e.target.value)}
-            placeholder="e.g. my-key"
-            fullWidth
-            error={hasAttemptedSubmit && !keyPairName.trim()}
-          />
+        <FormField required error={hasAttemptedSubmit && !keyPairName.trim()}>
+          <FormField.Label>Key pair name</FormField.Label>
+          <FormField.Control>
+            <Input
+              value={keyPairName}
+              onChange={(e) => setKeyPairName(e.target.value)}
+              placeholder="e.g. my-key"
+              fullWidth
+              error={hasAttemptedSubmit && !keyPairName.trim()}
+            />
+          </FormField.Control>
           {hasAttemptedSubmit && !keyPairName.trim() ? (
-            <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
-              Key pair name is required
-            </p>
+            <FormField.ErrorMessage>Key pair name is required</FormField.ErrorMessage>
           ) : (
-            <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
+            <FormField.HelperText>
               Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-            </p>
+            </FormField.HelperText>
           )}
-        </VStack>
+        </FormField>
 
         {/* Public Key Input (only for Import) */}
         {createType === 'import' && (
-          <VStack gap={2} className="w-full">
-            <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-              Public key
-            </label>
-            {/* Hidden file input */}
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept=".pub,.pem,.txt"
-              onChange={handleFileUpload}
-              className="hidden"
-            />
-            {/* Upload Button */}
-            <button
-              type="button"
-              onClick={() => fileInputRef.current?.click()}
-              className="flex items-center gap-1.5 px-3 py-2 text-label-md text-[var(--color-text-default)] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md hover:bg-[var(--color-surface-muted)] transition-colors"
-            >
-              <IconUpload size={16} stroke={1} />
-              Upload a File
-            </button>
-            {/* Textarea */}
-            <textarea
-              value={publicKey}
-              onChange={(e) => setPublicKey(e.target.value)}
-              placeholder="Upload a file with a public key or enter it in the field."
-              className={`w-full min-h-[80px] px-[10px] py-2 text-body-md leading-4 text-[var(--color-text-default)] placeholder:text-[var(--color-text-subtle)] bg-[var(--color-surface-default)] border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[var(--color-action-primary)] focus:border-transparent ${hasAttemptedSubmit && !publicKey.trim() ? 'border-[var(--color-state-danger)]' : 'border-[var(--color-border-strong)]'}`}
-            />
+          <FormField required error={hasAttemptedSubmit && !publicKey.trim()}>
+            <FormField.Label>Public key</FormField.Label>
+            <FormField.Control>
+              {/* Hidden file input */}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".pub,.pem,.txt"
+                onChange={handleFileUpload}
+                className="hidden"
+              />
+              {/* Upload Button */}
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="flex items-center gap-1.5 px-3 py-2 text-label-md text-[var(--color-text-default)] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md hover:bg-[var(--color-surface-muted)] transition-colors"
+              >
+                <IconUpload size={16} stroke={1} />
+                Upload a File
+              </button>
+              {/* Textarea */}
+              <textarea
+                value={publicKey}
+                onChange={(e) => setPublicKey(e.target.value)}
+                placeholder="Upload a file with a public key or enter it in the field."
+                className={`w-full min-h-[80px] px-[10px] py-2 text-body-md leading-4 text-[var(--color-text-default)] placeholder:text-[var(--color-text-subtle)] bg-[var(--color-surface-default)] border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[var(--color-action-primary)] focus:border-transparent ${hasAttemptedSubmit && !publicKey.trim() ? 'border-[var(--color-state-danger)]' : 'border-[var(--color-border-strong)]'}`}
+              />
+            </FormField.Control>
             {hasAttemptedSubmit && !publicKey.trim() && (
-              <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
-                Public key is required
-              </p>
+              <FormField.ErrorMessage>Public key is required</FormField.ErrorMessage>
             )}
-          </VStack>
+          </FormField>
         )}
       </VStack>
     </Drawer>

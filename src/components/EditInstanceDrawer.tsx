@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input } from '@/design-system';
+import { Drawer, Button, Input, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 
 export interface InstanceInfo {
@@ -77,36 +77,36 @@ export function EditInstanceDrawer({
         </h2>
 
         {/* Instance Name Input */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Instance name
-          </label>
-          <Input
-            value={instanceName}
-            onChange={(e) => setInstanceName(e.target.value)}
-            placeholder="Enter instance name"
-            fullWidth
-          />
-          <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
+        <FormField required>
+          <FormField.Label>Instance name</FormField.Label>
+          <FormField.Control>
+            <Input
+              value={instanceName}
+              onChange={(e) => setInstanceName(e.target.value)}
+              placeholder="Enter instance name"
+              fullWidth
+            />
+          </FormField.Control>
+          <FormField.HelperText>
             Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-          </p>
-        </VStack>
+          </FormField.HelperText>
+        </FormField>
 
         {/* Description Input */}
-        <VStack gap={2} className="w-full">
-          <div className="flex items-center gap-1">
-            <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-              Description
-            </label>
+        <FormField>
+          <FormField.Label>
+            Description{' '}
             <span className="text-body-md text-[var(--color-text-subtle)]">(optional)</span>
-          </div>
-          <Input
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Instance for running internal API service"
-            fullWidth
-          />
-        </VStack>
+          </FormField.Label>
+          <FormField.Control>
+            <Input
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Instance for running internal API service"
+              fullWidth
+            />
+          </FormField.Control>
+        </FormField>
       </VStack>
     </Drawer>
   );

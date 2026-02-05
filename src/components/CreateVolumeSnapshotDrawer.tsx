@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input } from '@/design-system';
+import { Drawer, Button, Input, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 import { IconAlertCircle, IconInfinity } from '@tabler/icons-react';
 
@@ -194,27 +194,25 @@ export function CreateVolumeSnapshotDrawer({
         </VStack>
 
         {/* Snapshot Name Input */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Volume snapshot name
-          </label>
-          <Input
-            value={snapshotName}
-            onChange={(e) => setSnapshotName(e.target.value)}
-            placeholder="Enter snapshot name"
-            fullWidth
-            error={hasAttemptedSubmit && !snapshotName.trim()}
-          />
+        <FormField required error={hasAttemptedSubmit && !snapshotName.trim()}>
+          <FormField.Label>Volume snapshot name</FormField.Label>
+          <FormField.Control>
+            <Input
+              value={snapshotName}
+              onChange={(e) => setSnapshotName(e.target.value)}
+              placeholder="Enter snapshot name"
+              fullWidth
+              error={hasAttemptedSubmit && !snapshotName.trim()}
+            />
+          </FormField.Control>
           {hasAttemptedSubmit && !snapshotName.trim() ? (
-            <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
-              Snapshot name is required
-            </p>
+            <FormField.ErrorMessage>Snapshot name is required</FormField.ErrorMessage>
           ) : (
-            <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
+            <FormField.HelperText>
               Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-            </p>
+            </FormField.HelperText>
           )}
-        </VStack>
+        </FormField>
       </VStack>
     </Drawer>
   );

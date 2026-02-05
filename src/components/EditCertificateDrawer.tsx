@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input } from '@/design-system';
+import { Drawer, Button, Input, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 
 /* ----------------------------------------
@@ -93,45 +93,41 @@ export function EditCertificateDrawer({
         </VStack>
 
         {/* Certificate Name Input */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Certificate Name
-          </label>
-          <Input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="e.g. my-ssl-cert"
-            fullWidth
-            error={hasAttemptedSubmit && !name.trim()}
-          />
+        <FormField required error={hasAttemptedSubmit && !name.trim()}>
+          <FormField.Label>Certificate Name</FormField.Label>
+          <FormField.Control>
+            <Input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="e.g. my-ssl-cert"
+              fullWidth
+              error={hasAttemptedSubmit && !name.trim()}
+            />
+          </FormField.Control>
           {hasAttemptedSubmit && !name.trim() ? (
-            <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
-              Certificate name is required
-            </p>
+            <FormField.ErrorMessage>Certificate name is required</FormField.ErrorMessage>
           ) : (
-            <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
+            <FormField.HelperText>
               Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-            </p>
+            </FormField.HelperText>
           )}
-        </VStack>
+        </FormField>
 
         {/* Description Input */}
-        <VStack gap={2} className="w-full">
-          <HStack gap={1} className="items-center">
-            <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-              Description
-            </label>
-            <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
-              (optional)
-            </span>
-          </HStack>
-          <Input
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="e.g. SSL certificate for web application HTTPS"
-            fullWidth
-          />
-        </VStack>
+        <FormField>
+          <FormField.Label>
+            Description{' '}
+            <span className="text-body-md text-[var(--color-text-subtle)]">(optional)</span>
+          </FormField.Label>
+          <FormField.Control>
+            <Input
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="e.g. SSL certificate for web application HTTPS"
+              fullWidth
+            />
+          </FormField.Control>
+        </FormField>
       </VStack>
     </Drawer>
   );

@@ -66,6 +66,7 @@ import {
   CheckboxGroup,
   Radio,
   RadioGroup,
+  FormField,
   Tabs,
   TabList,
   Tab,
@@ -318,6 +319,7 @@ const foundationItems = [
 const formControlItems = [
   { id: 'button', label: 'Button', icon: IconClick },
   { id: 'input', label: 'Input', icon: IconForms },
+  { id: 'form-field-spacing', label: 'Form Field Spacing', icon: IconLayoutGrid },
   { id: 'filter-search-input', label: 'Filter search Input', icon: IconSearch },
   { id: 'select', label: 'Select', icon: IconSelector },
   { id: 'datepicker', label: 'DatePicker', icon: IconCalendar },
@@ -5913,6 +5915,225 @@ outline: 2px solid var(--color-border-focus);`}
                             defaultValue="Search value"
                             className="w-[var(--search-input-width)]"
                           />
+                        </VStack>
+                      </div>
+                    </VStack>
+                  </VStack>
+                </Section>
+
+                {/* Form Field Spacing */}
+                <Section
+                  id="form-field-spacing"
+                  title="Form Field Spacing"
+                  description="Standardized spacing for label + description + input combinations"
+                >
+                  <VStack gap={8}>
+                    {/* Design Tokens */}
+                    <VStack gap={3}>
+                      <Label>Design tokens</Label>
+                      <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+                        <strong>Spacing:</strong>
+                        <br />
+                        • Input/Select/NumberInput: Label ↔ Input: 8px, Input ↔ HelperText: 8px
+                        <br />
+                        • FormField: Label ↔ Input: 8px, Label ↔ Description: 4px, Description ↔
+                        Input: 8px, Input ↔ HelperText: 8px
+                        <br />
+                        • Radio/CheckboxGroup: Label ↔ Options: 12px, Label ↔ Description: 4px,
+                        Description ↔ Options: 12px
+                        <br />
+                        <br />
+                        <strong>Typography:</strong>
+                        <br />
+                        • Description (라벨 하단): text-body-md (12px/18px)
+                        <br />• HelperText (Input 하단): text-body-sm (11px/16px)
+                      </div>
+                    </VStack>
+
+                    {/* Standard Pattern */}
+                    <VStack gap={3}>
+                      <Label>Standard Pattern (Label → Input → Helper)</Label>
+                      <div className="flex flex-wrap gap-6 items-start">
+                        <VStack gap={1.5} className="max-w-[240px]">
+                          <span className="text-label-sm text-[var(--color-text-subtle)]">
+                            Input
+                          </span>
+                          <Input
+                            label="Field Label"
+                            placeholder="Enter value"
+                            helperText="Helper text below input"
+                            width="md"
+                          />
+                        </VStack>
+                        <VStack gap={1.5} className="max-w-[240px]">
+                          <span className="text-label-sm text-[var(--color-text-subtle)]">
+                            Select
+                          </span>
+                          <Select
+                            label="Field Label"
+                            options={[
+                              { value: '1', label: 'Option 1' },
+                              { value: '2', label: 'Option 2' },
+                            ]}
+                            placeholder="Select option"
+                            helperText="Helper text below select"
+                            width="md"
+                          />
+                        </VStack>
+                        <VStack gap={1.5} className="max-w-[240px]">
+                          <span className="text-label-sm text-[var(--color-text-subtle)]">
+                            NumberInput
+                          </span>
+                          <NumberInput
+                            label="Field Label"
+                            defaultValue={0}
+                            helperText="Helper text below stepper"
+                            width="md"
+                          />
+                        </VStack>
+                      </div>
+                    </VStack>
+
+                    {/* With Description Pattern */}
+                    <VStack gap={3}>
+                      <Label>With Description (Label → Description → Input)</Label>
+                      <p className="text-body-sm text-[var(--color-text-subtle)]">
+                        Use FormField compound component for label → description → input order
+                      </p>
+                      <div className="flex flex-wrap gap-6 items-start">
+                        <VStack gap={1.5} className="max-w-[240px]">
+                          <span className="text-label-sm text-[var(--color-text-subtle)]">
+                            Input
+                          </span>
+                          <FormField>
+                            <FormField.Label>Field Label</FormField.Label>
+                            <FormField.Description>
+                              Description appears before input
+                            </FormField.Description>
+                            <FormField.Control>
+                              <Input placeholder="Enter value" width="md" />
+                            </FormField.Control>
+                          </FormField>
+                        </VStack>
+                        <VStack gap={1.5} className="max-w-[240px]">
+                          <span className="text-label-sm text-[var(--color-text-subtle)]">
+                            Select
+                          </span>
+                          <FormField>
+                            <FormField.Label>Field Label</FormField.Label>
+                            <FormField.Description>
+                              Description appears before select
+                            </FormField.Description>
+                            <FormField.Control>
+                              <Select
+                                options={[
+                                  { value: '1', label: 'Option 1' },
+                                  { value: '2', label: 'Option 2' },
+                                ]}
+                                placeholder="Select option"
+                                width="md"
+                              />
+                            </FormField.Control>
+                          </FormField>
+                        </VStack>
+                        <VStack gap={1.5} className="max-w-[240px]">
+                          <span className="text-label-sm text-[var(--color-text-subtle)]">
+                            NumberInput
+                          </span>
+                          <FormField>
+                            <FormField.Label>Field Label</FormField.Label>
+                            <FormField.Description>
+                              Description appears before stepper
+                            </FormField.Description>
+                            <FormField.Control>
+                              <NumberInput defaultValue={0} width="md" />
+                            </FormField.Control>
+                          </FormField>
+                        </VStack>
+                      </div>
+                    </VStack>
+
+                    {/* With Both Description and Helper */}
+                    <VStack gap={3}>
+                      <Label>With Both (Label → Description → Input → Helper)</Label>
+                      <p className="text-body-sm text-[var(--color-text-subtle)]">
+                        Description explains the field purpose, Helper provides input format
+                        guidance
+                      </p>
+                      <div className="flex flex-wrap gap-6 items-start">
+                        <VStack gap={1.5} className="max-w-[280px]">
+                          <FormField>
+                            <FormField.Label>Instance Name</FormField.Label>
+                            <FormField.Description>
+                              Choose a unique name for your instance
+                            </FormField.Description>
+                            <FormField.Control>
+                              <Input placeholder="e.g., web-server-01" fullWidth />
+                            </FormField.Control>
+                            <FormField.HelperText>
+                              2-64 characters, letters, numbers, -_.
+                            </FormField.HelperText>
+                          </FormField>
+                        </VStack>
+                      </div>
+                    </VStack>
+
+                    {/* RadioGroup Spacing */}
+                    <VStack gap={3}>
+                      <Label>RadioGroup (Label ↔ Options: 12px, Label ↔ Description: 4px)</Label>
+                      <div className="flex flex-wrap gap-6 items-start">
+                        <VStack gap={1.5} className="max-w-[280px]">
+                          <span className="text-label-sm text-[var(--color-text-subtle)]">
+                            Without Description
+                          </span>
+                          <RadioGroup
+                            label="Select option"
+                            options={[
+                              { value: '1', label: 'Option 1' },
+                              { value: '2', label: 'Option 2' },
+                            ]}
+                          />
+                        </VStack>
+                        <VStack gap={1.5} className="max-w-[280px]">
+                          <span className="text-label-sm text-[var(--color-text-subtle)]">
+                            With Description
+                          </span>
+                          <RadioGroup
+                            label="Select option"
+                            description="Choose one of the available options"
+                            options={[
+                              { value: '1', label: 'Option 1' },
+                              { value: '2', label: 'Option 2' },
+                            ]}
+                          />
+                        </VStack>
+                      </div>
+                    </VStack>
+
+                    {/* CheckboxGroup Spacing */}
+                    <VStack gap={3}>
+                      <Label>CheckboxGroup (Label ↔ Options: 12px, Label ↔ Description: 4px)</Label>
+                      <div className="flex flex-wrap gap-6 items-start">
+                        <VStack gap={1.5} className="max-w-[280px]">
+                          <span className="text-label-sm text-[var(--color-text-subtle)]">
+                            Without Description
+                          </span>
+                          <CheckboxGroup label="Select options">
+                            <Checkbox label="Option 1" />
+                            <Checkbox label="Option 2" />
+                          </CheckboxGroup>
+                        </VStack>
+                        <VStack gap={1.5} className="max-w-[280px]">
+                          <span className="text-label-sm text-[var(--color-text-subtle)]">
+                            With Description
+                          </span>
+                          <CheckboxGroup
+                            label="Select options"
+                            description="You can select multiple options"
+                          >
+                            <Checkbox label="Option 1" />
+                            <Checkbox label="Option 2" />
+                          </CheckboxGroup>
                         </VStack>
                       </div>
                     </VStack>

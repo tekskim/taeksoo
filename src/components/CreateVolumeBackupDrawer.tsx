@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input, Radio } from '@/design-system';
+import { Drawer, Button, Input, Radio, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 import { IconAlertCircle, IconHelp } from '@tabler/icons-react';
 import { Tooltip } from '@/design-system';
@@ -194,59 +194,57 @@ export function CreateVolumeBackupDrawer({
         </VStack>
 
         {/* Backup Name Input */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Volume backup name
-          </label>
-          <Input
-            value={backupName}
-            onChange={(e) => setBackupName(e.target.value)}
-            placeholder="Enter backup name"
-            fullWidth
-            error={hasAttemptedSubmit && !backupName.trim()}
-          />
+        <FormField required error={hasAttemptedSubmit && !backupName.trim()}>
+          <FormField.Label>Volume backup name</FormField.Label>
+          <FormField.Control>
+            <Input
+              value={backupName}
+              onChange={(e) => setBackupName(e.target.value)}
+              placeholder="Enter backup name"
+              fullWidth
+              error={hasAttemptedSubmit && !backupName.trim()}
+            />
+          </FormField.Control>
           {hasAttemptedSubmit && !backupName.trim() ? (
-            <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
-              Backup name is required
-            </p>
+            <FormField.ErrorMessage>Backup name is required</FormField.ErrorMessage>
           ) : (
-            <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
+            <FormField.HelperText>
               Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-            </p>
+            </FormField.HelperText>
           )}
-        </VStack>
+        </FormField>
 
         {/* Backup Mode */}
-        <VStack gap={3} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Backup mode
-          </label>
-          <VStack gap={3}>
-            <Radio
-              name="backup-mode"
-              value="full"
-              label="Full Backup"
-              checked={backupMode === 'full'}
-              onChange={() => setBackupMode('full')}
-            />
-            <HStack gap={1.5} align="center">
+        <FormField>
+          <FormField.Label>Backup mode</FormField.Label>
+          <FormField.Control>
+            <VStack gap={3}>
               <Radio
                 name="backup-mode"
-                value="incremental"
-                label="Increment Backup"
-                checked={backupMode === 'incremental'}
-                onChange={() => setBackupMode('incremental')}
+                value="full"
+                label="Full Backup"
+                checked={backupMode === 'full'}
+                onChange={() => setBackupMode('full')}
               />
-              <Tooltip content="Incremental backup only backs up the data that has changed since the last backup, saving storage space.">
-                <IconHelp
-                  size={16}
-                  className="text-[var(--color-text-subtle)] cursor-help"
-                  stroke={1.5}
+              <HStack gap={1.5} align="center">
+                <Radio
+                  name="backup-mode"
+                  value="incremental"
+                  label="Increment Backup"
+                  checked={backupMode === 'incremental'}
+                  onChange={() => setBackupMode('incremental')}
                 />
-              </Tooltip>
-            </HStack>
-          </VStack>
-        </VStack>
+                <Tooltip content="Incremental backup only backs up the data that has changed since the last backup, saving storage space.">
+                  <IconHelp
+                    size={16}
+                    className="text-[var(--color-text-subtle)] cursor-help"
+                    stroke={1.5}
+                  />
+                </Tooltip>
+              </HStack>
+            </VStack>
+          </FormField.Control>
+        </FormField>
       </VStack>
     </Drawer>
   );

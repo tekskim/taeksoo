@@ -22,6 +22,7 @@ import {
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
+import { CreateRouterDrawer } from '@/components/CreateRouterDrawer';
 import {
   IconTrash,
   IconDownload,
@@ -226,6 +227,9 @@ export function RoutersPage() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [routerToDelete, setRouterToDelete] = useState<Router | null>(null);
 
+  // Create router drawer state
+  const [isCreateRouterDrawerOpen, setIsCreateRouterDrawerOpen] = useState(false);
+
   // View preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -328,7 +332,7 @@ export function RoutersPage() {
               onClick={(e) => e.stopPropagation()}
             >
               {row.externalNetwork}
-              <IconExternalLink size={16} className="text-[var(--color-action-primary)]" />
+              <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
             </Link>
             <span className="text-body-sm text-[var(--color-text-subtle)]">
               ID : {row.externalNetworkId}
@@ -445,7 +449,11 @@ export function RoutersPage() {
               {/* Page Header */}
               <div className="flex justify-between items-center h-8 w-full">
                 <h1 className="text-heading-h5 text-[var(--color-text-default)]">Routers</h1>
-                <Button variant="primary" size="md">
+                <Button
+                  variant="primary"
+                  size="md"
+                  onClick={() => setIsCreateRouterDrawerOpen(true)}
+                >
                   Create Router
                 </Button>
               </div>
@@ -533,6 +541,12 @@ export function RoutersPage() {
         columns={columnConfig}
         defaultColumns={defaultColumnConfig}
         onColumnsChange={setColumnConfig}
+      />
+
+      {/* Create Router Drawer */}
+      <CreateRouterDrawer
+        isOpen={isCreateRouterDrawerOpen}
+        onClose={() => setIsCreateRouterDrawerOpen(false)}
       />
     </div>
   );

@@ -24,12 +24,12 @@ export interface SelectProps {
   defaultValue?: string;
   /** Change handler */
   onChange?: (value: string) => void;
-  /** Label text */
+  /** @deprecated Use FormField with label prop instead: <FormField label="Type"><Select /></FormField> */
   label?: string;
-  /** Helper text */
+  /** @deprecated Use FormField with helperText prop instead: <FormField helperText="Help"><Select /></FormField> */
   helperText?: string;
-  /** Error message */
-  error?: string;
+  /** Error state (boolean) or error message (string). Prefer boolean with FormField errorMessage prop */
+  error?: string | boolean;
   /** Disabled state */
   disabled?: boolean;
   /** Full width */
@@ -315,11 +315,6 @@ export function Select({
         </label>
       )}
 
-      {/* Helper Text - below label */}
-      {helperText && !error && (
-        <p className="text-body-sm text-[var(--color-text-subtle)]">{helperText}</p>
-      )}
-
       {/* Trigger */}
       <button
         ref={triggerRef}
@@ -368,6 +363,11 @@ export function Select({
           />
         </div>
       </button>
+
+      {/* Helper Text - below select */}
+      {helperText && !error && (
+        <p className="text-body-sm text-[var(--color-text-subtle)]">{helperText}</p>
+      )}
 
       {/* Error */}
       {error && <p className="text-body-sm text-[var(--color-state-danger)]">{error}</p>}

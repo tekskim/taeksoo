@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Drawer, Button, Input, Radio, RadioGroup } from '@/design-system';
+import { Drawer, Button, Input, Radio, RadioGroup, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 import { IconUpload, IconChevronDown, IconChevronRight } from '@tabler/icons-react';
 
@@ -269,60 +269,63 @@ export function RegisterCertificateDrawer({
         </VStack>
 
         {/* Type Radio */}
-        <VStack gap={3} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">Type</label>
-          <RadioGroup
-            value={certificateType}
-            onChange={(value) => setCertificateType(value as CertificateType)}
-          >
-            <VStack gap={3}>
-              <Radio value="server" label="Server Certificate" />
-              <Radio value="ca" label="CA Certificate" />
-            </VStack>
-          </RadioGroup>
-        </VStack>
+        <FormField>
+          <FormField.Label>Type</FormField.Label>
+          <FormField.Control>
+            <RadioGroup
+              value={certificateType}
+              onChange={(value) => setCertificateType(value as CertificateType)}
+            >
+              <VStack gap={3}>
+                <Radio value="server" label="Server Certificate" />
+                <Radio value="ca" label="CA Certificate" />
+              </VStack>
+            </RadioGroup>
+          </FormField.Control>
+        </FormField>
 
         {/* Certificate Name Input */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Certificate Name
-          </label>
-          <Input
-            value={certificateName}
-            onChange={(e) => setCertificateName(e.target.value)}
-            placeholder={
-              certificateType === 'server' ? 'e.g. my-ssl-cert' : 'e.g. company-internal-ca'
-            }
-            fullWidth
-            error={hasAttemptedSubmit && !certificateName.trim()}
-          />
+        <FormField required error={hasAttemptedSubmit && !certificateName.trim()}>
+          <FormField.Label>Certificate Name</FormField.Label>
+          <FormField.Control>
+            <Input
+              value={certificateName}
+              onChange={(e) => setCertificateName(e.target.value)}
+              placeholder={
+                certificateType === 'server' ? 'e.g. my-ssl-cert' : 'e.g. company-internal-ca'
+              }
+              fullWidth
+              error={hasAttemptedSubmit && !certificateName.trim()}
+            />
+          </FormField.Control>
           {hasAttemptedSubmit && !certificateName.trim() ? (
-            <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
-              Certificate name is required
-            </p>
+            <FormField.ErrorMessage>Certificate name is required</FormField.ErrorMessage>
           ) : (
-            <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
+            <FormField.HelperText>
               Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-            </p>
+            </FormField.HelperText>
           )}
-        </VStack>
+        </FormField>
 
         {/* Description Input */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Description (optional)
-          </label>
-          <Input
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder={
-              certificateType === 'server'
-                ? 'e.g. SSL certificate for web application HTTPS'
-                : 'e.g. Internal Root Certificate Authority'
-            }
-            fullWidth
-          />
-        </VStack>
+        <FormField>
+          <FormField.Label>
+            Description{' '}
+            <span className="text-body-md text-[var(--color-text-subtle)]">(optional)</span>
+          </FormField.Label>
+          <FormField.Control>
+            <Input
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder={
+                certificateType === 'server'
+                  ? 'e.g. SSL certificate for web application HTTPS'
+                  : 'e.g. Internal Root Certificate Authority'
+              }
+              fullWidth
+            />
+          </FormField.Control>
+        </FormField>
 
         {/* Certificate Body */}
         <FileUploadSection

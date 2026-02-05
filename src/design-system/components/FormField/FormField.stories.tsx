@@ -7,8 +7,29 @@ import { Checkbox } from '../Checkbox/Checkbox';
 /**
  * # FormField
  *
- * 폼 필드를 구성하는 Compound Component입니다.
+ * 폼 필드를 구성하는 컴포넌트입니다.
  * 라벨, 입력 컨트롤, 도움말, 에러 메시지를 일관된 구조로 조합합니다.
+ *
+ * ## 두 가지 사용 방식
+ *
+ * ### 1. Simple API (권장)
+ * ```tsx
+ * <FormField label="Name" helperText="2-64 characters" required>
+ *   <Input placeholder="Enter name" />
+ * </FormField>
+ * ```
+ *
+ * ### 2. Compound API (복잡한 레이아웃용)
+ * ```tsx
+ * <FormField required>
+ *   <FormField.Label>Name <Badge>NEW</Badge></FormField.Label>
+ *   <FormField.Description>설명</FormField.Description>
+ *   <FormField.Control>
+ *     <Input placeholder="Enter name" />
+ *   </FormField.Control>
+ *   <FormField.HelperText>2-64 characters</FormField.HelperText>
+ * </FormField>
+ * ```
  *
  * ## 언제 사용하나요?
  * - 폼 입력 필드에 라벨과 도움말을 추가할 때
@@ -16,11 +37,12 @@ import { Checkbox } from '../Checkbox/Checkbox';
  * - 유효성 검사 에러 메시지를 표시할 때
  * - 일관된 폼 레이아웃을 구성할 때
  *
- * ## 구성 요소
+ * ## 구성 요소 (Compound API)
  * - **FormField**: 컨테이너 (Context Provider)
  * - **FormField.Label**: 라벨 (필수 표시 포함)
+ * - **FormField.Description**: 라벨 아래 설명 (text-body-md)
  * - **FormField.Control**: 입력 컨트롤 래퍼
- * - **FormField.HelperText**: 도움말 텍스트
+ * - **FormField.HelperText**: 도움말 텍스트 (text-body-sm)
  * - **FormField.ErrorMessage**: 에러 메시지
  *
  * ## 접근성
@@ -72,10 +94,78 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 /* ----------------------------------------
-   Basic Examples
+   Simple API Examples (Recommended)
+   ---------------------------------------- */
+
+export const SimpleAPI: Story = {
+  name: 'Simple API (Recommended)',
+  render: () => (
+    <FormField label="Username" helperText="Your username must be unique.">
+      <Input placeholder="Enter username" fullWidth />
+    </FormField>
+  ),
+};
+
+export const SimpleAPIRequired: Story = {
+  name: 'Simple API - Required',
+  render: () => (
+    <FormField label="Email" helperText="We'll never share your email." required>
+      <Input type="email" placeholder="Enter email" fullWidth />
+    </FormField>
+  ),
+};
+
+export const SimpleAPIWithDescription: Story = {
+  name: 'Simple API - With Description',
+  render: () => (
+    <FormField
+      label="Instance Name"
+      description="A unique name to identify your instance"
+      helperText="2-64 characters, letters, numbers, and hyphens"
+      required
+    >
+      <Input placeholder="my-instance-01" fullWidth />
+    </FormField>
+  ),
+};
+
+export const SimpleAPIWithError: Story = {
+  name: 'Simple API - With Error',
+  render: () => (
+    <FormField
+      label="Password"
+      errorMessage="Password must be at least 8 characters."
+      required
+      error
+    >
+      <Input type="password" placeholder="Enter password" fullWidth />
+    </FormField>
+  ),
+};
+
+export const SimpleAPIWithSelect: Story = {
+  name: 'Simple API - With Select',
+  render: () => (
+    <FormField label="Country" helperText="Select your country of residence." required>
+      <Select
+        placeholder="Select a country"
+        fullWidth
+        options={[
+          { value: 'kr', label: 'South Korea' },
+          { value: 'us', label: 'United States' },
+          { value: 'jp', label: 'Japan' },
+        ]}
+      />
+    </FormField>
+  ),
+};
+
+/* ----------------------------------------
+   Compound API Examples
    ---------------------------------------- */
 
 export const Default: Story = {
+  name: 'Compound API - Default',
   render: () => (
     <FormField id="username">
       <FormField.Label>Username</FormField.Label>

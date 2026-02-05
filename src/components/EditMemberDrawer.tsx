@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input, Toggle } from '@/design-system';
+import { Drawer, Button, Input, Toggle, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 import { IconChevronDown, IconChevronRight } from '@tabler/icons-react';
 
@@ -117,38 +117,44 @@ export function EditMemberDrawer({ isOpen, onClose, member, onSubmit }: EditMemb
         </VStack>
 
         {/* Source (Read-only) */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">Source</label>
-          <Input value={member.source} readOnly disabled fullWidth />
-        </VStack>
+        <FormField>
+          <FormField.Label>Source</FormField.Label>
+          <FormField.Control>
+            <Input value={member.source} readOnly disabled fullWidth />
+          </FormField.Control>
+        </FormField>
 
         {/* IP Address (Read-only) */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            IP Address
-          </label>
-          <Input value={member.ipAddress} readOnly disabled fullWidth />
-        </VStack>
+        <FormField>
+          <FormField.Label>IP Address</FormField.Label>
+          <FormField.Control>
+            <Input value={member.ipAddress} readOnly disabled fullWidth />
+          </FormField.Control>
+        </FormField>
 
         {/* Port (Read-only) */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">Port</label>
-          <Input value={String(member.port)} readOnly disabled fullWidth />
-        </VStack>
+        <FormField>
+          <FormField.Label>Port</FormField.Label>
+          <FormField.Control>
+            <Input value={String(member.port)} readOnly disabled fullWidth />
+          </FormField.Control>
+        </FormField>
 
         {/* Weight */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">Weight</label>
-          <Input
-            type="number"
-            value={String(weight)}
-            onChange={(e) => setWeight(parseInt(e.target.value) || 1)}
-            min={1}
-            max={256}
-            fullWidth
-          />
-          <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">1~256</p>
-        </VStack>
+        <FormField required>
+          <FormField.Label>Weight</FormField.Label>
+          <FormField.Control>
+            <Input
+              type="number"
+              value={String(weight)}
+              onChange={(e) => setWeight(parseInt(e.target.value) || 1)}
+              min={1}
+              max={256}
+              fullWidth
+            />
+          </FormField.Control>
+          <FormField.HelperText>1~256</FormField.HelperText>
+        </FormField>
 
         {/* Advanced Options (Collapsible) */}
         <VStack gap={2} className="w-full">
@@ -168,61 +174,61 @@ export function EditMemberDrawer({ isOpen, onClose, member, onSubmit }: EditMemb
           {isAdvancedExpanded && (
             <VStack gap={6} className="w-full pt-4">
               {/* Monitor IP Address */}
-              <VStack gap={2} className="w-full">
-                <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-                  Monitor IP Address
-                </label>
-                <Input
-                  value={monitorIpAddress}
-                  onChange={(e) => setMonitorIpAddress(e.target.value)}
-                  placeholder="e.g. 10.63.0.50"
-                  fullWidth
-                />
-              </VStack>
+              <FormField>
+                <FormField.Label>Monitor IP Address</FormField.Label>
+                <FormField.Control>
+                  <Input
+                    value={monitorIpAddress}
+                    onChange={(e) => setMonitorIpAddress(e.target.value)}
+                    placeholder="e.g. 10.63.0.50"
+                    fullWidth
+                  />
+                </FormField.Control>
+              </FormField>
 
               {/* Monitor Port */}
-              <VStack gap={2} className="w-full">
-                <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-                  Monitor Port
-                </label>
-                <Input
-                  type="number"
-                  value={monitorPort}
-                  onChange={(e) => setMonitorPort(e.target.value)}
-                  placeholder="e.g. 8080"
-                  fullWidth
-                />
-                <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">1~65535</p>
-              </VStack>
+              <FormField>
+                <FormField.Label>Monitor Port</FormField.Label>
+                <FormField.Control>
+                  <Input
+                    type="number"
+                    value={monitorPort}
+                    onChange={(e) => setMonitorPort(e.target.value)}
+                    placeholder="e.g. 8080"
+                    fullWidth
+                  />
+                </FormField.Control>
+                <FormField.HelperText>1~65535</FormField.HelperText>
+              </FormField>
 
               {/* Backup */}
-              <VStack gap={3} className="w-full">
-                <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-                  Backup
-                </label>
-                <HStack gap={2} className="items-center">
-                  <Toggle checked={backup} onChange={(e) => setBackup(e.target.checked)} />
-                  <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                    {backup ? 'On' : 'Off'}
-                  </span>
-                </HStack>
-              </VStack>
+              <FormField>
+                <FormField.Label>Backup</FormField.Label>
+                <FormField.Control>
+                  <HStack gap={2} className="items-center">
+                    <Toggle checked={backup} onChange={(e) => setBackup(e.target.checked)} />
+                    <span className="text-body-md text-[var(--color-text-default)] leading-4">
+                      {backup ? 'On' : 'Off'}
+                    </span>
+                  </HStack>
+                </FormField.Control>
+              </FormField>
 
               {/* Admin State */}
-              <VStack gap={3} className="w-full">
-                <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-                  Admin State
-                </label>
-                <HStack gap={2} className="items-center">
-                  <Toggle
-                    checked={adminStateUp}
-                    onChange={(e) => setAdminStateUp(e.target.checked)}
-                  />
-                  <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                    {adminStateUp ? 'Up' : 'Down'}
-                  </span>
-                </HStack>
-              </VStack>
+              <FormField>
+                <FormField.Label>Admin State</FormField.Label>
+                <FormField.Control>
+                  <HStack gap={2} className="items-center">
+                    <Toggle
+                      checked={adminStateUp}
+                      onChange={(e) => setAdminStateUp(e.target.checked)}
+                    />
+                    <span className="text-body-md text-[var(--color-text-default)] leading-4">
+                      {adminStateUp ? 'Up' : 'Down'}
+                    </span>
+                  </HStack>
+                </FormField.Control>
+              </FormField>
             </VStack>
           )}
         </VStack>

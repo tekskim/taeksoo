@@ -502,7 +502,7 @@ export default function PortDetailPage() {
             onClick={(e) => e.stopPropagation()}
           >
             {row.name}
-            <IconExternalLink size={16} className="text-[var(--color-action-primary)]" />
+            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </Link>
           <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
         </div>
@@ -732,7 +732,7 @@ export default function PortDetailPage() {
                               >
                                 {port.ownedNetwork.name}
                                 <IconExternalLink
-                                  size={16}
+                                  size={12}
                                   className="text-[var(--color-action-primary)]"
                                 />
                               </Link>
@@ -747,7 +747,7 @@ export default function PortDetailPage() {
                               >
                                 {port.subnet.name}
                                 <IconExternalLink
-                                  size={16}
+                                  size={12}
                                   className="text-[var(--color-action-primary)]"
                                 />
                               </Link>
@@ -793,7 +793,7 @@ export default function PortDetailPage() {
                                 >
                                   {port.attachedTo.name}
                                   <IconExternalLink
-                                    size={16}
+                                    size={12}
                                     className="text-[var(--color-action-primary)]"
                                   />
                                 </Link>

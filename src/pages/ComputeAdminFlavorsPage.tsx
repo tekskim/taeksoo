@@ -25,7 +25,7 @@ import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import { IconDotsCircleHorizontal, IconDownload, IconBell } from '@tabler/icons-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 /* ----------------------------------------
    Types
@@ -262,6 +262,7 @@ const filterFields: FilterField[] = [
 ];
 
 export function ComputeAdminFlavorsPage() {
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -542,7 +543,9 @@ export function ComputeAdminFlavorsPage() {
               <div className="flex items-center justify-between h-8">
                 <h1 className="text-heading-h5 text-[var(--color-text-default)]">Flavors</h1>
                 <Link to="/compute-admin/flavors/create">
-                  <Button size="md">Create Flavor</Button>
+                  <Button size="md" onClick={() => navigate('/compute-admin/flavors/create')}>
+                    Create Flavor
+                  </Button>
                 </Link>
               </div>
 

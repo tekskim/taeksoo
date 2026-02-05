@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Drawer, Button, Select } from '@/design-system';
 import { IconGripVertical, IconEye, IconEyeOff, IconRefresh } from '@tabler/icons-react';
 
@@ -79,9 +79,9 @@ export function ViewPreferencesDrawer({
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
 
   // Sync local state when columns prop changes
-  useState(() => {
+  useEffect(() => {
     setLocalColumns(columns);
-  });
+  }, [columns]);
 
   // Reset to default
   const handleResetToDefault = useCallback(() => {

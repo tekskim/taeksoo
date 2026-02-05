@@ -373,11 +373,11 @@ export function CreateClusterPage() {
                       {/* Kubernetes Version */}
                       <FormField required>
                         <FormField.Label>Kubernetes Version</FormField.Label>
-                        <FormField.HelperText>
+                        <FormField.Description>
                           Select the Kubernetes version to apply to the cluster. Choosing the latest
                           supported version is recommended for improved stability and security
                           unless your application requires a specific older version.
-                        </FormField.HelperText>
+                        </FormField.Description>
                         <FormField.Control>
                           <Select
                             options={kubernetesVersionOptions}
@@ -391,10 +391,10 @@ export function CreateClusterPage() {
                       {/* Container Network */}
                       <FormField required>
                         <FormField.Label>Container Network</FormField.Label>
-                        <FormField.HelperText>
+                        <FormField.Description>
                           Select the container network (CNI) plugin that manages internal cluster
                           traffic.
-                        </FormField.HelperText>
+                        </FormField.Description>
                         <FormField.Control>
                           <Select
                             options={containerNetworkOptions}
@@ -430,9 +430,9 @@ export function CreateClusterPage() {
                       {/* External Network */}
                       <FormField required>
                         <FormField.Label>External Network</FormField.Label>
-                        <FormField.HelperText>
+                        <FormField.Description>
                           Select the external network for outbound access.
-                        </FormField.HelperText>
+                        </FormField.Description>
                         <FormField.Control>
                           <VStack gap={3}>
                             <SearchInput
@@ -472,9 +472,9 @@ export function CreateClusterPage() {
                       {/* Tenant Network */}
                       <FormField required>
                         <FormField.Label>Tenant Network</FormField.Label>
-                        <FormField.HelperText>
+                        <FormField.Description>
                           Select a tenant network for your cluster resources.
-                        </FormField.HelperText>
+                        </FormField.Description>
                         <FormField.Control>
                           <VStack gap={3}>
                             <SearchInput
@@ -509,9 +509,9 @@ export function CreateClusterPage() {
                       {/* Subnet */}
                       <FormField required>
                         <FormField.Label>Subnet</FormField.Label>
-                        <FormField.HelperText>
+                        <FormField.Description>
                           You can also enter the private IP address for the kubernetes api server.
-                        </FormField.HelperText>
+                        </FormField.Description>
                         <FormField.Control>
                           <Select
                             options={subnetOptions}
@@ -533,10 +533,10 @@ export function CreateClusterPage() {
                       {/* Node Type */}
                       <FormField required>
                         <FormField.Label>Node Type</FormField.Label>
-                        <FormField.HelperText>
+                        <FormField.Description>
                           Select the type of nodes to use for your cluster. Instance is used for
                           VM-based clusters and BareMetal is used for physical server clusters.
-                        </FormField.HelperText>
+                        </FormField.Description>
                         <FormField.Control>
                           <RadioGroup
                             value={nodeType}
@@ -557,9 +557,9 @@ export function CreateClusterPage() {
                           {/* Image */}
                           <FormField required>
                             <FormField.Label>Image</FormField.Label>
-                            <FormField.HelperText>
+                            <FormField.Description>
                               Select the operating system image to use for the control plane nodes.
-                            </FormField.HelperText>
+                            </FormField.Description>
                             <FormField.Control>
                               <Select
                                 options={imageOptions}
@@ -573,10 +573,10 @@ export function CreateClusterPage() {
                           {/* Flavor */}
                           <FormField required>
                             <FormField.Label>Flavor</FormField.Label>
-                            <FormField.HelperText>
+                            <FormField.Description>
                               Select the Flavor that defines the vCPU, memory, and disk capacity for
                               the control plane nodes.
-                            </FormField.HelperText>
+                            </FormField.Description>
                             <FormField.Control>
                               <VStack gap={3}>
                                 <Tabs
@@ -623,9 +623,9 @@ export function CreateClusterPage() {
                           {/* Node Count */}
                           <FormField required>
                             <FormField.Label>Node Count</FormField.Label>
-                            <FormField.HelperText>
+                            <FormField.Description>
                               Select the number of nodes to create.
-                            </FormField.HelperText>
+                            </FormField.Description>
                             <FormField.Control>
                               <Select
                                 options={[
@@ -643,9 +643,9 @@ export function CreateClusterPage() {
                           {/* etcd Disk */}
                           <FormField required>
                             <FormField.Label>etcd Disk</FormField.Label>
-                            <FormField.HelperText>
+                            <FormField.Description>
                               Select the disk type for storing etcd data.
-                            </FormField.HelperText>
+                            </FormField.Description>
                             <FormField.Control>
                               <RadioGroup
                                 value={etcdDiskType}
@@ -660,9 +660,9 @@ export function CreateClusterPage() {
                           {/* etcd Volume Size */}
                           <FormField required>
                             <FormField.Label>etcd Volume Size</FormField.Label>
-                            <FormField.HelperText>
+                            <FormField.Description>
                               Specify the volume size for the etcd data disk.
-                            </FormField.HelperText>
+                            </FormField.Description>
                             <FormField.Control>
                               <HStack gap={2}>
                                 <NumberInput
@@ -690,9 +690,9 @@ export function CreateClusterPage() {
                           {/* Image */}
                           <FormField required>
                             <FormField.Label>Image</FormField.Label>
-                            <FormField.HelperText>
+                            <FormField.Description>
                               Select the operating system image to use for the worker nodes.
-                            </FormField.HelperText>
+                            </FormField.Description>
                             <FormField.Control>
                               <Select
                                 options={imageOptions}
@@ -706,10 +706,10 @@ export function CreateClusterPage() {
                           {/* Flavor */}
                           <FormField required>
                             <FormField.Label>Flavor</FormField.Label>
-                            <FormField.HelperText>
+                            <FormField.Description>
                               Select the Flavor that defines the vCPU, memory, and disk capacity for
                               the worker nodes.
-                            </FormField.HelperText>
+                            </FormField.Description>
                             <FormField.Control>
                               <VStack gap={3}>
                                 <Tabs
@@ -756,9 +756,9 @@ export function CreateClusterPage() {
                           {/* Node Count */}
                           <FormField required>
                             <FormField.Label>Node Count</FormField.Label>
-                            <FormField.HelperText>
+                            <FormField.Description>
                               Select the number of worker nodes to create.
-                            </FormField.HelperText>
+                            </FormField.Description>
                             <FormField.Control>
                               <Select
                                 options={[

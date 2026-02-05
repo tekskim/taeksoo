@@ -1277,51 +1277,53 @@ export default function CreateLoadBalancerPage() {
                         {/* Provider */}
                         <FormField required error={!!providerError}>
                           <FormField.Label>Provider</FormField.Label>
-                          <FormField.HelperText>
+                          <FormField.Description>
                             Choose the provider to use for the load balancer.
-                          </FormField.HelperText>
-                          <VStack gap={1} className="mt-3">
-                            <VStack gap={3}>
-                              <HStack gap={1.5} align="center">
-                                <Radio
-                                  value="ovn"
-                                  checked={provider === 'ovn'}
-                                  onChange={() => handleProviderChange('ovn')}
-                                  label="OVN"
-                                />
-                                <IconInfoCircle
-                                  size={16}
-                                  className="text-[var(--color-text-subtle)]"
-                                />
-                              </HStack>
-                              <HStack gap={1.5} align="center">
-                                <Radio
-                                  value="amphora"
-                                  checked={provider === 'amphora'}
-                                  onChange={() => handleProviderChange('amphora')}
-                                  label="Amphora"
-                                />
-                                <IconInfoCircle
-                                  size={16}
-                                  className="text-[var(--color-text-subtle)]"
-                                />
-                              </HStack>
+                          </FormField.Description>
+                          <FormField.Control>
+                            <VStack gap={1}>
+                              <VStack gap={3}>
+                                <HStack gap={1.5} align="center">
+                                  <Radio
+                                    value="ovn"
+                                    checked={provider === 'ovn'}
+                                    onChange={() => handleProviderChange('ovn')}
+                                    label="OVN"
+                                  />
+                                  <IconInfoCircle
+                                    size={16}
+                                    className="text-[var(--color-text-subtle)]"
+                                  />
+                                </HStack>
+                                <HStack gap={1.5} align="center">
+                                  <Radio
+                                    value="amphora"
+                                    checked={provider === 'amphora'}
+                                    onChange={() => handleProviderChange('amphora')}
+                                    label="Amphora"
+                                  />
+                                  <IconInfoCircle
+                                    size={16}
+                                    className="text-[var(--color-text-subtle)]"
+                                  />
+                                </HStack>
+                              </VStack>
+                              {providerError && (
+                                <span className="text-body-sm text-[var(--color-state-danger)]">
+                                  {providerError}
+                                </span>
+                              )}
                             </VStack>
-                            {providerError && (
-                              <span className="text-body-sm text-[var(--color-state-danger)]">
-                                {providerError}
-                              </span>
-                            )}
-                          </VStack>
+                          </FormField.Control>
                         </FormField>
 
                         {/* Owned Network */}
                         <VStack gap={4}>
                           <FormField required>
                             <FormField.Label>Owned network</FormField.Label>
-                            <FormField.HelperText>
+                            <FormField.Description>
                               Select the network to attach the load balancer to.
-                            </FormField.HelperText>
+                            </FormField.Description>
                           </FormField>
 
                           {/* Network Tabs */}
@@ -1401,77 +1403,79 @@ export default function CreateLoadBalancerPage() {
                         {/* VIP Address */}
                         <FormField required>
                           <FormField.Label>VIP Address</FormField.Label>
-                          <FormField.HelperText>
+                          <FormField.Description>
                             Select the subnet for the VIP. You can assign an IP automatically or
                             manually enter one within the subnet range.
-                          </FormField.HelperText>
-                          <div className="mt-3 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md px-4 py-2 flex items-center gap-2">
-                            <HStack gap={2} align="center">
-                              <span className="text-label-md text-[var(--color-text-default)]">
-                                Subnet
-                              </span>
-                              <Select
-                                options={[
-                                  ...(selectedNetworkDetails
-                                    ? [
-                                        {
-                                          value: selectedNetworkDetails.subnetCidr,
-                                          label: selectedNetworkDetails.subnetCidr,
-                                        },
-                                      ]
-                                    : []),
-                                  { value: '10.0.0.0/24', label: '10.0.0.0/24' },
-                                  { value: '10.0.1.0/24', label: '10.0.1.0/24' },
-                                ]}
-                                value={subnet}
-                                onChange={setSubnet}
-                                placeholder="Select"
-                                width="sm"
-                              />
-                            </HStack>
-                            <HStack gap={2} align="center">
-                              <span className="text-label-lg text-[var(--color-text-default)]">
-                                VIP
-                              </span>
-                              <Select
-                                options={[
-                                  { value: 'auto', label: 'Auto-assign' },
-                                  { value: 'manual', label: 'Manual' },
-                                ]}
-                                value={vipMode}
-                                onChange={(value) => setVipMode(value as 'auto' | 'manual')}
-                                placeholder="Auto-assign"
-                                width="sm"
-                              />
-                              {vipMode === 'manual' && (
-                                <Input
-                                  placeholder="Enter VIP address"
-                                  value={manualVip}
-                                  onChange={(e) => setManualVip(e.target.value)}
-                                  style={{ width: '160px' }}
+                          </FormField.Description>
+                          <FormField.Control>
+                            <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md px-4 py-2 flex items-center gap-2">
+                              <HStack gap={2} align="center">
+                                <span className="text-label-md text-[var(--color-text-default)]">
+                                  Subnet
+                                </span>
+                                <Select
+                                  options={[
+                                    ...(selectedNetworkDetails
+                                      ? [
+                                          {
+                                            value: selectedNetworkDetails.subnetCidr,
+                                            label: selectedNetworkDetails.subnetCidr,
+                                          },
+                                        ]
+                                      : []),
+                                    { value: '10.0.0.0/24', label: '10.0.0.0/24' },
+                                    { value: '10.0.1.0/24', label: '10.0.1.0/24' },
+                                  ]}
+                                  value={subnet}
+                                  onChange={setSubnet}
+                                  placeholder="Select"
+                                  width="sm"
                                 />
-                              )}
-                              <span className="text-body-sm text-[var(--color-text-subtle)]">
-                                10.62.0.31 - 10.62.0.77
-                              </span>
-                            </HStack>
-                          </div>
+                              </HStack>
+                              <HStack gap={2} align="center">
+                                <span className="text-label-lg text-[var(--color-text-default)]">
+                                  VIP
+                                </span>
+                                <Select
+                                  options={[
+                                    { value: 'auto', label: 'Auto-assign' },
+                                    { value: 'manual', label: 'Manual' },
+                                  ]}
+                                  value={vipMode}
+                                  onChange={(value) => setVipMode(value as 'auto' | 'manual')}
+                                  placeholder="Auto-assign"
+                                  width="sm"
+                                />
+                                {vipMode === 'manual' && (
+                                  <Input
+                                    placeholder="Enter VIP address"
+                                    value={manualVip}
+                                    onChange={(e) => setManualVip(e.target.value)}
+                                    style={{ width: '160px' }}
+                                  />
+                                )}
+                                <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                  10.62.0.31 - 10.62.0.77
+                                </span>
+                              </HStack>
+                            </div>
+                          </FormField.Control>
                         </FormField>
 
                         {/* Load Balancer Admin State */}
                         <FormField>
                           <FormField.Label>Load balancer admin state</FormField.Label>
-                          <FormField.HelperText>
+                          <FormField.Description>
                             Set the administrative state of the load balancer. 'UP' enables traffic
                             handling, while 'DOWN' disables it.
-                          </FormField.HelperText>
-                          <div className="mt-2">
+                          </FormField.Description>
+                          <FormField.Control>
                             <Toggle
                               checked={adminStateUp}
                               onChange={(e) => setAdminStateUp(e.target.checked)}
                               label={adminStateUp ? 'Up' : 'Down'}
                             />
-                          </div>
+                          </FormField.Control>
                         </FormField>
 
                         {/* Next Button */}
@@ -1576,9 +1580,9 @@ export default function CreateLoadBalancerPage() {
                         {/* Listener protocol */}
                         <FormField required>
                           <FormField.Label>Listener protocol</FormField.Label>
-                          <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
+                          <FormField.Description>
                             Select the protocol used to handle client requests.
-                          </p>
+                          </FormField.Description>
                           <FormField.Control>
                             <Select
                               value={listenerProtocol}
@@ -1607,21 +1611,23 @@ export default function CreateLoadBalancerPage() {
                         {listenerProtocol === 'HTTP' && (
                           <FormField required>
                             <FormField.Label>SSL Parsing Method</FormField.Label>
-                            <p className="text-body-md text-[var(--color-text-subtle)] mb-3">
+                            <FormField.Description>
                               Defines how SSL information is parsed from incoming HTTPS requests.
-                            </p>
-                            <VStack gap={3} align="start">
-                              <Radio
-                                label="One-way authentication"
-                                checked={sslParsingMethod === 'one-way'}
-                                onChange={() => setSslParsingMethod('one-way')}
-                              />
-                              <Radio
-                                label="Two-way authentication"
-                                checked={sslParsingMethod === 'two-way'}
-                                onChange={() => setSslParsingMethod('two-way')}
-                              />
-                            </VStack>
+                            </FormField.Description>
+                            <FormField.Control>
+                              <VStack gap={3} align="start">
+                                <Radio
+                                  label="One-way authentication"
+                                  checked={sslParsingMethod === 'one-way'}
+                                  onChange={() => setSslParsingMethod('one-way')}
+                                />
+                                <Radio
+                                  label="Two-way authentication"
+                                  checked={sslParsingMethod === 'two-way'}
+                                  onChange={() => setSslParsingMethod('two-way')}
+                                />
+                              </VStack>
+                            </FormField.Control>
                           </FormField>
                         )}
 
@@ -1630,10 +1636,10 @@ export default function CreateLoadBalancerPage() {
                           <VStack gap={4}>
                             <FormField required>
                               <FormField.Label>Server Certificates</FormField.Label>
-                              <p className="text-body-md text-[var(--color-text-subtle)]">
+                              <FormField.Description>
                                 Select a server certificate for the listener to handle HTTPS
                                 traffic.
-                              </p>
+                              </FormField.Description>
                             </FormField>
 
                             {/* Search */}
@@ -1685,9 +1691,9 @@ export default function CreateLoadBalancerPage() {
                           <VStack gap={4} align="stretch">
                             <FormField required>
                               <FormField.Label>CA Certificates</FormField.Label>
-                              <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
+                              <FormField.Description>
                                 Select a CA certificate to validate client certificates.
-                              </p>
+                              </FormField.Description>
                             </FormField>
 
                             {/* Search */}
@@ -1738,16 +1744,18 @@ export default function CreateLoadBalancerPage() {
                         {listenerProtocol === 'HTTP' && (
                           <FormField>
                             <FormField.Label>SNI</FormField.Label>
-                            <p className="text-body-md text-[var(--color-text-subtle)] mb-2">
+                            <FormField.Description>
                               Add more certificates here to host multiple, different HTTPS websites
                               on this single listener.
-                            </p>
-                            <HStack gap={2} align="center">
-                              <Toggle checked={sniEnabled} onChange={setSniEnabled} />
-                              <span className="text-body-md text-[var(--color-text-default)]">
-                                {sniEnabled ? 'On' : 'Off'}
-                              </span>
-                            </HStack>
+                            </FormField.Description>
+                            <FormField.Control>
+                              <HStack gap={2} align="center">
+                                <Toggle checked={sniEnabled} onChange={setSniEnabled} />
+                                <span className="text-body-md text-[var(--color-text-default)]">
+                                  {sniEnabled ? 'On' : 'Off'}
+                                </span>
+                              </HStack>
+                            </FormField.Control>
                           </FormField>
                         )}
 

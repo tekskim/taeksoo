@@ -27,6 +27,7 @@ import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPrefe
 import { AssociateFloatingIPDrawer } from '@/components/AssociateFloatingIPDrawer';
 import { DisassociateFloatingIPDrawer } from '@/components/DisassociateFloatingIPDrawer';
 import { EditFloatingIPDrawer } from '@/components/EditFloatingIPDrawer';
+import { AllocateFloatingIPDrawer } from '@/components/AllocateFloatingIPDrawer';
 import {
   IconDotsCircleHorizontal,
   IconTrash,
@@ -215,6 +216,9 @@ export function FloatingIPsPage() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [floatingIPToDelete, setFloatingIPToDelete] = useState<FloatingIP | null>(null);
 
+  // Allocate floating IP drawer state
+  const [isAllocateDrawerOpen, setIsAllocateDrawerOpen] = useState(false);
+
   // View preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -357,7 +361,7 @@ export function FloatingIPsPage() {
                 >
                   <span className="truncate">{row.associatedTo}</span>
                   <IconExternalLink
-                    size={16}
+                    size={12}
                     className="flex-shrink-0 text-[var(--color-action-primary)]"
                   />
                 </Link>
@@ -399,7 +403,7 @@ export function FloatingIPsPage() {
             >
               <span className="truncate">{row.network}</span>
               <IconExternalLink
-                size={16}
+                size={12}
                 className="flex-shrink-0 text-[var(--color-action-primary)]"
               />
             </Link>
@@ -510,7 +514,7 @@ export function FloatingIPsPage() {
               {/* Page Header */}
               <div className="flex justify-between items-center h-8 w-full">
                 <h1 className="text-heading-h5 text-[var(--color-text-default)]">Floating IPs</h1>
-                <Button variant="primary" size="md">
+                <Button variant="primary" size="md" onClick={() => setIsAllocateDrawerOpen(true)}>
                   Allocate Floating IP
                 </Button>
               </div>
@@ -627,6 +631,12 @@ export function FloatingIPsPage() {
           id: selectedFIPForDrawer?.id || '',
           ipAddress: selectedFIPForDrawer?.floatingIp || '',
         }}
+      />
+
+      {/* Allocate Floating IP Drawer */}
+      <AllocateFloatingIPDrawer
+        isOpen={isAllocateDrawerOpen}
+        onClose={() => setIsAllocateDrawerOpen(false)}
       />
     </div>
   );

@@ -136,137 +136,127 @@ export function CreateHealthMonitorDrawer({
         </VStack>
 
         {/* Pool Name (Read-only) */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Pool name
-          </label>
-          <Input value={pool.name} readOnly disabled fullWidth />
-        </VStack>
+        <FormField>
+          <FormField.Label>Pool name</FormField.Label>
+          <FormField.Control>
+            <Input value={pool.name} readOnly disabled fullWidth />
+          </FormField.Control>
+        </FormField>
 
         {/* Health Monitor Name */}
-        <VStack gap={2} className="w-full">
-          <HStack gap={2} className="items-center">
-            <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-              Health Monitor Name
-            </label>
+        <FormField>
+          <FormField.Label>
+            Health Monitor Name{' '}
             <span className="text-body-md text-[var(--color-text-subtle)]">(Optional)</span>
-          </HStack>
-          <Input
-            value={healthMonitorName}
-            onChange={(e) => setHealthMonitorName(e.target.value)}
-            placeholder="e.g. hm-pool-http"
-            fullWidth
-          />
-          <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
+          </FormField.Label>
+          <FormField.Control>
+            <Input
+              value={healthMonitorName}
+              onChange={(e) => setHealthMonitorName(e.target.value)}
+              placeholder="e.g. hm-pool-http"
+              fullWidth
+            />
+          </FormField.Control>
+          <FormField.HelperText>
             Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-          </p>
-        </VStack>
+          </FormField.HelperText>
+        </FormField>
 
         {/* Type */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">Type</label>
-          <Select
-            value={monitorType}
-            onChange={(value) => setMonitorType(value as HealthMonitorType)}
-            options={healthMonitorTypeOptions}
-            fullWidth
-          />
-        </VStack>
+        <FormField>
+          <FormField.Label>Type</FormField.Label>
+          <FormField.Control>
+            <Select
+              value={monitorType}
+              onChange={(value) => setMonitorType(value as HealthMonitorType)}
+              options={healthMonitorTypeOptions}
+              fullWidth
+            />
+          </FormField.Control>
+        </FormField>
 
         {/* Interval (sec) */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Interval (sec)
-          </label>
-          <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
-            Time between consecutive health checks.
-          </p>
-          <Input
-            type="number"
-            value={String(interval)}
-            onChange={(e) => setInterval(parseInt(e.target.value) || 1)}
-            min={1}
-            max={3600}
-            fullWidth
-            error={hasAttemptedSubmit && !isIntervalValid}
-          />
+        <FormField error={hasAttemptedSubmit && !isIntervalValid}>
+          <FormField.Label>Interval (sec)</FormField.Label>
+          <FormField.Description>Time between consecutive health checks.</FormField.Description>
+          <FormField.Control>
+            <Input
+              type="number"
+              value={String(interval)}
+              onChange={(e) => setInterval(parseInt(e.target.value) || 1)}
+              min={1}
+              max={3600}
+              fullWidth
+              error={hasAttemptedSubmit && !isIntervalValid}
+            />
+          </FormField.Control>
           {hasAttemptedSubmit && !isIntervalValid ? (
-            <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
-              Interval must be between 1-3600
-            </p>
+            <FormField.ErrorMessage>Interval must be between 1-3600</FormField.ErrorMessage>
           ) : (
-            <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
-              1 ~ 3600; Timeout &lt; Delay
-            </p>
+            <FormField.HelperText>1 ~ 3600; Timeout &lt; Delay</FormField.HelperText>
           )}
-        </VStack>
+        </FormField>
 
         {/* Timeout (sec) */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Timeout (sec)
-          </label>
-          <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
-            Maximum time to wait for response
-          </p>
-          <Input
-            type="number"
-            value={String(timeout)}
-            onChange={(e) => setTimeout(parseInt(e.target.value) || 1)}
-            min={1}
-            max={3599}
-            fullWidth
-            error={hasAttemptedSubmit && !isTimeoutValid}
-          />
+        <FormField error={hasAttemptedSubmit && !isTimeoutValid}>
+          <FormField.Label>Timeout (sec)</FormField.Label>
+          <FormField.Description>Maximum time to wait for response</FormField.Description>
+          <FormField.Control>
+            <Input
+              type="number"
+              value={String(timeout)}
+              onChange={(e) => setTimeout(parseInt(e.target.value) || 1)}
+              min={1}
+              max={3599}
+              fullWidth
+              error={hasAttemptedSubmit && !isTimeoutValid}
+            />
+          </FormField.Control>
           {hasAttemptedSubmit && !isTimeoutValid ? (
-            <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
+            <FormField.ErrorMessage>
               Timeout must be between 1-3599 and less than Interval
-            </p>
+            </FormField.ErrorMessage>
           ) : (
-            <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
-              1 ~ 3599; Timeout &lt; Delay
-            </p>
+            <FormField.HelperText>1 ~ 3599; Timeout &lt; Delay</FormField.HelperText>
           )}
-        </VStack>
+        </FormField>
 
         {/* Max Retries */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Max Retries
-          </label>
-          <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
+        <FormField error={hasAttemptedSubmit && !isMaxRetriesValid}>
+          <FormField.Label>Max Retries</FormField.Label>
+          <FormField.Description>
             Number of failed attempts before marking member OFFLINE.
-          </p>
-          <Input
-            type="number"
-            value={String(maxRetries)}
-            onChange={(e) => setMaxRetries(parseInt(e.target.value) || 1)}
-            min={1}
-            max={10}
-            fullWidth
-            error={hasAttemptedSubmit && !isMaxRetriesValid}
-          />
+          </FormField.Description>
+          <FormField.Control>
+            <Input
+              type="number"
+              value={String(maxRetries)}
+              onChange={(e) => setMaxRetries(parseInt(e.target.value) || 1)}
+              min={1}
+              max={10}
+              fullWidth
+              error={hasAttemptedSubmit && !isMaxRetriesValid}
+            />
+          </FormField.Control>
           {hasAttemptedSubmit && !isMaxRetriesValid ? (
-            <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
-              Max Retries must be between 1-10
-            </p>
+            <FormField.ErrorMessage>Max Retries must be between 1-10</FormField.ErrorMessage>
           ) : (
-            <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">1 ~ 10</p>
+            <FormField.HelperText>1 ~ 10</FormField.HelperText>
           )}
-        </VStack>
+        </FormField>
 
         {/* Admin State */}
-        <VStack gap={3} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Admin State
-          </label>
-          <HStack gap={2} className="items-center">
-            <Toggle checked={adminStateUp} onChange={(e) => setAdminStateUp(e.target.checked)} />
-            <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              {adminStateUp ? 'Up' : 'Down'}
-            </span>
-          </HStack>
-        </VStack>
+        <FormField>
+          <FormField.Label>Admin State</FormField.Label>
+          <FormField.Control>
+            <HStack gap={2} className="items-center">
+              <Toggle checked={adminStateUp} onChange={(e) => setAdminStateUp(e.target.checked)} />
+              <span className="text-body-md text-[var(--color-text-default)] leading-4">
+                {adminStateUp ? 'Up' : 'Down'}
+              </span>
+            </HStack>
+          </FormField.Control>
+        </FormField>
       </VStack>
     </Drawer>
   );
