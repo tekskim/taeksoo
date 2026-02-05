@@ -75,8 +75,8 @@ import { Button } from '@thaki/tds';
     },
     size: {
       control: 'select',
-      options: ['sm', 'md', 'lg'],
-      description: '버튼 크기 (sm: 28px, md: 32px, lg: 36px)',
+      options: ['xs', 'sm', 'md', 'lg'],
+      description: '버튼 크기 (xs: 24px, sm: 28px, md: 32px, lg: 40px)',
       table: {
         type: { summary: 'string' },
         defaultValue: { summary: 'md' },
