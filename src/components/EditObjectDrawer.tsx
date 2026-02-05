@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input } from '@/design-system';
+import { Drawer, Button, Input, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 import { IconX } from '@tabler/icons-react';
 
@@ -113,17 +113,17 @@ export function EditObjectDrawer({
 
         <VStack gap={4} className="w-full">
           {/* Folder Name Input */}
-          <VStack gap={2} className="w-full">
-            <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-              Folder Name
-            </label>
-            <Input
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="{Current Folder Name}"
-              fullWidth
-            />
-          </VStack>
+          <FormField required>
+            <FormField.Label>Folder Name</FormField.Label>
+            <FormField.Control>
+              <Input
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="{Current Folder Name}"
+                fullWidth
+              />
+            </FormField.Control>
+          </FormField>
 
           {/* Tags Section */}
           <VStack gap={1} className="w-full">

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input } from '@/design-system';
+import { Drawer, Button, Input, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 
 /* ----------------------------------------
@@ -115,42 +115,38 @@ export function CreateStaticRouteDrawer({
         <RouterInfoBox router={router} />
 
         {/* Destination CIDR Input */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Destination CIDR
-          </label>
-          <Input
-            value={destinationCidr}
-            onChange={(e) => setDestinationCidr(e.target.value)}
-            placeholder="e.g., 10.7.61.0/24"
-            fullWidth
-            error={hasAttemptedSubmit && !destinationCidr.trim()}
-          />
+        <FormField required error={hasAttemptedSubmit && !destinationCidr.trim()}>
+          <FormField.Label>Destination CIDR</FormField.Label>
+          <FormField.Control>
+            <Input
+              value={destinationCidr}
+              onChange={(e) => setDestinationCidr(e.target.value)}
+              placeholder="e.g., 10.7.61.0/24"
+              fullWidth
+              error={hasAttemptedSubmit && !destinationCidr.trim()}
+            />
+          </FormField.Control>
           {hasAttemptedSubmit && !destinationCidr.trim() && (
-            <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
-              Destination CIDR is required
-            </p>
+            <FormField.ErrorMessage>Destination CIDR is required</FormField.ErrorMessage>
           )}
-        </VStack>
+        </FormField>
 
         {/* Next hop Input */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Next hop
-          </label>
-          <Input
-            value={nextHop}
-            onChange={(e) => setNextHop(e.target.value)}
-            placeholder="e.g., 192.168.10.50"
-            fullWidth
-            error={hasAttemptedSubmit && !nextHop.trim()}
-          />
+        <FormField required error={hasAttemptedSubmit && !nextHop.trim()}>
+          <FormField.Label>Next hop</FormField.Label>
+          <FormField.Control>
+            <Input
+              value={nextHop}
+              onChange={(e) => setNextHop(e.target.value)}
+              placeholder="e.g., 192.168.10.50"
+              fullWidth
+              error={hasAttemptedSubmit && !nextHop.trim()}
+            />
+          </FormField.Control>
           {hasAttemptedSubmit && !nextHop.trim() && (
-            <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
-              Next hop is required
-            </p>
+            <FormField.ErrorMessage>Next hop is required</FormField.ErrorMessage>
           )}
-        </VStack>
+        </FormField>
       </VStack>
     </Drawer>
   );

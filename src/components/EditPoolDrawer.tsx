@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input, Select, Toggle, Textarea } from '@/design-system';
+import { Drawer, Button, Input, Select, Toggle, Textarea, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 import { IconChevronDown, IconChevronRight } from '@tabler/icons-react';
 
@@ -154,61 +154,62 @@ export function EditPoolDrawer({ isOpen, onClose, pool, onSubmit }: EditPoolDraw
         </VStack>
 
         {/* Pool Name Input */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Pool name
-          </label>
-          <Input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="e.g. pool-http"
-            fullWidth
-          />
-          <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
+        <FormField required>
+          <FormField.Label>Pool name</FormField.Label>
+          <FormField.Control>
+            <Input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="e.g. pool-http"
+              fullWidth
+            />
+          </FormField.Control>
+          <FormField.HelperText>
             Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-          </p>
-        </VStack>
+          </FormField.HelperText>
+        </FormField>
 
         {/* Description Input */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Description (optional)
-          </label>
-          <Input
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="e.g. For distributing traffic to backend web servers"
-            fullWidth
-          />
-        </VStack>
+        <FormField>
+          <FormField.Label>
+            Description{' '}
+            <span className="text-body-md text-[var(--color-text-subtle)]">(optional)</span>
+          </FormField.Label>
+          <FormField.Control>
+            <Input
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="e.g. For distributing traffic to backend web servers"
+              fullWidth
+            />
+          </FormField.Control>
+        </FormField>
 
         {/* Algorithm Select */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Algorithm
-          </label>
-          <Select
-            value={algorithm}
-            onChange={(value) => setAlgorithm(value as AlgorithmType)}
-            options={algorithmOptions}
-            fullWidth
-          />
-          <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
-            {algorithmDescriptions[algorithm]}
-          </p>
-        </VStack>
+        <FormField>
+          <FormField.Label>Algorithm</FormField.Label>
+          <FormField.Control>
+            <Select
+              value={algorithm}
+              onChange={(value) => setAlgorithm(value as AlgorithmType)}
+              options={algorithmOptions}
+              fullWidth
+            />
+          </FormField.Control>
+          <FormField.HelperText>{algorithmDescriptions[algorithm]}</FormField.HelperText>
+        </FormField>
 
         {/* Protocol (Read-only) */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Protocol
-          </label>
-          <div className="w-full px-[10px] py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-md">
-            <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              {pool.protocol}
-            </span>
-          </div>
-        </VStack>
+        <FormField>
+          <FormField.Label>Protocol</FormField.Label>
+          <FormField.Control>
+            <div className="w-full px-[10px] py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-md">
+              <span className="text-body-md text-[var(--color-text-default)] leading-4">
+                {pool.protocol}
+              </span>
+            </div>
+          </FormField.Control>
+        </FormField>
 
         {/* Session Persistence (Collapsible) */}
         <VStack gap={2} className="w-full">
@@ -235,63 +236,67 @@ export function EditPoolDrawer({ isOpen, onClose, pool, onSubmit }: EditPoolDraw
               />
 
               {sessionPersistenceType === 'APP_COOKIE' && (
-                <>
-                  <Input
-                    value={cookieName}
-                    onChange={(e) => setCookieName(e.target.value)}
-                    placeholder="Input Cookie Name"
-                    fullWidth
-                  />
-                  <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
+                <FormField>
+                  <FormField.Label>Cookie Name</FormField.Label>
+                  <FormField.Control>
+                    <Input
+                      value={cookieName}
+                      onChange={(e) => setCookieName(e.target.value)}
+                      placeholder="Input Cookie Name"
+                      fullWidth
+                    />
+                  </FormField.Control>
+                  <FormField.HelperText>
                     Allowed: 1–64 characters; letters, numbers, "-", "_", "."; No spaces
-                  </p>
-                </>
+                  </FormField.HelperText>
+                </FormField>
               )}
             </VStack>
           )}
         </VStack>
 
         {/* Backend TLS */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Backend TLS
-          </label>
-          <HStack gap={2} className="items-center">
-            <Toggle checked={tlsEnabled} onChange={(e) => setTlsEnabled(e.target.checked)} />
-            <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              {tlsEnabled ? 'On' : 'Off'}
-            </span>
-          </HStack>
-
+        <FormField>
+          <FormField.Label>Backend TLS</FormField.Label>
+          <FormField.Control>
+            <HStack gap={2} className="items-center">
+              <Toggle checked={tlsEnabled} onChange={(e) => setTlsEnabled(e.target.checked)} />
+              <span className="text-body-md text-[var(--color-text-default)] leading-4">
+                {tlsEnabled ? 'On' : 'Off'}
+              </span>
+            </HStack>
+          </FormField.Control>
           {tlsEnabled && (
             <>
-              <Textarea
-                value={tlsCiphers}
-                onChange={(e) => setTlsCiphers(e.target.value)}
-                placeholder="Input Custom Cipher String (Leave blank to use safe defaults)"
-                rows={3}
-                fullWidth
-              />
-              <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
+              <FormField.Control>
+                <Textarea
+                  value={tlsCiphers}
+                  onChange={(e) => setTlsCiphers(e.target.value)}
+                  placeholder="Input Custom Cipher String (Leave blank to use safe defaults)"
+                  rows={3}
+                  fullWidth
+                />
+              </FormField.Control>
+              <FormField.HelperText>
                 Use a colon-separated list of cipher names (e.g., CIPHER1:CIPHER2). Spaces and
                 special characters are not allowed.
-              </p>
+              </FormField.HelperText>
             </>
           )}
-        </VStack>
+        </FormField>
 
         {/* Admin State */}
-        <VStack gap={3} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Admin State
-          </label>
-          <HStack gap={2} className="items-center">
-            <Toggle checked={adminStateUp} onChange={(e) => setAdminStateUp(e.target.checked)} />
-            <span className="text-body-md text-[var(--color-text-default)] leading-4">
-              {adminStateUp ? 'Up' : 'Down'}
-            </span>
-          </HStack>
-        </VStack>
+        <FormField>
+          <FormField.Label>Admin State</FormField.Label>
+          <FormField.Control>
+            <HStack gap={2} className="items-center">
+              <Toggle checked={adminStateUp} onChange={(e) => setAdminStateUp(e.target.checked)} />
+              <span className="text-body-md text-[var(--color-text-default)] leading-4">
+                {adminStateUp ? 'Up' : 'Down'}
+              </span>
+            </HStack>
+          </FormField.Control>
+        </FormField>
       </VStack>
     </Drawer>
   );

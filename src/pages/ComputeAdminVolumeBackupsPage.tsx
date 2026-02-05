@@ -23,6 +23,7 @@ import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import { CreateVolumeFromBackupDrawer } from '@/components/CreateVolumeFromBackupDrawer';
+import { CreateVolumeBackupDrawer } from '@/components/CreateVolumeBackupDrawer';
 import { EditVolumeBackupDrawer } from '@/components/EditVolumeBackupDrawer';
 import { IconDotsCircleHorizontal, IconTrash, IconDownload, IconBell } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
@@ -228,6 +229,9 @@ export function ComputeAdminVolumeBackupsPage() {
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [backupToDelete, setBackupToDelete] = useState<VolumeBackup | null>(null);
+
+  // Create backup drawer state
+  const [isCreateBackupDrawerOpen, setIsCreateBackupDrawerOpen] = useState(false);
 
   // View Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
@@ -509,7 +513,9 @@ export function ComputeAdminVolumeBackupsPage() {
               {/* Page Header */}
               <div className="flex items-center justify-between h-8">
                 <h1 className="text-heading-h5 text-[var(--color-text-default)]">Volume backups</h1>
-                <Button size="md">Create Backup</Button>
+                <Button size="md" onClick={() => setIsCreateBackupDrawerOpen(true)}>
+                  Create Backup
+                </Button>
               </div>
 
               {/* List Toolbar */}
@@ -622,6 +628,13 @@ export function ComputeAdminVolumeBackupsPage() {
               }
             : null
         }
+      />
+
+      {/* Create Backup Drawer */}
+      <CreateVolumeBackupDrawer
+        isOpen={isCreateBackupDrawerOpen}
+        onClose={() => setIsCreateBackupDrawerOpen(false)}
+        volume={null}
       />
     </div>
   );

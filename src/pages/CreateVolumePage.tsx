@@ -489,8 +489,34 @@ export function CreateVolumePage() {
     configuration: getSectionStatus('configuration'),
   };
 
-  // Check if create button should be disabled
-  const isCreateDisabled = !validateBasicInfo() || !validateSource() || !validateConfiguration();
+  // Check if create button should be disabled (without triggering setState)
+  const isCreateDisabled = useMemo(() => {
+    // Basic info validation
+    const isBasicInfoValid = volumeName.trim() !== '' && availabilityZone !== '';
+
+    // Source validation
+    let isSourceValid = true;
+    if (sourceType === 'image' && selectedImage.length === 0) {
+      isSourceValid = false;
+    } else if (sourceType === 'snapshot' && selectedSnapshot.length === 0) {
+      isSourceValid = false;
+    }
+
+    // Configuration validation
+    let isConfigurationValid = true;
+    if (sourceType !== 'snapshot' && selectedVolumeType.length === 0) {
+      isConfigurationValid = false;
+    }
+
+    return !isBasicInfoValid || !isSourceValid || !isConfigurationValid;
+  }, [
+    volumeName,
+    availabilityZone,
+    sourceType,
+    selectedImage,
+    selectedSnapshot,
+    selectedVolumeType,
+  ]);
 
   // Image table columns
   const imageColumns: TableColumn<ImageRow>[] = [
@@ -658,7 +684,7 @@ export function CreateVolumePage() {
                   {/* Basic information Section */}
                   <SectionCard>
                     <SectionCard.Header title={SECTION_LABELS['basic-info']} />
-                    <SectionCard.Content gap={6} className="pt-2">
+                    <SectionCard.Content showDividers={false} gap={6} className="pt-2">
                       <FormField required error={!!volumeNameError}>
                         <FormField.Label>Volume name</FormField.Label>
                         <FormField.Control>
@@ -690,9 +716,9 @@ export function CreateVolumePage() {
 
                       <FormField required error={!!azError}>
                         <FormField.Label>AZ (Availability zone)</FormField.Label>
-                        <FormField.HelperText>
+                        <FormField.Description>
                           Select the availability zone for the volume.
-                        </FormField.HelperText>
+                        </FormField.Description>
                         <FormField.Control>
                           <VStack gap={1}>
                             <Select
@@ -737,25 +763,27 @@ export function CreateVolumePage() {
                   {/* Source Section */}
                   <SectionCard>
                     <SectionCard.Header title={SECTION_LABELS['source']} />
-                    <SectionCard.Content gap={6} className="pt-2">
+                    <SectionCard.Content showDividers={false} gap={6} className="pt-2">
                       <FormField required>
                         <FormField.Label>Volume source type</FormField.Label>
-                        <FormField.HelperText>
+                        <FormField.Description>
                           Select the source for the new volume. You can create a blank volume or
                           generate a volume from an image or an existing volume.
-                        </FormField.HelperText>
-                        <RadioGroup
-                          value={sourceType}
-                          onChange={(value) => {
-                            setSourceType(value as SourceType);
-                            setSelectedImage([]);
-                            setSelectedSnapshot([]);
-                          }}
-                        >
-                          <Radio value="blank" label="Blank volume" />
-                          <Radio value="image" label="Image" />
-                          <Radio value="snapshot" label="Volume snapshot" />
-                        </RadioGroup>
+                        </FormField.Description>
+                        <FormField.Control>
+                          <RadioGroup
+                            value={sourceType}
+                            onChange={(value) => {
+                              setSourceType(value as SourceType);
+                              setSelectedImage([]);
+                              setSelectedSnapshot([]);
+                            }}
+                          >
+                            <Radio value="blank" label="Blank volume" />
+                            <Radio value="image" label="Image" />
+                            <Radio value="snapshot" label="Volume snapshot" />
+                          </RadioGroup>
+                        </FormField.Control>
                       </FormField>
 
                       {/* Image Selection */}
@@ -904,7 +932,7 @@ export function CreateVolumePage() {
                   {/* Configuration Section */}
                   <SectionCard>
                     <SectionCard.Header title={SECTION_LABELS['configuration']} />
-                    <SectionCard.Content gap={6} className="pt-2">
+                    <SectionCard.Content showDividers={false} gap={6} className="pt-2">
                       {/* Different content for snapshot vs other sources */}
                       {sourceType === 'snapshot' ? (
                         <>
@@ -933,34 +961,36 @@ export function CreateVolumePage() {
                           {/* Volume type capacity */}
                           <FormField required>
                             <FormField.Label>Volume type capacity</FormField.Label>
-                            <FormField.HelperText>
+                            <FormField.Description>
                               Defines the size of the volume. Depending on the selected source, a
                               minimum required size may apply.
-                            </FormField.HelperText>
-                            <div className="flex items-center gap-6 w-full border border-[var(--color-border-default)] rounded-md px-4 py-2">
-                              <div className="flex-1">
-                                <Slider
-                                  value={volumeCapacity}
-                                  onChange={setVolumeCapacity}
-                                  min={1}
-                                  max={1460}
-                                />
-                              </div>
-                              <div className="flex items-center gap-1.5">
-                                <div>
-                                  <NumberInput
+                            </FormField.Description>
+                            <FormField.Control>
+                              <div className="flex items-center gap-6 w-full border border-[var(--color-border-default)] rounded-md px-4 py-2">
+                                <div className="flex-1">
+                                  <Slider
                                     value={volumeCapacity}
-                                    onChange={(val) => setVolumeCapacity(val ?? 64)}
+                                    onChange={setVolumeCapacity}
                                     min={1}
                                     max={1460}
-                                    width="sm"
                                   />
                                 </div>
-                                <span className="text-body-md text-[var(--color-text-default)]">
-                                  GiB
-                                </span>
+                                <div className="flex items-center gap-1.5">
+                                  <div>
+                                    <NumberInput
+                                      value={volumeCapacity}
+                                      onChange={(val) => setVolumeCapacity(val ?? 64)}
+                                      min={1}
+                                      max={1460}
+                                      width="sm"
+                                    />
+                                  </div>
+                                  <span className="text-body-md text-[var(--color-text-default)]">
+                                    GiB
+                                  </span>
+                                </div>
                               </div>
-                            </div>
+                            </FormField.Control>
                             <FormField.HelperText>1-1460 GiB</FormField.HelperText>
                           </FormField>
                         </>
@@ -969,10 +999,10 @@ export function CreateVolumePage() {
                           {/* Standard Volume type selection for blank/image sources */}
                           <FormField required>
                             <FormField.Label>Volume type</FormField.Label>
-                            <FormField.HelperText>
+                            <FormField.Description>
                               Select the volume type that determines performance characteristics for
                               the volume.
-                            </FormField.HelperText>
+                            </FormField.Description>
                           </FormField>
 
                           <VStack gap={4} align="stretch">
@@ -1022,34 +1052,36 @@ export function CreateVolumePage() {
 
                           <FormField required>
                             <FormField.Label>Volume type capacity</FormField.Label>
-                            <FormField.HelperText>
+                            <FormField.Description>
                               Defines the size of the volume. Depending on the selected source, and
                               minimum required size may apply.
-                            </FormField.HelperText>
-                            <div className="flex items-center gap-4 w-full">
-                              <div className="flex-1">
-                                <Slider
-                                  value={volumeCapacity}
-                                  onChange={setVolumeCapacity}
-                                  min={1}
-                                  max={1000}
-                                />
-                              </div>
-                              <div className="flex items-center gap-2">
-                                <div>
-                                  <NumberInput
+                            </FormField.Description>
+                            <FormField.Control>
+                              <div className="flex items-center gap-4 w-full">
+                                <div className="flex-1">
+                                  <Slider
                                     value={volumeCapacity}
-                                    onChange={(val) => setVolumeCapacity(val ?? 10)}
+                                    onChange={setVolumeCapacity}
                                     min={1}
                                     max={1000}
-                                    width="sm"
                                   />
                                 </div>
-                                <span className="text-body-lg text-[var(--color-text-default)]">
-                                  GiB
-                                </span>
+                                <div className="flex items-center gap-2">
+                                  <div>
+                                    <NumberInput
+                                      value={volumeCapacity}
+                                      onChange={(val) => setVolumeCapacity(val ?? 10)}
+                                      min={1}
+                                      max={1000}
+                                      width="sm"
+                                    />
+                                  </div>
+                                  <span className="text-body-lg text-[var(--color-text-default)]">
+                                    GiB
+                                  </span>
+                                </div>
                               </div>
-                            </div>
+                            </FormField.Control>
                             <FormField.HelperText>1 ~ 1000 GiB</FormField.HelperText>
                           </FormField>
                         </>

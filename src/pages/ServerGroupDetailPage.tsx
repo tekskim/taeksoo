@@ -336,7 +336,7 @@ export function ServerGroupDetailPage() {
               {row.name}
             </Link>
             <IconExternalLink
-              size={16}
+              size={12}
               className="flex-shrink-0 text-[var(--color-action-primary)]"
             />
           </div>

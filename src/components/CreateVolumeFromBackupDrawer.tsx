@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input, Select, Slider } from '@/design-system';
+import { Drawer, Button, Input, Select, Slider, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 import { IconInfinity } from '@tabler/icons-react';
 
@@ -232,96 +232,96 @@ export function CreateVolumeFromBackupDrawer({
         </VStack>
 
         {/* Volume Name Input */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Volume name
-          </label>
-          <Input
-            value={volumeName}
-            onChange={(e) => setVolumeName(e.target.value)}
-            placeholder="e.g. volume backup-copy"
-            fullWidth
-            error={hasAttemptedSubmit && !volumeName.trim()}
-          />
+        <FormField required error={hasAttemptedSubmit && !volumeName.trim()}>
+          <FormField.Label>Volume name</FormField.Label>
+          <FormField.Control>
+            <Input
+              value={volumeName}
+              onChange={(e) => setVolumeName(e.target.value)}
+              placeholder="e.g. volume backup-copy"
+              fullWidth
+              error={hasAttemptedSubmit && !volumeName.trim()}
+            />
+          </FormField.Control>
           {hasAttemptedSubmit && !volumeName.trim() ? (
-            <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
-              Volume name is required
-            </p>
+            <FormField.ErrorMessage>Volume name is required</FormField.ErrorMessage>
           ) : (
-            <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
+            <FormField.HelperText>
               Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-            </p>
+            </FormField.HelperText>
           )}
-        </VStack>
+        </FormField>
 
         {/* Description Input */}
-        <VStack gap={2} className="w-full">
-          <HStack gap={1} className="items-center">
-            <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-              Description
-            </label>
+        <FormField>
+          <FormField.Label>
+            Description{' '}
             <span className="text-body-md text-[var(--color-text-subtle)]">(optional)</span>
-          </HStack>
-          <Input
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="e.g. Recovery test volume from backup"
-            fullWidth
-          />
-        </VStack>
+          </FormField.Label>
+          <FormField.Control>
+            <Input
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="e.g. Recovery test volume from backup"
+              fullWidth
+            />
+          </FormField.Control>
+        </FormField>
 
         {/* Capacity Slider */}
-        <VStack gap={5} className="w-full">
+        <FormField>
           <HStack className="justify-between w-full">
-            <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-              Capacity (GiB)
-            </label>
+            <FormField.Label>Capacity (GiB)</FormField.Label>
             <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
               {minCapacity} - {maxCapacity} GiB
             </span>
           </HStack>
-          <VStack gap={5} className="w-full">
-            <Slider value={capacity} onChange={setCapacity} min={minCapacity} max={maxCapacity} />
-            <Input
-              type="number"
-              value={capacity.toString()}
-              onChange={(e) => {
-                const val = parseInt(e.target.value) || minCapacity;
-                setCapacity(Math.min(Math.max(val, minCapacity), maxCapacity));
-              }}
-              min={minCapacity}
-              max={maxCapacity}
-              fullWidth
-            />
-          </VStack>
-        </VStack>
+          <FormField.Control>
+            <VStack gap={5} className="w-full">
+              <Slider value={capacity} onChange={setCapacity} min={minCapacity} max={maxCapacity} />
+              <Input
+                type="number"
+                value={capacity.toString()}
+                onChange={(e) => {
+                  const val = parseInt(e.target.value) || minCapacity;
+                  setCapacity(Math.min(Math.max(val, minCapacity), maxCapacity));
+                }}
+                min={minCapacity}
+                max={maxCapacity}
+                fullWidth
+              />
+            </VStack>
+          </FormField.Control>
+        </FormField>
 
         {/* Volume Type Select */}
-        <VStack gap={2} className="w-full">
-          <HStack gap={1} className="items-center">
-            <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-              Volume type
-            </label>
+        <FormField>
+          <FormField.Label>
+            Volume type{' '}
             <span className="text-body-md text-[var(--color-text-subtle)]">(optional)</span>
-          </HStack>
-          <Select
-            value={volumeType}
-            onChange={(value) => setVolumeType(value)}
-            options={volumeTypes}
-            fullWidth
-          />
-        </VStack>
+          </FormField.Label>
+          <FormField.Control>
+            <Select
+              value={volumeType}
+              onChange={(value) => setVolumeType(value)}
+              options={volumeTypes}
+              fullWidth
+            />
+          </FormField.Control>
+        </FormField>
 
         {/* AZ Select */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">AZ</label>
-          <Select
-            value={az}
-            onChange={(value) => setAz(value)}
-            options={availabilityZones}
-            fullWidth
-          />
-        </VStack>
+        <FormField>
+          <FormField.Label>AZ</FormField.Label>
+          <FormField.Control>
+            <Select
+              value={az}
+              onChange={(value) => setAz(value)}
+              options={availabilityZones}
+              fullWidth
+            />
+          </FormField.Control>
+        </FormField>
       </VStack>
     </Drawer>
   );

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Drawer, Button, Input, Select, Radio } from '@/design-system';
+import { Drawer, Button, Input, Select, Radio, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 import { IconUpload, IconX, IconChevronDown } from '@tabler/icons-react';
 
@@ -155,16 +155,16 @@ export function CreateObjectDrawer({
         </h2>
 
         {/* Folder Path */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Folder path
-          </label>
-          <div className="w-full px-[10px] py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md">
-            <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
-              {currentPath}
-            </span>
-          </div>
-        </VStack>
+        <FormField>
+          <FormField.Label>Folder path</FormField.Label>
+          <FormField.Control>
+            <div className="w-full px-[10px] py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md">
+              <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
+                {currentPath}
+              </span>
+            </div>
+          </FormField.Control>
+        </FormField>
 
         {/* Upload Files Section */}
         <VStack gap={2} className="w-full">

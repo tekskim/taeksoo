@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input, Select, Toggle } from '@/design-system';
+import { Drawer, Button, Input, Select, Toggle, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 
 /* ----------------------------------------
@@ -143,27 +143,25 @@ export function AddL7RuleDrawer({ isOpen, onClose, onSubmit }: AddL7RuleDrawerPr
         </VStack>
 
         {/* Rule Type */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Rule Type
-          </label>
-          <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
+        <FormField>
+          <FormField.Label>Rule Type</FormField.Label>
+          <FormField.Description>
             Select the part of the incoming request to inspect, such as the URL path or a specific
             HTTP header.
-          </p>
-          <Select
-            value={ruleType}
-            onChange={(value) => {
-              setRuleType(value as RuleType);
-              setKey(''); // Reset key when rule type changes
-            }}
-            options={ruleTypeOptions}
-            fullWidth
-          />
+          </FormField.Description>
+          <FormField.Control>
+            <Select
+              value={ruleType}
+              onChange={(value) => {
+                setRuleType(value as RuleType);
+                setKey(''); // Reset key when rule type changes
+              }}
+              options={ruleTypeOptions}
+              fullWidth
+            />
 
-          {/* Key Input (shown for HEADER, COOKIE, SSL_DN_FIELD) */}
-          {requiresKey && (
-            <>
+            {/* Key Input (shown for HEADER, COOKIE, SSL_DN_FIELD) */}
+            {requiresKey && (
               <Input
                 value={key}
                 onChange={(e) => setKey(e.target.value)}
@@ -176,58 +174,54 @@ export function AddL7RuleDrawer({ isOpen, onClose, onSubmit }: AddL7RuleDrawerPr
                 }
                 fullWidth
               />
-              <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
-                Allowed: 1–255 characters, letters, numbers, "-".
-              </p>
-            </>
+            )}
+          </FormField.Control>
+          {requiresKey && (
+            <FormField.HelperText>
+              Allowed: 1–255 characters, letters, numbers, "-".
+            </FormField.HelperText>
           )}
-        </VStack>
+        </FormField>
 
         {/* Compare Type */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Compare Type
-          </label>
-          <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
+        <FormField required error={hasAttemptedSubmit && !compareType}>
+          <FormField.Label>Compare Type</FormField.Label>
+          <FormField.Description>
             Select how the value is compared. Regex is for advanced matching.
-          </p>
-          <Select
-            value={compareType}
-            onChange={(value) => setCompareType(value as CompareType | '')}
-            options={[{ value: '', label: 'Select a compare type' }, ...compareTypeOptions]}
-            fullWidth
-            error={hasAttemptedSubmit && !compareType}
-          />
+          </FormField.Description>
+          <FormField.Control>
+            <Select
+              value={compareType}
+              onChange={(value) => setCompareType(value as CompareType | '')}
+              options={[{ value: '', label: 'Select a compare type' }, ...compareTypeOptions]}
+              fullWidth
+              error={hasAttemptedSubmit && !compareType}
+            />
+          </FormField.Control>
           {hasAttemptedSubmit && !compareType && (
-            <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
-              Compare type is required
-            </p>
+            <FormField.ErrorMessage>Compare type is required</FormField.ErrorMessage>
           )}
-        </VStack>
+        </FormField>
 
         {/* Value */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">Value</label>
-          <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
-            Enter the value or pattern to match.
-          </p>
-          <Input
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-            placeholder="Enter a value to compare"
-            fullWidth
-            error={hasAttemptedSubmit && !value.trim()}
-          />
+        <FormField required error={hasAttemptedSubmit && !value.trim()}>
+          <FormField.Label>Value</FormField.Label>
+          <FormField.Description>Enter the value or pattern to match.</FormField.Description>
+          <FormField.Control>
+            <Input
+              value={value}
+              onChange={(e) => setValue(e.target.value)}
+              placeholder="Enter a value to compare"
+              fullWidth
+              error={hasAttemptedSubmit && !value.trim()}
+            />
+          </FormField.Control>
           {hasAttemptedSubmit && !value.trim() ? (
-            <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
-              Value is required
-            </p>
+            <FormField.ErrorMessage>Value is required</FormField.ErrorMessage>
           ) : (
-            <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
-              Allowed: 1–255 characters.
-            </p>
+            <FormField.HelperText>Allowed: 1–255 characters.</FormField.HelperText>
           )}
-        </VStack>
+        </FormField>
 
         {/* Invert */}
         <VStack gap={3} className="w-full">

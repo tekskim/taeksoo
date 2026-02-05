@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Select } from '@/design-system';
+import { Drawer, Button, Select, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 import { IconAlertCircle } from '@tabler/icons-react';
 
@@ -141,24 +141,22 @@ export function ChangeVolumeTypeDrawer({
         </VStack>
 
         {/* New Volume Type Select */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            New Volume type
-          </label>
-          <Select
-            value={selectedType}
-            onChange={(value) => setSelectedType(value)}
-            options={availableTypes}
-            placeholder="Please select a volume type"
-            fullWidth
-            error={hasAttemptedSubmit && !selectedType}
-          />
+        <FormField required error={hasAttemptedSubmit && !selectedType}>
+          <FormField.Label>New Volume type</FormField.Label>
+          <FormField.Control>
+            <Select
+              value={selectedType}
+              onChange={(value) => setSelectedType(value)}
+              options={availableTypes}
+              placeholder="Please select a volume type"
+              fullWidth
+              error={hasAttemptedSubmit && !selectedType}
+            />
+          </FormField.Control>
           {hasAttemptedSubmit && !selectedType && (
-            <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
-              Please select a volume type
-            </p>
+            <FormField.ErrorMessage>Please select a volume type</FormField.ErrorMessage>
           )}
-        </VStack>
+        </FormField>
       </VStack>
     </Drawer>
   );

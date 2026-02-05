@@ -311,7 +311,7 @@ export function DisconnectSubnetDrawer({
                     <span className="text-label-md text-[var(--color-action-primary)] leading-4">
                       {item.name}
                     </span>
-                    <IconExternalLink size={16} className="text-[var(--color-action-primary)]" />
+                    <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
                   </HStack>
                   <span className="text-body-sm text-[var(--color-text-subtle)] leading-4">
                     ID : {item.id}
@@ -332,7 +332,7 @@ export function DisconnectSubnetDrawer({
                     <span className="text-label-md text-[var(--color-action-primary)] leading-4">
                       {item.networkName}
                     </span>
-                    <IconExternalLink size={16} className="text-[var(--color-action-primary)]" />
+                    <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
                   </HStack>
                   <span className="text-body-sm text-[var(--color-text-subtle)] leading-4">
                     ID : {item.networkId}

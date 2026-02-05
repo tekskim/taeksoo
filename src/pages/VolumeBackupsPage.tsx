@@ -24,6 +24,7 @@ import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import { CreateVolumeFromBackupDrawer } from '@/components/CreateVolumeFromBackupDrawer';
+import { CreateVolumeBackupDrawer } from '@/components/CreateVolumeBackupDrawer';
 import { EditVolumeBackupDrawer } from '@/components/EditVolumeBackupDrawer';
 import {
   IconDotsCircleHorizontal,
@@ -214,6 +215,9 @@ export function VolumeBackupsPage() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [backupToDelete, setBackupToDelete] = useState<VolumeBackup | null>(null);
 
+  // Create backup drawer state
+  const [isCreateBackupDrawerOpen, setIsCreateBackupDrawerOpen] = useState(false);
+
   // View Preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -353,7 +357,7 @@ export function VolumeBackupsPage() {
             onClick={(e) => e.stopPropagation()}
           >
             {row.sourceVolume}
-            <IconExternalLink size={16} className="text-[var(--color-action-primary)]" />
+            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </Link>
           <span className="text-body-sm text-[var(--color-text-subtle)]">
             ID : {row.sourceVolumeId}
@@ -485,7 +489,9 @@ export function VolumeBackupsPage() {
               {/* Page Header */}
               <div className="flex items-center justify-between h-8">
                 <h1 className="text-heading-h5 text-[var(--color-text-default)]">Volume backups</h1>
-                <Button size="md">Create Backup</Button>
+                <Button size="md" onClick={() => setIsCreateBackupDrawerOpen(true)}>
+                  Create Backup
+                </Button>
               </div>
 
               {/* List Toolbar */}
@@ -598,6 +604,13 @@ export function VolumeBackupsPage() {
               }
             : null
         }
+      />
+
+      {/* Create Backup Drawer */}
+      <CreateVolumeBackupDrawer
+        isOpen={isCreateBackupDrawerOpen}
+        onClose={() => setIsCreateBackupDrawerOpen(false)}
+        volume={null}
       />
     </div>
   );

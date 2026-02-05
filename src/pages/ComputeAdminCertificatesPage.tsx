@@ -25,6 +25,7 @@ import {
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
+import { RegisterCertificateDrawer } from '@/components/RegisterCertificateDrawer';
 import { IconDotsCircleHorizontal, IconTrash, IconDownload, IconBell } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
@@ -217,6 +218,9 @@ export function ComputeAdminCertificatesPage() {
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [certToDelete, setCertToDelete] = useState<Certificate | null>(null);
+
+  // Register certificate drawer state
+  const [isRegisterDrawerOpen, setIsRegisterDrawerOpen] = useState(false);
 
   // View preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
@@ -434,7 +438,7 @@ export function ComputeAdminCertificatesPage() {
             <VStack gap={3}>
               <div className="flex justify-between items-center h-8 w-full">
                 <h1 className="text-heading-h5 text-[var(--color-text-default)]">Certificates</h1>
-                <Button variant="primary" size="md">
+                <Button variant="primary" size="md" onClick={() => setIsRegisterDrawerOpen(true)}>
                   Register certificate
                 </Button>
               </div>
@@ -520,6 +524,12 @@ export function ComputeAdminCertificatesPage() {
         columns={columnConfig}
         defaultColumns={defaultColumnConfig}
         onColumnsChange={setColumnConfig}
+      />
+
+      {/* Register Certificate Drawer */}
+      <RegisterCertificateDrawer
+        isOpen={isRegisterDrawerOpen}
+        onClose={() => setIsRegisterDrawerOpen(false)}
       />
     </div>
   );

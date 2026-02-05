@@ -8,6 +8,7 @@ import {
   TabBar,
   TopBar,
   Input,
+  FormField,
   SectionCard,
   Table,
   Pagination,
@@ -520,58 +521,58 @@ function BasicInformationSection({
           ) : undefined
         }
       />
-      <SectionCard.Content>
+      <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
           {/* Group Name */}
-          <div className="flex flex-col pt-2 pb-6">
-            <label className="text-label-lg text-[var(--color-text-default)] mb-2">
-              Group name <span className="text-[var(--color-state-danger)]">*</span>
-            </label>
-            <span className="text-body-md text-[var(--color-text-subtle)] mb-2">
-              Enter a unique name for the user group. This will be used to identify the group across
-              the system.
-            </span>
-            <Input
-              placeholder="Enter group name"
-              value={groupName}
-              onChange={(e) => {
-                onGroupNameChange(e.target.value);
-                onGroupNameErrorChange(null);
-              }}
-              error={!!groupNameError}
-              fullWidth
-            />
-            <div className="flex flex-col gap-1 mt-1">
-              {groupNameError && (
-                <span className="text-body-sm text-[var(--color-state-danger)]">
-                  {groupNameError}
-                </span>
+          <div className="pt-2 pb-6">
+            <FormField required error={!!groupNameError}>
+              <FormField.Label>Group name</FormField.Label>
+              <FormField.Description>
+                Enter a unique name for the user group. This will be used to identify the group
+                across the system.
+              </FormField.Description>
+              <FormField.Control>
+                <Input
+                  placeholder="Enter group name"
+                  value={groupName}
+                  onChange={(e) => {
+                    onGroupNameChange(e.target.value);
+                    onGroupNameErrorChange(null);
+                  }}
+                  fullWidth
+                />
+              </FormField.Control>
+              {groupNameError ? (
+                <FormField.ErrorMessage>{groupNameError}</FormField.ErrorMessage>
+              ) : (
+                <FormField.HelperText>
+                  You can use letters, numbers, and special characters (-_.), and the length must be
+                  between 3-64 characters.
+                </FormField.HelperText>
               )}
-              <span className="text-body-sm text-[var(--color-text-subtle)]">
-                You can use letters, numbers, and special characters (-_.), and the length must be
-                between 3-64 characters.
-              </span>
-            </div>
+            </FormField>
           </div>
 
           {/* Divider */}
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
           {/* Description */}
-          <div className="flex flex-col pt-2 pb-6">
-            <label className="text-label-lg text-[var(--color-text-default)] mb-2">
-              Description
-            </label>
-            <Input
-              placeholder="Enter description"
-              value={description}
-              onChange={(e) => onDescriptionChange(e.target.value)}
-              fullWidth
-            />
-            <span className="text-body-sm text-[var(--color-text-subtle)] mt-1">
-              You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255
-              characters.
-            </span>
+          <div className="pt-2 pb-6">
+            <FormField>
+              <FormField.Label>Description</FormField.Label>
+              <FormField.Control>
+                <Input
+                  placeholder="Enter description"
+                  value={description}
+                  onChange={(e) => onDescriptionChange(e.target.value)}
+                  fullWidth
+                />
+              </FormField.Control>
+              <FormField.HelperText>
+                You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255
+                characters.
+              </FormField.HelperText>
+            </FormField>
           </div>
 
           {/* Divider + Next Button (only when not editing) */}

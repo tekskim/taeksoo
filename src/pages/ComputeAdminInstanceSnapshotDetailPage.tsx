@@ -359,7 +359,7 @@ export function ComputeAdminInstanceSnapshotDetailPage() {
                               >
                                 {snapshot.sourceInstance}
                                 <IconExternalLink
-                                  size={16}
+                                  size={12}
                                   className="text-[var(--color-action-primary)]"
                                 />
                               </Link>

@@ -443,7 +443,7 @@ export default function RouterDetailPage() {
               {row.name}
             </Link>
             <IconExternalLink
-              size={16}
+              size={12}
               className="flex-shrink-0 text-[var(--color-action-primary)]"
             />
           </div>
@@ -703,7 +703,7 @@ export default function RouterDetailPage() {
                                 >
                                   {router.network.name}
                                   <IconExternalLink
-                                    size={16}
+                                    size={12}
                                     className="text-[var(--color-action-primary)]"
                                   />
                                 </Link>
@@ -723,7 +723,7 @@ export default function RouterDetailPage() {
                                 >
                                   {router.subnet.name}
                                   <IconExternalLink
-                                    size={16}
+                                    size={12}
                                     className="text-[var(--color-action-primary)]"
                                   />
                                 </Link>

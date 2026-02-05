@@ -16,6 +16,7 @@ import {
   Tooltip,
   SelectionIndicator,
   InlineMessage,
+  FormField,
   type TableColumn,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
@@ -419,34 +420,36 @@ function PasswordSection({
 
   return (
     <div className="flex flex-col py-6">
-      <label className="text-label-lg text-[var(--color-text-default)] mb-2">
-        Password <span className="text-[var(--color-state-danger)]">*</span>
-      </label>
-      <span className="text-body-md text-[var(--color-text-subtle)] mb-2">
-        Choose how to set the initial password for the user account.
-      </span>
-      <VStack gap={3}>
-        <label className="flex items-center gap-1.5 cursor-pointer">
-          <Radio
-            value="temporary"
-            checked={passwordOption === 'temporary'}
-            onChange={() => onPasswordOptionChange('temporary')}
-          />
-          <span className="text-body-md text-[var(--color-text-default)]">
-            Issue a temporary password (email sent automatically)
-          </span>
-        </label>
-        <label className="flex items-center gap-1.5 cursor-pointer">
-          <Radio
-            value="manual"
-            checked={passwordOption === 'manual'}
-            onChange={() => onPasswordOptionChange('manual')}
-          />
-          <span className="text-body-md text-[var(--color-text-default)]">
-            Set password manually (no email sent)
-          </span>
-        </label>
-      </VStack>
+      <FormField required>
+        <FormField.Label>Password</FormField.Label>
+        <FormField.Description>
+          Choose how to set the initial password for the user account.
+        </FormField.Description>
+        <FormField.Control>
+          <VStack gap={2}>
+            <label className="flex items-center gap-1.5 cursor-pointer">
+              <Radio
+                value="temporary"
+                checked={passwordOption === 'temporary'}
+                onChange={() => onPasswordOptionChange('temporary')}
+              />
+              <span className="text-body-md text-[var(--color-text-default)]">
+                Issue a temporary password (email sent automatically)
+              </span>
+            </label>
+            <label className="flex items-center gap-1.5 cursor-pointer">
+              <Radio
+                value="manual"
+                checked={passwordOption === 'manual'}
+                onChange={() => onPasswordOptionChange('manual')}
+              />
+              <span className="text-body-md text-[var(--color-text-default)]">
+                Set password manually (no email sent)
+              </span>
+            </label>
+          </VStack>
+        </FormField.Control>
+      </FormField>
 
       {/* Password inputs - shown when manual is selected */}
       {passwordOption === 'manual' && (
@@ -688,38 +691,36 @@ function BasicInformationSection({
           ) : undefined
         }
       />
-      <SectionCard.Content>
+      <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
           {/* Username */}
-          <div className="flex flex-col pt-2 pb-6">
-            <label className="text-label-lg text-[var(--color-text-default)] mb-2">
-              Username <span className="text-[var(--color-state-danger)]">*</span>
-            </label>
-            <span className="text-body-md text-[var(--color-text-subtle)] mb-2">
-              This is the user's unique identifier for signing in. It cannot be changed once
-              created.
-            </span>
-            <Input
-              placeholder="Enter username"
-              value={username}
-              onChange={(e) => {
-                onUsernameChange(e.target.value);
-                onUsernameErrorChange(null);
-              }}
-              error={!!usernameError}
-              fullWidth
-            />
-            <div className="flex flex-col gap-1 mt-1">
-              {usernameError && (
-                <span className="text-body-sm text-[var(--color-state-danger)]">
-                  {usernameError}
-                </span>
+          <div className="pt-2 pb-6">
+            <FormField required error={!!usernameError}>
+              <FormField.Label>Username</FormField.Label>
+              <FormField.Description>
+                This is the user's unique identifier for signing in. It cannot be changed once
+                created.
+              </FormField.Description>
+              <FormField.Control>
+                <Input
+                  placeholder="Enter username"
+                  value={username}
+                  onChange={(e) => {
+                    onUsernameChange(e.target.value);
+                    onUsernameErrorChange(null);
+                  }}
+                  fullWidth
+                />
+              </FormField.Control>
+              {usernameError ? (
+                <FormField.ErrorMessage>{usernameError}</FormField.ErrorMessage>
+              ) : (
+                <FormField.HelperText>
+                  You can use letters, numbers, and special characters (-_.), and the length must be
+                  between 3-64 characters.
+                </FormField.HelperText>
               )}
-              <span className="text-body-sm text-[var(--color-text-subtle)]">
-                You can use letters, numbers, and special characters (-_.), and the length must be
-                between 3-64 characters.
-              </span>
-            </div>
+            </FormField>
           </div>
 
           {/* Divider */}
@@ -743,64 +744,67 @@ function BasicInformationSection({
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
           {/* Email Address */}
-          <div className="flex flex-col py-6">
-            <label className="text-label-lg text-[var(--color-text-default)] mb-2">
-              Email address <span className="text-[var(--color-state-danger)]">*</span>
-            </label>
-            <span className="text-body-md text-[var(--color-text-subtle)] mb-2">
-              The email address used for user invitations and notifications.
-            </span>
-            <Input
-              placeholder="user@example.com"
-              value={email}
-              onChange={(e) => {
-                onEmailChange(e.target.value);
-                onEmailErrorChange(null);
-              }}
-              error={!!emailError}
-              fullWidth
-            />
-            {emailError && (
-              <span className="text-body-sm text-[var(--color-state-danger)] mt-1">
-                {emailError}
-              </span>
-            )}
+          <div className="py-6">
+            <FormField required error={!!emailError}>
+              <FormField.Label>Email address</FormField.Label>
+              <FormField.Description>
+                The email address used for user invitations and notifications.
+              </FormField.Description>
+              <FormField.Control>
+                <Input
+                  placeholder="user@example.com"
+                  value={email}
+                  onChange={(e) => {
+                    onEmailChange(e.target.value);
+                    onEmailErrorChange(null);
+                  }}
+                  fullWidth
+                />
+              </FormField.Control>
+              {emailError && <FormField.ErrorMessage>{emailError}</FormField.ErrorMessage>}
+            </FormField>
           </div>
 
           {/* Divider */}
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
           {/* Display Name */}
-          <div className="flex flex-col py-6">
-            <label className="text-label-lg text-[var(--color-text-default)] mb-2">
-              Display name
-            </label>
-            <span className="text-body-md text-[var(--color-text-subtle)] mb-2">
-              This is the user's display name. If left blank, the username will be shown instead.
-            </span>
-            <Input
-              placeholder="Enter display name"
-              value={displayName}
-              onChange={(e) => onDisplayNameChange(e.target.value)}
-              fullWidth
-            />
+          <div className="py-6">
+            <FormField>
+              <FormField.Label>Display name</FormField.Label>
+              <FormField.Description>
+                This is the user's display name. If left blank, the username will be shown instead.
+              </FormField.Description>
+              <FormField.Control>
+                <Input
+                  placeholder="Enter display name"
+                  value={displayName}
+                  onChange={(e) => onDisplayNameChange(e.target.value)}
+                  fullWidth
+                />
+              </FormField.Control>
+            </FormField>
           </div>
 
           {/* Divider */}
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
           {/* Status */}
-          <div className="flex flex-col py-6">
-            <label className="text-label-lg text-[var(--color-text-default)] mb-2">Status</label>
-            <span className="text-body-md text-[var(--color-text-subtle)] mb-2">
-              Select the user's status. If 'Disabled', the user will be prevented from signing in.
-            </span>
-            <HStack gap={2} align="center">
-              <Toggle checked={status} onChange={onStatusChange} />
-              <span className="text-body-md text-[var(--color-text-default)]">
-                {status ? 'Enabled' : 'Disabled'}
-              </span>
-            </HStack>
+          <div className="py-6">
+            <FormField>
+              <FormField.Label>Status</FormField.Label>
+              <FormField.Description>
+                Select the user's status. If 'Disabled', the user will be prevented from signing in.
+              </FormField.Description>
+              <FormField.Control>
+                <HStack gap={2} align="center">
+                  <Toggle checked={status} onChange={onStatusChange} />
+                  <span className="text-body-md text-[var(--color-text-default)]">
+                    {status ? 'Enabled' : 'Disabled'}
+                  </span>
+                </HStack>
+              </FormField.Control>
+            </FormField>
           </div>
 
           {/* Divider + Next Button (only when not editing) */}

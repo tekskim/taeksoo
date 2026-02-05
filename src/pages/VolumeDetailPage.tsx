@@ -431,7 +431,7 @@ export function VolumeDetailPage() {
             onClick={(e) => e.stopPropagation()}
           >
             {row.name}
-            <IconExternalLink size={16} className="text-[var(--color-action-primary)]" />
+            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </Link>
           <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
         </div>
@@ -503,7 +503,7 @@ export function VolumeDetailPage() {
             onClick={(e) => e.stopPropagation()}
           >
             {row.name}
-            <IconExternalLink size={16} className="text-[var(--color-action-primary)]" />
+            <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
           </Link>
           <span className="text-body-sm text-[var(--color-text-subtle)]">ID : {row.id}</span>
         </div>
@@ -702,7 +702,7 @@ export function VolumeDetailPage() {
                                 >
                                   {volume.attachedTo}
                                   <IconExternalLink
-                                    size={16}
+                                    size={12}
                                     className="text-[var(--color-action-primary)]"
                                   />
                                 </Link>

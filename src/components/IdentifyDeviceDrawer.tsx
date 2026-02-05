@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Drawer, Button, Select } from '@/design-system';
+import { Drawer, Button, Select, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 
 /* ----------------------------------------
@@ -82,17 +82,17 @@ export function IdentifyDeviceDrawer({ isOpen, onClose, onSubmit }: IdentifyDevi
         </VStack>
 
         {/* Duration Select */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Duration
-          </label>
-          <Select
-            value={duration}
-            onChange={(value) => setDuration(value)}
-            options={DURATION_OPTIONS}
-            fullWidth
-          />
-        </VStack>
+        <FormField required>
+          <FormField.Label>Duration</FormField.Label>
+          <FormField.Control>
+            <Select
+              value={duration}
+              onChange={(value) => setDuration(value)}
+              options={DURATION_OPTIONS}
+              fullWidth
+            />
+          </FormField.Control>
+        </FormField>
       </VStack>
     </Drawer>
   );

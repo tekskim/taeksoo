@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input, Toggle, Checkbox } from '@/design-system';
+import { Drawer, Button, Input, Toggle, Checkbox, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 import { RadioGroup, Radio } from '@/design-system/components/Radio';
 import { IconChevronDown, IconChevronRight, IconPlus, IconX } from '@tabler/icons-react';
@@ -172,48 +172,52 @@ export function EditListenerDrawer({
         </VStack>
 
         {/* Listener Name */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Listener Name
-          </label>
-          <Input
-            value={listenerName}
-            onChange={(e) => setListenerName(e.target.value)}
-            placeholder="e.g. listener-http-80"
-            fullWidth
-          />
-          <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
+        <FormField required>
+          <FormField.Label>Listener Name</FormField.Label>
+          <FormField.Control>
+            <Input
+              value={listenerName}
+              onChange={(e) => setListenerName(e.target.value)}
+              placeholder="e.g. listener-http-80"
+              fullWidth
+            />
+          </FormField.Control>
+          <FormField.HelperText>
             Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-          </p>
-        </VStack>
+          </FormField.HelperText>
+        </FormField>
 
         {/* Description */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
+        <FormField>
+          <FormField.Label>
             Description{' '}
             <span className="text-body-md text-[var(--color-text-subtle)]">(optional)</span>
-          </label>
-          <Input
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="e.g. NIC for frontend instance"
-            fullWidth
-          />
-        </VStack>
+          </FormField.Label>
+          <FormField.Control>
+            <Input
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="e.g. NIC for frontend instance"
+              fullWidth
+            />
+          </FormField.Control>
+        </FormField>
 
         {/* Protocol (Read-only) */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Protocol
-          </label>
-          <Input value={listener.protocol} readOnly disabled fullWidth />
-        </VStack>
+        <FormField>
+          <FormField.Label>Protocol</FormField.Label>
+          <FormField.Control>
+            <Input value={listener.protocol} readOnly disabled fullWidth />
+          </FormField.Control>
+        </FormField>
 
         {/* Port (Read-only) */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">Port</label>
-          <Input value={String(listener.port)} readOnly disabled fullWidth />
-        </VStack>
+        <FormField>
+          <FormField.Label>Port</FormField.Label>
+          <FormField.Control>
+            <Input value={String(listener.port)} readOnly disabled fullWidth />
+          </FormField.Control>
+        </FormField>
 
         {/* Connection Limit */}
         <VStack gap={3} className="w-full">
@@ -279,68 +283,68 @@ export function EditListenerDrawer({
               </VStack>
 
               {/* Client Data Timeout */}
-              <VStack gap={2} className="w-full">
-                <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-                  Client Data Timeout (ms)
-                </label>
-                <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
+              <FormField>
+                <FormField.Label>Client Data Timeout (ms)</FormField.Label>
+                <FormField.Description>
                   Maximum time to wait for client request data.
-                </p>
-                <Input
-                  type="number"
-                  value={String(clientDataTimeout)}
-                  onChange={(e) => setClientDataTimeout(parseInt(e.target.value) || 0)}
-                  fullWidth
-                />
-              </VStack>
+                </FormField.Description>
+                <FormField.Control>
+                  <Input
+                    type="number"
+                    value={String(clientDataTimeout)}
+                    onChange={(e) => setClientDataTimeout(parseInt(e.target.value) || 0)}
+                    fullWidth
+                  />
+                </FormField.Control>
+              </FormField>
 
               {/* Member Connect Timeout */}
-              <VStack gap={2} className="w-full">
-                <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-                  Member Connect Timeout (ms)
-                </label>
-                <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
+              <FormField>
+                <FormField.Label>Member Connect Timeout (ms)</FormField.Label>
+                <FormField.Description>
                   Maximum time to wait when establishing a connection to a backend member.
-                </p>
-                <Input
-                  type="number"
-                  value={String(memberConnectTimeout)}
-                  onChange={(e) => setMemberConnectTimeout(parseInt(e.target.value) || 0)}
-                  fullWidth
-                />
-              </VStack>
+                </FormField.Description>
+                <FormField.Control>
+                  <Input
+                    type="number"
+                    value={String(memberConnectTimeout)}
+                    onChange={(e) => setMemberConnectTimeout(parseInt(e.target.value) || 0)}
+                    fullWidth
+                  />
+                </FormField.Control>
+              </FormField>
 
               {/* Member Data Timeout */}
-              <VStack gap={2} className="w-full">
-                <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-                  Member Data Timeout (ms)
-                </label>
-                <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
+              <FormField>
+                <FormField.Label>Member Data Timeout (ms)</FormField.Label>
+                <FormField.Description>
                   Maximum time to wait for response data from a backend member.
-                </p>
-                <Input
-                  type="number"
-                  value={String(memberDataTimeout)}
-                  onChange={(e) => setMemberDataTimeout(parseInt(e.target.value) || 0)}
-                  fullWidth
-                />
-              </VStack>
+                </FormField.Description>
+                <FormField.Control>
+                  <Input
+                    type="number"
+                    value={String(memberDataTimeout)}
+                    onChange={(e) => setMemberDataTimeout(parseInt(e.target.value) || 0)}
+                    fullWidth
+                  />
+                </FormField.Control>
+              </FormField>
 
               {/* TCP Inspect Timeout */}
-              <VStack gap={2} className="w-full">
-                <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-                  TCP Inspect Timeout (ms)
-                </label>
-                <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
+              <FormField>
+                <FormField.Label>TCP Inspect Timeout (ms)</FormField.Label>
+                <FormField.Description>
                   Timeout for TCP packet inspection or handshake. 0 disables this feature.
-                </p>
-                <Input
-                  type="number"
-                  value={String(tcpInspectTimeout)}
-                  onChange={(e) => setTcpInspectTimeout(parseInt(e.target.value) || 0)}
-                  fullWidth
-                />
-              </VStack>
+                </FormField.Description>
+                <FormField.Control>
+                  <Input
+                    type="number"
+                    value={String(tcpInspectTimeout)}
+                    onChange={(e) => setTcpInspectTimeout(parseInt(e.target.value) || 0)}
+                    fullWidth
+                  />
+                </FormField.Control>
+              </FormField>
 
               {/* Allowed CIDRs */}
               <VStack gap={2} className="w-full">
@@ -421,20 +425,20 @@ export function EditListenerDrawer({
               </VStack>
 
               {/* Listener Admin State */}
-              <VStack gap={3} className="w-full">
-                <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-                  Listener Admin State
-                </label>
-                <HStack gap={2} className="items-center">
-                  <Toggle
-                    checked={adminStateUp}
-                    onChange={(e) => setAdminStateUp(e.target.checked)}
-                  />
-                  <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                    {adminStateUp ? 'Up' : 'Down'}
-                  </span>
-                </HStack>
-              </VStack>
+              <FormField>
+                <FormField.Label>Listener Admin State</FormField.Label>
+                <FormField.Control>
+                  <HStack gap={2} className="items-center">
+                    <Toggle
+                      checked={adminStateUp}
+                      onChange={(e) => setAdminStateUp(e.target.checked)}
+                    />
+                    <span className="text-body-md text-[var(--color-text-default)] leading-4">
+                      {adminStateUp ? 'Up' : 'Down'}
+                    </span>
+                  </HStack>
+                </FormField.Control>
+              </FormField>
             </VStack>
           )}
         </VStack>

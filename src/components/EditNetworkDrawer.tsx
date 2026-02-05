@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input, Toggle } from '@/design-system';
+import { Drawer, Button, Input, Toggle, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 import { IconChevronDown, IconChevronRight } from '@tabler/icons-react';
 
@@ -100,38 +100,36 @@ export function EditNetworkDrawer({ isOpen, onClose, network, onSubmit }: EditNe
         </VStack>
 
         {/* Network Name Input */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Network name
-          </label>
-          <Input
-            value={networkName}
-            onChange={(e) => setNetworkName(e.target.value)}
-            placeholder="e.g. my-network"
-            fullWidth
-          />
-          <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
+        <FormField required>
+          <FormField.Label>Network name</FormField.Label>
+          <FormField.Control>
+            <Input
+              value={networkName}
+              onChange={(e) => setNetworkName(e.target.value)}
+              placeholder="e.g. my-network"
+              fullWidth
+            />
+          </FormField.Control>
+          <FormField.HelperText>
             Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-          </p>
-        </VStack>
+          </FormField.HelperText>
+        </FormField>
 
         {/* Description Input */}
-        <VStack gap={2} className="w-full">
-          <HStack gap={1} className="items-center">
-            <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-              Description
-            </label>
-            <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
-              (optional)
-            </span>
-          </HStack>
-          <Input
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder=""
-            fullWidth
-          />
-        </VStack>
+        <FormField>
+          <FormField.Label>
+            Description{' '}
+            <span className="text-body-md text-[var(--color-text-subtle)]">(optional)</span>
+          </FormField.Label>
+          <FormField.Control>
+            <Input
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder=""
+              fullWidth
+            />
+          </FormField.Control>
+        </FormField>
 
         {/* Advanced Options Toggle */}
         <button
@@ -151,48 +149,44 @@ export function EditNetworkDrawer({ isOpen, onClose, network, onSubmit }: EditNe
         {isAdvancedExpanded && (
           <>
             {/* Admin State */}
-            <VStack gap={3} className="w-full">
-              <VStack gap={2} className="w-full">
-                <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-                  Admin State
-                </label>
-                <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
-                  Setting it to "Down" disables all related network or control operations,
-                  regardless of runtime status.
-                </p>
-              </VStack>
-              <HStack gap={2} className="items-center">
-                <Toggle
-                  checked={adminStateUp}
-                  onChange={(e) => setAdminStateUp(e.target.checked)}
-                />
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  {adminStateUp ? 'Up' : 'Down'}
-                </span>
-              </HStack>
-            </VStack>
+            <FormField>
+              <FormField.Label>Admin State</FormField.Label>
+              <FormField.Description>
+                Setting it to "Down" disables all related network or control operations, regardless
+                of runtime status.
+              </FormField.Description>
+              <FormField.Control>
+                <HStack gap={2} className="items-center">
+                  <Toggle
+                    checked={adminStateUp}
+                    onChange={(e) => setAdminStateUp(e.target.checked)}
+                  />
+                  <span className="text-body-md text-[var(--color-text-default)] leading-4">
+                    {adminStateUp ? 'Up' : 'Down'}
+                  </span>
+                </HStack>
+              </FormField.Control>
+            </FormField>
 
             {/* Port Security */}
-            <VStack gap={3} className="w-full">
-              <VStack gap={2} className="w-full">
-                <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-                  Port Security
-                </label>
-                <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
-                  Enhances security by allowing only permitted devices to access this network. It is
-                  recommended to keep this enabled in most cases.
-                </p>
-              </VStack>
-              <HStack gap={2} className="items-center">
-                <Toggle
-                  checked={portSecurityEnabled}
-                  onChange={(e) => setPortSecurityEnabled(e.target.checked)}
-                />
-                <span className="text-body-md text-[var(--color-text-default)] leading-4">
-                  {portSecurityEnabled ? 'On' : 'Off'}
-                </span>
-              </HStack>
-            </VStack>
+            <FormField>
+              <FormField.Label>Port Security</FormField.Label>
+              <FormField.Description>
+                Enhances security by allowing only permitted devices to access this network. It is
+                recommended to keep this enabled in most cases.
+              </FormField.Description>
+              <FormField.Control>
+                <HStack gap={2} className="items-center">
+                  <Toggle
+                    checked={portSecurityEnabled}
+                    onChange={(e) => setPortSecurityEnabled(e.target.checked)}
+                  />
+                  <span className="text-body-md text-[var(--color-text-default)] leading-4">
+                    {portSecurityEnabled ? 'On' : 'Off'}
+                  </span>
+                </HStack>
+              </FormField.Control>
+            </FormField>
           </>
         )}
       </VStack>

@@ -12,9 +12,10 @@ import {
   Radio,
   Toggle,
   Pagination,
-  InlineMessage,
   StatusIndicator,
   SelectionIndicator,
+  FormField,
+  Tooltip,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -382,34 +383,36 @@ function PasswordSection({
   );
 
   return (
-    <div className="flex flex-col py-6">
-      <label className="text-label-lg text-[var(--color-text-default)] mb-2">
-        Temporary Password <span className="text-[var(--color-state-danger)]">*</span>
-      </label>
-      <span className="text-body-md text-[var(--color-text-subtle)] mb-2">
-        The temporary password will be valid for 7 days. The account holder must sign in and change
-        the password within this period.
-      </span>
-      <VStack gap={3}>
-        <label className="flex items-center gap-1.5 cursor-pointer">
-          <Radio
-            value="temporary"
-            checked={passwordOption === 'temporary'}
-            onChange={() => onPasswordOptionChange('temporary')}
-          />
-          <span className="text-body-md text-[var(--color-text-default)]">
-            Auto-generated password
-          </span>
-        </label>
-        <label className="flex items-center gap-1.5 cursor-pointer">
-          <Radio
-            value="manual"
-            checked={passwordOption === 'manual'}
-            onChange={() => onPasswordOptionChange('manual')}
-          />
-          <span className="text-body-md text-[var(--color-text-default)]">Manually</span>
-        </label>
-      </VStack>
+    <div className="py-6">
+      <FormField required>
+        <FormField.Label>Temporary Password</FormField.Label>
+        <FormField.Description>
+          The temporary password will be valid for 7 days. The account holder must sign in and
+          change the password within this period.
+        </FormField.Description>
+        <FormField.Control>
+          <VStack gap={2}>
+            <label className="flex items-center gap-1.5 cursor-pointer">
+              <Radio
+                value="temporary"
+                checked={passwordOption === 'temporary'}
+                onChange={() => onPasswordOptionChange('temporary')}
+              />
+              <span className="text-body-md text-[var(--color-text-default)]">
+                Auto-generated password
+              </span>
+            </label>
+            <label className="flex items-center gap-1.5 cursor-pointer">
+              <Radio
+                value="manual"
+                checked={passwordOption === 'manual'}
+                onChange={() => onPasswordOptionChange('manual')}
+              />
+              <span className="text-body-md text-[var(--color-text-default)]">Manually</span>
+            </label>
+          </VStack>
+        </FormField.Control>
+      </FormField>
 
       {/* Password inputs - shown when manual is selected */}
       {passwordOption === 'manual' && (
@@ -706,64 +709,67 @@ function BasicInformationSection({
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
           {/* Email Address */}
-          <div className="flex flex-col py-6">
-            <label className="text-label-lg text-[var(--color-text-default)] mb-2">
-              Email address <span className="text-[var(--color-state-danger)]">*</span>
-            </label>
-            <span className="text-body-md text-[var(--color-text-subtle)] mb-2">
-              The email address used for user invitations and notifications.
-            </span>
-            <Input
-              placeholder="user@example.com"
-              value={email}
-              onChange={(e) => {
-                onEmailChange(e.target.value);
-                onEmailErrorChange(null);
-              }}
-              error={!!emailError}
-              fullWidth
-            />
-            {emailError && (
-              <span className="text-body-sm text-[var(--color-state-danger)] mt-1">
-                {emailError}
-              </span>
-            )}
+          <div className="py-6">
+            <FormField required error={!!emailError}>
+              <FormField.Label>Email address</FormField.Label>
+              <FormField.Description>
+                The email address used for user invitations and notifications.
+              </FormField.Description>
+              <FormField.Control>
+                <Input
+                  placeholder="user@example.com"
+                  value={email}
+                  onChange={(e) => {
+                    onEmailChange(e.target.value);
+                    onEmailErrorChange(null);
+                  }}
+                  fullWidth
+                />
+              </FormField.Control>
+              {emailError && <FormField.ErrorMessage>{emailError}</FormField.ErrorMessage>}
+            </FormField>
           </div>
 
           {/* Divider */}
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
           {/* Display Name */}
-          <div className="flex flex-col py-6">
-            <label className="text-label-lg text-[var(--color-text-default)] mb-2">
-              Display name
-            </label>
-            <span className="text-body-md text-[var(--color-text-subtle)] mb-2">
-              This is the user's display name. If left blank, the username will be shown instead.
-            </span>
-            <Input
-              placeholder="Enter display name"
-              value={displayName}
-              onChange={(e) => onDisplayNameChange(e.target.value)}
-              fullWidth
-            />
+          <div className="py-6">
+            <FormField>
+              <FormField.Label>Display name</FormField.Label>
+              <FormField.Description>
+                This is the user's display name. If left blank, the username will be shown instead.
+              </FormField.Description>
+              <FormField.Control>
+                <Input
+                  placeholder="Enter display name"
+                  value={displayName}
+                  onChange={(e) => onDisplayNameChange(e.target.value)}
+                  fullWidth
+                />
+              </FormField.Control>
+            </FormField>
           </div>
 
           {/* Divider */}
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
           {/* Status */}
-          <div className="flex flex-col py-6">
-            <label className="text-label-lg text-[var(--color-text-default)] mb-2">Status</label>
-            <span className="text-body-md text-[var(--color-text-subtle)] mb-2">
-              Select the user's status. If 'Disabled', the user will be prevented from signing in.
-            </span>
-            <HStack gap={2} align="center">
-              <Toggle checked={status} onChange={onStatusChange} />
-              <span className="text-body-md text-[var(--color-text-default)]">
-                {status ? 'Enabled' : 'Disabled'}
-              </span>
-            </HStack>
+          <div className="py-6">
+            <FormField>
+              <FormField.Label>Status</FormField.Label>
+              <FormField.Description>
+                Select the user's status. If 'Disabled', the user will be prevented from signing in.
+              </FormField.Description>
+              <FormField.Control>
+                <HStack gap={2} align="center">
+                  <Toggle checked={status} onChange={onStatusChange} />
+                  <span className="text-body-md text-[var(--color-text-default)]">
+                    {status ? 'Enabled' : 'Disabled'}
+                  </span>
+                </HStack>
+              </FormField.Control>
+            </FormField>
           </div>
 
           {/* Divider + Next Button (only when not editing) */}
@@ -857,144 +863,138 @@ function DefaultDomainSection({
           ) : undefined
         }
       />
-      <SectionCard.Content>
+      <SectionCard.Content showDividers={false}>
         <VStack gap={0} className="pt-2 pb-6">
-          <div className="flex flex-col gap-2">
-            <div className="flex gap-[3px]">
-              <span className="text-label-lg text-[var(--color-text-default)]">Domains</span>
-              <span className="text-[var(--color-state-danger)]">*</span>
-            </div>
-            <span className="text-body-md text-[var(--color-text-subtle)]">
+          <FormField required error={!!domainError && !selectedDomain}>
+            <FormField.Label>Domains</FormField.Label>
+            <FormField.Description>
               Defines which domain is opened first when the administrator signs in. The selected
               domain is used as the initial workspace.
-            </span>
-          </div>
-
-          {/* Search */}
-          <div className="mt-4">
-            <div className="relative w-[var(--search-input-width)]">
-              <input
-                type="text"
-                placeholder="Search domains by attributes"
-                value={searchQuery}
-                onChange={(e) => {
-                  setSearchQuery(e.target.value);
-                  setCurrentPage(1);
-                }}
-                className="w-full h-8 pl-3 pr-9 text-body-md bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] placeholder:text-[var(--color-text-subtle)] focus:outline-none focus:border-[var(--color-action-primary)] focus:shadow-[0_0_0_1px_var(--color-action-primary)]"
-              />
-              <IconSearch
-                size={14}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-subtle)] pointer-events-none"
-              />
-            </div>
-          </div>
-
-          {/* Pagination above table */}
-          {totalPages > 0 && (
-            <div className="mt-3 flex items-center gap-2">
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={setCurrentPage}
-              />
-              <div className="h-4 w-px bg-[var(--color-border-default)]" />
-              <span className="text-body-sm text-[var(--color-text-subtle)]">
-                {filteredDomains.length} items
-              </span>
-            </div>
-          )}
-
-          {/* Custom Table with radio selection */}
-          <div className="mt-3">
-            <div className="flex flex-col gap-[var(--table-row-gap)]">
-              {/* Table Header */}
-              <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] rounded-[var(--table-row-radius)] border border-[var(--color-border-default)]">
-                {/* Radio column header */}
-                <div className="shrink-0 flex items-center w-[var(--table-checkbox-width)] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)]" />
-                {/* Status column header */}
-                <div className="flex items-center justify-center w-[80px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                  Status
-                </div>
-                {/* Name column header */}
-                <div className="flex items-center flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                  Name
-                </div>
-                {/* Description column header */}
-                <div className="flex items-center flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                  Description
-                </div>
-                {/* Created at column header */}
-                <div className="flex items-center w-[120px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                  Created at
+            </FormField.Description>
+            <FormField.Control>
+              {/* Search */}
+              <div className="mt-4">
+                <div className="relative w-[var(--search-input-width)]">
+                  <input
+                    type="text"
+                    placeholder="Search domains by attributes"
+                    value={searchQuery}
+                    onChange={(e) => {
+                      setSearchQuery(e.target.value);
+                      setCurrentPage(1);
+                    }}
+                    className="w-full h-8 pl-3 pr-9 text-body-md bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)] placeholder:text-[var(--color-text-subtle)] focus:outline-none focus:border-[var(--color-action-primary)] focus:shadow-[0_0_0_1px_var(--color-action-primary)]"
+                  />
+                  <IconSearch
+                    size={14}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-subtle)] pointer-events-none"
+                  />
                 </div>
               </div>
 
-              {/* Table Body */}
-              <div className="flex flex-col gap-[var(--table-row-gap)] mt-[var(--table-row-gap)]">
-                {paginatedDomains.map((domain) => (
-                  <div
-                    key={domain.id}
-                    onClick={() => handleRowClick(domain.id)}
-                    className={`flex items-center h-[var(--table-row-height)] rounded-[var(--table-row-radius)] border overflow-hidden cursor-pointer transition-all hover:bg-[var(--table-row-hover-bg)] ${
-                      selectedDomain === domain.id
-                        ? 'border-[var(--color-action-primary)] bg-[var(--color-surface-subtle)]'
-                        : 'border-[var(--color-border-default)] bg-[var(--color-surface-default)]'
-                    }`}
-                  >
-                    {/* Radio column */}
-                    <div className="shrink-0 w-[var(--table-checkbox-width)] px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center justify-center">
-                      <Radio
-                        value={domain.id}
-                        checked={selectedDomain === domain.id}
-                        onChange={() => handleRowClick(domain.id)}
-                      />
+              {/* Pagination above table */}
+              {totalPages > 0 && (
+                <div className="mt-3 flex items-center gap-2">
+                  <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={setCurrentPage}
+                  />
+                  <div className="h-4 w-px bg-[var(--color-border-default)]" />
+                  <span className="text-body-sm text-[var(--color-text-subtle)]">
+                    {filteredDomains.length} items
+                  </span>
+                </div>
+              )}
+
+              {/* Custom Table with radio selection */}
+              <div className="mt-3">
+                <div className="flex flex-col gap-[var(--table-row-gap)]">
+                  {/* Table Header */}
+                  <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] rounded-[var(--table-row-radius)] border border-[var(--color-border-default)]">
+                    {/* Radio column header */}
+                    <div className="shrink-0 flex items-center w-[var(--table-checkbox-width)] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)]" />
+                    {/* Status column header */}
+                    <div className="flex items-center justify-center w-[80px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
+                      Status
                     </div>
-                    {/* Status column */}
-                    <div className="w-[80px] px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center justify-center border-l border-transparent">
-                      <StatusIndicator status="active" layout="icon-only" size="md" />
+                    {/* Name column header */}
+                    <div className="flex items-center flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
+                      Name
                     </div>
-                    {/* Name column */}
-                    <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] border-l border-transparent">
-                      {domain.name}
+                    {/* Description column header */}
+                    <div className="flex items-center flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
+                      Description
                     </div>
-                    {/* Description column */}
-                    <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] border-l border-transparent">
-                      {domain.description}
-                    </div>
-                    {/* Created at column */}
-                    <div className="w-[120px] px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] border-l border-transparent">
-                      {domain.createdAt}
+                    {/* Created at column header */}
+                    <div className="flex items-center w-[120px] px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
+                      Created at
                     </div>
                   </div>
-                ))}
-              </div>
-            </div>
-          </div>
 
-          {/* Selection indicator */}
-          <div className="mt-3">
-            {domainError && !selectedDomain ? (
-              <InlineMessage variant="error">{domainError}</InlineMessage>
-            ) : (
-              <SelectionIndicator
-                selectedItems={
-                  selectedDomain
-                    ? [
-                        {
-                          id: selectedDomain,
-                          label:
-                            mockDomains.find((d) => d.id === selectedDomain)?.name ||
-                            selectedDomain,
-                        },
-                      ]
-                    : []
-                }
-                onRemove={() => onSelectionChange(null)}
-                emptyText="No Item Selected"
-              />
+                  {/* Table Body */}
+                  <div className="flex flex-col gap-[var(--table-row-gap)] mt-[var(--table-row-gap)]">
+                    {paginatedDomains.map((domain) => (
+                      <div
+                        key={domain.id}
+                        onClick={() => handleRowClick(domain.id)}
+                        className={`flex items-center h-[var(--table-row-height)] rounded-[var(--table-row-radius)] border overflow-hidden cursor-pointer transition-all hover:bg-[var(--table-row-hover-bg)] ${
+                          selectedDomain === domain.id
+                            ? 'border-[var(--color-action-primary)] bg-[var(--color-surface-subtle)]'
+                            : 'border-[var(--color-border-default)] bg-[var(--color-surface-default)]'
+                        }`}
+                      >
+                        {/* Radio column */}
+                        <div className="shrink-0 w-[var(--table-checkbox-width)] px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center justify-center">
+                          <Radio
+                            value={domain.id}
+                            checked={selectedDomain === domain.id}
+                            onChange={() => handleRowClick(domain.id)}
+                          />
+                        </div>
+                        {/* Status column */}
+                        <div className="w-[80px] px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex items-center justify-center border-l border-transparent">
+                          <StatusIndicator status="active" layout="icon-only" size="md" />
+                        </div>
+                        {/* Name column */}
+                        <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] border-l border-transparent">
+                          {domain.name}
+                        </div>
+                        {/* Description column */}
+                        <div className="flex-1 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] border-l border-transparent">
+                          {domain.description}
+                        </div>
+                        {/* Created at column */}
+                        <div className="w-[120px] px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)] border-l border-transparent">
+                          {domain.createdAt}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Selection indicator */}
+              <div className="mt-3">
+                {selectedDomain ? (
+                  <SelectionIndicator
+                    selectedItems={[
+                      {
+                        id: selectedDomain,
+                        label:
+                          mockDomains.find((d) => d.id === selectedDomain)?.name || selectedDomain,
+                      },
+                    ]}
+                    onRemove={() => onSelectionChange(null)}
+                    emptyText="No Item Selected"
+                  />
+                ) : null}
+              </div>
+            </FormField.Control>
+            {domainError && !selectedDomain && (
+              <FormField.ErrorMessage>{domainError}</FormField.ErrorMessage>
             )}
-          </div>
+          </FormField>
         </VStack>
         {/* Next Button (only when not editing) */}
         {!isEditing && (

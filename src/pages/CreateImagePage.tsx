@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Button,
@@ -136,9 +136,9 @@ export function CreateImagePage() {
   const { tabs, activeTabId, closeTab, selectTab, updateActiveTabLabel } = useTabs();
 
   // Update tab label
-  useState(() => {
+  useEffect(() => {
     updateActiveTabLabel('Create image');
-  });
+  }, []);
 
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -473,10 +473,10 @@ export function CreateImagePage() {
                           {/* Disk format */}
                           <FormField required>
                             <FormField.Label>Disk format</FormField.Label>
-                            <FormField.HelperText>
+                            <FormField.Description>
                               Select the disk format for the image. It must match the actual type of
                               the uploaded file.
-                            </FormField.HelperText>
+                            </FormField.Description>
                             <FormField.Control>
                               <Select
                                 value={diskFormat}
@@ -499,9 +499,9 @@ export function CreateImagePage() {
                           {/* OS */}
                           <FormField required>
                             <FormField.Label>OS</FormField.Label>
-                            <FormField.HelperText>
+                            <FormField.Description>
                               Select the operating system type for the image.
-                            </FormField.HelperText>
+                            </FormField.Description>
                             <FormField.Control>
                               <Select
                                 value={os}
@@ -523,9 +523,9 @@ export function CreateImagePage() {
                           {/* OS Version */}
                           <FormField required>
                             <FormField.Label>OS version</FormField.Label>
-                            <FormField.HelperText>
+                            <FormField.Description>
                               This metadata helps categorize image.
-                            </FormField.HelperText>
+                            </FormField.Description>
                             <FormField.Control>
                               <Input
                                 value={osVersion}
@@ -539,10 +539,10 @@ export function CreateImagePage() {
                           {/* OS Admin */}
                           <FormField required>
                             <FormField.Label>OS admin</FormField.Label>
-                            <FormField.HelperText>
+                            <FormField.Description>
                               Enter the default administrator account used when launching instances
                               from this image.
-                            </FormField.HelperText>
+                            </FormField.Description>
                             <FormField.Control>
                               <Input
                                 value={osAdmin}
@@ -703,9 +703,9 @@ export function CreateImagePage() {
                           {/* CPU Policy */}
                           <FormField>
                             <FormField.Label>CPU policy</FormField.Label>
-                            <FormField.HelperText>
+                            <FormField.Description>
                               Policy that defines how vCPUs are allocated.
-                            </FormField.HelperText>
+                            </FormField.Description>
                             <FormField.Control>
                               <Select
                                 value={cpuPolicy}
@@ -723,9 +723,9 @@ export function CreateImagePage() {
                           {/* CPU Thread Policy */}
                           <FormField>
                             <FormField.Label>CPU thread policy</FormField.Label>
-                            <FormField.HelperText>
+                            <FormField.Description>
                               Policy defining how hyperthreads are used for vCPU placement.
-                            </FormField.HelperText>
+                            </FormField.Description>
                             <FormField.Control>
                               <Select
                                 value={cpuThreadPolicy}

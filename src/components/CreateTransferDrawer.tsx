@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input } from '@/design-system';
+import { Drawer, Button, Input, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 
 /* ----------------------------------------
@@ -115,27 +115,25 @@ export function CreateTransferDrawer({
         </VStack>
 
         {/* Transfer Name Input */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Transfer name
-          </label>
-          <Input
-            value={transferName}
-            onChange={(e) => setTransferName(e.target.value)}
-            placeholder="e.g., db-volume-transfer"
-            fullWidth
-            error={hasAttemptedSubmit && !transferName.trim()}
-          />
+        <FormField required error={hasAttemptedSubmit && !transferName.trim()}>
+          <FormField.Label>Transfer name</FormField.Label>
+          <FormField.Control>
+            <Input
+              value={transferName}
+              onChange={(e) => setTransferName(e.target.value)}
+              placeholder="e.g., db-volume-transfer"
+              fullWidth
+              error={hasAttemptedSubmit && !transferName.trim()}
+            />
+          </FormField.Control>
           {hasAttemptedSubmit && !transferName.trim() ? (
-            <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
-              Transfer name is required
-            </p>
+            <FormField.ErrorMessage>Transfer name is required</FormField.ErrorMessage>
           ) : (
-            <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
+            <FormField.HelperText>
               Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-            </p>
+            </FormField.HelperText>
           )}
-        </VStack>
+        </FormField>
       </VStack>
     </Drawer>
   );

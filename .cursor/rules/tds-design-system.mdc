@@ -211,7 +211,7 @@ import type { FilterField, AppliedFilter } from '@/design-system';
 ```css
 --input-radius: 0.25rem;      /* 4px */
 --input-icon-offset: 0.75rem; /* 12px */
---input-label-gap: 0.375rem;  /* 6px - label/input/helper 사이 간격 */
+--input-label-gap: 0.5rem;    /* 8px - label/input/helper 사이 간격 */
 ```
 
 ### Badge
@@ -377,28 +377,104 @@ const menuItems = [
 - `divider: true` 속성을 사용하여 해당 아이템 아래에 구분선 표시
 - 모든 아이템에 고유한 `id` 필드 필수
 
-## FormField 사용법
+## FormField Spacing Rules
+
+### Spacing
+
+| 컴포넌트 | 간격 |
+|---------|------|
+| Input/Select/NumberInput | Label ↔ Input: 8px, Input ↔ HelperText: 8px |
+| FormField | Label ↔ Input: 8px, Label ↔ Description: 4px, Description ↔ Input: 8px, Input ↔ HelperText: 8px |
+| Radio/CheckboxGroup | Label ↔ Options: 12px, Label ↔ Description: 4px, Description ↔ Options: 12px |
+
+### Typography
+
+| 구분 | 위치 | 스타일 |
+|------|------|--------|
+| Description | 라벨 하단 | `text-body-md` (12px/18px) |
+| HelperText | Input 하단 | `text-body-sm` (11px/16px) |
+
+### FormField with Description 패턴
 
 ```tsx
-<FormField required>
-  <FormField.Label>Instance Name</FormField.Label>
+<FormField>
+  <FormField.Label>Field Label</FormField.Label>
+  <FormField.Description>설명은 라벨 바로 아래에 위치</FormField.Description>
   <FormField.Control>
-    <Input placeholder="Enter name" fullWidth />
+    <Input placeholder="Enter value" fullWidth />
   </FormField.Control>
-  <FormField.HelperText>
-    도움말 텍스트
-  </FormField.HelperText>
+  <FormField.HelperText>도움말은 Input 아래에 위치</FormField.HelperText>
+</FormField>
+```
+
+## FormField 사용법
+
+### Simple API (권장)
+
+```tsx
+// 기본 사용
+<FormField label="Instance Name" helperText="2-64 characters" required>
+  <Input placeholder="Enter name" fullWidth />
+</FormField>
+
+// Description 포함
+<FormField 
+  label="Instance Name" 
+  description="A unique name to identify your instance"
+  helperText="2-64 characters"
+  required
+>
+  <Input placeholder="Enter name" fullWidth />
 </FormField>
 
 // 에러 상태
+<FormField 
+  label="Password" 
+  errorMessage="Password must be at least 8 characters."
+  error
+  required
+>
+  <Input type="password" fullWidth />
+</FormField>
+
+// Select와 함께
+<FormField label="Region" helperText="Select your preferred region" required>
+  <Select options={regions} placeholder="Select region" fullWidth />
+</FormField>
+```
+
+### Compound API (복잡한 레이아웃용)
+
+```tsx
+// 라벨에 Badge 등 추가 요소가 필요한 경우
+<FormField required>
+  <FormField.Label>Instance Name <Badge variant="info">NEW</Badge></FormField.Label>
+  <FormField.Description>A unique name to identify your instance</FormField.Description>
+  <FormField.Control>
+    <Input placeholder="Enter name" fullWidth />
+  </FormField.Control>
+  <FormField.HelperText>2-64 characters</FormField.HelperText>
+</FormField>
+
+// 에러 상태 (Compound)
 <FormField error>
   <FormField.Label>Password</FormField.Label>
   <FormField.Control>
     <Input type="password" fullWidth />
   </FormField.Control>
-  <FormField.ErrorMessage>
-    에러 메시지
-  </FormField.ErrorMessage>
+  <FormField.ErrorMessage>에러 메시지</FormField.ErrorMessage>
+</FormField>
+```
+
+### Input/Select label prop (Deprecated)
+
+```tsx
+// ❌ 더 이상 권장하지 않음
+<Input label="Name" helperText="Help text" />
+
+// ✅ FormField 사용 권장
+<FormField label="Name" helperText="Help text">
+  <Input fullWidth />
 </FormField>
 ```
 
@@ -728,10 +804,10 @@ import { IconPlus, IconEdit, IconTrash } from '@tabler/icons-react';
 
 ## 버전
 
-- **Current Version**: 1.5.2
-- **Last Updated**: 2026-02-04
+- **Current Version**: 1.6.0
+- **Last Updated**: 2026-02-05
 - **Changes**:
-  - Storybook 불일치 수정: Modal size, radius-xl, Button padding 값 정정
-  - Input/Select: xs, lg, half, full width 옵션 stories에 추가
-  - Button: warning variant DesignSystemPage에 추가
-  - Spacing 토큰 추가: 0.5, 1.5, 2.5, 9
+  - FormField Simple API 추가: label, description, helperText, errorMessage props
+  - Input/Select/NumberInput의 label, helperText props deprecated
+  - FormField가 children에 id, error, disabled 자동 주입
+  - Compound API도 여전히 지원 (복잡한 레이아웃용)

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input } from '@/design-system';
+import { Drawer, Button, Input, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 
 /* ----------------------------------------
@@ -83,43 +83,41 @@ export function EditImageDrawer({ isOpen, onClose, image, onSubmit }: EditImageD
         <h2 className="text-heading-h5 text-[var(--color-text-default)] leading-6">Edit Image</h2>
 
         {/* Image Name Input */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Image name
-          </label>
-          <Input
-            value={imageName}
-            onChange={(e) => setImageName(e.target.value)}
-            placeholder="Enter image name"
-            fullWidth
-            error={hasAttemptedSubmit && !imageName.trim()}
-          />
+        <FormField required error={hasAttemptedSubmit && !imageName.trim()}>
+          <FormField.Label>Image name</FormField.Label>
+          <FormField.Control>
+            <Input
+              value={imageName}
+              onChange={(e) => setImageName(e.target.value)}
+              placeholder="Enter image name"
+              fullWidth
+              error={hasAttemptedSubmit && !imageName.trim()}
+            />
+          </FormField.Control>
           {hasAttemptedSubmit && !imageName.trim() ? (
-            <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
-              Image name is required
-            </p>
+            <FormField.ErrorMessage>Image name is required</FormField.ErrorMessage>
           ) : (
-            <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
+            <FormField.HelperText>
               Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-            </p>
+            </FormField.HelperText>
           )}
-        </VStack>
+        </FormField>
 
         {/* Description Input */}
-        <VStack gap={2} className="w-full">
-          <HStack gap={1} className="items-center">
-            <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-              Description
-            </label>
+        <FormField>
+          <FormField.Label>
+            Description{' '}
             <span className="text-body-md text-[var(--color-text-subtle)]">(optional)</span>
-          </HStack>
-          <Input
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Instance for running internal API service"
-            fullWidth
-          />
-        </VStack>
+          </FormField.Label>
+          <FormField.Control>
+            <Input
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Instance for running internal API service"
+              fullWidth
+            />
+          </FormField.Control>
+        </FormField>
       </VStack>
     </Drawer>
   );

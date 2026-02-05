@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input, Select, Radio, RadioGroup } from '@/design-system';
+import { Drawer, Button, Input, Select, Radio, RadioGroup, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 
 /* ----------------------------------------
@@ -223,70 +223,73 @@ export function CreateSecurityGroupRuleDrawer({
         </VStack>
 
         {/* Direction Radio */}
-        <VStack gap={3} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Direction
-          </label>
-          <RadioGroup value={direction} onChange={(value) => setDirection(value as RuleDirection)}>
-            <VStack gap={3}>
-              <Radio value="ingress" label="Ingress" />
-              <Radio value="egress" label="Egress" />
-            </VStack>
-          </RadioGroup>
-        </VStack>
+        <FormField>
+          <FormField.Label>Direction</FormField.Label>
+          <FormField.Control>
+            <RadioGroup
+              value={direction}
+              onChange={(value) => setDirection(value as RuleDirection)}
+            >
+              <VStack gap={3}>
+                <Radio value="ingress" label="Ingress" />
+                <Radio value="egress" label="Egress" />
+              </VStack>
+            </RadioGroup>
+          </FormField.Control>
+        </FormField>
 
         {/* Protocol Select */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Protocol
-          </label>
+        <FormField>
+          <FormField.Label>Protocol</FormField.Label>
           {!isAllProto && (
-            <p className="text-body-md text-[var(--color-text-subtle)] leading-4">
+            <FormField.Description>
               Select a protocol type to define the rule's traffic. 'Custom' allows specifying
               specific port numbers.
-            </p>
+            </FormField.Description>
           )}
-          <Select
-            options={protocolOptions}
-            value={protocol}
-            onChange={(value) => setProtocol(value as ProtocolType)}
-            fullWidth
-          />
-        </VStack>
+          <FormField.Control>
+            <Select
+              options={protocolOptions}
+              value={protocol}
+              onChange={(value) => setProtocol(value as ProtocolType)}
+              fullWidth
+            />
+          </FormField.Control>
+        </FormField>
 
         {/* Port Range (only for Custom TCP/UDP, not for All Proto) */}
         {!isAllProto && ['custom_tcp', 'custom_udp'].includes(protocol) && (
-          <VStack gap={2} className="w-full">
-            <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-              Port Range
-            </label>
-            <Select
-              options={portRangeOptions}
-              value={portRangeType}
-              onChange={(value) => setPortRangeType(value as PortRangeType)}
-              fullWidth
-            />
+          <FormField>
+            <FormField.Label>Port Range</FormField.Label>
+            <FormField.Control>
+              <Select
+                options={portRangeOptions}
+                value={portRangeType}
+                onChange={(value) => setPortRangeType(value as PortRangeType)}
+                fullWidth
+              />
+            </FormField.Control>
             {portRangeType === 'custom' && (
               <>
-                <Input
-                  value={portRange}
-                  onChange={(e) => setPortRange(e.target.value)}
-                  placeholder=""
-                  fullWidth
-                  error={hasAttemptedSubmit && !portRange.trim()}
-                />
+                <FormField.Control>
+                  <Input
+                    value={portRange}
+                    onChange={(e) => setPortRange(e.target.value)}
+                    placeholder=""
+                    fullWidth
+                    error={hasAttemptedSubmit && !portRange.trim()}
+                  />
+                </FormField.Control>
                 {hasAttemptedSubmit && !portRange.trim() ? (
-                  <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
-                    Port range is required
-                  </p>
+                  <FormField.ErrorMessage>Port range is required</FormField.ErrorMessage>
                 ) : (
-                  <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
+                  <FormField.HelperText>
                     e.g. single port '8080', port range '7000-7005'
-                  </p>
+                  </FormField.HelperText>
                 )}
               </>
             )}
-          </VStack>
+          </FormField>
         )}
 
         {/* ICMP Type and Code (only for Custom ICMP) */}

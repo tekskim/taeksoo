@@ -163,7 +163,7 @@ export function DetachVolumeDrawer({
               variant="muted"
               size="sm"
               onClick={onCreateNewNetwork}
-              rightIcon={<IconExternalLink size={16} />}
+              rightIcon={<IconExternalLink size={12} />}
             >
               Create a new network
             </Button>
@@ -294,7 +294,7 @@ export function DetachVolumeDrawer({
                         {volume.name}
                       </span>
                       <IconExternalLink
-                        size={16}
+                        size={12}
                         className="shrink-0 text-[var(--color-action-primary)]"
                       />
                     </div>

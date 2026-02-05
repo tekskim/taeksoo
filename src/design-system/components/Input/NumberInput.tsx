@@ -12,12 +12,12 @@ export interface NumberInputProps extends Omit<
   InputHTMLAttributes<HTMLInputElement>,
   'type' | 'onChange' | 'value' | 'defaultValue'
 > {
-  /** Label text */
+  /** @deprecated Use FormField with label prop instead: <FormField label="Count"><NumberInput /></FormField> */
   label?: string;
-  /** Helper text */
+  /** @deprecated Use FormField with helperText prop instead: <FormField helperText="Help"><NumberInput /></FormField> */
   helperText?: string;
-  /** Error message */
-  error?: string;
+  /** Error state (boolean) or error message (string). Prefer boolean with FormField errorMessage prop */
+  error?: string | boolean;
   /** @deprecated Use width="full" instead */
   fullWidth?: boolean;
   /** Width variant: xs (80px), sm (160px), md (240px), lg (320px), half (50%), full (100%), or number for custom pixel width */
@@ -199,7 +199,7 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
     return (
       <div className={wrapperClasses}>
         {label && (
-          <label htmlFor={inputId} className="text-label-sm text-[var(--color-text-default)]">
+          <label htmlFor={inputId} className="text-label-lg text-[var(--color-text-default)]">
             {label}
           </label>
         )}

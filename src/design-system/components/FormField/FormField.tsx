@@ -1,4 +1,14 @@
-import { forwardRef, type HTMLAttributes, type ReactNode, createContext, useContext } from 'react';
+import {
+  forwardRef,
+  type HTMLAttributes,
+  type ReactNode,
+  createContext,
+  useContext,
+  cloneElement,
+  isValidElement,
+  Children,
+  useId,
+} from 'react';
 import { twMerge } from 'tailwind-merge';
 
 /* ----------------------------------------
@@ -31,6 +41,21 @@ export interface FormFieldProps extends HTMLAttributes<HTMLDivElement> {
   required?: boolean;
   /** Children elements */
   children: ReactNode;
+
+  /* ----------------------------------------
+     Simple API Props (alternative to Compound)
+     ---------------------------------------- */
+
+  /** Label text (simple API) - if provided, enables simple mode */
+  label?: ReactNode;
+  /** Description text below label (simple API) */
+  description?: ReactNode;
+  /** Helper text below input (simple API) */
+  helperText?: ReactNode;
+  /** Error message (simple API) */
+  errorMessage?: ReactNode;
+  /** Label size */
+  labelSize?: 'sm' | 'md';
 }
 
 export interface FormFieldLabelProps extends HTMLAttributes<HTMLLabelElement> {
@@ -57,12 +82,54 @@ export interface FormFieldControlProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
 }
 
+export interface FormFieldDescriptionProps extends HTMLAttributes<HTMLParagraphElement> {
+  /** Description text content */
+  children: ReactNode;
+}
+
 /* ----------------------------------------
    FormField Component
+   
+   Supports two usage modes:
+   
+   1. Simple API (recommended for most cases):
+      <FormField label="Name" helperText="2-64 characters" required>
+        <Input placeholder="Enter name" />
+      </FormField>
+   
+   2. Compound API (for complex layouts):
+      <FormField required>
+        <FormField.Label>Name <Badge>NEW</Badge></FormField.Label>
+        <FormField.Description>설명</FormField.Description>
+        <FormField.Control>
+          <Input placeholder="Enter name" />
+        </FormField.Control>
+        <FormField.HelperText>2-64 characters</FormField.HelperText>
+      </FormField>
    ---------------------------------------- */
 
 const FormFieldRoot = forwardRef<HTMLDivElement, FormFieldProps>(
-  ({ id, error, disabled, required, children, className, ...props }, ref) => {
+  (
+    {
+      id: idProp,
+      error,
+      disabled,
+      required,
+      children,
+      className,
+      // Simple API props
+      label,
+      description,
+      helperText,
+      errorMessage,
+      labelSize = 'md',
+      ...props
+    },
+    ref
+  ) => {
+    const generatedId = useId();
+    const id = idProp || (label ? generatedId : undefined);
+
     const contextValue: FormFieldContextValue = {
       id,
       error,
@@ -70,9 +137,46 @@ const FormFieldRoot = forwardRef<HTMLDivElement, FormFieldProps>(
       required,
     };
 
+    // Simple API mode: when label prop is provided
+    if (label !== undefined) {
+      return (
+        <FormFieldContext.Provider value={contextValue}>
+          <div ref={ref} className={twMerge('flex flex-col gap-[8px]', className)} {...props}>
+            {/* Label */}
+            <FormFieldLabel size={labelSize}>{label}</FormFieldLabel>
+
+            {/* Description (below label) */}
+            {description && <FormFieldDescription>{description}</FormFieldDescription>}
+
+            {/* Control with auto-injected props */}
+            <FormFieldControl>
+              {Children.map(children, (child) => {
+                if (isValidElement(child)) {
+                  // Auto-inject id, error, disabled props to form controls
+                  return cloneElement(child as React.ReactElement<any>, {
+                    id: (child.props as any).id || id,
+                    error: (child.props as any).error ?? error,
+                    disabled: (child.props as any).disabled ?? disabled,
+                  });
+                }
+                return child;
+              })}
+            </FormFieldControl>
+
+            {/* Helper Text (below input, hidden when error) */}
+            {helperText && <FormFieldHelperText>{helperText}</FormFieldHelperText>}
+
+            {/* Error Message (below input, shown when error) */}
+            {errorMessage && <FormFieldErrorMessage>{errorMessage}</FormFieldErrorMessage>}
+          </div>
+        </FormFieldContext.Provider>
+      );
+    }
+
+    // Compound API mode: traditional usage with sub-components
     return (
       <FormFieldContext.Provider value={contextValue}>
-        <div ref={ref} className={twMerge('flex flex-col gap-2', className)} {...props}>
+        <div ref={ref} className={twMerge('flex flex-col gap-[8px]', className)} {...props}>
           {children}
         </div>
       </FormFieldContext.Provider>
@@ -133,6 +237,32 @@ const FormFieldControl = forwardRef<HTMLDivElement, FormFieldControlProps>(
 FormFieldControl.displayName = 'FormField.Control';
 
 /* ----------------------------------------
+   FormField.Description Component
+   (Appears below label, describes the field purpose)
+   ---------------------------------------- */
+
+const FormFieldDescription = forwardRef<HTMLParagraphElement, FormFieldDescriptionProps>(
+  ({ children, className, ...props }, ref) => {
+    const { id } = useFormField();
+
+    // Label ↔ Description: 4px (8px gap - 4px = -4px margin-top)
+    // Description uses text-body-md (12px/18px), HelperText uses text-body-sm (11px/16px)
+    return (
+      <p
+        ref={ref}
+        id={id ? `${id}-description` : undefined}
+        className={`text-body-md text-[var(--color-text-subtle)] -mt-[4px] ${className || ''}`}
+        {...props}
+      >
+        {children}
+      </p>
+    );
+  }
+);
+
+FormFieldDescription.displayName = 'FormField.Description';
+
+/* ----------------------------------------
    FormField.HelperText Component
    ---------------------------------------- */
 
@@ -143,11 +273,12 @@ const FormFieldHelperText = forwardRef<HTMLParagraphElement, FormFieldHelperText
     // Don't render helper text when there's an error
     if (error) return null;
 
+    // HelperText uses text-body-sm (11px/16px)
     return (
       <p
         ref={ref}
         id={id ? `${id}-helper` : undefined}
-        className={twMerge('text-body-sm text-[var(--color-text-subtle)]', className)}
+        className={`text-body-sm text-[var(--color-text-subtle)] ${className || ''}`}
         {...props}
       >
         {children}
@@ -174,7 +305,7 @@ const FormFieldErrorMessage = forwardRef<HTMLParagraphElement, FormFieldErrorMes
         ref={ref}
         id={id ? `${id}-error` : undefined}
         role="alert"
-        className={twMerge('text-body-sm text-[var(--color-state-danger)]', className)}
+        className={`text-body-sm text-[var(--color-state-danger)] ${className || ''}`}
         {...props}
       >
         {children}
@@ -191,6 +322,7 @@ FormFieldErrorMessage.displayName = 'FormField.ErrorMessage';
 
 export const FormField = Object.assign(FormFieldRoot, {
   Label: FormFieldLabel,
+  Description: FormFieldDescription,
   Control: FormFieldControl,
   HelperText: FormFieldHelperText,
   ErrorMessage: FormFieldErrorMessage,

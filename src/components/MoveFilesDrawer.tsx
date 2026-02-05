@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button } from '@/design-system';
+import { Drawer, Button, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 import { IconChevronDown, IconChevronRight, IconFolder, IconFolderOpen } from '@tabler/icons-react';
 
@@ -265,16 +265,16 @@ export function MoveFilesDrawer({
         {/* Folder Path and Location */}
         <VStack gap={3} className="w-full">
           {/* Folder Path (read-only) */}
-          <VStack gap={2} className="w-full">
-            <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-              Folder path
-            </label>
-            <div className="w-full px-[10px] py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md">
-              <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
-                {currentPath}
-              </span>
-            </div>
-          </VStack>
+          <FormField>
+            <FormField.Label>Folder path</FormField.Label>
+            <FormField.Control>
+              <div className="w-full px-[10px] py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md">
+                <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
+                  {currentPath}
+                </span>
+              </div>
+            </FormField.Control>
+          </FormField>
 
           {/* Folder Location Tree */}
           <div className="w-full p-[13px] bg-white border border-[var(--color-border-default)] rounded-[10px]">

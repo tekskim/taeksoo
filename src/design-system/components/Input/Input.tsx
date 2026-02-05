@@ -19,12 +19,12 @@ export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 
   size?: InputSize | InputSizeAlias;
   /** Input variant */
   variant?: InputVariant;
-  /** Label text */
+  /** @deprecated Use FormField with label prop instead: <FormField label="Name"><Input /></FormField> */
   label?: string;
-  /** Helper text */
+  /** @deprecated Use FormField with helperText prop instead: <FormField helperText="Help"><Input /></FormField> */
   helperText?: string;
-  /** Error message */
-  error?: string;
+  /** Error state (boolean) or error message (string). Prefer boolean with FormField errorMessage prop */
+  error?: string | boolean;
   /** @deprecated Use width="full" instead */
   fullWidth?: boolean;
   /** Width variant: xs (80px), sm (160px), md (240px), lg (320px), half (50%), full (100%), or number for custom pixel width */

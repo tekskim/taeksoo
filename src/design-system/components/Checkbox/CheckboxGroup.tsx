@@ -63,28 +63,28 @@ export function CheckboxGroup({
   return (
     <CheckboxGroupContext.Provider value={{ name, disabled, error }}>
       <fieldset
-        className={twMerge('flex flex-col gap-[var(--checkbox-group-gap)]', className)}
+        className={twMerge('flex flex-col', className)}
         aria-labelledby={labelId}
         aria-describedby={[descriptionId, errorId].filter(Boolean).join(' ') || undefined}
         aria-invalid={error || undefined}
         disabled={disabled}
       >
         {/* Group Label */}
+        {/* Label ↔ Options: 12px, Label ↔ Description: 4px */}
         {label && (
           <legend
             id={labelId}
-            className="text-label-lg text-[var(--color-text-default)] mb-[var(--checkbox-group-label-gap)]"
+            className={`text-label-lg text-[var(--color-text-default)] ${description ? 'mb-[4px]' : 'mb-[12px]'}`}
           >
             {label}
           </legend>
         )}
 
         {/* Description */}
+        {/* Description ↔ Options: 12px */}
+        {/* Description uses text-body-md (12px/18px) */}
         {description && (
-          <p
-            id={descriptionId}
-            className="text-[length:var(--checkbox-description-size)] leading-[var(--checkbox-description-line-height)] text-[var(--checkbox-description-color)] -mt-1"
-          >
+          <p id={descriptionId} className="text-body-md text-[var(--color-text-subtle)] mb-[12px]">
             {description}
           </p>
         )}

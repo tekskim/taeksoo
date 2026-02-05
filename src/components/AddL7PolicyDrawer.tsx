@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input, Select, Toggle } from '@/design-system';
+import { Drawer, Button, Input, Select, Toggle, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 
 /* ----------------------------------------
@@ -121,54 +121,55 @@ export function AddL7PolicyDrawer({
         </h2>
 
         {/* L7 Policy Name Input */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            L7 Policy Name
-          </label>
-          <Input
-            value={policyName}
-            onChange={(e) => setPolicyName(e.target.value)}
-            placeholder="e.g. policy-image-redirect"
-            fullWidth
-            error={hasAttemptedSubmit && !policyName.trim()}
-          />
+        <FormField required error={hasAttemptedSubmit && !policyName.trim()}>
+          <FormField.Label>L7 Policy Name</FormField.Label>
+          <FormField.Control>
+            <Input
+              value={policyName}
+              onChange={(e) => setPolicyName(e.target.value)}
+              placeholder="e.g. policy-image-redirect"
+              fullWidth
+              error={hasAttemptedSubmit && !policyName.trim()}
+            />
+          </FormField.Control>
           {hasAttemptedSubmit && !policyName.trim() ? (
-            <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
-              Policy name is required
-            </p>
+            <FormField.ErrorMessage>Policy name is required</FormField.ErrorMessage>
           ) : (
-            <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
+            <FormField.HelperText>
               Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-            </p>
+            </FormField.HelperText>
           )}
-        </VStack>
+        </FormField>
 
         {/* Description Input */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Description (optional)
-          </label>
-          <Input
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="e.g., Redirect image traffic to CDN"
-            fullWidth
-          />
-        </VStack>
+        <FormField>
+          <FormField.Label>
+            Description{' '}
+            <span className="text-body-md text-[var(--color-text-subtle)]">(optional)</span>
+          </FormField.Label>
+          <FormField.Control>
+            <Input
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="e.g., Redirect image traffic to CDN"
+              fullWidth
+            />
+          </FormField.Control>
+        </FormField>
 
         {/* Action Select */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">Action</label>
-          <Select
-            value={action}
-            onChange={(value) => setAction(value)}
-            options={ACTION_OPTIONS}
-            fullWidth
-          />
+        <FormField>
+          <FormField.Label>Action</FormField.Label>
+          <FormField.Control>
+            <Select
+              value={action}
+              onChange={(value) => setAction(value)}
+              options={ACTION_OPTIONS}
+              fullWidth
+            />
 
-          {/* Target Pool Select (shown when action is forward_to_pool) */}
-          {action === 'forward_to_pool' && (
-            <>
+            {/* Target Pool Select (shown when action is forward_to_pool) */}
+            {action === 'forward_to_pool' && (
               <Select
                 value={targetPool}
                 onChange={(value) => setTargetPool(value)}
@@ -177,31 +178,29 @@ export function AddL7PolicyDrawer({
                 fullWidth
                 error={hasAttemptedSubmit && !targetPool}
               />
-              {hasAttemptedSubmit && !targetPool && (
-                <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
-                  Target pool is required
-                </p>
-              )}
-            </>
+            )}
+          </FormField.Control>
+          {action === 'forward_to_pool' && hasAttemptedSubmit && !targetPool && (
+            <FormField.ErrorMessage>Target pool is required</FormField.ErrorMessage>
           )}
-        </VStack>
+        </FormField>
 
         {/* Position Input */}
-        <VStack gap={2} className="w-full">
-          <HStack gap={2} className="items-center">
-            <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-              Position
-            </label>
+        <FormField>
+          <FormField.Label>
+            Position{' '}
             <span className="text-body-md text-[var(--color-text-subtle)]">(Optional)</span>
-          </HStack>
-          <Input
-            type="number"
-            value={position.toString()}
-            onChange={(e) => setPosition(Math.max(1, parseInt(e.target.value) || 1))}
-            min={1}
-            fullWidth
-          />
-        </VStack>
+          </FormField.Label>
+          <FormField.Control>
+            <Input
+              type="number"
+              value={position.toString()}
+              onChange={(e) => setPosition(Math.max(1, parseInt(e.target.value) || 1))}
+              min={1}
+              fullWidth
+            />
+          </FormField.Control>
+        </FormField>
 
         {/* Admin State Toggle */}
         <VStack gap={3} className="w-full">

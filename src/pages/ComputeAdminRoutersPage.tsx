@@ -23,6 +23,7 @@ import {
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
+import { CreateRouterDrawer } from '@/components/CreateRouterDrawer';
 import { IconTrash, IconDownload, IconBell, IconDotsCircleHorizontal } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 
@@ -254,6 +255,9 @@ export function ComputeAdminRoutersPage() {
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [routerToDelete, setRouterToDelete] = useState<Router | null>(null);
+
+  // Create router drawer state
+  const [isCreateRouterDrawerOpen, setIsCreateRouterDrawerOpen] = useState(false);
 
   // View preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
@@ -504,7 +508,11 @@ export function ComputeAdminRoutersPage() {
               {/* Page Header */}
               <div className="flex justify-between items-center h-8 w-full">
                 <h1 className="text-heading-h5 text-[var(--color-text-default)]">Routers</h1>
-                <Button variant="primary" size="md">
+                <Button
+                  variant="primary"
+                  size="md"
+                  onClick={() => setIsCreateRouterDrawerOpen(true)}
+                >
                   Create Router
                 </Button>
               </div>
@@ -592,6 +600,12 @@ export function ComputeAdminRoutersPage() {
         columns={columnConfig}
         defaultColumns={defaultColumnConfig}
         onColumnsChange={setColumnConfig}
+      />
+
+      {/* Create Router Drawer */}
+      <CreateRouterDrawer
+        isOpen={isCreateRouterDrawerOpen}
+        onClose={() => setIsCreateRouterDrawerOpen(false)}
       />
     </div>
   );

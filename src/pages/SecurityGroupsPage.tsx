@@ -23,6 +23,7 @@ import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { ViewPreferencesDrawer, type ColumnConfig } from '@/components/ViewPreferencesDrawer';
 import { CreateSecurityGroupRuleDrawer } from '@/components/CreateSecurityGroupRuleDrawer';
+import { CreateSecurityGroupDrawer } from '@/components/CreateSecurityGroupDrawer';
 import { EditSecurityGroupDrawer } from '@/components/EditSecurityGroupDrawer';
 import { IconDotsCircleHorizontal, IconTrash, IconDownload, IconBell } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
@@ -169,6 +170,9 @@ export function SecurityGroupsPage() {
   // Delete modal state
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [groupToDelete, setGroupToDelete] = useState<SecurityGroup | null>(null);
+
+  // Create security group drawer state
+  const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
 
   // View preferences state
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
@@ -390,7 +394,7 @@ export function SecurityGroupsPage() {
                 <h1 className="text-heading-h5 text-[var(--color-text-default)]">
                   Security groups
                 </h1>
-                <Button variant="primary" size="md">
+                <Button variant="primary" size="md" onClick={() => setIsCreateDrawerOpen(true)}>
                   Create Security group
                 </Button>
               </div>
@@ -495,6 +499,13 @@ export function SecurityGroupsPage() {
           name: selectedGroupForDrawer?.name || '',
           description: selectedGroupForDrawer?.description,
         }}
+      />
+
+      {/* Create Security Group Drawer */}
+      <CreateSecurityGroupDrawer
+        isOpen={isCreateDrawerOpen}
+        onClose={() => setIsCreateDrawerOpen(false)}
+        quota={{ used: 5, limit: 10 }}
       />
     </div>
   );

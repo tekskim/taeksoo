@@ -526,11 +526,11 @@ export default function CreateNetworkPage() {
                                   {/* Allocation pools */}
                                   <FormField>
                                     <FormField.Label>Allocation pools</FormField.Label>
-                                    <span className="text-body-md text-[var(--color-text-subtle)]">
+                                    <FormField.Description>
                                       Manually define the range of IP addresses to be automatically
                                       allocated by DHCP. IPs outside this range will not be
                                       allocated, which is useful for reserving static IPs.
-                                    </span>
+                                    </FormField.Description>
                                     <FormField.Control>
                                       <Textarea
                                         placeholder="e.g. 192.168.0.100,192.168.0.200"
@@ -548,10 +548,10 @@ export default function CreateNetworkPage() {
                                   {/* Host routes */}
                                   <FormField>
                                     <FormField.Label>Host routes</FormField.Label>
-                                    <span className="text-body-md text-[var(--color-text-subtle)]">
+                                    <FormField.Description>
                                       An advanced feature for manually specifying a route to a
                                       specific network destination.
-                                    </span>
+                                    </FormField.Description>
                                     <FormField.Control>
                                       <Textarea
                                         placeholder="e.g. 10.10.0.0/24,192.168.0.254"

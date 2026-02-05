@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Drawer, Button, Input, Select, Slider } from '@/design-system';
+import { Drawer, Button, Input, Select, Slider, FormField } from '@/design-system';
 import { HStack, VStack } from '@/design-system/layouts';
 import { IconInfinity } from '@tabler/icons-react';
 
@@ -215,27 +215,25 @@ export function CreateVolumeFromSnapshotDrawer({
         </VStack>
 
         {/* Volume Name Input */}
-        <VStack gap={2} className="w-full">
-          <label className="text-label-lg text-[var(--color-text-default)] leading-5">
-            Volume name
-          </label>
-          <Input
-            value={volumeName}
-            onChange={(e) => setVolumeName(e.target.value)}
-            placeholder="e.g. data-snap-volume"
-            fullWidth
-            error={hasAttemptedSubmit && !volumeName.trim()}
-          />
+        <FormField required error={hasAttemptedSubmit && !volumeName.trim()}>
+          <FormField.Label>Volume name</FormField.Label>
+          <FormField.Control>
+            <Input
+              value={volumeName}
+              onChange={(e) => setVolumeName(e.target.value)}
+              placeholder="e.g. data-snap-volume"
+              fullWidth
+              error={hasAttemptedSubmit && !volumeName.trim()}
+            />
+          </FormField.Control>
           {hasAttemptedSubmit && !volumeName.trim() ? (
-            <p className="text-body-sm text-[var(--color-state-danger)] leading-4">
-              Volume name is required
-            </p>
+            <FormField.ErrorMessage>Volume name is required</FormField.ErrorMessage>
           ) : (
-            <p className="text-body-sm text-[var(--color-text-subtle)] leading-4">
+            <FormField.HelperText>
               Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
-            </p>
+            </FormField.HelperText>
           )}
-        </VStack>
+        </FormField>
 
         {/* Capacity Slider */}
         <VStack gap={3} className="w-full">

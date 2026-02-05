@@ -14,6 +14,7 @@ import {
   InlineMessage,
   Chip,
   Checkbox,
+  FormField,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -510,54 +511,54 @@ function BasicInformationSection({
           ) : undefined
         }
       />
-      <SectionCard.Content>
+      <SectionCard.Content showDividers={false}>
         <VStack gap={0}>
           {/* Role Name */}
-          <div className="flex flex-col pt-2 pb-6">
-            <label className="text-label-lg text-[var(--color-text-default)] mb-2">
-              Role name <span className="text-[var(--color-state-danger)]">*</span>
-            </label>
-            <Input
-              placeholder="Enter role name"
-              value={roleName}
-              onChange={(e) => {
-                onRoleNameChange(e.target.value);
-                onRoleNameErrorChange(null);
-              }}
-              error={!!roleNameError}
-              fullWidth
-            />
-            <div className="flex flex-col gap-1 mt-1">
-              {roleNameError && (
-                <span className="text-body-sm text-[var(--color-state-danger)]">
-                  {roleNameError}
-                </span>
+          <div className="pt-2 pb-6">
+            <FormField required error={!!roleNameError}>
+              <FormField.Label>Role name</FormField.Label>
+              <FormField.Control>
+                <Input
+                  placeholder="Enter role name"
+                  value={roleName}
+                  onChange={(e) => {
+                    onRoleNameChange(e.target.value);
+                    onRoleNameErrorChange(null);
+                  }}
+                  fullWidth
+                />
+              </FormField.Control>
+              {roleNameError ? (
+                <FormField.ErrorMessage>{roleNameError}</FormField.ErrorMessage>
+              ) : (
+                <FormField.HelperText>
+                  You can use letters, numbers, and special characters (+=,.@-_), and the length
+                  must be between 2-128 characters.
+                </FormField.HelperText>
               )}
-              <span className="text-body-sm text-[var(--color-text-subtle)]">
-                You can use letters, numbers, and special characters (+=,.@-_), and the length must
-                be between 2-128 characters.
-              </span>
-            </div>
+            </FormField>
           </div>
 
           {/* Divider */}
           <div className="w-full h-px bg-[var(--color-border-subtle)]" />
 
           {/* Description */}
-          <div className="flex flex-col pt-2 pb-6">
-            <label className="text-label-lg text-[var(--color-text-default)] mb-2">
-              Description
-            </label>
-            <Input
-              placeholder="Enter description"
-              value={description}
-              onChange={(e) => onDescriptionChange(e.target.value)}
-              fullWidth
-            />
-            <span className="text-body-sm text-[var(--color-text-subtle)] mt-1">
-              You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255
-              characters.
-            </span>
+          <div className="pt-2 pb-6">
+            <FormField>
+              <FormField.Label>Description</FormField.Label>
+              <FormField.Control>
+                <Input
+                  placeholder="Enter description"
+                  value={description}
+                  onChange={(e) => onDescriptionChange(e.target.value)}
+                  fullWidth
+                />
+              </FormField.Control>
+              <FormField.HelperText>
+                You can use letters, numbers, and special characters (+=,.@-_()[]), and maximum 255
+                characters.
+              </FormField.HelperText>
+            </FormField>
           </div>
 
           {/* Divider + Next Button (only when not editing) */}
