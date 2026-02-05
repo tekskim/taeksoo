@@ -348,7 +348,6 @@ export function FloatingIPsPage() {
       label: 'Associated to',
       flex: 1,
       minWidth: columnMinWidths.associatedTo,
-      align: 'center',
       render: (_, row) =>
         row.associatedTo ? (
           <div className="flex items-center gap-2 justify-between w-full">
