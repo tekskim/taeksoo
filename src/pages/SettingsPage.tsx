@@ -503,10 +503,9 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
                         <Button
                           variant="outline"
                           size="sm"
-                          className="gap-1.5"
+                          leftIcon={<IconEdit size={12} />}
                           onClick={() => setIsEditingAccount(true)}
                         >
-                          <IconEdit size={16} />
                           Edit
                         </Button>
                       )
