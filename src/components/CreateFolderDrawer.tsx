@@ -326,7 +326,7 @@ export function CreateFolderDrawer({
             <label className="text-label-lg text-[var(--color-text-default)] leading-5">
               Folder path
             </label>
-            <div className="w-full px-[10px] py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md">
+            <div className="w-full px-2.5 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-md">
               <span className="text-body-md text-[var(--color-text-subtle)] leading-4">
                 {displayPath}
               </span>

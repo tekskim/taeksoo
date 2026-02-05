@@ -89,7 +89,7 @@ export function EditFloatingIPDrawer({
           <label className="text-label-lg text-[var(--color-text-default)] leading-5">
             Floating IP
           </label>
-          <div className="w-full px-[10px] py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-md">
+          <div className="w-full px-2.5 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-md">
             <span className="text-body-md text-[var(--color-text-default)] leading-4">
               {floatingIP.ipAddress}
             </span>

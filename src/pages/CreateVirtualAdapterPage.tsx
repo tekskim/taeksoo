@@ -800,22 +800,28 @@ export default function CreateVirtualAdapterPage() {
                             <FormField.Description>
                               Choose whether to auto-allocate a MAC address or enter one manually.
                             </FormField.Description>
+                            <FormField.Control>
+                              <VStack gap={3} align="stretch">
+                                <RadioGroup
+                                  value={macAddressMode}
+                                  onChange={(value) =>
+                                    setMacAddressMode(value as 'auto' | 'manual')
+                                  }
+                                >
+                                  <Radio value="auto" label="Auto-allocate" />
+                                  <Radio value="manual" label="Manual" />
+                                </RadioGroup>
+                                {macAddressMode === 'manual' && (
+                                  <Input
+                                    placeholder="Enter MAC address (e.g. fa:16:3e:d7:f2:6c)"
+                                    value={manualMacAddress}
+                                    onChange={(e) => setManualMacAddress(e.target.value)}
+                                    fullWidth
+                                  />
+                                )}
+                              </VStack>
+                            </FormField.Control>
                           </FormField>
-                          <RadioGroup
-                            value={macAddressMode}
-                            onChange={(value) => setMacAddressMode(value as 'auto' | 'manual')}
-                          >
-                            <Radio value="auto" label="Auto-allocate" />
-                            <Radio value="manual" label="Manual" />
-                          </RadioGroup>
-                          {macAddressMode === 'manual' && (
-                            <Input
-                              placeholder="Enter MAC address (e.g. fa:16:3e:d7:f2:6c)"
-                              value={manualMacAddress}
-                              onChange={(e) => setManualMacAddress(e.target.value)}
-                              fullWidth
-                            />
-                          )}
                         </VStack>
 
                         {/* Network Error Message */}

@@ -50,12 +50,12 @@ function QuotaProgressBar({ label, used, total }: QuotaProgressBarProps) {
       <div className="w-full h-1 bg-[var(--color-border-subtle)] rounded-lg relative overflow-hidden">
         {/* Current usage (darker green) */}
         <div
-          className="absolute left-0 top-0 h-full bg-[#4ade80] rounded-lg z-[2]"
+          className="absolute left-0 top-0 h-full bg-[var(--component-status-indicator-active-bg)] rounded-lg z-[2]"
           style={{ width: `${Math.min(percentage, 100)}%` }}
         />
         {/* Next usage preview (lighter green) */}
         <div
-          className="absolute left-0 top-0 h-full bg-[#bbf7d0] rounded-lg z-[1]"
+          className="absolute left-0 top-0 h-full bg-[var(--primitive-color-green200)] rounded-lg z-[1]"
           style={{ width: `${Math.min(nextPercentage, 100)}%` }}
         />
       </div>
@@ -228,7 +228,7 @@ export function CreateKeyPairDrawer({
                 value={publicKey}
                 onChange={(e) => setPublicKey(e.target.value)}
                 placeholder="Upload a file with a public key or enter it in the field."
-                className={`w-full min-h-[80px] px-[10px] py-2 text-body-md leading-4 text-[var(--color-text-default)] placeholder:text-[var(--color-text-subtle)] bg-[var(--color-surface-default)] border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[var(--color-action-primary)] focus:border-transparent ${hasAttemptedSubmit && !publicKey.trim() ? 'border-[var(--color-state-danger)]' : 'border-[var(--color-border-strong)]'}`}
+                className={`w-full min-h-[80px] px-2.5 py-2 text-body-md leading-4 text-[var(--color-text-default)] placeholder:text-[var(--color-text-subtle)] bg-[var(--color-surface-default)] border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-[var(--color-action-primary)] focus:border-transparent ${hasAttemptedSubmit && !publicKey.trim() ? 'border-[var(--color-state-danger)]' : 'border-[var(--color-border-strong)]'}`}
               />
             </FormField.Control>
             {hasAttemptedSubmit && !publicKey.trim() && (

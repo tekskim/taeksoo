@@ -109,16 +109,16 @@ function QuotaCard({ label, used, limit, unit }: QuotaItem) {
   // Get badge colors based on percentage
   const getBadgeClasses = () => {
     if (percentage >= 100) {
-      return 'bg-[#fee2e2] text-[#ef4444]';
+      return 'bg-[var(--semantic-color-state-danger-bg)] text-[var(--semantic-color-state-danger)]';
     } else if (percentage >= 70) {
-      return 'bg-[#ffedd5] text-[#f97316]';
+      return 'bg-[var(--semantic-color-state-warning-bg)] text-[var(--semantic-color-state-warning)]';
     } else {
-      return 'bg-[#dcfce7] text-[#22c55e]';
+      return 'bg-[var(--semantic-color-state-success-bg)] text-[var(--semantic-color-state-success)]';
     }
   };
 
   return (
-    <div className="bg-[#fafafa] rounded-lg p-5 flex-1 min-w-0">
+    <div className="bg-[var(--color-surface-subtle)] rounded-lg p-5 flex-1 min-w-0">
       {/* Header with label and percentage badge */}
       <div className="flex items-center justify-between mb-3">
         <span className="text-label-md text-[var(--color-text-default)]">{label}</span>
@@ -129,7 +129,7 @@ function QuotaCard({ label, used, limit, unit }: QuotaItem) {
 
       {/* Value display */}
       <div className="flex items-baseline mb-4">
-        <span className="text-[24px] text-[var(--color-text-default)]">{used}</span>
+        <span className="text-heading-h3 text-[var(--color-text-default)]">{used}</span>
         <span className="text-body-lg text-[var(--color-text-subtle)]">
           /{limit}
           {unit ? ` ${unit}` : ''}
@@ -139,7 +139,7 @@ function QuotaCard({ label, used, limit, unit }: QuotaItem) {
       {/* Progress bar */}
       <div className="h-1 bg-[var(--color-border-default)] rounded-sm overflow-hidden">
         <div
-          className="h-full bg-[#475569] rounded-sm transition-all"
+          className="h-full bg-[var(--color-text-muted)] rounded-sm transition-all"
           style={{ width: `${Math.min(percentage, 100)}%` }}
         />
       </div>
@@ -159,7 +159,7 @@ function QuotaSection({ title, quotas }: { title: string; quotas: QuotaItem[] })
   }
 
   return (
-    <div className="bg-white border border-[var(--color-border-default)] rounded-2xl p-6">
+    <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-2xl p-6">
       {/* Section Title */}
       <h4 className="text-heading-h5 text-[var(--color-text-muted)] mb-6">{title}</h4>
 

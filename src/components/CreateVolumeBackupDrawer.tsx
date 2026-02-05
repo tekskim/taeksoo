@@ -55,12 +55,12 @@ function QuotaProgressBar({ label, used, total }: QuotaProgressBarProps) {
       <div className="w-full h-1 bg-[var(--color-border-subtle)] rounded-lg relative overflow-hidden">
         {/* Current usage (darker green) */}
         <div
-          className="absolute left-0 top-0 h-full bg-[#4ade80] rounded-lg z-[2]"
+          className="absolute left-0 top-0 h-full bg-[var(--component-status-indicator-active-bg)] rounded-lg z-[2]"
           style={{ width: `${Math.min(percentage, 100)}%` }}
         />
         {/* Next usage preview (lighter green) */}
         <div
-          className="absolute left-0 top-0 h-full bg-[#bbf7d0] rounded-lg z-[1]"
+          className="absolute left-0 top-0 h-full bg-[var(--primitive-color-green200)] rounded-lg z-[1]"
           style={{ width: `${Math.min(nextPercentage, 100)}%` }}
         />
       </div>

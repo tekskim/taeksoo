@@ -260,7 +260,7 @@ function CopyableCommand({ command }: CopyableCommandProps) {
 
   return (
     <div className="bg-[var(--color-surface-subtle)] rounded-md px-4 py-3 flex items-center justify-between mt-3">
-      <code className="text-[13px] text-[var(--color-text-default)] font-mono">{command}</code>
+      <code className="text-label-lg text-[var(--color-text-default)] font-mono">{command}</code>
       <button
         onClick={handleCopy}
         className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors"
@@ -462,7 +462,7 @@ export function WorkloadDetailPage() {
                           {workload.httpServices.status === 'error' && (
                             <div className="flex items-center gap-2 mt-3 text-[var(--color-text-subtle)]">
                               <IconInfoCircle size={16} stroke={1.5} />
-                              <span className="text-[13px]">{workload.httpServices.message}</span>
+                              <span className="text-label-lg">{workload.httpServices.message}</span>
                             </div>
                           )}
                           {workload.httpServices.status === 'available' &&
@@ -472,7 +472,7 @@ export function WorkloadDetailPage() {
                                   href={workload.httpServices.url}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="text-[var(--color-action-primary)] hover:underline text-[13px]"
+                                  className="text-[var(--color-action-primary)] hover:underline text-label-lg"
                                 >
                                   {workload.httpServices.url}
                                 </a>

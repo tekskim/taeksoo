@@ -17,15 +17,15 @@ type ConnectionStatus = 'connected' | 'connecting' | 'disconnected';
 function ConnectionStatusIndicator({ status }: { status: ConnectionStatus }) {
   const statusConfig = {
     connected: {
-      color: 'bg-emerald-500',
+      color: 'bg-[var(--primitive-color-green500)]',
       label: 'Connected',
     },
     connecting: {
-      color: 'bg-amber-500',
+      color: 'bg-[var(--primitive-color-yellow500)]',
       label: 'Connecting',
     },
     disconnected: {
-      color: 'bg-red-500',
+      color: 'bg-[var(--primitive-color-red500)]',
       label: 'Disconnected',
     },
   };
@@ -201,12 +201,12 @@ export function ConsolePage() {
           {/* Log Content - Dark background */}
           <div
             ref={contentRef}
-            className="flex-1 overflow-auto p-4 font-mono text-body-md leading-5 bg-[#0d1117] text-slate-300 shell-scroll"
+            className="flex-1 overflow-auto p-4 font-mono text-body-md leading-5 bg-[var(--primitive-color-blue-gray900)] text-[var(--primitive-color-blue-gray300)] shell-scroll"
           >
             {content ? (
               <pre className="whitespace-pre-wrap break-all m-0">{content}</pre>
             ) : (
-              <span className="text-slate-600">
+              <span className="text-[var(--primitive-color-blue-gray600)]">
                 {connectionStatus === 'connecting' ? 'Connecting...' : 'No output'}
               </span>
             )}

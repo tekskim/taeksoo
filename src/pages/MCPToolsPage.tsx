@@ -40,15 +40,15 @@ interface StatusCardProps {
 }
 
 function StatusCard({ label, count, status }: StatusCardProps) {
-  let bgColor = 'bg-[var(--color-surface-subtle,#f8fafc)]';
-  let iconBg = 'bg-[var(--color-text-muted,#475569)]';
+  let bgColor = 'bg-[var(--color-surface-subtle)]';
+  let iconBg = 'bg-[var(--color-text-muted)]';
 
   if (status === 'active') {
-    bgColor = 'bg-[var(--color-state-success-bg,#f0fdf4)]';
-    iconBg = 'bg-[var(--color-success,#4ade80)]';
+    bgColor = 'bg-[var(--color-state-success-bg)]';
+    iconBg = 'bg-[var(--color-success)]';
   } else if (status === 'error') {
-    bgColor = 'bg-[var(--color-state-danger-bg,#fef2f2)]';
-    iconBg = 'bg-[var(--color-danger,#ef4444)]';
+    bgColor = 'bg-[var(--color-state-danger-bg)]';
+    iconBg = 'bg-[var(--color-danger)]';
   }
 
   const getStatusIcon = () => {
@@ -484,7 +484,7 @@ export function MCPToolsPage() {
           className="p-1 rounded hover:bg-[var(--color-surface-subtle)] transition-colors"
         >
           {row.favorite ? (
-            <IconStarFilled size={16} className="text-yellow-500" />
+            <IconStarFilled size={16} className="text-[var(--semantic-color-state-warning)]" />
           ) : (
             <IconStar size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
           )}
@@ -874,10 +874,10 @@ export function MCPToolsPage() {
                     if (parent) {
                       parent.innerHTML = `
                                 <div class="flex flex-wrap w-full h-full">
-                                  <div class="w-1/2 h-1/2 bg-yellow-400"></div>
-                                  <div class="w-1/2 h-1/2 bg-green-400"></div>
-                                  <div class="w-1/2 h-1/2 bg-blue-400"></div>
-                                  <div class="w-1/2 h-1/2 bg-red-400"></div>
+                                  <div class="w-1/2 h-1/2 bg-[var(--primitive-color-yellow400)]"></div>
+                                  <div class="w-1/2 h-1/2 bg-[var(--primitive-color-green400)]"></div>
+                                  <div class="w-1/2 h-1/2 bg-[var(--primitive-color-blue400)]"></div>
+                                  <div class="w-1/2 h-1/2 bg-[var(--primitive-color-red400)]"></div>
                                 </div>
                               `;
                     }
@@ -911,7 +911,7 @@ export function MCPToolsPage() {
                 {tool.tags.slice(0, 10).map((tag, idx) => (
                   <div
                     key={idx}
-                    className="bg-[var(--color-surface-subtle,#f8fafc)] border border-[var(--color-border-default,#e2e8f0)] px-2 py-0.5 rounded-md text-body-sm leading-4 text-[var(--color-text-default)] whitespace-nowrap flex-shrink-0"
+                    className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] px-2 py-0.5 rounded-md text-body-sm leading-4 text-[var(--color-text-default)] whitespace-nowrap flex-shrink-0"
                   >
                     {tag}
                   </div>

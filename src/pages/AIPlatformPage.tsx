@@ -772,25 +772,43 @@ function DashboardContent() {
           }
           value="15 / 15"
           label="Active nodes"
-          iconBgColor="bg-blue-50"
+          iconBgColor="bg-[var(--semantic-color-state-info-bg)]"
         />
         <StatCard
-          icon={<IconActivity size={20} stroke={1.5} className="text-emerald-600" />}
+          icon={
+            <IconActivity
+              size={20}
+              stroke={1.5}
+              className="text-[var(--semantic-color-state-success)]"
+            />
+          }
           value="65.6%"
           label="CPU (317 / 484 cores)"
-          iconBgColor="bg-emerald-50"
+          iconBgColor="bg-[var(--semantic-color-state-success-bg)]"
         />
         <StatCard
-          icon={<IconChartBar size={20} stroke={1.5} className="text-amber-600" />}
+          icon={
+            <IconChartBar
+              size={20}
+              stroke={1.5}
+              className="text-[var(--semantic-color-state-warning)]"
+            />
+          }
           value="42.2%"
           label="Memory GB (1568 / 3719 GB)"
-          iconBgColor="bg-amber-50"
+          iconBgColor="bg-[var(--semantic-color-state-warning-bg)]"
         />
         <StatCard
-          icon={<IconBolt size={20} stroke={1.5} className="text-emerald-600" />}
+          icon={
+            <IconBolt
+              size={20}
+              stroke={1.5}
+              className="text-[var(--semantic-color-state-success)]"
+            />
+          }
           value="16 / 18"
           label="Active GPUs"
-          iconBgColor="bg-emerald-50"
+          iconBgColor="bg-[var(--semantic-color-state-success-bg)]"
         />
       </div>
 
@@ -807,19 +825,37 @@ function DashboardContent() {
             onClick={() => navigate('/ai-platform/workloads')}
           />
           <QuickActionCard
-            icon={<IconBolt size={28} stroke={1.5} className="text-emerald-600" />}
+            icon={
+              <IconBolt
+                size={28}
+                stroke={1.5}
+                className="text-[var(--semantic-color-state-success)]"
+              />
+            }
             title="Serverless Endpoint"
             description="Create inference API"
             onClick={() => navigate('/ai-platform/serverless')}
           />
           <QuickActionCard
-            icon={<IconSettings2 size={28} stroke={1.5} className="text-violet-600" />}
+            icon={
+              <IconSettings2
+                size={28}
+                stroke={1.5}
+                className="text-[var(--primitive-color-violet600)]"
+              />
+            }
             title="Fine-tuning Job"
             description="Start model training"
             onClick={() => navigate('/ai-platform/fine-tune')}
           />
           <QuickActionCard
-            icon={<IconActivity size={28} stroke={1.5} className="text-emerald-600" />}
+            icon={
+              <IconActivity
+                size={28}
+                stroke={1.5}
+                className="text-[var(--semantic-color-state-success)]"
+              />
+            }
             title="Detailed Monitoring"
             description="Check resource trends"
             onClick={() => navigate('/ai-platform/monitoring')}
@@ -858,19 +894,37 @@ function DashboardContent() {
             onClick={() => navigate('/ai-platform/storage')}
           />
           <ServiceOverviewCard
-            icon={<IconBolt size={28} stroke={1.5} className="text-emerald-600" />}
+            icon={
+              <IconBolt
+                size={28}
+                stroke={1.5}
+                className="text-[var(--semantic-color-state-success)]"
+              />
+            }
             count={7}
             label="Serverless"
             onClick={() => navigate('/ai-platform/serverless')}
           />
           <ServiceOverviewCard
-            icon={<IconSettings2 size={28} stroke={1.5} className="text-violet-600" />}
+            icon={
+              <IconSettings2
+                size={28}
+                stroke={1.5}
+                className="text-[var(--primitive-color-violet600)]"
+              />
+            }
             count={0}
             label="Fine-tuning"
             onClick={() => navigate('/ai-platform/fine-tune')}
           />
           <ServiceOverviewCard
-            icon={<IconChartBar size={28} stroke={1.5} className="text-cyan-600" />}
+            icon={
+              <IconChartBar
+                size={28}
+                stroke={1.5}
+                className="text-[var(--primitive-color-cyan600)]"
+              />
+            }
             count={6}
             label="Benchmarks"
             onClick={() => navigate('/ai-platform/benchmarks')}
@@ -884,7 +938,13 @@ function DashboardContent() {
             onClick={() => navigate('/ai-platform/datasets')}
           />
           <ServiceOverviewCard
-            icon={<IconBrain size={28} stroke={1.5} className="text-violet-600" />}
+            icon={
+              <IconBrain
+                size={28}
+                stroke={1.5}
+                className="text-[var(--primitive-color-violet600)]"
+              />
+            }
             count={0}
             label="Models"
             onClick={() => navigate('/ai-platform/models')}
@@ -1023,18 +1083,18 @@ interface StatusCardProps {
 }
 
 function StatusCard({ label, count, status }: StatusCardProps) {
-  let bgColor = 'bg-[var(--color-surface-subtle,#f8fafc)]';
-  let iconBg = 'bg-[var(--color-text-muted,#475569)]';
+  let bgColor = 'bg-[var(--color-surface-subtle)]';
+  let iconBg = 'bg-[var(--color-text-muted)]';
 
   if (status === 'running') {
-    bgColor = 'bg-[var(--color-state-success-bg,#f0fdf4)]';
-    iconBg = 'bg-[var(--color-success,#4ade80)]';
+    bgColor = 'bg-[var(--color-state-success-bg)]';
+    iconBg = 'bg-[var(--color-success)]';
   } else if (status === 'failed') {
-    bgColor = 'bg-[var(--color-state-danger-bg,#fef2f2)]';
-    iconBg = 'bg-[var(--color-danger,#ef4444)]';
+    bgColor = 'bg-[var(--color-state-danger-bg)]';
+    iconBg = 'bg-[var(--color-danger)]';
   } else if (status === 'pending') {
-    bgColor = 'bg-[var(--color-info-weak-bg,#eff6ff)]';
-    iconBg = 'bg-[var(--color-info,#3b82f6)]';
+    bgColor = 'bg-[var(--color-info-weak-bg)]';
+    iconBg = 'bg-[var(--color-info)]';
   }
 
   const getStatusIcon = () => {

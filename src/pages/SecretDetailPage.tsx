@@ -394,7 +394,7 @@ export function SecretDetailPage() {
                 {/* Data Tab */}
                 <TabPanel value="data">
                   {/* Data Section */}
-                  <div className="w-full border border-[var(--color-border-default)] rounded-[6px] p-3">
+                  <div className="w-full border border-[var(--color-border-default)] rounded-[var(--primitive-radius-md)] p-3">
                     <VStack gap={3}>
                       {/* Section Header */}
                       <HStack gap={1} align="center">
@@ -418,7 +418,7 @@ export function SecretDetailPage() {
                                     Key
                                   </label>
                                 )}
-                                <div className="w-full h-[36px] px-[10px] py-[8px] bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[6px] text-body-md text-[var(--color-text-default)] flex items-center">
+                                <div className="w-full h-[36px] px-2.5 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-subtle)] rounded-[var(--primitive-radius-md)] text-body-md text-[var(--color-text-default)] flex items-center">
                                   {key}
                                 </div>
                               </div>
@@ -429,7 +429,7 @@ export function SecretDetailPage() {
                                     Value
                                   </label>
                                 )}
-                                <div className="w-full h-[36px] px-[10px] py-[6px] bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-[6px] text-body-md text-[var(--color-text-default)] flex items-center justify-between">
+                                <div className="w-full h-[36px] px-2.5 py-1.5 bg-[var(--color-surface-default)] border border-[var(--color-border-strong)] rounded-[var(--primitive-radius-md)] text-body-md text-[var(--color-text-default)] flex items-center justify-between">
                                   <span className="truncate font-mono">
                                     {visibleValues[key] ? value : maskValue(value)}
                                   </span>

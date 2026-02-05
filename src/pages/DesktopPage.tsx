@@ -510,7 +510,7 @@ function DesktopTopBar({
         </div>
 
         {/* Separator + Chatbot */}
-        <div className="flex items-center border-l border-[#e2e8f0] px-[10px]">
+        <div className="flex items-center border-l border-[#e2e8f0] px-2.5">
           <button
             className="w-8 h-8 flex items-center justify-center cursor-pointer transition-opacity hover:opacity-80"
             onClick={onChatbotToggle}

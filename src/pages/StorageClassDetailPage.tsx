@@ -374,7 +374,7 @@ export function StorageClassDetailPage() {
                 {/* Parameters Tab */}
                 <TabPanel value="parameters">
                   {/* Content Box */}
-                  <div className="w-full border border-[var(--color-border-default)] rounded-[8px] p-4">
+                  <div className="w-full border border-[var(--color-border-default)] rounded-[var(--primitive-radius-lg)] p-4">
                     <VStack gap={3}>
                       {/* Title */}
                       <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
@@ -392,7 +392,7 @@ export function StorageClassDetailPage() {
                               {parametersEntries.map(([key]) => (
                                 <div
                                   key={key}
-                                  className="w-full h-[36px] px-[10px] py-[8px] bg-[var(--color-border-default)] border border-[var(--color-border-strong)] rounded-[6px] text-body-md text-[var(--color-text-subtle)]"
+                                  className="w-full h-[36px] px-2.5 py-2 bg-[var(--color-border-default)] border border-[var(--color-border-strong)] rounded-[var(--primitive-radius-md)] text-body-md text-[var(--color-text-subtle)]"
                                 >
                                   {key}
                                 </div>
@@ -428,7 +428,7 @@ export function StorageClassDetailPage() {
                 {/* Customize Tab */}
                 <TabPanel value="customize">
                   {/* Content Box */}
-                  <div className="w-full border border-[var(--color-border-default)] rounded-[8px] px-4 py-3">
+                  <div className="w-full border border-[var(--color-border-default)] rounded-[var(--primitive-radius-lg)] px-4 py-3">
                     <VStack gap={3}>
                       {/* Title */}
                       <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
@@ -508,7 +508,7 @@ export function StorageClassDetailPage() {
                             {scData.mountOptions.map((option, index) => (
                               <div
                                 key={index}
-                                className="w-full h-[32px] px-[10px] py-[8px] bg-[#e5e7eb] rounded-[6px] text-body-md text-[var(--color-text-subtle)] flex items-center"
+                                className="w-full h-[32px] px-[10px] py-[8px] bg-[var(--primitive-color-cool-gray200)] rounded-[6px] text-body-md text-[var(--color-text-subtle)] flex items-center"
                               >
                                 {option}
                               </div>

@@ -1833,8 +1833,8 @@ export function ComputeAdminInstanceDetailPage() {
                       </div>
 
                       {/* Console Area */}
-                      <div className="w-full flex-1 min-h-[500px] bg-[#141414] dark:bg-[#FAFAFA] border border-[var(--color-border-default)] rounded-lg p-6 overflow-auto text-[#fafafa] dark:text-[#0f172a]">
-                        <pre className="font-mono text-[13px] leading-[22px] text-[#e2e8f0] dark:text-[#1e293b] whitespace-pre-wrap">
+                      <div className="w-full flex-1 min-h-[500px] bg-[var(--primitive-color-blue-gray900)] dark:bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-lg p-6 overflow-auto text-[var(--color-surface-subtle)] dark:text-[var(--color-text-default)]">
+                        <pre className="font-mono text-[13px] leading-[22px] text-[var(--primitive-color-blue-gray200)] dark:text-[var(--primitive-color-blue-gray800)] whitespace-pre-wrap">
                           {`[    0.000000] Linux version 5.15.0-107-cloud (buildd@ubuntu) (gcc 11.3.0) #119-Ubuntu SMP Thu Sep 5 10:10:10 UTC 2025
 [    0.500123] cloud-init[101]: Starting network configuration...
 [    1.002345] cloud-init[101]: eth0: assigned 192.168.0.15 via DHCP
