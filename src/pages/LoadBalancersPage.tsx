@@ -612,7 +612,7 @@ export function LoadBalancersPage() {
           setDeleteModalOpen(false);
           setLbToDelete(null);
         }}
-        title="Delete Load balancer"
+        title="Delete load balancer"
         description="Removing the selected instances is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"

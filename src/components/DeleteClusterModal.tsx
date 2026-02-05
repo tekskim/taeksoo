@@ -36,7 +36,7 @@ export function DeleteClusterModal({
     <ConfirmModal
       isOpen={isOpen}
       onClose={onClose}
-      title="Delete Cluster"
+      title="Delete cluster"
       description="Removing the selected instances is permanent and cannot be undone."
       infoLabel="Cluster name"
       infoValue={cluster?.name ?? ''}

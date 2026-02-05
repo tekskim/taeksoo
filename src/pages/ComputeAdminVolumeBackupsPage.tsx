@@ -583,7 +583,7 @@ export function ComputeAdminVolumeBackupsPage() {
       <ConfirmModal
         isOpen={deleteModalOpen}
         onClose={handleDeleteCancel}
-        title="Delete Volume backup"
+        title="Delete volume backup"
         description="Removing the selected instances is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"

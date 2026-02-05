@@ -583,7 +583,7 @@ export function ComputeAdminRoutersPage() {
           setDeleteModalOpen(false);
           setRouterToDelete(null);
         }}
-        title="Delete Router"
+        title="Delete router"
         description="Removing the selected instances is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"

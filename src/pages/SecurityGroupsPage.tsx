@@ -465,7 +465,7 @@ export function SecurityGroupsPage() {
           setDeleteModalOpen(false);
           setGroupToDelete(null);
         }}
-        title="Delete Security group"
+        title="Delete security group"
         description="Removing the selected instances is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"

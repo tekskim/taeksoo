@@ -574,7 +574,7 @@ export function ComputeAdminVolumeSnapshotsPage() {
       <ConfirmModal
         isOpen={deleteModalOpen}
         onClose={handleDeleteCancel}
-        title="Delete Volume snapshot"
+        title="Delete volume snapshot"
         description="Removing the selected instances is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"
