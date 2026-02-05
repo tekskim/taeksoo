@@ -26,7 +26,6 @@ import {
   Checkbox,
   StatusIndicator,
   Toggle,
-  InlineMessage,
   SelectionIndicator,
   IconUbuntu,
   IconGrid,
@@ -48,6 +47,7 @@ import {
   IconProgress,
   IconStar,
   IconStarFilled,
+  IconUpload,
 } from '@tabler/icons-react';
 
 /* ----------------------------------------
@@ -429,7 +429,7 @@ function QuotaSidebar({
             onChange={onNumberOfInstancesChange}
             min={1}
             max={10}
-            width="sm"
+            width="full"
           />
         </VStack>
 
@@ -1363,19 +1363,15 @@ function ImageSection({
             )}
 
             {/* Selected / Error Message */}
-            {sourceError && !selectedImage ? (
-              <div className="mt-2">
-                <InlineMessage variant="error">{sourceError}</InlineMessage>
-              </div>
-            ) : (
-              <SelectionIndicator
-                className="mt-2"
-                selectedItems={
-                  selectedImage ? [{ id: selectedImage.id, label: selectedImage.name }] : []
-                }
-                onRemove={() => onSelectImage('')}
-              />
-            )}
+            <SelectionIndicator
+              className="mt-2"
+              selectedItems={
+                selectedImage ? [{ id: selectedImage.id, label: selectedImage.name }] : []
+              }
+              onRemove={() => onSelectImage('')}
+              error={!!sourceError}
+              errorMessage={sourceError}
+            />
           </VStack>
 
           {/* Divider */}
@@ -1423,7 +1419,7 @@ function ImageSection({
                   </VStack>
                   <span className="text-body-md text-[var(--color-text-default)] pb-2">GiB</span>
                 </HStack>
-                <div className="self-end pb-[6px]">
+                <div className="self-end pb-2">
                   <Checkbox
                     label="Deleted with the instance"
                     checked={deleteWithInstance}
@@ -1761,28 +1757,24 @@ function FlavorSection({
           />
 
           {/* Error Message or Selection Indicator */}
-          {flavorError && !selectedFlavorId ? (
-            <div className="mt-2">
-              <InlineMessage variant="error">{flavorError}</InlineMessage>
-            </div>
-          ) : (
-            <SelectionIndicator
-              className="mt-2"
-              selectedItems={
-                selectedFlavorId
-                  ? [
-                      {
-                        id: selectedFlavorId,
-                        label:
-                          mockFlavors.find((f) => f.id === selectedFlavorId)?.name ||
-                          selectedFlavorId,
-                      },
-                    ]
-                  : []
-              }
-              onRemove={() => onSelectFlavor('')}
-            />
-          )}
+          <SelectionIndicator
+            className="mt-2"
+            selectedItems={
+              selectedFlavorId
+                ? [
+                    {
+                      id: selectedFlavorId,
+                      label:
+                        mockFlavors.find((f) => f.id === selectedFlavorId)?.name ||
+                        selectedFlavorId,
+                    },
+                  ]
+                : []
+            }
+            onRemove={() => onSelectFlavor('')}
+            error={!!flavorError}
+            errorMessage={flavorError}
+          />
 
           {/* Divider + Next Button - hidden in edit mode */}
           {!isEditing && (
@@ -2006,6 +1998,7 @@ function NetworkSection({
   );
   const [sgSearch, setSgSearch] = useState('');
   const [sgPage, setSgPage] = useState(1);
+  const [securityGroupError, setSecurityGroupError] = useState<string | null>(null);
 
   // Port (Disclosure)
   const [portOpen, setPortOpen] = useState(false);
@@ -2258,21 +2251,39 @@ function NetworkSection({
 
   // Handle Next with validation
   const handleNextClick = () => {
+    let hasError = false;
     if (selectedNetworkIds.size === 0) {
       setNetworkError('Please select a network.');
-      return;
+      hasError = true;
+    } else {
+      setNetworkError(null);
     }
-    setNetworkError(null);
+    if (selectedSecurityGroups.size === 0) {
+      setSecurityGroupError('Please select a security group.');
+      hasError = true;
+    } else {
+      setSecurityGroupError(null);
+    }
+    if (hasError) return;
     onNext();
   };
 
   // Handle Edit Done with validation
   const handleEditDone = () => {
+    let hasError = false;
     if (selectedNetworkIds.size === 0) {
       setNetworkError('Please select a network.');
-      return;
+      hasError = true;
+    } else {
+      setNetworkError(null);
     }
-    setNetworkError(null);
+    if (selectedSecurityGroups.size === 0) {
+      setSecurityGroupError('Please select a security group.');
+      hasError = true;
+    } else {
+      setSecurityGroupError(null);
+    }
+    if (hasError) return;
     onEditDone?.();
   };
 
@@ -2298,7 +2309,10 @@ function NetworkSection({
         <VStack gap={4} className="pt-2">
           {/* Network Sub-section */}
           <VStack gap={3}>
-            <span className="text-label-lg">Network</span>
+            <span className="text-label-lg text-[var(--color-text-default)]">
+              Network
+              <span className="ml-1 text-[var(--color-state-danger)]">*</span>
+            </span>
 
             {/* Search */}
             <SearchInput
@@ -2339,23 +2353,19 @@ function NetworkSection({
             />
 
             {/* Error Message or Selection Indicator for Networks */}
-            {networkError && selectedNetworkIds.size === 0 ? (
-              <div className="mt-2">
-                <InlineMessage variant="error">{networkError}</InlineMessage>
-              </div>
-            ) : (
-              <SelectionIndicator
-                className="mt-2"
-                selectedItems={mockNetworks
-                  .filter((n) => selectedNetworkIds.has(n.id))
-                  .map((n) => ({ id: n.id, label: `${n.id}(${n.name})` }))}
-                onRemove={(id) => {
-                  const newSet = new Set(selectedNetworkIds);
-                  newSet.delete(id);
-                  setSelectedNetworkIds(newSet);
-                }}
-              />
-            )}
+            <SelectionIndicator
+              className="mt-2"
+              selectedItems={mockNetworks
+                .filter((n) => selectedNetworkIds.has(n.id))
+                .map((n) => ({ id: n.id, label: `${n.id}(${n.name})` }))}
+              onRemove={(id) => {
+                const newSet = new Set(selectedNetworkIds);
+                newSet.delete(id);
+                setSelectedNetworkIds(newSet);
+              }}
+              error={!!networkError}
+              errorMessage={networkError}
+            />
           </VStack>
 
           {/* Virtual LAN Disclosure */}
@@ -2492,7 +2502,10 @@ function NetworkSection({
 
           {/* Security groups Section */}
           <VStack gap={3}>
-            <span className="text-label-lg">Security groups</span>
+            <span className="text-label-lg text-[var(--color-text-default)]">
+              Security groups
+              <span className="ml-1 text-[var(--color-state-danger)]">*</span>
+            </span>
 
             <HStack justify="between" align="center" className="w-full">
               <SearchInput
@@ -2540,6 +2553,10 @@ function NetworkSection({
                   newSet.add(row.id);
                 }
                 setSelectedSecurityGroups(newSet);
+                // Clear error when security group is selected
+                if (newSet.size > 0) {
+                  setSecurityGroupError(null);
+                }
               }}
             />
 
@@ -2554,6 +2571,8 @@ function NetworkSection({
                 newSet.delete(id);
                 setSelectedSecurityGroups(newSet);
               }}
+              error={!!securityGroupError}
+              errorMessage={securityGroupError}
             />
           </VStack>
 
@@ -2700,53 +2719,23 @@ function AuthenticationSection({
     setAuthError(null);
   };
 
-  // Handle Next with validation
+  // Handle Next - no validation required for authentication section
   const handleNextClick = () => {
-    if (loginType === 'keypair') {
-      if (!selectedKeyPairId) {
-        setAuthError('Please select a key pair.');
-        return;
-      }
-    } else {
-      // Password mode validation
-      if (!loginName.trim()) {
-        setAuthError('Please enter a login name.');
-        return;
-      }
-      if (!password) {
-        setAuthError('Please enter a password.');
-        return;
-      }
-      if (password !== confirmPassword) {
-        setAuthError('Passwords do not match.');
-        return;
-      }
+    // Password validation only if password mode is selected and fields are filled
+    if (loginType === 'password' && password && password !== confirmPassword) {
+      setAuthError('Passwords do not match.');
+      return;
     }
     setAuthError(null);
     onNext();
   };
 
-  // Handle Edit Done with validation
+  // Handle Edit Done - no validation required for authentication section
   const handleEditDone = () => {
-    if (loginType === 'keypair') {
-      if (!selectedKeyPairId) {
-        setAuthError('Please select a key pair.');
-        return;
-      }
-    } else {
-      // Password mode validation
-      if (!loginName.trim()) {
-        setAuthError('Please enter a login name.');
-        return;
-      }
-      if (!password) {
-        setAuthError('Please enter a password.');
-        return;
-      }
-      if (password !== confirmPassword) {
-        setAuthError('Passwords do not match.');
-        return;
-      }
+    // Password validation only if password mode is selected and fields are filled
+    if (loginType === 'password' && password && password !== confirmPassword) {
+      setAuthError('Passwords do not match.');
+      return;
     }
     setAuthError(null);
     onEditDone?.();
@@ -2983,11 +2972,6 @@ function AuthenticationSection({
             </TabPanel>
           </Tabs>
 
-          {/* Validation Error Message for Key Pair mode */}
-          {authError && loginType === 'keypair' && (
-            <InlineMessage variant="error">{authError}</InlineMessage>
-          )}
-
           {/* Next Button - hidden in edit mode */}
           {!isEditing && (
             <HStack justify="end" className="w-full pt-2">
@@ -3045,6 +3029,8 @@ function AdvancedSection({
   // User data
   const [userDataOpen, setUserDataOpen] = useState(false);
   const [userData, setUserData] = useState('');
+  const [userDataError, setUserDataError] = useState<string | null>(null);
+  const MAX_USER_DATA_SIZE = 16 * 1024; // 16KB
 
   // Filtered server groups
   const filteredServerGroups = mockServerGroups.filter(
@@ -3083,13 +3069,36 @@ function AdvancedSection({
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      // Check file size
+      if (file.size > MAX_USER_DATA_SIZE) {
+        setUserDataError('The user data exceeds the maximum size limit. (16KB)');
+        e.target.value = ''; // Reset file input
+        return;
+      }
+
       const reader = new FileReader();
       reader.onload = (event) => {
         const content = event.target?.result as string;
         setUserData(content);
+        setUserDataError(null);
+      };
+      reader.onerror = () => {
+        setUserDataError('File upload failed. Check the file status.');
+        e.target.value = ''; // Reset file input
       };
       reader.readAsText(file);
     }
+  };
+
+  // Handle user data text change with size validation
+  const handleUserDataChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const content = e.target.value;
+    if (new Blob([content]).size > MAX_USER_DATA_SIZE) {
+      setUserDataError('The user data exceeds the maximum size limit. (16KB)');
+    } else {
+      setUserDataError(null);
+    }
+    setUserData(content);
   };
 
   return (
@@ -3194,17 +3203,7 @@ function AdvancedSection({
                   <label htmlFor="user-data-file">
                     <Button variant="secondary" size="sm" as="span" className="cursor-pointer">
                       <HStack gap={1} align="center">
-                        <svg
-                          className="w-4 h-4"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                        >
-                          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                          <polyline points="17 8 12 3 7 8" />
-                          <line x1="12" y1="3" x2="12" y2="15" />
-                        </svg>
+                        <IconUpload size={12} stroke={1.5} />
                         <span>Upload a file</span>
                       </HStack>
                     </Button>
@@ -3212,14 +3211,27 @@ function AdvancedSection({
                 </div>
 
                 {/* User data Textarea */}
-                <Textarea
-                  value={userData}
-                  onChange={(e) => setUserData(e.target.value)}
-                  placeholder="input user data"
-                  rows={6}
-                  fullWidth
-                  className="font-mono text-body-md"
-                />
+                <div className="w-full">
+                  <Textarea
+                    value={userData}
+                    onChange={handleUserDataChange}
+                    placeholder="input user data"
+                    rows={6}
+                    fullWidth
+                    className="font-mono text-body-md"
+                    error={!!userDataError}
+                  />
+                  <div className="flex justify-between items-start mt-1.5">
+                    <span className="text-body-sm text-[var(--color-state-danger)]">
+                      {userDataError || ''}
+                    </span>
+                    <span
+                      className={`text-body-sm ${userDataError ? 'text-[var(--color-state-danger)]' : 'text-[var(--color-text-subtle)]'}`}
+                    >
+                      {(new Blob([userData]).size / 1024).toFixed(1)} / 16 KB
+                    </span>
+                  </div>
+                </div>
               </VStack>
             </Disclosure.Panel>
           </Disclosure>

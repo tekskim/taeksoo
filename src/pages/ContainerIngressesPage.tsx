@@ -158,7 +158,7 @@ export function ContainerIngressesPage() {
       align: 'center',
       render: (value: string) => (
         <StatusIndicator
-          status={value === 'Running' ? 'active' : value === 'Pending' ? 'paused' : 'error'}
+          status={value === 'Running' ? 'active' : value === 'Failed' ? 'error' : 'building'}
         />
       ),
     },
@@ -251,7 +251,7 @@ export function ContainerIngressesPage() {
 
         return (
           <div onClick={(e) => e.stopPropagation()}>
-            <ContextMenu items={menuItems} trigger="click">
+            <ContextMenu items={menuItems} trigger="click" align="right">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
                 <IconDotsCircleHorizontal
                   size={16}
@@ -376,7 +376,7 @@ export function ContainerIngressesPage() {
                     aria-label="Download"
                     className="!p-0 !w-7 !h-7 !min-w-7"
                   >
-                    <IconDownload size={14} stroke={1.5} />
+                    <IconDownload size={12} stroke={1.5} />
                   </Button>
                 </HStack>
 

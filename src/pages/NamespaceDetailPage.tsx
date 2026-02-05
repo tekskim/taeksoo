@@ -587,7 +587,11 @@ function WorkloadsTab({ workloads }: WorkloadsTabProps) {
       minWidth: columnMinWidths.action,
       align: 'center',
       render: (_: unknown, row: WorkloadRow) => (
-        <ContextMenu items={getWorkloadMenuItems(row.type, row, handleMenuAction)} trigger="click">
+        <ContextMenu
+          items={getWorkloadMenuItems(row.type, row, handleMenuAction)}
+          trigger="click"
+          align="right"
+        >
           <button
             className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
             onClick={(e) => e.stopPropagation()}
@@ -811,7 +815,7 @@ export function NamespaceDetailPage() {
               <DetailHeader>
                 <DetailHeader.Title>Namespace: {namespace.name}</DetailHeader.Title>
                 <DetailHeader.Actions>
-                  <ContextMenu items={moreActionsItems} trigger="click" align="left">
+                  <ContextMenu items={moreActionsItems} trigger="click" align="right">
                     <Button
                       variant="secondary"
                       size="md"

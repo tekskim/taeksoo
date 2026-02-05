@@ -505,7 +505,7 @@ export function TableStyleGuidePage() {
 { key: 'count', label: 'Count', flex: 1, minWidth: columnMinWidths.count }
 
 // 연관 리소스 - 오른쪽 정렬
-{ key: 'attachedTo', label: 'Attached to', flex: 1, align: 'right' }`}
+{ key: 'attachedTo', label: 'Attached to', flex: 1, align: 'center' }`}
                 />
               </div>
             </SectionCard.Content>

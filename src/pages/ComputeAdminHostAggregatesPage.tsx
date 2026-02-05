@@ -418,7 +418,11 @@ export function ComputeAdminHostAggregatesPage() {
 
                             {/* Action Cell */}
                             <div className="flex items-center justify-center px-1.5 py-1.5 w-[72px]">
-                              <ContextMenu items={getContextMenuItems(row)} trigger="click">
+                              <ContextMenu
+                                items={getContextMenuItems(row)}
+                                trigger="click"
+                                align="right"
+                              >
                                 <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors">
                                   <IconDotsCircleHorizontal
                                     size={16}

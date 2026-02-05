@@ -442,7 +442,7 @@ export default function ListenerDetailPage() {
         ];
         return (
           <div onClick={(e) => e.stopPropagation()}>
-            <ContextMenu items={poolMenuItems} trigger="click">
+            <ContextMenu items={poolMenuItems} trigger="click" align="right">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
                 <IconDotsCircleHorizontal
                   size={16}
@@ -529,7 +529,7 @@ export default function ListenerDetailPage() {
         ];
         return (
           <div onClick={(e) => e.stopPropagation()}>
-            <ContextMenu items={policyMenuItems} trigger="click">
+            <ContextMenu items={policyMenuItems} trigger="click" align="right">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
                 <IconDotsCircleHorizontal
                   size={16}
@@ -643,7 +643,7 @@ export default function ListenerDetailPage() {
         const certMenuItems = getCertMenuItems();
         return (
           <div onClick={(e) => e.stopPropagation()}>
-            <ContextMenu items={certMenuItems} trigger="click">
+            <ContextMenu items={certMenuItems} trigger="click" align="right">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
                 <IconDotsCircleHorizontal
                   size={16}

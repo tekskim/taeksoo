@@ -169,7 +169,7 @@ export default function ComputeAdminMetadataDefinitionsPage() {
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
-          <ContextMenu items={getMetadataMenuItems(row)} trigger="click">
+          <ContextMenu items={getMetadataMenuItems(row)} trigger="click" align="right">
             <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-subtle)] transition-colors">
               <IconDotsCircleHorizontal
                 size={16}

@@ -226,7 +226,7 @@ export function SecretsPage() {
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
-          <ContextMenu items={createMenuItems(row)} trigger="click" align="left">
+          <ContextMenu items={createMenuItems(row)} trigger="click" align="right">
             <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
               <IconDotsCircleHorizontal
                 size={16}
@@ -374,7 +374,7 @@ export function SecretsPage() {
                     aria-label="Download"
                     className="!p-0 !w-7 !h-7 !min-w-7"
                   >
-                    <IconDownload size={14} stroke={1.5} />
+                    <IconDownload size={12} stroke={1.5} />
                   </Button>
                 </HStack>
 

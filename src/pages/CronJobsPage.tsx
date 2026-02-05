@@ -40,7 +40,7 @@ import {
 
 interface CronJobRow {
   id: string;
-  status: 'Active' | 'Suspended' | 'Running';
+  status: 'Active' | 'Suspended' | 'Running' | 'Failed';
   name: string;
   namespace: string;
   image: string;
@@ -238,8 +238,8 @@ export function CronJobsPage() {
               ? 'active'
               : value === 'Running'
                 ? 'building'
-                : value === 'Suspended'
-                  ? 'suspended'
+                : value === 'Failed'
+                  ? 'error'
                   : 'suspended'
           }
         />
@@ -303,7 +303,7 @@ export function CronJobsPage() {
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
-          <ContextMenu items={createMenuItems(row)} trigger="click" align="left">
+          <ContextMenu items={createMenuItems(row)} trigger="click" align="right">
             <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
               <IconDotsCircleHorizontal
                 size={16}
@@ -451,7 +451,7 @@ export function CronJobsPage() {
                     aria-label="Download"
                     className="!p-0 !w-7 !h-7 !min-w-7"
                   >
-                    <IconDownload size={14} stroke={1.5} />
+                    <IconDownload size={12} stroke={1.5} />
                   </Button>
                 </HStack>
 

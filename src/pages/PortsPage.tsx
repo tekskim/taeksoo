@@ -426,7 +426,7 @@ export function PortsPage() {
       label: 'Attached to',
       flex: 1,
       minWidth: columnMinWidths.attachedTo,
-      align: 'right',
+      align: 'center',
       render: (_, row) =>
         row.attachedTo ? (
           <div className="flex items-center gap-2 justify-between w-full">
@@ -516,7 +516,7 @@ export function PortsPage() {
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
-          <ContextMenu items={getContextMenuItems(row)} trigger="click">
+          <ContextMenu items={getContextMenuItems(row)} trigger="click" align="right">
             <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
               <IconDotsCircleHorizontal
                 size={16}

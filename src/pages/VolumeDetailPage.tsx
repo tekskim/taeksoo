@@ -461,7 +461,7 @@ export function VolumeDetailPage() {
       align: 'center',
       render: (_, row) => (
         <div className="flex items-center justify-center">
-          <ContextMenu items={getSnapshotContextMenuItems(row)} trigger="click">
+          <ContextMenu items={getSnapshotContextMenuItems(row)} trigger="click" align="right">
             <button
               className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
               onClick={(e) => e.stopPropagation()}
@@ -540,7 +540,7 @@ export function VolumeDetailPage() {
       align: 'center',
       render: (_, row) => (
         <div className="flex items-center justify-center">
-          <ContextMenu items={getBackupContextMenuItems(row)} trigger="click">
+          <ContextMenu items={getBackupContextMenuItems(row)} trigger="click" align="right">
             <button
               className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group"
               onClick={(e) => e.stopPropagation()}

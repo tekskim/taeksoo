@@ -342,7 +342,7 @@ export default function SecurityGroupDetailPage() {
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
-          <ContextMenu items={getPortContextMenuItems(row)} trigger="click">
+          <ContextMenu items={getPortContextMenuItems(row)} trigger="click" align="right">
             <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
               <IconDotsCircleHorizontal
                 size={16}
@@ -396,7 +396,7 @@ export default function SecurityGroupDetailPage() {
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
-          <ContextMenu items={getRuleContextMenuItems(row)} trigger="click">
+          <ContextMenu items={getRuleContextMenuItems(row)} trigger="click" align="right">
             <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
               <IconDotsCircleHorizontal
                 size={16}

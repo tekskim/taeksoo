@@ -315,7 +315,7 @@ export function PersistentVolumeDetailPage() {
               <DetailHeader>
                 <DetailHeader.Title>Persistent Volume: {pvData.name}</DetailHeader.Title>
                 <DetailHeader.Actions>
-                  <ContextMenu items={moreActionsItems} trigger="click" align="left">
+                  <ContextMenu items={moreActionsItems} trigger="click" align="right">
                     <Button
                       variant="secondary"
                       size="md"

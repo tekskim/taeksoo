@@ -329,7 +329,7 @@ export function CloudBuilderConsolePage() {
         if (items.length === 0) return <span className="text-[var(--color-text-muted)]">-</span>;
 
         return (
-          <ContextMenu items={items} trigger="click">
+          <ContextMenu items={items} trigger="click" align="right">
             <button
               type="button"
               aria-label="Row actions"

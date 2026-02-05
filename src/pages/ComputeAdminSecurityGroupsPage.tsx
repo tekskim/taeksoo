@@ -344,7 +344,7 @@ export function ComputeAdminSecurityGroupsPage() {
       align: 'center',
       render: (_, row) => (
         <div onClick={(e) => e.stopPropagation()}>
-          <ContextMenu items={getContextMenuItems(row)} trigger="click">
+          <ContextMenu items={getContextMenuItems(row)} trigger="click" align="right">
             <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
               <IconTrash size={12} stroke={1.5} className="text-[var(--color-state-danger)]" />
             </button>
