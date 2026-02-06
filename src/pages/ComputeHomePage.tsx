@@ -103,7 +103,7 @@ function SummaryStatBox({ value, label }: SummaryStatBoxProps) {
     <div
       className={`flex-1 bg-[var(--color-surface-subtle)] rounded-lg p-4 border-2 border-transparent transition-colors ${isClickable ? 'hover:border-[var(--color-action-primary)] cursor-pointer' : ''}`}
     >
-      <div className={`text-[20px] font-medium ${textColor} pb-1`}>{value}</div>
+      <div className={`text-heading-h4 ${textColor} pb-1`}>{value}</div>
       <div className="text-body-sm text-[var(--color-text-subtle)]">{label}</div>
     </div>
   );
@@ -138,7 +138,7 @@ function InfraQuotaCard({ icon, label, used, total, href }: InfraQuotaCardProps)
       </div>
       <div className="flex items-baseline mb-3">
         <span className="text-heading-h4 text-[var(--color-text-default)]">{used}</span>
-        <span className="text-body-lg text-[var(--color-text-muted)] pt-1.5">/{total}</span>
+        <span className="text-body-lg text-[var(--color-text-muted)]">/{total}</span>
       </div>
       <div className="h-1 rounded-sm bg-[var(--color-surface-muted)] overflow-hidden">
         <div
