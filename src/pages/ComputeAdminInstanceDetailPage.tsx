@@ -1234,7 +1234,7 @@ export function ComputeAdminInstanceDetailPage() {
                             }
                           />
                           <SectionCard.DataRow
-                            label="Server Group"
+                            label="Server group"
                             value={instance.serverGroup}
                             isLink
                             linkHref="/compute-admin/server-groups"

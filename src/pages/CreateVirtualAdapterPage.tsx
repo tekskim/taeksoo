@@ -998,7 +998,7 @@ export default function CreateVirtualAdapterPage() {
                           showDivider
                         />
                         <SectionCard.DataRow
-                          label="Security Groups"
+                          label="Security groups"
                           value={
                             selectedSecurityGroups.length > 0
                               ? mockSecurityGroups

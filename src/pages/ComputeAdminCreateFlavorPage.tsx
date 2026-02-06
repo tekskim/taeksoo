@@ -427,7 +427,7 @@ export function ComputeAdminCreateFlavorPage() {
                               <Radio value="cpu" label="CPU" />
                               <Radio value="gpu" label="GPU" />
                               <Radio value="npu" label="NPU" />
-                              <Radio value="bare-metal" label="Bare Metal" />
+                              <Radio value="bare-metal" label="Bare metal" />
                             </RadioGroup>
                           </div>
 

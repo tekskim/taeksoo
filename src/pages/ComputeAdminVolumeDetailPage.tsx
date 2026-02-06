@@ -670,7 +670,7 @@ export function ComputeAdminVolumeDetailPage() {
                         <SectionCard.Header title="Source" showEditButton onEdit={() => {}} />
                         <SectionCard.Content>
                           <SectionCard.DataRow
-                            label="Volume Snapshot"
+                            label="Volume snapshot"
                             value={volume.dataSourceType}
                           />
                           <SectionCard.DataRow
