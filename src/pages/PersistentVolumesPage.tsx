@@ -61,7 +61,7 @@ const persistentVolumesData: PersistentVolumeRow[] = [
     persistentVolumeClaim: 'Ceph-pvc',
     source: 'rbd.csi.ceph.com',
     reason: '',
-    createdAt: '2025-11-10 12:57',
+    createdAt: 'Nov 10, 2025',
   },
   {
     id: '2',
@@ -71,7 +71,7 @@ const persistentVolumesData: PersistentVolumeRow[] = [
     persistentVolumeClaim: 'data-postgres-0',
     source: 'nfs.csi.k8s.io',
     reason: '',
-    createdAt: '2025-11-09 14:30',
+    createdAt: 'Nov 9, 2025',
   },
   {
     id: '3',
@@ -81,7 +81,7 @@ const persistentVolumesData: PersistentVolumeRow[] = [
     persistentVolumeClaim: '',
     source: 'nfs.csi.k8s.io',
     reason: '',
-    createdAt: '2025-11-08 09:15',
+    createdAt: 'Nov 8, 2025',
   },
   {
     id: '4',
@@ -91,7 +91,7 @@ const persistentVolumesData: PersistentVolumeRow[] = [
     persistentVolumeClaim: '',
     source: 'rbd.csi.ceph.com',
     reason: 'Claim deleted',
-    createdAt: '2025-11-07 16:45',
+    createdAt: 'Nov 7, 2025',
   },
   {
     id: '5',
@@ -101,7 +101,7 @@ const persistentVolumesData: PersistentVolumeRow[] = [
     persistentVolumeClaim: 'redis-data',
     source: 'local.csi.k8s.io',
     reason: '',
-    createdAt: '2025-11-06 10:30',
+    createdAt: 'Nov 6, 2025',
   },
   {
     id: '6',
@@ -111,7 +111,7 @@ const persistentVolumesData: PersistentVolumeRow[] = [
     persistentVolumeClaim: '',
     source: 'rbd.csi.ceph.com',
     reason: 'Provisioning failed',
-    createdAt: '2025-11-05 11:20',
+    createdAt: 'Nov 5, 2025',
   },
   {
     id: '7',
@@ -121,7 +121,7 @@ const persistentVolumesData: PersistentVolumeRow[] = [
     persistentVolumeClaim: 'pending-claim',
     source: 'nfs.csi.k8s.io',
     reason: 'Waiting for node',
-    createdAt: '2025-11-10 08:00',
+    createdAt: 'Nov 10, 2025',
   },
 ];
 

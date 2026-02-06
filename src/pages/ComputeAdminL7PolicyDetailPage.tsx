@@ -78,7 +78,7 @@ const mockL7PolicyDetail: L7PolicyDetail = {
   name: 'policy1',
   status: 'active',
   adminState: 'Up',
-  createdAt: '2025-07-25 09:12:20',
+  createdAt: 'Jul 25, 2025',
   // Basic information
   description: '-',
   behavior: 'Forward to Pool',
@@ -263,7 +263,7 @@ export default function L7PolicyDetailPage() {
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={ruleMenuItems} trigger="click" align="right">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                <IconTrash size={16} stroke={1.5} className="text-[var(--color-state-danger)]" />
+                <IconTrash size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
               </button>
             </ContextMenu>
           </div>

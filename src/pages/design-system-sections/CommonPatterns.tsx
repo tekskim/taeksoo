@@ -91,9 +91,21 @@ export function ListPagePatternDemo() {
   ];
 
   const data = [
-    { id: '1', status: 'active', name: 'instance-01', type: 'Standard', createdAt: '2024-01-15' },
-    { id: '2', status: 'error', name: 'instance-02', type: 'High Memory', createdAt: '2024-01-14' },
-    { id: '3', status: 'building', name: 'instance-03', type: 'Standard', createdAt: '2024-01-13' },
+    { id: '1', status: 'active', name: 'instance-01', type: 'Standard', createdAt: 'Jan 15, 2024' },
+    {
+      id: '2',
+      status: 'error',
+      name: 'instance-02',
+      type: 'High Memory',
+      createdAt: 'Jan 14, 2024',
+    },
+    {
+      id: '3',
+      status: 'building',
+      name: 'instance-03',
+      type: 'Standard',
+      createdAt: 'Jan 13, 2024',
+    },
   ];
 
   // Convert applied filters to toolbar format
@@ -229,7 +241,7 @@ export function DetailPagePatternDemo() {
           <DetailHeader.InfoCard label="Status" status="active" />
           <DetailHeader.InfoCard label="ID" value="i-1234567890abcdef0" copyable />
           <DetailHeader.InfoCard label="Host" value="compute-node-01" />
-          <DetailHeader.InfoCard label="Created at" value="2024-01-15 10:30:00" />
+          <DetailHeader.InfoCard label="Created at" value="Jan 15, 2024" />
         </DetailHeader.InfoGrid>
       </DetailHeader>
 

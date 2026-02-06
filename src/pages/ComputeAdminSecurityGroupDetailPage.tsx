@@ -82,61 +82,61 @@ const mockSecurityGroupsMap: Record<string, SecurityGroupDetail> = {
     id: 'sg-001',
     name: 'sg-01',
     description: 'Web server access group',
-    createdAt: '2024-01-15',
+    createdAt: 'Jan 15, 2024',
   },
   'sg-002': {
     id: 'sg-002',
     name: 'default',
     description: 'Default security group',
-    createdAt: '2024-01-10',
+    createdAt: 'Jan 10, 2024',
   },
   'sg-003': {
     id: 'sg-003',
     name: 'db-sg',
     description: 'Database access group',
-    createdAt: '2024-02-01',
+    createdAt: 'Feb 1, 2024',
   },
   'sg-004': {
     id: 'sg-004',
     name: 'app-sg',
     description: 'Application server security group',
-    createdAt: '2024-02-15',
+    createdAt: 'Feb 15, 2024',
   },
   'sg-005': {
     id: 'sg-005',
     name: 'lb-sg',
     description: 'Load balancer security group',
-    createdAt: '2024-03-01',
+    createdAt: 'Mar 1, 2024',
   },
   'sg-006': {
     id: 'sg-006',
     name: 'cache-sg',
     description: 'Cache server access group',
-    createdAt: '2024-03-10',
+    createdAt: 'Mar 10, 2024',
   },
   'sg-007': {
     id: 'sg-007',
     name: 'monitor-sg',
     description: 'Monitoring access group',
-    createdAt: '2024-04-01',
+    createdAt: 'Apr 1, 2024',
   },
   'sg-008': {
     id: 'sg-008',
     name: 'vpn-sg',
     description: 'VPN access group',
-    createdAt: '2024-04-15',
+    createdAt: 'Apr 15, 2024',
   },
   'sg-009': {
     id: 'sg-009',
     name: 'admin-sg',
     description: 'Admin access group',
-    createdAt: '2024-05-01',
+    createdAt: 'May 1, 2024',
   },
   'sg-010': {
     id: 'sg-010',
     name: 'test-sg',
     description: 'Test environment security group',
-    createdAt: '2024-05-10',
+    createdAt: 'May 10, 2024',
   },
 };
 
@@ -388,7 +388,7 @@ export default function SecurityGroupDetailPage() {
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getRuleContextMenuItems(row)} trigger="click" align="right">
             <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-              <IconTrash size={16} stroke={1.5} className="text-[var(--color-state-danger)]" />
+              <IconTrash size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
             </button>
           </ContextMenu>
         </div>

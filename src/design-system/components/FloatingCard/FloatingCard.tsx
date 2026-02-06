@@ -6,7 +6,6 @@ import {
   IconChevronRight,
   IconChevronDown,
   IconTarget,
-  IconLoader2,
   IconAlertTriangle,
   IconCheck,
 } from '@tabler/icons-react';
@@ -95,15 +94,9 @@ function StatusIcon({ status }: { status: SectionStatus }) {
     case 'processing':
       return (
         <div
-          className="size-4 rounded-full border border-[var(--color-text-muted)] shrink-0 flex items-center justify-center"
-          style={{ borderStyle: 'dashed' }}
-        >
-          <IconLoader2
-            size={10}
-            stroke={2}
-            className="text-[var(--color-text-muted)] animate-spin"
-          />
-        </div>
+          className="size-4 rounded-full border border-[var(--color-text-muted)] shrink-0 animate-spin"
+          style={{ borderStyle: 'dashed', animationDuration: '2s' }}
+        />
       );
     default:
       return (

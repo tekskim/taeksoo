@@ -75,7 +75,7 @@ describe('StatusIndicator', () => {
   describe('Size variants (icon-only)', () => {
     it('renders sm size', () => {
       render(<StatusIndicator status="active" size="sm" />);
-      expect(screen.getByRole('status')).toHaveClass('size-[20px]');
+      expect(screen.getByRole('status')).toHaveClass('size-[24px]');
     });
 
     it('renders md size (default)', () => {

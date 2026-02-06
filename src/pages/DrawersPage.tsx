@@ -2386,7 +2386,7 @@ export function DrawersPage() {
         onClose={() => setIsChangeServerCertificateOpen(false)}
         currentCertificate={{
           name: 'server-cert-1',
-          expiresAt: '2025-10-10',
+          expiresAt: 'Oct 10, 2025',
         }}
         onChangeCertificate={(certificateId) => {
           console.log('Change server certificate:', certificateId);
@@ -2398,7 +2398,7 @@ export function DrawersPage() {
         onClose={() => setIsChangeCACertificateOpen(false)}
         currentCertificate={{
           name: 'ca-cert-1',
-          expiredOn: '2025-10-10',
+          expiredOn: 'Oct 10, 2025',
         }}
         onSubmit={(certificateId) => {
           console.log('Change CA certificate:', certificateId);

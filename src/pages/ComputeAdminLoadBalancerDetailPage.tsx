@@ -89,7 +89,7 @@ const mockLoadBalancersMap: Record<string, LoadBalancerDetail> = {
     status: 'active',
     adminState: 'Up',
     vipAddress: '192.168.10.13',
-    createdAt: '2025-10-03 09:12:20',
+    createdAt: 'Oct 3, 2025',
     description: '-',
     provider: 'ovn',
     ownedNetwork: { name: 'net-02', id: 'net-002' },
@@ -102,7 +102,7 @@ const mockLoadBalancersMap: Record<string, LoadBalancerDetail> = {
     status: 'active',
     adminState: 'Up',
     vipAddress: '192.168.10.14',
-    createdAt: '2025-10-02 09:00:00',
+    createdAt: 'Oct 2, 2025',
     description: 'API Load balancer',
     provider: 'ovn',
     ownedNetwork: { name: 'net-01', id: 'net-001' },
@@ -115,7 +115,7 @@ const mockLoadBalancersMap: Record<string, LoadBalancerDetail> = {
     status: 'pending',
     adminState: 'Up',
     vipAddress: '192.168.10.15',
-    createdAt: '2025-10-01 10:30:00',
+    createdAt: 'Oct 1, 2025',
     description: 'Application Load balancer',
     provider: 'ovn',
     ownedNetwork: { name: 'net-03', id: 'net-003' },
@@ -446,7 +446,7 @@ export function ComputeAdminLoadBalancerDetailPage() {
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={poolMenuItems} trigger="click" align="right">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                <IconTrash size={16} stroke={1.5} className="text-[var(--color-state-danger)]" />
+                <IconTrash size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
               </button>
             </ContextMenu>
           </div>

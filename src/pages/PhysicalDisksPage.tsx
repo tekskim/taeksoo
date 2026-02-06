@@ -11,7 +11,7 @@ import {
   TopBarAction,
   Breadcrumb,
   StatusIndicator,
-  Chip,
+  Badge,
   Drawer,
   Select,
   FormField,
@@ -209,7 +209,11 @@ interface TypeCellProps {
 }
 
 function TypeCell({ type }: TypeCellProps) {
-  return <Chip value={type} />;
+  return (
+    <Badge variant="info" size="sm">
+      {type}
+    </Badge>
+  );
 }
 
 /* ----------------------------------------
@@ -266,7 +270,9 @@ function OSDsCell({ osds, maxVisible = 2 }: OSDsCellProps) {
   return (
     <div className="flex flex-wrap gap-1 items-center">
       {visibleOsds.map((osd, index) => (
-        <Chip key={index} value={osd} />
+        <Badge key={index} variant="info" size="sm">
+          {osd}
+        </Badge>
       ))}
       {remainingCount > 0 && (
         <>
@@ -297,7 +303,9 @@ function OSDsCell({ osds, maxVisible = 2 }: OSDsCellProps) {
                   </div>
                   <div className="flex flex-wrap gap-1">
                     {osds.map((osd, index) => (
-                      <Chip key={index} value={osd} />
+                      <Badge key={index} variant="info" size="sm">
+                        {osd}
+                      </Badge>
                     ))}
                   </div>
                 </div>
@@ -613,13 +621,13 @@ export function PhysicalDisksPage() {
                     <Button
                       variant="secondary"
                       size="sm"
-                      icon={<IconDownload size={14} stroke={1.5} />}
+                      icon={<IconDownload size={12} stroke={1.5} />}
                       aria-label="Download"
                     />
                     <Button
                       variant="secondary"
                       size="sm"
-                      icon={<IconRefresh size={14} stroke={1.5} />}
+                      icon={<IconRefresh size={12} stroke={1.5} />}
                       aria-label="Refresh"
                       onClick={() => console.log('Refresh clicked')}
                     />
@@ -630,7 +638,7 @@ export function PhysicalDisksPage() {
                     <Button
                       variant="secondary"
                       size="sm"
-                      leftIcon={<IconTrash size={14} stroke={1.5} />}
+                      leftIcon={<IconTrash size={12} stroke={1.5} />}
                     >
                       Delete
                     </Button>

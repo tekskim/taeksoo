@@ -262,14 +262,14 @@ export const StatusIndicator = memo(function StatusIndicator({
 
   // Size-based icon sizes for icon-only layout
   const iconSizes: Record<StatusSize, number> = {
-    sm: 12,
+    sm: 14,
     md: 14,
     lg: 16,
   };
 
   // Size-based container sizes for icon-only layout
   const sizeStyles: Record<StatusSize, string> = {
-    sm: 'size-[20px]',
+    sm: 'size-[24px]',
     md: 'size-[24px]',
     lg: 'size-[28px]',
   };

@@ -336,22 +336,22 @@ export function ComputeAdminHostAggregatesPage() {
                   )}
 
                   {/* Expandable Table */}
-                  <div className="flex flex-col gap-1 w-full">
+                  <div className="flex flex-col gap-[var(--table-row-gap)] w-full">
                     {/* Table Header */}
-                    <div className="flex items-stretch min-h-[40px] w-full bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
-                      <div className="flex items-center px-3 py-2 text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] min-w-0 overflow-hidden flex-1">
+                    <div className="flex items-stretch min-h-[var(--table-row-height)] w-full bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
+                      <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] min-w-0 overflow-hidden flex-1">
                         <span>Name</span>
                       </div>
-                      <div className="flex items-center px-3 py-2 text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] min-w-0 overflow-hidden flex-1 border-l border-[var(--color-border-default)]">
+                      <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] min-w-0 overflow-hidden flex-1 border-l border-[var(--color-border-default)]">
                         <span>Availability Zone</span>
                       </div>
-                      <div className="flex items-center px-3 py-2 text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] min-w-0 overflow-hidden flex-1 border-l border-[var(--color-border-default)]">
+                      <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] min-w-0 overflow-hidden flex-1 border-l border-[var(--color-border-default)]">
                         <span>Hosts</span>
                       </div>
-                      <div className="flex items-center px-3 py-2 text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] min-w-0 overflow-hidden flex-1 border-l border-[var(--color-border-default)]">
+                      <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] min-w-0 overflow-hidden flex-1 border-l border-[var(--color-border-default)]">
                         <span>Created at</span>
                       </div>
-                      <div className="flex items-center justify-center px-3 py-2 text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] min-w-0 overflow-hidden w-[72px] border-l border-[var(--color-border-default)]">
+                      <div className="flex items-center justify-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] min-w-0 overflow-hidden w-[72px] border-l border-[var(--color-border-default)]">
                         <span>Action</span>
                       </div>
                     </div>
@@ -368,9 +368,9 @@ export function ComputeAdminHostAggregatesPage() {
                           className="flex flex-col w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]"
                         >
                           {/* Row Content */}
-                          <div className="flex items-center min-h-[40px] w-full">
+                          <div className="flex items-center min-h-[var(--table-row-height)] w-full">
                             {/* Name Cell with Expand Icon */}
-                            <div className="flex items-center gap-2 px-3 py-2 min-w-0 flex-1">
+                            <div className="flex items-center gap-2 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 flex-1">
                               <button
                                 onClick={() => toggleRowExpansion(row.id)}
                                 className="shrink-0 p-0.5 rounded hover:bg-[var(--color-surface-muted)] transition-colors"
@@ -389,35 +389,35 @@ export function ComputeAdminHostAggregatesPage() {
                                   />
                                 )}
                               </button>
-                              <span className="text-body-md text-[var(--color-text-default)]">
+                              <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
                                 {row.name}
                               </span>
                             </div>
 
                             {/* Availability Zone Cell */}
-                            <div className="flex items-center px-3 py-2 min-w-0 flex-1">
-                              <span className="text-body-md text-[var(--color-text-default)]">
+                            <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 flex-1">
+                              <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
                                 {row.availabilityZone}
                               </span>
                             </div>
 
                             {/* Hosts Cell */}
-                            <div className="flex items-center px-3 py-2 min-w-0 flex-1">
-                              <span className="text-body-md text-[var(--color-text-default)]">
+                            <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 flex-1">
+                              <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
                                 {firstHost}
                                 {additionalHosts > 0 && ` (+${additionalHosts})`}
                               </span>
                             </div>
 
                             {/* Created at Cell */}
-                            <div className="flex items-center px-3 py-2 min-w-0 flex-1">
-                              <span className="text-body-md text-[var(--color-text-default)]">
+                            <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 flex-1">
+                              <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
                                 {row.createdAt}
                               </span>
                             </div>
 
                             {/* Action Cell */}
-                            <div className="flex items-center justify-center px-1.5 py-1.5 w-[72px]">
+                            <div className="flex items-center justify-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] w-[72px]">
                               <ContextMenu
                                 items={getContextMenuItems(row)}
                                 trigger="click"
@@ -437,16 +437,16 @@ export function ComputeAdminHostAggregatesPage() {
                           {/* Expanded Metadata Table */}
                           {isExpanded && row.metadata.length > 0 && (
                             <div className="border-t border-[var(--color-border-default)] p-3">
-                              <div className="flex flex-col gap-1 w-full">
+                              <div className="flex flex-col gap-[var(--table-row-gap)] w-full">
                                 {/* Metadata Table Header */}
-                                <div className="flex items-center h-[40px] w-full bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--radius-md)]">
-                                  <div className="flex items-center px-3 py-2 flex-1">
-                                    <span className="text-label-sm text-[var(--color-text-default)]">
+                                <div className="flex items-center min-h-[var(--table-row-height)] w-full bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
+                                  <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex-1">
+                                    <span className="text-[length:var(--table-header-font-size)] font-medium text-[var(--color-text-default)]">
                                       Metadata
                                     </span>
                                   </div>
-                                  <div className="flex items-center px-3 py-2 flex-1 border-l border-[var(--color-border-default)]">
-                                    <span className="text-label-sm text-[var(--color-text-default)]">
+                                  <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex-1 border-l border-[var(--color-border-default)]">
+                                    <span className="text-[length:var(--table-header-font-size)] font-medium text-[var(--color-text-default)]">
                                       Value
                                     </span>
                                   </div>
@@ -455,15 +455,15 @@ export function ComputeAdminHostAggregatesPage() {
                                 {row.metadata.map((meta, index) => (
                                   <div
                                     key={index}
-                                    className="flex items-center min-h-[40px] w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--radius-md)]"
+                                    className="flex items-center min-h-[var(--table-row-height)] w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]"
                                   >
-                                    <div className="flex items-center px-3 py-2 flex-1">
-                                      <span className="text-body-md text-[var(--color-text-default)]">
+                                    <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex-1">
+                                      <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
                                         {meta.key}
                                       </span>
                                     </div>
-                                    <div className="flex items-center px-3 py-2 flex-1">
-                                      <span className="text-body-md text-[var(--color-text-default)]">
+                                    <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] flex-1">
+                                      <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
                                         {meta.value}
                                       </span>
                                     </div>
@@ -517,10 +517,10 @@ export function ComputeAdminHostAggregatesPage() {
                   )}
 
                   {/* Availability Zones Table */}
-                  <div className="flex flex-col gap-1 w-full">
+                  <div className="flex flex-col gap-[var(--table-row-gap)] w-full">
                     {/* Table Header */}
-                    <div className="flex items-stretch min-h-[40px] w-full bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
-                      <div className="flex items-center gap-1.5 px-3 py-2 text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] min-w-0 overflow-hidden flex-1">
+                    <div className="flex items-stretch min-h-[var(--table-row-height)] w-full bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
+                      <div className="flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] min-w-0 overflow-hidden flex-1">
                         <span>Name</span>
                         <IconChevronDown
                           size={16}
@@ -528,10 +528,10 @@ export function ComputeAdminHostAggregatesPage() {
                           className="text-[var(--color-text-default)]"
                         />
                       </div>
-                      <div className="flex items-center px-3 py-2 text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] min-w-0 overflow-hidden flex-1 border-l border-[var(--color-border-default)]">
+                      <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] min-w-0 overflow-hidden flex-1 border-l border-[var(--color-border-default)]">
                         <span>Hosts</span>
                       </div>
-                      <div className="flex items-center px-3 py-2 text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] min-w-0 overflow-hidden flex-1 border-l border-[var(--color-border-default)]">
+                      <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] min-w-0 overflow-hidden flex-1 border-l border-[var(--color-border-default)]">
                         <span>Available</span>
                       </div>
                     </div>
@@ -544,26 +544,26 @@ export function ComputeAdminHostAggregatesPage() {
                       return (
                         <div
                           key={az.id}
-                          className="flex items-center min-h-[40px] w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]"
+                          className="flex items-center min-h-[var(--table-row-height)] w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]"
                         >
                           {/* Name Cell */}
-                          <div className="flex items-center px-3 py-2 min-w-0 flex-1">
-                            <span className="text-body-md text-[var(--color-text-default)]">
+                          <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 flex-1">
+                            <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
                               {az.name}
                             </span>
                           </div>
 
                           {/* Hosts Cell */}
-                          <div className="flex items-center px-3 py-2 min-w-0 flex-1">
-                            <span className="text-body-md text-[var(--color-text-default)]">
+                          <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 flex-1">
+                            <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
                               {firstHost}
                               {additionalHosts > 0 && ` (+${additionalHosts})`}
                             </span>
                           </div>
 
                           {/* Available Cell */}
-                          <div className="flex items-center px-3 py-2 min-w-0 flex-1">
-                            <span className="text-body-md text-[var(--color-text-default)]">
+                          <div className="flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] min-w-0 flex-1">
+                            <span className="text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
                               {az.available ? 'Yes' : 'No'}
                             </span>
                           </div>

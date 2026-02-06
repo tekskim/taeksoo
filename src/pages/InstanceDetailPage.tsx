@@ -144,7 +144,7 @@ const mockInstancesMap: Record<string, InstanceDetail> = {
     name: 'worker-node-01',
     status: 'active',
     host: 'compute-03',
-    createdAt: '2025-07-25 09:12:20',
+    createdAt: 'Jul 25, 2025',
     availabilityZone: 'keystone',
     description: '-',
     flavor: { name: 'Medium', vcpu: 4, ram: '8 GiB', disk: '100 GiB', gpu: 1 },
@@ -159,7 +159,7 @@ const mockInstancesMap: Record<string, InstanceDetail> = {
     name: 'worker-node-02',
     status: 'active',
     host: 'compute-03',
-    createdAt: '2025-07-24 10:30:00',
+    createdAt: 'Jul 24, 2025',
     availabilityZone: 'keystone',
     description: '-',
     flavor: { name: 'Medium', vcpu: 4, ram: '8 GiB', disk: '100 GiB', gpu: 1 },
@@ -174,7 +174,7 @@ const mockInstancesMap: Record<string, InstanceDetail> = {
     name: 'master-node-01',
     status: 'active',
     host: 'compute-01',
-    createdAt: '2025-07-20 08:00:00',
+    createdAt: 'Jul 20, 2025',
     availabilityZone: 'nova',
     description: 'Kubernetes master node',
     flavor: { name: 'Large', vcpu: 8, ram: '16 GiB', disk: '200 GiB', gpu: 0 },
@@ -189,7 +189,7 @@ const mockInstancesMap: Record<string, InstanceDetail> = {
     name: 'db-server-01',
     status: 'stopped',
     host: 'compute-02',
-    createdAt: '2025-07-15 14:20:00',
+    createdAt: 'Jul 15, 2025',
     availabilityZone: 'keystone',
     description: 'Database server',
     flavor: { name: 'XLarge', vcpu: 16, ram: '64 GiB', disk: '500 GiB', gpu: 0 },
@@ -204,7 +204,7 @@ const mockInstancesMap: Record<string, InstanceDetail> = {
     name: 'gpu-node-01',
     status: 'active',
     host: 'compute-gpu-01',
-    createdAt: '2025-07-10 09:00:00',
+    createdAt: 'Jul 10, 2025',
     availabilityZone: 'nova',
     description: 'GPU compute node',
     flavor: { name: 'GPU Large', vcpu: 32, ram: '128 GiB', disk: '1000 GiB', gpu: 4 },
@@ -222,7 +222,7 @@ const defaultInstanceDetail: InstanceDetail = {
   name: 'Unknown Instance',
   status: 'active',
   host: 'compute-03',
-  createdAt: '2025-07-25 09:12:20',
+  createdAt: 'Jul 25, 2025',
   availabilityZone: 'nova',
   description: '-',
   flavor: { name: 'Medium', vcpu: 1, ram: '4 GiB', disk: '40 GiB', gpu: 1 },
@@ -242,7 +242,7 @@ const mockAttachedVolumes: AttachedVolume[] = [
     type: '_DEFAULT_',
     diskTag: 'OS Disk',
     bootable: false,
-    access: '2025-11-11',
+    access: 'Nov 11, 2025',
   },
   {
     id: 'vol-002',
@@ -252,7 +252,7 @@ const mockAttachedVolumes: AttachedVolume[] = [
     type: 'SSD',
     diskTag: 'Data disk',
     bootable: false,
-    access: '2025-11-10',
+    access: 'Nov 10, 2025',
   },
   {
     id: 'vol-003',
@@ -262,7 +262,7 @@ const mockAttachedVolumes: AttachedVolume[] = [
     type: '_DEFAULT_',
     diskTag: 'Backup',
     bootable: false,
-    access: '2025-11-09',
+    access: 'Nov 9, 2025',
   },
   {
     id: 'vol-004',
@@ -272,7 +272,7 @@ const mockAttachedVolumes: AttachedVolume[] = [
     type: 'SSD',
     diskTag: 'App Data',
     bootable: false,
-    access: '2025-11-08',
+    access: 'Nov 8, 2025',
   },
   {
     id: 'vol-005',
@@ -282,7 +282,7 @@ const mockAttachedVolumes: AttachedVolume[] = [
     type: 'SSD',
     diskTag: 'Database',
     bootable: false,
-    access: '2025-11-07',
+    access: 'Nov 7, 2025',
   },
   {
     id: 'vol-006',
@@ -292,7 +292,7 @@ const mockAttachedVolumes: AttachedVolume[] = [
     type: '_DEFAULT_',
     diskTag: 'Logs',
     bootable: false,
-    access: '2025-11-06',
+    access: 'Nov 6, 2025',
   },
   {
     id: 'vol-007',
@@ -302,7 +302,7 @@ const mockAttachedVolumes: AttachedVolume[] = [
     type: '_DEFAULT_',
     diskTag: 'Media',
     bootable: false,
-    access: '2025-11-05',
+    access: 'Nov 5, 2025',
   },
   {
     id: 'vol-008',
@@ -312,7 +312,7 @@ const mockAttachedVolumes: AttachedVolume[] = [
     type: 'SSD',
     diskTag: 'Cache',
     bootable: false,
-    access: '2025-11-04',
+    access: 'Nov 4, 2025',
   },
   {
     id: 'vol-009',
@@ -322,7 +322,7 @@ const mockAttachedVolumes: AttachedVolume[] = [
     type: 'SSD',
     diskTag: 'Temp',
     bootable: false,
-    access: '2025-11-03',
+    access: 'Nov 3, 2025',
   },
   {
     id: 'vol-010',
@@ -332,7 +332,7 @@ const mockAttachedVolumes: AttachedVolume[] = [
     type: '_DEFAULT_',
     diskTag: 'Shared',
     bootable: false,
-    access: '2025-11-02',
+    access: 'Nov 2, 2025',
   },
 ];
 
@@ -345,7 +345,7 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     portStatus: 'Inactive',
     fixedIp: '10.0.0.6',
     macAddress: '10.0.0.2',
-    createdAt: '2025-11-11',
+    createdAt: 'Nov 11, 2025',
   },
   {
     id: '38hdk456',
@@ -355,7 +355,7 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     portStatus: 'Active',
     fixedIp: '10.0.0.5',
     macAddress: 'fa:16:3e:12:34:56',
-    createdAt: '2025-11-10',
+    createdAt: 'Nov 10, 2025',
   },
   {
     id: '47jfl789',
@@ -365,7 +365,7 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     portStatus: 'Active',
     fixedIp: '192.168.1.10',
     macAddress: 'fa:16:3e:ab:cd:ef',
-    createdAt: '2025-11-09',
+    createdAt: 'Nov 9, 2025',
   },
   {
     id: '56kgm012',
@@ -375,7 +375,7 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     portStatus: 'Active',
     fixedIp: '172.16.0.10',
     macAddress: 'fa:16:3e:11:22:33',
-    createdAt: '2025-11-08',
+    createdAt: 'Nov 8, 2025',
   },
   {
     id: '65lhn345',
@@ -385,7 +385,7 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     portStatus: 'Active',
     fixedIp: '10.10.0.5',
     macAddress: 'fa:16:3e:44:55:66',
-    createdAt: '2025-11-07',
+    createdAt: 'Nov 7, 2025',
   },
   {
     id: '74mip678',
@@ -395,7 +395,7 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     portStatus: 'Down',
     fixedIp: '10.20.0.15',
     macAddress: 'fa:16:3e:77:88:99',
-    createdAt: '2025-11-06',
+    createdAt: 'Nov 6, 2025',
   },
   {
     id: '83njq901',
@@ -405,7 +405,7 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     portStatus: 'Active',
     fixedIp: '10.30.0.20',
     macAddress: 'fa:16:3e:aa:bb:cc',
-    createdAt: '2025-11-05',
+    createdAt: 'Nov 5, 2025',
   },
   {
     id: '92okr234',
@@ -415,7 +415,7 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     portStatus: 'Active',
     fixedIp: '10.40.0.25',
     macAddress: 'fa:16:3e:dd:ee:ff',
-    createdAt: '2025-11-04',
+    createdAt: 'Nov 4, 2025',
   },
   {
     id: '01pls567',
@@ -425,7 +425,7 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     portStatus: 'Build',
     fixedIp: '10.50.0.30',
     macAddress: 'fa:16:3e:12:34:ab',
-    createdAt: '2025-11-03',
+    createdAt: 'Nov 3, 2025',
   },
   {
     id: '10qmt890',
@@ -435,7 +435,7 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     portStatus: 'Active',
     fixedIp: '10.60.0.35',
     macAddress: 'fa:16:3e:cd:ef:12',
-    createdAt: '2025-11-02',
+    createdAt: 'Nov 2, 2025',
   },
   {
     id: '29rnu123',
@@ -445,7 +445,7 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     portStatus: 'Active',
     fixedIp: '10.70.0.40',
     macAddress: 'fa:16:3e:34:56:78',
-    createdAt: '2025-11-01',
+    createdAt: 'Nov 1, 2025',
   },
   {
     id: '38sov456',
@@ -455,7 +455,7 @@ const mockAttachedInterfaces: AttachedInterface[] = [
     portStatus: 'Inactive',
     fixedIp: '10.80.0.45',
     macAddress: 'fa:16:3e:9a:bc:de',
-    createdAt: '2025-10-31',
+    createdAt: 'Oct 31, 2025',
   },
 ];
 
@@ -466,7 +466,7 @@ const mockFloatingIPs: FloatingIP[] = [
     status: 'active',
     floatingIp: '10.0.0.11',
     fixedIp: '10.0.0.11',
-    createdAt: '2025-09-01',
+    createdAt: 'Sep 1, 2025',
   },
   {
     id: '38hdk456',
@@ -474,7 +474,7 @@ const mockFloatingIPs: FloatingIP[] = [
     status: 'active',
     floatingIp: '192.168.1.100',
     fixedIp: '10.0.0.5',
-    createdAt: '2025-08-15',
+    createdAt: 'Aug 15, 2025',
   },
   {
     id: '47jfl789',
@@ -482,7 +482,7 @@ const mockFloatingIPs: FloatingIP[] = [
     status: 'shutoff',
     floatingIp: '172.16.0.50',
     fixedIp: '10.0.0.20',
-    createdAt: '2025-07-20',
+    createdAt: 'Jul 20, 2025',
   },
   {
     id: '56kgm012',
@@ -490,7 +490,7 @@ const mockFloatingIPs: FloatingIP[] = [
     status: 'active',
     floatingIp: '203.0.113.10',
     fixedIp: '10.0.1.10',
-    createdAt: '2025-09-10',
+    createdAt: 'Sep 10, 2025',
   },
   {
     id: '65lhn345',
@@ -498,7 +498,7 @@ const mockFloatingIPs: FloatingIP[] = [
     status: 'active',
     floatingIp: '203.0.113.20',
     fixedIp: '10.0.1.20',
-    createdAt: '2025-09-12',
+    createdAt: 'Sep 12, 2025',
   },
   {
     id: '74mip678',
@@ -506,7 +506,7 @@ const mockFloatingIPs: FloatingIP[] = [
     status: 'error',
     floatingIp: '203.0.113.30',
     fixedIp: '10.0.1.30',
-    createdAt: '2025-09-15',
+    createdAt: 'Sep 15, 2025',
   },
   {
     id: '83njq901',
@@ -514,7 +514,7 @@ const mockFloatingIPs: FloatingIP[] = [
     status: 'active',
     floatingIp: '203.0.113.40',
     fixedIp: '10.0.1.40',
-    createdAt: '2025-09-18',
+    createdAt: 'Sep 18, 2025',
   },
   {
     id: '92okr234',
@@ -522,7 +522,7 @@ const mockFloatingIPs: FloatingIP[] = [
     status: 'active',
     floatingIp: '203.0.113.50',
     fixedIp: '10.0.1.50',
-    createdAt: '2025-09-20',
+    createdAt: 'Sep 20, 2025',
   },
   {
     id: '01pls567',
@@ -530,7 +530,7 @@ const mockFloatingIPs: FloatingIP[] = [
     status: 'shutoff',
     floatingIp: '203.0.113.60',
     fixedIp: '10.0.1.60',
-    createdAt: '2025-09-22',
+    createdAt: 'Sep 22, 2025',
   },
   {
     id: '10qmt890',
@@ -538,7 +538,7 @@ const mockFloatingIPs: FloatingIP[] = [
     status: 'active',
     floatingIp: '203.0.113.70',
     fixedIp: '10.0.1.70',
-    createdAt: '2025-09-25',
+    createdAt: 'Sep 25, 2025',
   },
   {
     id: '29rnu123',
@@ -546,7 +546,7 @@ const mockFloatingIPs: FloatingIP[] = [
     status: 'active',
     floatingIp: '203.0.113.80',
     fixedIp: '10.0.1.80',
-    createdAt: '2025-09-28',
+    createdAt: 'Sep 28, 2025',
   },
   {
     id: '38sov456',
@@ -554,7 +554,7 @@ const mockFloatingIPs: FloatingIP[] = [
     status: 'shutoff',
     floatingIp: '203.0.113.90',
     fixedIp: '10.0.1.90',
-    createdAt: '2025-09-30',
+    createdAt: 'Sep 30, 2025',
   },
 ];
 
@@ -565,67 +565,72 @@ const mockNetworkInterfaces: NetworkInterface[] = [
 ];
 
 const mockSecurityGroups: SecurityGroup[] = [
-  { id: 'sg-001', name: 'sg-02', description: '10.0.0.11', createdAt: '2025-11-11' },
-  { id: 'sg-002', name: 'default', description: 'Default security group', createdAt: '2025-11-10' },
+  { id: 'sg-001', name: 'sg-02', description: '10.0.0.11', createdAt: 'Nov 11, 2025' },
+  {
+    id: 'sg-002',
+    name: 'default',
+    description: 'Default security group',
+    createdAt: 'Nov 10, 2025',
+  },
   {
     id: 'sg-003',
     name: 'web-servers',
     description: 'Web server security group',
-    createdAt: '2025-11-09',
+    createdAt: 'Nov 9, 2025',
   },
   {
     id: 'sg-004',
     name: 'ssh-access',
     description: 'SSH access security group',
-    createdAt: '2025-11-08',
+    createdAt: 'Nov 8, 2025',
   },
   {
     id: 'sg-005',
     name: 'db-servers',
     description: 'Database server security group',
-    createdAt: '2025-11-07',
+    createdAt: 'Nov 7, 2025',
   },
   {
     id: 'sg-006',
     name: 'internal-only',
     description: 'Internal network only',
-    createdAt: '2025-11-06',
+    createdAt: 'Nov 6, 2025',
   },
   {
     id: 'sg-007',
     name: 'load-balancer',
     description: 'Load balancer security group',
-    createdAt: '2025-11-05',
+    createdAt: 'Nov 5, 2025',
   },
   {
     id: 'sg-008',
     name: 'monitoring',
     description: 'Monitoring services access',
-    createdAt: '2025-11-04',
+    createdAt: 'Nov 4, 2025',
   },
   {
     id: 'sg-009',
     name: 'kubernetes',
     description: 'Kubernetes cluster security group',
-    createdAt: '2025-11-03',
+    createdAt: 'Nov 3, 2025',
   },
   {
     id: 'sg-010',
     name: 'api-gateway',
     description: 'API gateway security group',
-    createdAt: '2025-11-02',
+    createdAt: 'Nov 2, 2025',
   },
   {
     id: 'sg-011',
     name: 'cache-servers',
     description: 'Cache server security group',
-    createdAt: '2025-11-01',
+    createdAt: 'Nov 1, 2025',
   },
   {
     id: 'sg-012',
     name: 'message-queue',
     description: 'Message queue security group',
-    createdAt: '2025-10-31',
+    createdAt: 'Oct 31, 2025',
   },
 ];
 
@@ -636,7 +641,7 @@ const mockInstanceSnapshots: InstanceSnapshot[] = [
     status: 'active',
     size: '30GiB',
     diskFormat: 'RAW',
-    createdAt: '2025-09-01',
+    createdAt: 'Sep 1, 2025',
   },
   {
     id: 'snap-002',
@@ -644,7 +649,7 @@ const mockInstanceSnapshots: InstanceSnapshot[] = [
     status: 'active',
     size: '50GiB',
     diskFormat: 'QCOW2',
-    createdAt: '2025-08-28',
+    createdAt: 'Aug 28, 2025',
   },
   {
     id: 'snap-003',
@@ -652,7 +657,7 @@ const mockInstanceSnapshots: InstanceSnapshot[] = [
     status: 'active',
     size: '20GiB',
     diskFormat: 'RAW',
-    createdAt: '2025-08-25',
+    createdAt: 'Aug 25, 2025',
   },
   {
     id: 'snap-004',
@@ -660,7 +665,7 @@ const mockInstanceSnapshots: InstanceSnapshot[] = [
     status: 'active',
     size: '45GiB',
     diskFormat: 'QCOW2',
-    createdAt: '2025-08-20',
+    createdAt: 'Aug 20, 2025',
   },
   {
     id: 'snap-005',
@@ -668,7 +673,7 @@ const mockInstanceSnapshots: InstanceSnapshot[] = [
     status: 'active',
     size: '15GiB',
     diskFormat: 'RAW',
-    createdAt: '2025-08-15',
+    createdAt: 'Aug 15, 2025',
   },
   {
     id: 'snap-006',
@@ -676,7 +681,7 @@ const mockInstanceSnapshots: InstanceSnapshot[] = [
     status: 'active',
     size: '35GiB',
     diskFormat: 'QCOW2',
-    createdAt: '2025-08-10',
+    createdAt: 'Aug 10, 2025',
   },
   {
     id: 'snap-007',
@@ -684,7 +689,7 @@ const mockInstanceSnapshots: InstanceSnapshot[] = [
     status: 'active',
     size: '60GiB',
     diskFormat: 'RAW',
-    createdAt: '2025-08-05',
+    createdAt: 'Aug 5, 2025',
   },
   {
     id: 'snap-008',
@@ -692,7 +697,7 @@ const mockInstanceSnapshots: InstanceSnapshot[] = [
     status: 'queued',
     size: '25GiB',
     diskFormat: 'QCOW2',
-    createdAt: '2025-08-01',
+    createdAt: 'Aug 1, 2025',
   },
   {
     id: 'snap-009',
@@ -700,7 +705,7 @@ const mockInstanceSnapshots: InstanceSnapshot[] = [
     status: 'active',
     size: '40GiB',
     diskFormat: 'RAW',
-    createdAt: '2025-07-28',
+    createdAt: 'Jul 28, 2025',
   },
   {
     id: 'snap-010',
@@ -708,7 +713,7 @@ const mockInstanceSnapshots: InstanceSnapshot[] = [
     status: 'active',
     size: '55GiB',
     diskFormat: 'QCOW2',
-    createdAt: '2025-07-25',
+    createdAt: 'Jul 25, 2025',
   },
   {
     id: 'snap-011',
@@ -716,7 +721,7 @@ const mockInstanceSnapshots: InstanceSnapshot[] = [
     status: 'active',
     size: '10GiB',
     diskFormat: 'RAW',
-    createdAt: '2025-07-20',
+    createdAt: 'Jul 20, 2025',
   },
   {
     id: 'snap-012',
@@ -724,7 +729,7 @@ const mockInstanceSnapshots: InstanceSnapshot[] = [
     status: 'active',
     size: '18GiB',
     diskFormat: 'QCOW2',
-    createdAt: '2025-07-15',
+    createdAt: 'Jul 15, 2025',
   },
 ];
 
@@ -733,7 +738,7 @@ const mockActionLogs: ActionLog[] = [
     id: 'log-001',
     operationName: 'Create',
     requestId: 'req-fe6b60ca-76cf-4bd5-aa2f-d2b8d7f918c2',
-    requestedTime: '2025-09-11 13:34:57',
+    requestedTime: 'Sep 11, 2025',
     result: 'Success',
     startTime: '14:23:15',
     endTime: '14:23:15',
@@ -742,7 +747,7 @@ const mockActionLogs: ActionLog[] = [
     id: 'log-002',
     operationName: 'Create',
     requestId: 'req-fe6b60ca-76cf-4bd5-aa2f-d2b8d7f918c2',
-    requestedTime: '2025-09-11 13:34:57',
+    requestedTime: 'Sep 11, 2025',
     result: 'Success',
     startTime: '14:23:15',
     endTime: '14:23:15',
@@ -751,7 +756,7 @@ const mockActionLogs: ActionLog[] = [
     id: 'log-003',
     operationName: 'Create',
     requestId: 'req-fe6b60ca-76cf-4bd5-aa2f-d2b8d7f918c2',
-    requestedTime: '2025-09-11 13:34:57',
+    requestedTime: 'Sep 11, 2025',
     result: 'Success',
     startTime: '14:23:15',
     endTime: '14:23:15',
@@ -760,7 +765,7 @@ const mockActionLogs: ActionLog[] = [
     id: 'log-004',
     operationName: 'Create',
     requestId: 'req-fe6b60ca-76cf-4bd5-aa2f-d2b8d7f918c2',
-    requestedTime: '2025-09-11 13:34:57',
+    requestedTime: 'Sep 11, 2025',
     result: 'Success',
     startTime: '14:23:15',
     endTime: '14:23:15',
@@ -769,7 +774,7 @@ const mockActionLogs: ActionLog[] = [
     id: 'log-005',
     operationName: 'Create',
     requestId: 'req-fe6b60ca-76cf-4bd5-aa2f-d2b8d7f918c2',
-    requestedTime: '2025-09-11 13:34:57',
+    requestedTime: 'Sep 11, 2025',
     result: 'Success',
     startTime: '14:23:15',
     endTime: '14:23:15',
@@ -778,7 +783,7 @@ const mockActionLogs: ActionLog[] = [
     id: 'log-006',
     operationName: 'Create',
     requestId: 'req-fe6b60ca-76cf-4bd5-aa2f-d2b8d7f918c2',
-    requestedTime: '2025-09-11 13:34:57',
+    requestedTime: 'Sep 11, 2025',
     result: 'Success',
     startTime: '14:23:15',
     endTime: '14:23:15',
@@ -787,7 +792,7 @@ const mockActionLogs: ActionLog[] = [
     id: 'log-007',
     operationName: 'Create',
     requestId: 'req-fe6b60ca-76cf-4bd5-aa2f-d2b8d7f918c2',
-    requestedTime: '2025-09-11 13:34:57',
+    requestedTime: 'Sep 11, 2025',
     result: 'Success',
     startTime: '14:23:15',
     endTime: '14:23:15',
@@ -796,7 +801,7 @@ const mockActionLogs: ActionLog[] = [
     id: 'log-008',
     operationName: 'Create',
     requestId: 'req-fe6b60ca-76cf-4bd5-aa2f-d2b8d7f918c2',
-    requestedTime: '2025-09-11 13:34:57',
+    requestedTime: 'Sep 11, 2025',
     result: 'Success',
     startTime: '14:23:15',
     endTime: '14:23:15',
@@ -805,7 +810,7 @@ const mockActionLogs: ActionLog[] = [
     id: 'log-009',
     operationName: 'Create',
     requestId: 'req-fe6b60ca-76cf-4bd5-aa2f-d2b8d7f918c2',
-    requestedTime: '2025-09-11 13:34:57',
+    requestedTime: 'Sep 11, 2025',
     result: 'Success',
     startTime: '14:23:15',
     endTime: '14:23:15',
@@ -814,7 +819,7 @@ const mockActionLogs: ActionLog[] = [
     id: 'log-010',
     operationName: 'Create',
     requestId: 'req-fe6b60ca-76cf-4bd5-aa2f-d2b8d7f918c2',
-    requestedTime: '2025-09-11 13:34:57',
+    requestedTime: 'Sep 11, 2025',
     result: 'Success',
     startTime: '14:23:15',
     endTime: '14:23:15',

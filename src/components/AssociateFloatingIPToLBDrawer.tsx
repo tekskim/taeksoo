@@ -46,7 +46,7 @@ const defaultFloatingIPs: FloatingIPItem[] = Array.from({ length: 115 }, (_, i) 
   floatingIp: '10.0.0.5',
   networkId: `45ghj${567 + i}`,
   networkName: 'net-02',
-  createdAt: '2025-08-23',
+  createdAt: 'Aug 23, 2025',
 }));
 
 const ITEMS_PER_PAGE = 5;

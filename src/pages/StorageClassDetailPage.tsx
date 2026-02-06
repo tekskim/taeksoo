@@ -57,7 +57,7 @@ const mockStorageClassData: Record<string, StorageClassData> = {
     name: 'storageclassName1',
     status: 'Active',
     isDefault: true,
-    createdAt: '2025-07-25 09:12:20',
+    createdAt: 'Jul 25, 2025',
     labels: {
       'app.kubernetes.io/managed-by': 'Helm',
     },
@@ -79,7 +79,7 @@ const mockStorageClassData: Record<string, StorageClassData> = {
     name: 'storageclassName2',
     status: 'Active',
     isDefault: false,
-    createdAt: '2025-07-25 09:12:20',
+    createdAt: 'Jul 25, 2025',
     labels: {
       app: 'storage',
     },
@@ -99,7 +99,7 @@ const mockStorageClassData: Record<string, StorageClassData> = {
     name: 'ceph-rbd',
     status: 'Active',
     isDefault: false,
-    createdAt: '2025-11-09 14:30',
+    createdAt: 'Nov 9, 2025',
     labels: {},
     annotations: {},
     parameters: {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { IconCheck, IconEdit, IconProgress, IconMinus } from '@tabler/icons-react';
+import { IconCheck, IconEdit, IconMinus } from '@tabler/icons-react';
 import { Button } from '../Button';
 import { VStack, HStack } from '../../layouts';
 import { SectionCard } from '../SectionCard/SectionCard';
@@ -28,29 +28,23 @@ export function WizardSectionStatusIcon({ status }: WizardSectionStatusIconProps
     );
   }
 
-  // active → spinning progress (currently working)
+  // active → spinning dashed circle (currently working)
   if (status === 'active') {
     return (
-      <div className="w-4 h-4 shrink-0 flex items-center justify-center">
-        <IconProgress
-          size={16}
-          stroke={1.5}
-          className="text-[var(--color-text-subtle)] animate-spin"
-        />
-      </div>
+      <div
+        className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-text-muted)] animate-spin"
+        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
+      />
     );
   }
 
-  // writing → spinning progress
+  // writing → spinning dashed circle
   if (status === 'writing') {
     return (
-      <div className="w-4 h-4 shrink-0 flex items-center justify-center">
-        <IconProgress
-          size={16}
-          stroke={1.5}
-          className="text-[var(--color-text-subtle)] animate-spin"
-        />
-      </div>
+      <div
+        className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-text-muted)] animate-spin"
+        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
+      />
     );
   }
 
@@ -63,9 +57,12 @@ export function WizardSectionStatusIcon({ status }: WizardSectionStatusIconProps
     );
   }
 
-  // pre → empty circle (waiting)
+  // pre → empty dashed circle (waiting)
   return (
-    <div className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)]" />
+    <div
+      className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)]"
+      style={{ borderStyle: 'dashed' }}
+    />
   );
 }
 

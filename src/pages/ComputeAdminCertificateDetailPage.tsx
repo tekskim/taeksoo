@@ -95,16 +95,16 @@ const mockServerCertificate: ServerCertificateDetail = {
   certificateType: 'server',
   type: 'Wildcard',
   domain: '.domain.com',
-  expiresAt: '2025-09-25 09:12:20',
-  createdAt: '2025-07-25 09:12:20',
+  expiresAt: 'Sep 25, 2025',
+  createdAt: 'Jul 25, 2025',
   description: '-',
   // Certificate Metadata
   classification: 'Server Certificate',
   issuer: "Let's Encrypt Authority X3",
   san: 'www.domain.com, api.domain.com',
   signatureType: 'SHA256withRSA',
-  validFrom: '2025-02-10',
-  validTo: '2026-02-10',
+  validFrom: 'Feb 10, 2025',
+  validTo: 'Feb 10, 2026',
 };
 
 const mockCACertificate: CACertificateDetail = {
@@ -112,16 +112,16 @@ const mockCACertificate: CACertificateDetail = {
   name: 'root-ca',
   status: 'valid',
   certificateType: 'ca',
-  expiresAt: '2025-09-25 09:12:20',
-  createdAt: '2025-07-25 09:12:20',
+  expiresAt: 'Sep 25, 2025',
+  createdAt: 'Jul 25, 2025',
   description: '-',
   // Certificate Metadata
   classification: 'CA Certificate',
   authority: 'Sectigo Root CA',
   issuer: 'Sectigo Root CA',
   signatureType: 'SHA256withRSA',
-  validFrom: '2025-02-10',
-  validTo: '2026-02-10',
+  validFrom: 'Feb 10, 2025',
+  validTo: 'Feb 10, 2026',
 };
 
 // Mock certificate database

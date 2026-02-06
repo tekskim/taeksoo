@@ -190,7 +190,7 @@ const mockNetworksMap: Record<string, NetworkDetail> = {
     tenant: 'tenantB',
     shared: false,
     external: false,
-    createdAt: 'Dec 05 2025 11:00:00',
+    createdAt: 'Dec 5 2025 11:00:00',
     networkName: 'test-network',
     description: 'Test network',
     portSecurity: true,
@@ -739,7 +739,7 @@ export default function NetworkDetailPage() {
       label: 'Admin state',
       flex: 1,
       render: (_, row) => (
-        <Badge variant={row.adminState === 'Up' ? 'success' : 'error'} size="sm">
+        <Badge variant={row.adminState === 'Up' ? 'success' : 'default'} size="sm">
           {row.adminState}
         </Badge>
       ),
@@ -761,7 +761,7 @@ export default function NetworkDetailPage() {
             className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors"
             onClick={() => console.log('Remove DHCP agent', row.id)}
           >
-            <IconTrash size={16} stroke={1.5} className="text-[var(--color-state-danger)]" />
+            <IconTrash size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
           </button>
         </div>
       ),

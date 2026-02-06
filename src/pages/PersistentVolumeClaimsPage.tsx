@@ -65,7 +65,7 @@ const persistentVolumeClaimsData: PersistentVolumeClaimRow[] = [
     accessModes: 'RWO',
     storageClass: 'Ceph',
     volumeAttributesClass: '1',
-    createdAt: '2025-11-10 12:57',
+    createdAt: 'Nov 10, 2025',
   },
   {
     id: '2',
@@ -77,7 +77,7 @@ const persistentVolumeClaimsData: PersistentVolumeClaimRow[] = [
     accessModes: 'RWO',
     storageClass: 'Ceph',
     volumeAttributesClass: '1',
-    createdAt: '2025-11-09 14:30',
+    createdAt: 'Nov 9, 2025',
   },
   {
     id: '3',
@@ -89,7 +89,7 @@ const persistentVolumeClaimsData: PersistentVolumeClaimRow[] = [
     accessModes: 'RWO',
     storageClass: 'local',
     volumeAttributesClass: '1',
-    createdAt: '2025-11-08 09:15',
+    createdAt: 'Nov 8, 2025',
   },
   {
     id: '4',
@@ -101,7 +101,7 @@ const persistentVolumeClaimsData: PersistentVolumeClaimRow[] = [
     accessModes: 'RWX',
     storageClass: 'nfs',
     volumeAttributesClass: '',
-    createdAt: '2025-11-10 08:00',
+    createdAt: 'Nov 10, 2025',
   },
   {
     id: '5',
@@ -113,7 +113,7 @@ const persistentVolumeClaimsData: PersistentVolumeClaimRow[] = [
     accessModes: 'RWO',
     storageClass: 'Ceph',
     volumeAttributesClass: '2',
-    createdAt: '2025-11-07 16:45',
+    createdAt: 'Nov 7, 2025',
   },
 ];
 
