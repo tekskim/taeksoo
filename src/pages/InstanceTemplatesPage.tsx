@@ -379,7 +379,7 @@ export function InstanceTemplatesPage() {
           className="p-1 rounded hover:bg-[var(--color-surface-subtle)] transition-colors"
         >
           {row.favorite ? (
-            <IconStarFilled size={16} className="text-[var(--semantic-color-state-warning)]" />
+            <IconStarFilled size={16} className="text-[var(--primitive-color-yellow400)]" />
           ) : (
             <IconStar size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
           )}
