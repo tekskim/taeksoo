@@ -824,11 +824,6 @@ import { IconPlus, IconEdit, IconTrash, IconStar, IconStarFilled } from '@tabler
 
 ## 버전
 
-- **Current Version**: 1.6.1
-- **Last Updated**: 2026-02-05
-- **Changes**:
-  - Button xs size 추가 (24px height)
-  - Star(즐겨찾기) 아이콘 색상: yellow400 사용
-  - Table 컬럼 정렬 규칙 추가 (연관 리소스는 왼쪽 정렬)
-  - FormField Simple API: label, description, helperText, errorMessage props
-  - Compound API도 여전히 지원 (복잡한 레이아웃용)
+- **Current Version**: 1.0.0
+- **Last Updated**: 2026-02-06
+- **Changelog**: `/CHANGELOG.md`

@@ -314,6 +314,9 @@ export function EntryPage() {
                 <Button variant="muted" size="md" onClick={() => navigate('/design/comparison')}>
                   Production Comparison{' '}
                 </Button>
+                <Button variant="muted" size="md" onClick={() => navigate('/iconography')}>
+                  Iconography{' '}
+                </Button>
               </div>
             </div>
           </div>
