@@ -16,15 +16,16 @@ import {
   Button, Input, Select, Checkbox, Radio, Toggle, Slider,
   SearchInput, FilterSearchInput, NumberInput, Textarea,
   // Data Display
-  Table, Pagination, Badge, Chip, StatusIndicator,
+  Table, Pagination, Badge, Chip, StatusIndicator, MetricCard, InfoBox,
   // Overlays
-  Modal, ConfirmModal, Drawer, Tooltip, ContextMenu,
+  Modal, ConfirmModal, Drawer, Tooltip, Popover, ContextMenu,
   // Layout
-  FormField, SectionCard, DetailHeader, ListToolbar,
+  FormField, SectionCard, DetailHeader, ListToolbar, PageShell, PageHeader,
   // Navigation
   Tabs, TabList, Tab, TabPanel, TabBar, TopBar, Breadcrumb, SNBMenuItem,
   // Feedback
   InlineMessage, Disclosure, ProgressBar, Loading, SelectionIndicator,
+  EmptyState, ErrorState,
   // Stack
   VStack, HStack, Container,
   // Presets
@@ -272,6 +273,17 @@ import type { FilterField, AppliedFilter } from '@/design-system';
 --tooltip-max-width: 14.375rem; /* 230px */
 ```
 
+### Popover
+
+```css
+--popover-radius: 0.5rem;      /* 8px - primitive-radius-lg */
+--popover-border: 1px;
+--popover-arrow-size: 7px;     /* border triangle outer */
+--popover-arrow-fill: 6px;     /* fill triangle inner */
+--popover-bg: var(--color-surface-default);
+--popover-border-color: var(--color-border-default);
+```
+
 ### StatusIndicator
 
 ```css
@@ -326,8 +338,13 @@ import type { FilterField, AppliedFilter } from '@/design-system';
 - **Pagination**: 페이지 네비게이션
 - **ProgressBar**: 진행률 표시
 - **Tooltip**: 툴팁 표시
+- **Popover**: 인터랙티브 팝오버 (`trigger="click|hover"`, `position="top|bottom|left|right"`, `showArrow`)
+- **MetricCard**: 메트릭 카드 (`title`, `value`, `tooltip`, `MetricCard.Group`)
+- **InfoBox**: 정보 박스 (`label`, `value`, `children`, `InfoBox.Group`)
 
 ### Layout
+- **PageShell**: 페이지 셸 레이아웃 (`sidebar`, `sidebarWidth`, `tabBar`, `topBar`, `bottomPanel`, `contentClassName`, `bottomPanelPadding`)
+- **PageHeader**: 페이지 헤더 (`title`, `titleExtra`, `actions`)
 - **VStack**: 수직 스택 (`gap`, `align`, `justify`)
 - **HStack**: 수평 스택 (`gap`, `align`, `justify`)
 - **Container**: 컨테이너 (`maxWidth`, `padding`)
@@ -348,8 +365,228 @@ import type { FilterField, AppliedFilter } from '@/design-system';
 - **InlineMessage**: 인라인 알림 (`variant="info|success|warning|error"`)
 - **ContextMenu**: 컨텍스트 메뉴 (`items`, `trigger="click|contextmenu"`)
 
+### Feedback (Empty/Error)
+- **EmptyState**: 빈 상태 표시 (`icon`, `title`, `description`, `action`, `variant="card|inline"`)
+- **ErrorState**: 에러 상태 표시 (`icon`, `title`, `description`, `action`)
+
 ### Disclosure
 - **Disclosure**: 접기/펼치기 패널
+
+## PageShell 사용법
+
+```tsx
+// 페이지 셸 — 모든 페이지의 외부 레이아웃을 래핑 (controlled 모드)
+const [sidebarOpen, setSidebarOpen] = useState(true);
+const sidebarWidth = sidebarOpen ? 240 : 40;
+
+<PageShell
+  sidebar={<ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />}
+  sidebarWidth={sidebarWidth}
+  tabBar={
+    <TabBar
+      tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+      activeTab={activeTabId}
+      onTabChange={selectTab}
+      onTabClose={closeTab}
+      onTabAdd={addNewTab}
+      onTabReorder={moveTab}
+    />
+  }
+  topBar={
+    <TopBar
+      showSidebarToggle={!sidebarOpen}
+      onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+      showNavigation={true}
+      onBack={() => window.history.back()}
+      onForward={() => window.history.forward()}
+      breadcrumb={<Breadcrumb items={[...]} />}
+      actions={<>...</>}
+    />
+  }
+  bottomPanel={<ShellPanel ... sidebarOpen={sidebarOpen} sidebarWidth={sidebarWidth} />}
+  bottomPanelPadding={shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0'}
+>
+  <VStack gap={3}>
+    {/* Page content */}
+  </VStack>
+</PageShell>
+```
+
+## PageHeader 사용법
+
+```tsx
+// 기본 — 제목 + Create 버튼
+<PageHeader
+  title="Pods"
+  actions={
+    <Button variant="primary" size="md" leftIcon={<IconPlus size={12} />}>
+      Create Pod
+    </Button>
+  }
+/>
+
+// 드롭다운 액션 버튼
+<PageHeader
+  title="Pods"
+  actions={
+    <ContextMenu items={createDropdownItems} trigger="click" align="right">
+      <Button variant="primary" size="md" rightIcon={<IconChevronDown size={14} />}>
+        Create Pod
+      </Button>
+    </ContextMenu>
+  }
+/>
+
+// 제목에 뱃지 추가
+<PageHeader
+  title="Security Groups"
+  titleExtra={<Badge variant="info" size="sm">12</Badge>}
+  actions={<Button variant="primary" size="md">Create</Button>}
+/>
+```
+
+## EmptyState / ErrorState 사용법
+
+```tsx
+// EmptyState — 카드 형태 (기본)
+<EmptyState
+  icon={<IconDatabase size={48} stroke={1} />}
+  title="No instances found"
+  description="Create your first instance to get started."
+  action={
+    <Button variant="primary" size="md" leftIcon={<IconPlus size={12} />}>
+      Create Instance
+    </Button>
+  }
+/>
+
+// EmptyState — 인라인 형태
+<EmptyState
+  variant="inline"
+  icon={<IconSearch size={48} stroke={1} />}
+  title="No results found"
+  description="Try adjusting your search or filter criteria."
+/>
+
+// ErrorState — 에러 화면
+<ErrorState
+  icon={<IconAlertTriangle size={48} stroke={1} />}
+  title="Something went wrong"
+  description="An unexpected error occurred. Please try again later."
+  action={<Button variant="secondary" size="md">Retry</Button>}
+/>
+```
+
+## InfoBox / MetricCard 사용법
+
+```tsx
+// InfoBox — 단일
+<InfoBox label="Instance ID" value="i-1234567890abcdef0" />
+
+// InfoBox — 복합 값 (children)
+<InfoBox label="Labels (3)">
+  <div className="flex flex-wrap items-center gap-1">
+    <Chip label="app=nginx" size="sm" />
+    <Chip label="env=production" size="sm" />
+  </div>
+</InfoBox>
+
+// InfoBox — 그룹
+<InfoBox.Group>
+  <InfoBox label="Resource Name" value="my-deployment" />
+  <InfoBox label="Namespace" value="default" />
+  <InfoBox label="Created at" value="2026-02-06 14:30:00" />
+</InfoBox.Group>
+
+// MetricCard — 그룹
+<MetricCard.Group>
+  <MetricCard title="Pod restarts" value={3} tooltip="Total number of container restarts." />
+  <MetricCard title="CPU usage" value="45%" tooltip="Current CPU utilization." />
+  <MetricCard title="Memory usage" value="1.2 GB" tooltip="Current memory utilization." />
+</MetricCard.Group>
+```
+
+## Popover 사용법
+
+```tsx
+// 기본 (클릭 트리거)
+<Popover
+  trigger="click"
+  position="bottom"
+  content={
+    <div className="p-4">
+      <p className="text-body-md text-[var(--color-text-default)]">
+        Interactive content here
+      </p>
+    </div>
+  }
+>
+  <Button variant="secondary">Open Popover</Button>
+</Popover>
+
+// 호버 트리거
+<Popover
+  trigger="hover"
+  position="top"
+  delay={200}
+  hideDelay={150}
+  content={<div className="p-3">Hover info</div>}
+>
+  <Button variant="ghost">Hover me</Button>
+</Popover>
+
+// 인터랙티브 콘텐츠 (폼, 메뉴 등)
+<Popover
+  trigger="click"
+  position="bottom"
+  content={
+    <VStack gap={3} className="p-4 w-[280px]">
+      <h4 className="text-heading-h6">Quick Settings</h4>
+      <FormField label="Display Name">
+        <Input placeholder="Enter name" fullWidth />
+      </FormField>
+      <HStack gap={2} className="w-full">
+        <Button variant="secondary" size="sm" className="flex-1">Cancel</Button>
+        <Button variant="primary" size="sm" className="flex-1">Save</Button>
+      </HStack>
+    </VStack>
+  }
+>
+  <Button variant="primary">Open Form</Button>
+</Popover>
+
+// 화살표 없이
+<Popover showArrow={false} trigger="click" content={<div className="p-3">No arrow</div>}>
+  <Button variant="outline">No Arrow</Button>
+</Popover>
+
+// Controlled 상태
+const [isOpen, setIsOpen] = useState(false);
+<Popover
+  trigger="click"
+  isOpen={isOpen}
+  onOpenChange={setIsOpen}
+  content={<div className="p-4">Controlled content</div>}
+>
+  <Button variant="secondary">Controlled</Button>
+</Popover>
+```
+
+**Popover vs Tooltip:**
+- **Tooltip**: 텍스트만, 비인터랙티브, hover 전용
+- **Popover**: 인터랙티브 콘텐츠 (폼, 메뉴, 버튼), click/hover 지원, `aria-haspopup="dialog"`
+
+**Props:**
+- `content`: ReactNode - 팝오버 내용
+- `position`: `"top" | "bottom" | "left" | "right"` (기본: `"bottom"`)
+- `trigger`: `"click" | "hover"` (기본: `"click"`)
+- `delay` / `hideDelay`: hover 트리거 시 지연(ms)
+- `showArrow`: 화살표 표시 (기본: `true`)
+- `isOpen` / `onOpenChange`: Controlled 상태
+- `closeOnOutsideClick`: 외부 클릭 닫기 (기본: `true`)
+- `closeOnEscape`: ESC 키 닫기 (기본: `true`)
+- `disabled`: 비활성화
+- `aria-label`: 접근성 라벨
 
 ## ContextMenu 사용법
 
@@ -556,16 +793,43 @@ const menuItems = [
 
 ## 페이지 패턴
 
+### Full Page 패턴 (PageShell 포함)
+```tsx
+// 전체 페이지 구조 — PageShell이 외부 레이아웃을 래핑
+const [sidebarOpen, setSidebarOpen] = useState(true);
+const sidebarWidth = sidebarOpen ? 240 : 40;
+const shellPanel = useShellPanel();
+
+<PageShell
+  sidebar={<ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />}
+  sidebarWidth={sidebarWidth}
+  tabBar={<TabBar tabs={tabs} activeTab={activeTabId} onTabChange={selectTab} ... />}
+  topBar={
+    <TopBar
+      showSidebarToggle={!sidebarOpen}
+      onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+      breadcrumb={<Breadcrumb items={[{ label: 'clusterName', href: '/container' }, { label: 'Pods' }]} />}
+      actions={<>...</>}
+      ...
+    />
+  }
+  bottomPanel={<ShellPanel ... sidebarOpen={sidebarOpen} sidebarWidth={sidebarWidth} />}
+  bottomPanelPadding={shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0'}
+>
+  <VStack gap={3}>
+    {/* 아래 List Page 또는 Detail Page 패턴의 내용이 들어감 */}
+  </VStack>
+</PageShell>
+```
+
 ### List Page 패턴 (리스트 페이지)
 ```tsx
 <VStack gap={3}>
   {/* 1. Page Header */}
-  <div className="flex items-center justify-between h-8">
-    <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-      [Page Title]
-    </h1>
-    <Button size="md">Create [resource]</Button>
-  </div>
+  <PageHeader
+    title="[Page Title]"
+    actions={<Button variant="primary" size="md">Create [resource]</Button>}
+  />
 
   {/* 2. ListToolbar */}
   <ListToolbar
@@ -693,10 +957,7 @@ const menuItems = [
     <h2 className="text-heading-h5 text-[var(--color-text-default)]">Edit [Resource]</h2>
     
     {/* Info Box (컨텍스트 정보) */}
-    <div className="w-full px-4 py-3 bg-[var(--color-surface-subtle)] rounded-lg">
-      <div className="text-label-sm text-[var(--color-text-subtle)] mb-1.5">Resource ID</div>
-      <div className="text-body-md text-[var(--color-text-default)]">{resourceId}</div>
-    </div>
+    <InfoBox label="Resource ID" value={resourceId} />
     
     {/* Form Fields */}
     <FormField required>
@@ -719,10 +980,7 @@ const menuItems = [
   size="sm"
 >
   {/* Info Box */}
-  <div className="bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)] px-4 py-3 flex flex-col gap-1.5">
-    <span className="text-label-sm text-[var(--color-text-subtle)]">Resource name</span>
-    <span className="text-body-md text-[var(--color-text-default)]">{resourceName}</span>
-  </div>
+  <InfoBox label="Resource name" value={resourceName} />
   
   {/* Button Group */}
   <div className="flex gap-2 w-full">

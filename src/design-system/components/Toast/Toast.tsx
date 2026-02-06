@@ -411,6 +411,7 @@ export function ToastContainer({
         isBottom && 'flex-col-reverse',
         className
       )}
+      role="region"
       aria-live="polite"
       aria-label="알림"
     >

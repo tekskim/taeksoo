@@ -41,6 +41,7 @@ export * from './components/Breadcrumb';
 export * from './components/StatusIndicator';
 export * from './components/Menu';
 export * from './components/Tooltip';
+export * from './components/Popover';
 export * from './components/Drawer';
 export * from './components/ListToolbar';
 export * from './components/Modal';
@@ -55,6 +56,12 @@ export * from './components/Skeleton';
 export * from './components/SNBMenuItem';
 export * from './components/CardTitle';
 export * from './components/Wizard';
+export * from './components/PageShell';
+export * from './components/PageHeader';
+export * from './components/EmptyState';
+export * from './components/ErrorState';
+export * from './components/InfoBox';
+export * from './components/MetricCard';
 
 // Layouts
 export * from './layouts';

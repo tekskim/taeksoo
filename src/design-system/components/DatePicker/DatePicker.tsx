@@ -478,7 +478,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                     ${day.isToday && !isSelected ? 'ring-1 ring-[var(--color-action-primary)]' : ''}
                   `}
                   aria-label={day.date.toLocaleDateString()}
-                  aria-selected={isSelected}
+                  aria-pressed={isSelected}
                 >
                   {day.day}
 
