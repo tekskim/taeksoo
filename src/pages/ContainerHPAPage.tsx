@@ -2,6 +2,8 @@ import { useState } from 'react';
 import {
   VStack,
   HStack,
+  PageShell,
+  PageHeader,
   TabBar,
   TopBar,
   Breadcrumb,
@@ -11,7 +13,6 @@ import {
   StatusIndicator,
   SearchInput,
   Pagination,
-  ListToolbar,
   ContextMenu,
   type TableColumn,
   type ContextMenuItem,
@@ -284,16 +285,12 @@ export function ContainerHPAPage() {
   };
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-
-      {/* Main Content Area */}
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: `${sidebarWidth}px` }}
-      >
-        {/* TabBar */}
+    <PageShell
+      sidebar={
+        <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
         <TabBar
           tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
@@ -302,8 +299,8 @@ export function ContainerHPAPage() {
           onTabAdd={addNewTab}
           onTabReorder={moveTab}
         />
-
-        {/* TopBar */}
+      }
+      topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -355,107 +352,105 @@ export function ContainerHPAPage() {
             </>
           }
         />
+      }
+      bottomPanel={
+        <ShellPanel
+          isExpanded={shellPanel.isExpanded}
+          onExpandedChange={shellPanel.setIsExpanded}
+          tabs={shellPanel.tabs}
+          activeTabId={shellPanel.activeTabId}
+          onActiveTabChange={shellPanel.setActiveTabId}
+          onCloseTab={shellPanel.closeTab}
+          onContentChange={shellPanel.updateContent}
+          onClear={shellPanel.clearContent}
+          onOpenInNewTab={handleOpenInNewTab}
+          initialHeight={350}
+          minHeight={300}
+          sidebarOpen={sidebarOpen}
+          sidebarWidth={sidebarWidth}
+        />
+      }
+      bottomPanelPadding={shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0'}
+      contentClassName="pt-4 px-8 pb-6"
+    >
+      <VStack gap={3}>
+        {/* Header */}
+        <PageHeader
+          title="Horizontal Pod Autoscalers"
+          actions={
+            <ContextMenu items={createDropdownItems} trigger="click" align="right">
+              <Button variant="primary" rightIcon={<IconChevronDown size={14} stroke={1.5} />}>
+                Create Horizontal Pod Autoscaler
+              </Button>
+            </ContextMenu>
+          }
+        />
 
-        {/* Page Content */}
-        <div
-          className="flex-1 overflow-y-auto overflow-x-hidden min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll"
-          style={{ paddingBottom: shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0' }}
-        >
-          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
-            <VStack gap={3}>
-              {/* Header */}
-              <HStack justify="between" align="center" className="w-full min-h-8">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-                  Horizontal Pod Autoscalers
-                </h1>
-                <ContextMenu items={createDropdownItems} trigger="click" align="right">
-                  <Button variant="primary" rightIcon={<IconChevronDown size={14} stroke={1.5} />}>
-                    Create Horizontal Pod Autoscaler
-                  </Button>
-                </ContextMenu>
-              </HStack>
+        {/* Action Bar */}
+        <HStack gap={2} align="center" className="w-full min-h-7">
+          {/* Search */}
+          <HStack gap={1} align="center">
+            <SearchInput
+              placeholder="Search horizontal pod autoscaler by attributes"
+              size="sm"
+              className="w-[var(--search-input-width)]"
+            />
+            <Button
+              variant="secondary"
+              size="sm"
+              aria-label="Download"
+              className="!p-0 !w-7 !h-7 !min-w-7"
+            >
+              <IconDownload size={12} stroke={1.5} />
+            </Button>
+          </HStack>
 
-              {/* Action Bar */}
-              <ListToolbar
-                primaryActions={
-                  <ListToolbar.Actions>
-                    <SearchInput
-                      placeholder="Search horizontal pod autoscaler by attributes"
-                      size="sm"
-                      className="w-[var(--search-input-width)]"
-                    />
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      icon={<IconDownload size={12} stroke={1.5} />}
-                      aria-label="Download"
-                    />
-                  </ListToolbar.Actions>
-                }
-                bulkActions={
-                  <ListToolbar.Actions>
-                    <Button
-                      variant="muted"
-                      size="sm"
-                      leftIcon={<IconDownload size={12} stroke={1.5} />}
-                      disabled={selectedRows.length === 0}
-                    >
-                      Download YAML
-                    </Button>
-                    <Button
-                      variant="muted"
-                      size="sm"
-                      leftIcon={<IconTrash size={12} stroke={1.5} />}
-                      disabled={selectedRows.length === 0}
-                    >
-                      Delete
-                    </Button>
-                  </ListToolbar.Actions>
-                }
-              />
+          {/* Divider */}
+          <div className="w-px h-4 bg-[var(--color-border-default)]" />
 
-              {/* Pagination */}
-              <Pagination
-                currentPage={currentPage}
-                totalPages={1}
-                onPageChange={setCurrentPage}
-                totalItems={hpaData.length}
-                selectedCount={selectedRows.length}
-                showSettings
-                onSettingsClick={() => {}}
-              />
+          {/* Actions */}
+          <HStack gap={1} align="center">
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconDownload size={12} stroke={1.5} />}
+              disabled={selectedRows.length === 0}
+            >
+              Download YAML
+            </Button>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<IconTrash size={12} stroke={1.5} />}
+              disabled={selectedRows.length === 0}
+            >
+              Delete
+            </Button>
+          </HStack>
+        </HStack>
 
-              {/* Table */}
-              <Table<HPARow>
-                columns={columns}
-                data={hpaData}
-                rowKey="id"
-                selectable
-                selectedKeys={selectedRows}
-                onSelectionChange={setSelectedRows}
-                onRowClick={(row) => navigate(`/container/hpa/${row.id}`)}
-              />
-            </VStack>
-          </div>
-        </div>
-      </main>
+        {/* Pagination */}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={1}
+          onPageChange={setCurrentPage}
+          totalItems={hpaData.length}
+          selectedCount={selectedRows.length}
+          showSettings
+          onSettingsClick={() => {}}
+        />
 
-      {/* Shell Panel */}
-      <ShellPanel
-        isExpanded={shellPanel.isExpanded}
-        onExpandedChange={shellPanel.setIsExpanded}
-        tabs={shellPanel.tabs}
-        activeTabId={shellPanel.activeTabId}
-        onActiveTabChange={shellPanel.setActiveTabId}
-        onCloseTab={shellPanel.closeTab}
-        onContentChange={shellPanel.updateContent}
-        onClear={shellPanel.clearContent}
-        onOpenInNewTab={handleOpenInNewTab}
-        initialHeight={350}
-        minHeight={300}
-        sidebarOpen={sidebarOpen}
-        sidebarWidth={sidebarWidth}
-      />
-    </div>
+        {/* Table */}
+        <Table<HPARow>
+          columns={columns}
+          data={hpaData}
+          rowKey="id"
+          selectable
+          selectedKeys={selectedRows}
+          onSelectionChange={setSelectedRows}
+          onRowClick={(row) => navigate(`/container/hpa/${row.id}`)}
+        />
+      </VStack>
+    </PageShell>
   );
 }

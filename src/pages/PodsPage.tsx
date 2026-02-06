@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import {
   VStack,
-  HStack,
   TabBar,
   TopBar,
   Breadcrumb,
@@ -12,6 +11,8 @@ import {
   Pagination,
   ListToolbar,
   ContextMenu,
+  PageShell,
+  PageHeader,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
@@ -360,16 +361,12 @@ export function PodsPage() {
   ];
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-
-      {/* Main Content */}
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: `${sidebarWidth}px` }}
-      >
-        {/* Tab Bar */}
+    <PageShell
+      sidebar={
+        <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
         <TabBar
           tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
@@ -378,8 +375,8 @@ export function PodsPage() {
           onTabAdd={addNewTab}
           onTabReorder={moveTab}
         />
-
-        {/* Top Bar */}
+      }
+      topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -426,122 +423,111 @@ export function PodsPage() {
             </>
           }
         />
+      }
+      bottomPanel={
+        <ShellPanel
+          isExpanded={shellPanel.isExpanded}
+          onExpandedChange={shellPanel.setIsExpanded}
+          tabs={shellPanel.tabs}
+          activeTabId={shellPanel.activeTabId}
+          onActiveTabChange={shellPanel.setActiveTabId}
+          onCloseTab={shellPanel.closeTab}
+          onContentChange={shellPanel.updateContent}
+          onClear={shellPanel.clearContent}
+          onOpenInNewTab={handleOpenInNewTab}
+          initialHeight={350}
+          minHeight={300}
+          sidebarOpen={sidebarOpen}
+          sidebarWidth={sidebarWidth}
+        />
+      }
+      bottomPanelPadding={shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0'}
+    >
+      <VStack gap={3}>
+        {/* Header */}
+        <PageHeader
+          title="Pods"
+          actions={
+            <ContextMenu items={createDropdownItems} trigger="click" align="right">
+              <Button
+                variant="primary"
+                size="md"
+                rightIcon={<IconChevronDown size={14} stroke={1.5} />}
+              >
+                Create Pod
+              </Button>
+            </ContextMenu>
+          }
+        />
 
-        {/* Content Area */}
-        <div
-          className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll"
-          style={{ paddingBottom: shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0' }}
-        >
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
-            <VStack gap={3}>
-              {/* Header */}
-              <HStack justify="between" align="center" className="w-full min-h-8">
-                <HStack gap={2} align="center">
-                  <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
-                    Pods{' '}
-                  </h1>
-                </HStack>
-
-                {/* Create Pod Button with Dropdown */}
-                <ContextMenu items={createDropdownItems} trigger="click" align="right">
-                  <Button
-                    variant="primary"
-                    size="md"
-                    rightIcon={<IconChevronDown size={14} stroke={1.5} />}
-                  >
-                    Create Pod{' '}
-                  </Button>
-                </ContextMenu>
-              </HStack>
-
-              {/* Action Bar */}
-              <ListToolbar
-                primaryActions={
-                  <ListToolbar.Actions>
-                    <SearchInput
-                      placeholder="Search pods by attributes"
-                      size="sm"
-                      className="w-[var(--search-input-width)]"
-                    />
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      icon={<IconDownload size={12} stroke={1.5} />}
-                      aria-label="Download"
-                    />
-                  </ListToolbar.Actions>
-                }
-                bulkActions={
-                  <ListToolbar.Actions>
-                    <Button
-                      variant="muted"
-                      size="sm"
-                      leftIcon={<IconDownload size={12} stroke={1.5} />}
-                      disabled={selectedRows.length === 0}
-                    >
-                      Download YAML
-                    </Button>
-                    <Button
-                      variant="muted"
-                      size="sm"
-                      leftIcon={<IconTrash size={12} stroke={1.5} />}
-                      disabled={selectedRows.length === 0}
-                    >
-                      Delete
-                    </Button>
-                  </ListToolbar.Actions>
-                }
-                filters={filters.map((filter, index) => ({
-                  id: String(index),
-                  field: filter.key,
-                  value: filter.value,
-                }))}
-                onFilterRemove={(id) => handleRemoveFilter(Number(id))}
-                onFiltersClear={handleClearFilters}
+        {/* List Toolbar */}
+        <ListToolbar
+          primaryActions={
+            <ListToolbar.Actions>
+              <SearchInput
+                placeholder="Search pods by attributes"
+                size="sm"
+                className="w-[var(--search-input-width)]"
               />
-
-              {/* Pagination */}
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={setCurrentPage}
-                totalItems={podsData.length}
-                selectedCount={selectedRows.length}
-                showSettings
-                onSettingsClick={() => {}}
+              <Button
+                variant="secondary"
+                size="sm"
+                icon={<IconDownload size={12} stroke={1.5} />}
+                aria-label="Download"
               />
+            </ListToolbar.Actions>
+          }
+          bulkActions={
+            <ListToolbar.Actions>
+              <Button
+                variant="muted"
+                size="sm"
+                leftIcon={<IconDownload size={12} stroke={1.5} />}
+                disabled={selectedRows.length === 0}
+              >
+                Download YAML
+              </Button>
+              <Button
+                variant="muted"
+                size="sm"
+                leftIcon={<IconTrash size={12} stroke={1.5} />}
+                disabled={selectedRows.length === 0}
+              >
+                Delete
+              </Button>
+            </ListToolbar.Actions>
+          }
+          filters={filters.map((filter, index) => ({
+            id: String(index),
+            field: filter.key,
+            value: filter.value,
+          }))}
+          onFilterRemove={(id) => handleRemoveFilter(Number(id))}
+          onFiltersClear={handleClearFilters}
+        />
 
-              {/* Table */}
-              <Table<PodRow>
-                columns={columns}
-                data={paginatedData}
-                rowKey="id"
-                selectable
-                selectedKeys={selectedRows}
-                onSelectionChange={setSelectedRows}
-              />
-            </VStack>
-          </div>
-        </div>
-      </main>
+        {/* Pagination */}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          totalItems={podsData.length}
+          selectedCount={selectedRows.length}
+          showSettings
+          onSettingsClick={() => {}}
+        />
 
-      {/* Shell Panel */}
-      <ShellPanel
-        isExpanded={shellPanel.isExpanded}
-        onExpandedChange={shellPanel.setIsExpanded}
-        tabs={shellPanel.tabs}
-        activeTabId={shellPanel.activeTabId}
-        onActiveTabChange={shellPanel.setActiveTabId}
-        onCloseTab={shellPanel.closeTab}
-        onContentChange={shellPanel.updateContent}
-        onClear={shellPanel.clearContent}
-        onOpenInNewTab={handleOpenInNewTab}
-        initialHeight={350}
-        minHeight={300}
-        sidebarOpen={sidebarOpen}
-        sidebarWidth={sidebarWidth}
-      />
-    </div>
+        {/* Table */}
+        <Table<PodRow>
+          columns={columns}
+          data={paginatedData}
+          rowKey="id"
+          selectable
+          selectedKeys={selectedRows}
+          onSelectionChange={setSelectedRows}
+        />
+      </VStack>
+    </PageShell>
   );
 }
 

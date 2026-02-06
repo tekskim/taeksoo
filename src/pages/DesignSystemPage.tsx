@@ -82,6 +82,7 @@ import {
   MenuSection,
   MenuDivider,
   Tooltip,
+  Popover,
   DetailHeader,
   SectionCard,
   MonitoringToolbar,
@@ -348,6 +349,7 @@ const navigationItems = [
 // Overlay - 오버레이 컴포넌트
 const overlayItems = [
   { id: 'tooltip', label: 'Tooltip', icon: IconMessage2 },
+  { id: 'popover', label: 'Popover', icon: IconMessage2 },
   { id: 'menu', label: 'Menu', icon: IconMenu2 },
   { id: 'context-menu', label: 'Context menu', icon: IconMenu2 },
   { id: 'modal', label: 'Modal', icon: IconLayoutGrid },
@@ -8475,6 +8477,156 @@ outline: 2px solid var(--color-border-focus);`}
                             500ms
                           </Button>
                         </Tooltip>
+                      </div>
+                    </VStack>
+                  </VStack>
+                </Section>
+
+                {/* Popover Component */}
+                <Section
+                  id="popover"
+                  title="Popover"
+                  description="Interactive overlay that can contain complex content"
+                >
+                  <VStack gap={8}>
+                    {/* Tokens */}
+                    <VStack gap={3}>
+                      <Label>Design tokens</Label>
+                      <div className="text-[length:var(--font-size-11)] text-[var(--color-text-subtle)] p-3 bg-[var(--color-surface-muted)] rounded-[var(--radius-md)]">
+                        <code>padding: 12px</code> · <code>radius: 8px</code> ·{' '}
+                        <code>border: 1px</code> · <code>arrow: 6px</code>
+                      </div>
+                    </VStack>
+
+                    {/* Basic Usage */}
+                    <VStack gap={3}>
+                      <Label>Click trigger (default)</Label>
+                      <div className="flex gap-4 items-center flex-wrap">
+                        <Popover
+                          content={
+                            <div className="p-3">
+                              <p className="text-body-md">Click outside or press Escape to close</p>
+                            </div>
+                          }
+                          trigger="click"
+                        >
+                          <Button variant="outline" size="sm">
+                            Click me
+                          </Button>
+                        </Popover>
+                      </div>
+                    </VStack>
+
+                    {/* Hover Trigger */}
+                    <VStack gap={3}>
+                      <Label>Hover trigger</Label>
+                      <div className="flex gap-4 items-center flex-wrap">
+                        <Popover
+                          content={
+                            <div className="p-3">
+                              <p className="text-body-md">
+                                Hover content with interactive elements
+                              </p>
+                              <Button variant="secondary" size="sm" className="mt-2">
+                                Action
+                              </Button>
+                            </div>
+                          }
+                          trigger="hover"
+                        >
+                          <Button variant="outline" size="sm">
+                            Hover me
+                          </Button>
+                        </Popover>
+                      </div>
+                    </VStack>
+
+                    {/* Positions */}
+                    <VStack gap={3}>
+                      <Label>Positions</Label>
+                      <div className="flex gap-4 items-center flex-wrap">
+                        <Popover
+                          content={<div className="p-3 text-body-md">Top popover</div>}
+                          position="top"
+                          trigger="click"
+                        >
+                          <Button variant="outline" size="sm">
+                            Top
+                          </Button>
+                        </Popover>
+                        <Popover
+                          content={<div className="p-3 text-body-md">Bottom popover</div>}
+                          position="bottom"
+                          trigger="click"
+                        >
+                          <Button variant="outline" size="sm">
+                            Bottom
+                          </Button>
+                        </Popover>
+                        <Popover
+                          content={<div className="p-3 text-body-md">Left popover</div>}
+                          position="left"
+                          trigger="click"
+                        >
+                          <Button variant="outline" size="sm">
+                            Left
+                          </Button>
+                        </Popover>
+                        <Popover
+                          content={<div className="p-3 text-body-md">Right popover</div>}
+                          position="right"
+                          trigger="click"
+                        >
+                          <Button variant="outline" size="sm">
+                            Right
+                          </Button>
+                        </Popover>
+                      </div>
+                    </VStack>
+
+                    {/* Interactive Content */}
+                    <VStack gap={3}>
+                      <Label>Interactive content</Label>
+                      <div className="flex gap-4 items-center flex-wrap">
+                        <Popover
+                          content={
+                            <div className="p-3 w-[200px]">
+                              <VStack gap={3}>
+                                <p className="text-label-md">Quick actions</p>
+                                <Button variant="secondary" size="sm" fullWidth>
+                                  Edit
+                                </Button>
+                                <Button variant="secondary" size="sm" fullWidth>
+                                  Duplicate
+                                </Button>
+                                <Button variant="danger" size="sm" fullWidth>
+                                  Delete
+                                </Button>
+                              </VStack>
+                            </div>
+                          }
+                          trigger="click"
+                        >
+                          <Button variant="outline" size="sm">
+                            Menu popover
+                          </Button>
+                        </Popover>
+                      </div>
+                    </VStack>
+
+                    {/* Without Arrow */}
+                    <VStack gap={3}>
+                      <Label>Without arrow</Label>
+                      <div className="flex gap-4 items-center flex-wrap">
+                        <Popover
+                          content={<div className="p-3 text-body-md">No arrow variant</div>}
+                          trigger="click"
+                          showArrow={false}
+                        >
+                          <Button variant="outline" size="sm">
+                            No arrow
+                          </Button>
+                        </Popover>
                       </div>
                     </VStack>
                   </VStack>
