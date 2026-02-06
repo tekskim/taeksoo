@@ -95,7 +95,7 @@ const mockServerGroupInstances: ServerGroupInstance[] = [
     image: 'Ubuntu2404',
     fixedIP: '10.62.0.30',
     az: 'zone-o',
-    createdAt: '2025-09-30',
+    createdAt: 'Sep 30, 2025',
   },
   {
     id: '29tgj235',
@@ -105,7 +105,7 @@ const mockServerGroupInstances: ServerGroupInstance[] = [
     image: 'Ubuntu2404',
     fixedIP: '10.62.0.30',
     az: 'zone-o',
-    createdAt: '2025-09-30',
+    createdAt: 'Sep 30, 2025',
   },
   {
     id: '29tgj236',
@@ -115,7 +115,7 @@ const mockServerGroupInstances: ServerGroupInstance[] = [
     image: 'Ubuntu2404',
     fixedIP: '10.62.0.30',
     az: 'zone-o',
-    createdAt: '2025-09-30',
+    createdAt: 'Sep 30, 2025',
   },
   {
     id: '29tgj237',
@@ -125,7 +125,7 @@ const mockServerGroupInstances: ServerGroupInstance[] = [
     image: 'Ubuntu2404',
     fixedIP: '10.62.0.30',
     az: 'zone-o',
-    createdAt: '2025-09-30',
+    createdAt: 'Sep 30, 2025',
   },
   {
     id: '29tgj238',
@@ -135,7 +135,7 @@ const mockServerGroupInstances: ServerGroupInstance[] = [
     image: 'Ubuntu2404',
     fixedIP: '10.62.0.30',
     az: 'zone-o',
-    createdAt: '2025-09-30',
+    createdAt: 'Sep 30, 2025',
   },
   {
     id: '29tgj239',
@@ -145,7 +145,7 @@ const mockServerGroupInstances: ServerGroupInstance[] = [
     image: 'Ubuntu2404',
     fixedIP: '10.62.0.30',
     az: 'zone-o',
-    createdAt: '2025-09-30',
+    createdAt: 'Sep 30, 2025',
   },
   {
     id: '29tgj240',
@@ -155,7 +155,7 @@ const mockServerGroupInstances: ServerGroupInstance[] = [
     image: 'Ubuntu2404',
     fixedIP: '10.62.0.30',
     az: 'zone-o',
-    createdAt: '2025-09-30',
+    createdAt: 'Sep 30, 2025',
   },
   {
     id: '29tgj241',
@@ -165,7 +165,7 @@ const mockServerGroupInstances: ServerGroupInstance[] = [
     image: 'Ubuntu2404',
     fixedIP: '10.62.0.30',
     az: 'zone-o',
-    createdAt: '2025-09-30',
+    createdAt: 'Sep 30, 2025',
   },
   {
     id: '29tgj242',
@@ -175,7 +175,7 @@ const mockServerGroupInstances: ServerGroupInstance[] = [
     image: 'Ubuntu2404',
     fixedIP: '10.62.0.30',
     az: 'zone-o',
-    createdAt: '2025-09-30',
+    createdAt: 'Sep 30, 2025',
   },
   {
     id: '29tgj243',
@@ -185,7 +185,7 @@ const mockServerGroupInstances: ServerGroupInstance[] = [
     image: 'Ubuntu2404',
     fixedIP: '10.62.0.30',
     az: 'zone-o',
-    createdAt: '2025-09-30',
+    createdAt: 'Sep 30, 2025',
   },
   {
     id: '29tgj244',
@@ -195,7 +195,7 @@ const mockServerGroupInstances: ServerGroupInstance[] = [
     image: 'Ubuntu2404',
     fixedIP: '10.62.0.30',
     az: 'zone-o',
-    createdAt: '2025-09-30',
+    createdAt: 'Sep 30, 2025',
   },
 ];
 

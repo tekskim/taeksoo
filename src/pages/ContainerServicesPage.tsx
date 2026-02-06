@@ -62,7 +62,7 @@ const servicesData: ServiceRow[] = [
     target: ['http + 80/TCP', 'https-internal + 444/TCP'],
     selector: ['key1=value1'],
     type: 'ClusterIP',
-    createdAt: '2025-11-10 12:57',
+    createdAt: 'Nov 10, 2025',
   },
   {
     id: '2',
@@ -72,7 +72,7 @@ const servicesData: ServiceRow[] = [
     target: ['myport + 80/TCP'],
     selector: ['key1=value1', 'key2=value2', 'key3=value3'],
     type: 'ClusterIP (Headless)',
-    createdAt: '2025-11-10 12:57',
+    createdAt: 'Nov 10, 2025',
   },
   {
     id: '3',
@@ -82,7 +82,7 @@ const servicesData: ServiceRow[] = [
     target: ['my.database.example.com'],
     selector: ['-'],
     type: 'ExternalName',
-    createdAt: '2025-11-10 12:57',
+    createdAt: 'Nov 10, 2025',
   },
   {
     id: '4',
@@ -92,7 +92,7 @@ const servicesData: ServiceRow[] = [
     target: ['80/TCP', '443/TCP'],
     selector: ['key1=value1', 'key2=value2'],
     type: 'LoadBalancer',
-    createdAt: '2025-11-10 12:57',
+    createdAt: 'Nov 10, 2025',
   },
   {
     id: '5',
@@ -102,7 +102,7 @@ const servicesData: ServiceRow[] = [
     target: ['[Any Node]:31575'],
     selector: ['key1=value1'],
     type: 'NodePort',
-    createdAt: '2025-11-10 12:57',
+    createdAt: 'Nov 10, 2025',
   },
 ];
 

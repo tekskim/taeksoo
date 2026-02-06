@@ -65,7 +65,7 @@ const mockLoadBalancers: LoadBalancer[] = [
     listeners: 'listener-http-80',
     listenerId: '29tgj234',
     listenerCount: 2,
-    createdAt: '2025-10-03',
+    createdAt: 'Oct 3, 2025',
     status: 'active',
   },
   {
@@ -79,7 +79,7 @@ const mockLoadBalancers: LoadBalancer[] = [
     listeners: 'listener-https-443',
     listenerId: '38fk29dk',
     listenerCount: 0,
-    createdAt: '2025-10-02',
+    createdAt: 'Oct 2, 2025',
     status: 'active',
   },
   {
@@ -93,7 +93,7 @@ const mockLoadBalancers: LoadBalancer[] = [
     listeners: 'listener-tcp-8080',
     listenerId: '9dk38fj2',
     listenerCount: 1,
-    createdAt: '2025-10-01',
+    createdAt: 'Oct 1, 2025',
     status: 'building',
   },
   {
@@ -107,7 +107,7 @@ const mockLoadBalancers: LoadBalancer[] = [
     listeners: 'listener-mysql-3306',
     listenerId: 'k29dk38f',
     listenerCount: 0,
-    createdAt: '2025-09-28',
+    createdAt: 'Sep 28, 2025',
     status: 'active',
   },
   {
@@ -121,7 +121,7 @@ const mockLoadBalancers: LoadBalancer[] = [
     listeners: 'listener-redis-6379',
     listenerId: 'fj29dk38',
     listenerCount: 0,
-    createdAt: '2025-09-25',
+    createdAt: 'Sep 25, 2025',
     status: 'active',
   },
   {
@@ -135,7 +135,7 @@ const mockLoadBalancers: LoadBalancer[] = [
     listeners: 'listener-grpc-9090',
     listenerId: '8fj29dk3',
     listenerCount: 3,
-    createdAt: '2025-09-20',
+    createdAt: 'Sep 20, 2025',
     status: 'error',
   },
   {
@@ -149,7 +149,7 @@ const mockLoadBalancers: LoadBalancer[] = [
     listeners: 'listener-rtmp-1935',
     listenerId: 'dk38fj29',
     listenerCount: 0,
-    createdAt: '2025-09-15',
+    createdAt: 'Sep 15, 2025',
     status: 'active',
   },
   {
@@ -163,7 +163,7 @@ const mockLoadBalancers: LoadBalancer[] = [
     listeners: 'listener-smtp-25',
     listenerId: '29dk38fj',
     listenerCount: 0,
-    createdAt: '2025-09-10',
+    createdAt: 'Sep 10, 2025',
     status: 'pending',
   },
   {
@@ -177,7 +177,7 @@ const mockLoadBalancers: LoadBalancer[] = [
     listeners: 'listener-openvpn-1194',
     listenerId: '3fj29dk8',
     listenerCount: 0,
-    createdAt: '2025-09-05',
+    createdAt: 'Sep 5, 2025',
     status: 'active',
   },
   {
@@ -191,7 +191,7 @@ const mockLoadBalancers: LoadBalancer[] = [
     listeners: 'listener-http-3000',
     listenerId: 'j29dk38f',
     listenerCount: 4,
-    createdAt: '2025-09-01',
+    createdAt: 'Sep 1, 2025',
     status: 'active',
   },
 ];

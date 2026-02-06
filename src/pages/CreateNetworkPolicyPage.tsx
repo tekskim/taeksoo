@@ -133,9 +133,9 @@ interface MatchingPod {
 
 // Mock matching pods data
 const MOCK_MATCHING_PODS: MatchingPod[] = [
-  { id: '1', name: 'deploymentName-77f6bb9c69-4ww7f', createdAt: '2025-07-25 09:12:20' },
-  { id: '2', name: 'deploymentName-77f6bb9c69-8xyz1', createdAt: '2025-07-25 09:12:18' },
-  { id: '3', name: 'deploymentName-77f6bb9c69-2abc3', createdAt: '2025-07-25 09:12:15' },
+  { id: '1', name: 'deploymentName-77f6bb9c69-4ww7f', createdAt: 'Jul 25, 2025' },
+  { id: '2', name: 'deploymentName-77f6bb9c69-8xyz1', createdAt: 'Jul 25, 2025' },
+  { id: '3', name: 'deploymentName-77f6bb9c69-2abc3', createdAt: 'Jul 25, 2025' },
 ];
 
 /* ----------------------------------------

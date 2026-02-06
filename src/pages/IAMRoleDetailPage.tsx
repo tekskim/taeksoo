@@ -80,37 +80,37 @@ const mockRolesMap: Record<string, RoleDetail> = {
     name: 'admin',
     description: 'Full administrative access',
     type: 'Built-in',
-    createdAt: '2025-06-01 09:00:00',
+    createdAt: 'Jun 1, 2025',
   },
   Member: {
     name: 'Member',
     description: 'member role',
     type: 'Custom',
-    createdAt: '2025-07-25 09:12:20',
+    createdAt: 'Jul 25, 2025',
   },
   viewer: {
     name: 'viewer',
     description: 'Read-only access',
     type: 'Built-in',
-    createdAt: '2025-06-01 09:00:00',
+    createdAt: 'Jun 1, 2025',
   },
   'compute-admin': {
     name: 'compute-admin',
     description: 'Compute administration access',
     type: 'Built-in',
-    createdAt: '2025-06-15 10:00:00',
+    createdAt: 'Jun 15, 2025',
   },
   'storage-admin': {
     name: 'storage-admin',
     description: 'Storage administration access',
     type: 'Built-in',
-    createdAt: '2025-06-20 11:00:00',
+    createdAt: 'Jun 20, 2025',
   },
   'network-admin': {
     name: 'network-admin',
     description: 'Network administration access',
     type: 'Built-in',
-    createdAt: '2025-06-25 12:00:00',
+    createdAt: 'Jun 25, 2025',
   },
 };
 
@@ -121,7 +121,7 @@ const mockRolePolicies: RolePolicy[] = [
     type: 'Built-in',
     apps: 'compute:tenantA (+3)',
     description: '-',
-    editedAt: '2025-09-12',
+    editedAt: 'Sep 12, 2025',
     permissions: [
       {
         application: 'Compute',
@@ -143,7 +143,7 @@ const mockRolePolicies: RolePolicy[] = [
     type: 'Built-in',
     apps: 'compute (+3)',
     description: '-',
-    editedAt: '2025-09-12',
+    editedAt: 'Sep 12, 2025',
     permissions: [
       {
         application: 'Compute',
@@ -172,7 +172,7 @@ const mockRolePolicies: RolePolicy[] = [
     type: 'Custom',
     apps: 'network (+2)',
     description: 'Network management policy',
-    editedAt: '2025-09-15',
+    editedAt: 'Sep 15, 2025',
     permissions: [
       {
         application: 'Network',
@@ -202,17 +202,17 @@ const mockAttachedUserGroups: AttachedUserGroup[] = [
     name: 'dev-admin-group',
     type: 'Built-in',
     userCount: 130,
-    createdAt: '2025-09-12',
+    createdAt: 'Sep 12, 2025',
   },
-  { id: 'ug-002', name: 'ops-team', type: 'Custom', userCount: 45, createdAt: '2025-08-15' },
+  { id: 'ug-002', name: 'ops-team', type: 'Custom', userCount: 45, createdAt: 'Aug 15, 2025' },
   {
     id: 'ug-003',
     name: 'security-group',
     type: 'Built-in',
     userCount: 22,
-    createdAt: '2025-07-20',
+    createdAt: 'Jul 20, 2025',
   },
-  { id: 'ug-004', name: 'data-analysts', type: 'Custom', userCount: 67, createdAt: '2025-06-10' },
+  { id: 'ug-004', name: 'data-analysts', type: 'Custom', userCount: 67, createdAt: 'Jun 10, 2025' },
 ];
 
 const mockAttachedUsers: AttachedUser[] = [
@@ -220,36 +220,36 @@ const mockAttachedUsers: AttachedUser[] = [
     id: 'u-001',
     name: 'thaki-kim',
     type: 'Built-in',
-    lastSignIn: '2025-12-10 14:30',
-    createdAt: '2025-09-12',
+    lastSignIn: 'Dec 10, 2025',
+    createdAt: 'Sep 12, 2025',
   },
   {
     id: 'u-002',
     name: 'alex.johnson',
     type: 'Custom',
-    lastSignIn: '2025-12-09 09:15',
-    createdAt: '2025-08-15',
+    lastSignIn: 'Dec 9, 2025',
+    createdAt: 'Aug 15, 2025',
   },
   {
     id: 'u-003',
     name: 'maria.garcia',
     type: 'Built-in',
-    lastSignIn: '2025-12-08 16:45',
-    createdAt: '2025-07-20',
+    lastSignIn: 'Dec 8, 2025',
+    createdAt: 'Jul 20, 2025',
   },
   {
     id: 'u-004',
     name: 'john.doe',
     type: 'Custom',
-    lastSignIn: '2025-12-07 11:20',
-    createdAt: '2025-06-10',
+    lastSignIn: 'Dec 7, 2025',
+    createdAt: 'Jun 10, 2025',
   },
   {
     id: 'u-005',
     name: 'emma.wilson',
     type: 'Built-in',
-    lastSignIn: '2025-12-05 08:00',
-    createdAt: '2025-05-05',
+    lastSignIn: 'Dec 5, 2025',
+    createdAt: 'May 5, 2025',
   },
 ];
 

@@ -18,7 +18,6 @@ import { useTabs } from '@/contexts/TabContext';
 import {
   IconEdit,
   IconCheck,
-  IconProgress,
   IconCirclePlus,
   IconChevronDown,
   IconChevronRight,
@@ -126,22 +125,27 @@ function SectionStatusIcon({ status }: { status: SectionState }) {
 
   if (status === 'active') {
     return (
-      <div className="w-4 h-4 shrink-0">
-        <IconProgress
-          size={16}
-          stroke={1.5}
-          className="text-[var(--color-text-subtle)] animate-spin"
-        />
-      </div>
+      <div
+        className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-text-muted)] animate-spin"
+        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
+      />
     );
   }
 
   if (status === 'writing') {
-    return null;
+    return (
+      <div
+        className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-text-muted)] animate-spin"
+        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
+      />
+    );
   }
 
   return (
-    <div className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)]" />
+    <div
+      className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)]"
+      style={{ borderStyle: 'dashed' }}
+    />
   );
 }
 

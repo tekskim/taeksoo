@@ -476,9 +476,9 @@ export function ComputeAdminPortsPage() {
             <Tooltip content={row.attachedType === 'router' ? 'Router' : 'Instance'} position="top">
               <div className="flex-shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[4px] p-[3px] cursor-default">
                 {row.attachedType === 'router' ? (
-                  <IconRouter size={16} className="text-[var(--color-text-subtle)]" />
+                  <IconRouter size={16} stroke={1.5} className="text-[var(--color-text-subtle)]" />
                 ) : (
-                  <IconCube size={16} className="text-[var(--color-text-subtle)]" />
+                  <IconCube size={16} stroke={1.5} className="text-[var(--color-text-subtle)]" />
                 )}
               </div>
             </Tooltip>
@@ -556,7 +556,7 @@ export function ComputeAdminPortsPage() {
       flex: 1,
       minWidth: columnMinWidths.adminState,
       render: (_, row) => (
-        <Badge variant={row.adminState === 'Up' ? 'success' : 'error'} size="sm">
+        <Badge variant={row.adminState === 'Up' ? 'success' : 'default'} size="sm">
           {row.adminState}
         </Badge>
       ),
@@ -582,7 +582,7 @@ export function ComputeAdminPortsPage() {
               setDeleteModalOpen(true);
             }}
           >
-            <IconTrash size={16} stroke={1.5} className="text-[var(--color-state-danger)]" />
+            <IconTrash size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
           </button>
         </div>
       ),

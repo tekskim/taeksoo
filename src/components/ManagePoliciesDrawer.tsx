@@ -42,7 +42,7 @@ const defaultPolicies: PolicyItem[] = Array.from({ length: 25 }, (_, i) => ({
   type: 'Built-in',
   apps: 'compute (+3)',
   description: '-',
-  editedAt: '2025-09-12',
+  editedAt: 'Sep 12, 2025',
 }));
 
 const ITEMS_PER_PAGE = 5;

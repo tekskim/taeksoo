@@ -55,7 +55,7 @@ const mockUserGroups: UserGroup[] = [
     roles: 'admin (+3)',
     userCount: 100,
     description: 'Development team administrators',
-    createdAt: '2025-09-12',
+    createdAt: 'Sep 12, 2025',
   },
   {
     id: 'ug-002',
@@ -65,7 +65,7 @@ const mockUserGroups: UserGroup[] = [
     roles: 'network-admin (+1)',
     userCount: 25,
     description: 'Operations team',
-    createdAt: '2025-09-10',
+    createdAt: 'Sep 10, 2025',
   },
   {
     id: 'ug-003',
@@ -75,7 +75,7 @@ const mockUserGroups: UserGroup[] = [
     roles: 'qa-lead (+2)',
     userCount: 15,
     description: 'Quality assurance team',
-    createdAt: '2025-09-08',
+    createdAt: 'Sep 8, 2025',
   },
   {
     id: 'ug-004',
@@ -85,7 +85,7 @@ const mockUserGroups: UserGroup[] = [
     roles: 'Viewer (+3)',
     userCount: 130,
     description: '-',
-    createdAt: '2025-09-12',
+    createdAt: 'Sep 12, 2025',
   },
   {
     id: 'ug-005',
@@ -95,7 +95,7 @@ const mockUserGroups: UserGroup[] = [
     roles: 'super-admin',
     userCount: 5,
     description: 'System administrators',
-    createdAt: '2025-08-01',
+    createdAt: 'Aug 1, 2025',
   },
   {
     id: 'ug-006',
@@ -105,7 +105,7 @@ const mockUserGroups: UserGroup[] = [
     roles: 'developer (+2)',
     userCount: 45,
     description: 'Development team',
-    createdAt: '2025-08-15',
+    createdAt: 'Aug 15, 2025',
   },
   {
     id: 'ug-007',
@@ -115,7 +115,7 @@ const mockUserGroups: UserGroup[] = [
     roles: 'security-admin',
     userCount: 8,
     description: 'Security operations',
-    createdAt: '2025-07-20',
+    createdAt: 'Jul 20, 2025',
   },
   {
     id: 'ug-008',
@@ -125,7 +125,7 @@ const mockUserGroups: UserGroup[] = [
     roles: 'support (+1)',
     userCount: 20,
     description: 'Customer support team',
-    createdAt: '2025-07-10',
+    createdAt: 'Jul 10, 2025',
   },
   {
     id: 'ug-009',
@@ -135,7 +135,7 @@ const mockUserGroups: UserGroup[] = [
     roles: 'analyst',
     userCount: 12,
     description: 'Data analysis team',
-    createdAt: '2025-06-25',
+    createdAt: 'Jun 25, 2025',
   },
   {
     id: 'ug-010',
@@ -145,7 +145,7 @@ const mockUserGroups: UserGroup[] = [
     roles: 'viewer',
     userCount: 50,
     description: 'External partners',
-    createdAt: '2025-06-01',
+    createdAt: 'Jun 1, 2025',
   },
 ];
 

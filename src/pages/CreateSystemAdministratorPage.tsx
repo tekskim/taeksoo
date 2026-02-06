@@ -22,7 +22,6 @@ import { useTabs } from '@/contexts/TabContext';
 import {
   IconEdit,
   IconCheck,
-  IconProgress,
   IconEye,
   IconEyeOff,
   IconCircle,
@@ -63,31 +62,31 @@ const SECTION_ORDER: SectionStep[] = ['basic-info', 'default-domain'];
    ---------------------------------------- */
 
 const mockDomains: Domain[] = [
-  { id: 'domain-1', name: 'domain', description: '-', createdAt: '2025-09-12' },
-  { id: 'domain-2', name: 'domain', description: '-', createdAt: '2025-09-12' },
-  { id: 'domain-3', name: 'domain', description: '-', createdAt: '2025-09-12' },
-  { id: 'domain-4', name: 'domain', description: '-', createdAt: '2025-09-12' },
-  { id: 'domain-5', name: 'domain', description: '-', createdAt: '2025-09-12' },
-  { id: 'domain-6', name: 'domain', description: '-', createdAt: '2025-09-12' },
-  { id: 'domain-7', name: 'domain', description: '-', createdAt: '2025-09-12' },
-  { id: 'domain-8', name: 'domain', description: '-', createdAt: '2025-09-12' },
-  { id: 'domain-9', name: 'domain', description: '-', createdAt: '2025-09-12' },
-  { id: 'domain-10', name: 'domain', description: '-', createdAt: '2025-09-12' },
-  { id: 'domain-11', name: 'domain', description: '-', createdAt: '2025-09-12' },
-  { id: 'domain-12', name: 'domain', description: '-', createdAt: '2025-09-12' },
-  { id: 'domain-13', name: 'domain', description: '-', createdAt: '2025-09-12' },
-  { id: 'domain-14', name: 'domain', description: '-', createdAt: '2025-09-12' },
-  { id: 'domain-15', name: 'domain', description: '-', createdAt: '2025-09-12' },
-  { id: 'domain-16', name: 'domain', description: '-', createdAt: '2025-09-12' },
-  { id: 'domain-17', name: 'domain', description: '-', createdAt: '2025-09-12' },
-  { id: 'domain-18', name: 'domain', description: '-', createdAt: '2025-09-12' },
-  { id: 'domain-19', name: 'domain', description: '-', createdAt: '2025-09-12' },
-  { id: 'domain-20', name: 'domain', description: '-', createdAt: '2025-09-12' },
-  { id: 'domain-21', name: 'domain', description: '-', createdAt: '2025-09-12' },
-  { id: 'domain-22', name: 'domain', description: '-', createdAt: '2025-09-12' },
-  { id: 'domain-23', name: 'domain', description: '-', createdAt: '2025-09-12' },
-  { id: 'domain-24', name: 'domain', description: '-', createdAt: '2025-09-12' },
-  { id: 'domain-25', name: 'domain', description: '-', createdAt: '2025-09-12' },
+  { id: 'domain-1', name: 'domain', description: '-', createdAt: 'Sep 12, 2025' },
+  { id: 'domain-2', name: 'domain', description: '-', createdAt: 'Sep 12, 2025' },
+  { id: 'domain-3', name: 'domain', description: '-', createdAt: 'Sep 12, 2025' },
+  { id: 'domain-4', name: 'domain', description: '-', createdAt: 'Sep 12, 2025' },
+  { id: 'domain-5', name: 'domain', description: '-', createdAt: 'Sep 12, 2025' },
+  { id: 'domain-6', name: 'domain', description: '-', createdAt: 'Sep 12, 2025' },
+  { id: 'domain-7', name: 'domain', description: '-', createdAt: 'Sep 12, 2025' },
+  { id: 'domain-8', name: 'domain', description: '-', createdAt: 'Sep 12, 2025' },
+  { id: 'domain-9', name: 'domain', description: '-', createdAt: 'Sep 12, 2025' },
+  { id: 'domain-10', name: 'domain', description: '-', createdAt: 'Sep 12, 2025' },
+  { id: 'domain-11', name: 'domain', description: '-', createdAt: 'Sep 12, 2025' },
+  { id: 'domain-12', name: 'domain', description: '-', createdAt: 'Sep 12, 2025' },
+  { id: 'domain-13', name: 'domain', description: '-', createdAt: 'Sep 12, 2025' },
+  { id: 'domain-14', name: 'domain', description: '-', createdAt: 'Sep 12, 2025' },
+  { id: 'domain-15', name: 'domain', description: '-', createdAt: 'Sep 12, 2025' },
+  { id: 'domain-16', name: 'domain', description: '-', createdAt: 'Sep 12, 2025' },
+  { id: 'domain-17', name: 'domain', description: '-', createdAt: 'Sep 12, 2025' },
+  { id: 'domain-18', name: 'domain', description: '-', createdAt: 'Sep 12, 2025' },
+  { id: 'domain-19', name: 'domain', description: '-', createdAt: 'Sep 12, 2025' },
+  { id: 'domain-20', name: 'domain', description: '-', createdAt: 'Sep 12, 2025' },
+  { id: 'domain-21', name: 'domain', description: '-', createdAt: 'Sep 12, 2025' },
+  { id: 'domain-22', name: 'domain', description: '-', createdAt: 'Sep 12, 2025' },
+  { id: 'domain-23', name: 'domain', description: '-', createdAt: 'Sep 12, 2025' },
+  { id: 'domain-24', name: 'domain', description: '-', createdAt: 'Sep 12, 2025' },
+  { id: 'domain-25', name: 'domain', description: '-', createdAt: 'Sep 12, 2025' },
 ];
 
 /* ----------------------------------------
@@ -169,22 +168,27 @@ function SectionStatusIcon({ status }: { status: SectionState }) {
 
   if (status === 'active') {
     return (
-      <div className="w-4 h-4 shrink-0">
-        <IconProgress
-          size={16}
-          stroke={1.5}
-          className="text-[var(--color-text-subtle)] animate-spin"
-        />
-      </div>
+      <div
+        className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-text-muted)] animate-spin"
+        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
+      />
     );
   }
 
   if (status === 'writing') {
-    return null;
+    return (
+      <div
+        className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-text-muted)] animate-spin"
+        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
+      />
+    );
   }
 
   return (
-    <div className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)]" />
+    <div
+      className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)]"
+      style={{ borderStyle: 'dashed' }}
+    />
   );
 }
 

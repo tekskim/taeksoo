@@ -61,7 +61,7 @@ const jobsData: JobRow[] = [
     image: 'imageName',
     completions: '1/1',
     duration: '36 days',
-    createdAt: '2025-11-10 12:57',
+    createdAt: 'Nov 10, 2025',
   },
   {
     id: '2',
@@ -71,7 +71,7 @@ const jobsData: JobRow[] = [
     image: 'migration-tool:v2.1',
     completions: '1/1',
     duration: '2h 15m',
-    createdAt: '2025-11-09 14:30',
+    createdAt: 'Nov 9, 2025',
   },
   {
     id: '3',
@@ -81,7 +81,7 @@ const jobsData: JobRow[] = [
     image: 'backup-agent:v1.5',
     completions: '0/1',
     duration: '45m',
-    createdAt: '2025-11-10 08:00',
+    createdAt: 'Nov 10, 2025',
   },
   {
     id: '4',
@@ -91,7 +91,7 @@ const jobsData: JobRow[] = [
     image: 'cleanup-tool:v1.0',
     completions: '0/3',
     duration: '5m',
-    createdAt: '2025-11-10 11:22',
+    createdAt: 'Nov 10, 2025',
   },
   {
     id: '5',
@@ -101,7 +101,7 @@ const jobsData: JobRow[] = [
     image: 'report-gen:v3.2',
     completions: '5/5',
     duration: '1h 30m',
-    createdAt: '2025-11-08 09:15',
+    createdAt: 'Nov 8, 2025',
   },
   {
     id: '6',
@@ -111,7 +111,7 @@ const jobsData: JobRow[] = [
     image: 'sync-worker:v2.0',
     completions: '0/1',
     duration: '-',
-    createdAt: '2025-11-10 12:00',
+    createdAt: 'Nov 10, 2025',
   },
   {
     id: '7',
@@ -121,7 +121,7 @@ const jobsData: JobRow[] = [
     image: 'indexer:v4.1',
     completions: '1/1',
     duration: '3h 45m',
-    createdAt: '2025-11-07 16:45',
+    createdAt: 'Nov 7, 2025',
   },
   {
     id: '8',
@@ -131,7 +131,7 @@ const jobsData: JobRow[] = [
     image: 'cache-warmer:v1.2',
     completions: '10/10',
     duration: '20m',
-    createdAt: '2025-11-06 10:30',
+    createdAt: 'Nov 6, 2025',
   },
 ];
 

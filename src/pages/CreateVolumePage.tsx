@@ -175,7 +175,7 @@ const mockSnapshots: SnapshotRow[] = [
     name: 'snapshot-01',
     volumeType: '_DEFAULT_',
     size: '50 GiB',
-    createdAt: '2025-11-01',
+    createdAt: 'Nov 1, 2025',
     status: 'active',
   },
   {
@@ -183,7 +183,7 @@ const mockSnapshots: SnapshotRow[] = [
     name: 'snapshot-02',
     volumeType: '_DEFAULT_',
     size: '0.0 GiB',
-    createdAt: '2025-11-20',
+    createdAt: 'Nov 20, 2025',
     status: 'active',
   },
   {
@@ -191,7 +191,7 @@ const mockSnapshots: SnapshotRow[] = [
     name: 'snapshot-03',
     volumeType: '_DEFAULT_',
     size: '10 GiB',
-    createdAt: '2025-11-20',
+    createdAt: 'Nov 20, 2025',
     status: 'active',
   },
   {
@@ -199,7 +199,7 @@ const mockSnapshots: SnapshotRow[] = [
     name: 'snapshot-04',
     volumeType: '_DEFAULT_',
     size: '68 GiB',
-    createdAt: '2025-11-20',
+    createdAt: 'Nov 20, 2025',
     status: 'active',
   },
   {
@@ -207,7 +207,7 @@ const mockSnapshots: SnapshotRow[] = [
     name: 'snapshot-05',
     volumeType: '_DEFAULT_',
     size: '68 GiB',
-    createdAt: '2025-11-30',
+    createdAt: 'Nov 30, 2025',
     status: 'active',
   },
 ];

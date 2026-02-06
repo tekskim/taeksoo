@@ -54,7 +54,7 @@ const secretsData: SecretRow[] = [
     namespace: 'namespaceName',
     type: 'Opaque',
     data: 'keyName01 (+3)',
-    createdAt: '2025-11-10 12:57',
+    createdAt: 'Nov 10, 2025',
   },
   {
     id: '2',
@@ -62,7 +62,7 @@ const secretsData: SecretRow[] = [
     namespace: 'default',
     type: 'Opaque',
     data: 'username, password (+1)',
-    createdAt: '2025-11-09 14:30',
+    createdAt: 'Nov 9, 2025',
   },
   {
     id: '3',
@@ -70,7 +70,7 @@ const secretsData: SecretRow[] = [
     namespace: 'nginx-ingress',
     type: 'kubernetes.io/tls',
     data: 'tls.crt, tls.key',
-    createdAt: '2025-11-08 09:15',
+    createdAt: 'Nov 8, 2025',
   },
   {
     id: '4',
@@ -78,7 +78,7 @@ const secretsData: SecretRow[] = [
     namespace: 'default',
     type: 'kubernetes.io/dockerconfigjson',
     data: '.dockerconfigjson',
-    createdAt: '2025-11-07 16:45',
+    createdAt: 'Nov 7, 2025',
   },
   {
     id: '5',
@@ -86,7 +86,7 @@ const secretsData: SecretRow[] = [
     namespace: 'kube-system',
     type: 'kubernetes.io/service-account-token',
     data: 'ca.crt, namespace, token',
-    createdAt: '2025-11-06 11:20',
+    createdAt: 'Nov 6, 2025',
   },
 ];
 

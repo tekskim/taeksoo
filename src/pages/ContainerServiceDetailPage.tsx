@@ -102,7 +102,7 @@ const mockServiceData: Record<string, ServiceData> = {
     type: 'ClusterIP',
     clusterIP: '10.11.111.10',
     sessionAffinity: 'None',
-    createdAt: '2025-07-25 09:12:20',
+    createdAt: 'Jul 25, 2025',
     labels: {
       'app.kubernetes.io/managed-by': 'Helm',
       'cluster.x-k8s.io/provider': 'cluster-api',
@@ -122,7 +122,7 @@ const mockServiceData: Record<string, ServiceData> = {
     type: 'LoadBalancer',
     clusterIP: '10.43.136.100',
     sessionAffinity: 'ClientIP',
-    createdAt: '2025-11-08 09:30:00',
+    createdAt: 'Nov 8, 2025',
     labels: {
       'app.kubernetes.io/name': 'nginx',
       'app.kubernetes.io/component': 'controller',
@@ -143,7 +143,7 @@ const mockPodsData: PodRow[] = [
     restarts: 1,
     ip: '10.11.0.11',
     node: 'nodeName',
-    createdAt: '2025-07-25 09:12:20',
+    createdAt: 'Jul 25, 2025',
   },
   {
     id: '2',
@@ -154,7 +154,7 @@ const mockPodsData: PodRow[] = [
     restarts: 0,
     ip: '10.11.0.12',
     node: 'nodeName-2',
-    createdAt: '2025-07-25 09:13:15',
+    createdAt: 'Jul 25, 2025',
   },
 ];
 
@@ -199,7 +199,7 @@ const mockConditionsData: ConditionRow[] = [
     status: 'True',
     reason: 'MinimumReplicasAvailable',
     message: 'Service has minimum availability.',
-    lastTransition: '2025-07-25 09:12:30',
+    lastTransition: 'Jul 25, 2025',
   },
   {
     id: '2',
@@ -207,7 +207,7 @@ const mockConditionsData: ConditionRow[] = [
     status: 'True',
     reason: 'NewReplicaSetAvailable',
     message: 'ReplicaSet has successfully progressed.',
-    lastTransition: '2025-07-25 09:12:30',
+    lastTransition: 'Jul 25, 2025',
   },
 ];
 

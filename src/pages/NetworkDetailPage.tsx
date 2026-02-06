@@ -110,7 +110,7 @@ const mockNetworksMap: Record<string, NetworkDetail> = {
     adminState: 'Up',
     access: 'Project',
     external: true,
-    createdAt: '2025-09-15',
+    createdAt: 'Sep 15, 2025',
     networkName: 'net-01',
     availabilityZone: 'nova',
     availabilityZoneHint: '-',
@@ -129,7 +129,7 @@ const mockNetworksMap: Record<string, NetworkDetail> = {
     adminState: 'Up',
     access: 'Project',
     external: false,
-    createdAt: '2025-09-10',
+    createdAt: 'Sep 10, 2025',
     networkName: 'internal-net',
     availabilityZone: 'nova',
     availabilityZoneHint: '-',
@@ -148,7 +148,7 @@ const mockNetworksMap: Record<string, NetworkDetail> = {
     adminState: 'Up',
     access: 'Project',
     external: false,
-    createdAt: '2025-09-05',
+    createdAt: 'Sep 5, 2025',
     networkName: 'dev-network',
     availabilityZone: 'keystone',
     availabilityZoneHint: '-',
@@ -167,7 +167,7 @@ const mockNetworksMap: Record<string, NetworkDetail> = {
     adminState: 'Up',
     access: 'Project',
     external: true,
-    createdAt: '2025-09-01',
+    createdAt: 'Sep 1, 2025',
     networkName: 'prod-net',
     availabilityZone: 'nova',
     availabilityZoneHint: '-',
@@ -186,7 +186,7 @@ const mockNetworksMap: Record<string, NetworkDetail> = {
     adminState: 'Down',
     access: 'Project',
     external: false,
-    createdAt: '2025-08-25',
+    createdAt: 'Aug 25, 2025',
     networkName: 'test-network',
     availabilityZone: 'nova',
     availabilityZoneHint: '-',
@@ -205,7 +205,7 @@ const mockNetworksMap: Record<string, NetworkDetail> = {
     adminState: 'Up',
     access: 'Project',
     external: true,
-    createdAt: '2025-08-20',
+    createdAt: 'Aug 20, 2025',
     networkName: 'dmz-net',
     availabilityZone: 'nova',
     availabilityZoneHint: '-',
@@ -224,7 +224,7 @@ const mockNetworksMap: Record<string, NetworkDetail> = {
     adminState: 'Down',
     access: 'Project',
     external: false,
-    createdAt: '2025-08-15',
+    createdAt: 'Aug 15, 2025',
     networkName: 'management-net',
     availabilityZone: 'nova',
     availabilityZoneHint: '-',
@@ -243,7 +243,7 @@ const mockNetworksMap: Record<string, NetworkDetail> = {
     adminState: 'Up',
     access: 'Project',
     external: false,
-    createdAt: '2025-08-10',
+    createdAt: 'Aug 10, 2025',
     networkName: 'backup-network',
     availabilityZone: 'nova',
     availabilityZoneHint: '-',
@@ -262,7 +262,7 @@ const mockNetworksMap: Record<string, NetworkDetail> = {
     adminState: 'Up',
     access: 'Shared',
     external: true,
-    createdAt: '2025-08-05',
+    createdAt: 'Aug 5, 2025',
     networkName: 'external-gateway',
     availabilityZone: 'nova',
     availabilityZoneHint: '-',
@@ -281,7 +281,7 @@ const mockNetworksMap: Record<string, NetworkDetail> = {
     adminState: 'Up',
     access: 'External',
     external: true,
-    createdAt: '2025-08-01',
+    createdAt: 'Aug 1, 2025',
     networkName: 'provider-net',
     availabilityZone: 'nova',
     availabilityZoneHint: '-',
@@ -323,7 +323,7 @@ const mockSubnets: Subnet[] = Array.from({ length: 115 }, (_, i) => ({
   gatewayIp: '192.168.11',
   dhcpEnabled: true,
   portCount: 2,
-  createdAt: '2025-01-15 10:30:00',
+  createdAt: 'Jan 15, 2025',
 }));
 
 const mockPorts: Port[] = Array.from({ length: 115 }, (_, i) => ({
@@ -649,9 +649,9 @@ export default function NetworkDetailPage() {
             >
               <div className="flex-shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[4px] p-1 cursor-pointer hover:bg-[var(--color-surface-muted)] transition-colors">
                 {row.attachedTo.type === 'router' ? (
-                  <IconRouter size={16} className="text-[var(--color-text-subtle)]" />
+                  <IconRouter size={16} stroke={1.5} className="text-[var(--color-text-subtle)]" />
                 ) : (
-                  <IconCube size={16} className="text-[var(--color-text-subtle)]" />
+                  <IconCube size={16} stroke={1.5} className="text-[var(--color-text-subtle)]" />
                 )}
               </div>
             </Tooltip>

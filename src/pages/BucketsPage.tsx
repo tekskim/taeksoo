@@ -56,7 +56,7 @@ const mockBuckets: Bucket[] = [
     capacityLimit: 'No Limit',
     objects: '1',
     objectLimit: 'No Limit',
-    creationDate: '2025-09-19 04:06',
+    creationDate: 'Sep 19, 2025',
   },
   {
     id: 'bucket-2',
@@ -66,7 +66,7 @@ const mockBuckets: Bucket[] = [
     capacityLimit: 'No Limit',
     objects: '2.7 k',
     objectLimit: 'No Limit',
-    creationDate: '2025-09-19 04:06',
+    creationDate: 'Sep 19, 2025',
   },
   {
     id: 'bucket-3',
@@ -76,7 +76,7 @@ const mockBuckets: Bucket[] = [
     capacityLimit: 'No Limit',
     objects: '5.2 k',
     objectLimit: 'No Limit',
-    creationDate: '2025-09-18 12:30',
+    creationDate: 'Sep 18, 2025',
   },
   {
     id: 'bucket-4',
@@ -86,7 +86,7 @@ const mockBuckets: Bucket[] = [
     capacityLimit: '500 GiB',
     objects: '12.4 k',
     objectLimit: '100 k',
-    creationDate: '2025-09-17 08:15',
+    creationDate: 'Sep 17, 2025',
   },
   {
     id: 'bucket-5',
@@ -96,7 +96,7 @@ const mockBuckets: Bucket[] = [
     capacityLimit: '200 GiB',
     objects: '8.9 k',
     objectLimit: '50 k',
-    creationDate: '2025-09-17 08:20',
+    creationDate: 'Sep 17, 2025',
   },
   {
     id: 'bucket-6',
@@ -106,7 +106,7 @@ const mockBuckets: Bucket[] = [
     capacityLimit: '1 TiB',
     objects: '45.6 k',
     objectLimit: 'No Limit',
-    creationDate: '2025-09-15 00:00',
+    creationDate: 'Sep 15, 2025',
   },
   {
     id: 'bucket-7',
@@ -116,7 +116,7 @@ const mockBuckets: Bucket[] = [
     capacityLimit: '100 GiB',
     objects: '234.5 k',
     objectLimit: '500 k',
-    creationDate: '2025-09-14 10:00',
+    creationDate: 'Sep 14, 2025',
   },
   {
     id: 'bucket-8',
@@ -126,7 +126,7 @@ const mockBuckets: Bucket[] = [
     capacityLimit: '5 TiB',
     objects: '1.2 M',
     objectLimit: '10 M',
-    creationDate: '2025-09-10 14:30',
+    creationDate: 'Sep 10, 2025',
   },
   {
     id: 'bucket-9',
@@ -136,7 +136,7 @@ const mockBuckets: Bucket[] = [
     capacityLimit: 'No Limit',
     objects: '2.1 M',
     objectLimit: 'No Limit',
-    creationDate: '2025-01-01 00:00',
+    creationDate: 'Jan 1, 2025',
   },
   {
     id: 'bucket-10',
@@ -146,7 +146,7 @@ const mockBuckets: Bucket[] = [
     capacityLimit: '100 GiB',
     objects: '3.4 k',
     objectLimit: '10 k',
-    creationDate: '2025-09-20 09:00',
+    creationDate: 'Sep 20, 2025',
   },
 ];
 

@@ -61,7 +61,7 @@ const podsData: PodRow[] = [
     ready: '1/1',
     restarts: 1,
     ip: '10.76.0.1',
-    createdAt: '2025-11-10 12:57',
+    createdAt: 'Nov 10, 2025',
   },
   {
     id: '2',
@@ -72,7 +72,7 @@ const podsData: PodRow[] = [
     ready: '1/1',
     restarts: 0,
     ip: '10.76.0.12',
-    createdAt: '2025-11-09 14:30',
+    createdAt: 'Nov 9, 2025',
   },
   {
     id: '3',
@@ -83,7 +83,7 @@ const podsData: PodRow[] = [
     ready: '0/1',
     restarts: 0,
     ip: '-',
-    createdAt: '2025-11-10 08:00',
+    createdAt: 'Nov 10, 2025',
   },
   {
     id: '4',
@@ -94,7 +94,7 @@ const podsData: PodRow[] = [
     ready: '0/1',
     restarts: 5,
     ip: '10.76.0.45',
-    createdAt: '2025-11-10 11:22',
+    createdAt: 'Nov 10, 2025',
   },
   {
     id: '5',
@@ -105,7 +105,7 @@ const podsData: PodRow[] = [
     ready: '1/1',
     restarts: 0,
     ip: '10.76.0.23',
-    createdAt: '2025-11-08 09:15',
+    createdAt: 'Nov 8, 2025',
   },
   {
     id: '6',
@@ -116,7 +116,7 @@ const podsData: PodRow[] = [
     ready: '1/1',
     restarts: 1,
     ip: '10.76.0.34',
-    createdAt: '2025-11-07 16:45',
+    createdAt: 'Nov 7, 2025',
   },
   {
     id: '7',
@@ -127,7 +127,7 @@ const podsData: PodRow[] = [
     ready: '0/1',
     restarts: 0,
     ip: '10.76.0.56',
-    createdAt: '2025-11-06 10:30',
+    createdAt: 'Nov 6, 2025',
   },
   {
     id: '8',
@@ -138,7 +138,7 @@ const podsData: PodRow[] = [
     ready: '1/1',
     restarts: 2,
     ip: '10.76.0.67',
-    createdAt: '2025-11-05 11:20',
+    createdAt: 'Nov 5, 2025',
   },
 ];
 

@@ -60,7 +60,7 @@ const podDisruptionBudgetsData: PodDisruptionBudgetRow[] = [
     minAvailable: '1',
     maxUnavailable: 'N/A',
     allowedDisruption: '0',
-    createdAt: '2025-11-10 12:57',
+    createdAt: 'Nov 10, 2025',
   },
   {
     id: '2',
@@ -70,7 +70,7 @@ const podDisruptionBudgetsData: PodDisruptionBudgetRow[] = [
     minAvailable: '2',
     maxUnavailable: 'N/A',
     allowedDisruption: '1',
-    createdAt: '2025-11-09 14:30',
+    createdAt: 'Nov 9, 2025',
   },
   {
     id: '3',
@@ -80,7 +80,7 @@ const podDisruptionBudgetsData: PodDisruptionBudgetRow[] = [
     minAvailable: 'N/A',
     maxUnavailable: '1',
     allowedDisruption: '2',
-    createdAt: '2025-11-08 09:15',
+    createdAt: 'Nov 8, 2025',
   },
   {
     id: '4',
@@ -90,7 +90,7 @@ const podDisruptionBudgetsData: PodDisruptionBudgetRow[] = [
     minAvailable: '50%',
     maxUnavailable: 'N/A',
     allowedDisruption: '0',
-    createdAt: '2025-11-07 16:45',
+    createdAt: 'Nov 7, 2025',
   },
   {
     id: '5',
@@ -100,7 +100,7 @@ const podDisruptionBudgetsData: PodDisruptionBudgetRow[] = [
     minAvailable: 'N/A',
     maxUnavailable: '25%',
     allowedDisruption: '1',
-    createdAt: '2025-11-06 11:20',
+    createdAt: 'Nov 6, 2025',
   },
 ];
 

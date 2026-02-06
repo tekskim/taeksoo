@@ -58,7 +58,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     description: 'Web server access group',
     ingressRules: 3,
     egressRules: 3,
-    createdAt: '2024-01-15',
+    createdAt: 'Jan 15, 2024',
     status: 'active',
   },
   {
@@ -69,7 +69,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     description: 'Default security group',
     ingressRules: 2,
     egressRules: 2,
-    createdAt: '2024-01-10',
+    createdAt: 'Jan 10, 2024',
     status: 'active',
   },
   {
@@ -80,7 +80,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     description: 'Database access group',
     ingressRules: 5,
     egressRules: 1,
-    createdAt: '2024-02-01',
+    createdAt: 'Feb 1, 2024',
     status: 'active',
   },
   {
@@ -91,7 +91,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     description: 'Application server security group',
     ingressRules: 8,
     egressRules: 4,
-    createdAt: '2024-02-15',
+    createdAt: 'Feb 15, 2024',
     status: 'active',
   },
   {
@@ -102,7 +102,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     description: 'Load balancer security group',
     ingressRules: 4,
     egressRules: 2,
-    createdAt: '2024-03-01',
+    createdAt: 'Mar 1, 2024',
     status: 'active',
   },
   {
@@ -113,7 +113,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     description: 'Cache server access group',
     ingressRules: 2,
     egressRules: 1,
-    createdAt: '2024-03-10',
+    createdAt: 'Mar 10, 2024',
     status: 'active',
   },
   {
@@ -124,7 +124,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     description: 'Monitoring access group',
     ingressRules: 6,
     egressRules: 3,
-    createdAt: '2024-04-01',
+    createdAt: 'Apr 1, 2024',
     status: 'error',
   },
   {
@@ -135,7 +135,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     description: 'VPN access group',
     ingressRules: 10,
     egressRules: 5,
-    createdAt: '2024-04-15',
+    createdAt: 'Apr 15, 2024',
     status: 'active',
   },
   {
@@ -146,7 +146,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     description: 'Admin access group',
     ingressRules: 15,
     egressRules: 8,
-    createdAt: '2024-05-01',
+    createdAt: 'May 1, 2024',
     status: 'active',
   },
   {
@@ -157,7 +157,7 @@ const mockSecurityGroups: SecurityGroup[] = [
     description: 'Test environment security group',
     ingressRules: 1,
     egressRules: 1,
-    createdAt: '2024-05-10',
+    createdAt: 'May 10, 2024',
     status: 'active',
   },
 ];
@@ -347,7 +347,7 @@ export function ComputeAdminSecurityGroupsPage() {
         <div onClick={(e) => e.stopPropagation()}>
           <ContextMenu items={getContextMenuItems(row)} trigger="click" align="right">
             <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-              <IconTrash size={12} stroke={1.5} className="text-[var(--color-state-danger)]" />
+              <IconTrash size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
             </button>
           </ContextMenu>
         </div>

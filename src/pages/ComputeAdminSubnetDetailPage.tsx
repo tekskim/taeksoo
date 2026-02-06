@@ -76,7 +76,7 @@ const mockSubnetDetail: SubnetDetail = {
   name: 'subnet-1',
   cidr: '192.168.2.0/24',
   gatewayIp: '192.168.2.1',
-  createdAt: '2025-07-25 09:12:20',
+  createdAt: 'Jul 25, 2025',
   // Basic information
   allocationPools: '192.168.2.2 - 192.168.2.254',
   dhcp: true,
@@ -305,7 +305,7 @@ export default function SubnetDetailPage() {
       label: 'Admin state',
       flex: 1,
       render: (_, row) => (
-        <Badge variant={row.adminState === 'Up' ? 'success' : 'error'} size="sm">
+        <Badge variant={row.adminState === 'Up' ? 'success' : 'default'} size="sm">
           {row.adminState}
         </Badge>
       ),
@@ -327,7 +327,7 @@ export default function SubnetDetailPage() {
             className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors"
             onClick={() => console.log('Delete port', row.id)}
           >
-            <IconTrash size={16} stroke={1.5} className="text-[var(--color-state-danger)]" />
+            <IconTrash size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
           </button>
         </div>
       ),

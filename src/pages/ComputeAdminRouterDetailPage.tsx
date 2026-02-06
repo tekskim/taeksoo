@@ -82,7 +82,7 @@ const mockRoutersMap: Record<string, RouterDetail> = {
     adminState: 'Up',
     access: 'Project',
     externalGateway: true,
-    createdAt: '2025-09-15',
+    createdAt: 'Sep 15, 2025',
     routerName: 'router-01',
     availabilityZone: 'nova',
     availabilityZoneHint: 'zone-01 (+3)',
@@ -99,7 +99,7 @@ const mockRoutersMap: Record<string, RouterDetail> = {
     adminState: 'Up',
     access: 'Project',
     externalGateway: true,
-    createdAt: '2025-09-10',
+    createdAt: 'Sep 10, 2025',
     routerName: 'main-router',
     availabilityZone: 'nova',
     availabilityZoneHint: 'zone-01',
@@ -116,7 +116,7 @@ const mockRoutersMap: Record<string, RouterDetail> = {
     adminState: 'Up',
     access: 'Project',
     externalGateway: false,
-    createdAt: '2025-09-08',
+    createdAt: 'Sep 8, 2025',
     routerName: 'dev-router',
     availabilityZone: 'nova',
     availabilityZoneHint: 'zone-02',
@@ -133,7 +133,7 @@ const mockRoutersMap: Record<string, RouterDetail> = {
     adminState: 'Up',
     access: 'Project',
     externalGateway: true,
-    createdAt: '2025-09-05',
+    createdAt: 'Sep 5, 2025',
     routerName: 'prod-router',
     availabilityZone: 'nova',
     availabilityZoneHint: 'zone-01',
@@ -150,7 +150,7 @@ const mockRoutersMap: Record<string, RouterDetail> = {
     adminState: 'Down',
     access: 'Project',
     externalGateway: false,
-    createdAt: '2025-09-01',
+    createdAt: 'Sep 1, 2025',
     routerName: 'test-router',
     availabilityZone: 'nova',
     availabilityZoneHint: 'zone-03',
@@ -167,7 +167,7 @@ const mockRoutersMap: Record<string, RouterDetail> = {
     adminState: 'Up',
     access: 'Project',
     externalGateway: true,
-    createdAt: '2025-08-28',
+    createdAt: 'Aug 28, 2025',
     routerName: 'backup-router',
     availabilityZone: 'nova',
     availabilityZoneHint: 'zone-01',
@@ -184,7 +184,7 @@ const mockRoutersMap: Record<string, RouterDetail> = {
     adminState: 'Down',
     access: 'Project',
     externalGateway: true,
-    createdAt: '2025-08-25',
+    createdAt: 'Aug 25, 2025',
     routerName: 'dmz-router',
     availabilityZone: 'nova',
     availabilityZoneHint: 'zone-01',
@@ -201,7 +201,7 @@ const mockRoutersMap: Record<string, RouterDetail> = {
     adminState: 'Up',
     access: 'Project',
     externalGateway: false,
-    createdAt: '2025-08-20',
+    createdAt: 'Aug 20, 2025',
     routerName: 'internal-router',
     availabilityZone: 'nova',
     availabilityZoneHint: 'zone-02',
@@ -218,7 +218,7 @@ const mockRoutersMap: Record<string, RouterDetail> = {
     adminState: 'Up',
     access: 'Project',
     externalGateway: true,
-    createdAt: '2025-08-15',
+    createdAt: 'Aug 15, 2025',
     routerName: 'edge-router',
     availabilityZone: 'nova',
     availabilityZoneHint: 'zone-01',
@@ -235,7 +235,7 @@ const mockRoutersMap: Record<string, RouterDetail> = {
     adminState: 'Up',
     access: 'Project',
     externalGateway: true,
-    createdAt: '2025-08-10',
+    createdAt: 'Aug 10, 2025',
     routerName: 'vpn-router',
     availabilityZone: 'nova',
     availabilityZoneHint: 'zone-01',
@@ -459,7 +459,7 @@ export default function RouterDetailPage() {
       label: 'Admin state',
       flex: 1,
       render: (value: 'Up' | 'Down') => (
-        <Badge variant={value === 'Up' ? 'success' : 'error'} size="sm">
+        <Badge variant={value === 'Up' ? 'success' : 'default'} size="sm">
           {value}
         </Badge>
       ),
@@ -481,7 +481,7 @@ export default function RouterDetailPage() {
             className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors"
             onClick={() => console.log('Delete port', row.id)}
           >
-            <IconTrash size={16} stroke={1.5} className="text-[var(--color-state-danger)]" />
+            <IconTrash size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
           </button>
         </div>
       ),
@@ -512,7 +512,7 @@ export default function RouterDetailPage() {
             className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors"
             onClick={() => console.log('Delete route', row.id)}
           >
-            <IconTrash size={16} stroke={1.5} className="text-[var(--color-state-danger)]" />
+            <IconTrash size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
           </button>
         </div>
       ),

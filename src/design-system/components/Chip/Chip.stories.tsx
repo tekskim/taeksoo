@@ -239,7 +239,7 @@ export const FilterTags: Story = {
     const [filters, setFilters] = useState([
       { id: '1', label: 'Status', value: 'Running', icon: <IconTag size={12} /> },
       { id: '2', label: 'User', value: 'john@example.com', icon: <IconUser size={12} /> },
-      { id: '3', label: 'Date', value: '2024-01-15', icon: <IconCalendar size={12} /> },
+      { id: '3', label: 'Date', value: 'Jan 15, 2024', icon: <IconCalendar size={12} /> },
       { id: '4', label: 'Region', value: 'US East', icon: <IconMapPin size={12} /> },
     ]);
 

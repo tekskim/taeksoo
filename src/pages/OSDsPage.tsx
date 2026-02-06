@@ -10,7 +10,7 @@ import {
   TopBar,
   TopBarAction,
   Breadcrumb,
-  Chip,
+  Badge,
   ProgressBar,
   type TableColumn,
   columnMinWidths,
@@ -153,7 +153,9 @@ function StatusCell({ status }: StatusCellProps) {
   return (
     <div className="flex gap-0.5">
       {status.map((s, index) => (
-        <Chip key={index} value={s} />
+        <Badge key={index} variant={s === 'in' || s === 'up' ? 'success' : 'default'} size="sm">
+          {s}
+        </Badge>
       ))}
     </div>
   );
@@ -168,7 +170,11 @@ interface DeviceClassCellProps {
 }
 
 function DeviceClassCell({ deviceClass }: DeviceClassCellProps) {
-  return <Chip value={deviceClass} />;
+  return (
+    <Badge variant="info" size="sm">
+      {deviceClass.toUpperCase()}
+    </Badge>
+  );
 }
 
 /* ----------------------------------------
@@ -378,7 +384,7 @@ export function OSDsPage() {
                   <Button
                     variant="secondary"
                     size="sm"
-                    icon={<IconRefresh size={14} stroke={1.5} />}
+                    icon={<IconRefresh size={12} stroke={1.5} />}
                     aria-label="Refresh"
                     onClick={() => console.log('Refresh clicked')}
                   />

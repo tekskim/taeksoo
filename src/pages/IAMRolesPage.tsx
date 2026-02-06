@@ -45,7 +45,7 @@ const mockRoles: Role[] = [
     policies: 'FullAccess',
     description: 'Full administrative access',
     scope: 'Global',
-    createdAt: '2025-06-01',
+    createdAt: 'Jun 1, 2025',
   },
   {
     id: 'role-002',
@@ -54,7 +54,7 @@ const mockRoles: Role[] = [
     policies: 'ReadCompute (+3)',
     description: '-',
     scope: '-',
-    createdAt: '2025-09-12',
+    createdAt: 'Sep 12, 2025',
   },
   {
     id: 'role-003',
@@ -63,7 +63,7 @@ const mockRoles: Role[] = [
     policies: 'ViewNetwork (+1)',
     description: 'Read-only network access',
     scope: 'Project',
-    createdAt: '2025-07-15',
+    createdAt: 'Jul 15, 2025',
   },
   {
     id: 'role-004',
@@ -72,7 +72,7 @@ const mockRoles: Role[] = [
     policies: 'ManageStorage (+2)',
     description: 'Storage management role',
     scope: 'Project',
-    createdAt: '2025-08-20',
+    createdAt: 'Aug 20, 2025',
   },
   {
     id: 'role-005',
@@ -81,7 +81,7 @@ const mockRoles: Role[] = [
     policies: 'DeveloperAccess',
     description: 'Developer access role',
     scope: 'Project',
-    createdAt: '2025-09-01',
+    createdAt: 'Sep 1, 2025',
   },
   {
     id: 'role-006',
@@ -90,7 +90,7 @@ const mockRoles: Role[] = [
     policies: 'QAAccess (+1)',
     description: 'QA tester access',
     scope: 'Project',
-    createdAt: '2025-09-05',
+    createdAt: 'Sep 5, 2025',
   },
   {
     id: 'role-007',
@@ -99,7 +99,7 @@ const mockRoles: Role[] = [
     policies: 'SecurityFullAccess',
     description: 'Security administration',
     scope: 'Global',
-    createdAt: '2025-06-15',
+    createdAt: 'Jun 15, 2025',
   },
   {
     id: 'role-008',
@@ -108,7 +108,7 @@ const mockRoles: Role[] = [
     policies: 'ViewBilling',
     description: 'View billing information',
     scope: 'Organization',
-    createdAt: '2025-07-01',
+    createdAt: 'Jul 1, 2025',
   },
   {
     id: 'role-009',
@@ -117,7 +117,7 @@ const mockRoles: Role[] = [
     policies: 'SupportAccess (+2)',
     description: 'Customer support access',
     scope: 'Global',
-    createdAt: '2025-08-10',
+    createdAt: 'Aug 10, 2025',
   },
   {
     id: 'role-010',
@@ -126,7 +126,7 @@ const mockRoles: Role[] = [
     policies: 'ReadAll',
     description: 'Read-only access to all',
     scope: 'Project',
-    createdAt: '2025-06-20',
+    createdAt: 'Jun 20, 2025',
   },
 ];
 

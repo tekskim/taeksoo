@@ -67,7 +67,7 @@ const mockAdminsMap: Record<string, SystemAdminDetail> = {
     email: 'thaki.kim@example.com',
     status: 'online',
     defaultDomain: 'domain A',
-    createdAt: '2025-07-25 09:12:20',
+    createdAt: 'Jul 25, 2025',
     locked: false,
   },
   'alex-jones': {
@@ -76,7 +76,7 @@ const mockAdminsMap: Record<string, SystemAdminDetail> = {
     email: 'alex.jones@example.com',
     status: 'online',
     defaultDomain: 'domain A',
-    createdAt: '2025-08-15 14:30:00',
+    createdAt: 'Aug 15, 2025',
     locked: false,
   },
   'sarah-lee': {
@@ -85,7 +85,7 @@ const mockAdminsMap: Record<string, SystemAdminDetail> = {
     email: 'sarah.lee@example.com',
     status: 'online',
     defaultDomain: 'domain B',
-    createdAt: '2025-07-20 10:00:00',
+    createdAt: 'Jul 20, 2025',
     locked: false,
   },
   'john-doe': {
@@ -94,7 +94,7 @@ const mockAdminsMap: Record<string, SystemAdminDetail> = {
     email: 'john.doe@example.com',
     status: 'offline',
     defaultDomain: 'domain A',
-    createdAt: '2025-06-10 08:45:00',
+    createdAt: 'Jun 10, 2025',
     locked: true,
   },
   'jane-smith': {
@@ -103,7 +103,7 @@ const mockAdminsMap: Record<string, SystemAdminDetail> = {
     email: 'jane.smith@example.com',
     status: 'online',
     defaultDomain: 'domain C',
-    createdAt: '2025-09-01 16:20:00',
+    createdAt: 'Sep 1, 2025',
     locked: false,
   },
   'mike-wilson': {
@@ -112,7 +112,7 @@ const mockAdminsMap: Record<string, SystemAdminDetail> = {
     email: 'mike.wilson@example.com',
     status: 'online',
     defaultDomain: 'domain A',
-    createdAt: '2025-08-25 11:15:00',
+    createdAt: 'Aug 25, 2025',
     locked: false,
   },
   'emily-davis': {
@@ -121,7 +121,7 @@ const mockAdminsMap: Record<string, SystemAdminDetail> = {
     email: 'emily.davis@example.com',
     status: 'offline',
     defaultDomain: 'domain B',
-    createdAt: '2025-09-10 09:30:00',
+    createdAt: 'Sep 10, 2025',
     locked: false,
   },
   'chris-martin': {
@@ -130,7 +130,7 @@ const mockAdminsMap: Record<string, SystemAdminDetail> = {
     email: 'chris.martin@example.com',
     status: 'online',
     defaultDomain: 'domain A',
-    createdAt: '2025-07-05 13:45:00',
+    createdAt: 'Jul 5, 2025',
     locked: true,
   },
   'lisa-anderson': {
@@ -139,7 +139,7 @@ const mockAdminsMap: Record<string, SystemAdminDetail> = {
     email: 'lisa.anderson@example.com',
     status: 'online',
     defaultDomain: 'domain C',
-    createdAt: '2025-06-01 15:00:00',
+    createdAt: 'Jun 1, 2025',
     locked: false,
   },
   'david-brown': {
@@ -148,7 +148,7 @@ const mockAdminsMap: Record<string, SystemAdminDetail> = {
     email: 'david.brown@example.com',
     status: 'online',
     defaultDomain: 'domain A',
-    createdAt: '2025-05-15 10:30:00',
+    createdAt: 'May 15, 2025',
     locked: false,
   },
 };
@@ -167,30 +167,30 @@ const mockMFAMethods: MFAMethod[] = [
   {
     id: 'mfa-001',
     method: 'OTP',
-    lastUsed: '2025-09-12 12:33:15',
-    createdAt: '2025-09-12 12:33:15',
+    lastUsed: 'Sep 12, 2025',
+    createdAt: 'Sep 12, 2025',
   },
 ];
 
 const mockSessions: Session[] = [
   {
     id: 'sess-001',
-    started: '2025-09-12 10:00:00',
-    lastAccess: '2025-09-12 14:30:00',
+    started: 'Sep 12, 2025',
+    lastAccess: 'Sep 12, 2025',
     ipAddress: '192.168.1.100',
     device: 'Chrome / Windows',
   },
   {
     id: 'sess-002',
-    started: '2025-09-11 09:15:00',
-    lastAccess: '2025-09-11 18:45:00',
+    started: 'Sep 11, 2025',
+    lastAccess: 'Sep 11, 2025',
     ipAddress: '192.168.1.101',
     device: 'Firefox / macOS',
   },
   {
     id: 'sess-003',
-    started: '2025-09-10 08:30:00',
-    lastAccess: '2025-09-10 17:00:00',
+    started: 'Sep 10, 2025',
+    lastAccess: 'Sep 10, 2025',
     ipAddress: '192.168.1.102',
     device: 'Safari / iOS',
   },

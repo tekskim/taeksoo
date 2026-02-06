@@ -450,9 +450,9 @@ export function PortsPage() {
             <Tooltip content={row.attachedType === 'router' ? 'Router' : 'Instance'} position="top">
               <div className="flex-shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[4px] p-[3px] cursor-default">
                 {row.attachedType === 'router' ? (
-                  <IconRouter size={16} className="text-[var(--color-text-subtle)]" />
+                  <IconRouter size={16} stroke={1.5} className="text-[var(--color-text-subtle)]" />
                 ) : (
-                  <IconCube size={16} className="text-[var(--color-text-subtle)]" />
+                  <IconCube size={16} stroke={1.5} className="text-[var(--color-text-subtle)]" />
                 )}
               </div>
             </Tooltip>

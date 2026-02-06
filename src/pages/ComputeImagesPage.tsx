@@ -65,7 +65,7 @@ const mockImages: Image[] = [
     protected: true,
     access: 'Private',
     description: 'Base Ubuntu 22.04 image',
-    createdAt: '2025-09-12',
+    createdAt: 'Sep 12, 2025',
     status: 'active',
   },
   {
@@ -77,7 +77,7 @@ const mockImages: Image[] = [
     protected: false,
     access: 'Private',
     description: 'Minimal CentOS 8 installation',
-    createdAt: '2025-09-10',
+    createdAt: 'Sep 10, 2025',
     status: 'active',
   },
   {
@@ -89,7 +89,7 @@ const mockImages: Image[] = [
     protected: true,
     access: 'Shared',
     description: 'Rocky Linux 9 server image',
-    createdAt: '2025-09-08',
+    createdAt: 'Sep 8, 2025',
     status: 'active',
   },
   {
@@ -101,7 +101,7 @@ const mockImages: Image[] = [
     protected: false,
     access: 'Public',
     description: 'Standard Debian 12 image',
-    createdAt: '2025-09-05',
+    createdAt: 'Sep 5, 2025',
     status: 'active',
   },
   {
@@ -113,7 +113,7 @@ const mockImages: Image[] = [
     protected: true,
     access: 'Private',
     description: 'Ubuntu 20.04 LTS server',
-    createdAt: '2025-08-28',
+    createdAt: 'Aug 28, 2025',
     status: 'active',
   },
   {
@@ -125,7 +125,7 @@ const mockImages: Image[] = [
     protected: false,
     access: 'Shared',
     description: 'Windows Server 2022 Datacenter',
-    createdAt: '2025-08-25',
+    createdAt: 'Aug 25, 2025',
     status: 'pending',
   },
   {
@@ -137,7 +137,7 @@ const mockImages: Image[] = [
     protected: false,
     access: 'Public',
     description: 'Lightweight Alpine Linux',
-    createdAt: '2025-08-20',
+    createdAt: 'Aug 20, 2025',
     status: 'active',
   },
   {
@@ -149,7 +149,7 @@ const mockImages: Image[] = [
     protected: true,
     access: 'Private',
     description: 'Fedora 39 workstation image',
-    createdAt: '2025-08-15',
+    createdAt: 'Aug 15, 2025',
     status: 'active',
   },
   {
@@ -161,7 +161,7 @@ const mockImages: Image[] = [
     protected: false,
     access: 'Shared',
     description: 'Oracle Linux 8 for databases',
-    createdAt: '2025-08-10',
+    createdAt: 'Aug 10, 2025',
     status: 'deactivated',
   },
   {
@@ -173,7 +173,7 @@ const mockImages: Image[] = [
     protected: true,
     access: 'Private',
     description: 'Ubuntu with GPU drivers',
-    createdAt: '2025-08-05',
+    createdAt: 'Aug 5, 2025',
     status: 'active',
   },
 ];
