@@ -18,6 +18,7 @@ import {
   Pagination,
   StatusIndicator,
   ContextMenu,
+  Badge,
   fixedColumns,
   columnMinWidths,
 } from '@/design-system';
@@ -309,6 +310,11 @@ export function ComputeAdminLoadBalancerDetailPage() {
       key: 'adminState',
       label: 'Admin state',
       flex: 1,
+      render: (_, row) => (
+        <Badge variant={row.adminState === 'Up' ? 'success' : 'default'} size="sm">
+          {row.adminState}
+        </Badge>
+      ),
     },
     {
       key: 'actions',
@@ -421,6 +427,11 @@ export function ComputeAdminLoadBalancerDetailPage() {
       label: 'Admin state',
       flex: 1,
       minWidth: columnMinWidths.adminState,
+      render: (_, row) => (
+        <Badge variant={row.adminState === 'Up' ? 'success' : 'default'} size="sm">
+          {row.adminState}
+        </Badge>
+      ),
     },
     {
       key: 'actions',

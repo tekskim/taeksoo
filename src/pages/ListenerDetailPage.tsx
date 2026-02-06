@@ -18,6 +18,7 @@ import {
   Pagination,
   StatusIndicator,
   ContextMenu,
+  Badge,
   fixedColumns,
   columnMinWidths,
 } from '@/design-system';
@@ -425,6 +426,11 @@ export default function ListenerDetailPage() {
       label: 'Admin state',
       flex: 1,
       minWidth: columnMinWidths.adminState,
+      render: (_, row) => (
+        <Badge variant={row.adminState === 'Up' ? 'success' : 'default'} size="sm">
+          {row.adminState}
+        </Badge>
+      ),
     },
     {
       key: 'actions',
@@ -506,6 +512,11 @@ export default function ListenerDetailPage() {
       label: 'Admin state',
       flex: 1,
       minWidth: columnMinWidths.adminState,
+      render: (_, row) => (
+        <Badge variant={row.adminState === 'Up' ? 'success' : 'default'} size="sm">
+          {row.adminState}
+        </Badge>
+      ),
     },
     {
       key: 'actions',

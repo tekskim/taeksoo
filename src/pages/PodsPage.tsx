@@ -10,7 +10,7 @@ import {
   StatusIndicator,
   SearchInput,
   Pagination,
-  Chip,
+  ListToolbar,
   ContextMenu,
   type TableColumn,
   type ContextMenuItem,
@@ -455,73 +455,50 @@ export function PodsPage() {
               </HStack>
 
               {/* Action Bar */}
-              <HStack gap={2} align="center" className="w-full min-h-7">
-                {/* Search */}
-                <HStack gap={1} align="center">
-                  <SearchInput
-                    placeholder="Search pods by attributes"
-                    size="sm"
-                    className="w-[var(--search-input-width)]"
-                  />
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    aria-label="Download"
-                    className="!p-0 !w-7 !h-7 !min-w-7"
-                  >
-                    <IconDownload size={12} stroke={1.5} />
-                  </Button>
-                </HStack>
-
-                {/* Divider */}
-                <div className="w-px h-4 bg-[var(--color-border-default)]" />
-
-                {/* Actions */}
-                <HStack gap={1} align="center">
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    leftIcon={<IconDownload size={12} stroke={1.5} />}
-                    disabled={selectedRows.length === 0}
-                  >
-                    Download YAML{' '}
-                  </Button>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    leftIcon={<IconTrash size={12} stroke={1.5} />}
-                    disabled={selectedRows.length === 0}
-                  >
-                    Delete{' '}
-                  </Button>
-                </HStack>
-              </HStack>
-
-              {/* Filter Bar */}
-              {filters.length > 0 && (
-                <HStack
-                  justify="between"
-                  align="center"
-                  className="w-full pl-2 pr-4 py-2 bg-[var(--color-surface-subtle)] rounded-[var(--radius-md)]"
-                >
-                  <HStack gap={1} align="center">
-                    {filters.map((filter, index) => (
-                      <Chip
-                        key={index}
-                        label={filter.key}
-                        value={filter.value}
-                        onRemove={() => handleRemoveFilter(index)}
-                      />
-                    ))}
-                  </HStack>
-                  <button
-                    onClick={handleClearFilters}
-                    className="text-label-sm text-[var(--color-action-primary)] hover:underline"
-                  >
-                    Clear Filters{' '}
-                  </button>
-                </HStack>
-              )}
+              <ListToolbar
+                primaryActions={
+                  <ListToolbar.Actions>
+                    <SearchInput
+                      placeholder="Search pods by attributes"
+                      size="sm"
+                      className="w-[var(--search-input-width)]"
+                    />
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      icon={<IconDownload size={12} stroke={1.5} />}
+                      aria-label="Download"
+                    />
+                  </ListToolbar.Actions>
+                }
+                bulkActions={
+                  <ListToolbar.Actions>
+                    <Button
+                      variant="muted"
+                      size="sm"
+                      leftIcon={<IconDownload size={12} stroke={1.5} />}
+                      disabled={selectedRows.length === 0}
+                    >
+                      Download YAML
+                    </Button>
+                    <Button
+                      variant="muted"
+                      size="sm"
+                      leftIcon={<IconTrash size={12} stroke={1.5} />}
+                      disabled={selectedRows.length === 0}
+                    >
+                      Delete
+                    </Button>
+                  </ListToolbar.Actions>
+                }
+                filters={filters.map((filter, index) => ({
+                  id: String(index),
+                  field: filter.key,
+                  value: filter.value,
+                }))}
+                onFilterRemove={(id) => handleRemoveFilter(Number(id))}
+                onFiltersClear={handleClearFilters}
+              />
 
               {/* Pagination */}
               <Pagination

@@ -17,6 +17,7 @@ import {
   SearchInput,
   Pagination,
   ContextMenu,
+  Badge,
   fixedColumns,
   columnMinWidths,
 } from '@/design-system';
@@ -254,6 +255,11 @@ export default function L7PolicyDetailPage() {
       key: 'adminState',
       label: 'Admin state',
       flex: 1,
+      render: (_, row) => (
+        <Badge variant={row.adminState === 'Up' ? 'success' : 'default'} size="sm">
+          {row.adminState}
+        </Badge>
+      ),
     },
     {
       key: 'actions',

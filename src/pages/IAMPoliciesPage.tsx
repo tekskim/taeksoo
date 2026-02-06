@@ -12,6 +12,7 @@ import {
   TabBar,
   Chip,
   Checkbox,
+  ListToolbar,
   type ContextMenuItem,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
@@ -480,35 +481,31 @@ export default function IAMPoliciesPage() {
 
               {/* Action Bar */}
               <VStack gap={3} className="w-full">
-                <HStack gap={2} className="items-center">
-                  {/* Search */}
-                  <HStack gap={1} align="center">
-                    <SearchInput
-                      placeholder="Search policies by attributes"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-[var(--search-input-width)]"
-                    />
-
-                    {/* Download Button */}
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      icon={<IconDownload size={12} />}
-                      aria-label="Download"
-                    />
-                  </HStack>
-
-                  {/* Divider */}
-                  <div className="flex items-center">
-                    <div className="w-px h-4 bg-[var(--color-border-default)]" />
-                  </div>
-
-                  {/* Actions */}
-                  <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />} disabled>
-                    Delete
-                  </Button>
-                </HStack>
+                <ListToolbar
+                  primaryActions={
+                    <ListToolbar.Actions>
+                      <SearchInput
+                        placeholder="Search policies by attributes"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-[var(--search-input-width)]"
+                      />
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        icon={<IconDownload size={12} />}
+                        aria-label="Download"
+                      />
+                    </ListToolbar.Actions>
+                  }
+                  bulkActions={
+                    <ListToolbar.Actions>
+                      <Button variant="muted" size="sm" leftIcon={<IconTrash size={12} />} disabled>
+                        Delete
+                      </Button>
+                    </ListToolbar.Actions>
+                  }
+                />
 
                 {/* Pagination */}
                 <Pagination

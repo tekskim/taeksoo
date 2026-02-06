@@ -1,4 +1,4 @@
-import { useState, type ReactNode, type HTMLAttributes } from 'react';
+import { useState, Children, type ReactNode, type HTMLAttributes } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { IconCopy, IconCheck, IconHelpCircle } from '@tabler/icons-react';
 import { StatusIndicator, type StatusType } from '../StatusIndicator';
@@ -77,10 +77,69 @@ export interface DetailHeaderInfoGridProps extends HTMLAttributes<HTMLDivElement
   children: ReactNode;
 }
 
+/**
+ * Get the row layout based on the number of cards.
+ * | Cards | Layout       |
+ * |-------|------------- |
+ * | 1–4   | single row   |
+ * | 5     | 3 / 2        |
+ * | 6     | 4 / 2        |
+ * | 7     | 4 / 3        |
+ * | 8     | 4 / 4        |
+ * | 9     | 4 / 3 / 2    |
+ * | 10    | 4 / 4 / 2    |
+ * | 11    | 4 / 4 / 3    |
+ * | 12    | 4 / 4 / 4    |
+ */
+function getRowLayout(count: number): number[] {
+  if (count <= 4) return [count];
+  if (count === 5) return [3, 2];
+  if (count === 6) return [4, 2];
+  if (count === 7) return [4, 3];
+  if (count === 8) return [4, 4];
+  if (count === 9) return [4, 3, 2];
+  if (count === 10) return [4, 4, 2];
+  if (count === 11) return [4, 4, 3];
+  if (count === 12) return [4, 4, 4];
+  // Fallback for >12: fill rows of 4
+  const rows: number[] = [];
+  let remaining = count;
+  while (remaining > 0) {
+    rows.push(Math.min(4, remaining));
+    remaining -= Math.min(4, remaining);
+  }
+  return rows;
+}
+
 function DetailHeaderInfoGrid({ children, className, ...props }: DetailHeaderInfoGridProps) {
+  const childArray = Children.toArray(children);
+  const count = childArray.length;
+  const rowLayout = getRowLayout(count);
+
+  // Single row — keep simple layout
+  if (rowLayout.length === 1) {
+    return (
+      <div className={twMerge('flex items-stretch gap-3', 'w-full', className)} {...props}>
+        {children}
+      </div>
+    );
+  }
+
+  // Multi-row layout
+  let index = 0;
+  const rows = rowLayout.map((rowCount) => {
+    const rowChildren = childArray.slice(index, index + rowCount);
+    index += rowCount;
+    return rowChildren;
+  });
+
   return (
-    <div className={twMerge('flex items-center gap-3', 'w-full', className)} {...props}>
-      {children}
+    <div className={twMerge('flex flex-col gap-3', 'w-full', className)} {...props}>
+      {rows.map((rowChildren, rowIndex) => (
+        <div key={rowIndex} className="flex items-stretch gap-3 w-full">
+          {rowChildren}
+        </div>
+      ))}
     </div>
   );
 }

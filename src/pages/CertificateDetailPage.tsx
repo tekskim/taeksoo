@@ -17,6 +17,7 @@ import {
   Table,
   SearchInput,
   Pagination,
+  Badge,
   fixedColumns,
 } from '@/design-system';
 import type { TableColumn } from '@/design-system';
@@ -315,6 +316,11 @@ export default function CertificateDetailPage() {
       key: 'adminState',
       label: 'Admin state',
       flex: 1,
+      render: (_, row) => (
+        <Badge variant={row.adminState === 'Up' ? 'success' : 'default'} size="sm">
+          {row.adminState}
+        </Badge>
+      ),
     },
   ];
 

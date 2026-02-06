@@ -18,6 +18,7 @@ import {
   SectionCard,
   DetailHeader,
   Tooltip,
+  Badge,
   type TableColumn,
   fixedColumns,
 } from '@/design-system';
@@ -297,6 +298,11 @@ export default function ComputeAdminFirewallDetailPage() {
       key: 'adminState',
       label: 'Admin state',
       flex: 1,
+      render: (_, row) => (
+        <Badge variant={row.adminState === 'Up' ? 'success' : 'default'} size="sm">
+          {row.adminState}
+        </Badge>
+      ),
     },
   ];
 
