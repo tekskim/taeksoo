@@ -83,7 +83,7 @@ const mockPoolsMap: Record<string, PoolDetail> = {
     name: 'pool-http',
     status: 'active',
     adminState: 'Up',
-    createdAt: '2025-07-25 09:12:20',
+    createdAt: 'Jul 25, 2025',
     description: '-',
     algorithm: 'Round Robin',
     protocol: 'HTTP',
@@ -95,7 +95,7 @@ const mockPoolsMap: Record<string, PoolDetail> = {
     name: 'pool-http',
     status: 'active',
     adminState: 'Up',
-    createdAt: '2025-07-24 10:30:00',
+    createdAt: 'Jul 24, 2025',
     description: 'HTTP connection pool',
     algorithm: 'Round Robin',
     protocol: 'HTTP',
@@ -107,7 +107,7 @@ const mockPoolsMap: Record<string, PoolDetail> = {
     name: 'pool-http',
     status: 'active',
     adminState: 'Up',
-    createdAt: '2025-07-23 14:00:00',
+    createdAt: 'Jul 23, 2025',
     description: 'HTTP connection pool',
     algorithm: 'Round Robin',
     protocol: 'HTTP',
@@ -308,7 +308,7 @@ export default function PoolDetailPage() {
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={memberMenuItems} trigger="click" align="right">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                <IconTrash size={16} stroke={1.5} className="text-[var(--color-state-danger)]" />
+                <IconTrash size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
               </button>
             </ContextMenu>
           </div>

@@ -58,7 +58,7 @@ const statefulSetsData: StatefulSetRow[] = [
     namespace: 'default',
     image: 'nginx',
     ready: '1/1',
-    createdAt: '2025-11-10 12:57',
+    createdAt: 'Nov 10, 2025',
   },
   {
     id: '2',
@@ -67,7 +67,7 @@ const statefulSetsData: StatefulSetRow[] = [
     namespace: 'database',
     image: 'mysql:8.0',
     ready: '1/1',
-    createdAt: '2025-11-09 14:30',
+    createdAt: 'Nov 9, 2025',
   },
   {
     id: '3',
@@ -76,7 +76,7 @@ const statefulSetsData: StatefulSetRow[] = [
     namespace: 'logging',
     image: 'elasticsearch:8.10.2',
     ready: '3/3',
-    createdAt: '2025-11-08 09:15',
+    createdAt: 'Nov 8, 2025',
   },
   {
     id: '4',
@@ -85,7 +85,7 @@ const statefulSetsData: StatefulSetRow[] = [
     namespace: 'database',
     image: 'mongo:7.0',
     ready: '0/3',
-    createdAt: '2025-11-10 11:22',
+    createdAt: 'Nov 10, 2025',
   },
   {
     id: '5',
@@ -94,7 +94,7 @@ const statefulSetsData: StatefulSetRow[] = [
     namespace: 'messaging',
     image: 'confluentinc/cp-kafka:7.5.0',
     ready: '3/3',
-    createdAt: '2025-11-07 16:45',
+    createdAt: 'Nov 7, 2025',
   },
   {
     id: '6',
@@ -103,7 +103,7 @@ const statefulSetsData: StatefulSetRow[] = [
     namespace: 'messaging',
     image: 'zookeeper:3.9',
     ready: '0/3',
-    createdAt: '2025-11-10 08:00',
+    createdAt: 'Nov 10, 2025',
   },
   {
     id: '7',
@@ -112,7 +112,7 @@ const statefulSetsData: StatefulSetRow[] = [
     namespace: 'cache',
     image: 'redis:7.2-alpine',
     ready: '6/6',
-    createdAt: '2025-11-06 10:30',
+    createdAt: 'Nov 6, 2025',
   },
   {
     id: '8',
@@ -121,7 +121,7 @@ const statefulSetsData: StatefulSetRow[] = [
     namespace: 'database',
     image: 'cockroachdb/cockroach:v23.1.11',
     ready: '3/3',
-    createdAt: '2025-11-05 12:00',
+    createdAt: 'Nov 5, 2025',
   },
 ];
 

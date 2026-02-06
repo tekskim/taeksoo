@@ -30,7 +30,7 @@ export default function SettingsAccountPage() {
   const [isEditingPassword, setIsEditingPassword] = useState(false);
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [passwordLastUpdated, setPasswordLastUpdated] = useState('2024-01-10 09:30');
+  const [passwordLastUpdated, setPasswordLastUpdated] = useState('Jan 10, 2024');
 
   // 2-Step Verification State
   const [twoStepEnabled, setTwoStepEnabled] = useState(false);
@@ -54,35 +54,35 @@ export default function SettingsAccountPage() {
       location: 'Gangnam-gu, Seoul, South Korea',
       ip: '211.234.56.78',
       device: 'Chrome on macOS',
-      timestamp: '2026-01-06 14:32:18 +0900',
+      timestamp: 'Jan 6, 2026 +0900',
     },
     {
       id: '2',
       location: 'Gangnam-gu, Seoul, South Korea',
       ip: '211.234.56.78',
       device: 'Safari on iOS',
-      timestamp: '2026-01-05 09:15:42 +0900',
+      timestamp: 'Jan 5, 2026 +0900',
     },
     {
       id: '3',
       location: 'Mapo-gu, Seoul, South Korea',
       ip: '175.192.44.123',
       device: 'Firefox on Windows',
-      timestamp: '2026-01-04 18:22:05 +0900',
+      timestamp: 'Jan 4, 2026 +0900',
     },
     {
       id: '4',
       location: 'Seocho-gu, Seoul, South Korea',
       ip: '121.167.88.45',
       device: 'Edge on Windows',
-      timestamp: '2026-01-03 11:45:33 +0900',
+      timestamp: 'Jan 3, 2026 +0900',
     },
     {
       id: '5',
       location: 'Bundang-gu, Seongnam, South Korea',
       ip: '58.123.201.67',
       device: 'Chrome on Android',
-      timestamp: '2026-01-02 08:10:22 +0900',
+      timestamp: 'Jan 2, 2026 +0900',
     },
   ];
 

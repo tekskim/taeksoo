@@ -105,7 +105,7 @@ const mockListenersMap: Record<string, ListenerDetail> = {
     name: 'listener-http-80',
     status: 'active',
     adminState: 'Up',
-    createdAt: '2025-07-25 09:12:20',
+    createdAt: 'Jul 25, 2025',
     description: '-',
     protocol: 'HTTP',
     port: 80,
@@ -123,7 +123,7 @@ const mockListenersMap: Record<string, ListenerDetail> = {
     name: 'listener-https-443',
     status: 'active',
     adminState: 'Up',
-    createdAt: '2025-07-24 10:30:00',
+    createdAt: 'Jul 24, 2025',
     description: 'HTTPS listener for API',
     protocol: 'HTTPS',
     port: 443,
@@ -141,7 +141,7 @@ const mockListenersMap: Record<string, ListenerDetail> = {
     name: 'listener-tcp-8080',
     status: 'active',
     adminState: 'Up',
-    createdAt: '2025-07-23 14:00:00',
+    createdAt: 'Jul 23, 2025',
     description: 'TCP listener for app',
     protocol: 'TCP',
     port: 8080,
@@ -521,7 +521,7 @@ export default function ListenerDetailPage() {
           <div onClick={(e) => e.stopPropagation()}>
             <ContextMenu items={policyMenuItems} trigger="click" align="right">
               <button className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors group">
-                <IconTrash size={16} stroke={1.5} className="text-[var(--color-state-danger)]" />
+                <IconTrash size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
               </button>
             </ContextMenu>
           </div>

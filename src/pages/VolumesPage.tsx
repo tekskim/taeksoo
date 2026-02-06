@@ -75,7 +75,7 @@ const mockVolumes: Volume[] = [
     diskTag: 'Data disk',
     attachedTo: 'web-server-1',
     attachedToId: 'inst-001',
-    createdAt: '2025-09-12',
+    createdAt: 'Sep 12, 2025',
     status: 'in-use',
   },
   {
@@ -86,7 +86,7 @@ const mockVolumes: Volume[] = [
     diskTag: 'Data disk',
     attachedTo: 'app-server-1',
     attachedToId: 'inst-002',
-    createdAt: '2025-09-10',
+    createdAt: 'Sep 10, 2025',
     status: 'in-use',
   },
   {
@@ -97,7 +97,7 @@ const mockVolumes: Volume[] = [
     diskTag: 'Backup',
     attachedTo: null,
     attachedToId: null,
-    createdAt: '2025-09-08',
+    createdAt: 'Sep 8, 2025',
     status: 'active',
   },
   {
@@ -108,7 +108,7 @@ const mockVolumes: Volume[] = [
     diskTag: 'Logs',
     attachedTo: 'log-server',
     attachedToId: 'inst-003',
-    createdAt: '2025-09-05',
+    createdAt: 'Sep 5, 2025',
     status: 'in-use',
   },
   {
@@ -119,7 +119,7 @@ const mockVolumes: Volume[] = [
     diskTag: 'Cache',
     attachedTo: 'cache-01',
     attachedToId: 'inst-004',
-    createdAt: '2025-08-30',
+    createdAt: 'Aug 30, 2025',
     status: 'in-use',
   },
   {
@@ -130,7 +130,7 @@ const mockVolumes: Volume[] = [
     diskTag: 'Media',
     attachedTo: null,
     attachedToId: null,
-    createdAt: '2025-08-25',
+    createdAt: 'Aug 25, 2025',
     status: 'active',
   },
   {
@@ -141,7 +141,7 @@ const mockVolumes: Volume[] = [
     diskTag: 'Temporary',
     attachedTo: null,
     attachedToId: null,
-    createdAt: '2025-08-20',
+    createdAt: 'Aug 20, 2025',
     status: 'pending',
   },
   {
@@ -152,7 +152,7 @@ const mockVolumes: Volume[] = [
     diskTag: 'ML Dataset',
     attachedTo: 'gpu-server-1',
     attachedToId: 'inst-005',
-    createdAt: '2025-08-15',
+    createdAt: 'Aug 15, 2025',
     status: 'in-use',
   },
   {
@@ -163,7 +163,7 @@ const mockVolumes: Volume[] = [
     diskTag: 'Archive',
     attachedTo: null,
     attachedToId: null,
-    createdAt: '2025-08-10',
+    createdAt: 'Aug 10, 2025',
     status: 'active',
   },
   {
@@ -174,7 +174,7 @@ const mockVolumes: Volume[] = [
     diskTag: 'Boot',
     attachedTo: 'web-server-2',
     attachedToId: 'inst-006',
-    createdAt: '2025-08-05',
+    createdAt: 'Aug 5, 2025',
     status: 'in-use',
   },
 ];

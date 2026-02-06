@@ -20,13 +20,7 @@ import {
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import {
-  IconEdit,
-  IconCheck,
-  IconProgress,
-  IconExternalLink,
-  IconSearch,
-} from '@tabler/icons-react';
+import { IconEdit, IconCheck, IconExternalLink, IconSearch } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -69,225 +63,225 @@ const mockUsers: User[] = [
     username: 'thaki-kim',
     userGroups: 'dev-admin-group (+2)',
     roles: 'compute-admin (+3)',
-    lastSignIn: '2025-09-12',
+    lastSignIn: 'Sep 12, 2025',
     status: 'active',
-    createdAt: '2025-09-12',
+    createdAt: 'Sep 12, 2025',
   },
   {
     id: 'user-2',
     username: 'thaki-kim',
     userGroups: 'dev-admin-group (+2)',
     roles: 'compute-admin (+3)',
-    lastSignIn: '2025-09-12',
+    lastSignIn: 'Sep 12, 2025',
     status: 'active',
-    createdAt: '2025-09-12',
+    createdAt: 'Sep 12, 2025',
   },
   {
     id: 'user-3',
     username: 'thaki-kim',
     userGroups: 'dev-admin-group (+2)',
     roles: 'compute-admin (+3)',
-    lastSignIn: '2025-09-12',
+    lastSignIn: 'Sep 12, 2025',
     status: 'active',
-    createdAt: '2025-09-12',
+    createdAt: 'Sep 12, 2025',
   },
   {
     id: 'user-4',
     username: 'thaki-kim',
     userGroups: 'dev-admin-group (+2)',
     roles: 'compute-admin (+3)',
-    lastSignIn: '2025-09-12',
+    lastSignIn: 'Sep 12, 2025',
     status: 'active',
-    createdAt: '2025-09-12',
+    createdAt: 'Sep 12, 2025',
   },
   {
     id: 'user-5',
     username: 'thaki-kim',
     userGroups: 'dev-admin-group (+2)',
     roles: 'compute-admin (+3)',
-    lastSignIn: '2025-09-12',
+    lastSignIn: 'Sep 12, 2025',
     status: 'active',
-    createdAt: '2025-09-12',
+    createdAt: 'Sep 12, 2025',
   },
   {
     id: 'user-6',
     username: 'thaki-kim',
     userGroups: 'dev-admin-group (+2)',
     roles: 'compute-admin (+3)',
-    lastSignIn: '2025-09-12',
+    lastSignIn: 'Sep 12, 2025',
     status: 'active',
-    createdAt: '2025-09-12',
+    createdAt: 'Sep 12, 2025',
   },
   {
     id: 'user-7',
     username: 'thaki-kim',
     userGroups: 'dev-admin-group (+2)',
     roles: 'compute-admin (+3)',
-    lastSignIn: '2025-09-12',
+    lastSignIn: 'Sep 12, 2025',
     status: 'active',
-    createdAt: '2025-09-12',
+    createdAt: 'Sep 12, 2025',
   },
   {
     id: 'user-8',
     username: 'admin-user',
     userGroups: 'admins (+1)',
     roles: 'full-access (+5)',
-    lastSignIn: '2025-09-10',
+    lastSignIn: 'Sep 10, 2025',
     status: 'active',
-    createdAt: '2025-09-10',
+    createdAt: 'Sep 10, 2025',
   },
   {
     id: 'user-9',
     username: 'dev-user',
     userGroups: 'developers (+3)',
     roles: 'write-access (+2)',
-    lastSignIn: '2025-09-08',
+    lastSignIn: 'Sep 8, 2025',
     status: 'active',
-    createdAt: '2025-09-08',
+    createdAt: 'Sep 8, 2025',
   },
   {
     id: 'user-10',
     username: 'viewer-user',
     userGroups: 'viewers',
     roles: 'read-only',
-    lastSignIn: '2025-09-05',
+    lastSignIn: 'Sep 5, 2025',
     status: 'inactive',
-    createdAt: '2025-09-05',
+    createdAt: 'Sep 5, 2025',
   },
   {
     id: 'user-11',
     username: 'test-user-1',
     userGroups: 'testers (+1)',
     roles: 'qa-role (+2)',
-    lastSignIn: '2025-09-01',
+    lastSignIn: 'Sep 1, 2025',
     status: 'active',
-    createdAt: '2025-09-01',
+    createdAt: 'Sep 1, 2025',
   },
   {
     id: 'user-12',
     username: 'test-user-2',
     userGroups: 'testers (+1)',
     roles: 'qa-role (+2)',
-    lastSignIn: '2025-08-28',
+    lastSignIn: 'Aug 28, 2025',
     status: 'active',
-    createdAt: '2025-08-28',
+    createdAt: 'Aug 28, 2025',
   },
   {
     id: 'user-13',
     username: 'ops-user',
     userGroups: 'ops-team (+2)',
     roles: 'infra-admin (+3)',
-    lastSignIn: '2025-08-25',
+    lastSignIn: 'Aug 25, 2025',
     status: 'active',
-    createdAt: '2025-08-25',
+    createdAt: 'Aug 25, 2025',
   },
   {
     id: 'user-14',
     username: 'support-user',
     userGroups: 'support (+1)',
     roles: 'support-role',
-    lastSignIn: '2025-08-20',
+    lastSignIn: 'Aug 20, 2025',
     status: 'active',
-    createdAt: '2025-08-20',
+    createdAt: 'Aug 20, 2025',
   },
   {
     id: 'user-15',
     username: 'manager-user',
     userGroups: 'managers (+2)',
     roles: 'manager-role (+4)',
-    lastSignIn: '2025-08-15',
+    lastSignIn: 'Aug 15, 2025',
     status: 'active',
-    createdAt: '2025-08-15',
+    createdAt: 'Aug 15, 2025',
   },
   {
     id: 'user-16',
     username: 'analyst-user',
     userGroups: 'analysts',
     roles: 'read-analytics',
-    lastSignIn: '2025-08-10',
+    lastSignIn: 'Aug 10, 2025',
     status: 'active',
-    createdAt: '2025-08-10',
+    createdAt: 'Aug 10, 2025',
   },
   {
     id: 'user-17',
     username: 'security-user',
     userGroups: 'security (+3)',
     roles: 'security-admin (+5)',
-    lastSignIn: '2025-08-05',
+    lastSignIn: 'Aug 5, 2025',
     status: 'active',
-    createdAt: '2025-08-05',
+    createdAt: 'Aug 5, 2025',
   },
   {
     id: 'user-18',
     username: 'finance-user',
     userGroups: 'finance (+1)',
     roles: 'finance-role (+2)',
-    lastSignIn: '2025-08-01',
+    lastSignIn: 'Aug 1, 2025',
     status: 'inactive',
-    createdAt: '2025-08-01',
+    createdAt: 'Aug 1, 2025',
   },
   {
     id: 'user-19',
     username: 'hr-user',
     userGroups: 'hr-team (+2)',
     roles: 'hr-role (+3)',
-    lastSignIn: '2025-07-28',
+    lastSignIn: 'Jul 28, 2025',
     status: 'active',
-    createdAt: '2025-07-28',
+    createdAt: 'Jul 28, 2025',
   },
   {
     id: 'user-20',
     username: 'legal-user',
     userGroups: 'legal',
     roles: 'legal-role',
-    lastSignIn: '2025-07-25',
+    lastSignIn: 'Jul 25, 2025',
     status: 'active',
-    createdAt: '2025-07-25',
+    createdAt: 'Jul 25, 2025',
   },
   {
     id: 'user-21',
     username: 'marketing-user',
     userGroups: 'marketing (+1)',
     roles: 'marketing-role (+2)',
-    lastSignIn: '2025-07-20',
+    lastSignIn: 'Jul 20, 2025',
     status: 'active',
-    createdAt: '2025-07-20',
+    createdAt: 'Jul 20, 2025',
   },
   {
     id: 'user-22',
     username: 'sales-user',
     userGroups: 'sales (+2)',
     roles: 'sales-role (+3)',
-    lastSignIn: '2025-07-15',
+    lastSignIn: 'Jul 15, 2025',
     status: 'active',
-    createdAt: '2025-07-15',
+    createdAt: 'Jul 15, 2025',
   },
   {
     id: 'user-23',
     username: 'customer-user',
     userGroups: 'customers',
     roles: 'customer-role',
-    lastSignIn: '2025-07-10',
+    lastSignIn: 'Jul 10, 2025',
     status: 'active',
-    createdAt: '2025-07-10',
+    createdAt: 'Jul 10, 2025',
   },
   {
     id: 'user-24',
     username: 'partner-user',
     userGroups: 'partners (+1)',
     roles: 'partner-role (+2)',
-    lastSignIn: '2025-07-05',
+    lastSignIn: 'Jul 5, 2025',
     status: 'active',
-    createdAt: '2025-07-05',
+    createdAt: 'Jul 5, 2025',
   },
   {
     id: 'user-25',
     username: 'vendor-user',
     userGroups: 'vendors',
     roles: 'vendor-role',
-    lastSignIn: '2025-07-01',
+    lastSignIn: 'Jul 1, 2025',
     status: 'inactive',
-    createdAt: '2025-07-01',
+    createdAt: 'Jul 1, 2025',
   },
 ];
 
@@ -370,22 +364,27 @@ function SectionStatusIcon({ status }: { status: SectionState }) {
 
   if (status === 'active') {
     return (
-      <div className="w-4 h-4 shrink-0">
-        <IconProgress
-          size={16}
-          stroke={1.5}
-          className="text-[var(--color-text-subtle)] animate-spin"
-        />
-      </div>
+      <div
+        className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-text-muted)] animate-spin"
+        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
+      />
     );
   }
 
   if (status === 'writing') {
-    return null;
+    return (
+      <div
+        className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-text-muted)] animate-spin"
+        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
+      />
+    );
   }
 
   return (
-    <div className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)]" />
+    <div
+      className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)]"
+      style={{ borderStyle: 'dashed' }}
+    />
   );
 }
 

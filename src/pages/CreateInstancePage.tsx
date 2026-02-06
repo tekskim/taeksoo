@@ -44,7 +44,6 @@ import {
   IconEdit,
   IconExternalLink,
   IconCirclePlus,
-  IconProgress,
   IconStar,
   IconStarFilled,
   IconUpload,
@@ -156,7 +155,7 @@ const mockTemplates: TemplateRow[] = [
     name: 'th.tiny',
     description: '-',
     visibility: 'Private',
-    createdAt: '2025-11-19',
+    createdAt: 'Nov 19, 2025',
     isFavorite: true,
     config: {
       instanceNamePrefix: 'tiny-instance',
@@ -180,7 +179,7 @@ const mockTemplates: TemplateRow[] = [
     name: 'th.small',
     description: 'Small instance',
     visibility: 'Public',
-    createdAt: '2025-11-18',
+    createdAt: 'Nov 18, 2025',
     isFavorite: false,
     config: {
       instanceNamePrefix: 'small-instance',
@@ -204,7 +203,7 @@ const mockTemplates: TemplateRow[] = [
     name: 'th.medium',
     description: 'Medium instance',
     visibility: 'Private',
-    createdAt: '2025-11-17',
+    createdAt: 'Nov 17, 2025',
     isFavorite: true,
     config: {
       instanceNamePrefix: 'medium-instance',
@@ -228,7 +227,7 @@ const mockTemplates: TemplateRow[] = [
     name: 'th.large',
     description: 'Large instance',
     visibility: 'Public',
-    createdAt: '2025-11-16',
+    createdAt: 'Nov 16, 2025',
     isFavorite: false,
     config: {
       instanceNamePrefix: 'large-instance',
@@ -251,7 +250,7 @@ const mockTemplates: TemplateRow[] = [
     name: 'th.xlarge',
     description: 'Extra large instance',
     visibility: 'Private',
-    createdAt: '2025-11-15',
+    createdAt: 'Nov 15, 2025',
     isFavorite: true,
     config: {
       instanceNamePrefix: 'xlarge-instance',
@@ -275,7 +274,7 @@ const mockTemplates: TemplateRow[] = [
     name: 'th.2xlarge',
     description: '2x large instance',
     visibility: 'Public',
-    createdAt: '2025-11-14',
+    createdAt: 'Nov 14, 2025',
     isFavorite: false,
     config: {
       instanceNamePrefix: '2xlarge-instance',
@@ -322,32 +321,37 @@ function SectionStatusIcon({ status }: { status: SectionState }) {
     );
   }
 
-  // active → spinning progress (currently working)
+  // active → spinning dashed circle (currently working)
   if (status === 'active') {
     return (
-      <div className="w-4 h-4 shrink-0">
-        <IconProgress
-          size={16}
-          stroke={1.5}
-          className="text-[var(--color-text-subtle)] animate-spin"
-        />
-      </div>
+      <div
+        className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-text-muted)] animate-spin"
+        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
+      />
     );
   }
 
-  // writing → no icon, show "Writing..." text instead (handled in parent)
+  // writing → spinning dashed circle
   if (status === 'writing') {
-    return null;
+    return (
+      <div
+        className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-text-muted)] animate-spin"
+        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
+      />
+    );
   }
 
-  // pre → empty circle (waiting)
+  // pre → empty dashed circle (waiting)
   if (status === 'pre') {
     return (
-      <div className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)]" />
+      <div
+        className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)]"
+        style={{ borderStyle: 'dashed' }}
+      />
     );
   }
 
-  // skipped → dash or empty
+  // skipped → dash icon
   return (
     <div className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)] flex items-center justify-center">
       <div className="w-2 h-0.5 bg-[var(--color-text-subtle)]" />
@@ -883,7 +887,7 @@ const mockSnapshots: SnapshotRow[] = [
     name: 'newsnapshot',
     size: '709.98 MiB',
     sourceInstance: 'th-server',
-    createdAt: '2025-09-01',
+    createdAt: 'Sep 1, 2025',
   },
   {
     id: 's2',
@@ -891,7 +895,7 @@ const mockSnapshots: SnapshotRow[] = [
     name: 'web-backup',
     size: '1.2 GiB',
     sourceInstance: 'web-server-01',
-    createdAt: '2025-08-28',
+    createdAt: 'Aug 28, 2025',
   },
   {
     id: 's3',
@@ -899,7 +903,7 @@ const mockSnapshots: SnapshotRow[] = [
     name: 'db-snapshot',
     size: '2.5 GiB',
     sourceInstance: 'db-master',
-    createdAt: '2025-08-25',
+    createdAt: 'Aug 25, 2025',
   },
   {
     id: 's4',
@@ -907,7 +911,7 @@ const mockSnapshots: SnapshotRow[] = [
     name: 'app-snapshot',
     size: '890.00 MiB',
     sourceInstance: 'app-server',
-    createdAt: '2025-08-20',
+    createdAt: 'Aug 20, 2025',
   },
   {
     id: 's5',
@@ -915,7 +919,7 @@ const mockSnapshots: SnapshotRow[] = [
     name: 'test-snapshot',
     size: '512.00 MiB',
     sourceInstance: 'test-vm',
-    createdAt: '2025-08-15',
+    createdAt: 'Aug 15, 2025',
   },
 ];
 
@@ -926,7 +930,7 @@ const mockBootableVolumes: BootableVolumeRow[] = [
     name: 'boot-volume-01',
     size: '50 GiB',
     type: 'SSD',
-    createdAt: '2025-09-01',
+    createdAt: 'Sep 1, 2025',
   },
   {
     id: 'v2',
@@ -934,7 +938,7 @@ const mockBootableVolumes: BootableVolumeRow[] = [
     name: 'boot-volume-02',
     size: '100 GiB',
     type: 'SSD',
-    createdAt: '2025-08-28',
+    createdAt: 'Aug 28, 2025',
   },
   {
     id: 'v3',
@@ -942,7 +946,7 @@ const mockBootableVolumes: BootableVolumeRow[] = [
     name: 'system-disk',
     size: '80 GiB',
     type: 'HDD',
-    createdAt: '2025-08-20',
+    createdAt: 'Aug 20, 2025',
   },
 ];
 
@@ -1926,10 +1930,15 @@ const mockExistingFloatingIPs: ExistingFloatingIPRow[] = [
 ];
 
 const mockSecurityGroups: SecurityGroupRow[] = [
-  { id: 'sg1', name: 'default', description: 'Default security group', createdAt: '2025-08-15' },
-  { id: 'sg2', name: 'suite-default', description: 'test only', createdAt: '2025-09-01' },
-  { id: 'sg3', name: 'web-sg', description: 'Web server security group', createdAt: '2025-09-10' },
-  { id: 'sg4', name: 'db-sg', description: 'Database security group', createdAt: '2025-09-15' },
+  { id: 'sg1', name: 'default', description: 'Default security group', createdAt: 'Aug 15, 2025' },
+  { id: 'sg2', name: 'suite-default', description: 'test only', createdAt: 'Sep 1, 2025' },
+  {
+    id: 'sg3',
+    name: 'web-sg',
+    description: 'Web server security group',
+    createdAt: 'Sep 10, 2025',
+  },
+  { id: 'sg4', name: 'db-sg', description: 'Database security group', createdAt: 'Sep 15, 2025' },
 ];
 
 const mockPorts: PortRow[] = [

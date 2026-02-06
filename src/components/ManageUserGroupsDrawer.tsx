@@ -42,7 +42,7 @@ const defaultUserGroups: UserGroupItem[] = Array.from({ length: 25 }, (_, i) => 
   type: 'Built-in',
   roles: 'ReadCompute (+3)',
   userCount: 130,
-  createdAt: '2025-09-12',
+  createdAt: 'Sep 12, 2025',
 }));
 
 const ITEMS_PER_PAGE = 5;

@@ -32,7 +32,7 @@ const mockTemplates: MailTemplate[] = [
     type: 'authentication',
     subject: 'You have been invited to THAKI Cloud',
     description: 'Sent when an administrator creates a new account and invites the user',
-    lastModified: '2025-01-12',
+    lastModified: 'Jan 12, 2025',
   },
   {
     id: 'reset-password',
@@ -40,7 +40,7 @@ const mockTemplates: MailTemplate[] = [
     type: 'authentication',
     subject: 'Reset your password',
     description: 'Sent when a user requests to reset their password',
-    lastModified: '2025-01-12',
+    lastModified: 'Jan 12, 2025',
   },
   {
     id: 'email-mfa',
@@ -48,7 +48,7 @@ const mockTemplates: MailTemplate[] = [
     type: 'security',
     subject: 'Your verification code',
     description: 'Sent for email-based multi-factor authentication',
-    lastModified: '2025-01-12',
+    lastModified: 'Jan 12, 2025',
   },
 ];
 

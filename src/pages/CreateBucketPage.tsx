@@ -16,7 +16,7 @@ import {
 } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
-import { IconBell, IconEdit, IconCheck, IconProgress } from '@tabler/icons-react';
+import { IconBell, IconEdit, IconCheck } from '@tabler/icons-react';
 
 /* ----------------------------------------
    Types
@@ -125,27 +125,32 @@ function SectionStatusIcon({ status }: { status: SectionState }) {
     );
   }
 
-  // active → spinning progress (currently working)
+  // active → spinning dashed circle (currently working)
   if (status === 'active') {
     return (
-      <div className="w-4 h-4 shrink-0">
-        <IconProgress
-          size={16}
-          stroke={1.5}
-          className="text-[var(--color-text-subtle)] animate-spin"
-        />
-      </div>
+      <div
+        className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-text-muted)] animate-spin"
+        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
+      />
     );
   }
 
-  // writing → no icon, show "Writing..." text instead (handled in parent)
+  // writing → spinning dashed circle
   if (status === 'writing') {
-    return null;
+    return (
+      <div
+        className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-text-muted)] animate-spin"
+        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
+      />
+    );
   }
 
-  // pre → empty circle (waiting)
+  // pre → empty dashed circle (waiting)
   return (
-    <div className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)]" />
+    <div
+      className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)]"
+      style={{ borderStyle: 'dashed' }}
+    />
   );
 }
 

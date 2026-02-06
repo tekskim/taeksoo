@@ -47,7 +47,7 @@ const defaultSnapshots: VolumeSnapshotItem[] = Array.from({ length: 115 }, (_, i
   type: '_DEFAULT_',
   size: 1500,
   status: 'active',
-  createdAt: '2025-08-23',
+  createdAt: 'Aug 23, 2025',
 }));
 
 const ITEMS_PER_PAGE = 5;

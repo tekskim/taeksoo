@@ -401,7 +401,9 @@ export default function ComputeAdminFirewallsPage() {
       flex: 1,
       sortable: true,
       render: (_, row) => (
-        <Badge variant={row.adminState === 'Up' ? 'info' : 'default'}>{row.adminState}</Badge>
+        <Badge variant={row.adminState === 'Up' ? 'success' : 'default'} size="sm">
+          {row.adminState}
+        </Badge>
       ),
     },
     {

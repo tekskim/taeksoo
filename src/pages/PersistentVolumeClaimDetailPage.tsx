@@ -95,7 +95,7 @@ const mockPersistentVolumeClaimData: Record<string, PersistentVolumeClaimData> =
     name: 'cert-manager',
     status: 'Bound',
     namespace: 'default',
-    createdAt: '2025-07-25 09:12:20',
+    createdAt: 'Jul 25, 2025',
     labels: {
       'app.kubernetes.io/managed-by': 'Helm',
     },
@@ -117,14 +117,14 @@ const mockPersistentVolumeClaimData: Record<string, PersistentVolumeClaimData> =
         condition: 'Bound',
         size: 'True',
         message: '[Success] Volume bound successfully',
-        updated: '2025-07-25 09:12:20',
+        updated: 'Jul 25, 2025',
       },
       {
         id: '2',
         condition: 'FileSystemResizePending',
         size: 'False',
         message: '[Info] No resize pending',
-        updated: '2025-07-25 09:12:20',
+        updated: 'Jul 25, 2025',
       },
     ],
     events: [
@@ -159,7 +159,7 @@ const mockPersistentVolumeClaimData: Record<string, PersistentVolumeClaimData> =
     name: 'data-postgres-0',
     status: 'Bound',
     namespace: 'database',
-    createdAt: '2025-11-09 14:30',
+    createdAt: 'Nov 9, 2025',
     labels: {
       app: 'postgres',
     },
@@ -181,7 +181,7 @@ const mockPersistentVolumeClaimData: Record<string, PersistentVolumeClaimData> =
         condition: 'Bound',
         size: 'True',
         message: '[Success] Volume bound to pvc-abc12345',
-        updated: '2025-11-09 14:30',
+        updated: 'Nov 9, 2025',
       },
     ],
     events: [
@@ -204,7 +204,7 @@ const mockPersistentVolumeClaimData: Record<string, PersistentVolumeClaimData> =
     name: 'redis-data',
     status: 'Bound',
     namespace: 'cache',
-    createdAt: '2025-11-08 09:15',
+    createdAt: 'Nov 8, 2025',
     labels: {
       app: 'redis',
     },
@@ -224,7 +224,7 @@ const mockPersistentVolumeClaimData: Record<string, PersistentVolumeClaimData> =
         condition: 'Bound',
         size: 'True',
         message: '[Success] Bound to existing PV',
-        updated: '2025-11-08 09:15',
+        updated: 'Nov 8, 2025',
       },
     ],
     events: [
@@ -247,7 +247,7 @@ const mockPersistentVolumeClaimData: Record<string, PersistentVolumeClaimData> =
     name: 'pending-claim',
     status: 'Pending',
     namespace: 'default',
-    createdAt: '2025-11-10 08:00',
+    createdAt: 'Nov 10, 2025',
     labels: {},
     annotations: {},
     source: 'storage-class',
@@ -265,7 +265,7 @@ const mockPersistentVolumeClaimData: Record<string, PersistentVolumeClaimData> =
         condition: 'Pending',
         size: 'True',
         message: '[Waiting] Waiting for volume to be provisioned',
-        updated: '2025-11-10 08:00',
+        updated: 'Nov 10, 2025',
       },
     ],
     events: [
@@ -300,7 +300,7 @@ const mockPersistentVolumeClaimData: Record<string, PersistentVolumeClaimData> =
     name: 'elasticsearch-data-0',
     status: 'Bound',
     namespace: 'logging',
-    createdAt: '2025-11-07 16:45',
+    createdAt: 'Nov 7, 2025',
     labels: {
       app: 'elasticsearch',
     },
@@ -322,7 +322,7 @@ const mockPersistentVolumeClaimData: Record<string, PersistentVolumeClaimData> =
         condition: 'Bound',
         size: 'True',
         message: '[Success] Volume bound to pvc-elastic-001',
-        updated: '2025-11-07 16:45',
+        updated: 'Nov 7, 2025',
       },
     ],
     events: [

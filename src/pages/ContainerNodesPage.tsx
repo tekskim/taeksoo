@@ -69,7 +69,7 @@ const nodesData: NodeRow[] = [
     cpuUsage: 8,
     ramUsage: 23,
     podsUsage: 13,
-    createdAt: '2025-11-01 12:57',
+    createdAt: 'Nov 1, 2025',
   },
   {
     id: '2',
@@ -83,7 +83,7 @@ const nodesData: NodeRow[] = [
     cpuUsage: 45,
     ramUsage: 67,
     podsUsage: 42,
-    createdAt: '2025-11-01 12:58',
+    createdAt: 'Nov 1, 2025',
   },
   {
     id: '3',
@@ -97,7 +97,7 @@ const nodesData: NodeRow[] = [
     cpuUsage: 32,
     ramUsage: 51,
     podsUsage: 28,
-    createdAt: '2025-11-01 12:59',
+    createdAt: 'Nov 1, 2025',
   },
   {
     id: '4',
@@ -111,7 +111,7 @@ const nodesData: NodeRow[] = [
     cpuUsage: 78,
     ramUsage: 82,
     podsUsage: 65,
-    createdAt: '2025-11-02 09:15',
+    createdAt: 'Nov 2, 2025',
   },
   {
     id: '5',
@@ -125,7 +125,7 @@ const nodesData: NodeRow[] = [
     cpuUsage: 0,
     ramUsage: 0,
     podsUsage: 0,
-    createdAt: '2025-11-02 09:20',
+    createdAt: 'Nov 2, 2025',
   },
   {
     id: '6',
@@ -139,7 +139,7 @@ const nodesData: NodeRow[] = [
     cpuUsage: 92,
     ramUsage: 88,
     podsUsage: 75,
-    createdAt: '2025-11-03 14:30',
+    createdAt: 'Nov 3, 2025',
   },
 ];
 

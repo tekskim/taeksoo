@@ -69,7 +69,7 @@ const mockFloatingIPs: FloatingIP[] = [
     fixedIp: '10.7.65.39',
     network: 'net-01',
     networkId: 'net-001',
-    createdAt: '2025-10-01',
+    createdAt: 'Oct 1, 2025',
     status: 'active',
   },
   {
@@ -80,7 +80,7 @@ const mockFloatingIPs: FloatingIP[] = [
     fixedIp: '10.7.65.40',
     network: 'net-02',
     networkId: 'net-002',
-    createdAt: '2025-10-02',
+    createdAt: 'Oct 2, 2025',
     status: 'active',
   },
   {
@@ -91,7 +91,7 @@ const mockFloatingIPs: FloatingIP[] = [
     fixedIp: '-',
     network: 'net-01',
     networkId: 'net-001',
-    createdAt: '2025-10-03',
+    createdAt: 'Oct 3, 2025',
     status: 'down',
   },
   {
@@ -102,7 +102,7 @@ const mockFloatingIPs: FloatingIP[] = [
     fixedIp: '10.7.65.41',
     network: 'net-03',
     networkId: 'net-003',
-    createdAt: '2025-09-28',
+    createdAt: 'Sep 28, 2025',
     status: 'active',
   },
   {
@@ -113,7 +113,7 @@ const mockFloatingIPs: FloatingIP[] = [
     fixedIp: '10.7.65.42',
     network: 'net-01',
     networkId: 'net-001',
-    createdAt: '2025-09-25',
+    createdAt: 'Sep 25, 2025',
     status: 'active',
   },
   {
@@ -124,7 +124,7 @@ const mockFloatingIPs: FloatingIP[] = [
     fixedIp: '-',
     network: 'net-02',
     networkId: 'net-002',
-    createdAt: '2025-09-20',
+    createdAt: 'Sep 20, 2025',
     status: 'error',
   },
   {
@@ -135,7 +135,7 @@ const mockFloatingIPs: FloatingIP[] = [
     fixedIp: '10.7.65.43',
     network: 'net-01',
     networkId: 'net-001',
-    createdAt: '2025-09-15',
+    createdAt: 'Sep 15, 2025',
     status: 'active',
   },
   {
@@ -146,7 +146,7 @@ const mockFloatingIPs: FloatingIP[] = [
     fixedIp: '10.7.65.44',
     network: 'net-04',
     networkId: 'net-004',
-    createdAt: '2025-09-10',
+    createdAt: 'Sep 10, 2025',
     status: 'active',
   },
   {
@@ -157,7 +157,7 @@ const mockFloatingIPs: FloatingIP[] = [
     fixedIp: '-',
     network: 'net-03',
     networkId: 'net-003',
-    createdAt: '2025-09-05',
+    createdAt: 'Sep 5, 2025',
     status: 'down',
   },
   {
@@ -168,7 +168,7 @@ const mockFloatingIPs: FloatingIP[] = [
     fixedIp: '10.7.65.45',
     network: 'net-01',
     networkId: 'net-001',
-    createdAt: '2025-09-01',
+    createdAt: 'Sep 1, 2025',
     status: 'active',
   },
 ];
@@ -371,7 +371,7 @@ export function FloatingIPsPage() {
             </div>
             <Tooltip content="Instance" position="top">
               <div className="flex-shrink-0 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[4px] p-[3px] cursor-default">
-                <IconCube size={16} className="text-[var(--color-text-subtle)]" />
+                <IconCube size={16} stroke={1.5} className="text-[var(--color-text-subtle)]" />
               </div>
             </Tooltip>
           </div>

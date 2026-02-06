@@ -101,7 +101,7 @@ const mockJobData: Record<string, JobData> = {
     status: 'Completed',
     namespace: 'default',
     image: 'nginx:1.27',
-    createdAt: '2025-07-25 09:12:20',
+    createdAt: 'Jul 25, 2025',
     duration: '36 days',
     labels: {
       'app.kubernetes.io/managed-by': 'Helm',
@@ -120,7 +120,7 @@ const mockJobData: Record<string, JobData> = {
     status: 'Completed',
     namespace: 'database',
     image: 'migration-tool:v2.1',
-    createdAt: '2025-11-09 14:30:00',
+    createdAt: 'Nov 9, 2025',
     duration: '2h 15m',
     labels: {
       'app.kubernetes.io/name': 'migration',
@@ -142,7 +142,7 @@ const mockPodsData: PodRow[] = [
     restarts: 1,
     ip: '10.11.0.11',
     node: 'nodeName',
-    createdAt: '2025-07-25 09:12:20',
+    createdAt: 'Jul 25, 2025',
     containers: [
       'container-0',
       'container-1',
@@ -161,8 +161,8 @@ const mockConditionsData: ConditionRow[] = [
     status: 'True',
     reason: 'JobCompleted',
     message: 'Job completed successfully.',
-    lastTransition: '2025-07-25 09:12:30',
-    lastUpdate: '2025-07-25 09:12:30',
+    lastTransition: 'Jul 25, 2025',
+    lastUpdate: 'Jul 25, 2025',
   },
 ];
 
