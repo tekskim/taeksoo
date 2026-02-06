@@ -472,7 +472,7 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
                 {/* Account Information */}
                 <SectionCard className="mb-6 min-w-[600px]" isActive={isEditingAccount}>
                   <SectionCard.Header
-                    title="Account Information"
+                    title="Account information"
                     actions={
                       isEditingAccount ? (
                         <div className="flex items-center gap-2">
@@ -895,7 +895,7 @@ export function SettingsPage({ isOpen, onClose, initialTab = 'account' }: Settin
           setPasswordError('');
           setCurrentSetupMethod(null);
         }}
-        title="Verify Your Identity"
+        title="Verify your identity"
       >
         <div className="space-y-4">
           <p className="text-body-md text-[var(--color-text-default)]">

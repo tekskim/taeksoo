@@ -163,7 +163,7 @@ export function PodDisruptionBudgetsPage() {
     return [
       {
         id: 'edit-config',
-        label: 'Edit Config',
+        label: 'Edit config',
         onClick: () => console.log('Edit Config:', row.id),
       },
       {
@@ -222,25 +222,25 @@ export function PodDisruptionBudgetsPage() {
     },
     {
       key: 'minAvailable',
-      label: 'Min Available',
+      label: 'Min available',
       flex: 1,
       render: (value: string) => <span className="text-[var(--color-text-default)]">{value}</span>,
     },
     {
       key: 'maxUnavailable',
-      label: 'Max Unavailable',
+      label: 'Max unavailable',
       flex: 1,
       render: (value: string) => <span className="text-[var(--color-text-default)]">{value}</span>,
     },
     {
       key: 'allowedDisruption',
-      label: 'Allowed Disruption',
+      label: 'Allowed disruption',
       flex: 1,
       render: (value: string) => <span className="text-[var(--color-text-default)]">{value}</span>,
     },
     {
       key: 'createdAt',
-      label: 'Created At',
+      label: 'Created at',
       flex: 1,
       sortable: true,
     },
@@ -318,7 +318,7 @@ export function PodDisruptionBudgetsPage() {
             <Breadcrumb
               items={[
                 { label: 'clusterName', href: '/container' },
-                { label: 'Pod Disruption Budgets' },
+                { label: 'Pod disruption budgets' },
               ]}
             />
           }
@@ -348,7 +348,7 @@ export function PodDisruptionBudgetsPage() {
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />

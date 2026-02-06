@@ -195,7 +195,7 @@ export const Sortable: Story = {
       { key: 'name', label: 'Name', sortable: true },
       { key: 'email', label: 'Email', sortable: true },
       { key: 'role', label: 'Role', sortable: true },
-      { key: 'createdAt', label: 'Created At', sortable: true, width: '120px' },
+      { key: 'createdAt', label: 'Created at', sortable: true, width: '120px' },
     ];
 
     return <Table columns={sortableColumns} data={sampleUsers} rowKey="id" />;

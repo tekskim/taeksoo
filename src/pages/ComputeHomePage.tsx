@@ -199,7 +199,7 @@ function Card({
     <div
       className={`p-4 rounded-2xl border border-[var(--color-border-default)] ${bgColor} ${className}`}
     >
-      <h6 className="text-heading-h6 !font-medium text-[var(--color-text-muted)] mb-4">{title}</h6>
+      <h6 className="text-heading-h7 mb-4">{title}</h6>
       {children}
     </div>
   );
@@ -313,7 +313,7 @@ export function ComputeHomePage() {
               </Card>
 
               {/* Compute Quota */}
-              <Card title="Compute Quota">
+              <Card title="Compute quota">
                 <div className="space-y-[22px]">
                   <ComputeQuotaBar label="vCPU" used={4} total={8} unit="vCPU" />
                   <ComputeQuotaBar label="RAM" used={22} total={32} unit="GiB" />
@@ -342,7 +342,7 @@ export function ComputeHomePage() {
               </Card>
 
               {/* Bare Metal Summary */}
-              <Card title="Bare Metal Summary" className="flex flex-col">
+              <Card title="Bare metal summary" className="flex flex-col">
                 <div className="mb-4">
                   <div className="text-heading-h3 text-[var(--color-text-default)]">8</div>
                   <div className="text-body-md text-[var(--color-text-subtle)]">Total</div>

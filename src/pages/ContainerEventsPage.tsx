@@ -266,7 +266,7 @@ export function ContainerEventsPage() {
     },
     {
       key: 'lastSeen',
-      label: 'Last Seen',
+      label: 'Last seen',
       flex: 1,
       minWidth: columnMinWidths.lastSeen,
       sortable: true,
@@ -329,7 +329,7 @@ export function ContainerEventsPage() {
     },
     {
       key: 'firstSeen',
-      label: 'First Seen',
+      label: 'First seen',
       flex: 1,
       minWidth: columnMinWidths.firstSeen,
       sortable: true,
@@ -444,7 +444,7 @@ export function ContainerEventsPage() {
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
@@ -475,7 +475,7 @@ export function ContainerEventsPage() {
                 {/* Search */}
                 <HStack gap={1} align="center">
                   <SearchInput
-                    placeholder="Search Events by attributes"
+                    placeholder="Search events by attributes"
                     size="sm"
                     className="w-[var(--search-input-width)]"
                   />

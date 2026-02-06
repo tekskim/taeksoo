@@ -612,7 +612,7 @@ function SystemLoadCard() {
       <DataViewDrawer
         isOpen={showDataView}
         onClose={() => setShowDataView(false)}
-        title="System Load (RAW)"
+        title="System load (RAW)"
         series={drawerSeries}
         timeLabels={timeLabels}
       />
@@ -702,7 +702,7 @@ export default function ComputeAdminPhysicalNodesPage() {
             breadcrumb={<Breadcrumb items={breadcrumbItems} />}
             actions={
               <TopBarAction
-                icon={<IconBell size={12} stroke={1.5} />}
+                icon={<IconBell size={16} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />
@@ -742,7 +742,7 @@ export default function ComputeAdminPhysicalNodesPage() {
               <div className="flex gap-4">
                 <StatCard title="CPU Cores" value={0} />
                 <StatCard title="Total RAM" value="2.56" unit="GiB" />
-                <StatCard title="System Running Time" value="2.56" unit="weeks" />
+                <StatCard title="System running time" value="2.56" unit="weeks" />
                 <FileSystemCard />
               </div>
 
@@ -790,7 +790,7 @@ export default function ComputeAdminPhysicalNodesPage() {
                   dropdownOptions={nodeOptions}
                 />
                 <AreaChartCard
-                  title="Disk Usage"
+                  title="Disk usage"
                   labels={timeLabels}
                   series={[diskUsageData.usage]}
                   colors={[chartColors.emerald400]}
@@ -808,7 +808,7 @@ export default function ComputeAdminPhysicalNodesPage() {
               {/* Row 5: Network Traffic & TCP Connections */}
               <div className="flex gap-4">
                 <AreaChartCard
-                  title="Network Traffic"
+                  title="Network traffic"
                   labels={timeLabels}
                   series={[networkTrafficData.receive, networkTrafficData.transmit]}
                   colors={[chartColors.cyan400, chartColors.emerald400]}
@@ -826,7 +826,7 @@ export default function ComputeAdminPhysicalNodesPage() {
               {/* Row 6: Network Errors & Dropped Packets */}
               <div className="flex gap-4">
                 <AreaChartCard
-                  title="Network Errors"
+                  title="Network errors"
                   labels={timeLabels}
                   series={[networkErrorsData.errors]}
                   colors={[chartColors.cyan400]}
@@ -836,7 +836,7 @@ export default function ComputeAdminPhysicalNodesPage() {
                   dropdownOptions={networkInterfaceOptions}
                 />
                 <AreaChartCard
-                  title="Network Dropped Packets"
+                  title="Network dropped packets"
                   labels={timeLabels}
                   series={[networkDroppedData.receive, networkDroppedData.transmit]}
                   colors={[chartColors.cyan400, chartColors.emerald400]}

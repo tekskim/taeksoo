@@ -36,7 +36,7 @@ export function DeleteJobModal({
     <ConfirmModal
       isOpen={isOpen}
       onClose={onClose}
-      title="Delete Job"
+      title="Delete job"
       description="Removing the selected instances is permanent and cannot be undone."
       infoLabel="Job name"
       infoValue={job?.name ?? ''}

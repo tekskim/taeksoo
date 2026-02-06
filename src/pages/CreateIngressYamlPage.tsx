@@ -244,7 +244,7 @@ export function CreateIngressYamlPage() {
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
@@ -262,7 +262,7 @@ export function CreateIngressYamlPage() {
             <VStack gap={6} className="flex-1 min-h-0">
               {/* Header */}
               <VStack gap={2} className="flex-shrink-0">
-                <h1 className="text-heading-h4 text-[var(--color-text-default)]">Create Ingress</h1>
+                <h1 className="text-heading-h4 text-[var(--color-text-default)]">Create ingress</h1>
                 <p className="text-body-sm text-[var(--color-text-subtle)]">
                   Ingresses route incoming traffic from the internet to Services within the cluster
                   based on the hostname and path specified in the request. You can expose multiple

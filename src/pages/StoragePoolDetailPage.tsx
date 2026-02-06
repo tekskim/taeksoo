@@ -1149,11 +1149,11 @@ export function StoragePoolDetailPage() {
                         <SectionCard.Header title="Pool flags & limits" />
                         <SectionCard.Content>
                           <SectionCard.DataRow
-                            label="No Scrub"
+                            label="No scrub"
                             value={pool.noScrub ? 'Enabled' : 'Disabled'}
                           />
                           <SectionCard.DataRow
-                            label="No Deep Scrub"
+                            label="No deep scrub"
                             value={pool.noDeepScrub ? 'Enabled' : 'Disabled'}
                           />
                           <SectionCard.DataRow
@@ -1252,7 +1252,7 @@ export function StoragePoolDetailPage() {
                       <div className="grid grid-cols-2 gap-4">
                         {/* Object Ingress/Egress */}
                         <ChartWithFullScreen
-                          title="Object Ingress/Egress"
+                          title="Object ingress/egress"
                           series={[
                             {
                               name: 'Objects per second',
@@ -1283,7 +1283,7 @@ export function StoragePoolDetailPage() {
                         />
                         {/* Client Throughput */}
                         <ChartWithFullScreen
-                          title="Client Throughput"
+                          title="Client throughput"
                           series={[
                             {
                               name: 'reads',

@@ -199,7 +199,7 @@ function InformationTab({
       {/* Basic Information */}
       <SectionCard>
         <SectionCard.Header
-          title="Basic Information"
+          title="Basic information"
           actions={
             <Button
               variant="secondary"

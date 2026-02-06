@@ -2872,7 +2872,7 @@ function AuthenticationSection({
                       setLoginName(e.target.value);
                       setAuthError(null);
                     }}
-                    placeholder="Input Login Name"
+                    placeholder="Input login name"
                   />
                 </div>
                 <div>
@@ -2885,7 +2885,7 @@ function AuthenticationSection({
                         setPassword(e.target.value);
                         setAuthError(null);
                       }}
-                      placeholder="Input Password"
+                      placeholder="Input password"
                     />
                     <button
                       type="button"
@@ -2929,7 +2929,7 @@ function AuthenticationSection({
                           setConfirmPassword(e.target.value);
                           setAuthError(null);
                         }}
-                        placeholder="Input Password"
+                        placeholder="Input password"
                       />
                       <button
                         type="button"
@@ -3407,7 +3407,7 @@ function TemplatesSection({
                 checked={resourceType === 'vm'}
                 onChange={() => setResourceType('vm')}
               />
-              <span className="text-body-md text-[var(--color-text-default)]">Virtual Machine</span>
+              <span className="text-body-md text-[var(--color-text-default)]">Virtual machine</span>
             </label>
             <label className="flex items-center gap-1.5 cursor-pointer">
               <Radio
@@ -4019,7 +4019,7 @@ export function ComputeAdminCreateInstancePage() {
                     >
                       <SectionCard.DataRow
                         label="Resource type"
-                        value="Virtual Machine"
+                        value="Virtual machine"
                         showDivider={false}
                       />
                       <SectionCard.DataRow

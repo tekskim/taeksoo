@@ -3996,7 +3996,15 @@ export function DesignSystemPage() {
                                 weight: '600',
                                 desc: 'Label heading',
                               },
-                            ].map(({ token, size, lh, weight, desc }) => (
+                              {
+                                token: 'h7',
+                                size: '12px',
+                                lh: '18px',
+                                weight: '600',
+                                desc: 'CARD TITLE',
+                                extra: 'uppercase, muted',
+                              },
+                            ].map(({ token, size, lh, weight, desc, extra }) => (
                               <tr
                                 key={token}
                                 className="border-b border-[var(--color-border-subtle)]"
@@ -4021,10 +4029,21 @@ export function DesignSystemPage() {
                                       fontSize: size,
                                       lineHeight: lh,
                                       fontWeight: Number(weight),
+                                      ...(extra?.includes('uppercase') && {
+                                        textTransform: 'uppercase' as const,
+                                      }),
+                                      ...(extra?.includes('muted') && {
+                                        color: 'var(--color-text-muted)',
+                                      }),
                                     }}
                                   >
                                     {desc}
                                   </span>
+                                  {extra && (
+                                    <span className="ml-2 text-[10px] text-[var(--color-text-subtle)]">
+                                      ({extra})
+                                    </span>
+                                  )}
                                 </td>
                               </tr>
                             ))}
@@ -4970,7 +4989,7 @@ outline: 2px solid var(--color-border-focus);`}
 
                     {/* Custom Icons (TDS) */}
                     <IconDisplayGrid
-                      title="Custom Icons (TDS)"
+                      title="Custom icons (TDS)"
                       icons={[
                         { Icon: IconExpandOff, name: 'Expand Off' },
                         { Icon: IconExpandOn, name: 'Expand On' },
@@ -5924,7 +5943,7 @@ outline: 2px solid var(--color-border-focus);`}
                 {/* Form Field Spacing */}
                 <Section
                   id="form-field-spacing"
-                  title="Form Field Spacing"
+                  title="Form field spacing"
                   description="Standardized spacing for label + description + input combinations"
                 >
                   <VStack gap={8}>
@@ -5959,7 +5978,7 @@ outline: 2px solid var(--color-border-focus);`}
                             Input
                           </span>
                           <Input
-                            label="Field Label"
+                            label="Field label"
                             placeholder="Enter value"
                             helperText="Helper text below input"
                             width="md"
@@ -5970,7 +5989,7 @@ outline: 2px solid var(--color-border-focus);`}
                             Select
                           </span>
                           <Select
-                            label="Field Label"
+                            label="Field label"
                             options={[
                               { value: '1', label: 'Option 1' },
                               { value: '2', label: 'Option 2' },
@@ -5985,7 +6004,7 @@ outline: 2px solid var(--color-border-focus);`}
                             NumberInput
                           </span>
                           <NumberInput
-                            label="Field Label"
+                            label="Field label"
                             defaultValue={0}
                             helperText="Helper text below stepper"
                             width="md"
@@ -9057,7 +9076,7 @@ outline: 2px solid var(--color-border-focus);`}
                               />
                               <MenuItem
                                 icon={<IconCamera size={16} stroke={1.5} />}
-                                label="Volume Snapshots"
+                                label="Volume snapshots"
                               />
                             </MenuSection>
                           </VStack>
@@ -9095,7 +9114,7 @@ outline: 2px solid var(--color-border-focus);`}
                             />
                             <MenuItem
                               icon={<IconCamera size={16} stroke={1.5} />}
-                              label="Volume Snapshots"
+                              label="Volume snapshots"
                             />
                             <MenuItem
                               icon={<IconDatabaseExport size={16} stroke={1.5} />}

@@ -96,7 +96,7 @@ export function DevSpacePage() {
               </HStack>
               <EmptyState
                 icon={<IconCode size={48} stroke={1} />}
-                title="No DevSpaces found"
+                title="No devSpaces found"
                 description="Create your first DevSpace to get started."
               />
             </VStack>

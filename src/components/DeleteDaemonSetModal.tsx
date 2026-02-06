@@ -36,7 +36,7 @@ export function DeleteDaemonSetModal({
     <ConfirmModal
       isOpen={isOpen}
       onClose={onClose}
-      title="Delete DaemonSet"
+      title="Delete daemonSet"
       description="Removing the selected instances is permanent and cannot be undone."
       infoLabel="DaemonSet name"
       infoValue={daemonSet?.name ?? ''}

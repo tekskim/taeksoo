@@ -436,7 +436,7 @@ export default function CreateIngressPage() {
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
@@ -454,7 +454,7 @@ export default function CreateIngressPage() {
             <VStack gap={6}>
               {/* Page Header */}
               <VStack gap={2}>
-                <h1 className="text-heading-h4">Create Ingress</h1>
+                <h1 className="text-heading-h4">Create ingress</h1>
                 <p className="text-body-sm text-[var(--color-text-subtle)]">
                   Ingresses route incoming traffic from the internet to Services within the cluster
                   based on the hostname and path specified in the request. You can expose multiple
@@ -468,7 +468,7 @@ export default function CreateIngressPage() {
                 <VStack gap={4} className="flex-1">
                   {/* Basic Information Section */}
                   <SectionCard>
-                    <SectionCard.Header title="Basic Information" />
+                    <SectionCard.Header title="Basic information" />
                     <SectionCard.Content>
                       <VStack gap={6}>
                         {/* Namespace */}
@@ -662,7 +662,7 @@ export default function CreateIngressPage() {
 
                   {/* Default Backend Section */}
                   <SectionCard>
-                    <SectionCard.Header title="Default Backend" />
+                    <SectionCard.Header title="Default backend" />
                     <SectionCard.Content>
                       <VStack gap={6}>
                         {/* Warning message */}
@@ -778,7 +778,7 @@ export default function CreateIngressPage() {
 
                   {/* Ingress Class Section */}
                   <SectionCard>
-                    <SectionCard.Header title="Ingress Class" />
+                    <SectionCard.Header title="Ingress class" />
                     <SectionCard.Content>
                       <VStack gap={2}>
                         <label className="text-label-lg text-[var(--color-text-default)]">
@@ -829,13 +829,13 @@ export default function CreateIngressPage() {
                                   className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                                 >
                                   <Input
-                                    placeholder="Input Key"
+                                    placeholder="Input key"
                                     value={label.key}
                                     onChange={(e) => updateLabel(label.id, 'key', e.target.value)}
                                     fullWidth
                                   />
                                   <Input
-                                    placeholder="Input Value"
+                                    placeholder="Input value"
                                     value={label.value}
                                     onChange={(e) => updateLabel(label.id, 'value', e.target.value)}
                                     fullWidth
@@ -897,7 +897,7 @@ export default function CreateIngressPage() {
                                   className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
                                 >
                                   <Input
-                                    placeholder="Input Key"
+                                    placeholder="Input key"
                                     value={annotation.key}
                                     onChange={(e) =>
                                       updateAnnotation(annotation.id, 'key', e.target.value)
@@ -905,7 +905,7 @@ export default function CreateIngressPage() {
                                     fullWidth
                                   />
                                   <Input
-                                    placeholder="Input Value"
+                                    placeholder="Input value"
                                     value={annotation.value}
                                     onChange={(e) =>
                                       updateAnnotation(annotation.id, 'value', e.target.value)

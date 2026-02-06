@@ -220,7 +220,7 @@ export default function ComputeAdminFirewallDetailPage() {
     },
     {
       key: 'attachedTo',
-      label: 'Attached To',
+      label: 'Attached to',
       flex: 1,
       render: (_, row) => (
         <div className="flex items-center justify-between w-full">
@@ -295,7 +295,7 @@ export default function ComputeAdminFirewallDetailPage() {
     },
     {
       key: 'adminState',
-      label: 'Admin State',
+      label: 'Admin state',
       flex: 1,
     },
   ];
@@ -369,8 +369,8 @@ export default function ComputeAdminFirewallDetailPage() {
                   />
                   <DetailHeader.InfoCard label="ID" value={firewall.id} copyable />
                   <DetailHeader.InfoCard label="Tenant" value={firewall.tenant} />
-                  <DetailHeader.InfoCard label="Admin State" value={firewall.adminState} />
-                  <DetailHeader.InfoCard label="Created At" value={firewall.createdAt} />
+                  <DetailHeader.InfoCard label="Admin state" value={firewall.adminState} />
+                  <DetailHeader.InfoCard label="Created at" value={firewall.createdAt} />
                 </DetailHeader.InfoGrid>
               </DetailHeader>
 
@@ -385,16 +385,16 @@ export default function ComputeAdminFirewallDetailPage() {
                   {/* Details Tab */}
                   <TabPanel value="details" className="pt-6">
                     <SectionCard>
-                      <SectionCard.Header title="Basic Information" />
+                      <SectionCard.Header title="Basic information" />
                       <SectionCard.Content>
-                        <SectionCard.DataRow label="Firewall Name" value={firewall.name} />
+                        <SectionCard.DataRow label="Firewall name" value={firewall.name} />
                         <SectionCard.DataRow
                           label="Description"
                           value={firewall.description || '-'}
                         />
-                        <SectionCard.DataRow label="Admin State" value={firewall.adminState} />
+                        <SectionCard.DataRow label="Admin state" value={firewall.adminState} />
                         <SectionCard.DataRow
-                          label="Ingress Policy"
+                          label="Ingress policy"
                           value={
                             firewall.ingressPolicyId ? (
                               <Link
@@ -409,7 +409,7 @@ export default function ComputeAdminFirewallDetailPage() {
                           }
                         />
                         <SectionCard.DataRow
-                          label="Egress Policy"
+                          label="Egress policy"
                           value={
                             firewall.egressPolicyId ? (
                               <Link

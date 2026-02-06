@@ -500,7 +500,7 @@ export default function PoolDetailPage() {
                   <TabPanel value="health-monitor" className="pt-0">
                     <VStack gap={4} className="pt-4">
                       <SectionCard>
-                        <SectionCard.Header title="Health Monitor" />
+                        <SectionCard.Header title="Health monitor" />
                         <SectionCard.Content>
                           <SectionCard.DataRow
                             label="Health Monitor Name"

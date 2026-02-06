@@ -292,7 +292,7 @@ export function VolumeBackupDetailPage() {
             breadcrumb={<Breadcrumb items={breadcrumbItems} />}
             actions={
               <TopBarAction
-                icon={<IconBell size={12} stroke={1.5} />}
+                icon={<IconBell size={16} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />
@@ -349,7 +349,7 @@ export function VolumeBackupDetailPage() {
                       {/* Basic information */}
                       <SectionCard>
                         <SectionCard.Header
-                          title="Basic Infomation"
+                          title="Basic information"
                           actions={
                             <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
                               Edit

@@ -190,7 +190,7 @@ const floatingIPStatusMap: Record<FloatingIPStatus, 'active' | 'error' | 'down'>
 // Filter fields configuration
 const filterFields: FilterField[] = [
   { key: 'floatingIp', label: 'Floating IP', type: 'text' },
-  { key: 'associatedTo', label: 'Associated To', type: 'text' },
+  { key: 'associatedTo', label: 'Associated to', type: 'text' },
   { key: 'fixedIp', label: 'Fixed IP', type: 'text' },
   { key: 'network', label: 'Network', type: 'text' },
   {
@@ -497,7 +497,7 @@ export function FloatingIPsPage() {
             }
             actions={
               <TopBarAction
-                icon={<IconBell size={12} stroke={1} />}
+                icon={<IconBell size={16} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />

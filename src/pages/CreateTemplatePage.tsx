@@ -664,7 +664,7 @@ function TemplateInformationSection({
   return (
     <SectionCard isActive={isActive}>
       <SectionCard.Header
-        title="Template Information"
+        title="Template information"
         showDivider
         actions={
           isEditing ? (
@@ -2703,7 +2703,7 @@ export function CreateTemplatePage() {
             }
             actions={
               <TopBarAction
-                icon={<IconBell size={12} stroke={1.5} />}
+                icon={<IconBell size={16} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />

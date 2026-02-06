@@ -227,7 +227,7 @@ export function CreateMCPTemplatePage() {
               aria-label="Design system"
             />
             <TopBarAction
-              icon={<IconBell size={16} stroke={1} />}
+              icon={<IconBell size={16} stroke={1.5} />}
               aria-label="Notifications"
               badge={true}
             />
@@ -366,7 +366,7 @@ export function CreateMCPTemplatePage() {
                               value={authType}
                               onChange={setAuthType}
                               options={[
-                                { value: 'config-required', label: 'Config Required' },
+                                { value: 'config-required', label: 'Config required' },
                                 { value: 'oauth', label: 'OAuth' },
                                 { value: 'api-key', label: 'API Key' },
                                 { value: 'none', label: 'None' },
@@ -546,7 +546,7 @@ export function CreateMCPTemplatePage() {
                             {/* Destination Namespace */}
                             <div>
                               <Select
-                                label="Destination Namespace"
+                                label="Destination namespace"
                                 value={destinationNamespace}
                                 onChange={setDestinationNamespace}
                                 options={[

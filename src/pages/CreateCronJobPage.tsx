@@ -409,7 +409,7 @@ function SummarySidebar({
               {isCronJobTab && (
                 <VStack gap={0} className="ml-3">
                   <SummarySubItem
-                    label="Basic Information"
+                    label="Basic information"
                     status={basicInfoComplete ? 'complete' : 'in-progress'}
                   />
                   <SummarySubItem
@@ -514,7 +514,7 @@ function BasicInfoSection({
 }: BasicInfoSectionProps) {
   return (
     <SectionCard>
-      <SectionCard.Header title="Basic Information" />
+      <SectionCard.Header title="Basic information" />
       <SectionCard.Content>
         <VStack gap={6}>
           {/* Namespace */}
@@ -1738,7 +1738,7 @@ export function CreateCronJobPage() {
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
@@ -2084,7 +2084,7 @@ export function CreateCronJobPage() {
                                   </span>
                                   <Select
                                     options={[
-                                      { value: 'cluster-first', label: 'Cluster First' },
+                                      { value: 'cluster-first', label: 'Cluster first' },
                                       { value: 'default', label: 'Default' },
                                       { value: 'none', label: 'None' },
                                     ]}
@@ -2381,7 +2381,7 @@ export function CreateCronJobPage() {
 
                       {/* Node Scheduling */}
                       <SectionCard>
-                        <SectionCard.Header title="Node Scheduling" />
+                        <SectionCard.Header title="Node scheduling" />
                         <SectionCard.Content>
                           <VStack gap={4}>
                             <RadioGroup value={nodeScheduling} onChange={setNodeScheduling}>
@@ -2658,7 +2658,7 @@ export function CreateCronJobPage() {
 
                       {/* Pod Scheduling */}
                       <SectionCard>
-                        <SectionCard.Header title="Pod Scheduling" />
+                        <SectionCard.Header title="Pod scheduling" />
                         <SectionCard.Content>
                           <VStack gap={6}>
                             {podAffinityTerms.map((term, termIndex) => (
@@ -2801,7 +2801,7 @@ export function CreateCronJobPage() {
                                           },
                                           {
                                             key: 'createdAt',
-                                            label: 'Created At',
+                                            label: 'Created at',
                                             sortable: true,
                                           },
                                         ]}
@@ -2866,7 +2866,7 @@ export function CreateCronJobPage() {
                                                 Key
                                               </span>
                                               <Input
-                                                placeholder="Input Key"
+                                                placeholder="Input key"
                                                 value={expr.key}
                                                 onChange={(e) => {
                                                   const newTerms = [...podAffinityTerms];
@@ -3208,7 +3208,7 @@ export function CreateCronJobPage() {
 
                       {/* Security Context */}
                       <SectionCard>
-                        <SectionCard.Header title="Security Context" />
+                        <SectionCard.Header title="Security context" />
                         <SectionCard.Content>
                           <VStack gap={4}>
                             <VStack gap={1}>
@@ -3299,7 +3299,7 @@ export function CreateCronJobPage() {
                                             onChange={(val) =>
                                               updateVolume(index, { configMapName: val })
                                             }
-                                            placeholder="Select ConfigMap"
+                                            placeholder="Select configMap"
                                             fullWidth
                                           />
                                         </VStack>
@@ -3372,7 +3372,7 @@ export function CreateCronJobPage() {
                                             onChange={(val) =>
                                               updateVolume(index, { secretName: val })
                                             }
-                                            placeholder="Select Secret"
+                                            placeholder="Select secret"
                                             fullWidth
                                           />
                                         </VStack>
@@ -3590,7 +3590,7 @@ export function CreateCronJobPage() {
                                             </span>
                                             <VStack gap={1}>
                                               <Checkbox
-                                                label="Single Node Read-Write"
+                                                label="Single node read-write"
                                                 checked={
                                                   (volume as CreatePVCVolume).accessModes
                                                     .readWriteOnce
@@ -3605,7 +3605,7 @@ export function CreateCronJobPage() {
                                                 }
                                               />
                                               <Checkbox
-                                                label="Many Nodes Read-Only"
+                                                label="Many nodes read-only"
                                                 checked={
                                                   (volume as CreatePVCVolume).accessModes
                                                     .readOnlyMany
@@ -3620,7 +3620,7 @@ export function CreateCronJobPage() {
                                                 }
                                               />
                                               <Checkbox
-                                                label="Many Nodes Read-Write"
+                                                label="Many nodes read-write"
                                                 checked={
                                                   (volume as CreatePVCVolume).accessModes
                                                     .readWriteMany
@@ -3678,12 +3678,12 @@ export function CreateCronJobPage() {
                                 options={[
                                   { value: 'configmap', label: 'ConfigMap' },
                                   { value: 'secret', label: 'Secret' },
-                                  { value: 'pvc', label: 'Persistent Volume Claim' },
-                                  { value: 'create-pvc', label: 'Create Persistent Volume Claim' },
+                                  { value: 'pvc', label: 'Persistent volume claim' },
+                                  { value: 'create-pvc', label: 'Create persistent volume claim' },
                                 ]}
                                 value=""
                                 onChange={(val) => addVolume(val)}
-                                placeholder="Add Volume"
+                                placeholder="Add volume"
                                 fullWidth
                               />
                             </div>
@@ -3693,7 +3693,7 @@ export function CreateCronJobPage() {
 
                       {/* Volume Claim Templates */}
                       <SectionCard>
-                        <SectionCard.Header title="Volume Claim Templates" />
+                        <SectionCard.Header title="Volume claim templates" />
                         <SectionCard.Content>
                           <div className="w-full">
                             <VStack gap={3}>
@@ -3738,7 +3738,7 @@ export function CreateCronJobPage() {
                                     >
                                       <Radio
                                         value="new"
-                                        label="Use Storage Class and create a new Persistent Volume"
+                                        label="Use storage class and create a new persistent volume"
                                       />
                                       <Radio
                                         value="existing"
@@ -3766,7 +3766,7 @@ export function CreateCronJobPage() {
                                                 storageClass: val,
                                               })
                                             }
-                                            placeholder="Select Storage Class"
+                                            placeholder="Select storage class"
                                             fullWidth
                                           />
                                         </VStack>
@@ -3815,7 +3815,7 @@ export function CreateCronJobPage() {
                                               persistentVolume: val,
                                             })
                                           }
-                                          placeholder="Select Persistent Volume"
+                                          placeholder="Select persistent volume"
                                           fullWidth
                                         />
                                       </VStack>
@@ -3828,7 +3828,7 @@ export function CreateCronJobPage() {
                                       </span>
                                       <VStack gap={1.5}>
                                         <Checkbox
-                                          label="Single Node Read-Write"
+                                          label="Single node read-write"
                                           checked={template.accessModes.readWriteOnce}
                                           onChange={(e) =>
                                             updateVolumeClaimTemplate(index, {
@@ -3840,7 +3840,7 @@ export function CreateCronJobPage() {
                                           }
                                         />
                                         <Checkbox
-                                          label="Many Nodes Read-Only"
+                                          label="Many nodes read-only"
                                           checked={template.accessModes.readOnlyMany}
                                           onChange={(e) =>
                                             updateVolumeClaimTemplate(index, {
@@ -3852,7 +3852,7 @@ export function CreateCronJobPage() {
                                           }
                                         />
                                         <Checkbox
-                                          label="Many Nodes Read-Write"
+                                          label="Many nodes read-write"
                                           checked={template.accessModes.readWriteMany}
                                           onChange={(e) =>
                                             updateVolumeClaimTemplate(index, {
@@ -3928,7 +3928,7 @@ export function CreateCronJobPage() {
                         <>
                           {/* 1. Basic Information Section */}
                           <SectionCard>
-                            <SectionCard.Header title="Basic Information" />
+                            <SectionCard.Header title="Basic information" />
                             <SectionCard.Content>
                               <VStack gap={6}>
                                 <VStack gap={2} className="w-full">
@@ -3956,8 +3956,8 @@ export function CreateCronJobPage() {
                                       })
                                     }
                                   >
-                                    <Radio value="init" label="Init Container" />
-                                    <Radio value="standard" label="Standard Container" />
+                                    <Radio value="init" label="Init container" />
+                                    <Radio value="standard" label="Standard container" />
                                   </RadioGroup>
                                 </VStack>
                               </VStack>
@@ -4005,7 +4005,7 @@ export function CreateCronJobPage() {
                                     <Select
                                       options={[
                                         { value: 'Always', label: 'Always' },
-                                        { value: 'IfNotPresent', label: 'If Not Present' },
+                                        { value: 'IfNotPresent', label: 'If not present' },
                                         { value: 'Never', label: 'Never' },
                                       ]}
                                       value={config.imagePullPolicy || 'IfNotPresent'}
@@ -4052,7 +4052,7 @@ export function CreateCronJobPage() {
 
                           {/* 3. Environment Variables Section */}
                           <SectionCard>
-                            <SectionCard.Header title="Environment Variables" />
+                            <SectionCard.Header title="Environment variables" />
                             <SectionCard.Content>
                               <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
                                 <VStack gap={2}>
@@ -4167,7 +4167,7 @@ export function CreateCronJobPage() {
 
                           {/* 5. Service Account Name Section */}
                           <SectionCard>
-                            <SectionCard.Header title="Service Account Name" />
+                            <SectionCard.Header title="Service account name" />
                             <SectionCard.Content>
                               <VStack gap={3}>
                                 <VStack gap={1}>
@@ -4195,7 +4195,7 @@ export function CreateCronJobPage() {
 
                           {/* 7. Lifecycle Hooks Section */}
                           <SectionCard>
-                            <SectionCard.Header title="Lifecycle Hooks" />
+                            <SectionCard.Header title="Lifecycle hooks" />
                             <SectionCard.Content>
                               <div className="grid grid-cols-2 gap-4">
                                 {/* Post Start */}
@@ -4716,7 +4716,7 @@ export function CreateCronJobPage() {
 
                           {/* 8. Health Check Section */}
                           <SectionCard>
-                            <SectionCard.Header title="Health Check" />
+                            <SectionCard.Header title="Health check" />
                             <SectionCard.Content>
                               <VStack gap={6}>
                                 {/* Readiness Check */}
@@ -5809,7 +5809,7 @@ export function CreateCronJobPage() {
 
                           {/* 10. Security Context Section */}
                           <SectionCard>
-                            <SectionCard.Header title="Security Context" />
+                            <SectionCard.Header title="Security context" />
                             <SectionCard.Content>
                               <VStack gap={6}>
                                 {/* Row 1: Privileged + Privilege Escalation */}
@@ -6200,7 +6200,7 @@ export function CreateCronJobPage() {
                                 <div className="w-1/2">
                                   <Select
                                     options={[
-                                      { value: '', label: 'Select Volume' },
+                                      { value: '', label: 'Select volume' },
                                       ...volumes.map((v) => ({
                                         value: v.volumeName,
                                         label: v.volumeName,

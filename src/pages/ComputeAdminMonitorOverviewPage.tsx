@@ -876,7 +876,7 @@ function AlarmTrendCard() {
       <DataViewDrawer
         isOpen={showDataView}
         onClose={() => setShowDataView(false)}
-        title="Last Week Alarm Trend (RAW)"
+        title="Last week alarm trend (RAW)"
         series={drawerSeries}
         timeLabels={alarmTrendData.labels}
       />
@@ -946,7 +946,7 @@ export default function ComputeAdminMonitorOverviewPage() {
             breadcrumb={<Breadcrumb items={breadcrumbItems} />}
             actions={
               <TopBarAction
-                icon={<IconBell size={12} stroke={1.5} />}
+                icon={<IconBell size={16} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />
@@ -982,28 +982,28 @@ export default function ComputeAdminMonitorOverviewPage() {
 
               {/* Row 2: Gauge Charts + Pie Chart */}
               <div className="flex gap-4">
-                <GaugeCard title="Physical CPU Usage" value={70} used={7} total={10} unit="vCPU" />
-                <GaugeCard title="Total RAM Usage" value={70} used={8} total={10} unit="GiB" />
+                <GaugeCard title="Physical CPU usage" value={70} used={7} total={10} unit="vCPU" />
+                <GaugeCard title="Total RAM usage" value={70} used={8} total={10} unit="GiB" />
                 <GaugeCard
-                  title="Physical Storage Usage"
+                  title="Physical storage usage"
                   value={70}
                   used={8}
                   total={10}
                   unit="TiB"
                 />
-                <PieChartCard title="Compute Node Status" upCount={5} downCount={5} />
+                <PieChartCard title="Compute node status" upCount={5} downCount={5} />
               </div>
 
               {/* Row 3: Host Usage Charts */}
               <div className="flex gap-4">
-                <HostUsageCard title="Host CPU Usage" data={hostUsageData} type="cpu" />
-                <HostUsageCard title="Host RAM Usage" data={hostUsageData} type="ram" />
+                <HostUsageCard title="Host CPU usage" data={hostUsageData} type="cpu" />
+                <HostUsageCard title="Host RAM usage" data={hostUsageData} type="ram" />
               </div>
 
               {/* Row 4: Area Charts */}
               <div className="flex gap-4">
                 <AreaChartCard
-                  title="Host Disk Average IOPS"
+                  title="Host disk average IOPS"
                   labels={diskIOPSData.labels}
                   series={[diskIOPSData.reads, diskIOPSData.writes]}
                   colors={[chartColors.cyan400, chartColors.emerald400]}
@@ -1011,7 +1011,7 @@ export default function ComputeAdminMonitorOverviewPage() {
                   yAxisUnit="ops/s"
                 />
                 <AreaChartCard
-                  title="Host Average Network IO"
+                  title="Host average network IO"
                   labels={networkIOData.labels}
                   series={[networkIOData.receive, networkIOData.transmit]}
                   colors={[chartColors.cyan400, chartColors.emerald400]}

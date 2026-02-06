@@ -242,7 +242,7 @@ export function PodDisruptionBudgetDetailPage() {
     },
     {
       key: 'createdAt',
-      label: 'Created At',
+      label: 'Created at',
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
@@ -281,7 +281,7 @@ export function PodDisruptionBudgetDetailPage() {
   const recentEventsColumns: TableColumn<RecentEvent>[] = [
     {
       key: 'lastSeen',
-      label: 'Last Seen',
+      label: 'Last seen',
       flex: 1,
       minWidth: columnMinWidths.lastSeen,
       sortable: true,
@@ -321,7 +321,7 @@ export function PodDisruptionBudgetDetailPage() {
     },
     {
       key: 'firstSeen',
-      label: 'First Seen',
+      label: 'First seen',
       flex: 1,
       minWidth: columnMinWidths.firstSeen,
       sortable: true,
@@ -383,7 +383,7 @@ export function PodDisruptionBudgetDetailPage() {
   const moreActionsItems: ContextMenuItem[] = [
     {
       id: 'edit-config',
-      label: 'Edit Config',
+      label: 'Edit config',
       onClick: () => console.log('Edit Config'),
     },
     {
@@ -432,7 +432,7 @@ export function PodDisruptionBudgetDetailPage() {
             <Breadcrumb
               items={[
                 { label: 'clusterName', href: '/container' },
-                { label: 'Pod Disruption Budgets', href: '/container/pdb' },
+                { label: 'Pod disruption budgets', href: '/container/pdb' },
                 { label: pdbData.name },
               ]}
             />
@@ -463,7 +463,7 @@ export function PodDisruptionBudgetDetailPage() {
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
@@ -519,7 +519,7 @@ export function PodDisruptionBudgetDetailPage() {
                       </span>
                     }
                   />
-                  <DetailHeader.InfoCard label="Created At" value={pdbData.createdAt} />
+                  <DetailHeader.InfoCard label="Created at" value={pdbData.createdAt} />
                   <DetailHeader.InfoCard
                     label={`Labels (${labelsCount})`}
                     value={

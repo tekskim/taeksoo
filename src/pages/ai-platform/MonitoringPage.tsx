@@ -87,7 +87,7 @@ export function MonitoringPage() {
               </HStack>
               <EmptyState
                 icon={<IconActivity size={48} stroke={1} />}
-                title="Monitoring Dashboard"
+                title="Monitoring dashboard"
                 description="Cluster metrics and monitoring data will appear here."
               />
             </VStack>

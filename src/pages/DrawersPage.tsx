@@ -672,7 +672,7 @@ export function DrawersPage() {
                           linkedTo="Instance List"
                         />
                         <DrawerCard
-                          title="Manage Tags"
+                          title="Manage tags"
                           description="Add, edit, or remove tags to categorize and manage resources."
                           category="Instance"
                           onOpen={() => setIsManageTagsOpen(true)}
@@ -680,7 +680,7 @@ export function DrawersPage() {
                           linkedTo="Instance List"
                         />
                         <DrawerCard
-                          title="Rescue Instance"
+                          title="Rescue instance"
                           description="Create a temporary recovery server using your instance's root disk."
                           category="Instance"
                           onOpen={() => setIsRescueInstanceOpen(true)}
@@ -688,7 +688,7 @@ export function DrawersPage() {
                           linkedTo="Instance List"
                         />
                         <DrawerCard
-                          title="Rebuild Instance"
+                          title="Rebuild instance"
                           description="Rebuild the instance by reinstalling the operating system using a new image."
                           category="Instance"
                           onOpen={() => setIsRebuildInstanceOpen(true)}
@@ -696,7 +696,7 @@ export function DrawersPage() {
                           linkedTo="Instance List"
                         />
                         <DrawerCard
-                          title="Resize Instance"
+                          title="Resize instance"
                           description="Change the flavor to adjust vCPU, memory, or disk capacity."
                           category="Instance"
                           onOpen={() => setIsResizeInstanceOpen(true)}
@@ -718,7 +718,7 @@ export function DrawersPage() {
                           category="Snapshot"
                           onOpen={() => setIsEditInstanceSnapshotOpen(true)}
                           linked
-                          linkedTo="Instance Snapshots"
+                          linkedTo="Instance snapshots"
                         />
                         <DrawerCard
                           title="Create volume from Instance Snapshot"
@@ -726,7 +726,7 @@ export function DrawersPage() {
                           category="Snapshot"
                           onOpen={() => setIsCreateVolumeFromSnapshotOpen(true)}
                           linked
-                          linkedTo="Instance Snapshots"
+                          linkedTo="Instance snapshots"
                         />
                       </div>
                     </VStack>
@@ -822,7 +822,7 @@ export function DrawersPage() {
                           linkedTo="Volumes"
                         />
                         <DrawerCard
-                          title="Edit Volume"
+                          title="Edit volume"
                           description="Edit the name and description of an existing volume."
                           category="Volume"
                           onOpen={() => setIsEditVolumeOpen(true)}
@@ -851,10 +851,10 @@ export function DrawersPage() {
                           category="Volume"
                           onOpen={() => setIsEditVolumeBackupOpen(true)}
                           linked
-                          linkedTo="Volume Backups"
+                          linkedTo="Volume backups"
                         />
                         <DrawerCard
-                          title="Accept Volume Transfer"
+                          title="Accept volume transfer"
                           description="Accept a volume transfer using the provided transfer ID and authorization key."
                           category="Volume"
                           onOpen={() => setIsAcceptVolumeTransferOpen(true)}
@@ -865,7 +865,7 @@ export function DrawersPage() {
                           category="Volume"
                           onOpen={() => setIsEditVolumeSnapshotOpen(true)}
                           linked
-                          linkedTo="Volume Snapshots"
+                          linkedTo="Volume snapshots"
                         />
                         <DrawerCard
                           title="Create volume from Snapshot"
@@ -873,7 +873,7 @@ export function DrawersPage() {
                           category="Volume"
                           onOpen={() => setIsCreateVolumeFromVolumeSnapshotOpen(true)}
                           linked
-                          linkedTo="Volume Snapshots"
+                          linkedTo="Volume snapshots"
                         />
                         <DrawerCard
                           title="Create volume from Backup"
@@ -881,10 +881,10 @@ export function DrawersPage() {
                           category="Volume"
                           onOpen={() => setIsCreateVolumeFromBackupOpen(true)}
                           linked
-                          linkedTo="Volume Backups"
+                          linkedTo="Volume backups"
                         />
                         <DrawerCard
-                          title="Detach Volume"
+                          title="Detach volume"
                           description="Detach a volume from an instance. Once detached, it will no longer be accessible from the instance."
                           category="Volume"
                           onOpen={() => setIsDetachVolumeOpen(true)}
@@ -909,7 +909,7 @@ export function DrawersPage() {
                           linkedTo="Images"
                         />
                         <DrawerCard
-                          title="Edit Image"
+                          title="Edit image"
                           description="Edit image name and description. Allows modification of basic image metadata."
                           category="Image"
                           onOpen={() => setIsEditImageOpen(true)}
@@ -926,7 +926,7 @@ export function DrawersPage() {
                       </h2>
                       <div className="flex flex-col gap-2">
                         <DrawerCard
-                          title="Create Key pair"
+                          title="Create key pair"
                           description="Create a new SSH key pair or import an existing public key to securely access your instances."
                           category="Key pair"
                           onOpen={() => setIsCreateKeyPairOpen(true)}
@@ -968,7 +968,7 @@ export function DrawersPage() {
                       </h2>
                       <div className="flex flex-col gap-2">
                         <DrawerCard
-                          title="Edit Network"
+                          title="Edit network"
                           description="Edit network settings including name, description, admin state, and port security."
                           category="Network"
                           onOpen={() => setIsEditNetworkOpen(true)}
@@ -976,7 +976,7 @@ export function DrawersPage() {
                           linkedTo="Networks"
                         />
                         <DrawerCard
-                          title="Edit Router"
+                          title="Edit router"
                           description="Edit router settings including name, description, and admin state."
                           category="Router"
                           onOpen={() => setIsEditRouterOpen(true)}
@@ -988,7 +988,7 @@ export function DrawersPage() {
                           onOpen={() => setIsCreateStaticRouteOpen(true)}
                         />
                         <DrawerCard
-                          title="Edit Port"
+                          title="Edit port"
                           description="Edit port settings including name and description."
                           category="Port"
                           onOpen={() => setIsEditPortOpen(true)}
@@ -996,13 +996,13 @@ export function DrawersPage() {
                           linkedTo="Ports"
                         />
                         <DrawerCard
-                          title="Create Allowed Address Pair"
+                          title="Create allowed address pair"
                           description="Specify additional IP or MAC addresses that are allowed to pass through this port."
                           category="Port"
                           onOpen={() => setIsCreateAllowedAddressPairOpen(true)}
                         />
                         <DrawerCard
-                          title="Edit Floating IP"
+                          title="Edit floating IP"
                           description="Edit floating IP description."
                           category="Floating IP"
                           onOpen={() => setIsEditFloatingIPOpen(true)}
@@ -1032,7 +1032,7 @@ export function DrawersPage() {
                           linkedTo="Instance List"
                         />
                         <DrawerCard
-                          title="Associate Floating IP"
+                          title="Associate floating IP"
                           description="Assign a floating IP to this instance for external network access."
                           category="Floating IP"
                           onOpen={() => setIsAssociateFloatingIPOpen(true)}
@@ -1040,7 +1040,7 @@ export function DrawersPage() {
                           linkedTo="Instance List, Floating IPs"
                         />
                         <DrawerCard
-                          title="Disassociate Floating IP"
+                          title="Disassociate floating IP"
                           description="Remove the association between a floating IP and this instance. The instance will lose external network access through that IP."
                           category="Floating IP"
                           onOpen={() => setIsDisassociateFloatingIPOpen(true)}
@@ -1048,19 +1048,19 @@ export function DrawersPage() {
                           linkedTo="Instance List, Floating IPs, LBs"
                         />
                         <DrawerCard
-                          title="Allocate Floating IP"
+                          title="Allocate floating IP"
                           description="Allocate a new floating IP from an external network pool with optional DNS settings."
                           category="Floating IP"
                           onOpen={() => setIsAllocateFloatingIPOpen(true)}
                         />
                         <DrawerCard
-                          title="External Gateway Setting"
+                          title="External gateway setting"
                           description="Configure external gateway for a router to enable access to external networks."
                           category="Router"
                           onOpen={() => setIsExternalGatewaySettingOpen(true)}
                         />
                         <DrawerCard
-                          title="Connect Subnet"
+                          title="Connect subnet"
                           description="Connect an existing subnet to a router to enable routing between networks."
                           category="Router"
                           onOpen={() => setIsConnectSubnetOpen(true)}
@@ -1074,7 +1074,7 @@ export function DrawersPage() {
                           linkedTo="Ports"
                         />
                         <DrawerCard
-                          title="Disconnect Subnet"
+                          title="Disconnect subnet"
                           description="Disconnect a subnet from a router to remove its routing path."
                           category="Router"
                           onOpen={() => setIsDisconnectSubnetOpen(true)}
@@ -1094,7 +1094,7 @@ export function DrawersPage() {
                           category="Security group"
                           onOpen={() => setIsCreateSecurityGroupRuleOpen(true)}
                           linked
-                          linkedTo="Security Groups"
+                          linkedTo="Security groups"
                         />
                         <DrawerCard
                           title="Create Security group"
@@ -1108,10 +1108,10 @@ export function DrawersPage() {
                           category="Security group"
                           onOpen={() => setIsEditSecurityGroupOpen(true)}
                           linked
-                          linkedTo="Security Groups"
+                          linkedTo="Security groups"
                         />
                         <DrawerCard
-                          title="Manage Security Groups"
+                          title="Manage security groups"
                           description="Attach or detach security groups for an interface to control inbound and outbound traffic."
                           category="Security group"
                           onOpen={() => setIsManageSecurityGroupsOpen(true)}
@@ -1148,7 +1148,7 @@ export function DrawersPage() {
                           onOpen={() => setIsRegisterCertificateOpen(true)}
                         />
                         <DrawerCard
-                          title="Edit Certificate"
+                          title="Edit certificate"
                           description="Edit certificate name and description."
                           category="Certificate"
                           onOpen={() => setIsEditCertificateOpen(true)}
@@ -1159,10 +1159,10 @@ export function DrawersPage() {
                           category="Load balancer"
                           onOpen={() => setIsEditLoadBalancerOpen(true)}
                           linked
-                          linkedTo="Load Balancers"
+                          linkedTo="Load balancers"
                         />
                         <DrawerCard
-                          title="Edit Pool"
+                          title="Edit pool"
                           description="Edit pool settings including algorithm, session persistence, TLS, and admin state."
                           category="Load balancer"
                           onOpen={() => setIsEditPoolOpen(true)}
@@ -1174,25 +1174,25 @@ export function DrawersPage() {
                           onOpen={() => setIsAddL7RuleOpen(true)}
                         />
                         <DrawerCard
-                          title="Edit Listener"
+                          title="Edit listener"
                           description="Edit listener settings including name, connection limits, timeouts, and allowed CIDRs."
                           category="Load balancer"
                           onOpen={() => setIsEditListenerOpen(true)}
                         />
                         <DrawerCard
-                          title="Create Health Monitor"
+                          title="Create health monitor"
                           description="Create a health monitor for a pool to check backend member availability."
                           category="Load balancer"
                           onOpen={() => setIsCreateHealthMonitorOpen(true)}
                         />
                         <DrawerCard
-                          title="Edit Member"
+                          title="Edit member"
                           description="Edit pool member settings including weight, monitor address, backup, and admin state."
                           category="Load balancer"
                           onOpen={() => setIsEditMemberOpen(true)}
                         />
                         <DrawerCard
-                          title="Manage Members"
+                          title="Manage members"
                           description="Manage pool members by adding instances or external members with configurable port and weight."
                           category="Load balancer"
                           onOpen={() => setIsManageMembersOpen(true)}
@@ -1203,10 +1203,10 @@ export function DrawersPage() {
                           category="Load balancer"
                           onOpen={() => setIsAssociateFloatingIPToLBOpen(true)}
                           linked
-                          linkedTo="Load Balancers"
+                          linkedTo="Load balancers"
                         />
                         <DrawerCard
-                          title="Change Server Certificate"
+                          title="Change server certificate"
                           description="Change the server certificate for a listener with certificate selection table."
                           category="Certificate"
                           onOpen={() => setIsChangeServerCertificateOpen(true)}
@@ -1260,7 +1260,7 @@ export function DrawersPage() {
                       </h3>
                       <div className="flex flex-col gap-2">
                         <DrawerCard
-                          title="Manage User Groups"
+                          title="Manage user groups"
                           description="Add or remove user groups for a specific user."
                           category="User"
                           onOpen={() => setIsManageUserGroupsOpen(true)}
@@ -1276,7 +1276,7 @@ export function DrawersPage() {
                           linkedTo="IAM Users, User Groups"
                         />
                         <DrawerCard
-                          title="Reset Password"
+                          title="Reset password"
                           description="Reset the login password for a specific user."
                           category="User"
                           onOpen={() => setIsResetPasswordOpen(true)}
@@ -1301,15 +1301,15 @@ export function DrawersPage() {
                         <DrawerCard
                           title="Manage Users"
                           description="Add or remove members of a user group."
-                          category="User Group"
+                          category="User group"
                           onOpen={() => setIsManageUsersOpen(true)}
                           linked
                           linkedTo="IAM User Groups"
                         />
                         <DrawerCard
-                          title="Edit User Group"
+                          title="Edit user group"
                           description="Edit the user group's basic information."
-                          category="User Group"
+                          category="User group"
                           onOpen={() => setIsEditUserGroupOpen(true)}
                           linked
                           linkedTo="IAM User Groups"
@@ -1357,7 +1357,7 @@ export function DrawersPage() {
                           badge="Domain"
                         />
                         <DrawerCard
-                          title="Set Default Domain"
+                          title="Set default domain"
                           description="Set the default domain for the system administrator."
                           onOpen={() => setIsSetDefaultDomainOpen(true)}
                           badge="Domain"
@@ -1369,7 +1369,7 @@ export function DrawersPage() {
                           badge="Admin"
                         />
                         <DrawerCard
-                          title="Edit System Administrator"
+                          title="Edit system administrator"
                           description="Edit the system administrator's basic information."
                           onOpen={() => setIsEditSystemAdminOpen(true)}
                           badge="Admin"
@@ -1411,27 +1411,27 @@ export function DrawersPage() {
                       </h2>
                       <div className="flex flex-col gap-2">
                         <DrawerCard
-                          title="Create Folder"
+                          title="Create folder"
                           description="Create a new folder in a bucket with a specified parent location."
-                          category="Object Storage"
+                          category="Object storage"
                           onOpen={() => setIsCreateFolderOpen(true)}
                         />
                         <DrawerCard
-                          title="Create Object"
+                          title="Create object"
                           description="Upload files to a bucket with ACL settings and tags."
-                          category="Object Storage"
+                          category="Object storage"
                           onOpen={() => setIsCreateObjectOpen(true)}
                         />
                         <DrawerCard
                           title="Move Files"
                           description="Move files or folders to a different location within the bucket."
-                          category="Object Storage"
+                          category="Object storage"
                           onOpen={() => setIsMoveFilesOpen(true)}
                         />
                         <DrawerCard
-                          title="Edit Object"
+                          title="Edit object"
                           description="Edit object name and manage tags."
-                          category="Object Storage"
+                          category="Object storage"
                           onOpen={() => setIsEditObjectOpen(true)}
                         />
                       </div>
@@ -1486,7 +1486,7 @@ export function DrawersPage() {
                       </h2>
                       <div className="flex flex-col gap-2">
                         <DrawerCard
-                          title="Resource Type Search"
+                          title="Resource type search"
                           description="Search and navigate Kubernetes resource types across clusters with categorized resource lists."
                           category="Search"
                           onOpen={() => setIsResourceTypeSearchOpen(true)}
@@ -1528,19 +1528,19 @@ export function DrawersPage() {
                       </h2>
                       <div className="flex flex-col gap-2">
                         <DrawerCard
-                          title="Edit Basic Information"
+                          title="Edit basic information"
                           description="Edit agent name, description, status, and tags."
                           category="Settings"
                           onOpen={() => setIsEditBasicInfoOpen(true)}
                         />
                         <DrawerCard
-                          title="Edit Model Settings"
+                          title="Edit model settings"
                           description="Configure model provider, model, temperature, and max tokens."
                           category="Settings"
                           onOpen={() => setIsEditModelSettingsOpen(true)}
                         />
                         <DrawerCard
-                          title="Edit Prompt Settings"
+                          title="Edit prompt settings"
                           description="Set system prompt, tone, and max iteration count."
                           category="Settings"
                           onOpen={() => setIsEditPromptSettingsOpen(true)}
@@ -1554,7 +1554,7 @@ export function DrawersPage() {
                       </h2>
                       <div className="flex flex-col gap-2">
                         <DrawerCard
-                          title="Connect Data Source"
+                          title="Connect data source"
                           description="Select and connect data sources to the agent."
                           category="Connection"
                           onOpen={() => setIsConnectDataSourceOpen(true)}
@@ -1594,7 +1594,7 @@ export function DrawersPage() {
                           onOpen={() => setIsCreateMCPTemplateOpen(true)}
                         />
                         <DrawerCard
-                          title="Template Type Settings"
+                          title="Template type settings"
                           description="Configure template type between STDIO (Container) and HTTP (Remote)."
                           category="Template"
                           onOpen={() => setIsTemplateTypeSettingsOpen(true)}
@@ -1612,7 +1612,7 @@ export function DrawersPage() {
                           onOpen={() => setIsHTTPSettingsOpen(true)}
                         />
                         <DrawerCard
-                          title="Tool Access Control"
+                          title="Tool access control"
                           description="Configure tool visibility and rate limiting for agents."
                           category="Settings"
                           onOpen={() => setIsToolAccessControlOpen(true)}
@@ -1636,7 +1636,7 @@ export function DrawersPage() {
                 </h2>
                 <div className="flex flex-col gap-2">
                   <DrawerCard
-                    title="View Preferences"
+                    title="View preferences"
                     description="Customize table view by showing/hiding columns, reordering columns, and adjusting rows per page."
                     category="Table"
                     onOpen={() => setIsViewPreferencesOpen(true)}

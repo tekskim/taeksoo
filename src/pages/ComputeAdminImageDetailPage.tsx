@@ -497,7 +497,7 @@ export function ComputeAdminImageDetailPage() {
             breadcrumb={<Breadcrumb items={breadcrumbItems} />}
             actions={
               <TopBarAction
-                icon={<IconBell size={12} stroke={1.5} />}
+                icon={<IconBell size={16} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />
@@ -577,7 +577,7 @@ export function ComputeAdminImageDetailPage() {
                           <SectionCard.DataRow label="OS" value={image.os} />
                           <SectionCard.DataRow label="OS Admin" value={image.osAdmin} />
                           <SectionCard.DataRow
-                            label="Disk Format / Container Format"
+                            label="Disk format / container format"
                             value={`${image.diskFormat} / ${image.containerFormat}`}
                           />
                           <SectionCard.DataRow

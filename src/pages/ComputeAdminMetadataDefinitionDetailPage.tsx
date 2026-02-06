@@ -166,7 +166,7 @@ export default function ComputeAdminMetadataDefinitionDetailPage() {
             }
             actions={
               <TopBarAction
-                icon={<IconBell size={12} stroke={1.5} />}
+                icon={<IconBell size={16} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />
@@ -197,7 +197,7 @@ export default function ComputeAdminMetadataDefinitionDetailPage() {
                     label="Protected"
                     value={metadata.isProtected ? 'Yes' : 'No'}
                   />
-                  <DetailHeader.InfoCard label="Created At" value={metadata.createdAt} />
+                  <DetailHeader.InfoCard label="Created at" value={metadata.createdAt} />
                 </DetailHeader.InfoGrid>
               </DetailHeader>
 
@@ -214,9 +214,9 @@ export default function ComputeAdminMetadataDefinitionDetailPage() {
                     <VStack gap={6}>
                       {/* Basic Information */}
                       <SectionCard>
-                        <SectionCard.Header title="Basic Information" />
+                        <SectionCard.Header title="Basic information" />
                         <SectionCard.Content>
-                          <SectionCard.DataRow label="Display Name" value={metadata.displayName} />
+                          <SectionCard.DataRow label="Display name" value={metadata.displayName} />
                           <SectionCard.DataRow label="Description" value={metadata.description} />
                           <SectionCard.DataRow
                             label="Public"
@@ -231,7 +231,7 @@ export default function ComputeAdminMetadataDefinitionDetailPage() {
 
                       {/* Associated Resource Types */}
                       <SectionCard>
-                        <SectionCard.Header title="Associated Resource Types" />
+                        <SectionCard.Header title="Associated resource types" />
                         <SectionCard.Content>
                           {metadata.resourceTypes.length > 0 ? (
                             metadata.resourceTypes.map((rt, index) => (
