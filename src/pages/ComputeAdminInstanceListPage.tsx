@@ -1201,7 +1201,7 @@ export function ComputeAdminInstanceListPage() {
       flex: 1,
       minWidth: columnMinWidths.image,
       sortable: true,
-      render: (_, row) => <span className="font-medium">{row.image}</span>,
+      render: (_, row) => <span className="truncate w-full">{row.image}</span>,
     },
     {
       key: 'flavor',

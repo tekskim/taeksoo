@@ -13,6 +13,7 @@ import {
   ConfirmModal,
   StatusIndicator,
   ContextMenu,
+  Badge,
   fixedColumns,
   columnMinWidths,
   type TableColumn,
@@ -347,7 +348,11 @@ export function RoutersPage() {
       label: 'Admin state',
       flex: 1,
       minWidth: columnMinWidths.adminState,
-      render: (value: boolean) => (value ? 'Up' : 'Down'),
+      render: (value: boolean) => (
+        <Badge variant={value ? 'success' : 'default'} size="sm">
+          {value ? 'Up' : 'Down'}
+        </Badge>
+      ),
     },
     {
       key: 'actions',

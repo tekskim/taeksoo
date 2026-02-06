@@ -604,20 +604,17 @@ export function PhysicalDisksPage() {
               </div>
 
               {/* Action Bar */}
-              <div className="flex flex-col gap-2">
-                <div className="flex items-center gap-2">
-                  {/* Search */}
-                  <div className="flex items-center gap-1">
-                    <div className="w-[var(--search-input-width)]">
-                      <SearchInput
-                        placeholder="Search users by attributes"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        onClear={() => setSearchQuery('')}
-                        size="sm"
-                        fullWidth
-                      />
-                    </div>
+              <ListToolbar
+                primaryActions={
+                  <ListToolbar.Actions>
+                    <SearchInput
+                      placeholder="Search users by attributes"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      onClear={() => setSearchQuery('')}
+                      size="sm"
+                      className="w-[var(--search-input-width)]"
+                    />
                     <Button
                       variant="secondary"
                       size="sm"
@@ -631,20 +628,20 @@ export function PhysicalDisksPage() {
                       aria-label="Refresh"
                       onClick={() => console.log('Refresh clicked')}
                     />
-                  </div>
-                  <div className="w-px h-4 bg-[var(--color-border-default)]" />
-                  {/* Actions */}
-                  <div className="flex items-center gap-1">
+                  </ListToolbar.Actions>
+                }
+                bulkActions={
+                  <ListToolbar.Actions>
                     <Button
-                      variant="secondary"
+                      variant="muted"
                       size="sm"
                       leftIcon={<IconTrash size={12} stroke={1.5} />}
                     >
                       Delete
                     </Button>
-                  </div>
-                </div>
-              </div>
+                  </ListToolbar.Actions>
+                }
+              />
 
               {/* Pagination */}
               {filteredDisks.length > 0 && (

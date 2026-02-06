@@ -400,43 +400,46 @@ export function HostsPage() {
               </div>
 
               {/* Search and Actions */}
-              <div className="flex items-center gap-2">
-                <div className="flex items-center gap-1">
-                  <div className="w-[var(--search-input-width)]">
+              <ListToolbar
+                primaryActions={
+                  <ListToolbar.Actions>
                     <SearchInput
                       placeholder="Search users by attributes"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       onClear={() => setSearchQuery('')}
                       size="sm"
-                      fullWidth
+                      className="w-[var(--search-input-width)]"
                     />
-                  </div>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    icon={<IconDownload size={12} stroke={1.5} />}
-                    aria-label="Download"
-                    onClick={() => console.log('Download clicked')}
-                  />
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    icon={<IconRefresh size={12} stroke={1.5} />}
-                    aria-label="Refresh"
-                    onClick={() => console.log('Refresh clicked')}
-                  />
-                </div>
-                <div className="w-px h-4 bg-[var(--color-border-default)]" />
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  leftIcon={<IconTrash size={12} stroke={1.5} />}
-                  onClick={() => console.log('Delete clicked')}
-                >
-                  Delete
-                </Button>
-              </div>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      icon={<IconDownload size={12} stroke={1.5} />}
+                      aria-label="Download"
+                      onClick={() => console.log('Download clicked')}
+                    />
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      icon={<IconRefresh size={12} stroke={1.5} />}
+                      aria-label="Refresh"
+                      onClick={() => console.log('Refresh clicked')}
+                    />
+                  </ListToolbar.Actions>
+                }
+                bulkActions={
+                  <ListToolbar.Actions>
+                    <Button
+                      variant="muted"
+                      size="sm"
+                      leftIcon={<IconTrash size={12} stroke={1.5} />}
+                      onClick={() => console.log('Delete clicked')}
+                    >
+                      Delete
+                    </Button>
+                  </ListToolbar.Actions>
+                }
+              />
 
               {/* Pagination */}
               {filteredHosts.length > 0 && (
