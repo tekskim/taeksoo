@@ -217,7 +217,7 @@ const mockSnapshots: InstanceSnapshot[] = [
 // Filter fields configuration
 const filterFields: FilterField[] = [
   { key: 'name', label: 'Name', type: 'text' },
-  { key: 'sourceInstance', label: 'Source Instance', type: 'text' },
+  { key: 'sourceInstance', label: 'Source instance', type: 'text' },
   {
     key: 'diskFormat',
     label: 'Disk Format',
@@ -534,7 +534,7 @@ export function ComputeAdminInstanceSnapshotsPage() {
             }
             actions={
               <TopBarAction
-                icon={<IconBell size={12} stroke={1} />}
+                icon={<IconBell size={16} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />

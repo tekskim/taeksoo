@@ -240,7 +240,7 @@ export function KeyPairDetailPage() {
             breadcrumb={<Breadcrumb items={breadcrumbItems} />}
             actions={
               <TopBarAction
-                icon={<IconBell size={12} stroke={1.5} />}
+                icon={<IconBell size={16} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />
@@ -303,7 +303,7 @@ export function KeyPairDetailPage() {
 
                       {/* Key Identity */}
                       <SectionCard>
-                        <SectionCard.Header title="Key Identity" />
+                        <SectionCard.Header title="Key identity" />
                         <SectionCard.Content>
                           <CopyableDataRow label="Fingerprint" value={keyPair.fingerprint} />
                           <CopyableDataRow label="Public key" value={keyPair.publicKey} />

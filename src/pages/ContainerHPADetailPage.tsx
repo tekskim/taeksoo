@@ -179,20 +179,20 @@ function MetricsTab() {
           <SectionCard.Content>
             <SectionCard.DataRow label="Source" value={mockMetricData.source} showDivider={false} />
             <SectionCard.DataRow label="Name" value={mockMetricData.name} />
-            <SectionCard.DataRow label="Target Name" value={mockMetricData.targetType} />
+            <SectionCard.DataRow label="Target name" value={mockMetricData.targetType} />
             <SectionCard.DataRow label="Value" value={mockMetricData.value} />
             <SectionCard.DataRow
-              label="Referent API Version"
+              label="Referent API version"
               value={mockMetricData.referentApiVersion}
             />
-            <SectionCard.DataRow label="Referent Kind" value={mockMetricData.referentKind} />
-            <SectionCard.DataRow label="Referent Name" value={mockMetricData.referentName} />
+            <SectionCard.DataRow label="Referent kind" value={mockMetricData.referentKind} />
+            <SectionCard.DataRow label="Referent name" value={mockMetricData.referentName} />
           </SectionCard.Content>
         </SectionCard>
 
         {/* Current Metrics Card */}
         <SectionCard className="flex-1">
-          <SectionCard.Header title="Current Metrics" />
+          <SectionCard.Header title="Current metrics" />
           <SectionCard.Content>
             <span className="text-body-md font-normal leading-[16px] text-[var(--color-text-default)]">
               No Current Metrics
@@ -221,7 +221,7 @@ function BehaviorTab() {
                 <div key={i}>{p}</div>
               ))}
             </SectionCard.DataRow>
-            <SectionCard.DataRow label="Select Policy" value={mockScaleDownBehavior.selectPolicy} />
+            <SectionCard.DataRow label="Select policy" value={mockScaleDownBehavior.selectPolicy} />
             <SectionCard.DataRow
               label="Stabilization window seconds"
               value={mockScaleDownBehavior.stabilizationWindowSeconds}
@@ -238,7 +238,7 @@ function BehaviorTab() {
                 <div key={i}>{p}</div>
               ))}
             </SectionCard.DataRow>
-            <SectionCard.DataRow label="Select Policy" value={mockScaleUpBehavior.selectPolicy} />
+            <SectionCard.DataRow label="Select policy" value={mockScaleUpBehavior.selectPolicy} />
             <SectionCard.DataRow
               label="Stabilization window seconds"
               value={mockScaleUpBehavior.stabilizationWindowSeconds}
@@ -364,7 +364,7 @@ export function ContainerHPADetailPage() {
   const moreActionsItems: ContextMenuItem[] = [
     {
       id: 'edit-config',
-      label: 'Edit Config',
+      label: 'Edit config',
       onClick: () => navigate(`/container/hpa/${hpa.id}/edit`),
     },
     {
@@ -429,7 +429,7 @@ export function ContainerHPADetailPage() {
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
@@ -466,8 +466,8 @@ export function ContainerHPADetailPage() {
                     status={getStatusType(hpa.status)}
                   />
                   <DetailHeader.InfoCard label="Namespace" value={hpa.namespace} copyable />
-                  <DetailHeader.InfoCard label="Target Reference" value={hpa.targetReference} />
-                  <DetailHeader.InfoCard label="Created At" value={hpa.createdAt} />
+                  <DetailHeader.InfoCard label="Target reference" value={hpa.targetReference} />
+                  <DetailHeader.InfoCard label="Created at" value={hpa.createdAt} />
                 </DetailHeader.InfoGrid>
 
                 {/* Second row: Labels, Annotations */}

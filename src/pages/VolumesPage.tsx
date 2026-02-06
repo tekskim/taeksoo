@@ -208,15 +208,15 @@ const filterFields: FilterField[] = [
       { value: 'HDD', label: 'HDD' },
     ],
   },
-  { key: 'diskTag', label: 'Disk Tag', type: 'text' },
-  { key: 'attachedTo', label: 'Attached To', type: 'text' },
+  { key: 'diskTag', label: 'Disk tag', type: 'text' },
+  { key: 'attachedTo', label: 'Attached to', type: 'text' },
   {
     key: 'status',
     label: 'Status',
     type: 'select',
     options: [
       { value: 'active', label: 'Active' },
-      { value: 'in-use', label: 'In Use' },
+      { value: 'in-use', label: 'In use' },
       { value: 'error', label: 'Error' },
       { value: 'pending', label: 'Pending' },
     ],
@@ -613,7 +613,7 @@ export function VolumesPage() {
             }
             actions={
               <TopBarAction
-                icon={<IconBell size={12} stroke={1.5} />}
+                icon={<IconBell size={16} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />

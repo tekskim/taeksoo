@@ -36,7 +36,7 @@ export function DeleteStatefulSetModal({
     <ConfirmModal
       isOpen={isOpen}
       onClose={onClose}
-      title="Delete StatefulSet"
+      title="Delete statefulSet"
       description="Removing the selected instances is permanent and cannot be undone."
       infoLabel="StatefulSet name"
       infoValue={statefulSet?.name ?? ''}

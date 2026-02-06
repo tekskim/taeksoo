@@ -260,7 +260,7 @@ export default function ComputeAdminTenantDetailPage() {
             }
             actions={
               <TopBarAction
-                icon={<IconBell size={12} stroke={1.5} />}
+                icon={<IconBell size={16} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />
@@ -297,7 +297,7 @@ export default function ComputeAdminTenantDetailPage() {
                   />
                   <DetailHeader.InfoCard label="ID" value={tenant.id} copyable />
                   <DetailHeader.InfoCard label="Enabled" value={tenant.enabled ? 'Yes' : 'No'} />
-                  <DetailHeader.InfoCard label="Created At" value={tenant.createdAt} />
+                  <DetailHeader.InfoCard label="Created at" value={tenant.createdAt} />
                 </DetailHeader.InfoGrid>
               </DetailHeader>
 
@@ -311,9 +311,9 @@ export default function ComputeAdminTenantDetailPage() {
                   {/* Quotas Tab */}
                   <TabPanel value="quotas" className="pt-6">
                     <VStack gap={6}>
-                      <QuotaSection title="Compute Quota" quotas={computeQuotas} />
-                      <QuotaSection title="Storage Quota" quotas={storageQuotas} />
-                      <QuotaSection title="Network Quota" quotas={networkQuotas} />
+                      <QuotaSection title="Compute quota" quotas={computeQuotas} />
+                      <QuotaSection title="Storage quota" quotas={storageQuotas} />
+                      <QuotaSection title="Network quota" quotas={networkQuotas} />
                     </VStack>
                   </TabPanel>
                 </Tabs>

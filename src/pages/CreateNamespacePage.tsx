@@ -262,7 +262,7 @@ export function CreateNamespacePage() {
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
@@ -280,7 +280,7 @@ export function CreateNamespacePage() {
             <VStack gap={6}>
               {/* Page Header */}
               <VStack gap={2}>
-                <h1 className="text-heading-h4">Create Namespace</h1>
+                <h1 className="text-heading-h4">Create namespace</h1>
                 <p className="text-body-sm text-[var(--color-text-subtle)]">
                   Namespace is a logical partition within a cluster that isolates and organizes
                   resources for easier management and access control.
@@ -293,7 +293,7 @@ export function CreateNamespacePage() {
                 <VStack gap={4} className="flex-1">
                   {/* Basic Information Section */}
                   <SectionCard>
-                    <SectionCard.Header title="Basic Information" />
+                    <SectionCard.Header title="Basic information" />
                     <SectionCard.Content>
                       <VStack gap={6}>
                         {/* Namespace Name */}
@@ -330,7 +330,7 @@ export function CreateNamespacePage() {
 
                   {/* Pod Security Admission Section */}
                   <SectionCard>
-                    <SectionCard.Header title="Pod Security Admission" />
+                    <SectionCard.Header title="Pod security admission" />
                     <SectionCard.Content>
                       <VStack gap={6}>
                         {/* Enforce */}

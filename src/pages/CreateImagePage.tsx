@@ -217,7 +217,7 @@ export function CreateImagePage() {
             breadcrumb={<Breadcrumb items={breadcrumbItems} />}
             actions={
               <TopBarAction
-                icon={<IconBell size={12} />}
+                icon={<IconBell size={16} stroke={1.5} />}
                 onClick={() => {}}
                 ariaLabel="Notifications"
                 showBadge

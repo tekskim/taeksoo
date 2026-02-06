@@ -125,7 +125,7 @@ export function ChangeServerCertificateDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title="Change Server Certificate"
+      title="Change server certificate"
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">

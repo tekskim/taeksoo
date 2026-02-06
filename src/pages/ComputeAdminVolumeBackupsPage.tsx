@@ -194,13 +194,13 @@ const volumeBackupStatusMap: Record<BackupStatus, 'active' | 'building' | 'error
 // Filter fields configuration
 const filterFields: FilterField[] = [
   { id: 'name', label: 'Name', type: 'text' },
-  { id: 'sourceVolume', label: 'Source Volume', type: 'text' },
+  { id: 'sourceVolume', label: 'Source volume', type: 'text' },
   {
     id: 'backupMode',
-    label: 'Backup Mode',
+    label: 'Backup mode',
     type: 'select',
     options: [
-      { value: 'Full Backup', label: 'Full Backup' },
+      { value: 'Full backup', label: 'Full backup' },
       { value: 'Incremental', label: 'Incremental' },
     ],
   },
@@ -264,10 +264,10 @@ export function ComputeAdminVolumeBackupsPage() {
     { id: 'status', label: 'Status', visible: true, locked: true },
     { id: 'name', label: 'Name', visible: true, locked: true },
     { id: 'tenant', label: 'Tenant', visible: true },
-    { id: 'backupMode', label: 'Backup Mode', visible: true },
+    { id: 'backupMode', label: 'Backup mode', visible: true },
     { id: 'size', label: 'Size', visible: true },
-    { id: 'sourceVolume', label: 'Source Volume', visible: true },
-    { id: 'createdAt', label: 'Created At', visible: true },
+    { id: 'sourceVolume', label: 'Source volume', visible: true },
+    { id: 'createdAt', label: 'Created at', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
@@ -374,7 +374,7 @@ export function ComputeAdminVolumeBackupsPage() {
     },
     {
       key: 'backupMode',
-      label: 'Backup Mode',
+      label: 'Backup mode',
       flex: 1,
       sortable: false,
     },
@@ -386,7 +386,7 @@ export function ComputeAdminVolumeBackupsPage() {
     },
     {
       key: 'sourceVolume',
-      label: 'Source Volume',
+      label: 'Source volume',
       flex: 1,
       sortable: false,
       render: (_, row) => (
@@ -406,7 +406,7 @@ export function ComputeAdminVolumeBackupsPage() {
     },
     {
       key: 'createdAt',
-      label: 'Created At',
+      label: 'Created at',
       flex: 1,
       sortable: true,
     },
@@ -498,7 +498,7 @@ export function ComputeAdminVolumeBackupsPage() {
             }
             actions={
               <TopBarAction
-                icon={<IconBell size={12} stroke={1} />}
+                icon={<IconBell size={16} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />

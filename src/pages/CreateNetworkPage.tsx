@@ -209,7 +209,7 @@ export default function CreateNetworkPage() {
             actions={
               <>
                 <TopBarAction
-                  icon={<IconBell size={18} />}
+                  icon={<IconBell size={16} stroke={1.5} />}
                   onClick={() => {}}
                   aria-label="Notifications"
                 />

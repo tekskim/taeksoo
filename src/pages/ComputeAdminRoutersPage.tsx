@@ -215,18 +215,18 @@ const filterFields: FilterField[] = [
   { key: 'tenant', label: 'Tenant', type: 'text' },
   {
     key: 'externalGateway',
-    label: 'External Gateway',
+    label: 'External gateway',
     type: 'select',
     options: [
       { value: 'true', label: 'Open' },
       { value: 'false', label: 'Closed' },
     ],
   },
-  { key: 'externalFixedIp', label: 'External Fixed IP', type: 'text' },
-  { key: 'externalNetwork', label: 'External Network', type: 'text' },
+  { key: 'externalFixedIp', label: 'External fixed IP', type: 'text' },
+  { key: 'externalNetwork', label: 'External network', type: 'text' },
   {
     key: 'adminState',
-    label: 'Admin State',
+    label: 'Admin state',
     type: 'select',
     options: [
       { value: 'Up', label: 'Up' },
@@ -267,11 +267,11 @@ export function ComputeAdminRoutersPage() {
     { id: 'status', label: 'Status', visible: true, locked: true },
     { id: 'name', label: 'Name', visible: true, locked: true },
     { id: 'tenant', label: 'Tenant', visible: true },
-    { id: 'externalGateway', label: 'External Gateway', visible: true },
-    { id: 'externalFixedIp', label: 'External Fixed IP', visible: true },
-    { id: 'externalNetwork', label: 'External Network', visible: true },
-    { id: 'adminState', label: 'Admin State', visible: true },
-    { id: 'createdAt', label: 'Created At', visible: true },
+    { id: 'externalGateway', label: 'External gateway', visible: true },
+    { id: 'externalFixedIp', label: 'External fixed IP', visible: true },
+    { id: 'externalNetwork', label: 'External network', visible: true },
+    { id: 'adminState', label: 'Admin state', visible: true },
+    { id: 'createdAt', label: 'Created at', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
 
@@ -358,20 +358,20 @@ export function ComputeAdminRoutersPage() {
     },
     {
       key: 'externalGateway',
-      label: 'External Gateway',
+      label: 'External gateway',
       flex: 1,
       minWidth: columnMinWidths.externalGateway,
       render: (value: boolean) => (value ? 'Open' : 'Closed'),
     },
     {
       key: 'externalFixedIp',
-      label: 'External Fixed IP',
+      label: 'External fixed IP',
       flex: 1,
       minWidth: columnMinWidths.externalFixedIp,
     },
     {
       key: 'externalNetwork',
-      label: 'External Network',
+      label: 'External network',
       flex: 1,
       minWidth: columnMinWidths.externalNetwork,
       sortable: true,
@@ -395,7 +395,7 @@ export function ComputeAdminRoutersPage() {
     },
     {
       key: 'adminState',
-      label: 'Admin State',
+      label: 'Admin state',
       flex: 1,
       minWidth: columnMinWidths.adminState,
       render: (value: 'Up' | 'Down') => (
@@ -406,7 +406,7 @@ export function ComputeAdminRoutersPage() {
     },
     {
       key: 'createdAt',
-      label: 'Created At',
+      label: 'Created at',
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
@@ -492,7 +492,7 @@ export function ComputeAdminRoutersPage() {
             }
             actions={
               <TopBarAction
-                icon={<IconBell size={12} stroke={1} />}
+                icon={<IconBell size={16} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />

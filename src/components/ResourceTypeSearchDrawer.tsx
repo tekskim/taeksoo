@@ -158,7 +158,7 @@ export function ResourceTypeSearchDrawer({
   }, [categories, selectedId]);
 
   return (
-    <Drawer isOpen={isOpen} onClose={onClose} title="Resource Type Search" width={400}>
+    <Drawer isOpen={isOpen} onClose={onClose} title="Resource type search" width={400}>
       <VStack gap={4}>
         {/* Search Input */}
         <SearchInput

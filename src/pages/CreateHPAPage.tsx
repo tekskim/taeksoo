@@ -459,7 +459,7 @@ export default function CreateHPAPage() {
                 <VStack gap={4} className="flex-1">
                   {/* Basic Information Section */}
                   <SectionCard>
-                    <SectionCard.Header title="Basic Information" />
+                    <SectionCard.Header title="Basic information" />
                     <SectionCard.Content>
                       <VStack gap={6}>
                         {/* Namespace */}
@@ -753,7 +753,7 @@ export default function CreateHPAPage() {
                                             className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
                                           >
                                             <Input
-                                              placeholder="Input Key"
+                                              placeholder="Input key"
                                               value={selector.key}
                                               onChange={(e) =>
                                                 updateMetricSelector(

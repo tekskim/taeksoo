@@ -367,7 +367,7 @@ export default function CreateNetworkPage() {
             actions={
               <>
                 <TopBarAction
-                  icon={<IconBell size={18} />}
+                  icon={<IconBell size={16} stroke={1.5} />}
                   onClick={() => {}}
                   aria-label="Notifications"
                 />
@@ -733,7 +733,7 @@ export default function CreateNetworkPage() {
                           }
                         />
                         <SectionCard.DataRow
-                          label="External Network"
+                          label="External network"
                           value={externalNetwork ? 'Yes' : 'No'}
                         />
                         {externalNetwork && (
@@ -750,11 +750,11 @@ export default function CreateNetworkPage() {
                         )}
                         {mtu && <SectionCard.DataRow label="MTU" value={`${mtu} bytes`} />}
                         <SectionCard.DataRow
-                          label="Admin State"
+                          label="Admin state"
                           value={adminState ? 'Up' : 'Down'}
                         />
                         <SectionCard.DataRow
-                          label="Port Security"
+                          label="Port security"
                           value={portSecurity ? 'On' : 'Off'}
                         />
                         <SectionCard.DataRow label="Shared" value={shared ? 'Yes' : 'No'} />

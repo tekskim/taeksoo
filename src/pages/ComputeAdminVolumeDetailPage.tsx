@@ -551,7 +551,7 @@ export function ComputeAdminVolumeDetailPage() {
             breadcrumb={<Breadcrumb items={breadcrumbItems} />}
             actions={
               <TopBarAction
-                icon={<IconBell size={12} stroke={1.5} />}
+                icon={<IconBell size={16} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />
@@ -632,7 +632,7 @@ export function ComputeAdminVolumeDetailPage() {
                       {/* Basic information */}
                       <SectionCard>
                         <SectionCard.Header
-                          title="Basic Infomation"
+                          title="Basic information"
                           showEditButton
                           onEdit={() => {}}
                         />

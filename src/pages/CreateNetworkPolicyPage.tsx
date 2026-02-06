@@ -671,7 +671,7 @@ export function CreateNetworkPolicyPage() {
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
@@ -688,7 +688,7 @@ export function CreateNetworkPolicyPage() {
             <VStack gap={6}>
               {/* Page Header */}
               <VStack gap={2}>
-                <h1 className="text-heading-h4">Create Network Policy</h1>
+                <h1 className="text-heading-h4">Create network policy</h1>
                 <p className="text-body-sm text-[var(--color-text-subtle)]">
                   Network policies are used to control the traffic flow between pods within the
                   cluster based on defined rules for ingress and egress.
@@ -701,7 +701,7 @@ export function CreateNetworkPolicyPage() {
                 <VStack gap={4} className="flex-1">
                   {/* Basic Information Section */}
                   <SectionCard>
-                    <SectionCard.Header title="Basic Information" />
+                    <SectionCard.Header title="Basic information" />
                     <SectionCard.Content>
                       <VStack gap={6}>
                         {/* Namespace */}
@@ -750,7 +750,7 @@ export function CreateNetworkPolicyPage() {
 
                   {/* Ingress Rules Section */}
                   <TrafficRulesSection
-                    title="Ingress Rules"
+                    title="Ingress rules"
                     checkboxLabel="Configure ingress rules to restrict incoming traffic"
                     enabled={ingressEnabled}
                     onEnabledChange={setIngressEnabled}
@@ -760,7 +760,7 @@ export function CreateNetworkPolicyPage() {
 
                   {/* Egress Rules Section */}
                   <TrafficRulesSection
-                    title="Egress Rules"
+                    title="Egress rules"
                     checkboxLabel="Configure egress rules to restrict outgoing traffic"
                     enabled={egressEnabled}
                     onEnabledChange={setEgressEnabled}
@@ -868,7 +868,7 @@ export function CreateNetworkPolicyPage() {
                               },
                               {
                                 key: 'createdAt',
-                                label: 'Created At',
+                                label: 'Created at',
                               },
                             ]}
                             data={MOCK_MATCHING_PODS}

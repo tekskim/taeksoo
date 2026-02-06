@@ -141,7 +141,7 @@ export default function SettingsAccountPage() {
                 {/* Account Information */}
                 <SectionCard>
                   <SectionCard.Header
-                    title="Account Information"
+                    title="Account information"
                     actions={
                       <Button variant="outline" size="sm" className="gap-1.5">
                         <IconEdit size={16} />

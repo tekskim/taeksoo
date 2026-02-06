@@ -281,7 +281,7 @@ function BasicInformationSection({
   return (
     <SectionCard isActive>
       <SectionCard.Header
-        title="Basic Information"
+        title="Basic information"
         showDivider
         actions={
           isEditing ? (

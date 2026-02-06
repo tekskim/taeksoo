@@ -552,7 +552,7 @@ export function ComputeAdminLoadBalancerDetailPage() {
                           <SectionCard.Header title="Basic information" />
                           <SectionCard.Content>
                             <SectionCard.DataRow
-                              label="Load Balancer Name"
+                              label="Load balancer name"
                               value={loadBalancer.name}
                             />
                             <SectionCard.DataRow

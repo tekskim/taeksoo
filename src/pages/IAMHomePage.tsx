@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import ReactECharts from 'echarts-for-react';
 import {
   VStack,
@@ -81,173 +81,78 @@ const eventsData: EventRow[] = [
 ];
 
 /* ----------------------------------------
-   Half Donut Chart Component (ECharts Gauge - from design system)
+   Simple Pie Chart Component (from design system)
    ---------------------------------------- */
 
-interface HalfDonutChartProps {
-  percentage: number;
-  primaryColor?: string;
-  secondaryColor?: string;
-  label?: string;
-  value?: string;
-  /** Tooltip data for primary segment (e.g., Success) */
-  primaryTooltip?: { label: string; value: string; percent: number };
-  /** Tooltip data for secondary segment (e.g., Failure) */
-  secondaryTooltip?: { label: string; value: string; percent: number };
+interface SimplePieChartProps {
+  data: { name: string; value: number; color: string }[];
+  size?: number;
 }
 
-// Get color from design system CSS variables
-const getColor = (cssVar: string, fallback: string) => {
-  if (typeof window !== 'undefined') {
-    const value = getComputedStyle(document.documentElement).getPropertyValue(cssVar).trim();
-    return value || fallback;
-  }
-  return fallback;
-};
-
-function HalfDonutChart({
-  percentage,
-  primaryColor = '#4ade80',
-  secondaryColor,
-  label,
-  value,
-  primaryTooltip,
-  secondaryTooltip,
-}: HalfDonutChartProps) {
-  const [showTooltip, setShowTooltip] = useState(false);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  // Chart dimensions
-  const chartWidth = 120;
-  const chartHeight = 100;
-  const centerX = chartWidth * 0.5;
-  const centerY = chartHeight * 0.65;
-  const radius = Math.min(chartWidth, chartHeight) * 0.45;
-  const arcWidth = 14;
-  const innerRadius = radius - arcWidth;
-  const outerRadius = radius;
-
-  const bgColor = secondaryColor || getColor('--color-border-subtle', '#f1f5f9');
-
-  // Check if mouse is over the gauge arc
-  const isOverGaugeArc = (mx: number, my: number) => {
-    const dx = mx - centerX;
-    const dy = my - centerY;
-    const distance = Math.sqrt(dx * dx + dy * dy);
-
-    if (distance < innerRadius - 4 || distance > outerRadius + 4) return false;
-
-    let angle = Math.atan2(-dy, dx) * (180 / Math.PI);
-    if (angle < 0) angle += 360;
-
-    return angle >= 150 && angle <= 330;
-  };
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (containerRef.current) {
-      const rect = containerRef.current.getBoundingClientRect();
-      const relX = e.clientX - rect.left;
-      const relY = e.clientY - rect.top;
-
-      setMousePos({ x: relX, y: relY });
-      setShowTooltip(isOverGaugeArc(relX, relY));
-    }
-  };
-
-  const handleMouseLeave = () => {
-    setShowTooltip(false);
-  };
-
+function SimplePieChart({ data, size = 100 }: SimplePieChartProps) {
   const getOption = () => ({
+    tooltip: {
+      show: true,
+      trigger: 'item',
+      backgroundColor: '#ffffff',
+      borderColor: '#e2e8f0',
+      borderWidth: 1,
+      borderRadius: 6,
+      padding: [8, 12],
+      textStyle: {
+        color: '#1e293b',
+        fontSize: 11,
+        fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif',
+      },
+      formatter: (params: { name: string; value: number; percent: number; color: string }) => {
+        return `<span style="display: inline-block; width: 8px; height: 8px; border-radius: 9999px; background-color: ${params.color}; margin-right: 6px;"></span>${params.name}<br/><span style="font-weight: 500; margin-left: 14px;">${params.value} (${params.percent.toFixed(0)}%)</span>`;
+      },
+    },
+    animation: false,
     series: [
       {
-        type: 'gauge',
-        startAngle: 210,
-        endAngle: -30,
-        center: ['50%', '65%'],
-        radius: '90%',
-        min: 0,
-        max: 100,
-        axisLine: {
-          lineStyle: {
-            width: 14,
-            color: [
-              [percentage / 100, primaryColor],
-              [1, bgColor],
-            ],
+        type: 'pie',
+        radius: '80%',
+        center: ['50%', '50%'],
+        avoidLabelOverlap: true,
+        label: {
+          show: true,
+          position: 'inside',
+          formatter: (params: { percent: number }) => {
+            return params.percent >= 15 ? `${params.percent.toFixed(0)}%` : '';
+          },
+          fontSize: 12,
+          fontWeight: 600,
+          color: '#ffffff',
+          fontFamily: 'Mona Sans, -apple-system, BlinkMacSystemFont, sans-serif',
+        },
+        emphasis: {
+          scale: true,
+          scaleSize: 5,
+          itemStyle: {
+            shadowBlur: 10,
+            shadowOffsetX: 0,
+            shadowColor: 'rgba(0, 0, 0, 0.2)',
           },
         },
-        pointer: {
+        labelLine: {
           show: false,
         },
-        axisTick: {
-          show: false,
-        },
-        splitLine: {
-          show: false,
-        },
-        axisLabel: {
-          show: false,
-        },
-        title: {
-          show: false,
-        },
-        detail: {
-          show: false,
-        },
+        data: data.map((item) => ({
+          name: item.name,
+          value: item.value,
+          itemStyle: { color: item.color },
+        })),
       },
     ],
   });
 
   return (
-    <div
-      ref={containerRef}
-      className="relative"
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-    >
-      <ReactECharts
-        option={getOption()}
-        style={{ height: `${chartHeight}px`, width: `${chartWidth}px` }}
-      />
-      <div className="absolute inset-0 flex flex-col items-center justify-center pt-4 pointer-events-none">
-        {label && <span className="text-body-xs text-[var(--color-text-subtle)]">{label}</span>}
-        {value && <span className="text-heading-h5 text-[var(--color-text-default)]">{value}</span>}
-      </div>
-
-      {/* Tooltip */}
-      {showTooltip && (
-        <div
-          className="absolute z-10 backdrop-blur-[40px] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] shadow-[0px_0px_4px_0px_rgba(0,0,0,0.1)] px-2 py-1.5 pointer-events-none whitespace-nowrap"
-          style={{ left: mousePos.x + 12, top: mousePos.y + 12 }}
-        >
-          {primaryTooltip && secondaryTooltip ? (
-            <div className="flex flex-col gap-1">
-              <div className="flex items-center gap-1.5">
-                <div className="w-2 h-2 rounded-sm" style={{ backgroundColor: primaryColor }} />
-                <span className="text-body-sm leading-[14px] text-[var(--color-text-default)]">
-                  {primaryTooltip.label}: {primaryTooltip.value} ({primaryTooltip.percent}%)
-                </span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <div
-                  className="w-2 h-2 rounded-sm"
-                  style={{ backgroundColor: secondaryColor || bgColor }}
-                />
-                <span className="text-body-sm leading-[14px] text-[var(--color-text-default)]">
-                  {secondaryTooltip.label}: {secondaryTooltip.value} ({secondaryTooltip.percent}%)
-                </span>
-              </div>
-            </div>
-          ) : (
-            <span className="text-body-sm leading-[14px] text-[var(--color-text-default)]">
-              {percentage}%
-            </span>
-          )}
-        </div>
-      )}
-    </div>
+    <ReactECharts
+      option={getOption()}
+      style={{ height: `${size}px`, width: `${size}px` }}
+      opts={{ devicePixelRatio: window.devicePixelRatio }}
+    />
   );
 }
 
@@ -387,7 +292,7 @@ export function IAMHomePage() {
               <div className="grid grid-cols-[320px_1fr] gap-6">
                 {/* Domain Info Card */}
                 <div className="bg-[var(--color-surface-subtle)] rounded-2xl border border-[var(--color-border-default)] p-4 flex flex-col gap-6">
-                  <h6 className="text-heading-h6 text-[var(--color-text-muted)]">DOMAIN INFO</h6>
+                  <h6 className="text-heading-h7">DOMAIN INFO</h6>
                   <h2 className="text-heading-h2 text-[var(--color-text-default)]">DomainA</h2>
                   <VStack gap={4} className="mt-auto">
                     <div>
@@ -409,9 +314,7 @@ export function IAMHomePage() {
 
                 {/* Authentication Summary Card */}
                 <div className="bg-[var(--color-surface-default)] rounded-2xl border border-[var(--color-border-default)] p-4 flex flex-col gap-4">
-                  <h6 className="text-heading-h6 text-[var(--color-text-muted)]">
-                    AUTHENTICATION SUMMARY
-                  </h6>
+                  <h6 className="text-heading-h7">AUTHENTICATION SUMMARY</h6>
 
                   <div className="grid grid-cols-2 gap-4">
                     {/* Today's Sign-ins */}
@@ -422,27 +325,25 @@ export function IAMHomePage() {
                         </p>
                         <VStack gap={2}>
                           <HStack gap={1} align="center">
-                            <div className="w-[3px] h-[3px] rounded-full bg-[#4ade80]" />
+                            <div className="w-2 h-2 rounded-sm bg-[#4ade80]" />
                             <span className="text-label-sm text-[var(--color-text-subtle)]">
                               Success: 1,234 (96%)
                             </span>
                           </HStack>
                           <HStack gap={1} align="center">
-                            <div className="w-[3px] h-[3px] rounded-full bg-[#f87171]" />
+                            <div className="w-2 h-2 rounded-sm bg-[#f87171]" />
                             <span className="text-label-sm text-[var(--color-text-subtle)]">
                               Failure: 45 (4%)
                             </span>
                           </HStack>
                         </VStack>
                       </VStack>
-                      <HalfDonutChart
-                        percentage={96}
-                        primaryColor="#4ade80"
-                        secondaryColor="#f87171"
-                        label="Total"
-                        value="1,279"
-                        primaryTooltip={{ label: 'Success', value: '1,234', percent: 96 }}
-                        secondaryTooltip={{ label: 'Failure', value: '45', percent: 4 }}
+                      <SimplePieChart
+                        data={[
+                          { name: 'Success', value: 1234, color: '#4ade80' },
+                          { name: 'Failure', value: 45, color: '#f87171' },
+                        ]}
+                        size={100}
                       />
                     </div>
 
@@ -454,26 +355,25 @@ export function IAMHomePage() {
                         </p>
                         <VStack gap={2}>
                           <HStack gap={1} align="center">
-                            <div className="w-[3px] h-[3px] rounded-full bg-[#4ade80]" />
+                            <div className="w-2 h-2 rounded-sm bg-[#4ade80]" />
                             <span className="text-label-sm text-[var(--color-text-subtle)]">
                               Enabled: 117 (78%)
                             </span>
                           </HStack>
                           <HStack gap={1} align="center">
-                            <div className="w-[3px] h-[3px] rounded-full bg-[#e2e8f0]" />
+                            <div className="w-2 h-2 rounded-sm bg-[#e2e8f0]" />
                             <span className="text-label-sm text-[var(--color-text-subtle)]">
                               Disabled: 33 (22%)
                             </span>
                           </HStack>
                         </VStack>
                       </VStack>
-                      <HalfDonutChart
-                        percentage={78}
-                        primaryColor="#4ade80"
-                        secondaryColor="#e2e8f0"
-                        value="78%"
-                        primaryTooltip={{ label: 'Enabled', value: '117', percent: 78 }}
-                        secondaryTooltip={{ label: 'Disabled', value: '33', percent: 22 }}
+                      <SimplePieChart
+                        data={[
+                          { name: 'Enabled', value: 117, color: '#4ade80' },
+                          { name: 'Disabled', value: 33, color: '#e2e8f0' },
+                        ]}
+                        size={100}
                       />
                     </div>
                   </div>
@@ -482,7 +382,7 @@ export function IAMHomePage() {
 
               {/* Row 2: User Status */}
               <div className="bg-[var(--color-surface-default)] rounded-2xl border border-[var(--color-border-default)] p-4 flex flex-col gap-4">
-                <h6 className="text-heading-h6 text-[var(--color-text-muted)]">USER STATUS</h6>
+                <h6 className="text-heading-h7">USER STATUS</h6>
                 <div className="grid grid-cols-4 gap-4">
                   <StatCard label="Total" value="150" variant="default" />
                   <StatCard label="Online" value="50" variant="success" />
@@ -495,7 +395,7 @@ export function IAMHomePage() {
               <div className="grid grid-cols-[320px_1fr] gap-6">
                 {/* IAM Resources */}
                 <div className="bg-[var(--color-surface-default)] rounded-2xl border border-[var(--color-border-default)] p-4 flex flex-col gap-4">
-                  <h6 className="text-heading-h6 text-[var(--color-text-muted)]">IAM RESOURCES</h6>
+                  <h6 className="text-heading-h7">IAM RESOURCES</h6>
                   <VStack gap={2}>
                     <ResourceCard label="User group" value="13" />
                     <ResourceCard label="Roles" value="13" />
@@ -505,7 +405,7 @@ export function IAMHomePage() {
 
                 {/* Recent Events */}
                 <div className="bg-[var(--color-surface-default)] rounded-2xl border border-[var(--color-border-default)] p-4 flex flex-col gap-4 min-w-0">
-                  <h6 className="text-heading-h6 text-[var(--color-text-muted)]">RECENT EVENTS</h6>
+                  <h6 className="text-heading-h7">RECENT EVENTS</h6>
                   <div className="overflow-x-auto">
                     <Table<EventRow> columns={eventsColumns} data={eventsData} rowKey="id" />
                   </div>

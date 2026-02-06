@@ -179,7 +179,7 @@ export function StorageClassDetailPage() {
     },
     {
       id: 'edit-config',
-      label: 'Edit Config',
+      label: 'Edit config',
       onClick: () => navigate(`/container/storage-classes/${storageClassId}/edit`),
     },
     {
@@ -272,7 +272,7 @@ export function StorageClassDetailPage() {
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
@@ -318,7 +318,7 @@ export function StorageClassDetailPage() {
                     }
                   />
                   <DetailHeader.InfoCard label="Default" value={scData.isDefault ? 'Yes' : 'No'} />
-                  <DetailHeader.InfoCard label="Created At" value={scData.createdAt} />
+                  <DetailHeader.InfoCard label="Created at" value={scData.createdAt} />
                   <DetailHeader.InfoCard
                     label={`Labels (${labelsCount})`}
                     value={

@@ -252,7 +252,7 @@ export function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
                 />
                 <MenuItem
                   icon={<IconCamera size={16} stroke={1.5} />}
-                  label="Volume Snapshots"
+                  label="Volume snapshots"
                   href="/compute-admin/volume-snapshots"
                   active={isActive('/compute-admin/volume-snapshots')}
                 />

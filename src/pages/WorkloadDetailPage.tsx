@@ -269,7 +269,7 @@ function CopyableCommand({ command }: CopyableCommandProps) {
         {copied ? (
           <IconCheck size={16} stroke={1.5} className="text-[var(--color-state-success)]" />
         ) : (
-          <IconCopy size={12} stroke={1.5} className="text-[var(--color-text-muted)]" />
+          <IconCopy size={16} stroke={1.5} className="text-[var(--color-text-muted)]" />
         )}
       </button>
     </div>
@@ -364,7 +364,7 @@ export function WorkloadDetailPage() {
             }
             actions={
               <TopBarAction
-                icon={<IconBell size={12} stroke={1} />}
+                icon={<IconBell size={16} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />
@@ -547,7 +547,7 @@ export function WorkloadDetailPage() {
                             {/* Direct TCP Ports */}
                             <ConnectionCard
                               icon={<IconNetwork size={24} stroke={1.5} />}
-                              title="Direct TCP Ports"
+                              title="Direct TCP ports"
                               description="Direct TCP connections to exposed ports"
                               status={workload.directTcpPorts.status}
                               badge={

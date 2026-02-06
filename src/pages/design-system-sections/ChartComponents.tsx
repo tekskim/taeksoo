@@ -645,7 +645,7 @@ export function AreaChartDemo({ variant }: { variant: 'basic' | 'stacked' | 'nod
   if (variant === 'basic') {
     return (
       <ChartWithFullScreen
-        title="Network Traffic"
+        title="Network traffic"
         series={networkTrafficSeries}
         yAxisFormatter={(v) => `${v} MB/s`}
         height="200px"
@@ -660,7 +660,7 @@ export function AreaChartDemo({ variant }: { variant: 'basic' | 'stacked' | 'nod
     ];
     return (
       <ChartWithFullScreen
-        title="Network Traffic"
+        title="Network traffic"
         series={emptySeriesData}
         yAxisFormatter={(v) => `${v} MB/s`}
         height="200px"

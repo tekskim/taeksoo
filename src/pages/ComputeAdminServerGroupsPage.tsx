@@ -408,7 +408,7 @@ export function ComputeAdminServerGroupsPage() {
             }
             actions={
               <TopBarAction
-                icon={<IconBell size={12} stroke={1} />}
+                icon={<IconBell size={16} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />
@@ -423,7 +423,7 @@ export function ComputeAdminServerGroupsPage() {
             <VStack gap={3}>
               {/* Page Header */}
               <div className="flex items-center justify-between h-8">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Server Groups</h1>
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Server groups</h1>
               </div>
 
               {/* List Toolbar */}
@@ -493,7 +493,7 @@ export function ComputeAdminServerGroupsPage() {
         isOpen={deleteModalOpen}
         onClose={handleDeleteCancel}
         onConfirm={handleDeleteConfirm}
-        title="Delete Server Group"
+        title="Delete server group"
         description="Removing the selected instances is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"

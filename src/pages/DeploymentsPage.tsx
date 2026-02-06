@@ -262,7 +262,7 @@ export function DeploymentsPage() {
     },
     {
       key: 'createdAt',
-      label: 'Created At',
+      label: 'Created at',
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
@@ -276,7 +276,7 @@ export function DeploymentsPage() {
         const menuItems: ContextMenuItem[] = [
           {
             id: 'execute-shell',
-            label: 'Execute Shell',
+            label: 'Execute shell',
             onClick: () => shellPanel.openConsole(row.id, `Shell: ${row.name}`),
           },
           {
@@ -296,7 +296,7 @@ export function DeploymentsPage() {
           },
           {
             id: 'edit-config',
-            label: 'Edit Config',
+            label: 'Edit config',
             onClick: () => navigate(`/container/deployments/${row.id}/edit`),
           },
           {
@@ -413,7 +413,7 @@ export function DeploymentsPage() {
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
@@ -457,7 +457,7 @@ export function DeploymentsPage() {
                 primaryActions={
                   <ListToolbar.Actions>
                     <SearchInput
-                      placeholder="Search Deployments by attributes"
+                      placeholder="Search deployments by attributes"
                       size="sm"
                       className="w-[var(--search-input-width)]"
                     />

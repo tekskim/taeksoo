@@ -689,8 +689,8 @@ export function BucketDetailPage() {
                             rowKey="key"
                           />
                         </SectionCard.DataRow>
-                        <SectionCard.DataRow label="Capacity limit %" value="No Limit" />
-                        <SectionCard.DataRow label="Object limit %" value="No Limit" />
+                        <SectionCard.DataRow label="Capacity limit %" value="No limit" />
+                        <SectionCard.DataRow label="Object limit %" value="No limit" />
                       </SectionCard.Content>
                     </SectionCard>
                   </TabPanel>

@@ -387,7 +387,7 @@ export default function CreateVirtualAdapterPage() {
       },
       {
         key: 'createdAt',
-        label: 'Created At',
+        label: 'Created at',
         flex: 1,
         sortable: true,
       },
@@ -486,7 +486,7 @@ export default function CreateVirtualAdapterPage() {
             actions={
               <>
                 <TopBarAction
-                  icon={<IconBell size={18} />}
+                  icon={<IconBell size={16} stroke={1.5} />}
                   onClick={() => {}}
                   aria-label="Notifications"
                 />
@@ -993,7 +993,7 @@ export default function CreateVirtualAdapterPage() {
                     {sectionStatus['security'] === 'done' && (
                       <SectionCard.Content>
                         <SectionCard.DataRow
-                          label="Port Security"
+                          label="Port security"
                           value={portSecurityEnabled ? 'Enabled' : 'Disabled'}
                           showDivider
                         />

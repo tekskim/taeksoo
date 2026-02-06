@@ -1133,7 +1133,7 @@ export function OverallPerformancePage() {
               />
             }
             actions={
-              <TopBarAction icon={<IconBell size={12} stroke={1.5} />} aria-label="Notifications" />
+              <TopBarAction icon={<IconBell size={16} stroke={1.5} />} aria-label="Notifications" />
             }
           />
         </div>
@@ -1190,7 +1190,7 @@ export function OverallPerformancePage() {
                       <div className="flex gap-6">
                         <div className="flex-1">
                           <ChartCard
-                            title="Pool Capacity Usage (RAW)"
+                            title="Pool capacity usage (RAW)"
                             series={capacitySeries}
                             yAxisFormatter={(v) => `${v} TiB`}
                             isDarkMode={isDark}
@@ -1201,7 +1201,7 @@ export function OverallPerformancePage() {
                         </div>
                         <div className="flex-1">
                           <ChartCard
-                            title="Client IOPS by Pool"
+                            title="Client IOPS by pool"
                             series={iopsSeries}
                             isDarkMode={isDark}
                             timeRange={timeRange}
@@ -1215,7 +1215,7 @@ export function OverallPerformancePage() {
                       <div className="flex gap-6">
                         <div className="w-[calc(50%-12px)]">
                           <ChartCard
-                            title="Client Bandwidth by Pool"
+                            title="Client bandwidth by pool"
                             series={bandwidthSeries}
                             yAxisFormatter={(v) => `${v} MB/s`}
                             isDarkMode={isDark}
@@ -1226,7 +1226,7 @@ export function OverallPerformancePage() {
                         </div>
                         <div className="w-[calc(50%-12px)]">
                           <EmptyStateChartCard
-                            title="Recovery Rate"
+                            title="Recovery rate"
                             yAxisFormatter={(v) => `${v} MB/s`}
                             isDarkMode={isDark}
                           />
@@ -1235,7 +1235,7 @@ export function OverallPerformancePage() {
 
                       {/* Pool Overview Table */}
                       <SectionCard>
-                        <SectionCard.Header title="Pool Overview" />
+                        <SectionCard.Header title="Pool overview" />
                         <SectionCard.Content gap={0}>
                           <Table<PoolOverviewRow>
                             columns={poolOverviewColumns}
@@ -1295,7 +1295,7 @@ export function OverallPerformancePage() {
 
                       {/* Host Overview Table */}
                       <SectionCard>
-                        <SectionCard.Header title="Host Overview" />
+                        <SectionCard.Header title="Host overview" />
                         <SectionCard.Content gap={0}>
                           <Table<HostOverviewRow>
                             columns={hostOverviewColumns}
@@ -1325,7 +1325,7 @@ export function OverallPerformancePage() {
                         {/* Highest READ Latencies Table */}
                         <div className="flex-1 h-[334px]">
                           <SectionCard className="h-full">
-                            <SectionCard.Header title="Highest READ Latencies" />
+                            <SectionCard.Header title="Highest READ latencies" />
                             <SectionCard.Content gap={0} className="overflow-auto flex-1">
                               <Table<OsdLatencyRow>
                                 columns={osdLatencyColumns}
@@ -1355,7 +1355,7 @@ export function OverallPerformancePage() {
                         {/* Highest WRITE Latencies Table */}
                         <div className="flex-1 h-[334px]">
                           <SectionCard className="h-full">
-                            <SectionCard.Header title="Highest WRITE Latencies" />
+                            <SectionCard.Header title="Highest WRITE latencies" />
                             <SectionCard.Content gap={0} className="overflow-auto flex-1">
                               <Table<OsdLatencyRow>
                                 columns={osdLatencyColumns}
@@ -1424,7 +1424,7 @@ export function OverallPerformancePage() {
 
                       {/* Top Slow OSD Ops Table */}
                       <SectionCard>
-                        <SectionCard.Header title="Top Slow OSD Ops" />
+                        <SectionCard.Header title="Top slow OSD ops" />
                         <SectionCard.Content gap={0}>
                           <Table<SlowOsdOpsRow>
                             columns={slowOsdOpsColumns}
@@ -1453,7 +1453,7 @@ export function OverallPerformancePage() {
                       <div className="flex gap-6">
                         <div className="flex-1 h-[334px]">
                           <SectionCard className="h-full">
-                            <SectionCard.Header title="Highest Throughput" />
+                            <SectionCard.Header title="Highest throughput" />
                             <SectionCard.Content gap={0} className="overflow-auto flex-1">
                               <Table<{ id: string; imageName: string; throughput: string }>
                                 columns={[
@@ -1498,7 +1498,7 @@ export function OverallPerformancePage() {
                         </div>
                         <div className="flex-1 h-[334px]">
                           <SectionCard className="h-full">
-                            <SectionCard.Header title="Highest Latencies" />
+                            <SectionCard.Header title="Highest latencies" />
                             <SectionCard.Content gap={0} className="overflow-auto flex-1">
                               <Table<{ id: string; imageName: string; latency: string }>
                                 columns={[
@@ -1597,7 +1597,7 @@ export function OverallPerformancePage() {
                       <div className="flex gap-6">
                         <div className="flex-1">
                           <ChartCard
-                            title="Average Latency"
+                            title="Average latency"
                             series={[
                               {
                                 name: 'image-001',
@@ -1653,7 +1653,7 @@ export function OverallPerformancePage() {
 
                       {/* Images Overview Table */}
                       <SectionCard>
-                        <SectionCard.Header title="Images Overview" />
+                        <SectionCard.Header title="Images overview" />
                         <SectionCard.Content gap={0}>
                           <Table<{
                             id: string;

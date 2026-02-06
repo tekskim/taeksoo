@@ -230,17 +230,17 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
     return [
       {
         id: 'execute-shell',
-        label: 'Execute Shell',
+        label: 'Execute shell',
         onClick: () => onExecuteShell(row.name),
       },
       {
         id: 'view-logs',
-        label: 'View Logs',
+        label: 'View logs',
         onClick: () => onViewLogs(row.name),
       },
       {
         id: 'edit-config',
-        label: 'Edit Config',
+        label: 'Edit config',
         onClick: () => navigate(`/container/pods/${row.id}/edit`),
       },
       {
@@ -336,7 +336,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
     },
     {
       key: 'createdAt',
-      label: 'Created At',
+      label: 'Created at',
       flex: 1,
       sortable: true,
     },
@@ -422,14 +422,14 @@ function PortsTab({ ports }: PortsTabProps) {
     },
     {
       key: 'nodePort',
-      label: 'Node Port',
+      label: 'Node port',
       flex: 1,
       sortable: true,
       render: (value: number | undefined) => value ?? '-',
     },
     {
       key: 'publicPorts',
-      label: 'Public Ports',
+      label: 'Public ports',
       flex: 1,
       sortable: true,
       render: (value: string | undefined) =>
@@ -609,7 +609,7 @@ export function ContainerServiceDetailPage() {
   const moreActionsItems: ContextMenuItem[] = [
     {
       id: 'edit-config',
-      label: 'Edit Config',
+      label: 'Edit config',
       onClick: () => navigate(`/container/services/${service.id}/edit`),
     },
     {
@@ -674,7 +674,7 @@ export function ContainerServiceDetailPage() {
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
@@ -724,8 +724,8 @@ export function ContainerServiceDetailPage() {
                     value={`${service.type} - Cluster IP: ${service.clusterIP}`}
                     copyable
                   />
-                  <DetailHeader.InfoCard label="Session Affinity" value={service.sessionAffinity} />
-                  <DetailHeader.InfoCard label="Created At" value={service.createdAt} />
+                  <DetailHeader.InfoCard label="Session affinity" value={service.sessionAffinity} />
+                  <DetailHeader.InfoCard label="Created at" value={service.createdAt} />
                 </DetailHeader.InfoGrid>
 
                 {/* Second row: Labels, Annotations */}

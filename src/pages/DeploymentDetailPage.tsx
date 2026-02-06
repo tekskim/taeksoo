@@ -294,17 +294,17 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
     return [
       {
         id: 'execute-shell',
-        label: 'Execute Shell',
+        label: 'Execute shell',
         onClick: () => onExecuteShell(row.name),
       },
       {
         id: 'view-logs',
-        label: 'View Logs',
+        label: 'View logs',
         onClick: () => onViewLogs(row.name),
       },
       {
         id: 'edit-config',
-        label: 'Edit Config',
+        label: 'Edit config',
         onClick: () => navigate(`/container/pods/${row.id}/edit`),
       },
       {
@@ -403,7 +403,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
     },
     {
       key: 'createdAt',
-      label: 'Created At',
+      label: 'Created at',
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
@@ -433,7 +433,7 @@ function PodsTab({ pods, onViewLogs, onExecuteShell }: PodsTabProps) {
       <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">Pods</h3>
       <HStack gap={2} align="center">
         <SearchInput
-          placeholder="Search Pods by attributes"
+          placeholder="Search pods by attributes"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           onClear={() => setSearchQuery('')}
@@ -487,7 +487,7 @@ function ServicesTab({ services }: ServicesTabProps) {
     return [
       {
         id: 'edit-config',
-        label: 'Edit Config',
+        label: 'Edit config',
         onClick: () => navigate(`/container/services/${row.id}/edit`),
       },
       {
@@ -567,7 +567,7 @@ function ServicesTab({ services }: ServicesTabProps) {
     },
     {
       key: 'createdAt',
-      label: 'Created At',
+      label: 'Created at',
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
@@ -741,7 +741,7 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
   const columns: TableColumn<EventRow>[] = [
     {
       key: 'lastSeen',
-      label: 'Last Seen',
+      label: 'Last seen',
       flex: 1,
       minWidth: columnMinWidths.lastSeen,
       sortable: true,
@@ -765,7 +765,7 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
     },
     {
       key: 'firstSeen',
-      label: 'First Seen',
+      label: 'First seen',
       flex: 1,
       minWidth: columnMinWidths.firstSeen,
       sortable: true,
@@ -812,7 +812,7 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
       </h3>
       <HStack gap={2} align="center">
         <SearchInput
-          placeholder="Search Events by attributes"
+          placeholder="Search events by attributes"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           onClear={() => setSearchQuery('')}
@@ -912,7 +912,7 @@ export function DeploymentDetailPage() {
   const moreActionsItems: ContextMenuItem[] = [
     {
       id: 'execute-shell',
-      label: 'Execute Shell',
+      label: 'Execute shell',
       submenu: containerSubmenu,
       onClick: () => console.log('Execute Shell'),
     },
@@ -933,7 +933,7 @@ export function DeploymentDetailPage() {
     },
     {
       id: 'edit-config',
-      label: 'Edit Config',
+      label: 'Edit config',
       onClick: () => navigate(`/container/deployments/${deployment.id}/edit`),
     },
     {
@@ -998,7 +998,7 @@ export function DeploymentDetailPage() {
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
@@ -1044,13 +1044,13 @@ export function DeploymentDetailPage() {
                   />
                   <DetailHeader.InfoCard label="Namespace" value={deployment.namespace} copyable />
                   <DetailHeader.InfoCard label="Image" value={deployment.image} copyable />
-                  <DetailHeader.InfoCard label="Created At" value={deployment.createdAt} />
+                  <DetailHeader.InfoCard label="Created at" value={deployment.createdAt} />
                 </DetailHeader.InfoGrid>
 
                 {/* Metric Cards */}
                 <HStack gap={3} className="w-full mt-3">
                   <MetricCard
-                    title="Pod Restarts"
+                    title="Pod restarts"
                     value={deployment.podRestarts}
                     tooltip="Pod restarts indicates how many times a container within the pod has been restarted by Kubernetes."
                   />

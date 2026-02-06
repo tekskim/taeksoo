@@ -284,14 +284,14 @@ const filterFields: FilterField[] = [
   { key: 'name', label: 'Name', type: 'text' },
   { key: 'description', label: 'Description', type: 'text' },
   { key: 'tenant', label: 'Tenant', type: 'text' },
-  { key: 'attachedTo', label: 'Attached To', type: 'text' },
+  { key: 'attachedTo', label: 'Attached to', type: 'text' },
   { key: 'ownedNetwork', label: 'Network', type: 'text' },
   { key: 'fixedIp', label: 'Fixed IP', type: 'text' },
   { key: 'floatingIp', label: 'Floating IP', type: 'text' },
   { key: 'macAddress', label: 'MAC Address', type: 'text' },
   {
     key: 'adminState',
-    label: 'Admin State',
+    label: 'Admin state',
     type: 'select',
     options: [
       { value: 'Up', label: 'Up' },
@@ -365,8 +365,8 @@ export function ComputeAdminPortsPage() {
     { id: 'floatingIp', label: 'Floating IP', visible: true },
     { id: 'description', label: 'Description', visible: true },
     { id: 'macAddress', label: 'Mac address', visible: true },
-    { id: 'adminState', label: 'Admin State', visible: true },
-    { id: 'createdAt', label: 'Created At', visible: true },
+    { id: 'adminState', label: 'Admin state', visible: true },
+    { id: 'createdAt', label: 'Created at', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
 
@@ -451,7 +451,7 @@ export function ComputeAdminPortsPage() {
     },
     {
       key: 'attachedTo',
-      label: 'Attached To',
+      label: 'Attached to',
       flex: 1,
       minWidth: columnMinWidths.attachedTo,
       render: (_, row) =>
@@ -552,7 +552,7 @@ export function ComputeAdminPortsPage() {
     },
     {
       key: 'adminState',
-      label: 'Admin State',
+      label: 'Admin state',
       flex: 1,
       minWidth: columnMinWidths.adminState,
       render: (_, row) => (
@@ -563,7 +563,7 @@ export function ComputeAdminPortsPage() {
     },
     {
       key: 'createdAt',
-      label: 'Created At',
+      label: 'Created at',
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
@@ -645,7 +645,7 @@ export function ComputeAdminPortsPage() {
             }
             actions={
               <TopBarAction
-                icon={<IconBell size={12} stroke={1} />}
+                icon={<IconBell size={16} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />

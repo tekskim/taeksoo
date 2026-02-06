@@ -184,7 +184,7 @@ export function PersistentVolumeDetailPage() {
   const moreActionsItems: ContextMenuItem[] = [
     {
       id: 'edit-config',
-      label: 'Edit Config',
+      label: 'Edit config',
       onClick: () => navigate(`/container/persistent-volumes/${pvId}/edit`),
     },
     {
@@ -292,7 +292,7 @@ export function PersistentVolumeDetailPage() {
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
@@ -339,7 +339,7 @@ export function PersistentVolumeDetailPage() {
                             : 'muted'
                     }
                   />
-                  <DetailHeader.InfoCard label="Created At" value={pvData.createdAt} />
+                  <DetailHeader.InfoCard label="Created at" value={pvData.createdAt} />
                   <DetailHeader.InfoCard
                     label={`Labels (${labelsCount})`}
                     value={
@@ -396,19 +396,19 @@ export function PersistentVolumeDetailPage() {
                           </h3>
                           <VStack gap={1.5} align="start">
                             <Checkbox
-                              label="Single Node Read-Write"
+                              label="Single node read-write"
                               checked={pvData.accessModes.singleNodeReadWrite}
                               onChange={() => {}}
                               disabled
                             />
                             <Checkbox
-                              label="Many Nodes Read-Only"
+                              label="Many nodes read-only"
                               checked={pvData.accessModes.manyNodesReadOnly}
                               onChange={() => {}}
                               disabled
                             />
                             <Checkbox
-                              label="Many Nodes Read-Write"
+                              label="Many nodes read-write"
                               checked={pvData.accessModes.manyNodesReadWrite}
                               onChange={() => {}}
                               disabled

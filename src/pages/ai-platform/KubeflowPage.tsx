@@ -106,7 +106,7 @@ export function KubeflowPage() {
               </HStack>
               <EmptyState
                 icon={<IconBrandDocker size={48} stroke={1} />}
-                title="Kubeflow Dashboard"
+                title="Kubeflow dashboard"
                 description="Connect to Kubeflow to manage ML workflows."
               />
             </VStack>

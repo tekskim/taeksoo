@@ -232,7 +232,7 @@ export default function SubnetDetailPage() {
     },
     {
       key: 'attachedTo',
-      label: 'Attached To',
+      label: 'Attached to',
       flex: 1,
       render: (_, row) =>
         row.attachedTo ? (
@@ -302,7 +302,7 @@ export default function SubnetDetailPage() {
     },
     {
       key: 'adminState',
-      label: 'Admin State',
+      label: 'Admin state',
       flex: 1,
       render: (_, row) => (
         <Badge variant={row.adminState === 'Up' ? 'success' : 'error'} size="sm">
@@ -312,7 +312,7 @@ export default function SubnetDetailPage() {
     },
     {
       key: 'createdAt',
-      label: 'Created At',
+      label: 'Created at',
       flex: 1,
       sortable: true,
     },
@@ -368,7 +368,7 @@ export default function SubnetDetailPage() {
             onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
             actions={
               <TopBarAction
-                icon={<IconBell size={12} stroke={1.5} />}
+                icon={<IconBell size={16} stroke={1.5} />}
                 onClick={() => {}}
                 hasNotification
               />

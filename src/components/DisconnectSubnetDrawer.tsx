@@ -196,7 +196,7 @@ export function DisconnectSubnetDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={onClose}
-      title="Disconnect Subnet"
+      title="Disconnect subnet"
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">

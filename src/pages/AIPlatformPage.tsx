@@ -173,7 +173,7 @@ export function AIPlatformSidebar() {
             />
             <MenuItem
               icon={<IconTemplate size={18} stroke={1.5} />}
-              label="My Templates"
+              label="My templates"
               href="/ai-platform/my-templates"
               active={isActive('/ai-platform/my-templates')}
             />
@@ -269,7 +269,7 @@ export function AIPlatformSidebar() {
             />
             <MenuItem
               icon={<IconShield size={18} stroke={1.5} />}
-              label="System Administration"
+              label="System administration"
               href="/ai-platform/admin"
               active={isActive('/ai-platform/admin')}
             />
@@ -336,7 +336,7 @@ export function AIPlatformPageLayout({
           aria-label="Design system"
         />
         <TopBarAction
-          icon={<IconBell size={16} stroke={1} />}
+          icon={<IconBell size={16} stroke={1.5} />}
           aria-label="Notifications"
           badge={true}
         />
@@ -740,7 +740,7 @@ function DashboardContent() {
           icon={
             <IconStack2 size={24} stroke={1.5} className="text-[var(--color-action-primary)]" />
           }
-          title="My Resource Usage"
+          title="My resource usage"
         >
           <div className="space-y-1">
             <DataRow label="Running jobs:" value={0} />
@@ -751,7 +751,7 @@ function DashboardContent() {
 
         <ResourceCard
           icon={<IconActivity size={24} stroke={1.5} className="text-[var(--color-text-muted)]" />}
-          title="Queue Status"
+          title="Queue status"
         >
           <div className="space-y-1">
             <DataRow label="My pending Jobs:" value={0} />
@@ -820,7 +820,7 @@ function DashboardContent() {
             icon={
               <IconStack2 size={28} stroke={1.5} className="text-[var(--color-action-primary)]" />
             }
-            title="Deploy New Workload"
+            title="Deploy new workload"
             description="Deploy Pod or template"
             onClick={() => navigate('/ai-platform/workloads')}
           />
@@ -832,7 +832,7 @@ function DashboardContent() {
                 className="text-[var(--semantic-color-state-success)]"
               />
             }
-            title="Serverless Endpoint"
+            title="Serverless endpoint"
             description="Create inference API"
             onClick={() => navigate('/ai-platform/serverless')}
           />
@@ -856,7 +856,7 @@ function DashboardContent() {
                 className="text-[var(--semantic-color-state-success)]"
               />
             }
-            title="Detailed Monitoring"
+            title="Detailed monitoring"
             description="Check resource trends"
             onClick={() => navigate('/ai-platform/monitoring')}
           />
@@ -884,7 +884,7 @@ function DashboardContent() {
               <IconTemplate size={28} stroke={1.5} className="text-[var(--color-action-primary)]" />
             }
             count={20}
-            label="My Templates"
+            label="My templates"
             onClick={() => navigate('/ai-platform/my-templates')}
           />
           <ServiceOverviewCard

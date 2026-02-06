@@ -874,7 +874,7 @@ export default function CreateLoadBalancerPage() {
       },
       {
         key: 'createdAt',
-        label: 'Created At',
+        label: 'Created at',
         flex: 1,
         minWidth: columnMinWidths.createdAt,
       },
@@ -954,7 +954,7 @@ export default function CreateLoadBalancerPage() {
       },
       {
         key: 'createdAt',
-        label: 'Created At',
+        label: 'Created at',
         flex: 1,
         minWidth: columnMinWidths.createdAt,
       },
@@ -1051,7 +1051,7 @@ export default function CreateLoadBalancerPage() {
       },
       {
         key: 'createdAt',
-        label: 'Created At',
+        label: 'Created at',
         flex: 1,
         minWidth: columnMinWidths.createdAt,
       },
@@ -1186,7 +1186,7 @@ export default function CreateLoadBalancerPage() {
             }
             actions={
               <TopBarAction
-                icon={<IconBell size={16} stroke={1} />}
+                icon={<IconBell size={16} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />
@@ -2143,8 +2143,8 @@ export default function CreateLoadBalancerPage() {
                               <FormField.Control>
                                 <Select
                                   options={[
-                                    { value: 'ROUND_ROBIN', label: 'Round Robin' },
-                                    { value: 'LEAST_CONNECTIONS', label: 'Least Connections' },
+                                    { value: 'ROUND_ROBIN', label: 'Round robin' },
+                                    { value: 'LEAST_CONNECTIONS', label: 'Least connections' },
                                     { value: 'SOURCE_IP', label: 'Source IP' },
                                     { value: 'SOURCE_IP_PORT', label: 'Source IP Port' },
                                   ]}
@@ -2849,7 +2849,7 @@ export default function CreateLoadBalancerPage() {
                     {sectionStatus['health-monitor'] === 'done' && (
                       <SectionCard.Content>
                         <SectionCard.DataRow
-                          label="Create Health Monitor"
+                          label="Create health monitor"
                           value={createHealthMonitor ? 'Yes' : 'No'}
                         />
                         {createHealthMonitor && (

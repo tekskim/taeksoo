@@ -124,7 +124,7 @@ export default function IAMTokenPoliciesPage() {
                   <TabPanel value="general" className="pt-0">
                     <VStack gap={4} className="pt-4">
                       <SectionCard>
-                        <SectionCard.Header title="General Policy" />
+                        <SectionCard.Header title="General policy" />
                         <SectionCard.Content gap={6}>
                           {/* Access Token Lifespan */}
                           <VStack gap={4}>

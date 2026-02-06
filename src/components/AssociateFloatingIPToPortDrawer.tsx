@@ -233,7 +233,7 @@ export function AssociateFloatingIPToPortDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title="Associate Floating IP"
+      title="Associate floating IP"
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">

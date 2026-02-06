@@ -513,13 +513,13 @@ export function ComputeAdminVolumeTypesPage() {
               <Breadcrumb
                 items={[
                   { label: 'Compute Admin', href: '/compute-admin' },
-                  { label: 'Volume Types' },
+                  { label: 'Volume types' },
                 ]}
               />
             }
             actions={
               <TopBarAction
-                icon={<IconBell size={12} stroke={1} />}
+                icon={<IconBell size={16} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />
@@ -533,7 +533,7 @@ export function ComputeAdminVolumeTypesPage() {
             <VStack gap={3}>
               {/* Page Header */}
               <div className="flex items-center justify-between h-8">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Volume Types</h1>
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Volume types</h1>
                 <Button size="md">
                   {activeTab === 'volume-types' ? 'Create Volume Type' : 'Create QoS Spec'}
                 </Button>
@@ -542,8 +542,8 @@ export function ComputeAdminVolumeTypesPage() {
               {/* Tabs */}
               <Tabs value={activeTab} onChange={handleTabChange} variant="underline" size="sm">
                 <TabList>
-                  <Tab value="volume-types">Volume Types</Tab>
-                  <Tab value="qos-specs">QoS Specs</Tab>
+                  <Tab value="volume-types">Volume types</Tab>
+                  <Tab value="qos-specs">QoS specs</Tab>
                 </TabList>
               </Tabs>
 

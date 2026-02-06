@@ -173,7 +173,7 @@ export function CreateKeyPairDrawer({
               onChange={(value) => setCreateType(value as 'create' | 'import')}
             >
               <VStack gap={3}>
-                <Radio value="create" label="Create Key Pair" />
+                <Radio value="create" label="Create key pair" />
                 <Radio value="import" label="Import Key Pair" />
               </VStack>
             </RadioGroup>
