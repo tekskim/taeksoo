@@ -718,7 +718,7 @@ export function DrawersPage() {
                           category="Snapshot"
                           onOpen={() => setIsEditInstanceSnapshotOpen(true)}
                           linked
-                          linkedTo="Instance Snapshots"
+                          linkedTo="Instance snapshots"
                         />
                         <DrawerCard
                           title="Create volume from Instance Snapshot"
@@ -726,7 +726,7 @@ export function DrawersPage() {
                           category="Snapshot"
                           onOpen={() => setIsCreateVolumeFromSnapshotOpen(true)}
                           linked
-                          linkedTo="Instance Snapshots"
+                          linkedTo="Instance snapshots"
                         />
                       </div>
                     </VStack>
@@ -851,7 +851,7 @@ export function DrawersPage() {
                           category="Volume"
                           onOpen={() => setIsEditVolumeBackupOpen(true)}
                           linked
-                          linkedTo="Volume Backups"
+                          linkedTo="Volume backups"
                         />
                         <DrawerCard
                           title="Accept volume transfer"
@@ -865,7 +865,7 @@ export function DrawersPage() {
                           category="Volume"
                           onOpen={() => setIsEditVolumeSnapshotOpen(true)}
                           linked
-                          linkedTo="Volume Snapshots"
+                          linkedTo="Volume snapshots"
                         />
                         <DrawerCard
                           title="Create volume from Snapshot"
@@ -873,7 +873,7 @@ export function DrawersPage() {
                           category="Volume"
                           onOpen={() => setIsCreateVolumeFromVolumeSnapshotOpen(true)}
                           linked
-                          linkedTo="Volume Snapshots"
+                          linkedTo="Volume snapshots"
                         />
                         <DrawerCard
                           title="Create volume from Backup"
@@ -881,7 +881,7 @@ export function DrawersPage() {
                           category="Volume"
                           onOpen={() => setIsCreateVolumeFromBackupOpen(true)}
                           linked
-                          linkedTo="Volume Backups"
+                          linkedTo="Volume backups"
                         />
                         <DrawerCard
                           title="Detach volume"
@@ -1094,7 +1094,7 @@ export function DrawersPage() {
                           category="Security group"
                           onOpen={() => setIsCreateSecurityGroupRuleOpen(true)}
                           linked
-                          linkedTo="Security Groups"
+                          linkedTo="Security groups"
                         />
                         <DrawerCard
                           title="Create Security group"
@@ -1108,7 +1108,7 @@ export function DrawersPage() {
                           category="Security group"
                           onOpen={() => setIsEditSecurityGroupOpen(true)}
                           linked
-                          linkedTo="Security Groups"
+                          linkedTo="Security groups"
                         />
                         <DrawerCard
                           title="Manage security groups"
@@ -1159,7 +1159,7 @@ export function DrawersPage() {
                           category="Load balancer"
                           onOpen={() => setIsEditLoadBalancerOpen(true)}
                           linked
-                          linkedTo="Load Balancers"
+                          linkedTo="Load balancers"
                         />
                         <DrawerCard
                           title="Edit pool"
@@ -1203,7 +1203,7 @@ export function DrawersPage() {
                           category="Load balancer"
                           onOpen={() => setIsAssociateFloatingIPToLBOpen(true)}
                           linked
-                          linkedTo="Load Balancers"
+                          linkedTo="Load balancers"
                         />
                         <DrawerCard
                           title="Change server certificate"
@@ -1301,7 +1301,7 @@ export function DrawersPage() {
                         <DrawerCard
                           title="Manage Users"
                           description="Add or remove members of a user group."
-                          category="User Group"
+                          category="User group"
                           onOpen={() => setIsManageUsersOpen(true)}
                           linked
                           linkedTo="IAM User Groups"
@@ -1309,7 +1309,7 @@ export function DrawersPage() {
                         <DrawerCard
                           title="Edit user group"
                           description="Edit the user group's basic information."
-                          category="User Group"
+                          category="User group"
                           onOpen={() => setIsEditUserGroupOpen(true)}
                           linked
                           linkedTo="IAM User Groups"
@@ -1413,25 +1413,25 @@ export function DrawersPage() {
                         <DrawerCard
                           title="Create folder"
                           description="Create a new folder in a bucket with a specified parent location."
-                          category="Object Storage"
+                          category="Object storage"
                           onOpen={() => setIsCreateFolderOpen(true)}
                         />
                         <DrawerCard
                           title="Create object"
                           description="Upload files to a bucket with ACL settings and tags."
-                          category="Object Storage"
+                          category="Object storage"
                           onOpen={() => setIsCreateObjectOpen(true)}
                         />
                         <DrawerCard
                           title="Move Files"
                           description="Move files or folders to a different location within the bucket."
-                          category="Object Storage"
+                          category="Object storage"
                           onOpen={() => setIsMoveFilesOpen(true)}
                         />
                         <DrawerCard
                           title="Edit object"
                           description="Edit object name and manage tags."
-                          category="Object Storage"
+                          category="Object storage"
                           onOpen={() => setIsEditObjectOpen(true)}
                         />
                       </div>

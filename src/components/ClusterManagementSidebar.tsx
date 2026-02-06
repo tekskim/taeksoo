@@ -129,7 +129,7 @@ export function ClusterManagementSidebar({
             icon={<FolderCog size={16} strokeWidth={1.5} />}
             active={activeIconSection === 'cluster-management'}
             onClick={() => navigate('/container/cluster-management')}
-            tooltip="Cluster Management"
+            tooltip="Cluster management"
           />
         </div>
       </aside>

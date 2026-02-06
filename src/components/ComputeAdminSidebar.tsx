@@ -136,7 +136,7 @@ export function ComputeAdminSidebar({ isOpen = true, onToggle }: ComputeAdminSid
             />
             <MenuItem
               icon={<IconLayoutGrid size={16} stroke={1.5} />}
-              label="Server Groups"
+              label="Server groups"
               href="/compute-admin/server-groups"
               active={isActive('/compute-admin/server-groups')}
             />

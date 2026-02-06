@@ -492,7 +492,7 @@ export function ContainerSidebar({ isOpen = true, onToggle }: ContainerSidebarPr
             icon={<FolderCog size={16} strokeWidth={1.5} />}
             active={location.pathname.startsWith('/container/cluster-management')}
             onClick={() => navigate('/container/cluster-management')}
-            tooltip="Cluster Management"
+            tooltip="Cluster management"
           />
         </div>
       </aside>
