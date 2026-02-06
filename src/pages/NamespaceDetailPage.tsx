@@ -416,7 +416,7 @@ function getWorkloadMenuItems(
   onAction: (action: string, workload: WorkloadRow) => void
 ): ContextMenuItem[] {
   const commonItems: ContextMenuItem[] = [
-    { id: 'edit-config', label: 'Edit Config', onClick: () => onAction('edit-config', workload) },
+    { id: 'edit-config', label: 'Edit config', onClick: () => onAction('edit-config', workload) },
     { id: 'edit-yaml', label: 'Edit YAML', onClick: () => onAction('edit-yaml', workload) },
     {
       id: 'download-yaml',
@@ -436,7 +436,7 @@ function getWorkloadMenuItems(
       return [
         {
           id: 'execute-shell',
-          label: 'Execute Shell',
+          label: 'Execute shell',
           onClick: () => onAction('execute-shell', workload),
         },
         {
@@ -453,7 +453,7 @@ function getWorkloadMenuItems(
       return [
         {
           id: 'execute-shell',
-          label: 'Execute Shell',
+          label: 'Execute shell',
           onClick: () => onAction('execute-shell', workload),
         },
         { id: 'redeploy', label: 'Redeploy', onClick: () => onAction('redeploy', workload) },
@@ -463,7 +463,7 @@ function getWorkloadMenuItems(
       return [
         {
           id: 'execute-shell',
-          label: 'Execute Shell',
+          label: 'Execute shell',
           onClick: () => onAction('execute-shell', workload),
         },
         { id: 'run-now', label: 'Run Now', onClick: () => onAction('run-now', workload) },
@@ -474,7 +474,7 @@ function getWorkloadMenuItems(
       return [
         {
           id: 'execute-shell',
-          label: 'Execute Shell',
+          label: 'Execute shell',
           onClick: () => onAction('execute-shell', workload),
         },
         ...commonItems,
@@ -483,17 +483,17 @@ function getWorkloadMenuItems(
       return [
         {
           id: 'execute-shell',
-          label: 'Execute Shell',
+          label: 'Execute shell',
           onClick: () => onAction('execute-shell', workload),
         },
-        { id: 'view-logs', label: 'View Logs', onClick: () => onAction('view-logs', workload) },
+        { id: 'view-logs', label: 'View logs', onClick: () => onAction('view-logs', workload) },
         ...commonItems,
       ];
     default:
       return [
         {
           id: 'execute-shell',
-          label: 'Execute Shell',
+          label: 'Execute shell',
           onClick: () => onAction('execute-shell', workload),
         },
         ...commonItems,
@@ -569,7 +569,7 @@ function WorkloadsTab({ workloads }: WorkloadsTabProps) {
     },
     {
       key: 'createdAt',
-      label: 'Created At',
+      label: 'Created at',
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
@@ -730,7 +730,7 @@ export function NamespaceDetailPage() {
   const moreActionsItems: ContextMenuItem[] = [
     {
       id: 'edit-config',
-      label: 'Edit Config',
+      label: 'Edit config',
       onClick: () => console.log('Edit Config'),
     },
     {
@@ -795,7 +795,7 @@ export function NamespaceDetailPage() {
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
@@ -837,7 +837,7 @@ export function NamespaceDetailPage() {
                           : 'pending'
                     }
                   />
-                  <DetailHeader.InfoCard label="Created At" value={namespace.createdAt} />
+                  <DetailHeader.InfoCard label="Created at" value={namespace.createdAt} />
                   <DetailHeader.InfoCard
                     label={`Labels (${Object.keys(namespace.labels).length})`}
                     value={

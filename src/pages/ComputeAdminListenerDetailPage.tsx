@@ -804,7 +804,7 @@ export default function ListenerDetailPage() {
                       {/* Default Pool */}
                       <SectionCard>
                         <SectionCard.Header
-                          title="Default Pool"
+                          title="Default pool"
                           actions={
                             <Button
                               variant="secondary"

@@ -195,7 +195,7 @@ function BasicInfoSection({
 }: BasicInfoSectionProps) {
   return (
     <SectionCard>
-      <SectionCard.Header title="Basic Information" showDivider />
+      <SectionCard.Header title="Basic information" showDivider />
       <SectionCard.Content>
         <VStack gap={6}>
           {/* Name */}
@@ -391,21 +391,21 @@ function StorageConfigSection({
                 onChange={(e) =>
                   onAccessModesChange({ ...accessModes, singleNodeReadWrite: e.target.checked })
                 }
-                label="Single Node Read-Write"
+                label="Single node read-write"
               />
               <Checkbox
                 checked={accessModes.manyNodesReadOnly}
                 onChange={(e) =>
                   onAccessModesChange({ ...accessModes, manyNodesReadOnly: e.target.checked })
                 }
-                label="Many Nodes Read-Only"
+                label="Many nodes read-only"
               />
               <Checkbox
                 checked={accessModes.manyNodesReadWrite}
                 onChange={(e) =>
                   onAccessModesChange({ ...accessModes, manyNodesReadWrite: e.target.checked })
                 }
-                label="Many Nodes Read-Write"
+                label="Many nodes read-write"
               />
             </VStack>
           </VStack>
@@ -956,7 +956,7 @@ export function CreatePersistentVolumePage() {
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />

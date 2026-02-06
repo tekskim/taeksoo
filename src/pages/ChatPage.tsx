@@ -329,10 +329,10 @@ function NewChatDrawer({
           <SectionCard.Header title="Model information" />
           <SectionCard.Content>
             <SectionCard.DataRow label="Provider" value={agent.provider} />
-            <SectionCard.DataRow label="Model Name" value={agent.modelName} />
+            <SectionCard.DataRow label="Model name" value={agent.modelName} />
             <SectionCard.DataRow label="Temperature" value={String(agent.temperature)} />
             <SectionCard.DataRow
-              label="Connected Data sources"
+              label="Connected data sources"
               value={
                 agent.connectedDataSources.length > 0
                   ? agent.connectedDataSources.join(', ')

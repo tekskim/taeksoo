@@ -130,7 +130,7 @@ export default function IAMSessionPoliciesPage() {
                   <TabPanel value="general" className="pt-4">
                     <VStack gap={4}>
                       <SectionCard>
-                        <SectionCard.Header title="General Policy" />
+                        <SectionCard.Header title="General policy" />
                         <SectionCard.Content gap={6}>
                           {/* Session Idle Timeout */}
                           <VStack gap={4}>

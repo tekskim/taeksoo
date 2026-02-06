@@ -56,7 +56,7 @@ const defaultColumns: ColumnConfig[] = [
   { id: 'gpu', label: 'GPU', visible: false },
   { id: 'az', label: 'AZ', visible: false },
   { id: 'tag', label: 'Tag', visible: false },
-  { id: 'createdAt', label: 'Created At', visible: false },
+  { id: 'createdAt', label: 'Created at', visible: false },
   { id: 'action', label: 'Action', visible: true, locked: true },
 ];
 
@@ -147,7 +147,7 @@ export function ViewPreferencesDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleCancel}
-      title="View Preferences"
+      title="View preferences"
       width={320}
       showCloseButton={true}
       footer={

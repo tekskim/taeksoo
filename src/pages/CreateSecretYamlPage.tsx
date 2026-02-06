@@ -192,7 +192,7 @@ export function CreateSecretYamlPage() {
               items={[
                 { label: 'clusterName', href: '/container' },
                 { label: 'Secrets', href: '/container/secrets' },
-                { label: 'Create Secret' },
+                { label: 'Create secret' },
               ]}
             />
           }
@@ -205,7 +205,7 @@ export function CreateSecretYamlPage() {
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
@@ -223,7 +223,7 @@ export function CreateSecretYamlPage() {
             <VStack gap={6} className="flex-1 min-h-0">
               {/* Header */}
               <VStack gap={2} className="flex-shrink-0">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create Secret</h1>
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create secret</h1>
                 <p className="text-body-sm text-[var(--color-text-subtle)]">
                   Secret is a Kubernetes resource used to securely store sensitive information such
                   as passwords, tokens, and certificates for use by Pods.

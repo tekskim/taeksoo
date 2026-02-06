@@ -95,7 +95,13 @@ function CapacityProgressBar({ label, used, total, unit, percentage }: CapacityP
   };
 
   return (
-    <div className="flex flex-col gap-[var(--spacing-2)] w-full">
+    <div
+      ref={containerRef}
+      className="flex flex-col gap-[var(--spacing-2)] w-full cursor-pointer"
+      onMouseEnter={() => setShowTooltip(true)}
+      onMouseLeave={() => setShowTooltip(false)}
+      onMouseMove={handleMouseMove}
+    >
       {/* Header Row */}
       <div className="flex items-center justify-between w-full">
         {/* Label */}
@@ -121,13 +127,7 @@ function CapacityProgressBar({ label, used, total, unit, percentage }: CapacityP
       </div>
 
       {/* Progress bar - using design system tokens */}
-      <div
-        ref={containerRef}
-        className="relative h-[var(--progress-bar-height)] w-full cursor-pointer"
-        onMouseEnter={() => setShowTooltip(true)}
-        onMouseLeave={() => setShowTooltip(false)}
-        onMouseMove={handleMouseMove}
-      >
+      <div className="relative h-[var(--progress-bar-height)] w-full">
         {/* Background */}
         <div
           className="absolute inset-0 rounded-[var(--progress-bar-radius)]"
@@ -180,6 +180,7 @@ interface CardProps {
   children: React.ReactNode;
   className?: string;
   bgColor?: string;
+  actions?: React.ReactNode;
 }
 
 function Card({
@@ -187,14 +188,16 @@ function Card({
   children,
   className = '',
   bgColor = 'bg-[var(--color-surface-default)]',
+  actions,
 }: CardProps) {
   return (
     <div
       className={`p-4 rounded-2xl border border-[var(--color-border-default)] ${bgColor} ${className}`}
     >
-      <h6 className="text-body-md !font-semibold text-[var(--color-text-muted)] mb-4 uppercase">
-        {title}
-      </h6>
+      <div className="flex items-center justify-between mb-4">
+        <h6 className="text-heading-h7">{title}</h6>
+        {actions}
+      </div>
       {children}
     </div>
   );
@@ -376,7 +379,7 @@ export function ContainerDashboardPage() {
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
@@ -395,60 +398,60 @@ export function ContainerDashboardPage() {
             <div className="grid grid-cols-2 gap-6 mb-6">
               {/* Basic information Card */}
               <Card
-                title="Basic Information"
+                title="Basic information"
                 bgColor="bg-[var(--color-surface-subtle)]"
                 className="flex flex-col"
               >
                 <h3 className="text-heading-h2 text-[var(--color-text-default)]">k3s-cluster</h3>
                 <div className="space-y-4 mt-auto">
                   <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <div className="text-body-xs text-[var(--color-text-muted)] mb-1">
+                    <div className="flex flex-col gap-1.5">
+                      <span className="text-label-sm text-[var(--color-text-subtle)]">
                         Architecture
-                      </div>
-                      <div className="text-body-md text-[var(--color-text-default)]">amd64</div>
+                      </span>
+                      <span className="text-body-md text-[var(--color-text-default)]">amd64</span>
                     </div>
-                    <div>
-                      <div className="text-body-xs text-[var(--color-text-muted)] mb-1">
+                    <div className="flex flex-col gap-1.5">
+                      <span className="text-label-sm text-[var(--color-text-subtle)]">
                         Kubernetes version
-                      </div>
-                      <div className="text-body-md text-[var(--color-text-default)]">
+                      </span>
+                      <span className="text-body-md text-[var(--color-text-default)]">
                         v1.33.4+k3s1
-                      </div>
+                      </span>
                     </div>
-                    <div>
-                      <div className="text-body-xs text-[var(--color-text-muted)] mb-1">
+                    <div className="flex flex-col gap-1.5">
+                      <span className="text-label-sm text-[var(--color-text-subtle)]">
                         Total resources
-                      </div>
-                      <div className="text-body-md text-[var(--color-text-default)]">295</div>
+                      </span>
+                      <span className="text-body-md text-[var(--color-text-default)]">295</span>
                     </div>
-                    <div>
-                      <div className="text-body-xs text-[var(--color-text-muted)] mb-1">
+                    <div className="flex flex-col gap-1.5">
+                      <span className="text-label-sm text-[var(--color-text-subtle)]">
                         Created at
-                      </div>
-                      <div className="text-body-md text-[var(--color-text-default)]">
+                      </span>
+                      <span className="text-body-md text-[var(--color-text-default)]">
                         2025-11-09 12:57
-                      </div>
+                      </span>
                     </div>
-                    <div>
-                      <div className="text-body-xs text-[var(--color-text-muted)] mb-1 flex items-center gap-1">
+                    <div className="flex flex-col gap-1.5">
+                      <span className="text-label-sm text-[var(--color-text-subtle)] flex items-center gap-1">
                         Deployments
                         <IconExternalLink
                           size={12}
                           className="text-[var(--color-action-primary)]"
                         />
-                      </div>
-                      <div className="text-body-md text-[var(--color-text-default)]">15</div>
+                      </span>
+                      <span className="text-body-md text-[var(--color-text-default)]">15</span>
                     </div>
-                    <div>
-                      <div className="text-body-xs text-[var(--color-text-muted)] mb-1 flex items-center gap-1">
+                    <div className="flex flex-col gap-1.5">
+                      <span className="text-label-sm text-[var(--color-text-subtle)] flex items-center gap-1">
                         Nodes
                         <IconExternalLink
                           size={12}
                           className="text-[var(--color-action-primary)]"
                         />
-                      </div>
-                      <div className="text-body-md text-[var(--color-text-default)]">1</div>
+                      </span>
+                      <span className="text-body-md text-[var(--color-text-default)]">1</span>
                     </div>
                   </div>
                 </div>
@@ -498,7 +501,7 @@ export function ContainerDashboardPage() {
 
             {/* Control Plane Components */}
             <div className="mb-6">
-              <Card title="Control Plane Components">
+              <Card title="Control plane components">
                 <DetailHeader.InfoGrid>
                   <DetailHeader.InfoCard
                     label="Etcd"
@@ -523,17 +526,19 @@ export function ContainerDashboardPage() {
             </div>
 
             {/* Events & Secrets */}
-            <Card title="Events & Secrets">
+            <Card
+              title="Events & Secrets"
+              actions={
+                <Button variant="secondary" size="sm">
+                  Full Events List
+                </Button>
+              }
+            >
               <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="md">
-                <div className="flex items-center justify-between mb-3">
-                  <TabList>
-                    <Tab value="events">Events</Tab>
-                    <Tab value="secrets">Secrets</Tab>
-                  </TabList>
-                  <Button variant="secondary" size="sm">
-                    Full Events List
-                  </Button>
-                </div>
+                <TabList className="w-full mb-3">
+                  <Tab value="events">Events</Tab>
+                  <Tab value="secrets">Secrets</Tab>
+                </TabList>
 
                 <TabPanel value="events" className="pt-0">
                   <VStack gap={3}>

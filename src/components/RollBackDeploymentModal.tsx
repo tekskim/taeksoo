@@ -62,7 +62,7 @@ export function RollBackDeploymentModal({
     <Modal
       isOpen={isOpen}
       onClose={handleClose}
-      title="Roll Back Deployment"
+      title="Roll back deployment"
       description="This action rolls back the deployment to a previous version."
       size="sm"
     >

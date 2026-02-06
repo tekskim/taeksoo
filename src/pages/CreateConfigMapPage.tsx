@@ -203,7 +203,7 @@ function BasicInfoSection({
 }: BasicInfoSectionProps) {
   return (
     <SectionCard>
-      <SectionCard.Header title="Basic Information" showDivider />
+      <SectionCard.Header title="Basic information" showDivider />
       <SectionCard.Content>
         <VStack gap={6}>
           {/* Namespace */}
@@ -386,7 +386,7 @@ function BinaryDataSection({
 
   return (
     <SectionCard>
-      <SectionCard.Header title="Binary Data" showDivider />
+      <SectionCard.Header title="Binary data" showDivider />
       <SectionCard.Content>
         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
           <VStack gap={3}>
@@ -799,7 +799,7 @@ export function CreateConfigMapPage() {
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />

@@ -225,7 +225,7 @@ const filterFields: FilterField[] = [
   },
   {
     key: 'adminState',
-    label: 'Admin State',
+    label: 'Admin state',
     type: 'select',
     options: [
       { value: 'Up', label: 'Up' },
@@ -283,8 +283,8 @@ export function ComputeAdminNetworksPage() {
     { id: 'subnetCidr', label: 'Subnet CIDR', visible: true },
     { id: 'external', label: 'External', visible: true },
     { id: 'shared', label: 'Shared', visible: true },
-    { id: 'adminState', label: 'Admin State', visible: true },
-    { id: 'createdAt', label: 'Created At', visible: true },
+    { id: 'adminState', label: 'Admin state', visible: true },
+    { id: 'createdAt', label: 'Created at', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
 
@@ -419,7 +419,7 @@ export function ComputeAdminNetworksPage() {
     },
     {
       key: 'adminState',
-      label: 'Admin State',
+      label: 'Admin state',
       flex: 1,
       minWidth: columnMinWidths.adminState,
       sortable: false,
@@ -431,7 +431,7 @@ export function ComputeAdminNetworksPage() {
     },
     {
       key: 'createdAt',
-      label: 'Created At',
+      label: 'Created at',
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
@@ -513,7 +513,7 @@ export function ComputeAdminNetworksPage() {
             }
             actions={
               <TopBarAction
-                icon={<IconBell size={12} stroke={1.5} />}
+                icon={<IconBell size={16} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />

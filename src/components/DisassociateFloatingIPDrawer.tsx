@@ -99,7 +99,7 @@ export function DisassociateFloatingIPDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title="Disassociate Floating IP"
+      title="Disassociate floating IP"
       description="Remove the association between this floating IP and the instance. Once disassociated, the instance will lose external network access through this IP."
       width={700}
       footer={

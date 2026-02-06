@@ -37,7 +37,7 @@ export function RedeployStatefulSetModal({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Redeploy StatefulSet"
+      title="Redeploy statefulSet"
       description="This action redeploys the stateful set."
       size="sm"
     >

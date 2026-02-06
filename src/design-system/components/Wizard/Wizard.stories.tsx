@@ -53,7 +53,7 @@ const meta: Meta<typeof WizardSection> = {
 ### 예시
 \`\`\`tsx
 <WizardSection
-  title="Basic Information"
+  title="Basic information"
   status="done"
   onEdit={() => setStep(1)}
   summaryContent={
@@ -135,7 +135,7 @@ export const SkippedSectionExample: Story = {
 export const DoneSectionExample: Story = {
   name: 'Done Section',
   render: () => (
-    <DoneSection title="Basic Information" onEdit={() => console.log('Edit clicked')}>
+    <DoneSection title="Basic information" onEdit={() => console.log('Edit clicked')}>
       <SectionCard.DataRow label="Instance Name" value="production-server-01" showDivider={false} />
       <SectionCard.DataRow label="Description" value="Main production web server" />
       <SectionCard.DataRow label="Region" value="us-east-1" />
@@ -182,7 +182,7 @@ export const FullWizardExample: Story = {
     <VStack gap={4}>
       {/* Completed Step */}
       <WizardSection
-        title="Basic Information"
+        title="Basic information"
         status="done"
         onEdit={() => console.log('Edit Basic Info')}
         summaryContent={

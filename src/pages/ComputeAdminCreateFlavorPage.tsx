@@ -336,7 +336,7 @@ export function ComputeAdminCreateFlavorPage() {
             breadcrumb={<Breadcrumb items={breadcrumbItems} />}
             actions={
               <TopBarAction
-                icon={<IconBell size={12} />}
+                icon={<IconBell size={16} stroke={1.5} />}
                 onClick={() => console.log('Notifications clicked')}
                 aria-label="Notifications"
                 badge

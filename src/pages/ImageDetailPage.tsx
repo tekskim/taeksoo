@@ -537,7 +537,7 @@ export function ImageDetailPage() {
               />
             }
             actions={
-              <TopBarAction icon={<IconBell size={12} stroke={1.5} />} aria-label="Notifications" />
+              <TopBarAction icon={<IconBell size={16} stroke={1.5} />} aria-label="Notifications" />
             }
           />
         </div>
@@ -598,7 +598,7 @@ export function ImageDetailPage() {
                       <div className="flex gap-4 w-full">
                         <div className="flex-1">
                           <ImageChartWithFullScreen
-                            title="Average Latency"
+                            title="Average latency"
                             series={latencySeries}
                             timeLabels={timeLabels}
                             yAxisUnit="ms"

@@ -201,7 +201,7 @@ export function NetworkPolicyDetailPage() {
   const moreActionsItems: ContextMenuItem[] = [
     {
       id: 'edit-config',
-      label: 'Edit Config',
+      label: 'Edit config',
       onClick: () => navigate(`/container/network-policies/${networkPolicyId}/edit`),
     },
     {
@@ -275,7 +275,7 @@ export function NetworkPolicyDetailPage() {
     },
     {
       key: 'createdAt',
-      label: 'Created At',
+      label: 'Created at',
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
@@ -349,7 +349,7 @@ export function NetworkPolicyDetailPage() {
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
@@ -407,7 +407,7 @@ export function NetworkPolicyDetailPage() {
                       </span>
                     }
                   />
-                  <DetailHeader.InfoCard label="Created At" value={networkPolicyData.createdAt} />
+                  <DetailHeader.InfoCard label="Created at" value={networkPolicyData.createdAt} />
                   <DetailHeader.InfoCard
                     label={`Labels (${labelsCount})`}
                     value={

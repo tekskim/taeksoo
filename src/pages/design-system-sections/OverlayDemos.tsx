@@ -1678,7 +1678,7 @@ export function CreateMCPTemplateDrawer({
                 value={authType}
                 onChange={(value) => setAuthType(value)}
                 options={[
-                  { value: 'config-required', label: 'Config Required' },
+                  { value: 'config-required', label: 'Config required' },
                   { value: 'oauth', label: 'OAuth' },
                   { value: 'api-key', label: 'API Key' },
                   { value: 'none', label: 'None' },

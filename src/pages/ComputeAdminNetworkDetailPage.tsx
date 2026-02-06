@@ -530,7 +530,7 @@ export default function NetworkDetailPage() {
     },
     {
       key: 'createdAt',
-      label: 'Created At',
+      label: 'Created at',
       flex: 1,
       sortable: true,
     },
@@ -595,7 +595,7 @@ export default function NetworkDetailPage() {
     },
     {
       key: 'attachedTo',
-      label: 'Attached To',
+      label: 'Attached to',
       flex: 1,
       render: (_, row) =>
         row.attachedTo ? (
@@ -676,12 +676,12 @@ export default function NetworkDetailPage() {
     },
     {
       key: 'adminState',
-      label: 'Admin State',
+      label: 'Admin state',
       flex: 1,
     },
     {
       key: 'createdAt',
-      label: 'Created At',
+      label: 'Created at',
       flex: 1,
       sortable: true,
     },
@@ -736,7 +736,7 @@ export default function NetworkDetailPage() {
     },
     {
       key: 'adminState',
-      label: 'Admin State',
+      label: 'Admin state',
       flex: 1,
       render: (_, row) => (
         <Badge variant={row.adminState === 'Up' ? 'success' : 'error'} size="sm">
@@ -746,7 +746,7 @@ export default function NetworkDetailPage() {
     },
     {
       key: 'createdAt',
-      label: 'Created At',
+      label: 'Created at',
       flex: 1,
       sortable: true,
     },
@@ -799,7 +799,7 @@ export default function NetworkDetailPage() {
             breadcrumb={<Breadcrumb items={breadcrumbItems} />}
             actions={
               <TopBarAction
-                icon={<IconBell size={12} stroke={1.5} />}
+                icon={<IconBell size={16} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />
@@ -830,10 +830,10 @@ export default function NetworkDetailPage() {
                   <DetailHeader.InfoCard label="Status" value="Active" status={network.status} />
                   <DetailHeader.InfoCard label="ID" value={network.id} copyable />
                   <DetailHeader.InfoCard label="Tenant" value={network.tenant} />
-                  <DetailHeader.InfoCard label="Admin State" value={network.adminState} />
+                  <DetailHeader.InfoCard label="Admin state" value={network.adminState} />
                   <DetailHeader.InfoCard label="Shared" value={network.shared ? 'Yes' : 'No'} />
                   <DetailHeader.InfoCard label="External" value={network.external ? 'Yes' : 'No'} />
-                  <DetailHeader.InfoCard label="Created At" value={network.createdAt} />
+                  <DetailHeader.InfoCard label="Created at" value={network.createdAt} />
                 </DetailHeader.InfoGrid>
               </DetailHeader>
 
@@ -858,7 +858,7 @@ export default function NetworkDetailPage() {
                       {/* Basic Information */}
                       <SectionCard>
                         <SectionCard.Header
-                          title="Basic Infomation"
+                          title="Basic information"
                           actions={
                             <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
                               Edit
@@ -866,11 +866,11 @@ export default function NetworkDetailPage() {
                           }
                         />
                         <SectionCard.Content>
-                          <SectionCard.DataRow label="Network Name" value={network.networkName} />
+                          <SectionCard.DataRow label="Network name" value={network.networkName} />
                           <SectionCard.DataRow label="Description" value={network.description} />
-                          <SectionCard.DataRow label="Admin State" value={network.adminState} />
+                          <SectionCard.DataRow label="Admin state" value={network.adminState} />
                           <SectionCard.DataRow
-                            label="Port Security"
+                            label="Port security"
                             value={network.portSecurity ? 'On' : 'Off'}
                           />
                           <SectionCard.DataRow

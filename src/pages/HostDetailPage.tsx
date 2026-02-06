@@ -2122,7 +2122,7 @@ export default function HostDetailPage() {
                           <div className="grid grid-cols-2 gap-4">
                             {/* Disk Latency */}
                             <HostChartWithFullScreen
-                              title="Disk Latency"
+                              title="Disk latency"
                               series={[
                                 {
                                   name: 'sda Read',
@@ -2151,7 +2151,7 @@ export default function HostDetailPage() {
 
                             {/* Disk Utilization */}
                             <HostChartWithFullScreen
-                              title="Disk Utilization"
+                              title="Disk utilization"
                               series={[
                                 {
                                   name: 'sda',

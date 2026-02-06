@@ -241,7 +241,7 @@ export function ConnectSubnetDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title="Connect Subnet"
+      title="Connect subnet"
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">

@@ -194,7 +194,7 @@ const filterFields: FilterField[] = [
   },
   {
     key: 'adminState',
-    label: 'Admin State',
+    label: 'Admin state',
     type: 'select',
     options: [
       { value: 'Up', label: 'Up' },
@@ -450,7 +450,7 @@ export function NetworksPage() {
             }
             actions={
               <TopBarAction
-                icon={<IconBell size={12} stroke={1.5} />}
+                icon={<IconBell size={16} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />

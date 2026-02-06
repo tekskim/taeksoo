@@ -387,7 +387,7 @@ export function ManageSecurityGroupsDrawer({
 
         {/* Security Groups Section */}
         <VStack gap={3} className="pb-5">
-          <h3 className="text-label-lg text-[var(--color-text-default)]">Security Groups</h3>
+          <h3 className="text-label-lg text-[var(--color-text-default)]">Security groups</h3>
 
           {/* Pagination */}
           <Pagination

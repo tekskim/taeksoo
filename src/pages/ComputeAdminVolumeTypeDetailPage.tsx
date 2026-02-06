@@ -200,7 +200,7 @@ export default function ComputeAdminVolumeTypeDetailPage() {
   // Breadcrumb items
   const breadcrumbItems = [
     { label: 'Compute Admin', href: '/compute-admin' },
-    { label: 'Volume Types', href: '/compute-admin/volume-types' },
+    { label: 'Volume types', href: '/compute-admin/volume-types' },
     { label: volumeType.name },
   ];
 
@@ -373,7 +373,7 @@ export default function ComputeAdminVolumeTypeDetailPage() {
             breadcrumb={<Breadcrumb items={breadcrumbItems} />}
             actions={
               <TopBarAction
-                icon={<IconBell size={12} stroke={1.5} />}
+                icon={<IconBell size={16} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />
@@ -524,12 +524,12 @@ export default function ComputeAdminVolumeTypeDetailPage() {
                       <SectionCard.Content>
                         <SectionCard.DataRow label="Provider" value={mockEncryption.provider} />
                         <SectionCard.DataRow
-                          label="Control Location"
+                          label="Control location"
                           value={mockEncryption.controlLocation}
                         />
                         <SectionCard.DataRow label="Cipher" value={mockEncryption.cipher} />
                         <SectionCard.DataRow
-                          label="Key Size"
+                          label="Key size"
                           value={`${mockEncryption.keySize} bits`}
                         />
                       </SectionCard.Content>
@@ -547,7 +547,7 @@ export default function ComputeAdminVolumeTypeDetailPage() {
         open={deleteModalOpen}
         onClose={() => setDeleteModalOpen(false)}
         onConfirm={handleConfirmDelete}
-        title="Delete Extra Spec"
+        title="Delete extra spec"
         description="Removing the selected instances is permanent and cannot be undone."
         confirmText="Delete"
         variant="danger"

@@ -224,15 +224,15 @@ const filterFields: FilterField[] = [
       { value: 'HDD', label: 'HDD' },
     ],
   },
-  { key: 'diskTag', label: 'Disk Tag', type: 'text' },
-  { key: 'attachedTo', label: 'Attached To', type: 'text' },
+  { key: 'diskTag', label: 'Disk tag', type: 'text' },
+  { key: 'attachedTo', label: 'Attached to', type: 'text' },
   {
     key: 'status',
     label: 'Status',
     type: 'select',
     options: [
       { value: 'active', label: 'Active' },
-      { value: 'in-use', label: 'In Use' },
+      { value: 'in-use', label: 'In use' },
       { value: 'error', label: 'Error' },
       { value: 'pending', label: 'Pending' },
     ],
@@ -274,9 +274,9 @@ export function ComputeAdminVolumesPage() {
     { id: 'host', label: 'Host', visible: true },
     { id: 'size', label: 'Size', visible: true },
     { id: 'type', label: 'Type', visible: true },
-    { id: 'diskTag', label: 'Disk Tag', visible: true },
-    { id: 'attachedTo', label: 'Attached To', visible: true },
-    { id: 'createdAt', label: 'Created At', visible: true },
+    { id: 'diskTag', label: 'Disk tag', visible: true },
+    { id: 'attachedTo', label: 'Attached to', visible: true },
+    { id: 'createdAt', label: 'Created at', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
@@ -399,13 +399,13 @@ export function ComputeAdminVolumesPage() {
     },
     {
       key: 'diskTag',
-      label: 'Disk Tag',
+      label: 'Disk tag',
       flex: 1,
       minWidth: columnMinWidths.diskTag,
     },
     {
       key: 'attachedTo',
-      label: 'Attached To',
+      label: 'Attached to',
       flex: 1,
       minWidth: columnMinWidths.attachedTo,
       render: (_, row) =>
@@ -428,7 +428,7 @@ export function ComputeAdminVolumesPage() {
     },
     {
       key: 'createdAt',
-      label: 'Created At',
+      label: 'Created at',
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
@@ -529,7 +529,7 @@ export function ComputeAdminVolumesPage() {
             }
             actions={
               <TopBarAction
-                icon={<IconBell size={12} stroke={1.5} />}
+                icon={<IconBell size={16} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />

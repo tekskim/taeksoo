@@ -354,7 +354,7 @@ export function CreateClusterPage() {
               <div className="flex-1 flex flex-col gap-4">
                 {/* Basic Information */}
                 <SectionCard>
-                  <SectionCard.Header title="Basic Information" />
+                  <SectionCard.Header title="Basic information" />
                   <SectionCard.Content>
                     <VStack gap={6}>
                       {/* Name */}
@@ -527,7 +527,7 @@ export function CreateClusterPage() {
 
                 {/* Node Configuration */}
                 <SectionCard>
-                  <SectionCard.Header title="Node Configuration" />
+                  <SectionCard.Header title="Node configuration" />
                   <SectionCard.Content>
                     <VStack gap={6}>
                       {/* Node Type */}
@@ -944,7 +944,7 @@ export function CreateClusterPage() {
 
                       {/* Summary Items */}
                       <VStack gap={0}>
-                        <SummaryItem label="Basic Information" status="in-progress" />
+                        <SummaryItem label="Basic information" status="in-progress" />
                         <SummaryItem label="Networking" status="in-progress" />
                         <SummaryItem label="Node Configuration" status="complete" />
                         <SummaryItem label="Labels & Annotations" status="complete" />

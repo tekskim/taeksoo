@@ -341,7 +341,7 @@ export default function ComputeAdminCreateFirewallRulePage() {
             actions={
               <>
                 <TopBarAction
-                  icon={<IconBell size={18} />}
+                  icon={<IconBell size={16} stroke={1.5} />}
                   onClick={() => {}}
                   aria-label="Notifications"
                 />
@@ -775,13 +775,13 @@ export default function ComputeAdminCreateFirewallRulePage() {
                           value={action.charAt(0).toUpperCase() + action.slice(1) || '-'}
                         />
                         <SectionCard.DataRow label="Source CIDR" value={sourceIp || '-'} />
-                        <SectionCard.DataRow label="Source Port" value={sourcePort || '-'} />
+                        <SectionCard.DataRow label="Source port" value={sourcePort || '-'} />
                         <SectionCard.DataRow
                           label="Destination CIDR"
                           value={destinationIp || '-'}
                         />
                         <SectionCard.DataRow
-                          label="Destination Port"
+                          label="Destination port"
                           value={destinationPort || '-'}
                         />
                       </SectionCard.Content>

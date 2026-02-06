@@ -525,7 +525,7 @@ function DesktopTopBar({
       <Modal
         isOpen={showLanguageConfirmModal}
         onClose={cancelLanguageChange}
-        title="Confirm Language Change"
+        title="Confirm language change"
       >
         <p className="text-body-md text-[var(--color-text-default)] mb-6">
           {pendingLanguage && (

@@ -188,7 +188,7 @@ export function ClusterManagementSidebar({
               </div>
 
               {/* Cluster Management Section */}
-              <MenuSection title="Cluster Management" defaultOpen={true}>
+              <MenuSection title="Cluster management" defaultOpen={true}>
                 <MenuItem
                   icon={<FolderCog size={16} strokeWidth={1.5} />}
                   label="Clusters"

@@ -202,7 +202,7 @@ export function AllocateFloatingIPDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title="Allocate Floating IP"
+      title="Allocate floating IP"
       width={696}
       footer={
         <VStack gap={4} className="w-full">

@@ -542,7 +542,7 @@ export default function PortDetailPage() {
             breadcrumb={<Breadcrumb items={breadcrumbItems} />}
             actions={
               <TopBarAction
-                icon={<IconBell size={12} stroke={1.5} />}
+                icon={<IconBell size={16} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />
@@ -583,7 +583,7 @@ export default function PortDetailPage() {
                     onCopy={handleCopyId}
                   />
                   <DetailHeader.InfoCard label="Tenant" value="tenantA" />
-                  <DetailHeader.InfoCard label="Admin State" value="Up" />
+                  <DetailHeader.InfoCard label="Admin state" value="Up" />
                   <DetailHeader.InfoCard
                     label="Port security"
                     value={port.portSecurity ? 'On' : 'Off'}
@@ -601,7 +601,7 @@ export default function PortDetailPage() {
                     {port.status === 'active' && (
                       <Tab value="allowed-address-pairs">Allowed Address Pairs</Tab>
                     )}
-                    {port.status === 'active' && <Tab value="security">Security Groups</Tab>}
+                    {port.status === 'active' && <Tab value="security">Security groups</Tab>}
                   </TabList>
 
                   {/* Details Tab */}
@@ -620,13 +620,13 @@ export default function PortDetailPage() {
                         <SectionCard.Content>
                           <SectionCard.DataRow label="Port name" value={port.name} />
                           <SectionCard.DataRow label="Description" value={port.description} />
-                          <SectionCard.DataRow label="Admin State" value="Up" />
+                          <SectionCard.DataRow label="Admin state" value="Up" />
                         </SectionCard.Content>
                       </SectionCard>
 
                       {/* Owned Network */}
                       <SectionCard>
-                        <SectionCard.Header title="Owned Network" />
+                        <SectionCard.Header title="Owned network" />
                         <SectionCard.Content>
                           <SectionCard.DataRow
                             label="Network"
@@ -658,7 +658,7 @@ export default function PortDetailPage() {
                             }
                           />
                           <SectionCard.DataRow
-                            label="Bind Device"
+                            label="Bind device"
                             value={
                               port.attachedTo ? (
                                 <Link

@@ -37,7 +37,7 @@ export function RedeployDaemonSetModal({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Redeploy DaemonSet"
+      title="Redeploy daemonSet"
       description="This action redeploys the daemon set."
       size="sm"
     >

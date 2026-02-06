@@ -179,13 +179,13 @@ const volumeBackupStatusMap: Record<BackupStatus, 'active' | 'building' | 'error
 // Filter fields configuration
 const filterFields: FilterField[] = [
   { id: 'name', label: 'Name', type: 'text' },
-  { id: 'sourceVolume', label: 'Source Volume', type: 'text' },
+  { id: 'sourceVolume', label: 'Source volume', type: 'text' },
   {
     id: 'backupMode',
-    label: 'Backup Mode',
+    label: 'Backup mode',
     type: 'select',
     options: [
-      { value: 'Full Backup', label: 'Full Backup' },
+      { value: 'Full backup', label: 'Full backup' },
       { value: 'Incremental', label: 'Incremental' },
     ],
   },
@@ -474,7 +474,7 @@ export function VolumeBackupsPage() {
             }
             actions={
               <TopBarAction
-                icon={<IconBell size={12} stroke={1} />}
+                icon={<IconBell size={16} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />

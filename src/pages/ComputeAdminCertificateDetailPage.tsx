@@ -352,7 +352,7 @@ export default function CertificateDetailPage() {
             onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
             actions={
               <TopBarAction
-                icon={<IconBell size={12} stroke={1.5} />}
+                icon={<IconBell size={16} stroke={1.5} />}
                 onClick={() => {}}
                 aria-label="Notifications"
               />
@@ -454,7 +454,7 @@ export default function CertificateDetailPage() {
                         {isServerCertificate(certificate) ? (
                           // Server Certificate Metadata
                           <>
-                            <SectionCard.Header title="Certificate Metadata" />
+                            <SectionCard.Header title="Certificate metadata" />
                             <SectionCard.Content>
                               <SectionCard.DataRow
                                 label="Classification"
@@ -477,7 +477,7 @@ export default function CertificateDetailPage() {
                         ) : (
                           // CA Certificate Metadata without Edit button
                           <>
-                            <SectionCard.Header title="Certificate Metadata" />
+                            <SectionCard.Header title="Certificate metadata" />
                             <SectionCard.Content>
                               <SectionCard.DataRow
                                 label="Classification"

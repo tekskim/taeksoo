@@ -456,7 +456,7 @@ export default function RouterDetailPage() {
     },
     {
       key: 'adminState',
-      label: 'Admin State',
+      label: 'Admin state',
       flex: 1,
       render: (value: 'Up' | 'Down') => (
         <Badge variant={value === 'Up' ? 'success' : 'error'} size="sm">
@@ -466,7 +466,7 @@ export default function RouterDetailPage() {
     },
     {
       key: 'createdAt',
-      label: 'Created At',
+      label: 'Created at',
       flex: 1,
       sortable: true,
     },
@@ -552,7 +552,7 @@ export default function RouterDetailPage() {
             breadcrumb={<Breadcrumb items={breadcrumbItems} />}
             actions={
               <TopBarAction
-                icon={<IconBell size={12} stroke={1.5} />}
+                icon={<IconBell size={16} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />
@@ -584,7 +584,7 @@ export default function RouterDetailPage() {
                   />
                   <DetailHeader.InfoCard label="ID" value={router.id} copyable />
                   <DetailHeader.InfoCard label="Tenant" value="tenantA" />
-                  <DetailHeader.InfoCard label="Admin State" value={router.adminState} />
+                  <DetailHeader.InfoCard label="Admin state" value={router.adminState} />
                   <DetailHeader.InfoCard
                     label="External gateway"
                     value={router.externalGateway ? 'Yes' : 'No'}
@@ -623,7 +623,7 @@ export default function RouterDetailPage() {
                         <SectionCard.Content>
                           <SectionCard.DataRow label="Router name" value={router.routerName} />
                           <SectionCard.DataRow label="Description" value={router.description} />
-                          <SectionCard.DataRow label="Admin State" value={router.adminState} />
+                          <SectionCard.DataRow label="Admin state" value={router.adminState} />
                         </SectionCard.Content>
                       </SectionCard>
 
