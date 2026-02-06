@@ -370,36 +370,36 @@ export function IAMUserGroupsPage() {
               {/* Search and Actions */}
               <VStack gap={3} className="w-full">
                 {/* Action Bar */}
-                <HStack gap={2} align="center">
-                  {/* Search */}
-                  <HStack gap={1} align="center">
-                    <SearchInput
-                      placeholder="Search user groups by attributes"
-                      value={searchQuery}
-                      onChange={setSearchQuery}
-                      className="w-[var(--search-input-width)]"
-                    />
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      icon={<IconDownload size={12} />}
-                      aria-label="Download"
-                    />
-                  </HStack>
-
-                  {/* Divider */}
-                  <div className="w-px h-4 bg-[var(--color-border-default)]" />
-
-                  {/* Actions */}
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    disabled={!hasSelection}
-                    leftIcon={<IconTrash size={12} />}
-                  >
-                    Delete
-                  </Button>
-                </HStack>
+                <ListToolbar
+                  primaryActions={
+                    <ListToolbar.Actions>
+                      <SearchInput
+                        placeholder="Search user groups by attributes"
+                        value={searchQuery}
+                        onChange={setSearchQuery}
+                        className="w-[var(--search-input-width)]"
+                      />
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        icon={<IconDownload size={12} />}
+                        aria-label="Download"
+                      />
+                    </ListToolbar.Actions>
+                  }
+                  bulkActions={
+                    <ListToolbar.Actions>
+                      <Button
+                        variant="muted"
+                        size="sm"
+                        disabled={!hasSelection}
+                        leftIcon={<IconTrash size={12} />}
+                      >
+                        Delete
+                      </Button>
+                    </ListToolbar.Actions>
+                  }
+                />
 
                 {/* Pagination */}
                 <Pagination

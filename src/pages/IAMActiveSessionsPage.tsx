@@ -11,6 +11,7 @@ import {
   Breadcrumb,
   ContextMenu,
   TabBar,
+  ListToolbar,
   fixedColumns,
   columnMinWidths,
   type TableColumn,
@@ -272,33 +273,31 @@ export default function IAMActiveSessionsPage() {
 
               {/* Action Bar */}
               <VStack gap={3} className="w-full">
-                <HStack gap={2} align="center">
-                  {/* Search */}
-                  <HStack gap={1} align="center">
-                    <SearchInput
-                      placeholder="Search session by attributes"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-[var(--search-input-width)]"
-                    />
-
-                    {/* Refresh Button */}
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      icon={<IconRefresh size={12} stroke={1.5} />}
-                      aria-label="Refresh"
-                    />
-                  </HStack>
-
-                  {/* Divider */}
-                  <div className="w-px h-4 bg-[var(--color-border-default)]" />
-
-                  {/* Actions */}
-                  <Button variant="secondary" size="sm" disabled={selectedRows.length === 0}>
-                    Terminate
-                  </Button>
-                </HStack>
+                <ListToolbar
+                  primaryActions={
+                    <ListToolbar.Actions>
+                      <SearchInput
+                        placeholder="Search session by attributes"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-[var(--search-input-width)]"
+                      />
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        icon={<IconRefresh size={12} stroke={1.5} />}
+                        aria-label="Refresh"
+                      />
+                    </ListToolbar.Actions>
+                  }
+                  bulkActions={
+                    <ListToolbar.Actions>
+                      <Button variant="muted" size="sm" disabled={selectedRows.length === 0}>
+                        Terminate
+                      </Button>
+                    </ListToolbar.Actions>
+                  }
+                />
 
                 {/* Pagination */}
                 <Pagination
