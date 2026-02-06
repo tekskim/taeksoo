@@ -228,7 +228,7 @@ const portStatusMap: Record<PortStatus, 'active' | 'error' | 'building' | 'down'
 // Filter fields configuration
 const filterFields: FilterField[] = [
   { key: 'name', label: 'Name', type: 'text' },
-  { key: 'attachedTo', label: 'Attached To', type: 'text' },
+  { key: 'attachedTo', label: 'Attached to', type: 'text' },
   { key: 'ownedNetwork', label: 'Network', type: 'text' },
   { key: 'fixedIp', label: 'Fixed IP', type: 'text' },
   { key: 'floatingIp', label: 'Floating IP', type: 'text' },
@@ -583,7 +583,7 @@ export function PortsPage() {
             }
             actions={
               <TopBarAction
-                icon={<IconBell size={12} stroke={1} />}
+                icon={<IconBell size={16} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />

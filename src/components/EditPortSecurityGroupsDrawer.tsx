@@ -178,7 +178,7 @@ export function EditPortSecurityGroupsDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={handleClose}
-      title="Manage Security Groups"
+      title="Manage security groups"
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">

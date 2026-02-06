@@ -71,7 +71,7 @@ const SERVICE_TYPE_OPTIONS = [
   { value: 'ClusterIP', label: 'Cluster IP' },
   { value: 'Headless', label: 'Headless' },
   { value: 'LoadBalancer', label: 'Load Balancer' },
-  { value: 'NodePort', label: 'Node Port' },
+  { value: 'NodePort', label: 'Node port' },
 ];
 
 // Service type descriptions
@@ -519,7 +519,7 @@ export function CreateServicePage() {
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
@@ -537,7 +537,7 @@ export function CreateServicePage() {
             <VStack gap={6}>
               {/* Page Header */}
               <VStack gap={2}>
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create Service</h1>
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create service</h1>
                 <p className="text-body-sm text-[var(--color-text-subtle)]">
                   Services allow you to define a logical set of Pods that can be accessed with a
                   single IP address and port.
@@ -550,7 +550,7 @@ export function CreateServicePage() {
                 <VStack gap={3} className="flex-1">
                   {/* Basic Information Section */}
                   <SectionCard>
-                    <SectionCard.Header title="Basic Information" showDivider />
+                    <SectionCard.Header title="Basic information" showDivider />
                     <SectionCard.Content>
                       <VStack gap={4}>
                         {/* Service Type */}
@@ -626,7 +626,7 @@ export function CreateServicePage() {
 
                   {/* Service Ports Section */}
                   <SectionCard>
-                    <SectionCard.Header title="Service Ports" />
+                    <SectionCard.Header title="Service ports" />
                     <SectionCard.Content>
                       <VStack gap={6}>
                         <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
@@ -934,7 +934,7 @@ export function CreateServicePage() {
                               },
                               {
                                 key: 'createdAt',
-                                label: 'Created At',
+                                label: 'Created at',
                                 sortable: true,
                               },
                             ]}
@@ -948,7 +948,7 @@ export function CreateServicePage() {
 
                   {/* Session Affinity Section */}
                   <SectionCard>
-                    <SectionCard.Header title="Session Affinity" />
+                    <SectionCard.Header title="Session affinity" />
                     <SectionCard.Content>
                       <VStack gap={6}>
                         <VStack gap={3}>

@@ -120,7 +120,7 @@ export default function SettingsNotificationsPage() {
 
                 {/* Notification Preferences */}
                 <SectionCard>
-                  <SectionCard.Header title="Notification Preferences" />
+                  <SectionCard.Header title="Notification preferences" />
                   <SectionCard.Content gap={6}>
                     {/* Global Notification Setting */}
                     <VStack gap={4}>

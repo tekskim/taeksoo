@@ -1164,7 +1164,7 @@ export function OSDDetailPage() {
 
                         {/* Content based on sub-tab */}
                         <SectionCard>
-                          <SectionCardHeader title="Device Information" />
+                          <SectionCardHeader title="Device information" />
                           <SectionCardContent>
                             <SectionCardDataRow
                               label="Model number"

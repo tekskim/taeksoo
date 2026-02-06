@@ -37,7 +37,7 @@ export function RedeployDeploymentModal({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Redeploy Deployment"
+      title="Redeploy deployment"
       description="This action redeploys the deployment."
       size="sm"
     >

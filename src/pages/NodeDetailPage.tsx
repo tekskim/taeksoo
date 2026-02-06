@@ -413,7 +413,7 @@ function PodsTab({ pods }: PodsTabProps) {
     },
     { key: 'ip', label: 'IP', flex: 1 },
     { key: 'node', label: 'Node', flex: 1 },
-    { key: 'createdAt', label: 'Created At', flex: 1, sortable: true },
+    { key: 'createdAt', label: 'Created at', flex: 1, sortable: true },
   ];
 
   return (
@@ -421,7 +421,7 @@ function PodsTab({ pods }: PodsTabProps) {
       <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">Pods</h3>
       <HStack gap={2} align="center">
         <SearchInput
-          placeholder="Search Pods by attributes"
+          placeholder="Search pods by attributes"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           onClear={() => setSearchQuery('')}
@@ -479,7 +479,7 @@ function DetailsTab({ node }: DetailsTabProps) {
       tooltip: 'A unique identifier generated when the node last booted.',
     },
     {
-      label: 'Container Runtime Version',
+      label: 'Container runtime version',
       value: node.containerRuntime,
       tooltip: 'The container runtime and version used to run containers on the node.',
     },
@@ -489,17 +489,17 @@ function DetailsTab({ node }: DetailsTabProps) {
       tooltip: 'Operating system image and version running on the node.',
     },
     {
-      label: 'Kernel Version',
+      label: 'Kernel version',
       value: node.kernelVersion,
       tooltip: 'The version of the Linux kernel running on the node.',
     },
     {
-      label: 'Kube Proxy Version',
+      label: 'Kube proxy version',
       value: node.kubeProxyVersion,
       tooltip: 'The version of kube-proxy handling service networking on the node.',
     },
     {
-      label: 'Kubelet Version',
+      label: 'Kubelet version',
       value: node.kubeletVersion,
       tooltip: 'The version of the kubelet agent running on the node.',
     },
@@ -509,7 +509,7 @@ function DetailsTab({ node }: DetailsTabProps) {
       tooltip: "A system-level identifier that uniquely represents the node's machine.",
     },
     {
-      label: 'Operating System',
+      label: 'Operating system',
       value: node.operatingSystem,
       tooltip: 'The type of operating system the node is running (linux or windows).',
     },
@@ -522,7 +522,7 @@ function DetailsTab({ node }: DetailsTabProps) {
 
   return (
     <SectionCard>
-      <SectionCard.Header title="Basic Information" />
+      <SectionCard.Header title="Basic information" />
       <SectionCard.Content gap={3}>
         {basicInfoFields.map((field, index) => (
           <SectionCard.DataRow
@@ -552,7 +552,7 @@ function ImagesTab({ images }: ImagesTabProps) {
   const columns: TableColumn<ImageRow>[] = [
     {
       key: 'name',
-      label: 'Image Name',
+      label: 'Image name',
       flex: 1,
       minWidth: columnMinWidths.containerImage,
       sortable: true,
@@ -565,7 +565,7 @@ function ImagesTab({ images }: ImagesTabProps) {
       <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">Images</h3>
       <HStack gap={2} align="center">
         <SearchInput
-          placeholder="Search Images by attributes"
+          placeholder="Search images by attributes"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           onClear={() => setSearchQuery('')}
@@ -683,7 +683,7 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
   const columns: TableColumn<EventRow>[] = [
     {
       key: 'lastSeen',
-      label: 'Last Seen',
+      label: 'Last seen',
       flex: 1,
       minWidth: columnMinWidths.lastSeen,
       sortable: true,
@@ -707,7 +707,7 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
     },
     {
       key: 'firstSeen',
-      label: 'First Seen',
+      label: 'First seen',
       flex: 1,
       minWidth: columnMinWidths.firstSeen,
       sortable: true,
@@ -748,7 +748,7 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
       </h3>
       <HStack gap={2} align="center">
         <SearchInput
-          placeholder="Search Events by attributes"
+          placeholder="Search events by attributes"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           onClear={() => setSearchQuery('')}
@@ -820,7 +820,7 @@ export function NodeDetailPage() {
   const moreActionsItems: ContextMenuItem[] = [
     {
       id: 'edit-config',
-      label: 'Edit Config',
+      label: 'Edit config',
       onClick: () => navigate(`/container/nodes/${node.name}/edit`),
     },
     {
@@ -886,7 +886,7 @@ export function NodeDetailPage() {
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
@@ -924,11 +924,11 @@ export function NodeDetailPage() {
                   />
                   <DetailHeader.InfoCard label="Internal IP" value={node.internalIp} copyable />
                   <DetailHeader.InfoCard
-                    label="Kubernetes Version"
+                    label="Kubernetes version"
                     value={node.kubernetesVersion}
                   />
                   <DetailHeader.InfoCard label="OS" value={node.os} />
-                  <DetailHeader.InfoCard label="Container Runtime" value={node.containerRuntime} />
+                  <DetailHeader.InfoCard label="Container runtime" value={node.containerRuntime} />
                   <DetailHeader.InfoCard
                     label={`Labels (${Object.keys(node.labels).length})`}
                     value={
@@ -969,7 +969,7 @@ export function NodeDetailPage() {
                       )
                     }
                   />
-                  <DetailHeader.InfoCard label="Created At" value={node.createdAt} />
+                  <DetailHeader.InfoCard label="Created at" value={node.createdAt} />
                 </DetailHeader.InfoGrid>
               </DetailHeader>
 
@@ -981,12 +981,12 @@ export function NodeDetailPage() {
                   tooltip="PID pressure indicates whether the node is running low on available process IDs."
                 />
                 <ConditionCard
-                  title="Disk Pressure"
+                  title="Disk pressure"
                   status={node.conditions.diskPressure ? 'NotReady' : 'Ready'}
                   tooltip="Disk pressure reports whether the node is experiencing insufficient disk space."
                 />
                 <ConditionCard
-                  title="Memory Pressure"
+                  title="Memory pressure"
                   status={node.conditions.memoryPressure ? 'NotReady' : 'Ready'}
                   tooltip="Memory pressure indicates that the node is running low on available memory resources."
                 />

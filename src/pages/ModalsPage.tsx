@@ -311,7 +311,7 @@ export function ModalsPage() {
                           onOpen={() => setIsDeleteSecurityGroupOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Security groups (Multiple)"
+                          title="Delete security groups (multiple)"
                           description="Confirm deletion of multiple security groups with scrollable list."
                           category="Confirm"
                           size="md"
@@ -325,7 +325,7 @@ export function ModalsPage() {
                           onOpen={() => setIsDeleteRuleOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Rules (Multiple)"
+                          title="Delete rules (multiple)"
                           description="Confirm deletion of multiple rules with scrollable list and warning."
                           category="Confirm"
                           size="md"
@@ -431,7 +431,7 @@ export function ModalsPage() {
                           onOpen={() => setIsDeleteLoadBalancerOpen(true)}
                         />
                         <ModalListItem
-                          title="Release Load balancers"
+                          title="Release load balancers"
                           description="Delete multiple load balancers with scrollable list and warning."
                           category="Network"
                           size="md"
@@ -745,70 +745,70 @@ export function ModalsPage() {
                       </h2>
                       <div className="flex flex-col gap-2">
                         <ModalListItem
-                          title="Delete Pod"
+                          title="Delete pod"
                           description="Confirm deletion of a Kubernetes pod."
                           category="Pod"
                           size="sm"
                           onOpen={() => setIsDeletePodOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Deployment"
+                          title="Delete deployment"
                           description="Confirm deletion of a Kubernetes deployment."
                           category="Deployment"
                           size="sm"
                           onOpen={() => setIsDeleteDeploymentOpen(true)}
                         />
                         <ModalListItem
-                          title="Redeploy Deployment"
+                          title="Redeploy deployment"
                           description="Redeploy a Kubernetes deployment with warning about downtime."
                           category="Deployment"
                           size="sm"
                           onOpen={() => setIsRedeployDeploymentOpen(true)}
                         />
                         <ModalListItem
-                          title="Roll Back Deployment"
+                          title="Roll back deployment"
                           description="Roll back a Kubernetes deployment to a previous revision."
                           category="Deployment"
                           size="sm"
                           onOpen={() => setIsRollBackDeploymentOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete StatefulSet"
+                          title="Delete statefulSet"
                           description="Confirm deletion of a Kubernetes stateful set."
                           category="StatefulSet"
                           size="sm"
                           onOpen={() => setIsDeleteStatefulSetOpen(true)}
                         />
                         <ModalListItem
-                          title="Redeploy StatefulSet"
+                          title="Redeploy statefulSet"
                           description="Redeploy a Kubernetes stateful set with warning about downtime."
                           category="StatefulSet"
                           size="sm"
                           onOpen={() => setIsRedeployStatefulSetOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete DaemonSet"
+                          title="Delete daemonSet"
                           description="Confirm deletion of a Kubernetes daemon set."
                           category="DaemonSet"
                           size="sm"
                           onOpen={() => setIsDeleteDaemonSetOpen(true)}
                         />
                         <ModalListItem
-                          title="Redeploy DaemonSet"
+                          title="Redeploy daemonSet"
                           description="Redeploy a Kubernetes daemon set with warning about downtime."
                           category="DaemonSet"
                           size="sm"
                           onOpen={() => setIsRedeployDaemonSetOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Job"
+                          title="Delete job"
                           description="Confirm deletion of a Kubernetes job."
                           category="Job"
                           size="sm"
                           onOpen={() => setIsDeleteJobOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete CronJob"
+                          title="Delete cronjob"
                           description="Confirm deletion of a Kubernetes cron job."
                           category="CronJob"
                           size="sm"
@@ -894,35 +894,35 @@ export function ModalsPage() {
                       </h2>
                       <div className="flex flex-col gap-2">
                         <ModalListItem
-                          title="Stop Instance"
+                          title="Stop instance"
                           description="Stop a single instance with warning about service interruption."
                           category="Instance"
                           size="sm"
                           onOpen={() => setIsStopInstanceOpen(true)}
                         />
                         <ModalListItem
-                          title="Reboot Instance"
+                          title="Reboot instance"
                           description="Reboot a single instance with warning about service interruption."
                           category="Instance"
                           size="sm"
                           onOpen={() => setIsRebootInstanceOpen(true)}
                         />
                         <ModalListItem
-                          title="Soft Reboot Instance"
+                          title="Soft reboot instance"
                           description="Perform a soft reboot of a single instance."
                           category="Instance"
                           size="sm"
                           onOpen={() => setIsSoftRebootInstanceOpen(true)}
                         />
                         <ModalListItem
-                          title="Confirm Resize"
+                          title="Confirm resize"
                           description="Confirm the resized state of an instance."
                           category="Instance"
                           size="sm"
                           onOpen={() => setIsConfirmResizeOpen(true)}
                         />
                         <ModalListItem
-                          title="Revert Resize"
+                          title="Revert resize"
                           description="Revert an instance to its previous state before resize."
                           category="Instance"
                           size="sm"
@@ -936,7 +936,7 @@ export function ModalsPage() {
                           onOpen={() => setIsDeleteInstanceOpen(true)}
                         />
                         <ModalListItem
-                          title="Shelve Instance"
+                          title="Shelve instance"
                           description="Shelve a single instance with warning about service interruption."
                           category="Instance"
                           size="sm"
@@ -952,28 +952,28 @@ export function ModalsPage() {
                       </h2>
                       <div className="flex flex-col gap-2">
                         <ModalListItem
-                          title="Start Instances"
+                          title="Start instances"
                           description="Start multiple selected instances with eligibility check."
                           category="Instances"
                           size="md"
                           onOpen={() => setIsStartInstancesOpen(true)}
                         />
                         <ModalListItem
-                          title="Stop Instances"
+                          title="Stop instances"
                           description="Stop multiple selected instances with eligibility check."
                           category="Instances"
                           size="md"
                           onOpen={() => setIsStopInstancesOpen(true)}
                         />
                         <ModalListItem
-                          title="Reboot Instances"
+                          title="Reboot instances"
                           description="Reboot multiple selected instances with eligibility check."
                           category="Instances"
                           size="md"
                           onOpen={() => setIsRebootInstancesOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Instances"
+                          title="Delete instances"
                           description="Permanently delete multiple selected instances with eligibility check."
                           category="Instances"
                           size="md"
@@ -989,14 +989,14 @@ export function ModalsPage() {
                       </h2>
                       <div className="flex flex-col gap-2">
                         <ModalListItem
-                          title="Delete Instance Template"
+                          title="Delete instance template"
                           description="Permanently delete a single instance template."
                           category="Template"
                           size="sm"
                           onOpen={() => setIsDeleteInstanceTemplateOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Instance Templates"
+                          title="Delete instance templates"
                           description="Permanently delete multiple instance templates."
                           category="Templates"
                           size="md"
@@ -1010,7 +1010,7 @@ export function ModalsPage() {
                           onOpen={() => setIsDeleteImageOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Images"
+                          title="Delete images"
                           description="Permanently delete multiple images with eligibility check."
                           category="Images"
                           size="md"
@@ -1024,7 +1024,7 @@ export function ModalsPage() {
                           onOpen={() => setIsDeleteSnapshotOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Snapshots"
+                          title="Delete snapshots"
                           description="Permanently delete multiple snapshots with eligibility check."
                           category="Snapshots"
                           size="md"
@@ -1047,84 +1047,84 @@ export function ModalsPage() {
                           onOpen={() => setIsDeleteVolumeOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Volumes"
+                          title="Delete volumes"
                           description="Permanently delete multiple volumes with eligibility check."
                           category="Volumes"
                           size="md"
                           onOpen={() => setIsDeleteVolumesOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Volume Type"
+                          title="Delete volume type"
                           description="Permanently delete a single volume type."
                           category="VolumeType"
                           size="sm"
                           onOpen={() => setIsDeleteVolumeTypeOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Volume Types"
+                          title="Delete volume types"
                           description="Permanently delete multiple volume types."
                           category="VolumeTypes"
                           size="sm"
                           onOpen={() => setIsDeleteVolumeTypesOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Backup"
+                          title="Delete backup"
                           description="Permanently delete a single backup."
                           category="Backup"
                           size="sm"
                           onOpen={() => setIsDeleteBackupOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Backups"
+                          title="Delete backups"
                           description="Permanently delete multiple backups with eligibility check."
                           category="Backups"
                           size="md"
                           onOpen={() => setIsDeleteBackupsOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Encryption"
+                          title="Delete encryption"
                           description="Remove encryption configuration from a volume type."
                           category="Encryption"
                           size="sm"
                           onOpen={() => setIsDeleteEncryptionOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Extra Spec"
+                          title="Delete extra spec"
                           description="Remove extra specification from a volume type."
                           category="ExtraSpec"
                           size="sm"
                           onOpen={() => setIsDeleteExtraSpecOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Extra Specs"
+                          title="Delete extra specs"
                           description="Remove multiple extra specifications from a volume type."
                           category="ExtraSpecs"
                           size="sm"
                           onOpen={() => setIsDeleteExtraSpecsOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete QoS Spec"
+                          title="Delete QoS spec"
                           description="Permanently delete a single QoS specification."
                           category="QoSSpec"
                           size="sm"
                           onOpen={() => setIsDeleteQoSSpecOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete QoS Specs"
+                          title="Delete QoS specs"
                           description="Permanently delete multiple QoS specifications."
                           category="QoSSpecs"
                           size="sm"
                           onOpen={() => setIsDeleteQoSSpecsOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete QoS Extra Spec"
+                          title="Delete QoS extra spec"
                           description="Remove extra specification from a QoS spec."
                           category="QoSExtra"
                           size="sm"
                           onOpen={() => setIsDeleteQoSExtraSpecOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete QoS Extra Specs"
+                          title="Delete QoS extra specs"
                           description="Remove multiple extra specifications from a QoS spec."
                           category="QoSExtras"
                           size="sm"
@@ -1147,21 +1147,21 @@ export function ModalsPage() {
                           onOpen={() => setIsDeleteNetworkOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Networks"
+                          title="Delete networks"
                           description="Permanently delete multiple networks with eligibility check."
                           category="Networks"
                           size="md"
                           onOpen={() => setIsDeleteNetworksOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Subnet"
+                          title="Delete subnet"
                           description="Permanently delete a single subnet with warning."
                           category="Subnet"
                           size="sm"
                           onOpen={() => setIsDeleteSubnetOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Subnets"
+                          title="Delete subnets"
                           description="Permanently delete multiple subnets."
                           category="Subnets"
                           size="sm"
@@ -1175,7 +1175,7 @@ export function ModalsPage() {
                           onOpen={() => setIsDeletePortOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Ports"
+                          title="Delete ports"
                           description="Permanently delete multiple ports with warning."
                           category="Ports"
                           size="sm"
@@ -1189,70 +1189,70 @@ export function ModalsPage() {
                           onOpen={() => setIsDeleteRouterOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Routers"
+                          title="Delete routers"
                           description="Permanently delete multiple routers with eligibility check."
                           category="Routers"
                           size="md"
                           onOpen={() => setIsDeleteRoutersOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Static Routes"
+                          title="Delete static routes"
                           description="Permanently delete multiple static routes."
                           category="Routes"
                           size="sm"
                           onOpen={() => setIsDeleteStaticRoutesOpen(true)}
                         />
                         <ModalListItem
-                          title="Remove DHCP Agents"
+                          title="Remove DHCP agents"
                           description="Remove DHCP agents from a network."
                           category="DHCP"
                           size="sm"
                           onOpen={() => setIsRemoveDHCPAgentsOpen(true)}
                         />
                         <ModalListItem
-                          title="Release Fixed IP"
+                          title="Release fixed IP"
                           description="Release a fixed IP address from a port."
                           category="IP"
                           size="sm"
                           onOpen={() => setIsReleaseFixedIPOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Allowed Address Pair"
+                          title="Delete allowed address pair"
                           description="Remove an allowed address pair from a port."
                           category="Address"
                           size="sm"
                           onOpen={() => setIsDeleteAllowedAddressPairOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Security Group"
+                          title="Delete security group"
                           description="Permanently delete a single security group."
                           category="SecGroup"
                           size="sm"
                           onOpen={() => setIsDeleteSecurityGroupAdminOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Security Groups"
+                          title="Delete security groups"
                           description="Permanently delete multiple security groups."
                           category="SecGroups"
                           size="md"
                           onOpen={() => setIsDeleteSecurityGroupsAdminOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Firewall"
+                          title="Delete firewall"
                           description="Permanently delete a single firewall."
                           category="Firewall"
                           size="sm"
                           onOpen={() => setIsDeleteFirewallOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Firewalls"
+                          title="Delete firewalls"
                           description="Permanently delete multiple firewalls."
                           category="Firewalls"
                           size="md"
                           onOpen={() => setIsDeleteFirewallsOpen(true)}
                         />
                         <ModalListItem
-                          title="Unsaved Changes"
+                          title="Unsaved changes"
                           description="Confirm leaving with unsaved changes."
                           category="Confirm"
                           size="sm"
@@ -1268,35 +1268,35 @@ export function ModalsPage() {
                       </h2>
                       <div className="flex flex-col gap-2">
                         <ModalListItem
-                          title="Disassociate Floating IP"
+                          title="Disassociate floating IP"
                           description="Disassociate a floating IP from a resource."
                           category="FloatingIP"
                           size="sm"
                           onOpen={() => setIsDisassociateFloatingIPOpen(true)}
                         />
                         <ModalListItem
-                          title="Release Floating IP"
+                          title="Release floating IP"
                           description="Release a single floating IP address."
                           category="FloatingIP"
                           size="sm"
                           onOpen={() => setIsReleaseFloatingIPOpen(true)}
                         />
                         <ModalListItem
-                          title="Release Floating IPs"
+                          title="Release floating IPs"
                           description="Release multiple floating IP addresses."
                           category="FloatingIPs"
                           size="sm"
                           onOpen={() => setIsReleaseFloatingIPsOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Load Balancer"
+                          title="Delete load balancer"
                           description="Permanently delete a single load balancer."
                           category="LB"
                           size="sm"
                           onOpen={() => setIsDeleteLoadBalancerAdminOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Load Balancers"
+                          title="Delete load balancers"
                           description="Permanently delete multiple load balancers."
                           category="LBs"
                           size="md"
@@ -1310,7 +1310,7 @@ export function ModalsPage() {
                           onOpen={() => setIsDeleteListenerOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Listeners"
+                          title="Delete listeners"
                           description="Permanently delete multiple listeners."
                           category="Listeners"
                           size="md"
@@ -1324,7 +1324,7 @@ export function ModalsPage() {
                           onOpen={() => setIsDeletePoolOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Pools"
+                          title="Delete pools"
                           description="Permanently delete multiple pools."
                           category="Pools"
                           size="md"
@@ -1338,42 +1338,42 @@ export function ModalsPage() {
                           onOpen={() => setIsDeleteMemberOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Members"
+                          title="Delete members"
                           description="Remove multiple members from a pool."
                           category="Members"
                           size="md"
                           onOpen={() => setIsDeleteMembersOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Security Group Rule"
+                          title="Delete security group rule"
                           description="Permanently delete a single security group rule."
                           category="Rule"
                           size="sm"
                           onOpen={() => setIsDeleteSecurityGroupRuleOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Security Group Rules"
+                          title="Delete security group rules"
                           description="Permanently delete multiple security group rules."
                           category="Rules"
                           size="md"
                           onOpen={() => setIsDeleteSecurityGroupRulesOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete L7 Policy"
+                          title="Delete L7 policy"
                           description="Permanently delete a single L7 policy."
                           category="L7Policy"
                           size="sm"
                           onOpen={() => setIsDeleteL7PolicyOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete L7 Policies"
+                          title="Delete L7 policies"
                           description="Permanently delete multiple L7 policies."
                           category="L7Policies"
                           size="md"
                           onOpen={() => setIsDeleteL7PoliciesOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Health Monitor"
+                          title="Delete health monitor"
                           description="Permanently delete a health monitor from a pool."
                           category="Monitor"
                           size="sm"
@@ -1389,63 +1389,63 @@ export function ModalsPage() {
                       </h2>
                       <div className="flex flex-col gap-2">
                         <ModalListItem
-                          title="Delete Firewall Policy"
+                          title="Delete firewall policy"
                           description="Permanently delete a single firewall policy."
                           category="FWPolicy"
                           size="sm"
                           onOpen={() => setIsDeleteFirewallPolicyOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Firewall Policies"
+                          title="Delete firewall policies"
                           description="Permanently delete multiple firewall policies."
                           category="FWPolicies"
                           size="md"
                           onOpen={() => setIsDeleteFirewallPoliciesOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Firewall Rule"
+                          title="Delete firewall rule"
                           description="Permanently delete a single firewall rule."
                           category="FWRule"
                           size="sm"
                           onOpen={() => setIsDeleteFirewallRuleOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Firewall Rules"
+                          title="Delete firewall rules"
                           description="Permanently delete multiple firewall rules."
                           category="FWRules"
                           size="md"
                           onOpen={() => setIsDeleteFirewallRulesOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Tenant"
+                          title="Delete tenant"
                           description="Permanently delete a single tenant."
                           category="Tenant"
                           size="sm"
                           onOpen={() => setIsDeleteTenantOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Tenants"
+                          title="Delete tenants"
                           description="Permanently delete multiple tenants."
                           category="Tenants"
                           size="sm"
                           onOpen={() => setIsDeleteTenantsOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Metadata"
+                          title="Delete metadata"
                           description="Remove a single metadata entry."
                           category="Metadata"
                           size="sm"
                           onOpen={() => setIsDeleteMetadataOpen(true)}
                         />
                         <ModalListItem
-                          title="Delete Metadatas"
+                          title="Delete metadatas"
                           description="Remove multiple metadata entries."
                           category="Metadatas"
                           size="md"
                           onOpen={() => setIsDeleteMetadatasOpen(true)}
                         />
                         <ModalListItem
-                          title="Manage Member"
+                          title="Manage member"
                           description="Redirect to IAM to manage users and groups."
                           category="IAM"
                           size="sm"
@@ -1488,7 +1488,7 @@ export function ModalsPage() {
                       </h2>
                       <div className="flex flex-col gap-2">
                         <ModalListItem
-                          title="Delete Agent Source"
+                          title="Delete agent source"
                           description="Confirm deletion of an agent source with warning."
                           category="Agent"
                           size="sm"
@@ -1623,7 +1623,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteSecurityGroupsMultipleOpen}
         onClose={() => setIsDeleteSecurityGroupsMultipleOpen(false)}
-        title="Delete Security groups"
+        title="Delete security groups"
         description="Removing the selected instances is permanent and cannot be undone."
         size="md"
       >
@@ -1732,7 +1732,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteRulesMultipleOpen}
         onClose={() => setIsDeleteRulesMultipleOpen(false)}
-        title="Delete Rules"
+        title="Delete rules"
         description="Removing the selected instances is permanent and cannot be undone."
         size="md"
       >
@@ -2302,7 +2302,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteLoadBalancersMultipleOpen}
         onClose={() => setIsDeleteLoadBalancersMultipleOpen(false)}
-        title="Release Load balancers"
+        title="Release load balancers"
         description="Removing the selected instances is permanent and cannot be undone."
         size="md"
       >
@@ -4219,7 +4219,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isStopInstanceOpen}
         onClose={() => setIsStopInstanceOpen(false)}
-        title="Stop Instance"
+        title="Stop instance"
         description="This action stops the instance."
         size="sm"
       >
@@ -4270,7 +4270,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isRebootInstanceOpen}
         onClose={() => setIsRebootInstanceOpen(false)}
-        title="Reboot Instance"
+        title="Reboot instance"
         description="This action reboots the instance."
         size="sm"
       >
@@ -4321,7 +4321,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isSoftRebootInstanceOpen}
         onClose={() => setIsSoftRebootInstanceOpen(false)}
-        title="Soft Reboot Instance"
+        title="Soft reboot instance"
         description="This action performs a soft reboot of the instance."
         size="sm"
       >
@@ -4372,7 +4372,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isConfirmResizeOpen}
         onClose={() => setIsConfirmResizeOpen(false)}
-        title="Confirm Resize"
+        title="Confirm resize"
         description="This action confirms the resized state of the instance."
         size="sm"
       >
@@ -4423,7 +4423,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isRevertResizeOpen}
         onClose={() => setIsRevertResizeOpen(false)}
-        title="Revert Resize"
+        title="Revert resize"
         description="This action reverts the instance to its previous state before the resize."
         size="sm"
       >
@@ -4525,7 +4525,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isShelveInstanceOpen}
         onClose={() => setIsShelveInstanceOpen(false)}
-        title="Shelve Instance"
+        title="Shelve instance"
         description="This action shelves the instance."
         size="sm"
       >
@@ -4576,7 +4576,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isStartInstancesOpen}
         onClose={() => setIsStartInstancesOpen(false)}
-        title="Start Instances"
+        title="Start instances"
         description="This action starts the selected instances."
         size="md"
       >
@@ -4641,7 +4641,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isStopInstancesOpen}
         onClose={() => setIsStopInstancesOpen(false)}
-        title="Stop Instances"
+        title="Stop instances"
         description="This action stops the selected instances."
         size="md"
       >
@@ -4706,7 +4706,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isRebootInstancesOpen}
         onClose={() => setIsRebootInstancesOpen(false)}
-        title="Reboot Instances"
+        title="Reboot instances"
         description="This action reboots the selected instances."
         size="md"
       >
@@ -4771,7 +4771,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteInstancesOpen}
         onClose={() => setIsDeleteInstancesOpen(false)}
-        title="Delete Instances"
+        title="Delete instances"
         description="Removing the selected instances is permanent and cannot be undone."
         size="md"
       >
@@ -4836,7 +4836,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteInstanceTemplateOpen}
         onClose={() => setIsDeleteInstanceTemplateOpen(false)}
-        title="Delete Instance Template"
+        title="Delete instance template"
         description="Deleting the instance template is permanent and cannot be undone."
         size="sm"
       >
@@ -4877,7 +4877,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteInstanceTemplatesOpen}
         onClose={() => setIsDeleteInstanceTemplatesOpen(false)}
-        title="Delete Instance Templates"
+        title="Delete instance templates"
         description="Deleting the selected instance templates is permanent and cannot be undone."
         size="md"
       >
@@ -4960,7 +4960,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteImagesOpen}
         onClose={() => setIsDeleteImagesOpen(false)}
-        title="Delete Images"
+        title="Delete images"
         description="Deleting the selected images is permanent and cannot be undone."
         size="md"
       >
@@ -5056,7 +5056,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteSnapshotsOpen}
         onClose={() => setIsDeleteSnapshotsOpen(false)}
-        title="Delete Snapshots"
+        title="Delete snapshots"
         description="Deleting the selected snapshots is permanent and cannot be undone."
         size="md"
       >
@@ -5152,7 +5152,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteVolumesOpen}
         onClose={() => setIsDeleteVolumesOpen(false)}
-        title="Delete Volumes"
+        title="Delete volumes"
         description="Deleting the selected volumes is permanent and cannot be undone."
         size="md"
       >
@@ -5207,7 +5207,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteVolumeTypeOpen}
         onClose={() => setIsDeleteVolumeTypeOpen(false)}
-        title="Delete Volume Type"
+        title="Delete volume type"
         description="Deleting the volume type is permanent and cannot be undone."
         size="sm"
       >
@@ -5248,7 +5248,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteVolumeTypesOpen}
         onClose={() => setIsDeleteVolumeTypesOpen(false)}
-        title="Delete Volume Types"
+        title="Delete volume types"
         description="Deleting the selected volume types is permanent and cannot be undone."
         size="sm"
       >
@@ -5292,7 +5292,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteBackupOpen}
         onClose={() => setIsDeleteBackupOpen(false)}
-        title="Delete Backup"
+        title="Delete backup"
         description="Deleting the backup is permanent and cannot be undone."
         size="sm"
       >
@@ -5333,7 +5333,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteBackupsOpen}
         onClose={() => setIsDeleteBackupsOpen(false)}
-        title="Delete Backups"
+        title="Delete backups"
         description="Deleting the selected backups is permanent and cannot be undone."
         size="md"
       >
@@ -5388,7 +5388,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteEncryptionOpen}
         onClose={() => setIsDeleteEncryptionOpen(false)}
-        title="Delete Encryption"
+        title="Delete encryption"
         description="This action removes the encryption configuration from the volume type."
         size="sm"
       >
@@ -5429,7 +5429,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteExtraSpecOpen}
         onClose={() => setIsDeleteExtraSpecOpen(false)}
-        title="Delete Extra Spec"
+        title="Delete extra spec"
         description="This action removes the extra specification from the volume type."
         size="sm"
       >
@@ -5478,7 +5478,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteExtraSpecsOpen}
         onClose={() => setIsDeleteExtraSpecsOpen(false)}
-        title="Delete Extra Specs"
+        title="Delete extra specs"
         description="Deleting the selected extra specifications is permanent and cannot be undone."
         size="sm"
       >
@@ -5530,7 +5530,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteQoSSpecOpen}
         onClose={() => setIsDeleteQoSSpecOpen(false)}
-        title="Delete QoS Spec"
+        title="Delete QoS spec"
         description="This action removes the QoS specification."
         size="sm"
       >
@@ -5571,7 +5571,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteQoSSpecsOpen}
         onClose={() => setIsDeleteQoSSpecsOpen(false)}
-        title="Delete QoS Specs"
+        title="Delete QoS specs"
         description="This action removes the selected QoS specifications."
         size="sm"
       >
@@ -5615,7 +5615,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteQoSExtraSpecOpen}
         onClose={() => setIsDeleteQoSExtraSpecOpen(false)}
-        title="Delete Extra Spec"
+        title="Delete extra spec"
         description="This action removes the extra specification from the volume type."
         size="sm"
       >
@@ -5664,7 +5664,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteQoSExtraSpecsOpen}
         onClose={() => setIsDeleteQoSExtraSpecsOpen(false)}
-        title="Delete Extra Specs"
+        title="Delete extra specs"
         description="Deleting the selected extra specifications is permanent and cannot be undone."
         size="sm"
       >
@@ -5767,7 +5767,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteNetworksOpen}
         onClose={() => setIsDeleteNetworksOpen(false)}
-        title="Delete Networks"
+        title="Delete networks"
         description="Removing the selected networks is permanent and cannot be undone."
         size="md"
       >
@@ -5832,7 +5832,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteSubnetOpen}
         onClose={() => setIsDeleteSubnetOpen(false)}
-        title="Delete Subnet"
+        title="Delete subnet"
         description="Deleting the subnet is permanent and cannot be undone."
         size="sm"
       >
@@ -5883,7 +5883,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteSubnetsOpen}
         onClose={() => setIsDeleteSubnetsOpen(false)}
-        title="Delete Subnets"
+        title="Delete subnets"
         description="Deleting the selected subnets is permanent and cannot be undone."
         size="sm"
       >
@@ -5986,7 +5986,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeletePortsOpen}
         onClose={() => setIsDeletePortsOpen(false)}
-        title="Delete Ports"
+        title="Delete ports"
         description="Deleting the selected ports is permanent and cannot be undone."
         size="sm"
       >
@@ -6089,7 +6089,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteRoutersOpen}
         onClose={() => setIsDeleteRoutersOpen(false)}
-        title="Delete Routers"
+        title="Delete routers"
         description="Removing the selected routers is permanent and cannot be undone."
         size="md"
       >
@@ -6154,7 +6154,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteStaticRoutesOpen}
         onClose={() => setIsDeleteStaticRoutesOpen(false)}
-        title="Delete Static Routes"
+        title="Delete static routes"
         description="Deleting the selected static routers is permanent and cannot be undone."
         size="sm"
       >
@@ -6208,7 +6208,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isRemoveDHCPAgentsOpen}
         onClose={() => setIsRemoveDHCPAgentsOpen(false)}
-        title="Remove DHCP Agents"
+        title="Remove DHCP agents"
         description="This action removes the selected DHCP agents from the network."
         size="sm"
       >
@@ -6328,7 +6328,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteAllowedAddressPairOpen}
         onClose={() => setIsDeleteAllowedAddressPairOpen(false)}
-        title="Delete Allowed Address Pair"
+        title="Delete allowed address pair"
         description="This action removes the allowed address pair from the port."
         size="sm"
       >
@@ -6385,7 +6385,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteSecurityGroupAdminOpen}
         onClose={() => setIsDeleteSecurityGroupAdminOpen(false)}
-        title="Delete Security Group"
+        title="Delete security group"
         description="Deleting the security group is permanent and cannot be undone."
         size="sm"
       >
@@ -6437,7 +6437,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteSecurityGroupsAdminOpen}
         onClose={() => setIsDeleteSecurityGroupsAdminOpen(false)}
-        title="Delete Security Groups"
+        title="Delete security groups"
         description="Deleting the selected security groups is permanent and cannot be undone."
         size="md"
       >
@@ -6502,7 +6502,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteFirewallOpen}
         onClose={() => setIsDeleteFirewallOpen(false)}
-        title="Delete Firewall"
+        title="Delete firewall"
         description="Deleting the firewall is permanent and cannot be undone."
         size="sm"
       >
@@ -6553,7 +6553,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteFirewallsOpen}
         onClose={() => setIsDeleteFirewallsOpen(false)}
-        title="Delete Firewalls"
+        title="Delete firewalls"
         description="Deleting the selected firewalls is permanent and cannot be undone."
         size="md"
       >
@@ -6649,7 +6649,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isReleaseFloatingIPOpen}
         onClose={() => setIsReleaseFloatingIPOpen(false)}
-        title="Release Floating IP"
+        title="Release floating IP"
         description="Releasing the floating IP is permanent and cannot be undone."
         size="sm"
       >
@@ -6700,7 +6700,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isReleaseFloatingIPsOpen}
         onClose={() => setIsReleaseFloatingIPsOpen(false)}
-        title="Release Floating IPs"
+        title="Release floating IPs"
         description="Releasing the floating IPs is permanent and cannot be undone."
         size="sm"
       >
@@ -6754,7 +6754,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteLoadBalancerAdminOpen}
         onClose={() => setIsDeleteLoadBalancerAdminOpen(false)}
-        title="Delete Load Balancer"
+        title="Delete load balancer"
         description="Removing the load balancer is permanent and cannot be undone."
         size="sm"
       >
@@ -6911,7 +6911,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteListenersOpen}
         onClose={() => setIsDeleteListenersOpen(false)}
-        title="Delete Listeners"
+        title="Delete listeners"
         description="Removing the listeners is permanent and cannot be undone."
         size="md"
       >
@@ -7131,7 +7131,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteMembersOpen}
         onClose={() => setIsDeleteMembersOpen(false)}
-        title="Delete Members"
+        title="Delete members"
         description="Removing the members is permanent and cannot be undone."
         size="md"
       >
@@ -7245,7 +7245,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteSecurityGroupRulesOpen}
         onClose={() => setIsDeleteSecurityGroupRulesOpen(false)}
-        title="Delete Rules"
+        title="Delete rules"
         description="Removing the rules is permanent and cannot be undone."
         size="md"
       >
@@ -7310,7 +7310,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteL7PolicyOpen}
         onClose={() => setIsDeleteL7PolicyOpen(false)}
-        title="Delete L7 Policy"
+        title="Delete L7 policy"
         description="Removing the L7 policy is permanent and cannot be undone."
         size="sm"
       >
@@ -7361,7 +7361,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteL7PoliciesOpen}
         onClose={() => setIsDeleteL7PoliciesOpen(false)}
-        title="Delete L7 Policies"
+        title="Delete L7 policies"
         description="Removing the L7 policies is permanent and cannot be undone."
         size="md"
       >
@@ -7426,7 +7426,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteHealthMonitorOpen}
         onClose={() => setIsDeleteHealthMonitorOpen(false)}
-        title="Delete Health Monitor"
+        title="Delete health monitor"
         description="Removing the health monitor is permanent and cannot be undone."
         size="sm"
       >
@@ -7478,7 +7478,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteFirewallPolicyOpen}
         onClose={() => setIsDeleteFirewallPolicyOpen(false)}
-        title="Delete Firewall Policy"
+        title="Delete firewall policy"
         description="Deleting the firewall policy is permanent and cannot be undone."
         size="sm"
       >
@@ -7519,7 +7519,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteFirewallPoliciesOpen}
         onClose={() => setIsDeleteFirewallPoliciesOpen(false)}
-        title="Delete Firewall Policies"
+        title="Delete firewall policies"
         description="Removing the selected firewall policies is permanent and cannot be undone."
         size="md"
       >
@@ -7574,7 +7574,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteFirewallRuleOpen}
         onClose={() => setIsDeleteFirewallRuleOpen(false)}
-        title="Delete Firewall Rule"
+        title="Delete firewall rule"
         description="Deleting the firewall rule is permanent and cannot be undone."
         size="sm"
       >
@@ -7615,7 +7615,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteFirewallRulesOpen}
         onClose={() => setIsDeleteFirewallRulesOpen(false)}
-        title="Delete Firewall Rules"
+        title="Delete firewall rules"
         description="Removing the selected firewall rules is permanent and cannot be undone."
         size="md"
       >
@@ -7670,7 +7670,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteTenantOpen}
         onClose={() => setIsDeleteTenantOpen(false)}
-        title="Delete Tenant"
+        title="Delete tenant"
         description="Deleting the tenant is permanent and cannot be undone."
         size="sm"
       >
@@ -7722,7 +7722,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteTenantsOpen}
         onClose={() => setIsDeleteTenantsOpen(false)}
-        title="Delete Tenant"
+        title="Delete tenant"
         description="Removing the selected tenants is permanent and cannot be undone."
         size="sm"
       >
@@ -7777,7 +7777,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteMetadataOpen}
         onClose={() => setIsDeleteMetadataOpen(false)}
-        title="Delete Metadata"
+        title="Delete metadata"
         description="This action removes the metadata."
         size="sm"
       >
@@ -7818,7 +7818,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isDeleteMetadatasOpen}
         onClose={() => setIsDeleteMetadatasOpen(false)}
-        title="Delete Metadata"
+        title="Delete metadata"
         description="This action removes the selected metadata."
         size="md"
       >
@@ -7873,7 +7873,7 @@ export function ModalsPage() {
       <Modal
         isOpen={isManageMemberOpen}
         onClose={() => setIsManageMemberOpen(false)}
-        title="Manage Member"
+        title="Manage member"
         description="User management for this project is handled in the IAM app. You will be redirected to IAM to manage users and user groups."
         size="sm"
       >

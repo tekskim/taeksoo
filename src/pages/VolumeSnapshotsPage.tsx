@@ -166,7 +166,7 @@ const volumeSnapshotStatusMap: Record<SnapshotStatus, 'active' | 'building' | 'e
 // Filter fields configuration
 const filterFields: FilterField[] = [
   { id: 'name', label: 'Name', type: 'text' },
-  { id: 'sourceVolume', label: 'Source Volume', type: 'text' },
+  { id: 'sourceVolume', label: 'Source volume', type: 'text' },
   {
     id: 'status',
     label: 'Status',
@@ -437,7 +437,7 @@ export function VolumeSnapshotsPage() {
             }
             actions={
               <TopBarAction
-                icon={<IconBell size={12} stroke={1.5} />}
+                icon={<IconBell size={16} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />

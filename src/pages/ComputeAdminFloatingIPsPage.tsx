@@ -222,7 +222,7 @@ const filterFields: FilterField[] = [
   { key: 'floatingIp', label: 'Floating IP', type: 'text' },
   { key: 'tenant', label: 'Tenant', type: 'text' },
   { key: 'description', label: 'Description', type: 'text' },
-  { key: 'associatedTo', label: 'Associated To', type: 'text' },
+  { key: 'associatedTo', label: 'Associated to', type: 'text' },
   { key: 'fixedIp', label: 'Fixed IP', type: 'text' },
   { key: 'network', label: 'Network', type: 'text' },
   {
@@ -530,7 +530,7 @@ export function ComputeAdminFloatingIPsPage() {
             }
             actions={
               <TopBarAction
-                icon={<IconBell size={12} stroke={1} />}
+                icon={<IconBell size={16} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />

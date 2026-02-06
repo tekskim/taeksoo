@@ -36,7 +36,7 @@ export function DeletePodModal({
     <ConfirmModal
       isOpen={isOpen}
       onClose={onClose}
-      title="Delete Pod"
+      title="Delete pod"
       description="Removing the selected instances is permanent and cannot be undone."
       infoLabel="Pod name"
       infoValue={pod?.name ?? ''}

@@ -2877,6 +2877,15 @@ input[type='search']::-webkit-search-decoration {
   font-weight: var(--font-weight-semibold);
 }
 
+/* h7 - Card/Section title style (12px, semibold, uppercase, muted) */
+.text-heading-h7 {
+  font-size: var(--font-size-12);
+  line-height: var(--line-height-18);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  color: var(--semantic-color-text-muted);
+}
+
 /* Body - All regular (400) */
 .text-body-lg {
   font-size: var(--font-size-14);

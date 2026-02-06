@@ -981,7 +981,7 @@ export function ComputeAdminInstanceDetailPage() {
             }
             actions={
               <TopBarAction
-                icon={<IconBell size={16} stroke={1} />}
+                icon={<IconBell size={16} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />
@@ -1234,7 +1234,7 @@ export function ComputeAdminInstanceDetailPage() {
                             }
                           />
                           <SectionCard.DataRow
-                            label="Server Group"
+                            label="Server group"
                             value={instance.serverGroup}
                             isLink
                             linkHref="/compute-admin/server-groups"

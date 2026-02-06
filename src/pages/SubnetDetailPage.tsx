@@ -371,7 +371,7 @@ export default function SubnetDetailPage() {
             onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
             actions={
               <TopBarAction
-                icon={<IconBell size={12} stroke={1.5} />}
+                icon={<IconBell size={16} stroke={1.5} />}
                 onClick={() => {}}
                 hasNotification
               />

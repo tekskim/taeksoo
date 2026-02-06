@@ -262,7 +262,7 @@ export function ClusterDetailPage() {
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
@@ -370,7 +370,7 @@ export function ClusterDetailPage() {
                       <SectionCard.Header title="Networking" />
                       <SectionCard.Content>
                         <SectionCard.DataRow
-                          label="External Network"
+                          label="External network"
                           value={clusterData.networking.externalNetwork}
                         />
                         <SectionCard.DataRow
@@ -387,7 +387,7 @@ export function ClusterDetailPage() {
                   <VStack gap={6}>
                     {/* Node Configuration Card */}
                     <SectionCard>
-                      <SectionCard.Header title="Node Configuration" />
+                      <SectionCard.Header title="Node configuration" />
                       <SectionCard.Content>
                         <SectionCard.DataRow
                           label="Node type"
@@ -398,7 +398,7 @@ export function ClusterDetailPage() {
 
                     {/* Control Planes Card */}
                     <SectionCard>
-                      <SectionCard.Header title="Control Planes" />
+                      <SectionCard.Header title="Control planes" />
                       <SectionCard.Content>
                         <SectionCard.DataRow
                           label="Image"

@@ -226,7 +226,7 @@ export function CreateVolumeFromBackupDrawer({
 
           {/* Volume Backup Info */}
           <InfoBox
-            label="Volume Backup"
+            label="Volume backup"
             value={volumeBackup ? `${volumeBackup.name} (${volumeBackup.size}GiB)` : '-'}
           />
         </VStack>

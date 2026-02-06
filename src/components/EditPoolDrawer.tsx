@@ -44,8 +44,8 @@ export interface EditPoolDrawerProps {
    ---------------------------------------- */
 
 const algorithmOptions = [
-  { value: 'ROUND_ROBIN', label: 'Round Robin' },
-  { value: 'LEAST_CONNECTIONS', label: 'Least Connections' },
+  { value: 'ROUND_ROBIN', label: 'Round robin' },
+  { value: 'LEAST_CONNECTIONS', label: 'Least connections' },
   { value: 'SOURCE_IP', label: 'Source IP' },
 ];
 
@@ -62,7 +62,7 @@ const sessionPersistenceOptions = [
   { value: 'NONE', label: 'None' },
   { value: 'SOURCE_IP', label: 'Source IP' },
   { value: 'HTTP_COOKIE', label: 'HTTP Cookie' },
-  { value: 'APP_COOKIE', label: 'App Cookie' },
+  { value: 'APP_COOKIE', label: 'App cookie' },
 ];
 
 /* ----------------------------------------

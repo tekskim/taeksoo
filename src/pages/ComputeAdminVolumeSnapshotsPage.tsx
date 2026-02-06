@@ -192,7 +192,7 @@ const volumeSnapshotStatusMap: Record<SnapshotStatus, 'active' | 'building' | 'e
 // Filter fields configuration
 const filterFields: FilterField[] = [
   { id: 'name', label: 'Name', type: 'text' },
-  { id: 'sourceVolume', label: 'Source Volume', type: 'text' },
+  { id: 'sourceVolume', label: 'Source volume', type: 'text' },
   {
     id: 'status',
     label: 'Status',
@@ -253,8 +253,8 @@ export function ComputeAdminVolumeSnapshotsPage() {
     { id: 'tenant', label: 'Tenant', visible: true },
     { id: 'host', label: 'Host', visible: true },
     { id: 'size', label: 'Size', visible: true },
-    { id: 'sourceVolume', label: 'Source Volume', visible: true },
-    { id: 'createdAt', label: 'Created At', visible: true },
+    { id: 'sourceVolume', label: 'Source volume', visible: true },
+    { id: 'createdAt', label: 'Created at', visible: true },
     { id: 'actions', label: 'Action', visible: true, locked: true },
   ];
   const [columnConfig, setColumnConfig] = useState<ColumnConfig[]>(defaultColumnConfig);
@@ -373,7 +373,7 @@ export function ComputeAdminVolumeSnapshotsPage() {
     },
     {
       key: 'sourceVolume',
-      label: 'Source Volume',
+      label: 'Source volume',
       flex: 1,
       sortable: false,
       render: (_, row) => (
@@ -393,7 +393,7 @@ export function ComputeAdminVolumeSnapshotsPage() {
     },
     {
       key: 'createdAt',
-      label: 'Created At',
+      label: 'Created at',
       flex: 1,
       sortable: true,
     },
@@ -490,7 +490,7 @@ export function ComputeAdminVolumeSnapshotsPage() {
             }
             actions={
               <TopBarAction
-                icon={<IconBell size={12} stroke={1.5} />}
+                icon={<IconBell size={16} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />

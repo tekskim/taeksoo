@@ -698,7 +698,7 @@ export function StorageHomePage() {
 
                 {/* Client Throughput Chart */}
                 <LineChart
-                  title="Client Throughput"
+                  title="Client throughput"
                   series={clientThroughputSeries}
                   timeLabels={timeLabels}
                   yAxisFormatter={(v) => `${v} MiB/s`}
@@ -747,7 +747,7 @@ export function StorageHomePage() {
 
                 {/* Recovery Throughput Chart */}
                 <LineChart
-                  title="Recovery Throughput"
+                  title="Recovery throughput"
                   series={recoveryThroughputSeries}
                   timeLabels={timeLabels}
                   yAxisFormatter={(v) => `${v} B/s`}

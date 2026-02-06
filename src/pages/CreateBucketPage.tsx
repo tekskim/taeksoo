@@ -291,7 +291,7 @@ function BasicInformationSection({
   return (
     <SectionCard isActive>
       <SectionCard.Header
-        title="Basic Information"
+        title="Basic information"
         showDivider
         actions={
           isEditing ? (
@@ -1073,7 +1073,7 @@ export default function CreateBucketPage() {
             }
             actions={
               <TopBarAction
-                icon={<IconBell size={12} stroke={1.5} />}
+                icon={<IconBell size={16} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />
@@ -1087,7 +1087,7 @@ export default function CreateBucketPage() {
             <VStack gap={3} className="min-w-[1176px]">
               {/* Page Title */}
               <div className="flex items-center justify-between h-8">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create Bucket</h1>
+                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create bucket</h1>
               </div>
 
               {/* Content Area */}
@@ -1126,7 +1126,7 @@ export default function CreateBucketPage() {
                       onEdit={() => handleEdit('basic-info')}
                     >
                       <SectionCard.DataRow
-                        label="Bucket Name"
+                        label="Bucket name"
                         value={bucketName || '-'}
                         showDivider={false}
                       />
@@ -1169,7 +1169,7 @@ export default function CreateBucketPage() {
                       onEdit={() => handleEdit('settings')}
                     >
                       <SectionCard.DataRow
-                        label="Object Locking"
+                        label="Object locking"
                         value={objectLocking === 'disabled' ? 'Disabled' : 'Enabled'}
                         showDivider={false}
                       />
@@ -1186,7 +1186,7 @@ export default function CreateBucketPage() {
                             }
                           />
                           <SectionCard.DataRow
-                            label="Retention Days"
+                            label="Retention days"
                             value={retentionDays || '-'}
                           />
                         </>

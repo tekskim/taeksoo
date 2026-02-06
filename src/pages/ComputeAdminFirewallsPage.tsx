@@ -397,7 +397,7 @@ export default function ComputeAdminFirewallsPage() {
     },
     {
       key: 'adminState',
-      label: 'Admin State',
+      label: 'Admin state',
       flex: 1,
       sortable: true,
       render: (_, row) => (
@@ -406,7 +406,7 @@ export default function ComputeAdminFirewallsPage() {
     },
     {
       key: 'createdAt',
-      label: 'Created At',
+      label: 'Created at',
       flex: 1,
       sortable: true,
     },
@@ -699,8 +699,8 @@ export default function ComputeAdminFirewallsPage() {
               <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
                 <TabList>
                   <Tab value="firewalls">Firewalls</Tab>
-                  <Tab value="policies">Firewall Policies</Tab>
-                  <Tab value="rules">Firewall Rules</Tab>
+                  <Tab value="policies">Firewall policies</Tab>
+                  <Tab value="rules">Firewall rules</Tab>
                 </TabList>
 
                 {/* Firewalls Tab */}

@@ -273,7 +273,7 @@ export function ComputeAdminHostAggregatesPage() {
             }
             actions={
               <TopBarAction
-                icon={<IconBell size={12} stroke={1} />}
+                icon={<IconBell size={16} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />
@@ -299,8 +299,8 @@ export function ComputeAdminHostAggregatesPage() {
               {/* Tabs */}
               <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
                 <TabList>
-                  <Tab value="host-aggregates">Host Aggregates</Tab>
-                  <Tab value="availability-zones">Availability Zones</Tab>
+                  <Tab value="host-aggregates">Host aggregates</Tab>
+                  <Tab value="availability-zones">Availability zones</Tab>
                 </TabList>
               </Tabs>
 
@@ -589,7 +589,7 @@ export function ComputeAdminHostAggregatesPage() {
         isOpen={deleteModalOpen}
         onClose={() => setDeleteModalOpen(false)}
         onConfirm={handleDeleteConfirm}
-        title="Delete Host Aggregate"
+        title="Delete host aggregate"
         description="Removing the selected instances is permanent and cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"

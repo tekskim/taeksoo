@@ -217,7 +217,7 @@ export function CreateVolumeFromVolumeSnapshotDrawer({
 
           {/* Volume Snapshot Info */}
           <InfoBox
-            label="Volume Snapshot"
+            label="Volume snapshot"
             value={volumeSnapshot ? `${volumeSnapshot.name} (${volumeSnapshot.size}GiB)` : '-'}
           />
         </VStack>

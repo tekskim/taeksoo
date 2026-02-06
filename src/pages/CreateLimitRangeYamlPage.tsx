@@ -192,7 +192,7 @@ export function CreateLimitRangeYamlPage() {
               items={[
                 { label: 'clusterName', href: '/container' },
                 { label: 'LimitRanges', href: '/container/limitRanges' },
-                { label: 'Create LimitRange' },
+                { label: 'Create limit range' },
               ]}
             />
           }
@@ -205,7 +205,7 @@ export function CreateLimitRangeYamlPage() {
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />

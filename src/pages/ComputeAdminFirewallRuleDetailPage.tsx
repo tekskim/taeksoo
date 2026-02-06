@@ -187,7 +187,7 @@ export default function ComputeAdminFirewallRuleDetailPage() {
             }
             actions={
               <TopBarAction
-                icon={<IconBell size={12} stroke={1.5} />}
+                icon={<IconBell size={16} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />
@@ -227,9 +227,9 @@ export default function ComputeAdminFirewallRuleDetailPage() {
                     <VStack gap={6}>
                       {/* Basic Information */}
                       <SectionCard>
-                        <SectionCard.Header title="Basic Information" />
+                        <SectionCard.Header title="Basic information" />
                         <SectionCard.Content>
-                          <SectionCard.DataRow label="Rule Name" value={rule.name} />
+                          <SectionCard.DataRow label="Rule name" value={rule.name} />
                           <SectionCard.DataRow
                             label="Description"
                             value={rule.description || '-'}
@@ -237,13 +237,13 @@ export default function ComputeAdminFirewallRuleDetailPage() {
                           <SectionCard.DataRow label="Protocol" value={rule.protocol} />
                           <SectionCard.DataRow label="Action" value={rule.action} />
                           <SectionCard.DataRow label="Source IP" value={rule.sourceIp || '-'} />
-                          <SectionCard.DataRow label="Source Port" value={rule.sourcePort || '-'} />
+                          <SectionCard.DataRow label="Source port" value={rule.sourcePort || '-'} />
                           <SectionCard.DataRow
                             label="Destination IP"
                             value={rule.destinationIp || '-'}
                           />
                           <SectionCard.DataRow
-                            label="Destination Port"
+                            label="Destination port"
                             value={rule.destinationPort || '-'}
                           />
                           <SectionCard.DataRow
@@ -256,10 +256,10 @@ export default function ComputeAdminFirewallRuleDetailPage() {
 
                       {/* Firewall Policy */}
                       <SectionCard>
-                        <SectionCard.Header title="Firewall Policy" />
+                        <SectionCard.Header title="Firewall policy" />
                         <SectionCard.Content>
                           <SectionCard.DataRow
-                            label="Firewall Policy"
+                            label="Firewall policy"
                             value={
                               rule.firewallPolicyId ? (
                                 <Link

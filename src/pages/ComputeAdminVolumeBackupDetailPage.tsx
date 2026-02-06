@@ -285,7 +285,7 @@ export function ComputeAdminVolumeBackupDetailPage() {
             breadcrumb={<Breadcrumb items={breadcrumbItems} />}
             actions={
               <TopBarAction
-                icon={<IconBell size={12} stroke={1.5} />}
+                icon={<IconBell size={16} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />
@@ -343,7 +343,7 @@ export function ComputeAdminVolumeBackupDetailPage() {
                       {/* Basic information */}
                       <SectionCard>
                         <SectionCard.Header
-                          title="Basic Infomation"
+                          title="Basic information"
                           actions={
                             <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
                               Edit
@@ -381,7 +381,7 @@ export function ComputeAdminVolumeBackupDetailPage() {
                       <SectionCard>
                         <SectionCard.Header title="Specifications" />
                         <SectionCard.Content>
-                          <SectionCard.DataRow label="Backup Mode" value="Full Backup" />
+                          <SectionCard.DataRow label="Backup mode" value="Full backup" />
                           <SectionCard.DataRow label="Size" value={backup.size} />
                         </SectionCard.Content>
                       </SectionCard>

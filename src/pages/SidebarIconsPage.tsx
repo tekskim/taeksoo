@@ -882,7 +882,7 @@ function IconCard({ item, sidebarFile }: IconCardProps) {
 
       {/* Copy buttons */}
       <div className="flex flex-col gap-1.5">
-        <CopyButton text={item.name} label="Icon Name" />
+        <CopyButton text={item.name} label="Icon name" />
         <CopyButton text={importStatement} label="Import" />
         <CopyButton text={jsxCode} label="JSX" />
       </div>

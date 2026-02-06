@@ -525,7 +525,7 @@ export function WarningModalPatternDemo() {
       <Modal
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
-        title="Reboot Instance"
+        title="Reboot instance"
         description="This will restart the instance."
         size="sm"
       >
@@ -730,7 +730,7 @@ export function SectionCardWithActionsDemo() {
   return (
     <SectionCard>
       <SectionCard.Header
-        title="Account Information"
+        title="Account information"
         actions={
           <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
             Edit

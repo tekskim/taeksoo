@@ -126,11 +126,11 @@ export function CreateSecurityGroupRuleDrawer({
   }, [isOpen]);
 
   const protocolOptions = [
-    { value: 'all_proto', label: 'All Proto' },
+    { value: 'all_proto', label: 'All proto' },
     { value: 'custom_tcp', label: 'Custom TCP' },
     { value: 'custom_udp', label: 'Custom UDP' },
     { value: 'custom_icmp', label: 'Custom ICMP' },
-    { value: 'other_protocol', label: 'Other Protocol' },
+    { value: 'other_protocol', label: 'Other protocol' },
     { value: 'ssh', label: 'SSH (22)' },
     { value: 'http', label: 'HTTP (80)' },
     { value: 'https', label: 'HTTPS (443)' },
@@ -141,7 +141,7 @@ export function CreateSecurityGroupRuleDrawer({
   ];
 
   const portRangeOptions = [
-    { value: 'all', label: 'All Ports' },
+    { value: 'all', label: 'All ports' },
     { value: 'custom', label: 'Custom' },
   ];
 

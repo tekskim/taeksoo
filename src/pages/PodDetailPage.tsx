@@ -223,12 +223,12 @@ function ContainersTab({ containers, onExecuteShell, onViewLogs }: ContainersTab
     return [
       {
         id: 'execute-shell',
-        label: 'Execute Shell',
+        label: 'Execute shell',
         onClick: () => onExecuteShell(row.name),
       },
       {
         id: 'view-logs',
-        label: 'View Logs',
+        label: 'View logs',
         onClick: () => onViewLogs(row.name),
       },
     ];
@@ -303,7 +303,7 @@ function ContainersTab({ containers, onExecuteShell, onViewLogs }: ContainersTab
     },
     {
       key: 'createdAt',
-      label: 'Created At',
+      label: 'Created at',
       flex: 1,
       minWidth: columnMinWidths.createdAt,
       sortable: true,
@@ -443,7 +443,7 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
   const columns: TableColumn<EventRow>[] = [
     {
       key: 'lastSeen',
-      label: 'Last Seen',
+      label: 'Last seen',
       flex: 1,
       minWidth: columnMinWidths.lastSeen,
       sortable: true,
@@ -467,7 +467,7 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
     },
     {
       key: 'firstSeen',
-      label: 'First Seen',
+      label: 'First seen',
       flex: 1,
       minWidth: columnMinWidths.firstSeen,
       sortable: true,
@@ -513,7 +513,7 @@ function RecentEventsTab({ events }: RecentEventsTabProps) {
       <h3 className="text-heading-h5 text-[var(--color-text-default)]">Recent Events</h3>
       <HStack gap={2} align="center">
         <SearchInput
-          placeholder="Search Events by attributes"
+          placeholder="Search events by attributes"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           onClear={() => setSearchQuery('')}
@@ -610,17 +610,17 @@ export function PodDetailPage() {
   const moreActionsItems: ContextMenuItem[] = [
     {
       id: 'execute-shell',
-      label: 'Execute Shell',
+      label: 'Execute shell',
       submenu: containerSubmenu,
     },
     {
       id: 'view-logs',
-      label: 'View Logs',
+      label: 'View logs',
       onClick: () => handleViewLogs(pod.name),
     },
     {
       id: 'edit-config',
-      label: 'Edit Config',
+      label: 'Edit config',
       onClick: () => navigate(`/container/pods/${pod.id}/edit`),
     },
     {
@@ -686,7 +686,7 @@ export function PodDetailPage() {
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
@@ -739,7 +739,7 @@ export function PodDetailPage() {
                     copyable
                   />
                   <DetailHeader.InfoCard label="Pod IP" value={pod.podIP} copyable />
-                  <DetailHeader.InfoCard label="Created At" value={pod.createdAt} />
+                  <DetailHeader.InfoCard label="Created at" value={pod.createdAt} />
                 </DetailHeader.InfoGrid>
 
                 {/* Second row: Workload, Node, Labels, Annotations */}

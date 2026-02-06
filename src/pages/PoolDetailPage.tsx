@@ -411,7 +411,7 @@ export default function PoolDetailPage() {
             onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
             actions={
               <TopBarAction
-                icon={<IconBell size={12} stroke={1.5} />}
+                icon={<IconBell size={16} stroke={1.5} />}
                 onClick={() => {}}
                 hasNotification
               />
@@ -592,7 +592,7 @@ export default function PoolDetailPage() {
                     <VStack gap={4} className="pt-4">
                       <SectionCard>
                         <SectionCard.Header
-                          title="Health Monitor"
+                          title="Health monitor"
                           actions={
                             <div className="flex items-center gap-2">
                               <Button

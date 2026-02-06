@@ -404,7 +404,7 @@ export function PersistentVolumeClaimDetailPage() {
   const moreActionsItems: ContextMenuItem[] = [
     {
       id: 'edit-config',
-      label: 'Edit Config',
+      label: 'Edit config',
       onClick: () => navigate(`/container/pvc/${pvcId}/edit`),
     },
     {
@@ -437,7 +437,7 @@ export function PersistentVolumeClaimDetailPage() {
 
   // Storage class options
   const storageClassOptions = [
-    { value: 'Default Storage Class', label: 'Default Storage Class' },
+    { value: 'Default Storage Class', label: 'Default storage class' },
     { value: 'standard', label: 'standard' },
     { value: 'fast', label: 'fast' },
     { value: 'Ceph', label: 'Ceph' },
@@ -503,7 +503,7 @@ export function PersistentVolumeClaimDetailPage() {
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
@@ -559,7 +559,7 @@ export function PersistentVolumeClaimDetailPage() {
                       </span>
                     }
                   />
-                  <DetailHeader.InfoCard label="Created At" value={pvcData.createdAt} />
+                  <DetailHeader.InfoCard label="Created at" value={pvcData.createdAt} />
                   <DetailHeader.InfoCard
                     label={`Labels (${labelsCount})`}
                     value={
@@ -652,7 +652,7 @@ export function PersistentVolumeClaimDetailPage() {
                           options={storageClassOptions}
                           value={pvcData.storageClass}
                           onChange={() => {}}
-                          placeholder="Default Storage Class"
+                          placeholder="Default storage class"
                           fullWidth
                           disabled
                         />
@@ -699,19 +699,19 @@ export function PersistentVolumeClaimDetailPage() {
                         </h4>
                         <VStack gap={1} align="start">
                           <Checkbox
-                            label="Single Node Read-Write"
+                            label="Single node read-write"
                             checked={pvcData.accessModes.singleNodeReadWrite}
                             onChange={() => {}}
                             disabled
                           />
                           <Checkbox
-                            label="Many Nodes Read-Only"
+                            label="Many nodes read-only"
                             checked={pvcData.accessModes.manyNodesReadOnly}
                             onChange={() => {}}
                             disabled
                           />
                           <Checkbox
-                            label="Many Nodes Read-Write"
+                            label="Many nodes read-write"
                             checked={pvcData.accessModes.manyNodesReadWrite}
                             onChange={() => {}}
                             disabled
@@ -908,7 +908,7 @@ export function PersistentVolumeClaimDetailPage() {
                         columns={[
                           {
                             key: 'lastSeen',
-                            label: 'Last Seen',
+                            label: 'Last seen',
                             sortable: true,
                             flex: 1,
                             minWidth: columnMinWidths.lastSeen,
@@ -948,7 +948,7 @@ export function PersistentVolumeClaimDetailPage() {
                           },
                           {
                             key: 'firstSeen',
-                            label: 'First Seen',
+                            label: 'First seen',
                             sortable: true,
                             flex: 1,
                             minWidth: columnMinWidths.firstSeen,

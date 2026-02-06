@@ -230,13 +230,13 @@ export function HomePage() {
               <SubLabel>Today</SubLabel>
               <VStack gap={2} className="w-full">
                 <ChatItem
-                  title="New Chat"
+                  title="New chat"
                   description="Analyze SQL queries and recommend optimal indexes"
                   createdAt="Sep 26, 2025"
                   onClick={() => navigate('/chat')}
                 />
                 <ChatItem
-                  title="New Chat"
+                  title="New chat"
                   description="# 🎬 라따뚜이 등장인물 정리 대본 내용을 바탕으로 주요 등장인물들을 표로 정리해드릴게요! | 캐릭터명 | 종류/직책 | 특징 및 역할 | |---------|----------|----..."
                   createdAt="Sep 26, 2025"
                 />
@@ -248,7 +248,7 @@ export function HomePage() {
               <SubLabel>Last 7 days</SubLabel>
               <VStack gap={2} className="w-full">
                 <ChatItem
-                  title="New Chat"
+                  title="New chat"
                   description="Analyze SQL queries and recommend optimal indexes"
                   createdAt="Sep 26, 2025"
                 />

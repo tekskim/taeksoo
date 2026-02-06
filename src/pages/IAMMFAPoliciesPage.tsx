@@ -334,7 +334,7 @@ export default function IAMMFAPoliciesPage() {
                               </VStack>
                               <HStack className="gap-[6px]">
                                 <Chip
-                                  value="Google Auth"
+                                  value="Google auth"
                                   leftIcon={<IconDeviceMobile size={12} stroke={1.5} />}
                                 />
                                 <Chip

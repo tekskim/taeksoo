@@ -236,7 +236,7 @@ export function ManageMembersDrawer({
     <Drawer
       isOpen={isOpen}
       onClose={onClose}
-      title="Manage Members"
+      title="Manage members"
       width={696}
       footer={
         <HStack gap={2} justify="center" className="w-full">

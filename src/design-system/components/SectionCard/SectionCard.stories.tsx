@@ -42,7 +42,7 @@ const meta: Meta<typeof SectionCard> = {
 ### 예시
 \`\`\`tsx
 <SectionCard>
-  <SectionCard.Header title="Basic Information" />
+  <SectionCard.Header title="Basic information" />
   <SectionCard.Content>
     <SectionCard.DataRow label="Name" value="my-instance" />
     <SectionCard.DataRow label="Status">
@@ -73,7 +73,7 @@ type Story = StoryObj<typeof SectionCard>;
 export const Default: Story = {
   render: () => (
     <SectionCard>
-      <SectionCard.Header title="Basic Information" />
+      <SectionCard.Header title="Basic information" />
       <SectionCard.Content>
         <SectionCard.DataRow label="Name" value="my-instance-01" />
         <SectionCard.DataRow label="Description" value="Production server for web application" />

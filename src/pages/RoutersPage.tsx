@@ -186,18 +186,18 @@ const filterFields: FilterField[] = [
   { key: 'name', label: 'Name', type: 'text' },
   {
     key: 'externalGateway',
-    label: 'External Gateway',
+    label: 'External gateway',
     type: 'select',
     options: [
       { value: 'true', label: 'Yes' },
       { value: 'false', label: 'No' },
     ],
   },
-  { key: 'externalFixedIp', label: 'External Fixed IP', type: 'text' },
-  { key: 'externalNetwork', label: 'External Network', type: 'text' },
+  { key: 'externalFixedIp', label: 'External fixed IP', type: 'text' },
+  { key: 'externalNetwork', label: 'External network', type: 'text' },
   {
     key: 'adminState',
-    label: 'Admin State',
+    label: 'Admin state',
     type: 'select',
     options: [
       { value: 'true', label: 'Up' },
@@ -433,7 +433,7 @@ export function RoutersPage() {
             }
             actions={
               <TopBarAction
-                icon={<IconBell size={12} stroke={1} />}
+                icon={<IconBell size={16} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />

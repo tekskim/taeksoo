@@ -239,7 +239,7 @@ export function CreateServiceYamlPage() {
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
@@ -257,7 +257,7 @@ export function CreateServiceYamlPage() {
             <VStack gap={6} className="flex-1 min-h-0">
               {/* Header */}
               <VStack gap={2} className="flex-shrink-0">
-                <h1 className="text-heading-h4 text-[var(--color-text-default)]">Create Service</h1>
+                <h1 className="text-heading-h4 text-[var(--color-text-default)]">Create service</h1>
                 <p className="text-body-sm text-[var(--color-text-subtle)]">
                   Services allow you to define a logical set of Pods that can be accessed with a
                   single IP address and port.

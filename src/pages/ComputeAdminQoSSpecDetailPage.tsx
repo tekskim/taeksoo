@@ -147,7 +147,7 @@ export default function ComputeAdminQoSSpecDetailPage() {
   // Breadcrumb items
   const breadcrumbItems = [
     { label: 'Compute Admin', href: '/compute-admin' },
-    { label: 'Volume Types', href: '/compute-admin/volume-types' },
+    { label: 'Volume types', href: '/compute-admin/volume-types' },
     { label: qosSpec.name },
   ];
 
@@ -301,7 +301,7 @@ export default function ComputeAdminQoSSpecDetailPage() {
             breadcrumb={<Breadcrumb items={breadcrumbItems} />}
             actions={
               <TopBarAction
-                icon={<IconBell size={12} stroke={1.5} />}
+                icon={<IconBell size={16} stroke={1.5} />}
                 aria-label="Notifications"
                 badge={true}
               />
@@ -433,7 +433,7 @@ export default function ComputeAdminQoSSpecDetailPage() {
         open={deleteModalOpen}
         onClose={() => setDeleteModalOpen(false)}
         onConfirm={handleConfirmDelete}
-        title="Delete Extra Spec"
+        title="Delete extra spec"
         description="Removing the selected instances is permanent and cannot be undone."
         confirmText="Delete"
         variant="danger"

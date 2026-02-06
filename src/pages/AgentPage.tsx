@@ -118,7 +118,7 @@ export function AgentSidebar() {
         <div className="flex flex-col items-center w-full">
           {/* Back to All Services */}
           <div className="flex items-center justify-center py-1.5">
-            <Tooltip content="All Services" position="right">
+            <Tooltip content="All services" position="right">
               <Link
                 to="/"
                 className="size-[38px] rounded-lg bg-[var(--color-surface-default)] hover:bg-[var(--color-surface-muted)] transition-colors flex items-center justify-center shrink-0"

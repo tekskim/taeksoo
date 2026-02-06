@@ -215,7 +215,7 @@ export function ContainerIngressDetailPage() {
   const moreActionsItems: ContextMenuItem[] = [
     {
       id: 'edit-config',
-      label: 'Edit Config',
+      label: 'Edit config',
       onClick: () => console.log('Edit Config'),
     },
     {
@@ -340,7 +340,7 @@ export function ContainerIngressDetailPage() {
                   />
                   <DetailHeader.InfoCard label="Namespace" value={ingress.namespace} copyable />
                   <DetailHeader.InfoCard label="Ingress Class" value={ingress.ingressClass} />
-                  <DetailHeader.InfoCard label="Created At" value={ingress.createdAt} />
+                  <DetailHeader.InfoCard label="Created at" value={ingress.createdAt} />
                 </DetailHeader.InfoGrid>
 
                 {/* Labels & Annotations Cards */}

@@ -199,7 +199,7 @@ export function ConfigMapDetailPage() {
   const moreActionsItems: ContextMenuItem[] = [
     {
       id: 'edit-config',
-      label: 'Edit Config',
+      label: 'Edit config',
       onClick: () => navigate(`/container/configmaps/${configMapId}/edit`),
     },
     {
@@ -299,7 +299,7 @@ export function ConfigMapDetailPage() {
                 <IconFile size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
-                <IconCopy size={12} className="text-[var(--color-text-muted)]" stroke={1.5} />
+                <IconCopy size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
               </button>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
@@ -355,7 +355,7 @@ export function ConfigMapDetailPage() {
                       </span>
                     }
                   />
-                  <DetailHeader.InfoCard label="Created At" value={configMapData.createdAt} />
+                  <DetailHeader.InfoCard label="Created at" value={configMapData.createdAt} />
                   <DetailHeader.InfoCard
                     label={`Labels (${labelsCount})`}
                     value={
