@@ -72,7 +72,7 @@ const mockClusterDetails: Record<string, ClusterDetail> = {
     status: 'building',
     kubernetesVersion: 'v1.34',
     containerNetwork: 'Kube OVN',
-    createdAt: '2025-11-11 13:00',
+    createdAt: 'Nov 11, 2025',
     networking: {
       externalNetwork: 'extnet-01',
       tenantNetwork: 'net-01',
@@ -99,7 +99,7 @@ const mockClusterDetails: Record<string, ClusterDetail> = {
     status: 'active',
     kubernetesVersion: 'v1.33.4',
     containerNetwork: 'Kube OVN',
-    createdAt: '2025-10-06 12:51',
+    createdAt: 'Oct 6, 2025',
     networking: {
       externalNetwork: 'extnet-02',
       tenantNetwork: 'net-02',
@@ -155,7 +155,7 @@ export function ClusterDetailPage() {
     status: 'active' as ClusterStatus,
     kubernetesVersion: 'v1.34',
     containerNetwork: 'Kube OVN',
-    createdAt: '2025-07-25 09:12:20',
+    createdAt: 'Jul 25, 2025',
     networking: {
       externalNetwork: 'extnet-01',
       tenantNetwork: 'net-01',

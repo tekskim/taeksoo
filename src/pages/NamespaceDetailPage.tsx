@@ -69,7 +69,7 @@ const mockNamespaceData: Record<string, NamespaceData> = {
   'cattle-clusters-system': {
     name: 'cattle-clusters-system',
     status: 'Active',
-    createdAt: '2025-11-06 12:57',
+    createdAt: 'Nov 6, 2025',
     labels: { 'kubernetes.io/metadata.name': 'cattle-clusters-system' },
     annotations: {},
     resources: { active: 122, processing: 0, error: 0, total: 138 },
@@ -77,7 +77,7 @@ const mockNamespaceData: Record<string, NamespaceData> = {
   'kube-system': {
     name: 'kube-system',
     status: 'Active',
-    createdAt: '2025-11-06 12:57',
+    createdAt: 'Nov 6, 2025',
     labels: { 'kubernetes.io/metadata.name': 'kube-system' },
     annotations: {},
     resources: { active: 122, processing: 0, error: 0, total: 138 },
@@ -85,7 +85,7 @@ const mockNamespaceData: Record<string, NamespaceData> = {
   default: {
     name: 'default',
     status: 'Active',
-    createdAt: '2025-11-06 12:57',
+    createdAt: 'Nov 6, 2025',
     labels: { 'kubernetes.io/metadata.name': 'default' },
     annotations: {},
     resources: { active: 10, processing: 0, error: 0, total: 10 },
@@ -120,7 +120,7 @@ const mockWorkloadsData: WorkloadRow[] = [
     type: 'Deployment',
     image: 'thakicloud/frontend:v2.1.0',
     restarts: 0,
-    createdAt: '2025-07-25 09:12:20',
+    createdAt: 'Jul 25, 2025',
     health: '3 Running',
     status: 'active',
   },
@@ -131,7 +131,7 @@ const mockWorkloadsData: WorkloadRow[] = [
     type: 'Deployment',
     image: 'thakicloud/api:v1.2.0',
     restarts: 2,
-    createdAt: '2025-07-24 14:30:00',
+    createdAt: 'Jul 24, 2025',
     health: '5 Running',
     status: 'active',
   },
@@ -142,7 +142,7 @@ const mockWorkloadsData: WorkloadRow[] = [
     type: 'DaemonSet',
     image: 'fluent/fluentd:v1.16',
     restarts: 0,
-    createdAt: '2025-07-20 08:00:00',
+    createdAt: 'Jul 20, 2025',
     health: '4 Running',
     status: 'active',
   },
@@ -153,7 +153,7 @@ const mockWorkloadsData: WorkloadRow[] = [
     type: 'DaemonSet',
     image: 'prom/node-exporter:v1.6.0',
     restarts: 1,
-    createdAt: '2025-07-18 11:30:00',
+    createdAt: 'Jul 18, 2025',
     health: '4 Running',
     status: 'active',
   },
@@ -164,7 +164,7 @@ const mockWorkloadsData: WorkloadRow[] = [
     type: 'StatefulSet',
     image: 'postgres:15-alpine',
     restarts: 0,
-    createdAt: '2025-07-15 10:00:00',
+    createdAt: 'Jul 15, 2025',
     health: '3 Running',
     status: 'active',
   },
@@ -175,7 +175,7 @@ const mockWorkloadsData: WorkloadRow[] = [
     type: 'StatefulSet',
     image: 'redis:7.0-alpine',
     restarts: 0,
-    createdAt: '2025-07-14 09:00:00',
+    createdAt: 'Jul 14, 2025',
     health: '3 Running',
     status: 'active',
   },
@@ -186,7 +186,7 @@ const mockWorkloadsData: WorkloadRow[] = [
     type: 'CronJob',
     image: 'thakicloud/backup:v1.0.0',
     restarts: 0,
-    createdAt: '2025-07-10 00:00:00',
+    createdAt: 'Jul 10, 2025',
     health: '0 Running',
     status: 'active',
   },
@@ -197,7 +197,7 @@ const mockWorkloadsData: WorkloadRow[] = [
     type: 'CronJob',
     image: 'thakicloud/reports:v2.3.1',
     restarts: 0,
-    createdAt: '2025-07-12 06:00:00',
+    createdAt: 'Jul 12, 2025',
     health: '0 Running',
     status: 'active',
   },
@@ -208,7 +208,7 @@ const mockWorkloadsData: WorkloadRow[] = [
     type: 'Job',
     image: 'thakicloud/migrate:v1.5.0',
     restarts: 0,
-    createdAt: '2025-07-25 08:00:00',
+    createdAt: 'Jul 25, 2025',
     health: '1 Running',
     status: 'pending',
   },
@@ -219,7 +219,7 @@ const mockWorkloadsData: WorkloadRow[] = [
     type: 'Job',
     image: 'elasticsearch:8.9.0',
     restarts: 1,
-    createdAt: '2025-07-24 22:00:00',
+    createdAt: 'Jul 24, 2025',
     health: '0 Completed',
     status: 'active',
   },
@@ -230,7 +230,7 @@ const mockWorkloadsData: WorkloadRow[] = [
     type: 'Pod',
     image: 'thakicloud/api:v1.2.0',
     restarts: 0,
-    createdAt: '2025-07-25 10:15:00',
+    createdAt: 'Jul 25, 2025',
     health: '1 Running',
     status: 'active',
   },
@@ -241,7 +241,7 @@ const mockWorkloadsData: WorkloadRow[] = [
     type: 'Pod',
     image: 'thakicloud/worker:v3.0.2',
     restarts: 3,
-    createdAt: '2025-07-25 07:45:00',
+    createdAt: 'Jul 25, 2025',
     health: '1 Running',
     status: 'error',
   },
@@ -261,35 +261,35 @@ const mockConditionsData: ConditionRow[] = [
     condition: 'NamespaceDeletionDiscoveryFailure',
     status: 'False',
     message: '',
-    updated: '2025-11-10 12:57',
+    updated: 'Nov 10, 2025',
   },
   {
     id: '2',
     condition: 'NamespaceDeletionGroupVersionParsingFailure',
     status: 'False',
     message: '',
-    updated: '2025-11-10 12:57',
+    updated: 'Nov 10, 2025',
   },
   {
     id: '3',
     condition: 'NamespaceDeletionContentFailure',
     status: 'False',
     message: '',
-    updated: '2025-11-10 12:57',
+    updated: 'Nov 10, 2025',
   },
   {
     id: '4',
     condition: 'NamespaceContentRemaining',
     status: 'False',
     message: '',
-    updated: '2025-11-10 12:57',
+    updated: 'Nov 10, 2025',
   },
   {
     id: '5',
     condition: 'NamespaceFinalizersRemaining',
     status: 'False',
     message: '',
-    updated: '2025-11-10 12:57',
+    updated: 'Nov 10, 2025',
   },
 ];
 
@@ -702,7 +702,7 @@ export function NamespaceDetailPage() {
   const namespace = mockNamespaceData[namespaceName || ''] || {
     name: namespaceName || 'unknown',
     status: 'Active' as const,
-    createdAt: '2025-11-06 12:57',
+    createdAt: 'Nov 6, 2025',
     labels: { 'kubernetes.io/metadata.name': namespaceName || '' },
     annotations: {},
     resources: { active: 0, processing: 0, error: 0, total: 0 },
@@ -864,23 +864,25 @@ export function NamespaceDetailPage() {
               </DetailHeader>
 
               {/* Resources Section */}
-              <VStack gap={3}>
-                <h2 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
-                  Workload
-                </h2>
+              <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 pt-3 pb-4 w-full">
+                <VStack gap={3}>
+                  <h2 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
+                    Workload
+                  </h2>
 
-                {/* Stat Cards */}
-                <HStack gap={3} className="w-full">
-                  <StatCard label="Active" value={namespace.resources.active} color="green" />
-                  <StatCard
-                    label="Processing"
-                    value={namespace.resources.processing}
-                    color="blue"
-                  />
-                  <StatCard label="Error" value={namespace.resources.error} color="red" />
-                  <StatCard label="Total" value={namespace.resources.total} color="black" />
-                </HStack>
-              </VStack>
+                  {/* Stat Cards */}
+                  <HStack gap={3} className="w-full">
+                    <StatCard label="Active" value={namespace.resources.active} color="green" />
+                    <StatCard
+                      label="Processing"
+                      value={namespace.resources.processing}
+                      color="blue"
+                    />
+                    <StatCard label="Error" value={namespace.resources.error} color="red" />
+                    <StatCard label="Total" value={namespace.resources.total} color="black" />
+                  </HStack>
+                </VStack>
+              </div>
 
               {/* Tabs Section */}
               <Tabs

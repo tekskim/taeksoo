@@ -62,7 +62,7 @@ const daemonSetsData: DaemonSetRow[] = [
     ready: 1,
     current: 1,
     desired: 1,
-    createdAt: '2025-11-10 12:57',
+    createdAt: 'Nov 10, 2025',
   },
   {
     id: '2',
@@ -73,7 +73,7 @@ const daemonSetsData: DaemonSetRow[] = [
     ready: 3,
     current: 3,
     desired: 3,
-    createdAt: '2025-11-09 14:30',
+    createdAt: 'Nov 9, 2025',
   },
   {
     id: '3',
@@ -84,7 +84,7 @@ const daemonSetsData: DaemonSetRow[] = [
     ready: 5,
     current: 5,
     desired: 5,
-    createdAt: '2025-11-08 09:15',
+    createdAt: 'Nov 8, 2025',
   },
   {
     id: '4',
@@ -95,7 +95,7 @@ const daemonSetsData: DaemonSetRow[] = [
     ready: 2,
     current: 3,
     desired: 5,
-    createdAt: '2025-11-10 11:22',
+    createdAt: 'Nov 10, 2025',
   },
   {
     id: '5',
@@ -106,7 +106,7 @@ const daemonSetsData: DaemonSetRow[] = [
     ready: 5,
     current: 5,
     desired: 5,
-    createdAt: '2025-11-07 16:45',
+    createdAt: 'Nov 7, 2025',
   },
   {
     id: '6',
@@ -117,7 +117,7 @@ const daemonSetsData: DaemonSetRow[] = [
     ready: 0,
     current: 0,
     desired: 5,
-    createdAt: '2025-11-10 08:00',
+    createdAt: 'Nov 10, 2025',
   },
   {
     id: '7',
@@ -128,7 +128,7 @@ const daemonSetsData: DaemonSetRow[] = [
     ready: 2,
     current: 2,
     desired: 2,
-    createdAt: '2025-11-06 10:30',
+    createdAt: 'Nov 6, 2025',
   },
   {
     id: '8',
@@ -139,7 +139,7 @@ const daemonSetsData: DaemonSetRow[] = [
     ready: 5,
     current: 5,
     desired: 5,
-    createdAt: '2025-11-05 12:00',
+    createdAt: 'Nov 5, 2025',
   },
 ];
 

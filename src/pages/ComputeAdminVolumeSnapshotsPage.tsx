@@ -60,7 +60,7 @@ const mockVolumeSnapshots: VolumeSnapshot[] = [
     size: '1500GiB',
     sourceVolume: 'vol-1',
     sourceVolumeId: 'vol-001',
-    createdAt: '2025-09-12',
+    createdAt: 'Sep 12, 2025',
     status: 'active',
   },
   {
@@ -72,7 +72,7 @@ const mockVolumeSnapshots: VolumeSnapshot[] = [
     size: '500GiB',
     sourceVolume: 'vol-2',
     sourceVolumeId: 'vol-002',
-    createdAt: '2025-09-10',
+    createdAt: 'Sep 10, 2025',
     status: 'active',
   },
   {
@@ -84,7 +84,7 @@ const mockVolumeSnapshots: VolumeSnapshot[] = [
     size: '2000GiB',
     sourceVolume: 'vol-3',
     sourceVolumeId: 'vol-003',
-    createdAt: '2025-09-08',
+    createdAt: 'Sep 8, 2025',
     status: 'active',
   },
   {
@@ -96,7 +96,7 @@ const mockVolumeSnapshots: VolumeSnapshot[] = [
     size: '100GiB',
     sourceVolume: 'vol-4',
     sourceVolumeId: 'vol-004',
-    createdAt: '2025-09-05',
+    createdAt: 'Sep 5, 2025',
     status: 'creating',
   },
   {
@@ -108,7 +108,7 @@ const mockVolumeSnapshots: VolumeSnapshot[] = [
     size: '256GiB',
     sourceVolume: 'vol-5',
     sourceVolumeId: 'vol-005',
-    createdAt: '2025-08-30',
+    createdAt: 'Aug 30, 2025',
     status: 'active',
   },
   {
@@ -120,7 +120,7 @@ const mockVolumeSnapshots: VolumeSnapshot[] = [
     size: '5000GiB',
     sourceVolume: 'vol-6',
     sourceVolumeId: 'vol-006',
-    createdAt: '2025-08-25',
+    createdAt: 'Aug 25, 2025',
     status: 'active',
   },
   {
@@ -132,7 +132,7 @@ const mockVolumeSnapshots: VolumeSnapshot[] = [
     size: '50GiB',
     sourceVolume: 'vol-7',
     sourceVolumeId: 'vol-007',
-    createdAt: '2025-08-20',
+    createdAt: 'Aug 20, 2025',
     status: 'error',
   },
   {
@@ -144,7 +144,7 @@ const mockVolumeSnapshots: VolumeSnapshot[] = [
     size: '1000GiB',
     sourceVolume: 'vol-8',
     sourceVolumeId: 'vol-008',
-    createdAt: '2025-08-15',
+    createdAt: 'Aug 15, 2025',
     status: 'active',
   },
   {
@@ -156,7 +156,7 @@ const mockVolumeSnapshots: VolumeSnapshot[] = [
     size: '10000GiB',
     sourceVolume: 'vol-9',
     sourceVolumeId: 'vol-009',
-    createdAt: '2025-08-10',
+    createdAt: 'Aug 10, 2025',
     status: 'active',
   },
   {
@@ -168,7 +168,7 @@ const mockVolumeSnapshots: VolumeSnapshot[] = [
     size: '100GiB',
     sourceVolume: 'vol-10',
     sourceVolumeId: 'vol-010',
-    createdAt: '2025-08-05',
+    createdAt: 'Aug 5, 2025',
     status: 'deleting',
   },
 ];

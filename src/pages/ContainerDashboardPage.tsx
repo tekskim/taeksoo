@@ -430,7 +430,7 @@ export function ContainerDashboardPage() {
                         Created at
                       </span>
                       <span className="text-body-md text-[var(--color-text-default)]">
-                        2025-11-09 12:57
+                        Nov 9, 2025
                       </span>
                     </div>
                     <div className="flex flex-col gap-1.5">

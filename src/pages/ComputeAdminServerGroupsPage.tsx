@@ -350,7 +350,7 @@ export function ComputeAdminServerGroupsPage() {
             className="p-1.5 rounded-md hover:bg-[var(--color-surface-muted)] transition-colors"
             onClick={() => handleDeleteClick(row)}
           >
-            <IconTrash size={16} stroke={1.5} className="text-[var(--color-state-danger)]" />
+            <IconTrash size={16} stroke={1.5} className="text-[var(--action-icon-color)]" />
           </button>
         </div>
       ),

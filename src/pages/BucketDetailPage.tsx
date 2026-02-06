@@ -88,7 +88,7 @@ const mockBucketDetail: BucketDetail = {
   owner: 'ai_platform$ai.platform',
   usedCapacity: 'ai_platform$ai.platform',
   objects: 13,
-  creationDate: '2025-09-19 04:06',
+  creationDate: 'Sep 19, 2025',
 };
 
 const mockObjectTree: ObjectItem[] = [
@@ -115,7 +115,7 @@ const mockTableObjects: ObjectItem[] = [
     size: '51.0 KiB',
     storageClass: 'STANDARD',
     etag: '9ec45b70efc38e0d6',
-    lastModified: '2025-12-22 02:24',
+    lastModified: 'Dec 22, 2025',
     s3Uri: 's3://images/343da87798e1c6356b47236f21099b63.jpg',
     objectUrl:
       'http://10.7.50.253.80/images/343da87798e1c6356b47236f21099b63.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=4J350T4JB1JKIZUN1AS4%2F20260107%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Date=20260107T072559Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=ea6089c110b3b219b8c2c7d530e67fdd0d2f281064588c1a8db4bb133249e9a1',
@@ -126,7 +126,7 @@ const mockTableObjects: ObjectItem[] = [
         storageClass: 'STANDARD',
         type: 'file',
         size: '51.0 KiB',
-        lastModified: '2025-12-22 02:24',
+        lastModified: 'Dec 22, 2025',
       },
     ],
   },

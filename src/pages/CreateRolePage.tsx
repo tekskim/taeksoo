@@ -21,7 +21,6 @@ import { useTabs } from '@/contexts/TabContext';
 import {
   IconEdit,
   IconCheck,
-  IconProgress,
   IconExternalLink,
   IconSearch,
   IconChevronDown,
@@ -79,7 +78,7 @@ const mockPolicies: Policy[] = [
     apps: 'compute:tenantA (+3)',
     roles: 'member (+2)',
     description: '-',
-    editedAt: '2025-09-12',
+    editedAt: 'Sep 12, 2025',
     permissions: [
       {
         application: 'Compute',
@@ -102,7 +101,7 @@ const mockPolicies: Policy[] = [
     apps: 'compute (+3)',
     roles: 'member (+2)',
     description: '-',
-    editedAt: '2025-09-12',
+    editedAt: 'Sep 12, 2025',
     permissions: [
       {
         application: 'Compute',
@@ -132,7 +131,7 @@ const mockPolicies: Policy[] = [
     apps: 'compute',
     roles: 'admin',
     description: 'Full access to compute resources',
-    editedAt: '2025-08-15',
+    editedAt: 'Aug 15, 2025',
     permissions: [
       {
         application: 'Compute',
@@ -155,7 +154,7 @@ const mockPolicies: Policy[] = [
     apps: 'storage',
     roles: 'viewer',
     description: 'Read-only access to storage',
-    editedAt: '2025-08-10',
+    editedAt: 'Aug 10, 2025',
     permissions: [
       { application: 'Storage', partition: '*all', resource: 'Bucket', actions: ['Read', 'List'] },
       { application: 'Storage', partition: '*all', resource: 'Object', actions: ['Read', 'List'] },
@@ -168,7 +167,7 @@ const mockPolicies: Policy[] = [
     apps: 'network',
     roles: 'network-admin',
     description: 'Network administration policy',
-    editedAt: '2025-07-20',
+    editedAt: 'Jul 20, 2025',
     permissions: [
       {
         application: 'Network',
@@ -191,7 +190,7 @@ const mockPolicies: Policy[] = [
     apps: 'container (+2)',
     roles: 'developer (+1)',
     description: 'Container deployment permissions',
-    editedAt: '2025-07-15',
+    editedAt: 'Jul 15, 2025',
     permissions: [
       {
         application: 'Container',
@@ -214,7 +213,7 @@ const mockPolicies: Policy[] = [
     apps: 'iam',
     roles: 'viewer',
     description: 'View-only IAM permissions',
-    editedAt: '2025-06-30',
+    editedAt: 'Jun 30, 2025',
     permissions: [
       { application: 'IAM', partition: '-', resource: 'User', actions: ['Read', 'List'] },
       { application: 'IAM', partition: '-', resource: 'Role', actions: ['Read', 'List'] },
@@ -227,7 +226,7 @@ const mockPolicies: Policy[] = [
     apps: 'security (+3)',
     roles: 'auditor',
     description: 'Security audit permissions',
-    editedAt: '2025-06-25',
+    editedAt: 'Jun 25, 2025',
     permissions: [
       {
         application: 'Security',
@@ -250,7 +249,7 @@ const mockPolicies: Policy[] = [
     apps: 'database',
     roles: 'db-admin',
     description: 'Database administration policy',
-    editedAt: '2025-06-20',
+    editedAt: 'Jun 20, 2025',
     permissions: [
       {
         application: 'Database',
@@ -273,7 +272,7 @@ const mockPolicies: Policy[] = [
     apps: 'logging',
     roles: 'support',
     description: 'Access to logging services',
-    editedAt: '2025-06-15',
+    editedAt: 'Jun 15, 2025',
     permissions: [
       { application: 'Logging', partition: '*all', resource: 'Log', actions: ['Read', 'List'] },
       { application: 'Logging', partition: '*all', resource: 'Metric', actions: ['Read', 'List'] },
@@ -360,22 +359,27 @@ function SectionStatusIcon({ status }: { status: SectionState }) {
 
   if (status === 'active') {
     return (
-      <div className="w-4 h-4 shrink-0">
-        <IconProgress
-          size={16}
-          stroke={1.5}
-          className="text-[var(--color-text-subtle)] animate-spin"
-        />
-      </div>
+      <div
+        className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-text-muted)] animate-spin"
+        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
+      />
     );
   }
 
   if (status === 'writing') {
-    return null;
+    return (
+      <div
+        className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-text-muted)] animate-spin"
+        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
+      />
+    );
   }
 
   return (
-    <div className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)]" />
+    <div
+      className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)]"
+      style={{ borderStyle: 'dashed' }}
+    />
   );
 }
 

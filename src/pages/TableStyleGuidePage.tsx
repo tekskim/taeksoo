@@ -196,7 +196,7 @@ export function TableStyleGuidePage() {
           <div className="flex items-center gap-4 text-body-md text-[var(--color-text-subtle)]">
             <span>버전: 1.0</span>
             <span>•</span>
-            <span>최종 업데이트: 2026-01-27</span>
+            <span>최종 업데이트: Jan 27, 2026</span>
           </div>
 
           {/* Section 1: Overview */}

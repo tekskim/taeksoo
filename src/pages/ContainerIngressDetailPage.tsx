@@ -60,7 +60,7 @@ const mockIngressData: Record<string, IngressData> = {
     status: 'Active',
     namespace: 'default',
     ingressClass: 'ingressclassName',
-    createdAt: '2025-07-25 09:12:20',
+    createdAt: 'Jul 25, 2025',
     labels: {
       'app.kubernetes.io/managed-by': 'Helm',
       'cluster.x-k8s.io/provider': 'cluster-api',
@@ -78,7 +78,7 @@ const mockIngressData: Record<string, IngressData> = {
     status: 'Active',
     namespace: 'kube-system',
     ingressClass: 'traefik',
-    createdAt: '2025-11-08 09:30:00',
+    createdAt: 'Nov 8, 2025',
     labels: {
       'app.kubernetes.io/name': 'traefik',
     },

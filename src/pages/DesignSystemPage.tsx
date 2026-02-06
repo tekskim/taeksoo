@@ -285,15 +285,7 @@ import {
 } from '@tabler/icons-react';
 
 // Custom Icons from design-system
-import {
-  IconExpandOff,
-  IconExpandOn,
-  IconAction,
-  IconTimeout,
-  IconHistory2,
-  IconRobotCustom,
-  IconAddRobot,
-} from '@/design-system/components/Icons/CustomIcons';
+import { IconExpandOff, IconExpandOn } from '@/design-system/components/Icons/CustomIcons';
 import { Link } from 'react-router-dom';
 
 /* ----------------------------------------
@@ -868,7 +860,7 @@ function WizardPatternSection() {
 
       {/* Status Icons */}
       <VStack gap={3}>
-        <Label>WizardSectionStatusIcon</Label>
+        <Label>Wizard section status icon</Label>
         <HStack gap={6}>
           <HStack gap={2} align="center">
             <WizardSectionStatusIcon status="pre" />
@@ -905,7 +897,7 @@ function WizardPatternSection() {
 
       {/* WizardSummary */}
       <VStack gap={3}>
-        <Label>WizardSummary</Label>
+        <Label>Wizard summary</Label>
         <div className="w-[var(--wizard-summary-width)]">
           <WizardSummary
             title="Summary"
@@ -2004,19 +1996,19 @@ const sampleKeyPairData: KeyPairData[] = [
     id: 'kp-001',
     name: 'tk-keypair',
     fingerprint: '02:c1:ff:54:df:d9:69:0e:bb:46:a9:c8:0c:dc:2f:bb',
-    createdAt: '2025-09-10',
+    createdAt: 'Sep 10, 2025',
   },
   {
     id: 'kp-002',
     name: 'dev-keypair',
     fingerprint: 'a3:b2:c1:d4:e5:f6:07:18:29:3a:4b:5c:6d:7e:8f:90',
-    createdAt: '2025-09-08',
+    createdAt: 'Sep 8, 2025',
   },
   {
     id: 'kp-003',
     name: 'prod-keypair',
     fingerprint: '11:22:33:44:55:66:77:88:99:aa:bb:cc:dd:ee:ff:00',
-    createdAt: '2025-09-05',
+    createdAt: 'Sep 5, 2025',
   },
 ];
 
@@ -4001,8 +3993,7 @@ export function DesignSystemPage() {
                                 size: '12px',
                                 lh: '18px',
                                 weight: '600',
-                                desc: 'CARD TITLE',
-                                extra: 'uppercase, muted',
+                                desc: 'Card section title',
                               },
                             ].map(({ token, size, lh, weight, desc, extra }) => (
                               <tr
@@ -4983,21 +4974,6 @@ outline: 2px solid var(--color-border-focus);`}
                         { Icon: IconRocky, name: 'Rocky' },
                         { Icon: IconGrid, name: 'Grid' },
                         { Icon: IconCircleDot, name: 'Other' },
-                      ]}
-                      searchQuery={iconSearchQuery}
-                    />
-
-                    {/* Custom Icons (TDS) */}
-                    <IconDisplayGrid
-                      title="Custom icons (TDS)"
-                      icons={[
-                        { Icon: IconExpandOff, name: 'Expand Off' },
-                        { Icon: IconExpandOn, name: 'Expand On' },
-                        { Icon: IconAction, name: 'Action' },
-                        { Icon: IconTimeout, name: 'Timeout' },
-                        { Icon: IconHistory2, name: 'History' },
-                        { Icon: IconRobotCustom, name: 'Robot' },
-                        { Icon: IconAddRobot, name: 'Add Robot' },
                       ]}
                       searchQuery={iconSearchQuery}
                     />
@@ -8836,7 +8812,7 @@ outline: 2px solid var(--color-border-focus);`}
                             copyable
                           />
                           <DetailHeader.InfoCard label="Host" value="compute-03" />
-                          <DetailHeader.InfoCard label="Created at" value="2025-07-25 09:12:20" />
+                          <DetailHeader.InfoCard label="Created at" value="Jul 25, 2025" />
                         </DetailHeader.InfoGrid>
                       </DetailHeader>
                     </VStack>
@@ -8870,7 +8846,7 @@ outline: 2px solid var(--color-border-focus);`}
                       <Label>Info Card - Basic Text</Label>
                       <div className="grid grid-cols-3 gap-2">
                         <DetailHeader.InfoCard label="Host" value="compute-03" />
-                        <DetailHeader.InfoCard label="Created at" value="2025-07-25 09:12:20" />
+                        <DetailHeader.InfoCard label="Created at" value="Jul 25, 2025" />
                         <DetailHeader.InfoCard label="Availability zone" value="nova" />
                       </div>
                     </VStack>
@@ -9849,34 +9825,40 @@ outline: 2px solid var(--color-border-focus);`}
                                     <span className="text-body-md text-[var(--color-text-default)]">
                                       Flavor
                                     </span>
-                                    <div className="w-4 h-4 shrink-0">
-                                      <IconProgress
-                                        size={16}
-                                        stroke={1.5}
-                                        className="text-[var(--color-text-subtle)] animate-spin"
-                                      />
-                                    </div>
+                                    <div
+                                      className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-text-muted)] animate-spin"
+                                      style={{ borderStyle: 'dashed', animationDuration: '2s' }}
+                                    />
                                   </div>
                                   {/* Network - pre */}
                                   <div className="flex items-center justify-between py-1">
                                     <span className="text-body-md text-[var(--color-text-default)]">
                                       Network
                                     </span>
-                                    <div className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)]" />
+                                    <div
+                                      className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)]"
+                                      style={{ borderStyle: 'dashed' }}
+                                    />
                                   </div>
                                   {/* Authentication - pre */}
                                   <div className="flex items-center justify-between py-1">
                                     <span className="text-body-md text-[var(--color-text-default)]">
                                       Authentication
                                     </span>
-                                    <div className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)]" />
+                                    <div
+                                      className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)]"
+                                      style={{ borderStyle: 'dashed' }}
+                                    />
                                   </div>
                                   {/* Advanced - pre */}
                                   <div className="flex items-center justify-between py-1">
                                     <span className="text-body-md text-[var(--color-text-default)]">
                                       Advanced
                                     </span>
-                                    <div className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)]" />
+                                    <div
+                                      className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)]"
+                                      style={{ borderStyle: 'dashed' }}
+                                    />
                                   </div>
                                 </div>
                               </VStack>
@@ -9979,13 +9961,10 @@ outline: 2px solid var(--color-border-focus);`}
                           </span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <div className="size-4 shrink-0">
-                            <IconProgress
-                              size={16}
-                              stroke={1.5}
-                              className="text-[var(--color-text-subtle)] animate-spin"
-                            />
-                          </div>
+                          <div
+                            className="size-4 rounded-full border border-[var(--color-text-muted)] animate-spin"
+                            style={{ borderStyle: 'dashed', animationDuration: '2s' }}
+                          />
                           <span className="text-[length:var(--font-size-12)] text-[var(--color-text-muted)]">
                             Processing
                           </span>

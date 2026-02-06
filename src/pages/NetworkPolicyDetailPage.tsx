@@ -83,7 +83,7 @@ const mockNetworkPolicyData: Record<string, NetworkPolicyData> = {
     name: 'networkpolicyName',
     status: 'Active',
     namespace: 'default',
-    createdAt: '2025-07-25 09:12:20',
+    createdAt: 'Jul 25, 2025',
     labels: { app: 'web' },
     annotations: { description: 'Network policy for web app' },
     ingressRules: [
@@ -116,9 +116,9 @@ const mockNetworkPolicyData: Record<string, NetworkPolicyData> = {
     ],
     podSelector: { app: 'web', tier: 'frontend' },
     matchingPods: [
-      { name: 'deploymentName-77f6bb9c69-4aw7f', createdAt: '2025-07-25 09:12:20' },
-      { name: 'deploymentName-77f6bb9c69-8xk2p', createdAt: '2025-07-25 09:12:20' },
-      { name: 'deploymentName-77f6bb9c69-9m3qt', createdAt: '2025-07-25 09:12:20' },
+      { name: 'deploymentName-77f6bb9c69-4aw7f', createdAt: 'Jul 25, 2025' },
+      { name: 'deploymentName-77f6bb9c69-8xk2p', createdAt: 'Jul 25, 2025' },
+      { name: 'deploymentName-77f6bb9c69-9m3qt', createdAt: 'Jul 25, 2025' },
     ],
   },
   '2': {
@@ -126,7 +126,7 @@ const mockNetworkPolicyData: Record<string, NetworkPolicyData> = {
     name: 'networkpolicyName2',
     status: 'Active',
     namespace: 'default',
-    createdAt: '2025-11-10 12:57',
+    createdAt: 'Nov 10, 2025',
     labels: {},
     annotations: {},
     ingressRules: [],

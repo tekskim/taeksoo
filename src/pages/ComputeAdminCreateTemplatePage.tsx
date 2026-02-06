@@ -47,7 +47,6 @@ import {
   IconEdit,
   IconExternalLink,
   IconCirclePlus,
-  IconProgress,
   IconUpload,
   IconX,
 } from '@tabler/icons-react';
@@ -174,7 +173,7 @@ const mockImages: ImageRow[] = [
     minRam: '0 MiB',
     access: 'Public',
     os: 'ubuntu',
-    createdAt: '2025-01-15',
+    createdAt: 'Jan 15, 2025',
   },
   {
     id: 'e920j31d',
@@ -186,7 +185,7 @@ const mockImages: ImageRow[] = [
     minRam: '0 MiB',
     access: 'Public',
     os: 'ubuntu',
-    createdAt: '2025-01-14',
+    createdAt: 'Jan 14, 2025',
   },
   {
     id: 'e920j32d',
@@ -198,7 +197,7 @@ const mockImages: ImageRow[] = [
     minRam: '0 MiB',
     access: 'Public',
     os: 'ubuntu',
-    createdAt: '2025-01-13',
+    createdAt: 'Jan 13, 2025',
   },
   {
     id: 'e920j35d',
@@ -210,7 +209,7 @@ const mockImages: ImageRow[] = [
     minRam: '0 MiB',
     access: 'Public',
     os: 'ubuntu',
-    createdAt: '2025-01-10',
+    createdAt: 'Jan 10, 2025',
   },
   {
     id: 'e920j37d',
@@ -222,7 +221,7 @@ const mockImages: ImageRow[] = [
     minRam: '2 GiB',
     access: 'Public',
     os: 'windows',
-    createdAt: '2025-01-08',
+    createdAt: 'Jan 8, 2025',
   },
   {
     id: 'e920j39d',
@@ -234,7 +233,7 @@ const mockImages: ImageRow[] = [
     minRam: '0 MiB',
     access: 'Public',
     os: 'rocky',
-    createdAt: '2025-01-05',
+    createdAt: 'Jan 5, 2025',
   },
 ];
 
@@ -346,11 +345,11 @@ const mockNetworks: NetworkRow[] = [
 ];
 
 const mockSecurityGroups: SecurityGroupRow[] = [
-  { id: 'sg1', name: 'suite-default', description: 'test only', createdAt: '2025-09-01' },
-  { id: 'sg2', name: 'suite-default', description: 'test only', createdAt: '2025-09-01' },
-  { id: 'sg3', name: 'suite-default', description: 'test only', createdAt: '2025-09-01' },
-  { id: 'sg4', name: 'suite-default', description: 'test only', createdAt: '2025-09-01' },
-  { id: 'sg5', name: 'suite-default', description: 'test only', createdAt: '2025-09-01' },
+  { id: 'sg1', name: 'suite-default', description: 'test only', createdAt: 'Sep 1, 2025' },
+  { id: 'sg2', name: 'suite-default', description: 'test only', createdAt: 'Sep 1, 2025' },
+  { id: 'sg3', name: 'suite-default', description: 'test only', createdAt: 'Sep 1, 2025' },
+  { id: 'sg4', name: 'suite-default', description: 'test only', createdAt: 'Sep 1, 2025' },
+  { id: 'sg5', name: 'suite-default', description: 'test only', createdAt: 'Sep 1, 2025' },
 ];
 
 const mockPorts: PortRow[] = [
@@ -402,9 +401,9 @@ const mockPorts: PortRow[] = [
 ];
 
 const mockKeyPairs: KeyPairRow[] = [
-  { id: 'kp1', name: 'dev-keypair', fingerprint: 'a1:b2:c3:d4:e5', createdAt: '2025-01-01' },
-  { id: 'kp2', name: 'prod-keypair', fingerprint: 'f6:g7:h8:i9:j0', createdAt: '2025-01-15' },
-  { id: 'kp3', name: 'staging-keypair', fingerprint: 'k1:l2:m3:n4:o5', createdAt: '2025-02-01' },
+  { id: 'kp1', name: 'dev-keypair', fingerprint: 'a1:b2:c3:d4:e5', createdAt: 'Jan 1, 2025' },
+  { id: 'kp2', name: 'prod-keypair', fingerprint: 'f6:g7:h8:i9:j0', createdAt: 'Jan 15, 2025' },
+  { id: 'kp3', name: 'staging-keypair', fingerprint: 'k1:l2:m3:n4:o5', createdAt: 'Feb 1, 2025' },
 ];
 
 const mockServerGroups: ServerGroupRow[] = [
@@ -439,23 +438,28 @@ function SectionStatusIcon({ status }: { status: SectionState }) {
 
   if (status === 'active') {
     return (
-      <div className="w-4 h-4 shrink-0">
-        <IconProgress
-          size={16}
-          stroke={1.5}
-          className="text-[var(--color-text-subtle)] animate-spin"
-        />
-      </div>
+      <div
+        className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-text-muted)] animate-spin"
+        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
+      />
     );
   }
 
   if (status === 'writing') {
-    return null;
+    return (
+      <div
+        className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-text-muted)] animate-spin"
+        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
+      />
+    );
   }
 
   if (status === 'pre') {
     return (
-      <div className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)]" />
+      <div
+        className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)]"
+        style={{ borderStyle: 'dashed' }}
+      />
     );
   }
 

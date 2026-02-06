@@ -167,22 +167,22 @@ interface StatCardProps {
 }
 
 function StatCard({ label, value, variant = 'default' }: StatCardProps) {
-  const bgColors = {
-    default: 'bg-[var(--color-surface-subtle)]',
-    success: 'bg-[var(--color-state-success-bg)]',
-    warning: 'bg-[var(--color-state-warning-bg)]',
-    danger: 'bg-[var(--color-state-danger-bg)]',
+  const colorStyles = {
+    default: 'text-[var(--color-text-default)]',
+    success: 'text-[var(--color-state-success)]',
+    warning: 'text-[var(--color-state-warning)]',
+    danger: 'text-[var(--color-state-danger)]',
   };
 
   const textColor =
-    value === '0' || value === 0
-      ? 'text-[var(--color-text-muted)]'
-      : 'text-[var(--color-text-default)]';
+    value === '0' || value === 0 ? 'text-[var(--color-text-muted)]' : colorStyles[variant];
 
   return (
-    <div className={`flex-1 ${bgColors[variant]} rounded-lg p-4`}>
-      <div className={`text-[20px] font-medium ${textColor} pb-1`}>{value}</div>
-      <div className="text-body-sm text-[var(--color-text-subtle)]">{label}</div>
+    <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+      <div className="flex flex-col gap-1.5">
+        <span className={`text-label-sm ${textColor}`}>{label}</span>
+        <span className={`text-heading-h3 ${textColor}`}>{value}</span>
+      </div>
     </div>
   );
 }

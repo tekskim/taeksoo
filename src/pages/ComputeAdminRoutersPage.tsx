@@ -65,7 +65,7 @@ const mockRouters: Router[] = [
     externalNetworkId: '29tgj234',
     adminState: 'Up',
     status: 'active',
-    createdAt: '2025-12-25',
+    createdAt: 'Dec 25, 2025',
   },
   {
     id: 'router-002',
@@ -79,7 +79,7 @@ const mockRouters: Router[] = [
     externalNetworkId: 'net-002',
     adminState: 'Up',
     status: 'active',
-    createdAt: '2025-12-24',
+    createdAt: 'Dec 24, 2025',
   },
   {
     id: 'router-003',
@@ -93,7 +93,7 @@ const mockRouters: Router[] = [
     externalNetworkId: '',
     adminState: 'Up',
     status: 'active',
-    createdAt: '2025-12-23',
+    createdAt: 'Dec 23, 2025',
   },
   {
     id: 'router-004',
@@ -107,7 +107,7 @@ const mockRouters: Router[] = [
     externalNetworkId: 'net-003',
     adminState: 'Up',
     status: 'building',
-    createdAt: '2025-12-22',
+    createdAt: 'Dec 22, 2025',
   },
   {
     id: 'router-005',
@@ -121,7 +121,7 @@ const mockRouters: Router[] = [
     externalNetworkId: '',
     adminState: 'Down',
     status: 'active',
-    createdAt: '2025-12-21',
+    createdAt: 'Dec 21, 2025',
   },
   {
     id: 'router-006',
@@ -135,7 +135,7 @@ const mockRouters: Router[] = [
     externalNetworkId: 'net-004',
     adminState: 'Up',
     status: 'active',
-    createdAt: '2025-12-20',
+    createdAt: 'Dec 20, 2025',
   },
   {
     id: 'router-007',
@@ -149,7 +149,7 @@ const mockRouters: Router[] = [
     externalNetworkId: 'net-005',
     adminState: 'Down',
     status: 'error',
-    createdAt: '2025-12-19',
+    createdAt: 'Dec 19, 2025',
   },
   {
     id: 'router-008',
@@ -163,7 +163,7 @@ const mockRouters: Router[] = [
     externalNetworkId: '',
     adminState: 'Up',
     status: 'active',
-    createdAt: '2025-12-18',
+    createdAt: 'Dec 18, 2025',
   },
   {
     id: 'router-009',
@@ -177,7 +177,7 @@ const mockRouters: Router[] = [
     externalNetworkId: 'net-006',
     adminState: 'Up',
     status: 'active',
-    createdAt: '2025-12-17',
+    createdAt: 'Dec 17, 2025',
   },
   {
     id: 'router-010',
@@ -191,7 +191,7 @@ const mockRouters: Router[] = [
     externalNetworkId: 'net-007',
     adminState: 'Up',
     status: 'active',
-    createdAt: '2025-12-16',
+    createdAt: 'Dec 16, 2025',
   },
 ];
 
@@ -399,7 +399,7 @@ export function ComputeAdminRoutersPage() {
       flex: 1,
       minWidth: columnMinWidths.adminState,
       render: (value: 'Up' | 'Down') => (
-        <Badge variant={value === 'Up' ? 'success' : 'error'} size="sm">
+        <Badge variant={value === 'Up' ? 'success' : 'default'} size="sm">
           {value}
         </Badge>
       ),

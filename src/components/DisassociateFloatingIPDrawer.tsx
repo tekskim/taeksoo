@@ -45,7 +45,7 @@ const defaultFloatingIps: FloatingIPItem[] = Array.from({ length: 115 }, (_, i) 
   floatingIp: '203.0.113.25',
   status: 'active',
   fixedIp: '10.0.0.5',
-  createdAt: '2025-09-01',
+  createdAt: 'Sep 1, 2025',
 }));
 
 const ITEMS_PER_PAGE = 5;

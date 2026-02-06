@@ -24,7 +24,6 @@ import { useTabs } from '@/contexts/TabContext';
 import {
   IconEdit,
   IconCheck,
-  IconProgress,
   IconEye,
   IconEyeOff,
   IconCircle,
@@ -74,7 +73,7 @@ const mockUserGroups: UserGroup[] = [
     type: 'Built-in',
     roles: 'ReadCompute (+3)',
     userCount: 130,
-    createdAt: '2025-09-12',
+    createdAt: 'Sep 12, 2025',
   },
   {
     id: 'group-2',
@@ -82,7 +81,7 @@ const mockUserGroups: UserGroup[] = [
     type: 'Built-in',
     roles: 'ReadCompute (+3)',
     userCount: 130,
-    createdAt: '2025-09-12',
+    createdAt: 'Sep 12, 2025',
   },
   {
     id: 'group-3',
@@ -90,7 +89,7 @@ const mockUserGroups: UserGroup[] = [
     type: 'Built-in',
     roles: 'ReadCompute (+3)',
     userCount: 130,
-    createdAt: '2025-09-12',
+    createdAt: 'Sep 12, 2025',
   },
   {
     id: 'group-4',
@@ -98,7 +97,7 @@ const mockUserGroups: UserGroup[] = [
     type: 'Built-in',
     roles: 'ReadCompute (+3)',
     userCount: 130,
-    createdAt: '2025-09-12',
+    createdAt: 'Sep 12, 2025',
   },
   {
     id: 'group-5',
@@ -106,7 +105,7 @@ const mockUserGroups: UserGroup[] = [
     type: 'Built-in',
     roles: 'ReadCompute (+3)',
     userCount: 130,
-    createdAt: '2025-09-12',
+    createdAt: 'Sep 12, 2025',
   },
   {
     id: 'group-6',
@@ -114,7 +113,7 @@ const mockUserGroups: UserGroup[] = [
     type: 'Custom',
     roles: 'FullAccess (+2)',
     userCount: 45,
-    createdAt: '2025-08-15',
+    createdAt: 'Aug 15, 2025',
   },
   {
     id: 'group-7',
@@ -122,7 +121,7 @@ const mockUserGroups: UserGroup[] = [
     type: 'Custom',
     roles: 'ReadOnly',
     userCount: 200,
-    createdAt: '2025-07-22',
+    createdAt: 'Jul 22, 2025',
   },
 ];
 
@@ -205,22 +204,27 @@ function SectionStatusIcon({ status }: { status: SectionState }) {
 
   if (status === 'active') {
     return (
-      <div className="w-4 h-4 shrink-0">
-        <IconProgress
-          size={16}
-          stroke={1.5}
-          className="text-[var(--color-text-subtle)] animate-spin"
-        />
-      </div>
+      <div
+        className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-text-muted)] animate-spin"
+        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
+      />
     );
   }
 
   if (status === 'writing') {
-    return null;
+    return (
+      <div
+        className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-text-muted)] animate-spin"
+        style={{ borderStyle: 'dashed', animationDuration: '2s' }}
+      />
+    );
   }
 
   return (
-    <div className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)]" />
+    <div
+      className="w-4 h-4 shrink-0 rounded-full border border-[var(--color-border-default)]"
+      style={{ borderStyle: 'dashed' }}
+    />
   );
 }
 

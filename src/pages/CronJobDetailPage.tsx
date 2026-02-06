@@ -90,7 +90,7 @@ const mockCronJobData: Record<string, CronJobData> = {
     status: 'Active',
     namespace: 'default:1.27',
     image: 'nginx:1.27',
-    createdAt: '2025-07-25 09:12:20',
+    createdAt: 'Jul 25, 2025',
     schedule: '@daily',
     labels: {
       'app.kubernetes.io/managed-by': 'Helm',
@@ -109,7 +109,7 @@ const mockCronJobData: Record<string, CronJobData> = {
     status: 'Active',
     namespace: 'database',
     image: 'backup-tool:v2.1',
-    createdAt: '2025-11-09 14:30:00',
+    createdAt: 'Nov 9, 2025',
     schedule: '0 2 * * *',
     labels: {
       'app.kubernetes.io/name': 'backup',
@@ -131,7 +131,7 @@ const mockJobsData: JobRow[] = [
     duration: '10s',
     restarts: 0,
     health: 'succeeded = 1',
-    createdAt: '2025-07-25 09:12:20',
+    createdAt: 'Jul 25, 2025',
   },
 ];
 

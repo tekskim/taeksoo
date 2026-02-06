@@ -63,7 +63,7 @@ const hpaData: HPARow[] = [
     minReplicas: 1,
     maxReplicas: 10,
     currentReplicas: 5,
-    createdAt: '2025-11-10 12:57',
+    createdAt: 'Nov 10, 2025',
   },
   {
     id: '2',
@@ -74,7 +74,7 @@ const hpaData: HPARow[] = [
     minReplicas: 2,
     maxReplicas: 20,
     currentReplicas: 8,
-    createdAt: '2025-11-09 14:30',
+    createdAt: 'Nov 9, 2025',
   },
   {
     id: '3',
@@ -85,7 +85,7 @@ const hpaData: HPARow[] = [
     minReplicas: 3,
     maxReplicas: 15,
     currentReplicas: 3,
-    createdAt: '2025-11-08 09:15',
+    createdAt: 'Nov 8, 2025',
   },
   {
     id: '4',
@@ -96,7 +96,7 @@ const hpaData: HPARow[] = [
     minReplicas: 1,
     maxReplicas: 5,
     currentReplicas: 1,
-    createdAt: '2025-11-07 16:42',
+    createdAt: 'Nov 7, 2025',
   },
 ];
 

@@ -129,8 +129,8 @@ const mockCertificates: CertificateRow[] = [
     listener: 'net',
     listenerId: '294u92s2',
     listenerCount: 3,
-    expiresAt: '2025-12-31',
-    createdAt: '2025-10-01',
+    expiresAt: 'Dec 31, 2025',
+    createdAt: 'Oct 1, 2025',
   },
   {
     id: '38rhk345',
@@ -140,8 +140,8 @@ const mockCertificates: CertificateRow[] = [
     listener: 'net',
     listenerId: '294u92s2',
     listenerCount: 3,
-    expiresAt: '2025-12-31',
-    createdAt: '2025-10-01',
+    expiresAt: 'Dec 31, 2025',
+    createdAt: 'Oct 1, 2025',
   },
   {
     id: '47sil456',
@@ -151,8 +151,8 @@ const mockCertificates: CertificateRow[] = [
     listener: 'net',
     listenerId: '294u92s2',
     listenerCount: 3,
-    expiresAt: '2025-12-31',
-    createdAt: '2025-10-01',
+    expiresAt: 'Dec 31, 2025',
+    createdAt: 'Oct 1, 2025',
   },
   {
     id: '56tjm567',
@@ -162,8 +162,8 @@ const mockCertificates: CertificateRow[] = [
     listener: 'net',
     listenerId: '294u92s2',
     listenerCount: 3,
-    expiresAt: '2025-12-31',
-    createdAt: '2025-10-01',
+    expiresAt: 'Dec 31, 2025',
+    createdAt: 'Oct 1, 2025',
   },
   {
     id: '65ukn678',
@@ -173,8 +173,8 @@ const mockCertificates: CertificateRow[] = [
     listener: 'net',
     listenerId: '294u92s2',
     listenerCount: 3,
-    expiresAt: '2025-12-31',
-    createdAt: '2025-10-01',
+    expiresAt: 'Dec 31, 2025',
+    createdAt: 'Oct 1, 2025',
   },
 ];
 
@@ -199,8 +199,8 @@ const mockCaCertificates: CaCertificateRow[] = [
     listener: 'net',
     listenerId: '294u92s2',
     listenerCount: 3,
-    expiresAt: '2025-12-31',
-    createdAt: '2025-10-01',
+    expiresAt: 'Dec 31, 2025',
+    createdAt: 'Oct 1, 2025',
   },
   {
     id: '38rhk345',
@@ -209,8 +209,8 @@ const mockCaCertificates: CaCertificateRow[] = [
     listener: 'net',
     listenerId: '294u92s2',
     listenerCount: 3,
-    expiresAt: '2025-12-31',
-    createdAt: '2025-10-01',
+    expiresAt: 'Dec 31, 2025',
+    createdAt: 'Oct 1, 2025',
   },
   {
     id: '47sil456',
@@ -219,8 +219,8 @@ const mockCaCertificates: CaCertificateRow[] = [
     listener: 'net',
     listenerId: '294u92s2',
     listenerCount: 3,
-    expiresAt: '2025-12-31',
-    createdAt: '2025-10-01',
+    expiresAt: 'Dec 31, 2025',
+    createdAt: 'Oct 1, 2025',
   },
   {
     id: '56tjm567',
@@ -229,8 +229,8 @@ const mockCaCertificates: CaCertificateRow[] = [
     listener: 'net',
     listenerId: '294u92s2',
     listenerCount: 3,
-    expiresAt: '2025-12-31',
-    createdAt: '2025-10-01',
+    expiresAt: 'Dec 31, 2025',
+    createdAt: 'Oct 1, 2025',
   },
   {
     id: '65ukn678',
@@ -239,8 +239,8 @@ const mockCaCertificates: CaCertificateRow[] = [
     listener: 'net',
     listenerId: '294u92s2',
     listenerCount: 3,
-    expiresAt: '2025-12-31',
-    createdAt: '2025-10-01',
+    expiresAt: 'Dec 31, 2025',
+    createdAt: 'Oct 1, 2025',
   },
 ];
 
@@ -267,8 +267,8 @@ const mockSniCertificates: SniCertificateRow[] = [
     listener: 'net',
     listenerId: '294u92s2',
     listenerCount: 3,
-    expiresAt: '2025-12-31',
-    createdAt: '2025-10-01',
+    expiresAt: 'Dec 31, 2025',
+    createdAt: 'Oct 1, 2025',
   },
   {
     id: '38rhk345',
@@ -278,8 +278,8 @@ const mockSniCertificates: SniCertificateRow[] = [
     listener: 'net',
     listenerId: '294u92s2',
     listenerCount: 3,
-    expiresAt: '2025-12-31',
-    createdAt: '2025-10-01',
+    expiresAt: 'Dec 31, 2025',
+    createdAt: 'Oct 1, 2025',
   },
   {
     id: '47sil456',
@@ -289,8 +289,8 @@ const mockSniCertificates: SniCertificateRow[] = [
     listener: 'net',
     listenerId: '294u92s2',
     listenerCount: 3,
-    expiresAt: '2025-12-31',
-    createdAt: '2025-10-01',
+    expiresAt: 'Dec 31, 2025',
+    createdAt: 'Oct 1, 2025',
   },
   {
     id: '56tjm567',
@@ -300,8 +300,8 @@ const mockSniCertificates: SniCertificateRow[] = [
     listener: 'net',
     listenerId: '294u92s2',
     listenerCount: 3,
-    expiresAt: '2025-12-31',
-    createdAt: '2025-10-01',
+    expiresAt: 'Dec 31, 2025',
+    createdAt: 'Oct 1, 2025',
   },
   {
     id: '65ukn678',
@@ -311,8 +311,8 @@ const mockSniCertificates: SniCertificateRow[] = [
     listener: 'net',
     listenerId: '294u92s2',
     listenerCount: 3,
-    expiresAt: '2025-12-31',
-    createdAt: '2025-10-01',
+    expiresAt: 'Dec 31, 2025',
+    createdAt: 'Oct 1, 2025',
   },
 ];
 

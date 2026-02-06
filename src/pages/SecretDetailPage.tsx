@@ -56,7 +56,7 @@ const mockSecretData: Record<string, SecretData> = {
     status: 'Active',
     namespace: 'namespaceName',
     secretType: 'Custom type - customType',
-    createdAt: '2025-11-10 12:57',
+    createdAt: 'Nov 10, 2025',
     labels: {},
     annotations: {},
     data: {
@@ -70,7 +70,7 @@ const mockSecretData: Record<string, SecretData> = {
     status: 'Active',
     namespace: 'default',
     secretType: 'Opaque',
-    createdAt: '2025-11-09 14:30',
+    createdAt: 'Nov 9, 2025',
     labels: {
       app: 'database',
     },
@@ -88,7 +88,7 @@ const mockSecretData: Record<string, SecretData> = {
     status: 'Active',
     namespace: 'nginx-ingress',
     secretType: 'kubernetes.io/tls',
-    createdAt: '2025-11-08 09:15',
+    createdAt: 'Nov 8, 2025',
     labels: {},
     annotations: {},
     data: {
@@ -102,7 +102,7 @@ const mockSecretData: Record<string, SecretData> = {
     status: 'Active',
     namespace: 'default',
     secretType: 'kubernetes.io/dockerconfigjson',
-    createdAt: '2025-11-07 16:45',
+    createdAt: 'Nov 7, 2025',
     labels: {},
     annotations: {},
     data: {
@@ -115,7 +115,7 @@ const mockSecretData: Record<string, SecretData> = {
     status: 'Active',
     namespace: 'kube-system',
     secretType: 'kubernetes.io/service-account-token',
-    createdAt: '2025-11-06 11:20',
+    createdAt: 'Nov 6, 2025',
     labels: {
       'kubernetes.io/service-account.name': 'default',
     },

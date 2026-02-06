@@ -10,7 +10,7 @@ import {
   TopBarAction,
   Breadcrumb,
   StatusIndicator,
-  Chip,
+  Badge,
   fixedColumns,
   columnMinWidths,
   type TableColumn,
@@ -185,7 +185,9 @@ function LabelsCell({ labels }: LabelsCellProps) {
   return (
     <div className="flex flex-wrap gap-1">
       {labels.map((label, index) => (
-        <Chip key={index} value={label} />
+        <Badge key={index} variant="info" size="sm">
+          {label}
+        </Badge>
       ))}
     </div>
   );
@@ -413,14 +415,14 @@ export function HostsPage() {
                   <Button
                     variant="secondary"
                     size="sm"
-                    icon={<IconDownload size={14} stroke={1.5} />}
+                    icon={<IconDownload size={12} stroke={1.5} />}
                     aria-label="Download"
                     onClick={() => console.log('Download clicked')}
                   />
                   <Button
                     variant="secondary"
                     size="sm"
-                    icon={<IconRefresh size={14} stroke={1.5} />}
+                    icon={<IconRefresh size={12} stroke={1.5} />}
                     aria-label="Refresh"
                     onClick={() => console.log('Refresh clicked')}
                   />
@@ -429,7 +431,7 @@ export function HostsPage() {
                 <Button
                   variant="secondary"
                   size="sm"
-                  leftIcon={<IconTrash size={14} stroke={1.5} />}
+                  leftIcon={<IconTrash size={12} stroke={1.5} />}
                   onClick={() => console.log('Delete clicked')}
                 >
                   Delete

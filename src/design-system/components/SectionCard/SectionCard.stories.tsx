@@ -169,7 +169,7 @@ export const WithDivider: Story = {
       <SectionCard.Content>
         <SectionCard.DataRow label="Account ID" value="acc-12345678" showDivider={false} />
         <SectionCard.DataRow label="Owner" value="admin@example.com" />
-        <SectionCard.DataRow label="Created" value="2024-01-01" />
+        <SectionCard.DataRow label="Created" value="Jan 1, 2024" />
       </SectionCard.Content>
     </SectionCard>
   ),
