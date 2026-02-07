@@ -11,6 +11,8 @@ import {
   Breadcrumb,
   ListToolbar,
   ContextMenu,
+  PageShell,
+  PageHeader,
   fixedColumns,
   columnMinWidths,
   type TableColumn,
@@ -193,6 +195,9 @@ export function BucketsPage() {
   // Global tab management
   const { tabs, activeTabId, closeTab, selectTab, addNewTab, moveTab } = useTabs();
 
+  // Sidebar width
+  const sidebarWidth = sidebarOpen ? 200 : 0;
+
   // Convert tabs to TabBar format
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
@@ -313,130 +318,117 @@ export function BucketsPage() {
   const hasSelection = selectedRows.length > 0;
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <StorageSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
+    <PageShell
+      sidebar={
+        <StorageSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={
+            <Breadcrumb items={[{ label: 'Home', href: '/storage' }, { label: 'Buckets' }]} />
+          }
+          actions={
+            <TopBarAction icon={<IconBell size={16} stroke={1.5} />} aria-label="Notifications" />
+          }
+        />
+      }
+    >
+      <VStack gap={3}>
+        {/* Page Header */}
+        <PageHeader
+          title="Buckets"
+          actions={
+            <Button variant="primary" size="md" onClick={() => navigate('/storage/buckets/create')}>
+              Create Bucket
+            </Button>
+          }
+        />
 
-      {/* Main Content */}
-      <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'}`}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Tab Bar */}
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            onTabAdd={addNewTab}
-            onTabReorder={moveTab}
-            showAddButton={true}
-            showWindowControls={true}
-          />
-
-          {/* Top Bar with Breadcrumb Navigation */}
-          <TopBar
-            showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
-            showNavigation={true}
-            onBack={() => window.history.back()}
-            onForward={() => window.history.forward()}
-            breadcrumb={
-              <Breadcrumb items={[{ label: 'Home', href: '/storage' }, { label: 'Buckets' }]} />
-            }
-            actions={
-              <TopBarAction icon={<IconBell size={16} stroke={1.5} />} aria-label="Notifications" />
-            }
-          />
-        </div>
-
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
-            <VStack gap={3}>
-              {/* Page Header */}
-              <div className="flex items-center justify-between h-8">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Buckets</h1>
-                <Button
-                  variant="primary"
+        {/* Search and Actions */}
+        <ListToolbar
+          primaryActions={
+            <ListToolbar.Actions>
+              <div className="w-[var(--search-input-width)]">
+                <SearchInput
+                  placeholder="Search users by attributes"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onClear={() => setSearchQuery('')}
                   size="sm"
-                  onClick={() => navigate('/storage/buckets/create')}
-                >
-                  Create Bucket
-                </Button>
-              </div>
-
-              {/* Search and Actions */}
-              <ListToolbar
-                primaryActions={
-                  <ListToolbar.Actions>
-                    <div className="w-[var(--search-input-width)]">
-                      <SearchInput
-                        placeholder="Search users by attributes"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        onClear={() => setSearchQuery('')}
-                        size="sm"
-                        fullWidth
-                      />
-                    </div>
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      icon={<IconDownload size={14} stroke={1.5} />}
-                      aria-label="Download"
-                    />
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      icon={<IconRefresh size={14} stroke={1.5} />}
-                      aria-label="Refresh"
-                      onClick={() => console.log('Refresh clicked')}
-                    />
-                  </ListToolbar.Actions>
-                }
-                bulkActions={
-                  <ListToolbar.Actions>
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      leftIcon={<IconTrash size={14} stroke={1.5} />}
-                      disabled={!hasSelection}
-                    >
-                      Delete
-                    </Button>
-                  </ListToolbar.Actions>
-                }
-              />
-
-              {/* Pagination */}
-              {filteredBuckets.length > 0 && (
-                <Pagination
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  onPageChange={setCurrentPage}
-                  showSettings
-                  onSettingsClick={() => console.log('Settings clicked')}
-                  totalItems={totalItems}
-                  selectedCount={selectedRows.length}
+                  fullWidth
                 />
-              )}
-
-              {/* Table */}
-              <Table
-                columns={columns}
-                data={paginatedBuckets}
-                rowKey="id"
-                selectable
-                selectedKeys={selectedRows}
-                onSelectionChange={setSelectedRows}
+              </div>
+              <Button
+                variant="secondary"
+                size="sm"
+                icon={<IconDownload size={14} stroke={1.5} />}
+                aria-label="Download"
               />
-            </VStack>
-          </div>
-        </div>
-      </main>
-    </div>
+              <Button
+                variant="secondary"
+                size="sm"
+                icon={<IconRefresh size={14} stroke={1.5} />}
+                aria-label="Refresh"
+                onClick={() => console.log('Refresh clicked')}
+              />
+            </ListToolbar.Actions>
+          }
+          bulkActions={
+            <ListToolbar.Actions>
+              <Button
+                variant="secondary"
+                size="sm"
+                leftIcon={<IconTrash size={14} stroke={1.5} />}
+                disabled={!hasSelection}
+              >
+                Delete
+              </Button>
+            </ListToolbar.Actions>
+          }
+        />
+
+        {/* Pagination */}
+        {filteredBuckets.length > 0 && (
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            showSettings
+            onSettingsClick={() => console.log('Settings clicked')}
+            totalItems={totalItems}
+            selectedCount={selectedRows.length}
+          />
+        )}
+
+        {/* Table */}
+        <Table
+          columns={columns}
+          data={paginatedBuckets}
+          rowKey="id"
+          selectable
+          selectedKeys={selectedRows}
+          onSelectionChange={setSelectedRows}
+        />
+      </VStack>
+    </PageShell>
   );
 }
 

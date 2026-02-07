@@ -93,7 +93,7 @@ import {
 import ThakiLogoLight from '@/assets/thakiLogo_light.svg';
 import ThakiLogoDark from '@/assets/thakiLogo-dark.svg';
 import RouterIcon from '@/assets/Router.svg';
-import { Button, Input } from '@/design-system';
+import { Button, PageShell, TopBar, HStack, SearchInput } from '@/design-system';
 
 /* ----------------------------------------
    Custom SVG Icon Component
@@ -1002,146 +1002,139 @@ export function SidebarIconsPage() {
     );
   }, [searchQuery, totalIcons]);
 
-  return (
-    <div className="fixed inset-0 overflow-auto bg-[var(--color-surface-subtle)]">
-      {/* Header */}
-      <header className="sticky top-0 left-0 right-0 z-50 bg-[var(--color-surface-default)] border-b border-[var(--color-border-default)]">
-        <div className="max-w-7xl mx-auto px-8 h-14 flex items-center justify-between">
-          {/* Back button & Logo */}
-          <div className="flex items-center gap-4">
-            <Button
-              variant="ghost"
-              size="sm"
-              leftIcon={<IconArrowLeft size={14} stroke={1.5} />}
-              onClick={() => navigate('/')}
-            >
-              Back
-            </Button>
-            <div className="w-px h-5 bg-[var(--color-border-default)]" />
-            <img src={isDark ? ThakiLogoDark : ThakiLogoLight} alt="THAKI Cloud" className="h-5" />
-          </div>
+  const sidebarWidth = 0;
 
-          {/* Search */}
-          <div className="w-[300px]">
-            <div className="relative">
-              <IconSearch
-                size={14}
-                stroke={1.5}
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-subtle)]"
+  return (
+    <PageShell
+      sidebarWidth={sidebarWidth}
+      topBar={
+        <TopBar
+          breadcrumb={
+            <HStack gap={4} align="center">
+              <Button
+                variant="ghost"
+                size="sm"
+                leftIcon={<IconArrowLeft size={14} stroke={1.5} />}
+                onClick={() => navigate('/')}
+              >
+                Back
+              </Button>
+              <div className="w-px h-5 bg-[var(--color-border-default)]" />
+              <img
+                src={isDark ? ThakiLogoDark : ThakiLogoLight}
+                alt="THAKI Cloud"
+                className="h-5"
               />
-              <Input
-                type="text"
+            </HStack>
+          }
+          actions={
+            <div className="w-[300px]">
+              <SearchInput
                 placeholder="Search icons..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9"
-                fullWidth
+                onChange={setSearchQuery}
+                size="sm"
               />
             </div>
+          }
+        />
+      }
+      contentClassName="max-w-7xl mx-auto px-8 py-12"
+    >
+      {/* Page Header */}
+      <div className="mb-10">
+        <h1 className="text-[28px] font-bold text-[var(--color-text-default)] mb-2">
+          Sidebar Icons Reference
+        </h1>
+        <p className="text-[14px] text-[var(--color-text-subtle)] mb-4">
+          각 앱별 사이드바 메뉴에 사용된 아이콘 목록입니다. 클릭하면 코드가 복사됩니다.
+        </p>
+
+        {/* Quick Reference */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="p-4 bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)]">
+            <h3 className="text-[12px] font-semibold text-[var(--color-text-default)] mb-2">
+              Tabler Icons
+            </h3>
+            <code className="text-[11px] text-[var(--color-text-muted)] font-mono block">
+              import {'{ IconName }'} from '@tabler/icons-react';
+            </code>
+            <code className="text-[11px] text-[var(--color-text-subtle)] font-mono block mt-1">
+              {'<IconName size={16} stroke={1.5} />'}
+            </code>
+          </div>
+          <div className="p-4 bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)]">
+            <h3 className="text-[12px] font-semibold text-[var(--color-text-default)] mb-2">
+              Lucide Icons
+            </h3>
+            <code className="text-[11px] text-[var(--color-text-muted)] font-mono block">
+              import {'{ IconName }'} from 'lucide-react';
+            </code>
+            <code className="text-[11px] text-[var(--color-text-subtle)] font-mono block mt-1">
+              {'<IconName size={16} strokeWidth={1.5} />'}
+            </code>
           </div>
         </div>
-      </header>
 
-      {/* Main Content */}
-      <main>
-        <div className="max-w-7xl mx-auto px-8 py-12">
-          {/* Page Header */}
-          <div className="mb-10">
-            <h1 className="text-[28px] font-bold text-[var(--color-text-default)] mb-2">
-              Sidebar Icons Reference
-            </h1>
-            <p className="text-[14px] text-[var(--color-text-subtle)] mb-4">
-              각 앱별 사이드바 메뉴에 사용된 아이콘 목록입니다. 클릭하면 코드가 복사됩니다.
-            </p>
-
-            {/* Quick Reference */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <div className="p-4 bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)]">
-                <h3 className="text-[12px] font-semibold text-[var(--color-text-default)] mb-2">
-                  Tabler Icons
-                </h3>
-                <code className="text-[11px] text-[var(--color-text-muted)] font-mono block">
-                  import {'{ IconName }'} from '@tabler/icons-react';
-                </code>
-                <code className="text-[11px] text-[var(--color-text-subtle)] font-mono block mt-1">
-                  {'<IconName size={16} stroke={1.5} />'}
-                </code>
-              </div>
-              <div className="p-4 bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-default)]">
-                <h3 className="text-[12px] font-semibold text-[var(--color-text-default)] mb-2">
-                  Lucide Icons
-                </h3>
-                <code className="text-[11px] text-[var(--color-text-muted)] font-mono block">
-                  import {'{ IconName }'} from 'lucide-react';
-                </code>
-                <code className="text-[11px] text-[var(--color-text-subtle)] font-mono block mt-1">
-                  {'<IconName size={16} strokeWidth={1.5} />'}
-                </code>
-              </div>
-            </div>
-
-            {/* Stats */}
-            <div className="mt-4 text-[12px] text-[var(--color-text-subtle)]">
-              {searchQuery ? (
-                <span>
-                  Found{' '}
-                  <strong className="text-[var(--color-text-default)]">{filteredCount}</strong> of{' '}
-                  {totalIcons} icons
-                </span>
-              ) : (
-                <span>
-                  Total <strong className="text-[var(--color-text-default)]">{totalIcons}</strong>{' '}
-                  icons across {appIconData.length} apps
-                </span>
-              )}
-            </div>
-
-            {/* Section Navigation */}
-            <div className="mt-6 flex flex-wrap gap-2">
-              {appIconData.map((app, index) => (
-                <a
-                  key={index}
-                  href={`#${toKebabCase(app.name)}`}
-                  className="px-3 py-1.5 text-[12px] font-medium rounded-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] text-[var(--color-text-muted)] hover:text-[var(--color-action-primary)] hover:border-[var(--color-action-primary)] transition-colors"
-                >
-                  {app.name}
-                </a>
-              ))}
-            </div>
-          </div>
-
-          {/* App Sections */}
-          <div className="space-y-8">
-            {appIconData.map((app, index) => (
-              <AppSectionCard key={index} app={app} searchQuery={searchQuery} />
-            ))}
-          </div>
-
-          {/* No results message */}
-          {filteredCount === 0 && searchQuery && (
-            <div className="text-center py-16">
-              <IconSearch
-                size={48}
-                stroke={1}
-                className="mx-auto text-[var(--color-text-subtle)] mb-4"
-              />
-              <p className="text-[14px] text-[var(--color-text-muted)]">
-                No icons found for "<strong>{searchQuery}</strong>"
-              </p>
-            </div>
+        {/* Stats */}
+        <div className="mt-4 text-[12px] text-[var(--color-text-subtle)]">
+          {searchQuery ? (
+            <span>
+              Found <strong className="text-[var(--color-text-default)]">{filteredCount}</strong> of{' '}
+              {totalIcons} icons
+            </span>
+          ) : (
+            <span>
+              Total <strong className="text-[var(--color-text-default)]">{totalIcons}</strong> icons
+              across {appIconData.length} apps
+            </span>
           )}
         </div>
-      </main>
+
+        {/* Section Navigation */}
+        <div className="mt-6 flex flex-wrap gap-2">
+          {appIconData.map((app, index) => (
+            <a
+              key={index}
+              href={`#${toKebabCase(app.name)}`}
+              className="px-3 py-1.5 text-[12px] font-medium rounded-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] text-[var(--color-text-muted)] hover:text-[var(--color-action-primary)] hover:border-[var(--color-action-primary)] transition-colors"
+            >
+              {app.name}
+            </a>
+          ))}
+        </div>
+      </div>
+
+      {/* App Sections */}
+      <div className="space-y-8">
+        {appIconData.map((app, index) => (
+          <AppSectionCard key={index} app={app} searchQuery={searchQuery} />
+        ))}
+      </div>
+
+      {/* No results message */}
+      {filteredCount === 0 && searchQuery && (
+        <div className="text-center py-16">
+          <IconSearch
+            size={48}
+            stroke={1}
+            className="mx-auto text-[var(--color-text-subtle)] mb-4"
+          />
+          <p className="text-[14px] text-[var(--color-text-muted)]">
+            No icons found for "<strong>{searchQuery}</strong>"
+          </p>
+        </div>
+      )}
 
       {/* Footer */}
-      <footer className="border-t border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
+      <footer className="border-t border-[var(--color-border-default)] bg-[var(--color-surface-default)] mt-12">
         <div className="max-w-7xl mx-auto px-8 py-6">
           <p className="text-[12px] text-[var(--color-text-subtle)] text-center">
             © 2025 THAKI Cloud. All rights reserved.
           </p>
         </div>
       </footer>
-    </div>
+    </PageShell>
   );
 }
 

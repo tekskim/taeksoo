@@ -18,6 +18,7 @@ import {
   Pagination,
   StatusIndicator,
   ContextMenu,
+  PageShell,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
@@ -405,6 +406,7 @@ export function ComputeAdminFlavorDetailPage() {
   const flavor = id ? mockFlavorsMap[id] || defaultFlavorDetail : defaultFlavorDetail;
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 200 : 0;
   const [activeDetailTab, setActiveDetailTab] = useState('details');
 
   // Instances tab state
@@ -569,176 +571,158 @@ export function ComputeAdminFlavorDetailPage() {
   ];
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-      <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
-          sidebarOpen ? 'left-[200px]' : 'left-0'
-        }`}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Tab Bar */}
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-          />
-          {/* Top Bar */}
-          <TopBar
-            showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
-            showNavigation={true}
-            onBack={() => navigate(-1)}
-            onForward={() => window.history.forward()}
-            breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-            actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-                badge={true}
-              />
-            }
-          />
-        </div>
+    <PageShell
+      sidebar={
+        <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={true}
+          onBack={() => navigate(-1)}
+          onForward={() => window.history.forward()}
+          breadcrumb={<Breadcrumb items={breadcrumbItems} />}
+          actions={
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1.5} />}
+              aria-label="Notifications"
+              badge={true}
+            />
+          }
+        />
+      }
+      contentClassName="pt-4 px-8 pb-20"
+    >
+      <VStack gap={6} className="min-w-[1176px]">
+        {/* Flavor Header Card */}
+        <DetailHeader>
+          <DetailHeader.Title>{flavor.name}</DetailHeader.Title>
+          <DetailHeader.Actions>
+            <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+              Create instance template
+            </Button>
+          </DetailHeader.Actions>
+          <DetailHeader.InfoGrid>
+            <DetailHeader.InfoCard label="ID" value={flavor.id} copyable />
+            <DetailHeader.InfoCard label="Category" value={flavor.category} />
+            <DetailHeader.InfoCard label="vCPU" value={String(flavor.vcpu)} />
+            <DetailHeader.InfoCard label="RAM" value={flavor.ram} />
+            <DetailHeader.InfoCard label="Root Disk" value="0GiB" />
+            <DetailHeader.InfoCard label="Public" value="On" />
+          </DetailHeader.InfoGrid>
+        </DetailHeader>
 
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
-            <VStack gap={6} className="min-w-[1176px]">
-              {/* Flavor Header Card */}
-              <DetailHeader>
-                <DetailHeader.Title>{flavor.name}</DetailHeader.Title>
-                <DetailHeader.Actions>
-                  <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                    Create instance template
-                  </Button>
-                </DetailHeader.Actions>
-                <DetailHeader.InfoGrid>
-                  <DetailHeader.InfoCard label="ID" value={flavor.id} copyable />
-                  <DetailHeader.InfoCard label="Category" value={flavor.category} />
-                  <DetailHeader.InfoCard label="vCPU" value={String(flavor.vcpu)} />
-                  <DetailHeader.InfoCard label="RAM" value={flavor.ram} />
-                  <DetailHeader.InfoCard label="Root Disk" value="0GiB" />
-                  <DetailHeader.InfoCard label="Public" value="On" />
-                </DetailHeader.InfoGrid>
-              </DetailHeader>
+        {/* Flavor Tabs */}
+        <div className="w-full">
+          <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline" size="sm">
+            <TabList>
+              <Tab value="details">Details</Tab>
+              <Tab value="instances">Instances</Tab>
+              <Tab value="parameters">Parameters</Tab>
+            </TabList>
 
-              {/* Flavor Tabs */}
-              <div className="w-full">
-                <Tabs
-                  value={activeDetailTab}
-                  onChange={setActiveDetailTab}
-                  variant="underline"
-                  size="sm"
-                >
-                  <TabList>
-                    <Tab value="details">Details</Tab>
-                    <Tab value="instances">Instances</Tab>
-                    <Tab value="parameters">Parameters</Tab>
-                  </TabList>
+            {/* Details Tab Panel */}
+            <TabPanel value="details" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Basic information */}
+                <SectionCard>
+                  <SectionCard.Header title="Basic information" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="Flavor name" value={flavor.name} />
+                    <SectionCard.DataRow label="Category" value={flavor.category} />
+                  </SectionCard.Content>
+                </SectionCard>
 
-                  {/* Details Tab Panel */}
-                  <TabPanel value="details" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Basic information */}
-                      <SectionCard>
-                        <SectionCard.Header title="Basic information" />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow label="Flavor name" value={flavor.name} />
-                          <SectionCard.DataRow label="Category" value={flavor.category} />
-                        </SectionCard.Content>
-                      </SectionCard>
+                {/* Specification */}
+                <SectionCard>
+                  <SectionCard.Header title="Specification" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="vCPU" value={String(flavor.vcpu)} />
+                    <SectionCard.DataRow label="RAM" value={flavor.ram} />
+                    <SectionCard.DataRow label="Root Disk" value="0GiB" />
+                    <SectionCard.DataRow label="Ephemeral disk" value={flavor.ephemeralDisk} />
+                    <SectionCard.DataRow label="Swap Disk" value={flavor.numaNodes} />
+                  </SectionCard.Content>
+                </SectionCard>
 
-                      {/* Specification */}
-                      <SectionCard>
-                        <SectionCard.Header title="Specification" />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow label="vCPU" value={String(flavor.vcpu)} />
-                          <SectionCard.DataRow label="RAM" value={flavor.ram} />
-                          <SectionCard.DataRow label="Root Disk" value="0GiB" />
-                          <SectionCard.DataRow
-                            label="Ephemeral disk"
-                            value={flavor.ephemeralDisk}
-                          />
-                          <SectionCard.DataRow label="Swap Disk" value={flavor.numaNodes} />
-                        </SectionCard.Content>
-                      </SectionCard>
+                {/* Security */}
+                <SectionCard>
+                  <SectionCard.Header title="Security" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="Visibility" value={flavor.visibility} />
+                  </SectionCard.Content>
+                </SectionCard>
 
-                      {/* Security */}
-                      <SectionCard>
-                        <SectionCard.Header title="Security" />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow label="Visibility" value={flavor.visibility} />
-                        </SectionCard.Content>
-                      </SectionCard>
+                {/* Metadata */}
+                <SectionCard>
+                  <SectionCard.Header title="Metadata" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="{metadata}" value="{value}" />
+                  </SectionCard.Content>
+                </SectionCard>
+              </VStack>
+            </TabPanel>
 
-                      {/* Metadata */}
-                      <SectionCard>
-                        <SectionCard.Header title="Metadata" />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow label="{metadata}" value="{value}" />
-                        </SectionCard.Content>
-                      </SectionCard>
-                    </VStack>
-                  </TabPanel>
+            {/* Instances Tab Panel */}
+            <TabPanel value="instances" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Section Header */}
+                <h2 className="text-heading-h5 text-[var(--color-text-default)]">Instances</h2>
 
-                  {/* Instances Tab Panel */}
-                  <TabPanel value="instances" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Section Header */}
-                      <h2 className="text-heading-h5 text-[var(--color-text-default)]">
-                        Instances
-                      </h2>
+                {/* Search */}
+                <div>
+                  <SearchInput
+                    placeholder="Search instance by attributes"
+                    value={instanceSearchQuery}
+                    onChange={(e) => setInstanceSearchQuery(e.target.value)}
+                    onClear={() => setInstanceSearchQuery('')}
+                    size="sm"
+                    fullWidth
+                  />
+                </div>
 
-                      {/* Search */}
-                      <div>
-                        <SearchInput
-                          placeholder="Search instance by attributes"
-                          value={instanceSearchQuery}
-                          onChange={(e) => setInstanceSearchQuery(e.target.value)}
-                          onClear={() => setInstanceSearchQuery('')}
-                          size="sm"
-                          fullWidth
-                        />
-                      </div>
+                {/* Pagination */}
+                <Pagination
+                  currentPage={instanceCurrentPage}
+                  totalPages={instanceTotalPages}
+                  onPageChange={setInstanceCurrentPage}
+                  totalItems={filteredInstances.length}
+                />
 
-                      {/* Pagination */}
-                      <Pagination
-                        currentPage={instanceCurrentPage}
-                        totalPages={instanceTotalPages}
-                        onPageChange={setInstanceCurrentPage}
-                        totalItems={filteredInstances.length}
-                      />
+                {/* Instances Table */}
+                <Table<FlavorInstance>
+                  columns={instanceColumns}
+                  data={paginatedInstances}
+                  rowKey="id"
+                  emptyMessage="No instances found"
+                />
+              </VStack>
+            </TabPanel>
 
-                      {/* Instances Table */}
-                      <Table<FlavorInstance>
-                        columns={instanceColumns}
-                        data={paginatedInstances}
-                        rowKey="id"
-                        emptyMessage="No instances found"
-                      />
-                    </VStack>
-                  </TabPanel>
-
-                  {/* Parameters Tab Panel */}
-                  <TabPanel value="parameters" className="pt-0">
-                    <div className="pt-6">
-                      <div className="bg-[#141414] dark:bg-[#FAFAFA] border border-[var(--color-border-default)] rounded-md p-4 w-full min-h-[576px] overflow-auto">
-                        <pre className="font-mono text-body-md leading-[18px] text-[#e2e8f0] dark:text-[#1e293b] whitespace-pre">
-                          {JSON.stringify(mockFlavorParameters, null, 5)}
-                        </pre>
-                      </div>
-                    </div>
-                  </TabPanel>
-                </Tabs>
+            {/* Parameters Tab Panel */}
+            <TabPanel value="parameters" className="pt-0">
+              <div className="pt-6">
+                <div className="bg-[#141414] dark:bg-[#FAFAFA] border border-[var(--color-border-default)] rounded-md p-4 w-full min-h-[576px] overflow-auto">
+                  <pre className="font-mono text-body-md leading-[18px] text-[#e2e8f0] dark:text-[#1e293b] whitespace-pre">
+                    {JSON.stringify(mockFlavorParameters, null, 5)}
+                  </pre>
+                </div>
               </div>
-            </VStack>
-          </div>
+            </TabPanel>
+          </Tabs>
         </div>
-      </main>
-    </div>
+      </VStack>
+    </PageShell>
   );
 }
 

@@ -28,6 +28,7 @@ import {
   IconRocky,
   InlineMessage,
   SelectionIndicator,
+  PageShell,
   fixedColumns,
   columnMinWidths,
 } from '@/design-system';
@@ -2446,6 +2447,7 @@ export function CreateTemplatePage() {
   const navigate = useNavigate();
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
   const { tabs, activeTabId, selectTab, closeTab } = useTabs();
+  const sidebarWidth = sidebarOpen ? 200 : 0;
 
   // Section status tracking
   const [sectionStatus, setSectionStatus] = useState<SectionStatus>({
@@ -2669,280 +2671,244 @@ export function CreateTemplatePage() {
   };
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
-
-      {/* Main Content */}
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: sidebarOpen ? 'var(--layout-sidebar-width)' : '0px' }}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Tab Bar */}
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            showWindowControls={true}
-          />
-
-          {/* Top Bar with Breadcrumb Navigation */}
-          <TopBar
-            showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={openSidebar}
-            showNavigation={true}
-            onBack={() => window.history.back()}
-            onForward={() => window.history.forward()}
-            breadcrumb={
-              <Breadcrumb
-                items={[
-                  { label: 'Proj-1', href: '/project' },
-                  { label: 'Instance templates', href: '/compute/instance-templates' },
-                  { label: 'Create template' },
-                ]}
-              />
-            }
-            actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-                badge={true}
-              />
-            }
-          />
+    <PageShell
+      sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          showWindowControls={true}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={openSidebar}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={
+            <Breadcrumb
+              items={[
+                { label: 'Proj-1', href: '/project' },
+                { label: 'Instance templates', href: '/compute/instance-templates' },
+                { label: 'Create template' },
+              ]}
+            />
+          }
+          actions={
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1.5} />}
+              aria-label="Notifications"
+              badge={true}
+            />
+          }
+        />
+      }
+      contentClassName="pt-3 px-8 pb-20"
+    >
+      <VStack gap={3} className="min-w-[1176px]">
+        {/* Page Title */}
+        <div className="flex items-center justify-between h-8">
+          <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create template</h1>
         </div>
 
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)] min-h-full">
-            <VStack gap={3} className="min-w-[1176px]">
-              {/* Page Title */}
-              <div className="flex items-center justify-between h-8">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-                  Create template
-                </h1>
-              </div>
+        {/* Content Area */}
+        <HStack gap={6} align="start" className="w-full">
+          {/* Left Column - Form Sections */}
+          <VStack gap={4} className="flex-1">
+            {/* Template Information Section */}
+            {sectionStatus['template-info'] === 'pre' && (
+              <PreSection title={SECTION_LABELS['template-info']} />
+            )}
+            {sectionStatus['template-info'] === 'writing' && (
+              <WritingSection title={SECTION_LABELS['template-info']} />
+            )}
+            {sectionStatus['template-info'] === 'active' && (
+              <TemplateInformationSection
+                templateName={templateName}
+                onTemplateNameChange={setTemplateName}
+                description={templateDescription}
+                onDescriptionChange={setTemplateDescription}
+                isFavorite={isFavorite}
+                onIsFavoriteChange={setIsFavorite}
+                onNext={() => handleNext('template-info')}
+                isActive
+                isEditing={editingSection === 'template-info'}
+                onEditCancel={handleEditCancel}
+                onEditDone={handleEditDone}
+              />
+            )}
+            {sectionStatus['template-info'] === 'done' && (
+              <DoneSection
+                title={SECTION_LABELS['template-info']}
+                onEdit={() => handleEdit('template-info')}
+              >
+                <SectionCard.DataRow
+                  label="Template name"
+                  value={templateName || '-'}
+                  showDivider={false}
+                />
+                <SectionCard.DataRow label="Description" value={templateDescription || '-'} />
+                <SectionCard.DataRow label="Favorite" value={isFavorite ? 'Yes' : 'No'} />
+              </DoneSection>
+            )}
 
-              {/* Content Area */}
-              <HStack gap={6} align="start" className="w-full">
-                {/* Left Column - Form Sections */}
-                <VStack gap={4} className="flex-1">
-                  {/* Template Information Section */}
-                  {sectionStatus['template-info'] === 'pre' && (
-                    <PreSection title={SECTION_LABELS['template-info']} />
-                  )}
-                  {sectionStatus['template-info'] === 'writing' && (
-                    <WritingSection title={SECTION_LABELS['template-info']} />
-                  )}
-                  {sectionStatus['template-info'] === 'active' && (
-                    <TemplateInformationSection
-                      templateName={templateName}
-                      onTemplateNameChange={setTemplateName}
-                      description={templateDescription}
-                      onDescriptionChange={setTemplateDescription}
-                      isFavorite={isFavorite}
-                      onIsFavoriteChange={setIsFavorite}
-                      onNext={() => handleNext('template-info')}
-                      isActive
-                      isEditing={editingSection === 'template-info'}
-                      onEditCancel={handleEditCancel}
-                      onEditDone={handleEditDone}
-                    />
-                  )}
-                  {sectionStatus['template-info'] === 'done' && (
-                    <DoneSection
-                      title={SECTION_LABELS['template-info']}
-                      onEdit={() => handleEdit('template-info')}
-                    >
-                      <SectionCard.DataRow
-                        label="Template name"
-                        value={templateName || '-'}
-                        showDivider={false}
-                      />
-                      <SectionCard.DataRow label="Description" value={templateDescription || '-'} />
-                      <SectionCard.DataRow label="Favorite" value={isFavorite ? 'Yes' : 'No'} />
-                    </DoneSection>
-                  )}
+            {/* Basic information Section */}
+            {sectionStatus['basic-info'] === 'pre' && (
+              <PreSection title={SECTION_LABELS['basic-info']} />
+            )}
+            {sectionStatus['basic-info'] === 'writing' && (
+              <WritingSection title={SECTION_LABELS['basic-info']} />
+            )}
+            {sectionStatus['basic-info'] === 'active' && (
+              <BasicInformationSection
+                availabilityZone={availabilityZone}
+                onAvailabilityZoneChange={setAvailabilityZone}
+                onNext={() => handleNext('basic-info')}
+                isActive
+                isEditing={editingSection === 'basic-info'}
+                onEditCancel={handleEditCancel}
+                onEditDone={handleEditDone}
+              />
+            )}
+            {sectionStatus['basic-info'] === 'done' && (
+              <DoneSection
+                title={SECTION_LABELS['basic-info']}
+                onEdit={() => handleEdit('basic-info')}
+              >
+                <SectionCard.DataRow
+                  label="AZ (Availability zone)"
+                  value={
+                    azOptions.find((az) => az.value === availabilityZone)?.label || availabilityZone
+                  }
+                  showDivider={false}
+                />
+              </DoneSection>
+            )}
 
-                  {/* Basic information Section */}
-                  {sectionStatus['basic-info'] === 'pre' && (
-                    <PreSection title={SECTION_LABELS['basic-info']} />
-                  )}
-                  {sectionStatus['basic-info'] === 'writing' && (
-                    <WritingSection title={SECTION_LABELS['basic-info']} />
-                  )}
-                  {sectionStatus['basic-info'] === 'active' && (
-                    <BasicInformationSection
-                      availabilityZone={availabilityZone}
-                      onAvailabilityZoneChange={setAvailabilityZone}
-                      onNext={() => handleNext('basic-info')}
-                      isActive
-                      isEditing={editingSection === 'basic-info'}
-                      onEditCancel={handleEditCancel}
-                      onEditDone={handleEditDone}
-                    />
-                  )}
-                  {sectionStatus['basic-info'] === 'done' && (
-                    <DoneSection
-                      title={SECTION_LABELS['basic-info']}
-                      onEdit={() => handleEdit('basic-info')}
-                    >
-                      <SectionCard.DataRow
-                        label="AZ (Availability zone)"
-                        value={
-                          azOptions.find((az) => az.value === availabilityZone)?.label ||
-                          availabilityZone
-                        }
-                        showDivider={false}
-                      />
-                    </DoneSection>
-                  )}
+            {/* Image Section */}
+            {sectionStatus.image === 'pre' && <PreSection title={SECTION_LABELS.image} />}
+            {sectionStatus.image === 'writing' && <WritingSection title={SECTION_LABELS.image} />}
+            {sectionStatus.image === 'active' && (
+              <ImageSection
+                selectedImageId={selectedImageId}
+                onSelectImage={setSelectedImageId}
+                storageType={storageType}
+                onStorageTypeChange={setStorageType}
+                storageSize={storageSize}
+                onStorageSizeChange={setStorageSize}
+                deleteWithInstance={deleteWithInstance}
+                onDeleteWithInstanceChange={setDeleteWithInstance}
+                onNext={() => handleNext('image')}
+                isActive
+                isEditing={editingSection === 'image'}
+                onEditCancel={handleEditCancel}
+                onEditDone={handleEditDone}
+              />
+            )}
+            {sectionStatus.image === 'done' && (
+              <DoneSection title={SECTION_LABELS.image} onEdit={() => handleEdit('image')}>
+                <SectionCard.DataRow
+                  label="Image"
+                  value={getImageSummary() || '-'}
+                  showDivider={false}
+                />
+                <SectionCard.DataRow label="System disk" value={getStorageSummary()} />
+              </DoneSection>
+            )}
 
-                  {/* Image Section */}
-                  {sectionStatus.image === 'pre' && <PreSection title={SECTION_LABELS.image} />}
-                  {sectionStatus.image === 'writing' && (
-                    <WritingSection title={SECTION_LABELS.image} />
-                  )}
-                  {sectionStatus.image === 'active' && (
-                    <ImageSection
-                      selectedImageId={selectedImageId}
-                      onSelectImage={setSelectedImageId}
-                      storageType={storageType}
-                      onStorageTypeChange={setStorageType}
-                      storageSize={storageSize}
-                      onStorageSizeChange={setStorageSize}
-                      deleteWithInstance={deleteWithInstance}
-                      onDeleteWithInstanceChange={setDeleteWithInstance}
-                      onNext={() => handleNext('image')}
-                      isActive
-                      isEditing={editingSection === 'image'}
-                      onEditCancel={handleEditCancel}
-                      onEditDone={handleEditDone}
-                    />
-                  )}
-                  {sectionStatus.image === 'done' && (
-                    <DoneSection title={SECTION_LABELS.image} onEdit={() => handleEdit('image')}>
-                      <SectionCard.DataRow
-                        label="Image"
-                        value={getImageSummary() || '-'}
-                        showDivider={false}
-                      />
-                      <SectionCard.DataRow label="System disk" value={getStorageSummary()} />
-                    </DoneSection>
-                  )}
+            {/* Flavor Section */}
+            {sectionStatus.flavor === 'pre' && <PreSection title={SECTION_LABELS.flavor} />}
+            {sectionStatus.flavor === 'writing' && <WritingSection title={SECTION_LABELS.flavor} />}
+            {sectionStatus.flavor === 'active' && (
+              <FlavorSection
+                selectedFlavorId={selectedFlavorId}
+                onSelectFlavor={setSelectedFlavorId}
+                onNext={() => handleNext('flavor')}
+                isActive
+                isEditing={editingSection === 'flavor'}
+                onEditCancel={handleEditCancel}
+                onEditDone={handleEditDone}
+              />
+            )}
+            {sectionStatus.flavor === 'done' && (
+              <DoneSection title={SECTION_LABELS.flavor} onEdit={() => handleEdit('flavor')}>
+                <SectionCard.DataRow
+                  label="Flavor"
+                  value={getFlavorSummary() || '-'}
+                  showDivider={false}
+                />
+              </DoneSection>
+            )}
 
-                  {/* Flavor Section */}
-                  {sectionStatus.flavor === 'pre' && <PreSection title={SECTION_LABELS.flavor} />}
-                  {sectionStatus.flavor === 'writing' && (
-                    <WritingSection title={SECTION_LABELS.flavor} />
-                  )}
-                  {sectionStatus.flavor === 'active' && (
-                    <FlavorSection
-                      selectedFlavorId={selectedFlavorId}
-                      onSelectFlavor={setSelectedFlavorId}
-                      onNext={() => handleNext('flavor')}
-                      isActive
-                      isEditing={editingSection === 'flavor'}
-                      onEditCancel={handleEditCancel}
-                      onEditDone={handleEditDone}
-                    />
-                  )}
-                  {sectionStatus.flavor === 'done' && (
-                    <DoneSection title={SECTION_LABELS.flavor} onEdit={() => handleEdit('flavor')}>
-                      <SectionCard.DataRow
-                        label="Flavor"
-                        value={getFlavorSummary() || '-'}
-                        showDivider={false}
-                      />
-                    </DoneSection>
-                  )}
+            {/* Network Section */}
+            {sectionStatus.network === 'pre' && <PreSection title={SECTION_LABELS.network} />}
+            {sectionStatus.network === 'writing' && (
+              <WritingSection title={SECTION_LABELS.network} />
+            )}
+            {sectionStatus.network === 'active' && (
+              <NetworkSection
+                selectedNetworkIds={selectedNetworkIds}
+                onNetworkToggle={handleNetworkToggle}
+                selectedSecurityGroups={selectedSecurityGroups}
+                onSecurityGroupToggle={handleSecurityGroupToggle}
+                onNext={() => handleNext('network')}
+                isActive
+                isEditing={editingSection === 'network'}
+                onEditCancel={handleEditCancel}
+                onEditDone={handleEditDone}
+              />
+            )}
+            {sectionStatus.network === 'done' && (
+              <DoneSection title={SECTION_LABELS.network} onEdit={() => handleEdit('network')}>
+                <SectionCard.DataRow
+                  label="Network"
+                  value={getNetworkSummary()}
+                  showDivider={false}
+                />
+                <SectionCard.DataRow label="Security groups" value={getSecurityGroupSummary()} />
+              </DoneSection>
+            )}
 
-                  {/* Network Section */}
-                  {sectionStatus.network === 'pre' && <PreSection title={SECTION_LABELS.network} />}
-                  {sectionStatus.network === 'writing' && (
-                    <WritingSection title={SECTION_LABELS.network} />
-                  )}
-                  {sectionStatus.network === 'active' && (
-                    <NetworkSection
-                      selectedNetworkIds={selectedNetworkIds}
-                      onNetworkToggle={handleNetworkToggle}
-                      selectedSecurityGroups={selectedSecurityGroups}
-                      onSecurityGroupToggle={handleSecurityGroupToggle}
-                      onNext={() => handleNext('network')}
-                      isActive
-                      isEditing={editingSection === 'network'}
-                      onEditCancel={handleEditCancel}
-                      onEditDone={handleEditDone}
-                    />
-                  )}
-                  {sectionStatus.network === 'done' && (
-                    <DoneSection
-                      title={SECTION_LABELS.network}
-                      onEdit={() => handleEdit('network')}
-                    >
-                      <SectionCard.DataRow
-                        label="Network"
-                        value={getNetworkSummary()}
-                        showDivider={false}
-                      />
-                      <SectionCard.DataRow
-                        label="Security groups"
-                        value={getSecurityGroupSummary()}
-                      />
-                    </DoneSection>
-                  )}
+            {/* Advanced Section */}
+            {sectionStatus.advanced === 'pre' && <PreSection title={SECTION_LABELS.advanced} />}
+            {sectionStatus.advanced === 'writing' && (
+              <WritingSection title={SECTION_LABELS.advanced} />
+            )}
+            {sectionStatus.advanced === 'active' && (
+              <AdvancedSection
+                tags={tags}
+                onTagsChange={setTags}
+                userData={userData}
+                onUserDataChange={setUserData}
+                onNext={() => handleNext('advanced')}
+                isActive
+                isEditing={editingSection === 'advanced'}
+                onEditCancel={handleEditCancel}
+                onEditDone={handleEditDone}
+              />
+            )}
+            {sectionStatus.advanced === 'done' && (
+              <DoneSection title={SECTION_LABELS.advanced} onEdit={() => handleEdit('advanced')}>
+                <SectionCard.DataRow
+                  label="Tags"
+                  value={tags.length > 0 ? `${tags.length} tag${tags.length > 1 ? 's' : ''}` : '-'}
+                  showDivider={false}
+                />
+                <SectionCard.DataRow label="User data" value={userData ? 'Configured' : '-'} />
+              </DoneSection>
+            )}
+          </VStack>
 
-                  {/* Advanced Section */}
-                  {sectionStatus.advanced === 'pre' && (
-                    <PreSection title={SECTION_LABELS.advanced} />
-                  )}
-                  {sectionStatus.advanced === 'writing' && (
-                    <WritingSection title={SECTION_LABELS.advanced} />
-                  )}
-                  {sectionStatus.advanced === 'active' && (
-                    <AdvancedSection
-                      tags={tags}
-                      onTagsChange={setTags}
-                      userData={userData}
-                      onUserDataChange={setUserData}
-                      onNext={() => handleNext('advanced')}
-                      isActive
-                      isEditing={editingSection === 'advanced'}
-                      onEditCancel={handleEditCancel}
-                      onEditDone={handleEditDone}
-                    />
-                  )}
-                  {sectionStatus.advanced === 'done' && (
-                    <DoneSection
-                      title={SECTION_LABELS.advanced}
-                      onEdit={() => handleEdit('advanced')}
-                    >
-                      <SectionCard.DataRow
-                        label="Tags"
-                        value={
-                          tags.length > 0 ? `${tags.length} tag${tags.length > 1 ? 's' : ''}` : '-'
-                        }
-                        showDivider={false}
-                      />
-                      <SectionCard.DataRow
-                        label="User data"
-                        value={userData ? 'Configured' : '-'}
-                      />
-                    </DoneSection>
-                  )}
-                </VStack>
-
-                {/* Right Column - Sidebar */}
-                <TemplateSidebar onCancel={handleCancel} sectionStatus={sectionStatus} />
-              </HStack>
-            </VStack>
-          </div>
-        </div>
-      </main>
-    </div>
+          {/* Right Column - Sidebar */}
+          <TemplateSidebar onCancel={handleCancel} sectionStatus={sectionStatus} />
+        </HStack>
+      </VStack>
+    </PageShell>
   );
 }
 

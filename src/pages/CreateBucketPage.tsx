@@ -13,6 +13,7 @@ import {
   SectionCard,
   Radio,
   Textarea,
+  PageShell,
 } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -1040,244 +1041,219 @@ export default function CreateBucketPage() {
   };
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <StorageSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
-
-      {/* Main content area */}
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: sidebarOpen ? 'var(--layout-sidebar-width)' : '0px' }}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Tab Bar */}
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            showWindowControls={true}
-          />
-
-          {/* Top Bar with Breadcrumb Navigation */}
-          <TopBar
-            showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
-            showNavigation={true}
-            onBack={() => window.history.back()}
-            onForward={() => window.history.forward()}
-            breadcrumb={
-              <Breadcrumb
-                items={[
-                  { label: 'Storage', href: '/storage' },
-                  { label: 'Buckets', href: '/storage/buckets' },
-                  { label: 'Create Bucket' },
-                ]}
-              />
-            }
-            actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-                badge={true}
-              />
-            }
-          />
+    <PageShell
+      sidebar={
+        <StorageSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          showWindowControls={true}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={
+            <Breadcrumb
+              items={[
+                { label: 'Storage', href: '/storage' },
+                { label: 'Buckets', href: '/storage/buckets' },
+                { label: 'Create Bucket' },
+              ]}
+            />
+          }
+          actions={
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1.5} />}
+              aria-label="Notifications"
+              badge={true}
+            />
+          }
+        />
+      }
+      contentClassName="pt-3 px-8 pb-20"
+    >
+      <VStack gap={3} className="min-w-[1176px]">
+        {/* Page Title */}
+        <div className="flex items-center justify-between h-8">
+          <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create bucket</h1>
         </div>
 
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)] min-h-full">
-            <VStack gap={3} className="min-w-[1176px]">
-              {/* Page Title */}
-              <div className="flex items-center justify-between h-8">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create bucket</h1>
-              </div>
-
-              {/* Content Area */}
-              <HStack gap={6} align="start" className="w-full">
-                {/* Left Column - Form Sections */}
-                <VStack gap={4} className="flex-1">
-                  {/* Basic Information Section */}
-                  {sectionStatus['basic-info'] === 'pre' && (
-                    <PreSection title={SECTION_LABELS['basic-info']} />
-                  )}
-                  {sectionStatus['basic-info'] === 'writing' && (
-                    <WritingSection title={SECTION_LABELS['basic-info']} />
-                  )}
-                  {sectionStatus['basic-info'] === 'active' && (
-                    <BasicInformationSection
-                      bucketName={bucketName}
-                      onBucketNameChange={setBucketName}
-                      bucketNameError={bucketNameError}
-                      onBucketNameErrorChange={setBucketNameError}
-                      region={region}
-                      onRegionChange={setRegion}
-                      owner={owner}
-                      onOwnerChange={setOwner}
-                      ownerError={ownerError}
-                      onOwnerErrorChange={setOwnerError}
-                      onNext={() => handleNext('basic-info')}
-                      isActive
-                      isEditing={editingSection === 'basic-info'}
-                      onEditCancel={handleEditCancel}
-                      onEditDone={handleEditDone}
-                    />
-                  )}
-                  {sectionStatus['basic-info'] === 'done' && (
-                    <DoneSection
-                      title={SECTION_LABELS['basic-info']}
-                      onEdit={() => handleEdit('basic-info')}
-                    >
-                      <SectionCard.DataRow
-                        label="Bucket name"
-                        value={bucketName || '-'}
-                        showDivider={false}
-                      />
-                      <SectionCard.DataRow label="Region" value={getRegionDisplay()} />
-                      <SectionCard.DataRow label="Owner" value={owner || '-'} />
-                    </DoneSection>
-                  )}
-
-                  {/* Settings Section */}
-                  {sectionStatus['settings'] === 'pre' && (
-                    <PreSection title={SECTION_LABELS['settings']} />
-                  )}
-                  {sectionStatus['settings'] === 'writing' && (
-                    <WritingSection title={SECTION_LABELS['settings']} />
-                  )}
-                  {sectionStatus['settings'] === 'active' && (
-                    <SettingsSection
-                      objectLocking={objectLocking}
-                      onObjectLockingChange={setObjectLocking}
-                      lockingMode={lockingMode}
-                      onLockingModeChange={setLockingMode}
-                      retentionDays={retentionDays}
-                      onRetentionDaysChange={setRetentionDays}
-                      tags={tags}
-                      onAddTag={addTag}
-                      onRemoveTag={removeTag}
-                      onUpdateTag={updateTag}
-                      placementTarget={placementTarget}
-                      onPlacementTargetChange={setPlacementTarget}
-                      onNext={() => handleNext('settings')}
-                      isActive
-                      isEditing={editingSection === 'settings'}
-                      onEditCancel={handleEditCancel}
-                      onEditDone={handleEditDone}
-                    />
-                  )}
-                  {sectionStatus['settings'] === 'done' && (
-                    <DoneSection
-                      title={SECTION_LABELS['settings']}
-                      onEdit={() => handleEdit('settings')}
-                    >
-                      <SectionCard.DataRow
-                        label="Object locking"
-                        value={objectLocking === 'disabled' ? 'Disabled' : 'Enabled'}
-                        showDivider={false}
-                      />
-                      {objectLocking === 'enabled' && (
-                        <>
-                          <SectionCard.DataRow
-                            label="Mode"
-                            value={
-                              lockingMode === 'compliance'
-                                ? 'COMPLIANCE / GOVERNANCE'
-                                : lockingMode === 'compliance-only'
-                                  ? 'COMPLIANCE'
-                                  : 'GOVERNANCE'
-                            }
-                          />
-                          <SectionCard.DataRow
-                            label="Retention days"
-                            value={retentionDays || '-'}
-                          />
-                        </>
-                      )}
-                      <SectionCard.DataRow
-                        label="Tags"
-                        value={tags.length > 0 ? `${tags.length} tag(s)` : 'None'}
-                      />
-                      <SectionCard.DataRow
-                        label="Placement target"
-                        value={placementTarget || '-'}
-                      />
-                    </DoneSection>
-                  )}
-
-                  {/* Policy Section */}
-                  {sectionStatus['policy'] === 'pre' && (
-                    <PreSection title={SECTION_LABELS['policy']} />
-                  )}
-                  {sectionStatus['policy'] === 'writing' && (
-                    <WritingSection title={SECTION_LABELS['policy']} />
-                  )}
-                  {sectionStatus['policy'] === 'active' && (
-                    <PolicySection
-                      bucketPolicy={bucketPolicy}
-                      onBucketPolicyChange={handlePolicyChange}
-                      policyValid={policyValid}
-                      policyError={policyError}
-                      onClearPolicy={handleClearPolicy}
-                      grantee={grantee}
-                      onGranteeChange={(value) => {
-                        setGrantee(value);
-                        // Update permissions based on grantee
-                        if (value === 'owner') {
-                          setPermissions('full-control');
-                        } else if (value === 'everyone') {
-                          setPermissions('read');
-                        } else if (value === 'authenticated') {
-                          setPermissions('read');
-                        }
-                      }}
-                      permissions={permissions}
-                      onPermissionsChange={setPermissions}
-                      onNext={() => {
-                        if (validatePolicy(bucketPolicy)) {
-                          handleNext('policy');
-                        }
-                      }}
-                      isActive
-                      isEditing={editingSection === 'policy'}
-                      onEditCancel={handleEditCancel}
-                      onEditDone={() => {
-                        if (validatePolicy(bucketPolicy)) {
-                          handleEditDone();
-                        }
-                      }}
-                    />
-                  )}
-                  {sectionStatus['policy'] === 'done' && (
-                    <DoneSection
-                      title={SECTION_LABELS['policy']}
-                      onEdit={() => handleEdit('policy')}
-                    >
-                      <SectionCard.DataRow
-                        label="Bucket policy"
-                        value={bucketPolicy === '{}' ? 'Empty' : 'Configured'}
-                        showDivider={false}
-                      />
-                      <SectionCard.DataRow label="Grantee" value={getGranteeDisplay()} />
-                      <SectionCard.DataRow label="Permissions" value={getPermissionsDisplay()} />
-                    </DoneSection>
-                  )}
-                </VStack>
-
-                {/* Right Column - Summary Sidebar */}
-                <SummarySidebar
-                  sectionStatus={sectionStatus}
-                  onCancel={handleCancel}
-                  onCreate={handleCreate}
-                  isCreateEnabled={allSectionsDone && !editingSection}
+        {/* Content Area */}
+        <HStack gap={6} align="start" className="w-full">
+          {/* Left Column - Form Sections */}
+          <VStack gap={4} className="flex-1">
+            {/* Basic Information Section */}
+            {sectionStatus['basic-info'] === 'pre' && (
+              <PreSection title={SECTION_LABELS['basic-info']} />
+            )}
+            {sectionStatus['basic-info'] === 'writing' && (
+              <WritingSection title={SECTION_LABELS['basic-info']} />
+            )}
+            {sectionStatus['basic-info'] === 'active' && (
+              <BasicInformationSection
+                bucketName={bucketName}
+                onBucketNameChange={setBucketName}
+                bucketNameError={bucketNameError}
+                onBucketNameErrorChange={setBucketNameError}
+                region={region}
+                onRegionChange={setRegion}
+                owner={owner}
+                onOwnerChange={setOwner}
+                ownerError={ownerError}
+                onOwnerErrorChange={setOwnerError}
+                onNext={() => handleNext('basic-info')}
+                isActive
+                isEditing={editingSection === 'basic-info'}
+                onEditCancel={handleEditCancel}
+                onEditDone={handleEditDone}
+              />
+            )}
+            {sectionStatus['basic-info'] === 'done' && (
+              <DoneSection
+                title={SECTION_LABELS['basic-info']}
+                onEdit={() => handleEdit('basic-info')}
+              >
+                <SectionCard.DataRow
+                  label="Bucket name"
+                  value={bucketName || '-'}
+                  showDivider={false}
                 />
-              </HStack>
-            </VStack>
-          </div>
-        </div>
-      </main>
-    </div>
+                <SectionCard.DataRow label="Region" value={getRegionDisplay()} />
+                <SectionCard.DataRow label="Owner" value={owner || '-'} />
+              </DoneSection>
+            )}
+
+            {/* Settings Section */}
+            {sectionStatus['settings'] === 'pre' && (
+              <PreSection title={SECTION_LABELS['settings']} />
+            )}
+            {sectionStatus['settings'] === 'writing' && (
+              <WritingSection title={SECTION_LABELS['settings']} />
+            )}
+            {sectionStatus['settings'] === 'active' && (
+              <SettingsSection
+                objectLocking={objectLocking}
+                onObjectLockingChange={setObjectLocking}
+                lockingMode={lockingMode}
+                onLockingModeChange={setLockingMode}
+                retentionDays={retentionDays}
+                onRetentionDaysChange={setRetentionDays}
+                tags={tags}
+                onAddTag={addTag}
+                onRemoveTag={removeTag}
+                onUpdateTag={updateTag}
+                placementTarget={placementTarget}
+                onPlacementTargetChange={setPlacementTarget}
+                onNext={() => handleNext('settings')}
+                isActive
+                isEditing={editingSection === 'settings'}
+                onEditCancel={handleEditCancel}
+                onEditDone={handleEditDone}
+              />
+            )}
+            {sectionStatus['settings'] === 'done' && (
+              <DoneSection title={SECTION_LABELS['settings']} onEdit={() => handleEdit('settings')}>
+                <SectionCard.DataRow
+                  label="Object locking"
+                  value={objectLocking === 'disabled' ? 'Disabled' : 'Enabled'}
+                  showDivider={false}
+                />
+                {objectLocking === 'enabled' && (
+                  <>
+                    <SectionCard.DataRow
+                      label="Mode"
+                      value={
+                        lockingMode === 'compliance'
+                          ? 'COMPLIANCE / GOVERNANCE'
+                          : lockingMode === 'compliance-only'
+                            ? 'COMPLIANCE'
+                            : 'GOVERNANCE'
+                      }
+                    />
+                    <SectionCard.DataRow label="Retention days" value={retentionDays || '-'} />
+                  </>
+                )}
+                <SectionCard.DataRow
+                  label="Tags"
+                  value={tags.length > 0 ? `${tags.length} tag(s)` : 'None'}
+                />
+                <SectionCard.DataRow label="Placement target" value={placementTarget || '-'} />
+              </DoneSection>
+            )}
+
+            {/* Policy Section */}
+            {sectionStatus['policy'] === 'pre' && <PreSection title={SECTION_LABELS['policy']} />}
+            {sectionStatus['policy'] === 'writing' && (
+              <WritingSection title={SECTION_LABELS['policy']} />
+            )}
+            {sectionStatus['policy'] === 'active' && (
+              <PolicySection
+                bucketPolicy={bucketPolicy}
+                onBucketPolicyChange={handlePolicyChange}
+                policyValid={policyValid}
+                policyError={policyError}
+                onClearPolicy={handleClearPolicy}
+                grantee={grantee}
+                onGranteeChange={(value) => {
+                  setGrantee(value);
+                  // Update permissions based on grantee
+                  if (value === 'owner') {
+                    setPermissions('full-control');
+                  } else if (value === 'everyone') {
+                    setPermissions('read');
+                  } else if (value === 'authenticated') {
+                    setPermissions('read');
+                  }
+                }}
+                permissions={permissions}
+                onPermissionsChange={setPermissions}
+                onNext={() => {
+                  if (validatePolicy(bucketPolicy)) {
+                    handleNext('policy');
+                  }
+                }}
+                isActive
+                isEditing={editingSection === 'policy'}
+                onEditCancel={handleEditCancel}
+                onEditDone={() => {
+                  if (validatePolicy(bucketPolicy)) {
+                    handleEditDone();
+                  }
+                }}
+              />
+            )}
+            {sectionStatus['policy'] === 'done' && (
+              <DoneSection title={SECTION_LABELS['policy']} onEdit={() => handleEdit('policy')}>
+                <SectionCard.DataRow
+                  label="Bucket policy"
+                  value={bucketPolicy === '{}' ? 'Empty' : 'Configured'}
+                  showDivider={false}
+                />
+                <SectionCard.DataRow label="Grantee" value={getGranteeDisplay()} />
+                <SectionCard.DataRow label="Permissions" value={getPermissionsDisplay()} />
+              </DoneSection>
+            )}
+          </VStack>
+
+          {/* Right Column - Summary Sidebar */}
+          <SummarySidebar
+            sectionStatus={sectionStatus}
+            onCancel={handleCancel}
+            onCreate={handleCreate}
+            isCreateEnabled={allSectionsDone && !editingSection}
+          />
+        </HStack>
+      </VStack>
+    </PageShell>
   );
 }

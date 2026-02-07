@@ -23,6 +23,7 @@ import {
   Radio,
   RadioGroup,
   Select,
+  PageShell,
   type TableColumn,
   fixedColumns,
 } from '@/design-system';
@@ -167,6 +168,7 @@ export default function CreateNetworkPage() {
   const navigate = useNavigate();
   const { tabs, activeTabId, addTab, closeTab, selectTab } = useTabs();
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
+  const sidebarWidth = sidebarOpen ? 200 : 0;
 
   // Section status state
   const [sectionStatus, setSectionStatus] = useState<Record<SectionStep, WizardSectionState>>({
@@ -331,661 +333,625 @@ export default function CreateNetworkPage() {
   };
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
-
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: sidebarOpen ? 'var(--layout-sidebar-width)' : '0px' }}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Tab Bar */}
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            showAddButton={true}
-            showWindowControls={true}
-          />
-
-          {/* Top Bar */}
-          <TopBar
-            showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={openSidebar}
-            showNavigation={true}
-            breadcrumb={
-              <Breadcrumb
-                items={[
-                  { label: 'Compute Admin', href: '/compute-admin' },
-                  { label: 'Networks', href: '/compute-admin/networks' },
-                  { label: 'Create network' },
-                ]}
+    <PageShell
+      sidebar={<ComputeAdminSidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          showAddButton={true}
+          showWindowControls={true}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={openSidebar}
+          showNavigation={true}
+          breadcrumb={
+            <Breadcrumb
+              items={[
+                { label: 'Compute Admin', href: '/compute-admin' },
+                { label: 'Networks', href: '/compute-admin/networks' },
+                { label: 'Create network' },
+              ]}
+            />
+          }
+          actions={
+            <>
+              <TopBarAction
+                icon={<IconBell size={16} stroke={1.5} />}
+                onClick={() => {}}
+                aria-label="Notifications"
               />
-            }
-            actions={
-              <>
-                <TopBarAction
-                  icon={<IconBell size={16} stroke={1.5} />}
-                  onClick={() => {}}
-                  aria-label="Notifications"
-                />
-              </>
-            }
-          />
+            </>
+          }
+        />
+      }
+      contentClassName="pt-4 px-8 pb-6 min-h-full"
+    >
+      <VStack gap={3} className="min-w-[1176px]">
+        {/* Page Title */}
+        <div className="flex items-center justify-between h-8">
+          <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create network</h1>
         </div>
 
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)] min-h-full">
-            <VStack gap={3} className="min-w-[1176px]">
-              {/* Page Title */}
-              <div className="flex items-center justify-between h-8">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create network</h1>
-              </div>
+        {/* Content Area */}
+        <HStack gap={6} align="start" className="w-full">
+          {/* Left Column - Form Sections */}
+          <VStack gap={4} className="flex-1">
+            {/* Basic information Section */}
+            <SectionCard isActive={sectionStatus['basic-info'] === 'active'}>
+              <SectionCard.Header
+                title={SECTION_LABELS['basic-info']}
+                showDivider={sectionStatus['basic-info'] === 'active'}
+                actions={
+                  sectionStatus['basic-info'] === 'done' && (
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      leftIcon={<IconEdit size={12} />}
+                      onClick={() => editSection('basic-info')}
+                    >
+                      Edit
+                    </Button>
+                  )
+                }
+              />
+              {sectionStatus['basic-info'] === 'active' && (
+                <SectionCard.Content gap={6}>
+                  {/* Network name */}
+                  <FormField required error={!!networkNameError}>
+                    <FormField.Label>Network name</FormField.Label>
+                    <FormField.Control>
+                      <Input
+                        placeholder="Enter network name"
+                        value={networkName}
+                        onChange={(e) => {
+                          setNetworkName(e.target.value);
+                          setNetworkNameError(null);
+                        }}
+                        fullWidth
+                        error={!!networkNameError}
+                      />
+                    </FormField.Control>
+                    <FormField.ErrorMessage>{networkNameError}</FormField.ErrorMessage>
+                    <FormField.HelperText>
+                      You can use letters, numbers, and special characters (+=,.@-_), and the length
+                      must be between 2-128 characters.
+                    </FormField.HelperText>
+                  </FormField>
 
-              {/* Content Area */}
-              <HStack gap={6} align="start" className="w-full">
-                {/* Left Column - Form Sections */}
-                <VStack gap={4} className="flex-1">
-                  {/* Basic information Section */}
-                  <SectionCard isActive={sectionStatus['basic-info'] === 'active'}>
-                    <SectionCard.Header
-                      title={SECTION_LABELS['basic-info']}
-                      showDivider={sectionStatus['basic-info'] === 'active'}
-                      actions={
-                        sectionStatus['basic-info'] === 'done' && (
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            leftIcon={<IconEdit size={12} />}
-                            onClick={() => editSection('basic-info')}
-                          >
-                            Edit
-                          </Button>
-                        )
-                      }
+                  {/* Description */}
+                  <VStack gap={2} align="stretch">
+                    <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
+                      Description
+                    </span>
+                    <Input
+                      placeholder="Enter description"
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
+                      fullWidth
                     />
-                    {sectionStatus['basic-info'] === 'active' && (
-                      <SectionCard.Content gap={6}>
-                        {/* Network name */}
-                        <FormField required error={!!networkNameError}>
-                          <FormField.Label>Network name</FormField.Label>
-                          <FormField.Control>
-                            <Input
-                              placeholder="Enter network name"
-                              value={networkName}
-                              onChange={(e) => {
-                                setNetworkName(e.target.value);
-                                setNetworkNameError(null);
-                              }}
-                              fullWidth
-                              error={!!networkNameError}
-                            />
-                          </FormField.Control>
-                          <FormField.ErrorMessage>{networkNameError}</FormField.ErrorMessage>
-                          <FormField.HelperText>
-                            You can use letters, numbers, and special characters (+=,.@-_), and the
-                            length must be between 2-128 characters.
-                          </FormField.HelperText>
-                        </FormField>
+                    <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
+                      You can use letters, numbers, and special characters (+=,.@-_()[]), and
+                      maximum 255 characters.
+                    </span>
+                  </VStack>
 
-                        {/* Description */}
-                        <VStack gap={2} align="stretch">
-                          <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
-                            Description
-                          </span>
+                  {/* Owned tenant */}
+                  <VStack gap={4} align="stretch">
+                    <VStack gap={2} align="start">
+                      <div className="flex gap-[3px]">
+                        <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
+                          Owned tenant
+                        </span>
+                        <span className="text-label-lg text-[var(--color-state-danger)] leading-[20px]">
+                          *
+                        </span>
+                      </div>
+                      <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
+                        Select the tenant that will own the network.
+                      </span>
+                    </VStack>
+
+                    {/* Tenant Search */}
+                    <SearchInput
+                      placeholder="Search tenants by attributes"
+                      value={tenantSearch}
+                      onChange={(e) => {
+                        setTenantSearch(e.target.value);
+                        setTenantPage(1);
+                      }}
+                    />
+
+                    {/* Tenant Pagination */}
+                    <div className="flex items-center gap-2">
+                      <button
+                        className="size-6 flex items-center justify-center disabled:opacity-40"
+                        disabled={tenantPage === 1}
+                        onClick={() => setTenantPage((p) => Math.max(1, p - 1))}
+                      >
+                        <IconChevronLeft size={16} stroke={1.5} />
+                      </button>
+                      {Array.from({ length: Math.min(5, totalTenantPages) }, (_, i) => i + 1).map(
+                        (page) => (
+                          <button
+                            key={page}
+                            className={`size-6 flex items-center justify-center rounded-md text-label-sm ${
+                              page === tenantPage
+                                ? 'bg-[var(--color-action-primary)] text-white'
+                                : 'text-[var(--color-text-subtle)] hover:bg-[var(--color-surface-subtle)]'
+                            }`}
+                            onClick={() => setTenantPage(page)}
+                          >
+                            {page}
+                          </button>
+                        )
+                      )}
+                      <button
+                        className="size-6 flex items-center justify-center disabled:opacity-40"
+                        disabled={tenantPage === totalTenantPages}
+                        onClick={() => setTenantPage((p) => Math.min(totalTenantPages, p + 1))}
+                      >
+                        <IconChevronRight size={16} stroke={1.5} />
+                      </button>
+                      <div className="w-px h-4 bg-[var(--color-border-default)]" />
+                      <span className="text-body-sm text-[var(--color-text-subtle)]">
+                        {selectedTenants.length > 0
+                          ? `${selectedTenants.length} selected`
+                          : `${filteredTenants.length} items`}
+                      </span>
+                    </div>
+
+                    {/* Tenant Table */}
+                    <Table
+                      columns={tenantColumns}
+                      data={paginatedTenants}
+                      rowKey="id"
+                      selectable
+                      selectedKeys={selectedTenants}
+                      onSelectionChange={(keys) => {
+                        setSelectedTenants(keys);
+                        if (keys.length > 0) setTenantError(false);
+                      }}
+                      emptyMessage="No tenants found"
+                    />
+
+                    {/* Selected tenant display */}
+                    <SelectionIndicator
+                      selectedItems={selectedTenantItems}
+                      onRemove={(id) => setSelectedTenants((prev) => prev.filter((t) => t !== id))}
+                      emptyText="No items selected"
+                      error={tenantError}
+                      errorMessage="Please select an item"
+                    />
+                  </VStack>
+
+                  {/* External Network */}
+                  <VStack gap={2} align="start">
+                    <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
+                      External Network
+                    </span>
+                    <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
+                      Indicates whether the network is used as an external network.
+                    </span>
+                    <Toggle
+                      checked={externalNetwork}
+                      onChange={(e) => setExternalNetwork(e.target.checked)}
+                      label={externalNetwork ? 'Yes' : 'No'}
+                    />
+                  </VStack>
+
+                  {/* Provider Network Type - Only visible when External Network is Yes */}
+                  {externalNetwork && (
+                    <VStack gap={2} align="start">
+                      <div className="flex gap-[3px]">
+                        <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
+                          Provider Network Type
+                        </span>
+                        <span className="text-label-lg text-[var(--color-state-danger)] leading-[20px]">
+                          *
+                        </span>
+                      </div>
+                      <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
+                        Select the provider network type to use for the network.
+                      </span>
+                      <RadioGroup
+                        value={providerNetworkType}
+                        onChange={setProviderNetworkType}
+                        orientation="vertical"
+                      >
+                        <Radio value="vlan" label="VLAN" />
+                        <Radio value="flat" label="Flat" />
+                      </RadioGroup>
+                    </VStack>
+                  )}
+
+                  {/* Segmentation ID - Only visible when External Network is Yes */}
+                  {externalNetwork && (
+                    <VStack gap={2} align="start">
+                      <div className="flex gap-[3px]">
+                        <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
+                          Segmentation ID
+                        </span>
+                        <span className="text-label-lg text-[var(--color-state-danger)] leading-[20px]">
+                          *
+                        </span>
+                      </div>
+                      <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
+                        Select the segmentation ID used by the provider network.
+                      </span>
+                      <Select
+                        options={[
+                          { value: '100', label: '100' },
+                          { value: '200', label: '200' },
+                          { value: '300', label: '300' },
+                          { value: '400', label: '400' },
+                          { value: '500', label: '500' },
+                        ]}
+                        value={segmentationId}
+                        onChange={setSegmentationId}
+                        placeholder="Select Segmentation ID"
+                        fullWidth
+                      />
+                    </VStack>
+                  )}
+
+                  {/* MTU */}
+                  <VStack gap={2} align="start">
+                    <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
+                      MTU
+                    </span>
+                    <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
+                      Specifies the MTU value used by the network.
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <div>
+                        <NumberInput
+                          value={mtu}
+                          onChange={setMtu}
+                          min={68}
+                          max={65535}
+                          placeholder=""
+                          width="sm"
+                        />
+                      </div>
+                      <span className="text-body-md text-[var(--color-text-default)]">bytes</span>
+                    </div>
+                    <span className="text-body-sm text-[var(--color-text-subtle)]">
+                      68-65535 bytes
+                    </span>
+                  </VStack>
+
+                  {/* Admin State */}
+                  <VStack gap={2} align="start">
+                    <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
+                      Admin State
+                    </span>
+                    <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
+                      Indicates whether the load balancer's administrative state is Up or Down.
+                    </span>
+                    <Toggle
+                      checked={adminState}
+                      onChange={(e) => setAdminState(e.target.checked)}
+                      label={adminState ? 'Up' : 'Down'}
+                    />
+                  </VStack>
+
+                  {/* Port Security */}
+                  <VStack gap={2} align="start">
+                    <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
+                      Port Security
+                    </span>
+                    <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
+                      Enhances security by allowing only permitted devices to access this network.
+                      It is recommended to keep this enabled in most cases.
+                    </span>
+                    <Toggle
+                      checked={portSecurity}
+                      onChange={(e) => setPortSecurity(e.target.checked)}
+                      label={portSecurity ? 'On' : 'Off'}
+                    />
+                  </VStack>
+
+                  {/* Shared */}
+                  <VStack gap={2} align="start">
+                    <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
+                      Shared
+                    </span>
+                    <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
+                      Indicates whether the network is available to other tenants.
+                    </span>
+                    <Toggle
+                      checked={shared}
+                      onChange={(e) => setShared(e.target.checked)}
+                      label={shared ? 'Yes' : 'No'}
+                    />
+                  </VStack>
+
+                  {/* Done Button */}
+                  <div className="flex items-center justify-end w-full">
+                    <Button
+                      variant="primary"
+                      onClick={() => {
+                        // Show validation errors on required fields
+                        if (!networkName.trim()) {
+                          setNetworkNameError('Please enter a network name.');
+                        } else {
+                          setNetworkNameError(null);
+                        }
+
+                        if (selectedTenants.length === 0) {
+                          setTenantError(true);
+                        } else {
+                          setTenantError(false);
+                        }
+
+                        // Always proceed to next section
+                        setSectionStatus((prev) => ({
+                          ...prev,
+                          'basic-info': 'done',
+                          subnet: 'active',
+                        }));
+                      }}
+                    >
+                      Done
+                    </Button>
+                  </div>
+                </SectionCard.Content>
+              )}
+              {sectionStatus['basic-info'] === 'done' && (
+                <SectionCard.Content>
+                  <SectionCard.DataRow label="Network name" value={networkName || '-'} />
+                  {description && <SectionCard.DataRow label="Description" value={description} />}
+                  <SectionCard.DataRow
+                    label="Owned tenant"
+                    value={
+                      selectedTenantItems.length > 0
+                        ? selectedTenantItems.map((t) => t.label).join(', ')
+                        : '-'
+                    }
+                  />
+                  <SectionCard.DataRow
+                    label="External network"
+                    value={externalNetwork ? 'Yes' : 'No'}
+                  />
+                  {externalNetwork && (
+                    <SectionCard.DataRow
+                      label="Provider Network Type"
+                      value={providerNetworkType.toUpperCase()}
+                    />
+                  )}
+                  {externalNetwork && (
+                    <SectionCard.DataRow label="Segmentation ID" value={segmentationId || '-'} />
+                  )}
+                  {mtu && <SectionCard.DataRow label="MTU" value={`${mtu} bytes`} />}
+                  <SectionCard.DataRow label="Admin state" value={adminState ? 'Up' : 'Down'} />
+                  <SectionCard.DataRow label="Port security" value={portSecurity ? 'On' : 'Off'} />
+                  <SectionCard.DataRow label="Shared" value={shared ? 'Yes' : 'No'} />
+                </SectionCard.Content>
+              )}
+            </SectionCard>
+
+            {/* Subnet Section */}
+            <SectionCard isActive={sectionStatus['subnet'] === 'active'}>
+              <SectionCard.Header
+                title={SECTION_LABELS['subnet']}
+                showDivider={sectionStatus['subnet'] === 'active'}
+                actions={
+                  sectionStatus['subnet'] === 'done' && (
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      leftIcon={<IconEdit size={12} />}
+                      onClick={() => editSection('subnet')}
+                    >
+                      Edit
+                    </Button>
+                  )
+                }
+              />
+              {sectionStatus['subnet'] === 'active' && (
+                <SectionCard.Content gap={6}>
+                  {/* Create subnet Toggle */}
+                  <VStack gap={2} align="start">
+                    <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
+                      Create subnet
+                    </span>
+                    <Toggle
+                      checked={createSubnet}
+                      onChange={(e) => setCreateSubnet(e.target.checked)}
+                      label={createSubnet ? 'Yes' : 'No'}
+                    />
+                  </VStack>
+
+                  {createSubnet && (
+                    <>
+                      {/* Subnet name (optional) */}
+                      <FormField>
+                        <FormField.Label>Subnet name (optional)</FormField.Label>
+                        <FormField.Control>
                           <Input
-                            placeholder="Enter description"
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
+                            placeholder="e.g. private-net-subnet-001"
+                            value={subnetName}
+                            onChange={(e) => setSubnetName(e.target.value)}
                             fullWidth
                           />
-                          <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
-                            You can use letters, numbers, and special characters (+=,.@-_()[]), and
-                            maximum 255 characters.
-                          </span>
-                        </VStack>
+                        </FormField.Control>
+                        <FormField.HelperText>
+                          Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()", "[]"
+                        </FormField.HelperText>
+                      </FormField>
 
-                        {/* Owned tenant */}
-                        <VStack gap={4} align="stretch">
-                          <VStack gap={2} align="start">
-                            <div className="flex gap-[3px]">
-                              <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
-                                Owned tenant
-                              </span>
-                              <span className="text-label-lg text-[var(--color-state-danger)] leading-[20px]">
-                                *
-                              </span>
-                            </div>
-                            <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
-                              Select the tenant that will own the network.
-                            </span>
-                          </VStack>
-
-                          {/* Tenant Search */}
-                          <SearchInput
-                            placeholder="Search tenants by attributes"
-                            value={tenantSearch}
+                      {/* CIDR */}
+                      <FormField required error={!!cidrError}>
+                        <FormField.Label>CIDR</FormField.Label>
+                        <FormField.Control>
+                          <Input
+                            placeholder="e.g. 192.168.0.0/24"
+                            value={cidr}
                             onChange={(e) => {
-                              setTenantSearch(e.target.value);
-                              setTenantPage(1);
+                              setCidr(e.target.value);
+                              setCidrError(null);
                             }}
+                            fullWidth
+                            error={!!cidrError}
                           />
+                        </FormField.Control>
+                        <FormField.ErrorMessage>{cidrError}</FormField.ErrorMessage>
+                        <FormField.HelperText>Prefix (/): 24~28</FormField.HelperText>
+                      </FormField>
 
-                          {/* Tenant Pagination */}
-                          <div className="flex items-center gap-2">
-                            <button
-                              className="size-6 flex items-center justify-center disabled:opacity-40"
-                              disabled={tenantPage === 1}
-                              onClick={() => setTenantPage((p) => Math.max(1, p - 1))}
-                            >
-                              <IconChevronLeft size={16} stroke={1.5} />
-                            </button>
-                            {Array.from(
-                              { length: Math.min(5, totalTenantPages) },
-                              (_, i) => i + 1
-                            ).map((page) => (
-                              <button
-                                key={page}
-                                className={`size-6 flex items-center justify-center rounded-md text-label-sm ${
-                                  page === tenantPage
-                                    ? 'bg-[var(--color-action-primary)] text-white'
-                                    : 'text-[var(--color-text-subtle)] hover:bg-[var(--color-surface-subtle)]'
-                                }`}
-                                onClick={() => setTenantPage(page)}
-                              >
-                                {page}
-                              </button>
-                            ))}
-                            <button
-                              className="size-6 flex items-center justify-center disabled:opacity-40"
-                              disabled={tenantPage === totalTenantPages}
-                              onClick={() =>
-                                setTenantPage((p) => Math.min(totalTenantPages, p + 1))
-                              }
-                            >
-                              <IconChevronRight size={16} stroke={1.5} />
-                            </button>
-                            <div className="w-px h-4 bg-[var(--color-border-default)]" />
-                            <span className="text-body-sm text-[var(--color-text-subtle)]">
-                              {selectedTenants.length > 0
-                                ? `${selectedTenants.length} selected`
-                                : `${filteredTenants.length} items`}
-                            </span>
-                          </div>
+                      {/* Gateway */}
+                      <VStack gap={2} align="start">
+                        <span className="text-label-lg text-[var(--color-text-default)]">
+                          Gateway
+                        </span>
+                        <Toggle
+                          checked={gateway}
+                          onChange={(e) => setGateway(e.target.checked)}
+                          label={gateway ? 'On' : 'Off'}
+                        />
+                      </VStack>
 
-                          {/* Tenant Table */}
-                          <Table
-                            columns={tenantColumns}
-                            data={paginatedTenants}
-                            rowKey="id"
-                            selectable
-                            selectedKeys={selectedTenants}
-                            onSelectionChange={(keys) => {
-                              setSelectedTenants(keys);
-                              if (keys.length > 0) setTenantError(false);
-                            }}
-                            emptyMessage="No tenants found"
-                          />
-
-                          {/* Selected tenant display */}
-                          <SelectionIndicator
-                            selectedItems={selectedTenantItems}
-                            onRemove={(id) =>
-                              setSelectedTenants((prev) => prev.filter((t) => t !== id))
-                            }
-                            emptyText="No items selected"
-                            error={tenantError}
-                            errorMessage="Please select an item"
-                          />
-                        </VStack>
-
-                        {/* External Network */}
-                        <VStack gap={2} align="start">
-                          <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
-                            External Network
-                          </span>
-                          <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
-                            Indicates whether the network is used as an external network.
-                          </span>
-                          <Toggle
-                            checked={externalNetwork}
-                            onChange={(e) => setExternalNetwork(e.target.checked)}
-                            label={externalNetwork ? 'Yes' : 'No'}
-                          />
-                        </VStack>
-
-                        {/* Provider Network Type - Only visible when External Network is Yes */}
-                        {externalNetwork && (
-                          <VStack gap={2} align="start">
-                            <div className="flex gap-[3px]">
-                              <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
-                                Provider Network Type
-                              </span>
-                              <span className="text-label-lg text-[var(--color-state-danger)] leading-[20px]">
-                                *
-                              </span>
-                            </div>
-                            <span className="text-body-sm text-[var(--color-text-subtle)] leading-[16px]">
-                              Select the provider network type to use for the network.
-                            </span>
-                            <RadioGroup
-                              value={providerNetworkType}
-                              onChange={setProviderNetworkType}
-                              orientation="vertical"
-                            >
-                              <Radio value="vlan" label="VLAN" />
-                              <Radio value="flat" label="Flat" />
-                            </RadioGroup>
-                          </VStack>
-                        )}
-
-                        {/* Segmentation ID - Only visible when External Network is Yes */}
-                        {externalNetwork && (
-                          <VStack gap={2} align="start">
-                            <div className="flex gap-[3px]">
-                              <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
-                                Segmentation ID
-                              </span>
-                              <span className="text-label-lg text-[var(--color-state-danger)] leading-[20px]">
-                                *
-                              </span>
-                            </div>
-                            <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
-                              Select the segmentation ID used by the provider network.
-                            </span>
-                            <Select
-                              options={[
-                                { value: '100', label: '100' },
-                                { value: '200', label: '200' },
-                                { value: '300', label: '300' },
-                                { value: '400', label: '400' },
-                                { value: '500', label: '500' },
-                              ]}
-                              value={segmentationId}
-                              onChange={setSegmentationId}
-                              placeholder="Select Segmentation ID"
+                      {gateway && (
+                        <FormField>
+                          <FormField.Control>
+                            <Input
+                              placeholder="e.g. 192.168.0.1"
+                              value={gatewayIp}
+                              onChange={(e) => setGatewayIp(e.target.value)}
                               fullWidth
                             />
-                          </VStack>
-                        )}
+                          </FormField.Control>
+                          <FormField.HelperText>
+                            Gateway must be an IP address within the subnet range, excluding the
+                            network and broadcast addresses.
+                          </FormField.HelperText>
+                        </FormField>
+                      )}
 
-                        {/* MTU */}
-                        <VStack gap={2} align="start">
-                          <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
-                            MTU
-                          </span>
-                          <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
-                            Specifies the MTU value used by the network.
-                          </span>
-                          <div className="flex items-center gap-2">
-                            <div>
-                              <NumberInput
-                                value={mtu}
-                                onChange={setMtu}
-                                min={68}
-                                max={65535}
-                                placeholder=""
-                                width="sm"
+                      {/* Advanced (optional) */}
+                      <Disclosure open={subnetAdvancedOpen} onChange={setSubnetAdvancedOpen}>
+                        <Disclosure.Trigger>Advanced (optional)</Disclosure.Trigger>
+                        <Disclosure.Panel>
+                          <VStack gap={6} align="stretch" className="mt-4">
+                            {/* DHCP */}
+                            <VStack gap={2} align="start">
+                              <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
+                                DHCP
+                              </span>
+                              <Toggle
+                                checked={dhcp}
+                                onChange={(e) => setDhcp(e.target.checked)}
+                                label={dhcp ? 'On' : 'Off'}
                               />
-                            </div>
-                            <span className="text-body-md text-[var(--color-text-default)]">
-                              bytes
-                            </span>
-                          </div>
-                          <span className="text-body-sm text-[var(--color-text-subtle)]">
-                            68-65535 bytes
-                          </span>
-                        </VStack>
+                            </VStack>
 
-                        {/* Admin State */}
-                        <VStack gap={2} align="start">
-                          <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
-                            Admin State
-                          </span>
-                          <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
-                            Indicates whether the load balancer's administrative state is Up or
-                            Down.
-                          </span>
-                          <Toggle
-                            checked={adminState}
-                            onChange={(e) => setAdminState(e.target.checked)}
-                            label={adminState ? 'Up' : 'Down'}
-                          />
-                        </VStack>
-
-                        {/* Port Security */}
-                        <VStack gap={2} align="start">
-                          <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
-                            Port Security
-                          </span>
-                          <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
-                            Enhances security by allowing only permitted devices to access this
-                            network. It is recommended to keep this enabled in most cases.
-                          </span>
-                          <Toggle
-                            checked={portSecurity}
-                            onChange={(e) => setPortSecurity(e.target.checked)}
-                            label={portSecurity ? 'On' : 'Off'}
-                          />
-                        </VStack>
-
-                        {/* Shared */}
-                        <VStack gap={2} align="start">
-                          <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
-                            Shared
-                          </span>
-                          <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
-                            Indicates whether the network is available to other tenants.
-                          </span>
-                          <Toggle
-                            checked={shared}
-                            onChange={(e) => setShared(e.target.checked)}
-                            label={shared ? 'Yes' : 'No'}
-                          />
-                        </VStack>
-
-                        {/* Done Button */}
-                        <div className="flex items-center justify-end w-full">
-                          <Button
-                            variant="primary"
-                            onClick={() => {
-                              // Show validation errors on required fields
-                              if (!networkName.trim()) {
-                                setNetworkNameError('Please enter a network name.');
-                              } else {
-                                setNetworkNameError(null);
-                              }
-
-                              if (selectedTenants.length === 0) {
-                                setTenantError(true);
-                              } else {
-                                setTenantError(false);
-                              }
-
-                              // Always proceed to next section
-                              setSectionStatus((prev) => ({
-                                ...prev,
-                                'basic-info': 'done',
-                                subnet: 'active',
-                              }));
-                            }}
-                          >
-                            Done
-                          </Button>
-                        </div>
-                      </SectionCard.Content>
-                    )}
-                    {sectionStatus['basic-info'] === 'done' && (
-                      <SectionCard.Content>
-                        <SectionCard.DataRow label="Network name" value={networkName || '-'} />
-                        {description && (
-                          <SectionCard.DataRow label="Description" value={description} />
-                        )}
-                        <SectionCard.DataRow
-                          label="Owned tenant"
-                          value={
-                            selectedTenantItems.length > 0
-                              ? selectedTenantItems.map((t) => t.label).join(', ')
-                              : '-'
-                          }
-                        />
-                        <SectionCard.DataRow
-                          label="External network"
-                          value={externalNetwork ? 'Yes' : 'No'}
-                        />
-                        {externalNetwork && (
-                          <SectionCard.DataRow
-                            label="Provider Network Type"
-                            value={providerNetworkType.toUpperCase()}
-                          />
-                        )}
-                        {externalNetwork && (
-                          <SectionCard.DataRow
-                            label="Segmentation ID"
-                            value={segmentationId || '-'}
-                          />
-                        )}
-                        {mtu && <SectionCard.DataRow label="MTU" value={`${mtu} bytes`} />}
-                        <SectionCard.DataRow
-                          label="Admin state"
-                          value={adminState ? 'Up' : 'Down'}
-                        />
-                        <SectionCard.DataRow
-                          label="Port security"
-                          value={portSecurity ? 'On' : 'Off'}
-                        />
-                        <SectionCard.DataRow label="Shared" value={shared ? 'Yes' : 'No'} />
-                      </SectionCard.Content>
-                    )}
-                  </SectionCard>
-
-                  {/* Subnet Section */}
-                  <SectionCard isActive={sectionStatus['subnet'] === 'active'}>
-                    <SectionCard.Header
-                      title={SECTION_LABELS['subnet']}
-                      showDivider={sectionStatus['subnet'] === 'active'}
-                      actions={
-                        sectionStatus['subnet'] === 'done' && (
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            leftIcon={<IconEdit size={12} />}
-                            onClick={() => editSection('subnet')}
-                          >
-                            Edit
-                          </Button>
-                        )
-                      }
-                    />
-                    {sectionStatus['subnet'] === 'active' && (
-                      <SectionCard.Content gap={6}>
-                        {/* Create subnet Toggle */}
-                        <VStack gap={2} align="start">
-                          <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
-                            Create subnet
-                          </span>
-                          <Toggle
-                            checked={createSubnet}
-                            onChange={(e) => setCreateSubnet(e.target.checked)}
-                            label={createSubnet ? 'Yes' : 'No'}
-                          />
-                        </VStack>
-
-                        {createSubnet && (
-                          <>
-                            {/* Subnet name (optional) */}
+                            {/* Allocation pools */}
                             <FormField>
-                              <FormField.Label>Subnet name (optional)</FormField.Label>
+                              <FormField.Label>Allocation pools</FormField.Label>
+                              <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
+                                Manually define the range of IP addresses to be automatically
+                                allocated by DHCP. IPs outside this range will not be allocated,
+                                which is useful for reserving static IPs.
+                              </span>
                               <FormField.Control>
-                                <Input
-                                  placeholder="e.g. private-net-subnet-001"
-                                  value={subnetName}
-                                  onChange={(e) => setSubnetName(e.target.value)}
+                                <Textarea
+                                  placeholder="e.g. 192.168.0.100,192.168.0.200"
+                                  value={allocationPools}
+                                  onChange={(e) => setAllocationPools(e.target.value)}
+                                  rows={3}
                                   fullWidth
                                 />
                               </FormField.Control>
                               <FormField.HelperText>
-                                Allowed: 1–128 characters, letters, numbers, "-", "_", ".", "()",
-                                "[]"
+                                Enter one IP address allocation range per line.
                               </FormField.HelperText>
                             </FormField>
 
-                            {/* CIDR */}
-                            <FormField required error={!!cidrError}>
-                              <FormField.Label>CIDR</FormField.Label>
+                            {/* Host routes */}
+                            <FormField>
+                              <FormField.Label>Host routes</FormField.Label>
+                              <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
+                                An advanced feature for manually specifying a route to a specific
+                                network destination.
+                              </span>
                               <FormField.Control>
-                                <Input
-                                  placeholder="e.g. 192.168.0.0/24"
-                                  value={cidr}
-                                  onChange={(e) => {
-                                    setCidr(e.target.value);
-                                    setCidrError(null);
-                                  }}
+                                <Textarea
+                                  placeholder="e.g. 10.10.0.0/24,192.168.0.254"
+                                  value={hostRoutes}
+                                  onChange={(e) => setHostRoutes(e.target.value)}
+                                  rows={3}
                                   fullWidth
-                                  error={!!cidrError}
                                 />
                               </FormField.Control>
-                              <FormField.ErrorMessage>{cidrError}</FormField.ErrorMessage>
-                              <FormField.HelperText>Prefix (/): 24~28</FormField.HelperText>
+                              <FormField.HelperText>
+                                Enter the destination CIDR and the next hop IP address.
+                              </FormField.HelperText>
                             </FormField>
+                          </VStack>
+                        </Disclosure.Panel>
+                      </Disclosure>
+                    </>
+                  )}
 
-                            {/* Gateway */}
-                            <VStack gap={2} align="start">
-                              <span className="text-label-lg text-[var(--color-text-default)]">
-                                Gateway
-                              </span>
-                              <Toggle
-                                checked={gateway}
-                                onChange={(e) => setGateway(e.target.checked)}
-                                label={gateway ? 'On' : 'Off'}
-                              />
-                            </VStack>
+                  {/* Done Button */}
+                  <div className="flex items-center justify-end w-full">
+                    <Button
+                      variant="primary"
+                      onClick={() => {
+                        // Show validation error on CIDR if createSubnet is enabled and CIDR is empty
+                        if (createSubnet && !cidr.trim()) {
+                          setCidrError('Please enter a CIDR.');
+                        } else {
+                          setCidrError(null);
+                        }
 
-                            {gateway && (
-                              <FormField>
-                                <FormField.Control>
-                                  <Input
-                                    placeholder="e.g. 192.168.0.1"
-                                    value={gatewayIp}
-                                    onChange={(e) => setGatewayIp(e.target.value)}
-                                    fullWidth
-                                  />
-                                </FormField.Control>
-                                <FormField.HelperText>
-                                  Gateway must be an IP address within the subnet range, excluding
-                                  the network and broadcast addresses.
-                                </FormField.HelperText>
-                              </FormField>
-                            )}
+                        // Always proceed to done state
+                        setSectionStatus((prev) => ({
+                          ...prev,
+                          subnet: 'done',
+                        }));
+                      }}
+                    >
+                      Done
+                    </Button>
+                  </div>
+                </SectionCard.Content>
+              )}
+              {sectionStatus['subnet'] === 'done' && (
+                <SectionCard.Content>
+                  <SectionCard.DataRow label="Create subnet" value={createSubnet ? 'Yes' : 'No'} />
+                  {createSubnet && subnetName && (
+                    <SectionCard.DataRow label="Subnet name" value={subnetName} />
+                  )}
+                  {createSubnet && <SectionCard.DataRow label="CIDR" value={cidr || '-'} />}
+                  {createSubnet && (
+                    <SectionCard.DataRow
+                      label="Gateway"
+                      value={gateway ? gatewayIp || 'Auto' : 'Off'}
+                    />
+                  )}
+                  {createSubnet && <SectionCard.DataRow label="DHCP" value={dhcp ? 'On' : 'Off'} />}
+                </SectionCard.Content>
+              )}
+            </SectionCard>
+          </VStack>
 
-                            {/* Advanced (optional) */}
-                            <Disclosure open={subnetAdvancedOpen} onChange={setSubnetAdvancedOpen}>
-                              <Disclosure.Trigger>Advanced (optional)</Disclosure.Trigger>
-                              <Disclosure.Panel>
-                                <VStack gap={6} align="stretch" className="mt-4">
-                                  {/* DHCP */}
-                                  <VStack gap={2} align="start">
-                                    <span className="text-label-lg text-[var(--color-text-default)] leading-[20px]">
-                                      DHCP
-                                    </span>
-                                    <Toggle
-                                      checked={dhcp}
-                                      onChange={(e) => setDhcp(e.target.checked)}
-                                      label={dhcp ? 'On' : 'Off'}
-                                    />
-                                  </VStack>
-
-                                  {/* Allocation pools */}
-                                  <FormField>
-                                    <FormField.Label>Allocation pools</FormField.Label>
-                                    <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
-                                      Manually define the range of IP addresses to be automatically
-                                      allocated by DHCP. IPs outside this range will not be
-                                      allocated, which is useful for reserving static IPs.
-                                    </span>
-                                    <FormField.Control>
-                                      <Textarea
-                                        placeholder="e.g. 192.168.0.100,192.168.0.200"
-                                        value={allocationPools}
-                                        onChange={(e) => setAllocationPools(e.target.value)}
-                                        rows={3}
-                                        fullWidth
-                                      />
-                                    </FormField.Control>
-                                    <FormField.HelperText>
-                                      Enter one IP address allocation range per line.
-                                    </FormField.HelperText>
-                                  </FormField>
-
-                                  {/* Host routes */}
-                                  <FormField>
-                                    <FormField.Label>Host routes</FormField.Label>
-                                    <span className="text-body-md text-[var(--color-text-subtle)] leading-[16px]">
-                                      An advanced feature for manually specifying a route to a
-                                      specific network destination.
-                                    </span>
-                                    <FormField.Control>
-                                      <Textarea
-                                        placeholder="e.g. 10.10.0.0/24,192.168.0.254"
-                                        value={hostRoutes}
-                                        onChange={(e) => setHostRoutes(e.target.value)}
-                                        rows={3}
-                                        fullWidth
-                                      />
-                                    </FormField.Control>
-                                    <FormField.HelperText>
-                                      Enter the destination CIDR and the next hop IP address.
-                                    </FormField.HelperText>
-                                  </FormField>
-                                </VStack>
-                              </Disclosure.Panel>
-                            </Disclosure>
-                          </>
-                        )}
-
-                        {/* Done Button */}
-                        <div className="flex items-center justify-end w-full">
-                          <Button
-                            variant="primary"
-                            onClick={() => {
-                              // Show validation error on CIDR if createSubnet is enabled and CIDR is empty
-                              if (createSubnet && !cidr.trim()) {
-                                setCidrError('Please enter a CIDR.');
-                              } else {
-                                setCidrError(null);
-                              }
-
-                              // Always proceed to done state
-                              setSectionStatus((prev) => ({
-                                ...prev,
-                                subnet: 'done',
-                              }));
-                            }}
-                          >
-                            Done
-                          </Button>
-                        </div>
-                      </SectionCard.Content>
-                    )}
-                    {sectionStatus['subnet'] === 'done' && (
-                      <SectionCard.Content>
-                        <SectionCard.DataRow
-                          label="Create subnet"
-                          value={createSubnet ? 'Yes' : 'No'}
-                        />
-                        {createSubnet && subnetName && (
-                          <SectionCard.DataRow label="Subnet name" value={subnetName} />
-                        )}
-                        {createSubnet && <SectionCard.DataRow label="CIDR" value={cidr || '-'} />}
-                        {createSubnet && (
-                          <SectionCard.DataRow
-                            label="Gateway"
-                            value={gateway ? gatewayIp || 'Auto' : 'Off'}
-                          />
-                        )}
-                        {createSubnet && (
-                          <SectionCard.DataRow label="DHCP" value={dhcp ? 'On' : 'Off'} />
-                        )}
-                      </SectionCard.Content>
-                    )}
-                  </SectionCard>
-                </VStack>
-
-                {/* Summary Sidebar */}
-                <SummarySidebar
-                  sectionStatus={sectionStatus}
-                  onCancel={handleCancel}
-                  onCreate={handleCreate}
-                  isCreateDisabled={isCreateDisabled}
-                />
-              </HStack>
-            </VStack>
-          </div>
-        </div>
-      </main>
-    </div>
+          {/* Summary Sidebar */}
+          <SummarySidebar
+            sectionStatus={sectionStatus}
+            onCancel={handleCancel}
+            onCreate={handleCreate}
+            isCreateDisabled={isCreateDisabled}
+          />
+        </HStack>
+      </VStack>
+    </PageShell>
   );
 }

@@ -12,6 +12,7 @@ import {
   Tab,
   TabPanel,
   DetailHeader,
+  PageShell,
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -189,6 +190,7 @@ function QuotaSection({ title, quotas }: { title: string; quotas: QuotaItem[] })
 export default function ComputeAdminTenantDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 200 : 0;
   const [activeTab, setActiveTab] = useState('quotas');
 
   // Global tab management
@@ -220,108 +222,101 @@ export default function ComputeAdminTenantDetailPage() {
   };
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
+    <PageShell
+      sidebar={
+        <ComputeAdminSidebar
+          isOpen={sidebarOpen}
+          onToggle={() => setSidebarOpen((prev) => !prev)}
+        />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={
+            <Breadcrumb
+              items={[
+                { label: 'Compute Admin', href: '/compute-admin' },
+                { label: 'Tenants', href: '/compute-admin/tenants' },
+                { label: tenant.name },
+              ]}
+            />
+          }
+          actions={
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1.5} />}
+              aria-label="Notifications"
+              badge={true}
+            />
+          }
+        />
+      }
+      contentClassName="pt-3 px-8 pb-20 bg-[var(--color-surface-subtle)]"
+    >
+      <VStack gap={8} className="min-w-[1176px]">
+        {/* Header Card */}
+        <DetailHeader>
+          <DetailHeader.Title>{tenant.name}</DetailHeader.Title>
+          <DetailHeader.Actions>
+            <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+              Modify Quotas
+            </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+              Edit
+            </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+              Delete
+            </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconUsers size={12} />}>
+              Manage member
+            </Button>
+          </DetailHeader.Actions>
+          <DetailHeader.InfoGrid>
+            <DetailHeader.InfoCard
+              label="Status"
+              value={tenant.status.charAt(0).toUpperCase() + tenant.status.slice(1)}
+              status={statusMap[tenant.status]}
+            />
+            <DetailHeader.InfoCard label="ID" value={tenant.id} copyable />
+            <DetailHeader.InfoCard label="Enabled" value={tenant.enabled ? 'Yes' : 'No'} />
+            <DetailHeader.InfoCard label="Created at" value={tenant.createdAt} />
+          </DetailHeader.InfoGrid>
+        </DetailHeader>
 
-      <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
-          sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'
-        }`}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Tab Bar */}
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            onTabAdd={addNewTab}
-            onTabReorder={moveTab}
-            showAddButton={true}
-            showWindowControls={true}
-          />
+        {/* Tabs Section */}
+        <div className="w-full">
+          <Tabs value={activeTab} onChange={setActiveTab}>
+            <TabList>
+              <Tab value="quotas">Quotas</Tab>
+            </TabList>
 
-          {/* Top Bar */}
-          <TopBar
-            showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
-            showNavigation={true}
-            onBack={() => window.history.back()}
-            onForward={() => window.history.forward()}
-            breadcrumb={
-              <Breadcrumb
-                items={[
-                  { label: 'Compute Admin', href: '/compute-admin' },
-                  { label: 'Tenants', href: '/compute-admin/tenants' },
-                  { label: tenant.name },
-                ]}
-              />
-            }
-            actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-                badge={true}
-              />
-            }
-          />
+            {/* Quotas Tab */}
+            <TabPanel value="quotas" className="pt-6">
+              <VStack gap={6}>
+                <QuotaSection title="Compute quota" quotas={computeQuotas} />
+                <QuotaSection title="Storage quota" quotas={storageQuotas} />
+                <QuotaSection title="Network quota" quotas={networkQuotas} />
+              </VStack>
+            </TabPanel>
+          </Tabs>
         </div>
-
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
-            <VStack gap={8} className="min-w-[1176px]">
-              {/* Header Card */}
-              <DetailHeader>
-                <DetailHeader.Title>{tenant.name}</DetailHeader.Title>
-                <DetailHeader.Actions>
-                  <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                    Modify Quotas
-                  </Button>
-                  <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                    Edit
-                  </Button>
-                  <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
-                    Delete
-                  </Button>
-                  <Button variant="secondary" size="sm" leftIcon={<IconUsers size={12} />}>
-                    Manage member
-                  </Button>
-                </DetailHeader.Actions>
-                <DetailHeader.InfoGrid>
-                  <DetailHeader.InfoCard
-                    label="Status"
-                    value={tenant.status.charAt(0).toUpperCase() + tenant.status.slice(1)}
-                    status={statusMap[tenant.status]}
-                  />
-                  <DetailHeader.InfoCard label="ID" value={tenant.id} copyable />
-                  <DetailHeader.InfoCard label="Enabled" value={tenant.enabled ? 'Yes' : 'No'} />
-                  <DetailHeader.InfoCard label="Created at" value={tenant.createdAt} />
-                </DetailHeader.InfoGrid>
-              </DetailHeader>
-
-              {/* Tabs Section */}
-              <div className="w-full">
-                <Tabs value={activeTab} onChange={setActiveTab}>
-                  <TabList>
-                    <Tab value="quotas">Quotas</Tab>
-                  </TabList>
-
-                  {/* Quotas Tab */}
-                  <TabPanel value="quotas" className="pt-6">
-                    <VStack gap={6}>
-                      <QuotaSection title="Compute quota" quotas={computeQuotas} />
-                      <QuotaSection title="Storage quota" quotas={storageQuotas} />
-                      <QuotaSection title="Network quota" quotas={networkQuotas} />
-                    </VStack>
-                  </TabPanel>
-                </Tabs>
-              </div>
-            </VStack>
-          </div>
-        </div>
-      </main>
-    </div>
+      </VStack>
+    </PageShell>
   );
 }

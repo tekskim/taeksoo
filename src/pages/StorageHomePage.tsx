@@ -1,6 +1,13 @@
 import { useState, useRef, useEffect } from 'react';
 import ReactECharts from 'echarts-for-react';
-import { TabBar, TopBar, TopBarAction, Breadcrumb, MonitoringToolbar } from '@/design-system';
+import {
+  TabBar,
+  TopBar,
+  TopBarAction,
+  Breadcrumb,
+  MonitoringToolbar,
+  PageShell,
+} from '@/design-system';
 import type { TimeRangeValue } from '@/design-system';
 import { StorageSidebar } from '@/components/StorageSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -537,6 +544,9 @@ export function StorageHomePage() {
   // Fullscreen chart state
   const [fullScreenChart, setFullScreenChart] = useState<FullScreenChartData | null>(null);
 
+  // Sidebar width
+  const sidebarWidth = sidebarOpen ? 200 : 0;
+
   const tabBarTabs = tabs.map((tab) => ({
     id: tab.id,
     label: tab.label,
@@ -581,191 +591,186 @@ export function StorageHomePage() {
   ];
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <StorageSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
+    <PageShell
+      sidebar={
+        <StorageSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={
+            <Breadcrumb items={[{ label: 'Storage', href: '/storage' }, { label: 'Home' }]} />
+          }
+          actions={
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1.5} />}
+              aria-label="Notifications"
+              badge={true}
+            />
+          }
+        />
+      }
+    >
+      {/* EntryPage Content */}
+      <div className="px-8 py-6">
+        {/* Top Row - 2 Cards: Inventory and Capacity */}
+        <div className="grid grid-cols-2 gap-6 mb-6">
+          {/* INVENTORY */}
+          <Card title="INVENTORY" className="flex flex-col">
+            {/* Total */}
+            <div className="mb-4">
+              <div className="text-heading-h3 text-[var(--color-text-default)]">54</div>
+              <div className="text-body-md text-[var(--color-text-subtle)]">Total</div>
+            </div>
+            {/* Stats Grid */}
+            <div className="space-y-2 mt-auto">
+              <div className="flex gap-2">
+                <InventoryStatBox value={21} label="Pools" />
+                <InventoryStatBox value={6} label="Hosts" />
+              </div>
+              <div className="flex gap-2">
+                <InventoryStatBox value={24} label="OSDs" />
+                <InventoryStatBox value={3} label="Buckets" />
+                <InventoryStatBox value={1} label="Object" />
+              </div>
+            </div>
+          </Card>
 
-      <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'}`}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            onTabAdd={addNewTab}
-            onTabReorder={moveTab}
-            showAddButton={true}
-            showWindowControls={true}
-          />
-
-          <TopBar
-            showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
-            showNavigation={true}
-            onBack={() => window.history.back()}
-            onForward={() => window.history.forward()}
-            breadcrumb={
-              <Breadcrumb items={[{ label: 'Storage', href: '/storage' }, { label: 'Home' }]} />
-            }
-            actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-                badge={true}
-              />
-            }
-          />
+          {/* CAPACITY */}
+          <Card title="CAPACITY" className="flex flex-col">
+            <CapacityGauge percentage={26.19} used={49.7} total={189.9} unit="TiB" />
+          </Card>
         </div>
 
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          {/* EntryPage Content */}
-          <div className="px-8 py-6">
-            {/* Top Row - 2 Cards: Inventory and Capacity */}
-            <div className="grid grid-cols-2 gap-6 mb-6">
-              {/* INVENTORY */}
-              <Card title="INVENTORY" className="flex flex-col">
-                {/* Total */}
-                <div className="mb-4">
-                  <div className="text-heading-h3 text-[var(--color-text-default)]">54</div>
-                  <div className="text-body-md text-[var(--color-text-subtle)]">Total</div>
-                </div>
-                {/* Stats Grid */}
-                <div className="space-y-2 mt-auto">
-                  <div className="flex gap-2">
-                    <InventoryStatBox value={21} label="Pools" />
-                    <InventoryStatBox value={6} label="Hosts" />
-                  </div>
-                  <div className="flex gap-2">
-                    <InventoryStatBox value={24} label="OSDs" />
-                    <InventoryStatBox value={3} label="Buckets" />
-                    <InventoryStatBox value={1} label="Object" />
-                  </div>
-                </div>
-              </Card>
+        {/* CLUSTER UTILIZATION Section */}
+        <div className="p-4 rounded-2xl border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
+          {/* Header */}
+          <div className="flex items-center justify-between mb-6">
+            <h6 className="text-heading-h6 text-[var(--color-text-default)]">
+              CLUSTER UTILIZATION
+            </h6>
+            <MonitoringToolbar
+              timeRange={timeRange}
+              onTimeRangeChange={setTimeRange}
+              onRefresh={() => console.log('Refresh clicked')}
+            />
+          </div>
 
-              {/* CAPACITY */}
-              <Card title="CAPACITY" className="flex flex-col">
-                <CapacityGauge percentage={26.19} used={49.7} total={189.9} unit="TiB" />
-              </Card>
-            </div>
+          {/* Charts Grid */}
+          <div className="grid grid-cols-2 gap-6">
+            {/* IOPS Chart */}
+            <LineChart
+              title="IOPS"
+              series={iopsSeries}
+              timeLabels={timeLabels}
+              height="280px"
+              onExpandClick={() =>
+                setFullScreenChart({ title: 'IOPS', series: iopsSeries, timeLabels })
+              }
+            />
 
-            {/* CLUSTER UTILIZATION Section */}
-            <div className="p-4 rounded-2xl border border-[var(--color-border-default)] bg-[var(--color-surface-default)]">
-              {/* Header */}
-              <div className="flex items-center justify-between mb-6">
-                <h6 className="text-heading-h6 text-[var(--color-text-default)]">
-                  CLUSTER UTILIZATION
-                </h6>
-                <MonitoringToolbar
-                  timeRange={timeRange}
-                  onTimeRangeChange={setTimeRange}
-                  onRefresh={() => console.log('Refresh clicked')}
-                />
-              </div>
+            {/* OSD Latencies Chart */}
+            <LineChart
+              title="OSD Latencies"
+              series={latencySeries}
+              timeLabels={timeLabels}
+              yAxisFormatter={(v) => `${v} ms`}
+              height="280px"
+              onExpandClick={() =>
+                setFullScreenChart({
+                  title: 'OSD Latencies',
+                  series: latencySeries,
+                  yAxisFormatter: (v) => `${v} ms`,
+                  timeLabels,
+                })
+              }
+            />
 
-              {/* Charts Grid */}
-              <div className="grid grid-cols-2 gap-6">
-                {/* IOPS Chart */}
-                <LineChart
-                  title="IOPS"
-                  series={iopsSeries}
-                  timeLabels={timeLabels}
-                  height="280px"
-                  onExpandClick={() =>
-                    setFullScreenChart({ title: 'IOPS', series: iopsSeries, timeLabels })
-                  }
-                />
+            {/* Client Throughput Chart */}
+            <LineChart
+              title="Client throughput"
+              series={clientThroughputSeries}
+              timeLabels={timeLabels}
+              yAxisFormatter={(v) => `${v} MiB/s`}
+              height="280px"
+              onExpandClick={() =>
+                setFullScreenChart({
+                  title: 'Client Throughput',
+                  series: clientThroughputSeries,
+                  yAxisFormatter: (v) => `${v} MiB/s`,
+                  timeLabels,
+                })
+              }
+            />
 
-                {/* OSD Latencies Chart */}
-                <LineChart
-                  title="OSD Latencies"
-                  series={latencySeries}
-                  timeLabels={timeLabels}
-                  yAxisFormatter={(v) => `${v} ms`}
-                  height="280px"
-                  onExpandClick={() =>
-                    setFullScreenChart({
-                      title: 'OSD Latencies',
-                      series: latencySeries,
-                      yAxisFormatter: (v) => `${v} ms`,
-                      timeLabels,
-                    })
-                  }
-                />
+            {/* Requests/sec Chart */}
+            <LineChart
+              title="Requests/sec"
+              series={requestsSeries}
+              timeLabels={timeLabels}
+              height="280px"
+              onExpandClick={() =>
+                setFullScreenChart({
+                  title: 'Requests/sec',
+                  series: requestsSeries,
+                  timeLabels,
+                })
+              }
+            />
 
-                {/* Client Throughput Chart */}
-                <LineChart
-                  title="Client throughput"
-                  series={clientThroughputSeries}
-                  timeLabels={timeLabels}
-                  yAxisFormatter={(v) => `${v} MiB/s`}
-                  height="280px"
-                  onExpandClick={() =>
-                    setFullScreenChart({
-                      title: 'Client Throughput',
-                      series: clientThroughputSeries,
-                      yAxisFormatter: (v) => `${v} MiB/s`,
-                      timeLabels,
-                    })
-                  }
-                />
+            {/* Latency Chart */}
+            <LineChart
+              title="Latency"
+              series={latencyDetailSeries}
+              timeLabels={timeLabels}
+              yAxisFormatter={(v) => `${v} ms`}
+              height="280px"
+              onExpandClick={() =>
+                setFullScreenChart({
+                  title: 'Latency',
+                  series: latencyDetailSeries,
+                  yAxisFormatter: (v) => `${v} ms`,
+                  timeLabels,
+                })
+              }
+            />
 
-                {/* Requests/sec Chart */}
-                <LineChart
-                  title="Requests/sec"
-                  series={requestsSeries}
-                  timeLabels={timeLabels}
-                  height="280px"
-                  onExpandClick={() =>
-                    setFullScreenChart({
-                      title: 'Requests/sec',
-                      series: requestsSeries,
-                      timeLabels,
-                    })
-                  }
-                />
-
-                {/* Latency Chart */}
-                <LineChart
-                  title="Latency"
-                  series={latencyDetailSeries}
-                  timeLabels={timeLabels}
-                  yAxisFormatter={(v) => `${v} ms`}
-                  height="280px"
-                  onExpandClick={() =>
-                    setFullScreenChart({
-                      title: 'Latency',
-                      series: latencyDetailSeries,
-                      yAxisFormatter: (v) => `${v} ms`,
-                      timeLabels,
-                    })
-                  }
-                />
-
-                {/* Recovery Throughput Chart */}
-                <LineChart
-                  title="Recovery throughput"
-                  series={recoveryThroughputSeries}
-                  timeLabels={timeLabels}
-                  yAxisFormatter={(v) => `${v} B/s`}
-                  height="280px"
-                  onExpandClick={() =>
-                    setFullScreenChart({
-                      title: 'Recovery Throughput',
-                      series: recoveryThroughputSeries,
-                      yAxisFormatter: (v) => `${v} B/s`,
-                      timeLabels,
-                    })
-                  }
-                />
-              </div>
-            </div>
+            {/* Recovery Throughput Chart */}
+            <LineChart
+              title="Recovery throughput"
+              series={recoveryThroughputSeries}
+              timeLabels={timeLabels}
+              yAxisFormatter={(v) => `${v} B/s`}
+              height="280px"
+              onExpandClick={() =>
+                setFullScreenChart({
+                  title: 'Recovery Throughput',
+                  series: recoveryThroughputSeries,
+                  yAxisFormatter: (v) => `${v} B/s`,
+                  timeLabels,
+                })
+              }
+            />
           </div>
         </div>
-      </main>
+      </div>
 
       {/* Full Screen Chart Overlay */}
       {fullScreenChart && (
@@ -785,7 +790,7 @@ export function StorageHomePage() {
           </div>
         </div>
       )}
-    </div>
+    </PageShell>
   );
 }
 

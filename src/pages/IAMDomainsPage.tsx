@@ -13,6 +13,7 @@ import {
   ContextMenu,
   TabBar,
   StatusIndicator,
+  PageShell,
   fixedColumns,
   columnMinWidths,
   type TableColumn,
@@ -229,16 +230,10 @@ export default function IAMDomainsPage() {
   ];
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <IAMSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-
-      {/* Main Content */}
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: `${sidebarWidth}px` }}
-      >
-        {/* Tab Bar */}
+    <PageShell
+      sidebar={<IAMSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />}
+      sidebarWidth={sidebarWidth}
+      tabBar={
         <TabBar
           tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
@@ -247,8 +242,8 @@ export default function IAMDomainsPage() {
           onTabAdd={addNewTab}
           onTabReorder={moveTab}
         />
-
-        {/* Top Bar */}
+      }
+      topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -257,59 +252,53 @@ export default function IAMDomainsPage() {
           onForward={() => window.history.forward()}
           breadcrumb={<Breadcrumb items={[{ label: 'IAM', href: '/iam' }, { label: 'Domains' }]} />}
         />
+      }
+      contentClassName="pt-4 px-8 pb-6"
+    >
+      <VStack gap={3}>
+        {/* Header */}
+        <HStack justify="between" align="center" className="w-full">
+          <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">Domains</h1>
+          <Button variant="primary" size="md">
+            Create domain
+          </Button>
+        </HStack>
 
-        {/* Scrollable Content */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
-            <VStack gap={3}>
-              {/* Header */}
-              <HStack justify="between" align="center" className="w-full">
-                <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
-                  Domains
-                </h1>
-                <Button variant="primary" size="md">
-                  Create domain
-                </Button>
-              </HStack>
+        {/* Table Content */}
+        <VStack gap={3} className="w-full">
+          {/* Action Bar */}
+          <HStack gap={2} align="center">
+            {/* Search */}
+            <HStack gap={1} align="center">
+              <SearchInput
+                placeholder="Search domains by attributes"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-[var(--search-input-width)]"
+              />
+              <Button
+                variant="secondary"
+                size="sm"
+                icon={<IconDownload size={12} />}
+                aria-label="Download"
+              />
+            </HStack>
+          </HStack>
 
-              {/* Table Content */}
-              <VStack gap={3} className="w-full">
-                {/* Action Bar */}
-                <HStack gap={2} align="center">
-                  {/* Search */}
-                  <HStack gap={1} align="center">
-                    <SearchInput
-                      placeholder="Search domains by attributes"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-[var(--search-input-width)]"
-                    />
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      icon={<IconDownload size={12} />}
-                      aria-label="Download"
-                    />
-                  </HStack>
-                </HStack>
+          {/* Pagination */}
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            showSettings
+            totalItems={filteredDomains.length}
+            selectedCount={selectedRows.length}
+          />
 
-                {/* Pagination */}
-                <Pagination
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  onPageChange={setCurrentPage}
-                  showSettings
-                  totalItems={filteredDomains.length}
-                  selectedCount={selectedRows.length}
-                />
-
-                {/* Table */}
-                <Table<Domain> columns={columns} data={paginatedDomains} rowKey="id" />
-              </VStack>
-            </VStack>
-          </div>
-        </div>
-      </main>
-    </div>
+          {/* Table */}
+          <Table<Domain> columns={columns} data={paginatedDomains} rowKey="id" />
+        </VStack>
+      </VStack>
+    </PageShell>
   );
 }

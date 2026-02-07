@@ -11,6 +11,9 @@ import {
   Tab,
   Badge,
   Chip,
+  PageShell,
+  PageHeader,
+  EmptyState,
 } from '@/design-system';
 import { AIPlatformSidebar } from '@/components/AIPlatformSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -166,26 +169,6 @@ function DatasetCard({
 }
 
 /* ----------------------------------------
-   Empty State Component
-   ---------------------------------------- */
-
-interface EmptyStateProps {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-}
-
-function EmptyState({ icon, title, description }: EmptyStateProps) {
-  return (
-    <div className="flex flex-col items-center justify-center py-20 text-center">
-      <div className="text-[var(--color-text-subtle)] mb-4">{icon}</div>
-      <h3 className="text-heading-h5 text-[var(--color-text-default)] mb-2">{title}</h3>
-      <p className="text-body-md text-[var(--color-text-muted)] max-w-md">{description}</p>
-    </div>
-  );
-}
-
-/* ----------------------------------------
    Datasets Page
    ---------------------------------------- */
 
@@ -295,25 +278,25 @@ export function DatasetsPage() {
     });
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <AIPlatformSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: `${sidebarWidth}px` }}
-      >
-        {/* TabBar */}
+    <PageShell
+      sidebar={
+        <AIPlatformSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
         <TabBar
-          tabs={tabs}
-          activeTabId={activeTabId}
-          onTabSelect={selectTab}
+          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
           onTabClose={closeTab}
-          onNewTab={() => addNewTab()}
-          onTabMove={moveTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
         />
-
-        {/* TopBar */}
+      }
+      topBar={
         <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
           breadcrumb={
             <Breadcrumb
               items={[{ label: 'AI Platform' }, { label: 'Hub' }, { label: 'Datasets' }]}
@@ -330,90 +313,74 @@ export function DatasetsPage() {
             </HStack>
           }
         />
+      }
+      contentClassName="pt-3 px-8 pb-20 bg-[var(--color-surface-subtle)]"
+    >
+      <VStack gap={6}>
+        <PageHeader
+          title="Datasets"
+          actions={
+            <Button variant="secondary" size="sm" leftIcon={<IconRefresh size={14} stroke={1.5} />}>
+              Refresh
+            </Button>
+          }
+        />
 
-        {/* Content */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-3 px-8 pb-20 bg-[var(--color-surface-subtle)] min-h-full">
-            <VStack gap={6}>
-              {/* Header */}
-              <HStack justify="between" align="start">
-                <VStack gap={1} align="start">
-                  <h1 className="text-heading-h3 text-[var(--color-text-default)]">Datasets</h1>
-                  <p className="text-body-lg text-[var(--color-text-subtle)]">
-                    High-quality datasets for training AI models
-                  </p>
-                </VStack>
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  leftIcon={<IconRefresh size={14} stroke={1.5} />}
-                >
-                  Refresh
-                </Button>
-              </HStack>
+        {/* Tabs */}
+        <Tabs value={activeTab} onChange={setActiveTab} variant="underline">
+          <TabList>
+            <Tab value="all">All datasets</Tab>
+            <Tab value="thaki">Thaki datasets</Tab>
+            <Tab value="custom">Custom datasets</Tab>
+          </TabList>
+        </Tabs>
 
-              {/* Tabs */}
-              <Tabs value={activeTab} onChange={setActiveTab} variant="underline">
-                <TabList>
-                  <Tab value="all">All datasets</Tab>
-                  <Tab value="thaki">Thaki datasets</Tab>
-                  <Tab value="custom">Custom datasets</Tab>
-                </TabList>
-              </Tabs>
-
-              {/* Search & Filters */}
-              <HStack gap={4} className="w-full">
-                <div className="flex-1 relative">
-                  <IconSearch
-                    size={16}
-                    stroke={1.5}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-subtle)]"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Search datasets..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full h-10 pl-10 pr-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md text-body-md text-[var(--color-text-default)] placeholder:text-[var(--color-text-subtle)] focus:outline-none focus:ring-2 focus:ring-[var(--color-border-focus)]"
-                  />
-                </div>
-                <Button
-                  variant="secondary"
-                  size="md"
-                  leftIcon={<IconFilter size={14} stroke={1.5} />}
-                >
-                  Filters
-                </Button>
-              </HStack>
-
-              {/* Datasets List */}
-              {filteredDatasets.length > 0 ? (
-                <VStack gap={4}>
-                  {filteredDatasets.map((dataset, index) => (
-                    <DatasetCard
-                      key={index}
-                      {...dataset}
-                      onViewDetails={() => console.log('View details:', dataset.name)}
-                      onDownload={() => console.log('Download:', dataset.name)}
-                    />
-                  ))}
-                </VStack>
-              ) : (
-                <EmptyState
-                  icon={<IconDatabase size={48} stroke={1} />}
-                  title="No datasets found"
-                  description={
-                    activeTab === 'custom'
-                      ? "You haven't uploaded any custom datasets yet. Upload your first dataset to get started."
-                      : 'No datasets match your search criteria. Try adjusting your filters.'
-                  }
-                />
-              )}
-            </VStack>
+        {/* Search & Filters */}
+        <HStack gap={4} className="w-full">
+          <div className="flex-1 relative">
+            <IconSearch
+              size={16}
+              stroke={1.5}
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-subtle)]"
+            />
+            <input
+              type="text"
+              placeholder="Search datasets..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full h-10 pl-10 pr-4 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md text-body-md text-[var(--color-text-default)] placeholder:text-[var(--color-text-subtle)] focus:outline-none focus:ring-2 focus:ring-[var(--color-border-focus)]"
+            />
           </div>
-        </div>
-      </main>
-    </div>
+          <Button variant="secondary" size="md" leftIcon={<IconFilter size={14} stroke={1.5} />}>
+            Filters
+          </Button>
+        </HStack>
+
+        {/* Datasets List */}
+        {filteredDatasets.length > 0 ? (
+          <VStack gap={4}>
+            {filteredDatasets.map((dataset, index) => (
+              <DatasetCard
+                key={index}
+                {...dataset}
+                onViewDetails={() => console.log('View details:', dataset.name)}
+                onDownload={() => console.log('Download:', dataset.name)}
+              />
+            ))}
+          </VStack>
+        ) : (
+          <EmptyState
+            icon={<IconDatabase size={48} stroke={1} />}
+            title="No datasets found"
+            description={
+              activeTab === 'custom'
+                ? "You haven't uploaded any custom datasets yet. Upload your first dataset to get started."
+                : 'No datasets match your search criteria. Try adjusting your filters.'
+            }
+          />
+        )}
+      </VStack>
+    </PageShell>
   );
 }
 

@@ -14,10 +14,12 @@ import {
   DetailHeader,
   SectionCard,
   ContextMenu,
+  PageShell,
   type ContextMenuItem,
 } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
+import { useSidebar } from '@/contexts/SidebarContext';
 import {
   IconCirclePlus,
   IconTrash,
@@ -400,7 +402,8 @@ export function ComputeImageDetailPage() {
   const { id } = useParams<{ id: string }>();
   const image = id ? mockImagesMap[id] || defaultImageDetail : defaultImageDetail;
   const navigate = useNavigate();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
+  const sidebarWidth = sidebarOpen ? 200 : 0;
   const [activeDetailTab, setActiveDetailTab] = useState('details');
 
   // Global tab management
@@ -429,226 +432,199 @@ export function ComputeImageDetailPage() {
   ];
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+    <PageShell
+      sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={openSidebar}
+          showNavigation={true}
+          onBack={() => navigate('/compute/images')}
+          onForward={() => window.history.forward()}
+          breadcrumb={<Breadcrumb items={breadcrumbItems} />}
+          actions={
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1.5} />}
+              aria-label="Notifications"
+              badge={true}
+            />
+          }
+        />
+      }
+      contentClassName="pt-4 px-8 pb-20"
+    >
+      <VStack gap={6} className="min-w-[1176px]">
+        {/* Image Header Card */}
+        <DetailHeader>
+          <DetailHeader.Title>{image.name}</DetailHeader.Title>
+          <DetailHeader.Actions>
+            <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+              Create instance
+            </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+              Create volume
+            </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+              Delete
+            </Button>
+            {activeDetailTab === 'details' && (
+              <ContextMenu
+                items={
+                  [
+                    {
+                      id: 'create-instance-template',
+                      label: 'Create instance Template',
+                      onClick: () => console.log('Create instance Template'),
+                    },
+                    {
+                      id: 'create-volume',
+                      label: 'Create volume',
+                      onClick: () => console.log('Create volume'),
+                    },
+                  ] as ContextMenuItem[]
+                }
+                trigger="click"
+              >
+                <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
+                  More Actions
+                </Button>
+              </ContextMenu>
+            )}
+          </DetailHeader.Actions>
+          <DetailHeader.InfoGrid>
+            <DetailHeader.InfoCard label="Status" value="Active" status="active" />
+            <DetailHeader.InfoCard label="ID" value={image.id} copyable />
+            <DetailHeader.InfoCard label="Access" value={image.access} />
+            <DetailHeader.InfoCard label="Created at" value={image.createdAt} />
+          </DetailHeader.InfoGrid>
+        </DetailHeader>
 
-      {/* Main Content */}
-      <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
-          sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'
-        }`}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Tab Bar */}
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            onTabAdd={addNewTab}
-            onTabReorder={moveTab}
-            showAddButton={true}
-            showWindowControls={true}
-          />
+        {/* Image Tabs */}
+        <div className="w-full">
+          <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline" size="sm">
+            <TabList>
+              <Tab value="details">Details</Tab>
+              <Tab value="metadata">Metadata</Tab>
+            </TabList>
 
-          {/* Top Bar */}
-          <TopBar
-            showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
-            showNavigation={true}
-            onBack={() => navigate('/compute/images')}
-            onForward={() => window.history.forward()}
-            breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-            actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-                badge={true}
-              />
-            }
-          />
-        </div>
-
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          {/* Page Content */}
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
-            <VStack gap={6} className="min-w-[1176px]">
-              {/* Image Header Card */}
-              <DetailHeader>
-                <DetailHeader.Title>{image.name}</DetailHeader.Title>
-                <DetailHeader.Actions>
-                  <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                    Create instance
-                  </Button>
-                  <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                    Create volume
-                  </Button>
-                  <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
-                    Delete
-                  </Button>
-                  {activeDetailTab === 'details' && (
-                    <ContextMenu
-                      items={
-                        [
-                          {
-                            id: 'create-instance-template',
-                            label: 'Create instance Template',
-                            onClick: () => console.log('Create instance Template'),
-                          },
-                          {
-                            id: 'create-volume',
-                            label: 'Create volume',
-                            onClick: () => console.log('Create volume'),
-                          },
-                        ] as ContextMenuItem[]
-                      }
-                      trigger="click"
-                    >
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        rightIcon={<IconChevronDown size={12} />}
-                      >
-                        More Actions
+            {/* Details Tab Panel */}
+            <TabPanel value="details" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Basic information */}
+                <SectionCard>
+                  <SectionCard.Header
+                    title="Basic information"
+                    actions={
+                      <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+                        Edit
                       </Button>
-                    </ContextMenu>
-                  )}
-                </DetailHeader.Actions>
-                <DetailHeader.InfoGrid>
-                  <DetailHeader.InfoCard label="Status" value="Active" status="active" />
-                  <DetailHeader.InfoCard label="ID" value={image.id} copyable />
-                  <DetailHeader.InfoCard label="Access" value={image.access} />
-                  <DetailHeader.InfoCard label="Created at" value={image.createdAt} />
-                </DetailHeader.InfoGrid>
-              </DetailHeader>
+                    }
+                  />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="Image name" value={image.name} />
+                    <SectionCard.DataRow label="Usage type" value={image.usageType} />
+                    <SectionCard.DataRow
+                      label="Protected"
+                      value={image.protected ? 'Enabled' : 'Disabled'}
+                    />
+                    <SectionCard.DataRow label="Description" value={image.description} />
+                  </SectionCard.Content>
+                </SectionCard>
 
-              {/* Image Tabs */}
-              <div className="w-full">
-                <Tabs
-                  value={activeDetailTab}
-                  onChange={setActiveDetailTab}
-                  variant="underline"
-                  size="sm"
-                >
-                  <TabList>
-                    <Tab value="details">Details</Tab>
-                    <Tab value="metadata">Metadata</Tab>
-                  </TabList>
+                {/* Specifications */}
+                <SectionCard>
+                  <SectionCard.Header title="Specifications" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="Size" value={image.size} />
+                    <SectionCard.DataRow label="OS" value={image.os} />
+                    <SectionCard.DataRow
+                      label="Disk format"
+                      value={`${image.diskFormat} / ${image.containerFormat}`}
+                    />
+                    <SectionCard.DataRow
+                      label="Min disk / Min RAM"
+                      value={`${image.minDisk} / ${image.minRam}`}
+                    />
+                  </SectionCard.Content>
+                </SectionCard>
 
-                  {/* Details Tab Panel */}
-                  <TabPanel value="details" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Basic information */}
-                      <SectionCard>
-                        <SectionCard.Header
-                          title="Basic information"
-                          actions={
-                            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                              Edit
-                            </Button>
-                          }
-                        />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow label="Image name" value={image.name} />
-                          <SectionCard.DataRow label="Usage type" value={image.usageType} />
-                          <SectionCard.DataRow
-                            label="Protected"
-                            value={image.protected ? 'Enabled' : 'Disabled'}
-                          />
-                          <SectionCard.DataRow label="Description" value={image.description} />
-                        </SectionCard.Content>
-                      </SectionCard>
+                {/* Security */}
+                <SectionCard>
+                  <SectionCard.Header title="Security" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="Owner" value={image.owner} />
+                    <SectionCard.DataRow label="Visibility" value={image.visibility} />
+                    <SectionCard.DataRow
+                      label="Protected"
+                      value={image.protected ? 'Enabled' : 'Disabled'}
+                    />
+                    <SectionCard.DataRow label="Filename">
+                      <CopyableValue value={image.filename} />
+                    </SectionCard.DataRow>
+                    <SectionCard.DataRow label="Checksum">
+                      <CopyableValue value={image.checksum} />
+                    </SectionCard.DataRow>
+                  </SectionCard.Content>
+                </SectionCard>
 
-                      {/* Specifications */}
-                      <SectionCard>
-                        <SectionCard.Header title="Specifications" />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow label="Size" value={image.size} />
-                          <SectionCard.DataRow label="OS" value={image.os} />
-                          <SectionCard.DataRow
-                            label="Disk format"
-                            value={`${image.diskFormat} / ${image.containerFormat}`}
-                          />
-                          <SectionCard.DataRow
-                            label="Min disk / Min RAM"
-                            value={`${image.minDisk} / ${image.minRam}`}
-                          />
-                        </SectionCard.Content>
-                      </SectionCard>
+                {/* Advanced */}
+                <SectionCard>
+                  <SectionCard.Header
+                    title="Advanced"
+                    actions={
+                      <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+                        Edit
+                      </Button>
+                    }
+                  />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow
+                      label="QEMU Guest Agent"
+                      value={image.qemuGuestAgent ? 'Enabled' : 'Disabled'}
+                    />
+                    <SectionCard.DataRow label="CPU Policy" value={image.cpuPolicy} />
+                    <SectionCard.DataRow label="CPU Thread Policy" value={image.cpuThreadPolicy} />
+                  </SectionCard.Content>
+                </SectionCard>
+              </VStack>
+            </TabPanel>
 
-                      {/* Security */}
-                      <SectionCard>
-                        <SectionCard.Header title="Security" />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow label="Owner" value={image.owner} />
-                          <SectionCard.DataRow label="Visibility" value={image.visibility} />
-                          <SectionCard.DataRow
-                            label="Protected"
-                            value={image.protected ? 'Enabled' : 'Disabled'}
-                          />
-                          <SectionCard.DataRow label="Filename">
-                            <CopyableValue value={image.filename} />
-                          </SectionCard.DataRow>
-                          <SectionCard.DataRow label="Checksum">
-                            <CopyableValue value={image.checksum} />
-                          </SectionCard.DataRow>
-                        </SectionCard.Content>
-                      </SectionCard>
-
-                      {/* Advanced */}
-                      <SectionCard>
-                        <SectionCard.Header
-                          title="Advanced"
-                          actions={
-                            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                              Edit
-                            </Button>
-                          }
-                        />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow
-                            label="QEMU Guest Agent"
-                            value={image.qemuGuestAgent ? 'Enabled' : 'Disabled'}
-                          />
-                          <SectionCard.DataRow label="CPU Policy" value={image.cpuPolicy} />
-                          <SectionCard.DataRow
-                            label="CPU Thread Policy"
-                            value={image.cpuThreadPolicy}
-                          />
-                        </SectionCard.Content>
-                      </SectionCard>
-                    </VStack>
-                  </TabPanel>
-
-                  {/* Metadata Tab Panel */}
-                  <TabPanel value="metadata" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      <SectionCard>
-                        <SectionCard.Header title="Metadata" />
-                        <SectionCard.Content>
-                          {Object.entries(image.metadata).length > 0 ? (
-                            Object.entries(image.metadata).map(([key, value]) => (
-                              <SectionCard.DataRow key={key} label={key} value={value} />
-                            ))
-                          ) : (
-                            <div className="py-4 text-center text-[var(--color-text-muted)]">
-                              No metadata available
-                            </div>
-                          )}
-                        </SectionCard.Content>
-                      </SectionCard>
-                    </VStack>
-                  </TabPanel>
-                </Tabs>
-              </div>
-            </VStack>
-          </div>
+            {/* Metadata Tab Panel */}
+            <TabPanel value="metadata" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                <SectionCard>
+                  <SectionCard.Header title="Metadata" />
+                  <SectionCard.Content>
+                    {Object.entries(image.metadata).length > 0 ? (
+                      Object.entries(image.metadata).map(([key, value]) => (
+                        <SectionCard.DataRow key={key} label={key} value={value} />
+                      ))
+                    ) : (
+                      <div className="py-4 text-center text-[var(--color-text-muted)]">
+                        No metadata available
+                      </div>
+                    )}
+                  </SectionCard.Content>
+                </SectionCard>
+              </VStack>
+            </TabPanel>
+          </Tabs>
         </div>
-      </main>
-    </div>
+      </VStack>
+    </PageShell>
   );
 }
 

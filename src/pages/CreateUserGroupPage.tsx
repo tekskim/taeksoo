@@ -15,6 +15,7 @@ import {
   SelectionIndicator,
   InlineMessage,
   StatusIndicator,
+  PageShell,
   type TableColumn,
   fixedColumns,
 } from '@/design-system';
@@ -984,20 +985,16 @@ export default function CreateUserGroupPage() {
   };
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <IAMSidebar
-        isOpen={sidebarOpen}
-        onToggle={() => setSidebarOpen(!sidebarOpen)}
-        currentPath="/iam/user-groups"
-      />
-
-      {/* Main Content */}
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: `${sidebarWidth}px` }}
-      >
-        {/* Tab Bar */}
+    <PageShell
+      sidebar={
+        <IAMSidebar
+          isOpen={sidebarOpen}
+          onToggle={() => setSidebarOpen(!sidebarOpen)}
+          currentPath="/iam/user-groups"
+        />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
         <TabBar
           tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
@@ -1006,8 +1003,8 @@ export default function CreateUserGroupPage() {
           onTabAdd={addNewTab}
           onTabReorder={moveTab}
         />
-
-        {/* Top Bar */}
+      }
+      topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -1024,107 +1021,97 @@ export default function CreateUserGroupPage() {
             />
           }
         />
-
-        {/* Scrollable content */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)] min-h-full">
-            {/* Main content area */}
-            <VStack gap={3} className="min-w-[1176px]">
-              {/* Page Title */}
-              <div className="flex items-center justify-between h-8">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-                  Create user group
-                </h1>
-              </div>
-              <HStack gap={6} align="start" className="w-full">
-                {/* Left Column - Form Sections */}
-                <VStack gap={4} className="flex-1">
-                  {/* Basic Information Section */}
-                  {sectionStatus['basic-info'] === 'pre' && (
-                    <PreSection title={SECTION_LABELS['basic-info']} />
-                  )}
-                  {sectionStatus['basic-info'] === 'writing' && (
-                    <WritingSection title={SECTION_LABELS['basic-info']} />
-                  )}
-                  {sectionStatus['basic-info'] === 'active' && (
-                    <BasicInformationSection
-                      groupName={groupName}
-                      onGroupNameChange={setGroupName}
-                      groupNameError={groupNameError}
-                      onGroupNameErrorChange={setGroupNameError}
-                      description={description}
-                      onDescriptionChange={setDescription}
-                      onNext={() => handleNext('basic-info')}
-                      isEditing={editingSection === 'basic-info'}
-                      onEditCancel={handleEditCancel}
-                      onEditDone={handleEditDone}
-                    />
-                  )}
-                  {sectionStatus['basic-info'] === 'done' && (
-                    <DoneSection
-                      title={SECTION_LABELS['basic-info']}
-                      onEdit={() => handleEdit('basic-info')}
-                    >
-                      <SectionCard.DataRow
-                        label="Group name"
-                        value={groupName}
-                        showDivider={false}
-                      />
-                      <SectionCard.DataRow label="Description" value={description || '-'} />
-                    </DoneSection>
-                  )}
-
-                  {/* Add Users Section */}
-                  {sectionStatus['add-users'] === 'pre' && (
-                    <PreSection title={SECTION_LABELS['add-users']} />
-                  )}
-                  {sectionStatus['add-users'] === 'writing' && (
-                    <WritingSection title={SECTION_LABELS['add-users']} />
-                  )}
-                  {sectionStatus['add-users'] === 'active' && (
-                    <AddUsersSection
-                      selectedUsers={selectedUsers}
-                      onSelectionChange={(ids) => {
-                        setSelectedUsers(ids);
-                        if (ids.length > 0) {
-                          setUsersError(null);
-                        }
-                      }}
-                      onNext={() => handleNext('add-users')}
-                      onSkip={() => handleNext('add-users')}
-                      isEditing={editingSection === 'add-users'}
-                      onEditCancel={handleEditCancel}
-                      onEditDone={handleEditDone}
-                      usersError={usersError}
-                      onUsersErrorChange={setUsersError}
-                    />
-                  )}
-                  {sectionStatus['add-users'] === 'done' && (
-                    <DoneSection
-                      title={SECTION_LABELS['add-users']}
-                      onEdit={() => handleEdit('add-users')}
-                    >
-                      <SectionCard.DataRow
-                        label="Selected users"
-                        value={getSelectedUsersDisplay()}
-                        showDivider={false}
-                      />
-                    </DoneSection>
-                  )}
-                </VStack>
-
-                {/* Right Column - Summary Sidebar */}
-                <SummarySidebar
-                  sectionStatus={sectionStatus}
-                  onCancel={handleCancel}
-                  onCreate={handleCreate}
-                  isCreateEnabled={allSectionsDone && !editingSection}
-                />
-              </HStack>
-            </VStack>
-          </div>
+      }
+      contentClassName="pt-3 px-8 pb-20"
+    >
+      {/* Main content area */}
+      <VStack gap={3} className="min-w-[1176px]">
+        {/* Page Title */}
+        <div className="flex items-center justify-between h-8">
+          <h1 className="text-heading-h5 text-[var(--color-text-default)]">Create user group</h1>
         </div>
-      </main>
-    </div>
+        <HStack gap={6} align="start" className="w-full">
+          {/* Left Column - Form Sections */}
+          <VStack gap={4} className="flex-1">
+            {/* Basic Information Section */}
+            {sectionStatus['basic-info'] === 'pre' && (
+              <PreSection title={SECTION_LABELS['basic-info']} />
+            )}
+            {sectionStatus['basic-info'] === 'writing' && (
+              <WritingSection title={SECTION_LABELS['basic-info']} />
+            )}
+            {sectionStatus['basic-info'] === 'active' && (
+              <BasicInformationSection
+                groupName={groupName}
+                onGroupNameChange={setGroupName}
+                groupNameError={groupNameError}
+                onGroupNameErrorChange={setGroupNameError}
+                description={description}
+                onDescriptionChange={setDescription}
+                onNext={() => handleNext('basic-info')}
+                isEditing={editingSection === 'basic-info'}
+                onEditCancel={handleEditCancel}
+                onEditDone={handleEditDone}
+              />
+            )}
+            {sectionStatus['basic-info'] === 'done' && (
+              <DoneSection
+                title={SECTION_LABELS['basic-info']}
+                onEdit={() => handleEdit('basic-info')}
+              >
+                <SectionCard.DataRow label="Group name" value={groupName} showDivider={false} />
+                <SectionCard.DataRow label="Description" value={description || '-'} />
+              </DoneSection>
+            )}
+
+            {/* Add Users Section */}
+            {sectionStatus['add-users'] === 'pre' && (
+              <PreSection title={SECTION_LABELS['add-users']} />
+            )}
+            {sectionStatus['add-users'] === 'writing' && (
+              <WritingSection title={SECTION_LABELS['add-users']} />
+            )}
+            {sectionStatus['add-users'] === 'active' && (
+              <AddUsersSection
+                selectedUsers={selectedUsers}
+                onSelectionChange={(ids) => {
+                  setSelectedUsers(ids);
+                  if (ids.length > 0) {
+                    setUsersError(null);
+                  }
+                }}
+                onNext={() => handleNext('add-users')}
+                onSkip={() => handleNext('add-users')}
+                isEditing={editingSection === 'add-users'}
+                onEditCancel={handleEditCancel}
+                onEditDone={handleEditDone}
+                usersError={usersError}
+                onUsersErrorChange={setUsersError}
+              />
+            )}
+            {sectionStatus['add-users'] === 'done' && (
+              <DoneSection
+                title={SECTION_LABELS['add-users']}
+                onEdit={() => handleEdit('add-users')}
+              >
+                <SectionCard.DataRow
+                  label="Selected users"
+                  value={getSelectedUsersDisplay()}
+                  showDivider={false}
+                />
+              </DoneSection>
+            )}
+          </VStack>
+
+          {/* Right Column - Summary Sidebar */}
+          <SummarySidebar
+            sectionStatus={sectionStatus}
+            onCancel={handleCancel}
+            onCreate={handleCreate}
+            isCreateEnabled={allSectionsDone && !editingSection}
+          />
+        </HStack>
+      </VStack>
+    </PageShell>
   );
 }

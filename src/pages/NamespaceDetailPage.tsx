@@ -17,6 +17,7 @@ import {
   Button,
   ContextMenu,
   StatusIndicator,
+  PageShell,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
@@ -751,16 +752,12 @@ export function NamespaceDetailPage() {
   ];
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-
-      {/* Main Content */}
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: `${sidebarWidth}px` }}
-      >
-        {/* Tab Bar */}
+    <PageShell
+      sidebar={
+        <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
         <TabBar
           tabs={tabBarTabs}
           activeTab={activeTabId}
@@ -769,8 +766,8 @@ export function NamespaceDetailPage() {
           onTabReorder={moveTab}
           onTabAdd={addNewTab}
         />
-
-        {/* Top Bar */}
+      }
+      topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -806,113 +803,105 @@ export function NamespaceDetailPage() {
             </>
           }
         />
-
-        {/* Page Content */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
-            <VStack gap={6}>
-              {/* Detail Header */}
-              <DetailHeader>
-                <DetailHeader.Title>Namespace: {namespace.name}</DetailHeader.Title>
-                <DetailHeader.Actions>
-                  <ContextMenu items={moreActionsItems} trigger="click" align="right">
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      rightIcon={<IconChevronDown size={12} stroke={1.5} />}
-                    >
-                      More Actions
-                    </Button>
-                  </ContextMenu>
-                </DetailHeader.Actions>
-                <DetailHeader.InfoGrid>
-                  <DetailHeader.InfoCard
-                    label="Status"
-                    value={namespace.status}
-                    status={
-                      namespace.status === 'Active'
-                        ? 'active'
-                        : namespace.status === 'Terminating'
-                          ? 'error'
-                          : 'pending'
-                    }
-                  />
-                  <DetailHeader.InfoCard label="Created at" value={namespace.createdAt} />
-                  <DetailHeader.InfoCard
-                    label={`Labels (${Object.keys(namespace.labels).length})`}
-                    value={
-                      Object.keys(namespace.labels).length > 0 ? (
-                        <div className="flex flex-wrap gap-1 min-w-0 w-full">
-                          {Object.entries(namespace.labels).map(([key, val]) => (
-                            <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
-                          ))}
-                        </div>
-                      ) : (
-                        '-'
-                      )
-                    }
-                  />
-                  <DetailHeader.InfoCard
-                    label={`Annotations (${Object.keys(namespace.annotations).length})`}
-                    value={
-                      Object.keys(namespace.annotations).length > 0
-                        ? Object.keys(namespace.annotations).length.toString()
-                        : '-'
-                    }
-                  />
-                </DetailHeader.InfoGrid>
-              </DetailHeader>
-
-              {/* Resources Section */}
-              <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 pt-3 pb-4 w-full">
-                <VStack gap={3}>
-                  <h2 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
-                    Workload
-                  </h2>
-
-                  {/* Stat Cards */}
-                  <HStack gap={3} className="w-full">
-                    <StatCard label="Active" value={namespace.resources.active} color="green" />
-                    <StatCard
-                      label="Processing"
-                      value={namespace.resources.processing}
-                      color="blue"
-                    />
-                    <StatCard label="Error" value={namespace.resources.error} color="red" />
-                    <StatCard label="Total" value={namespace.resources.total} color="black" />
-                  </HStack>
-                </VStack>
-              </div>
-
-              {/* Tabs Section */}
-              <Tabs
-                variant="underline"
+      }
+      contentClassName="pt-4 px-8 pb-6"
+    >
+      <VStack gap={6}>
+        {/* Detail Header */}
+        <DetailHeader>
+          <DetailHeader.Title>Namespace: {namespace.name}</DetailHeader.Title>
+          <DetailHeader.Actions>
+            <ContextMenu items={moreActionsItems} trigger="click" align="right">
+              <Button
+                variant="secondary"
                 size="sm"
-                value={activeTab}
-                onChange={setActiveTab}
-                className="w-full"
+                rightIcon={<IconChevronDown size={12} stroke={1.5} />}
               >
-                <TabList>
-                  <Tab value="resources">Resources</Tab>
-                  <Tab value="workloads">Workloads</Tab>
-                  <Tab value="conditions">Conditions</Tab>
-                </TabList>
+                More Actions
+              </Button>
+            </ContextMenu>
+          </DetailHeader.Actions>
+          <DetailHeader.InfoGrid>
+            <DetailHeader.InfoCard
+              label="Status"
+              value={namespace.status}
+              status={
+                namespace.status === 'Active'
+                  ? 'active'
+                  : namespace.status === 'Terminating'
+                    ? 'error'
+                    : 'pending'
+              }
+            />
+            <DetailHeader.InfoCard label="Created at" value={namespace.createdAt} />
+            <DetailHeader.InfoCard
+              label={`Labels (${Object.keys(namespace.labels).length})`}
+              value={
+                Object.keys(namespace.labels).length > 0 ? (
+                  <div className="flex flex-wrap gap-1 min-w-0 w-full">
+                    {Object.entries(namespace.labels).map(([key, val]) => (
+                      <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
+                    ))}
+                  </div>
+                ) : (
+                  '-'
+                )
+              }
+            />
+            <DetailHeader.InfoCard
+              label={`Annotations (${Object.keys(namespace.annotations).length})`}
+              value={
+                Object.keys(namespace.annotations).length > 0
+                  ? Object.keys(namespace.annotations).length.toString()
+                  : '-'
+              }
+            />
+          </DetailHeader.InfoGrid>
+        </DetailHeader>
 
-                <TabPanel value="resources">
-                  <ResourcesTab resources={mockResourcesData} />
-                </TabPanel>
-                <TabPanel value="workloads">
-                  <WorkloadsTab workloads={mockWorkloadsData} />
-                </TabPanel>
-                <TabPanel value="conditions">
-                  <ConditionsTab conditions={mockConditionsData} />
-                </TabPanel>
-              </Tabs>
-            </VStack>
-          </div>
+        {/* Resources Section */}
+        <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 pt-3 pb-4 w-full">
+          <VStack gap={3}>
+            <h2 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
+              Workload
+            </h2>
+
+            {/* Stat Cards */}
+            <HStack gap={3} className="w-full">
+              <StatCard label="Active" value={namespace.resources.active} color="green" />
+              <StatCard label="Processing" value={namespace.resources.processing} color="blue" />
+              <StatCard label="Error" value={namespace.resources.error} color="red" />
+              <StatCard label="Total" value={namespace.resources.total} color="black" />
+            </HStack>
+          </VStack>
         </div>
-      </main>
-    </div>
+
+        {/* Tabs Section */}
+        <Tabs
+          variant="underline"
+          size="sm"
+          value={activeTab}
+          onChange={setActiveTab}
+          className="w-full"
+        >
+          <TabList>
+            <Tab value="resources">Resources</Tab>
+            <Tab value="workloads">Workloads</Tab>
+            <Tab value="conditions">Conditions</Tab>
+          </TabList>
+
+          <TabPanel value="resources">
+            <ResourcesTab resources={mockResourcesData} />
+          </TabPanel>
+          <TabPanel value="workloads">
+            <WorkloadsTab workloads={mockWorkloadsData} />
+          </TabPanel>
+          <TabPanel value="conditions">
+            <ConditionsTab conditions={mockConditionsData} />
+          </TabPanel>
+        </Tabs>
+      </VStack>
+    </PageShell>
   );
 }
 

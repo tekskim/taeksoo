@@ -13,6 +13,7 @@ import {
   TopBarAction,
   Breadcrumb,
   Tooltip,
+  PageShell,
 } from '@/design-system';
 import {
   IconX,
@@ -3025,224 +3026,209 @@ export function TopologyD3Page() {
   }));
 
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 200 : 0;
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
-
-      <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
-          sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'
-        }`}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Tab Bar */}
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            onTabAdd={addNewTab}
-            onTabReorder={moveTab}
-            showAddButton={true}
-            showWindowControls={true}
-          />
-
-          {/* Top Bar */}
-          <TopBar
-            showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
-            showNavigation={true}
-            onBack={() => window.history.back()}
-            onForward={() => window.history.forward()}
-            breadcrumb={
-              <Breadcrumb items={[{ label: 'Proj-1', href: '/project' }, { label: 'Topology' }]} />
-            }
-            actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-                badge={true}
-              />
-            }
-          />
+    <PageShell
+      sidebar={<Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />}
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={
+            <Breadcrumb items={[{ label: 'Proj-1', href: '/project' }, { label: 'Topology' }]} />
+          }
+          actions={
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1.5} />}
+              aria-label="Notifications"
+              badge={true}
+            />
+          }
+        />
+      }
+      contentClassName="pt-4 px-8 pb-6 flex flex-col"
+    >
+      <VStack gap={3} className="flex-1 min-h-0">
+        {/* Page Header */}
+        <div className="flex justify-between items-center h-8 w-full">
+          <h1 className="text-heading-h5 text-[var(--color-text-default)]">Topology</h1>
         </div>
 
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          {/* Main Content */}
-          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)] flex flex-col">
-            <VStack gap={3} className="flex-1 min-h-0">
-              {/* Page Header */}
-              <div className="flex justify-between items-center h-8 w-full">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Topology</h1>
-              </div>
-
-              {/* Filters */}
-              <div className="flex items-center gap-3 flex-wrap bg-white rounded-lg border border-slate-200 p-3">
-                {/* Search */}
-                <div className="w-[240px]">
-                  <SearchInput
-                    placeholder="Search subnets, VPCs, CIDRs..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    onClear={() => setSearchTerm('')}
-                    size="sm"
-                  />
-                </div>
-
-                {/* Router filter - hidden */}
-                <Select
-                  value={filterRouter}
-                  onChange={setFilterRouter}
-                  placeholder={`All Routers (${routers.length})`}
-                  options={[
-                    { value: 'all', label: `All Routers (${routers.length})` },
-                    ...routers.map((r) => ({ value: r.id, label: r.name })),
-                  ]}
-                  className="w-[160px] hidden"
-                />
-
-                {/* VPC filter - hidden */}
-                <Select
-                  value={filterVpc}
-                  onChange={setFilterVpc}
-                  placeholder={`All VPCs (${networks.length})`}
-                  options={[
-                    { value: 'all', label: `All VPCs (${networks.length})` },
-                    ...networks.map((n) => ({ value: n.id, label: n.name })),
-                  ]}
-                  className="w-[160px] hidden"
-                />
-
-                {/* Status filter - hidden */}
-                <Select
-                  value={filterStatus}
-                  onChange={setFilterStatus}
-                  placeholder="All status"
-                  options={[
-                    { value: 'all', label: 'All status' },
-                    { value: 'active', label: 'Active' },
-                    { value: 'inactive', label: 'Inactive' },
-                    { value: 'error', label: 'Error' },
-                  ]}
-                  className="w-[120px] hidden"
-                />
-
-                {/* Reset button - hidden */}
-                {(searchTerm ||
-                  filterRouter !== 'all' ||
-                  filterVpc !== 'all' ||
-                  filterStatus !== 'all') && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={resetFilters}
-                    leftIcon={<IconRefresh size={14} />}
-                    className="hidden"
-                  >
-                    Reset
-                  </Button>
-                )}
-              </div>
-
-              {/* Empty state when no results */}
-              {filteredData.subnets.length === 0 ? (
-                <div className="flex-1 flex items-center justify-center bg-white border border-slate-200 rounded-lg">
-                  <div className="text-center py-12">
-                    <IconSearch size={48} className="mx-auto mb-3 text-slate-300" />
-                    <p className="text-slate-500">No resources match your filters</p>
-                    <button
-                      onClick={resetFilters}
-                      className="mt-2 text-teal-600 hover:underline text-sm"
-                    >
-                      Clear filters
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <div
-                  ref={containerRef}
-                  className="flex-1 bg-white border border-[var(--color-border-default)] rounded-lg overflow-hidden relative"
-                  style={{ minHeight: '500px' }}
-                >
-                  <svg ref={svgRef} className="w-full h-full" />
-
-                  {/* Stats & Zoom Controls */}
-                  <div className="absolute top-4 left-4 flex items-center gap-3 bg-white/90 px-3 py-2 rounded-lg border border-slate-200">
-                    <span className="text-body-sm text-[var(--color-text-subtle)]">
-                      {stats.filteredSubnets === stats.totalSubnets
-                        ? `${stats.totalSubnets} subnets`
-                        : `${stats.filteredSubnets} of ${stats.totalSubnets} subnets`}{' '}
-                      across {filteredData.networks.length} VPCs •
-                      <span className="text-green-600">{stats.activeSubnets} active</span>
-                      {stats.errorSubnets > 0 && (
-                        <span className="text-red-600"> • {stats.errorSubnets} error</span>
-                      )}
-                    </span>
-                    <div className="h-4 w-px bg-[var(--color-border-default)]" />
-                    <div className="flex items-center gap-2 px-2 py-1 bg-[var(--color-surface-muted)] rounded-md">
-                      <span className="text-label-sm text-[var(--color-text-default)]">
-                        {Math.round(zoomLevel * 100)}%
-                      </span>
-                      <span
-                        className={`text-body-sm px-1.5 py-0.5 rounded ${
-                          zoomLevel >= 1.0
-                            ? 'bg-green-100 text-green-700'
-                            : zoomLevel >= 0.6
-                              ? 'bg-yellow-100 text-yellow-700'
-                              : 'bg-[var(--color-surface-subtle)] text-[var(--color-text-muted)]'
-                        }`}
-                      >
-                        {zoomLevel >= 1.0 ? 'Full' : zoomLevel >= 0.6 ? 'Medium' : 'Compact'}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Minimap */}
-                  <div className="absolute bottom-4 right-4 shadow-md rounded-md overflow-hidden">
-                    <svg ref={minimapRef} />
-                  </div>
-
-                  {/* Legend */}
-                  <div className="absolute bottom-4 left-4 flex items-center gap-6 bg-white/90 px-4 py-2 rounded-lg border border-slate-200">
-                    <span className="text-sm font-medium text-slate-600">Legend:</span>
-                    <div className="flex items-center gap-2">
-                      <div
-                        className="w-3 h-3 rounded-full"
-                        style={{ backgroundColor: COLORS.externalNetwork.active }}
-                      />
-                      <span className="text-xs text-slate-600">External network</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div
-                        className="w-3 h-3 rounded-full"
-                        style={{ backgroundColor: COLORS.router.active }}
-                      />
-                      <span className="text-xs text-slate-600">Router</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div
-                        className="w-3 h-3 rounded-full"
-                        style={{ backgroundColor: COLORS.subnet.active }}
-                      />
-                      <span className="text-xs text-slate-600">Subnet</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div
-                        className="w-3 h-3 rounded-full"
-                        style={{ backgroundColor: COLORS.loadBalancer.active }}
-                      />
-                      <span className="text-xs text-slate-600">Load balancer</span>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </VStack>
+        {/* Filters */}
+        <div className="flex items-center gap-3 flex-wrap bg-white rounded-lg border border-slate-200 p-3">
+          {/* Search */}
+          <div className="w-[240px]">
+            <SearchInput
+              placeholder="Search subnets, VPCs, CIDRs..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onClear={() => setSearchTerm('')}
+              size="sm"
+            />
           </div>
+
+          {/* Router filter - hidden */}
+          <Select
+            value={filterRouter}
+            onChange={setFilterRouter}
+            placeholder={`All Routers (${routers.length})`}
+            options={[
+              { value: 'all', label: `All Routers (${routers.length})` },
+              ...routers.map((r) => ({ value: r.id, label: r.name })),
+            ]}
+            className="w-[160px] hidden"
+          />
+
+          {/* VPC filter - hidden */}
+          <Select
+            value={filterVpc}
+            onChange={setFilterVpc}
+            placeholder={`All VPCs (${networks.length})`}
+            options={[
+              { value: 'all', label: `All VPCs (${networks.length})` },
+              ...networks.map((n) => ({ value: n.id, label: n.name })),
+            ]}
+            className="w-[160px] hidden"
+          />
+
+          {/* Status filter - hidden */}
+          <Select
+            value={filterStatus}
+            onChange={setFilterStatus}
+            placeholder="All status"
+            options={[
+              { value: 'all', label: 'All status' },
+              { value: 'active', label: 'Active' },
+              { value: 'inactive', label: 'Inactive' },
+              { value: 'error', label: 'Error' },
+            ]}
+            className="w-[120px] hidden"
+          />
+
+          {/* Reset button - hidden */}
+          {(searchTerm ||
+            filterRouter !== 'all' ||
+            filterVpc !== 'all' ||
+            filterStatus !== 'all') && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={resetFilters}
+              leftIcon={<IconRefresh size={14} />}
+              className="hidden"
+            >
+              Reset
+            </Button>
+          )}
         </div>
-      </main>
+
+        {/* Empty state when no results */}
+        {filteredData.subnets.length === 0 ? (
+          <div className="flex-1 flex items-center justify-center bg-white border border-slate-200 rounded-lg">
+            <div className="text-center py-12">
+              <IconSearch size={48} className="mx-auto mb-3 text-slate-300" />
+              <p className="text-slate-500">No resources match your filters</p>
+              <button onClick={resetFilters} className="mt-2 text-teal-600 hover:underline text-sm">
+                Clear filters
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div
+            ref={containerRef}
+            className="flex-1 bg-white border border-[var(--color-border-default)] rounded-lg overflow-hidden relative"
+            style={{ minHeight: '500px' }}
+          >
+            <svg ref={svgRef} className="w-full h-full" />
+
+            {/* Stats & Zoom Controls */}
+            <div className="absolute top-4 left-4 flex items-center gap-3 bg-white/90 px-3 py-2 rounded-lg border border-slate-200">
+              <span className="text-body-sm text-[var(--color-text-subtle)]">
+                {stats.filteredSubnets === stats.totalSubnets
+                  ? `${stats.totalSubnets} subnets`
+                  : `${stats.filteredSubnets} of ${stats.totalSubnets} subnets`}{' '}
+                across {filteredData.networks.length} VPCs •
+                <span className="text-green-600">{stats.activeSubnets} active</span>
+                {stats.errorSubnets > 0 && (
+                  <span className="text-red-600"> • {stats.errorSubnets} error</span>
+                )}
+              </span>
+              <div className="h-4 w-px bg-[var(--color-border-default)]" />
+              <div className="flex items-center gap-2 px-2 py-1 bg-[var(--color-surface-muted)] rounded-md">
+                <span className="text-label-sm text-[var(--color-text-default)]">
+                  {Math.round(zoomLevel * 100)}%
+                </span>
+                <span
+                  className={`text-body-sm px-1.5 py-0.5 rounded ${
+                    zoomLevel >= 1.0
+                      ? 'bg-green-100 text-green-700'
+                      : zoomLevel >= 0.6
+                        ? 'bg-yellow-100 text-yellow-700'
+                        : 'bg-[var(--color-surface-subtle)] text-[var(--color-text-muted)]'
+                  }`}
+                >
+                  {zoomLevel >= 1.0 ? 'Full' : zoomLevel >= 0.6 ? 'Medium' : 'Compact'}
+                </span>
+              </div>
+            </div>
+
+            {/* Minimap */}
+            <div className="absolute bottom-4 right-4 shadow-md rounded-md overflow-hidden">
+              <svg ref={minimapRef} />
+            </div>
+
+            {/* Legend */}
+            <div className="absolute bottom-4 left-4 flex items-center gap-6 bg-white/90 px-4 py-2 rounded-lg border border-slate-200">
+              <span className="text-sm font-medium text-slate-600">Legend:</span>
+              <div className="flex items-center gap-2">
+                <div
+                  className="w-3 h-3 rounded-full"
+                  style={{ backgroundColor: COLORS.externalNetwork.active }}
+                />
+                <span className="text-xs text-slate-600">External network</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div
+                  className="w-3 h-3 rounded-full"
+                  style={{ backgroundColor: COLORS.router.active }}
+                />
+                <span className="text-xs text-slate-600">Router</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div
+                  className="w-3 h-3 rounded-full"
+                  style={{ backgroundColor: COLORS.subnet.active }}
+                />
+                <span className="text-xs text-slate-600">Subnet</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div
+                  className="w-3 h-3 rounded-full"
+                  style={{ backgroundColor: COLORS.loadBalancer.active }}
+                />
+                <span className="text-xs text-slate-600">Load balancer</span>
+              </div>
+            </div>
+          </div>
+        )}
+      </VStack>
 
       {/* Tooltip */}
       {tooltip.visible && (
@@ -3280,6 +3266,6 @@ export function TopologyD3Page() {
       {popover && (
         <Popover data={popover.data} position={popover.position} onClose={closePopover} />
       )}
-    </div>
+    </PageShell>
   );
 }

@@ -13,6 +13,7 @@ import {
   ContextMenu,
   TabBar,
   StatusIndicator,
+  PageShell,
   fixedColumns,
   columnMinWidths,
   type TableColumn,
@@ -258,16 +259,10 @@ export default function IAMSystemAdministratorsPage() {
   ];
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <IAMSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-
-      {/* Main Content */}
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: `${sidebarWidth}px` }}
-      >
-        {/* Tab Bar */}
+    <PageShell
+      sidebar={<IAMSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />}
+      sidebarWidth={sidebarWidth}
+      tabBar={
         <TabBar
           tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
@@ -276,8 +271,8 @@ export default function IAMSystemAdministratorsPage() {
           onTabAdd={addNewTab}
           onTabReorder={moveTab}
         />
-
-        {/* Top Bar */}
+      }
+      topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -290,63 +285,59 @@ export default function IAMSystemAdministratorsPage() {
             />
           }
         />
+      }
+      contentClassName="pt-4 px-8 pb-6"
+    >
+      <VStack gap={3}>
+        {/* Header */}
+        <HStack justify="between" align="center" className="w-full">
+          <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
+            System administrators
+          </h1>
+          <Button
+            variant="primary"
+            size="md"
+            onClick={() => navigate('/iam/system-administrators/create')}
+          >
+            Create account
+          </Button>
+        </HStack>
 
-        {/* Scrollable Content */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
-            <VStack gap={3}>
-              {/* Header */}
-              <HStack justify="between" align="center" className="w-full">
-                <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
-                  System administrators
-                </h1>
-                <Button
-                  variant="primary"
-                  size="md"
-                  onClick={() => navigate('/iam/system-administrators/create')}
-                >
-                  Create account
-                </Button>
-              </HStack>
+        {/* Table Content */}
+        <VStack gap={3} className="w-full">
+          {/* Action Bar */}
+          <HStack gap={2} align="center">
+            {/* Search */}
+            <HStack gap={1} align="center">
+              <SearchInput
+                placeholder="Search accounts by attributes"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-[var(--search-input-width)]"
+              />
+              <Button
+                variant="secondary"
+                size="sm"
+                icon={<IconDownload size={12} />}
+                aria-label="Download"
+              />
+            </HStack>
+          </HStack>
 
-              {/* Table Content */}
-              <VStack gap={3} className="w-full">
-                {/* Action Bar */}
-                <HStack gap={2} align="center">
-                  {/* Search */}
-                  <HStack gap={1} align="center">
-                    <SearchInput
-                      placeholder="Search accounts by attributes"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-[var(--search-input-width)]"
-                    />
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      icon={<IconDownload size={12} />}
-                      aria-label="Download"
-                    />
-                  </HStack>
-                </HStack>
+          {/* Pagination */}
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            showSettings
+            totalItems={filteredAdmins.length}
+            selectedCount={selectedRows.length}
+          />
 
-                {/* Pagination */}
-                <Pagination
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  onPageChange={setCurrentPage}
-                  showSettings
-                  totalItems={filteredAdmins.length}
-                  selectedCount={selectedRows.length}
-                />
-
-                {/* Table */}
-                <Table<SystemAdmin> columns={columns} data={paginatedAdmins} rowKey="id" />
-              </VStack>
-            </VStack>
-          </div>
-        </div>
-      </main>
-    </div>
+          {/* Table */}
+          <Table<SystemAdmin> columns={columns} data={paginatedAdmins} rowKey="id" />
+        </VStack>
+      </VStack>
+    </PageShell>
   );
 }

@@ -12,6 +12,8 @@ import {
   ListToolbar,
   ContextMenu,
   ConfirmModal,
+  PageShell,
+  PageHeader,
   type TableColumn,
   type ContextMenuItem,
   type FilterField,
@@ -185,6 +187,7 @@ const filterFields: FilterField[] = [
 export function ComputeAdminSecurityGroupsPage() {
   const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 200 : 0;
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [securityGroups] = useState(mockSecurityGroups);
@@ -375,123 +378,109 @@ export function ComputeAdminSecurityGroupsPage() {
   };
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
+    <PageShell
+      sidebar={
+        <ComputeAdminSidebar
+          isOpen={sidebarOpen}
+          onToggle={() => setSidebarOpen((prev) => !prev)}
+        />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={
+            <Breadcrumb
+              items={[
+                { label: 'Compute Admin', href: '/compute-admin' },
+                { label: 'Security groups' },
+              ]}
+            />
+          }
+          actions={
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1.5} />}
+              aria-label="Notifications"
+              badge={true}
+            />
+          }
+        />
+      }
+    >
+      <VStack gap={3}>
+        <PageHeader title="Security groups" />
 
-      <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
-          sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'
-        }`}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Tab Bar */}
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            onTabAdd={addNewTab}
-            onTabReorder={moveTab}
-            showAddButton={true}
-            showWindowControls={true}
-          />
-
-          {/* Top Bar */}
-          <TopBar
-            showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
-            showNavigation={true}
-            onBack={() => window.history.back()}
-            onForward={() => window.history.forward()}
-            breadcrumb={
-              <Breadcrumb
-                items={[
-                  { label: 'Compute Admin', href: '/compute-admin' },
-                  { label: 'Security groups' },
-                ]}
+        {/* Toolbar */}
+        <ListToolbar
+          primaryActions={
+            <ListToolbar.Actions>
+              <FilterSearchInput
+                filters={filterFields}
+                appliedFilters={appliedFilters}
+                onFiltersChange={setAppliedFilters}
+                placeholder="Search security group by attributes"
+                className="w-[var(--search-input-width)]"
               />
-            }
-            actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-                badge={true}
+              <Button
+                variant="secondary"
+                size="sm"
+                iconOnly
+                icon={<IconDownload size={12} />}
+                aria-label="Download"
               />
-            }
-          />
-        </div>
+            </ListToolbar.Actions>
+          }
+          bulkActions={
+            <ListToolbar.Actions>
+              <Button
+                variant="muted"
+                size="sm"
+                leftIcon={<IconTrash size={12} />}
+                disabled={selectedGroups.length === 0}
+              >
+                Delete
+              </Button>
+            </ListToolbar.Actions>
+          }
+        />
 
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          {/* Main Content */}
-          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
-            <VStack gap={3}>
-              {/* Page Header */}
-              <div className="flex justify-between items-center h-8 w-full">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-                  Security groups
-                </h1>
-              </div>
+        {/* Pagination */}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalItems={filteredGroups.length}
+          selectedCount={selectedGroups.length}
+          onPageChange={setCurrentPage}
+          showSettings
+          onSettingsClick={() => setIsPreferencesOpen(true)}
+        />
 
-              {/* Toolbar */}
-              <ListToolbar
-                primaryActions={
-                  <ListToolbar.Actions>
-                    <FilterSearchInput
-                      filters={filterFields}
-                      appliedFilters={appliedFilters}
-                      onFiltersChange={setAppliedFilters}
-                      placeholder="Search security group by attributes"
-                      className="w-[var(--search-input-width)]"
-                    />
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      iconOnly
-                      icon={<IconDownload size={12} />}
-                      aria-label="Download"
-                    />
-                  </ListToolbar.Actions>
-                }
-                bulkActions={
-                  <ListToolbar.Actions>
-                    <Button
-                      variant="muted"
-                      size="sm"
-                      leftIcon={<IconTrash size={12} />}
-                      disabled={selectedGroups.length === 0}
-                    >
-                      Delete
-                    </Button>
-                  </ListToolbar.Actions>
-                }
-              />
-
-              {/* Pagination */}
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                totalItems={filteredGroups.length}
-                selectedCount={selectedGroups.length}
-                onPageChange={setCurrentPage}
-                showSettings
-                onSettingsClick={() => setIsPreferencesOpen(true)}
-              />
-
-              {/* Table */}
-              <Table
-                columns={visibleColumns}
-                data={paginatedGroups}
-                rowKey="id"
-                selectable
-                selectedKeys={selectedGroups}
-                onSelectionChange={setSelectedGroups}
-              />
-            </VStack>
-          </div>
-        </div>
-      </main>
+        {/* Table */}
+        <Table
+          columns={visibleColumns}
+          data={paginatedGroups}
+          rowKey="id"
+          selectable
+          selectedKeys={selectedGroups}
+          onSelectionChange={setSelectedGroups}
+        />
+      </VStack>
 
       {/* Delete Modal */}
       <ConfirmModal
@@ -535,6 +524,6 @@ export function ComputeAdminSecurityGroupsPage() {
           description: selectedGroupForDrawer?.description,
         }}
       />
-    </div>
+    </PageShell>
   );
 }

@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import {
   Button,
   VStack,
+  PageShell,
   TabBar,
   TopBar,
   TopBarAction,
@@ -189,6 +190,7 @@ export default function PoolDetailPage() {
     useTabs();
 
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 200 : 0;
   const [activeDetailTab, setActiveDetailTab] = useState('details');
   const [copiedId, setCopiedId] = useState(false);
 
@@ -325,221 +327,195 @@ export default function PoolDetailPage() {
 
   // Health Monitor columns
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+    <PageShell
+      sidebar={
+        <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={<Breadcrumb items={breadcrumbItems} />}
+          actions={
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1.5} />}
+              onClick={() => {}}
+              hasNotification
+            />
+          }
+        />
+      }
+      contentClassName="pt-3 px-8 pb-20 bg-[var(--color-surface-subtle)]"
+    >
+      <VStack gap={8} className="min-w-[1176px]">
+        {/* Detail header */}
+        <DetailHeader>
+          <DetailHeader.Title>{pool.name}</DetailHeader.Title>
 
-      {/* Main Content */}
-      <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
-          sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'
-        }`}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Tab Bar */}
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            onTabAdd={addNewTab}
-            onTabReorder={moveTab}
-            showAddButton={true}
-            showWindowControls={true}
-          />
+          <DetailHeader.Actions>
+            <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+              Delete
+            </Button>
+          </DetailHeader.Actions>
 
-          {/* Top Bar */}
-          <TopBar
-            showNavigation={true}
-            onBack={() => window.history.back()}
-            onForward={() => window.history.forward()}
-            breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-            onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
-            actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                onClick={() => {}}
-                hasNotification
-              />
-            }
-          />
-        </div>
+          <DetailHeader.InfoGrid>
+            <DetailHeader.InfoCard
+              label="Status"
+              value={pool.status === 'active' ? 'Online' : pool.status}
+              status={poolStatusMap[pool.status]}
+            />
+            <DetailHeader.InfoCard
+              label="ID"
+              value={pool.id}
+              copyable
+              onCopy={handleCopyId}
+              className="flex-1"
+            />
+            <DetailHeader.InfoCard label="Admin state" value={pool.adminState} />
+            <DetailHeader.InfoCard label="Created at" value={pool.createdAt} />
+          </DetailHeader.InfoGrid>
+        </DetailHeader>
 
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          {/* Page Content */}
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
-            <VStack gap={8} className="min-w-[1176px]">
-              {/* Detail header */}
-              <DetailHeader>
-                <DetailHeader.Title>{pool.name}</DetailHeader.Title>
+        {/* Tabs */}
+        <div className="w-full">
+          <Tabs value={activeDetailTab} onChange={setActiveDetailTab} size="sm">
+            <TabList>
+              <Tab value="details">Details</Tab>
+              <Tab value="members">Members</Tab>
+              <Tab value="health-monitor">Health monitor</Tab>
+            </TabList>
 
-                <DetailHeader.Actions>
-                  <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
-                    Delete
-                  </Button>
-                </DetailHeader.Actions>
+            {/* Details Tab */}
+            <TabPanel value="details" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Basic information */}
+                <SectionCard>
+                  <SectionCard.Header title="Basic information" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="Name" value={pool.name} />
+                    <SectionCard.DataRow label="Description" value={pool.description} />
+                    <SectionCard.DataRow label="Admin state" value={pool.adminState} />
+                    <SectionCard.DataRow label="Algorithm" value={pool.algorithm} />
+                    <SectionCard.DataRow label="Protocol" value={pool.protocol} />
+                    <SectionCard.DataRow
+                      label="Session persistence"
+                      value={pool.sessionPersistence}
+                    />
+                  </SectionCard.Content>
+                </SectionCard>
 
-                <DetailHeader.InfoGrid>
-                  <DetailHeader.InfoCard
-                    label="Status"
-                    value={pool.status === 'active' ? 'Online' : pool.status}
-                    status={poolStatusMap[pool.status]}
-                  />
-                  <DetailHeader.InfoCard
-                    label="ID"
-                    value={pool.id}
-                    copyable
-                    onCopy={handleCopyId}
-                    className="flex-1"
-                  />
-                  <DetailHeader.InfoCard label="Admin state" value={pool.adminState} />
-                  <DetailHeader.InfoCard label="Created at" value={pool.createdAt} />
-                </DetailHeader.InfoGrid>
-              </DetailHeader>
-
-              {/* Tabs */}
-              <div className="w-full">
-                <Tabs value={activeDetailTab} onChange={setActiveDetailTab} size="sm">
-                  <TabList>
-                    <Tab value="details">Details</Tab>
-                    <Tab value="members">Members</Tab>
-                    <Tab value="health-monitor">Health monitor</Tab>
-                  </TabList>
-
-                  {/* Details Tab */}
-                  <TabPanel value="details" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Basic information */}
-                      <SectionCard>
-                        <SectionCard.Header title="Basic information" />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow label="Name" value={pool.name} />
-                          <SectionCard.DataRow label="Description" value={pool.description} />
-                          <SectionCard.DataRow label="Admin state" value={pool.adminState} />
-                          <SectionCard.DataRow label="Algorithm" value={pool.algorithm} />
-                          <SectionCard.DataRow label="Protocol" value={pool.protocol} />
-                          <SectionCard.DataRow
-                            label="Session persistence"
-                            value={pool.sessionPersistence}
-                          />
-                        </SectionCard.Content>
-                      </SectionCard>
-
-                      {/* Association */}
-                      <SectionCard>
-                        <SectionCard.Header title="Association" />
-                        <SectionCard.Content>
-                          <div className="flex flex-col gap-3 w-full">
-                            <div className="h-px w-full bg-[var(--color-border-subtle)]" />
-                            <div className="flex flex-col gap-1.5">
-                              <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
-                                Listener
-                              </span>
-                              {pool.listener && pool.listener.id ? (
-                                <Link
-                                  to={`/compute-admin/listeners/${pool.listener.id}`}
-                                  className="flex items-center gap-1.5 text-label-md leading-4 text-[var(--color-action-primary)] hover:underline"
-                                >
-                                  {pool.listener.name}
-                                </Link>
-                              ) : (
-                                <span className="text-body-md leading-4 text-[var(--color-text-default)]">
-                                  -
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                        </SectionCard.Content>
-                      </SectionCard>
-                    </VStack>
-                  </TabPanel>
-
-                  {/* Members Tab */}
-                  <TabPanel value="members" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Header */}
-                      <div className="flex items-center justify-between">
-                        <h3 className="text-heading-h5 text-[var(--color-text-default)]">
-                          Members
-                        </h3>
-                      </div>
-
-                      {/* Action Bar */}
-                      <div className="flex items-center gap-2">
-                        <div className="flex items-center gap-1">
-                          <div className="w-[var(--search-input-width)]">
-                            <SearchInput
-                              value={memberSearchTerm}
-                              onChange={(e) => {
-                                setMemberSearchTerm(e.target.value);
-                                setMemberCurrentPage(1);
-                              }}
-                              placeholder="Search member by attributes"
-                            />
-                          </div>
-                          <button
-                            type="button"
-                            className="flex items-center justify-center w-7 h-7 rounded-[var(--button-radius)] border border-[var(--color-border-strong)] bg-[var(--color-surface-default)] text-[var(--color-text-default)] hover:bg-[var(--button-secondary-hover-bg)]"
-                            aria-label="Download"
+                {/* Association */}
+                <SectionCard>
+                  <SectionCard.Header title="Association" />
+                  <SectionCard.Content>
+                    <div className="flex flex-col gap-3 w-full">
+                      <div className="h-px w-full bg-[var(--color-border-subtle)]" />
+                      <div className="flex flex-col gap-1.5">
+                        <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
+                          Listener
+                        </span>
+                        {pool.listener && pool.listener.id ? (
+                          <Link
+                            to={`/compute-admin/listeners/${pool.listener.id}`}
+                            className="flex items-center gap-1.5 text-label-md leading-4 text-[var(--color-action-primary)] hover:underline"
                           >
-                            <IconDownload size={14} stroke={1.5} />
-                          </button>
-                        </div>
+                            {pool.listener.name}
+                          </Link>
+                        ) : (
+                          <span className="text-body-md leading-4 text-[var(--color-text-default)]">
+                            -
+                          </span>
+                        )}
                       </div>
+                    </div>
+                  </SectionCard.Content>
+                </SectionCard>
+              </VStack>
+            </TabPanel>
 
-                      {/* Pagination */}
-                      <Pagination
-                        currentPage={memberCurrentPage}
-                        totalPages={totalMemberPages}
-                        onPageChange={setMemberCurrentPage}
-                        totalItems={filteredMembers.length}
+            {/* Members Tab */}
+            <TabPanel value="members" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Header */}
+                <div className="flex items-center justify-between">
+                  <h3 className="text-heading-h5 text-[var(--color-text-default)]">Members</h3>
+                </div>
+
+                {/* Action Bar */}
+                <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1">
+                    <div className="w-[var(--search-input-width)]">
+                      <SearchInput
+                        value={memberSearchTerm}
+                        onChange={(e) => {
+                          setMemberSearchTerm(e.target.value);
+                          setMemberCurrentPage(1);
+                        }}
+                        placeholder="Search member by attributes"
                       />
+                    </div>
+                    <button
+                      type="button"
+                      className="flex items-center justify-center w-7 h-7 rounded-[var(--button-radius)] border border-[var(--color-border-strong)] bg-[var(--color-surface-default)] text-[var(--color-text-default)] hover:bg-[var(--button-secondary-hover-bg)]"
+                      aria-label="Download"
+                    >
+                      <IconDownload size={14} stroke={1.5} />
+                    </button>
+                  </div>
+                </div>
 
-                      {/* Table */}
-                      <Table columns={memberColumns} data={paginatedMembers} rowKey="id" />
-                    </VStack>
-                  </TabPanel>
+                {/* Pagination */}
+                <Pagination
+                  currentPage={memberCurrentPage}
+                  totalPages={totalMemberPages}
+                  onPageChange={setMemberCurrentPage}
+                  totalItems={filteredMembers.length}
+                />
 
-                  {/* Health Monitor Tab */}
-                  <TabPanel value="health-monitor" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      <SectionCard>
-                        <SectionCard.Header title="Health monitor" />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow
-                            label="Health Monitor Name"
-                            value={healthMonitor.name}
-                          />
-                          <SectionCard.DataRow label="State" value={healthMonitor.state} />
-                          <SectionCard.DataRow
-                            label="Admin state"
-                            value={healthMonitor.adminState}
-                          />
-                          <SectionCard.DataRow label="Type" value={healthMonitor.type} />
-                          <SectionCard.DataRow
-                            label="Interval"
-                            value={`${healthMonitor.interval} sec`}
-                          />
-                          <SectionCard.DataRow
-                            label="Timeout"
-                            value={`${healthMonitor.timeout} sec`}
-                          />
-                          <SectionCard.DataRow
-                            label="Max retries"
-                            value={String(healthMonitor.maxRetries)}
-                          />
-                        </SectionCard.Content>
-                      </SectionCard>
-                    </VStack>
-                  </TabPanel>
-                </Tabs>
-              </div>
-            </VStack>
-          </div>
+                {/* Table */}
+                <Table columns={memberColumns} data={paginatedMembers} rowKey="id" />
+              </VStack>
+            </TabPanel>
+
+            {/* Health Monitor Tab */}
+            <TabPanel value="health-monitor" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                <SectionCard>
+                  <SectionCard.Header title="Health monitor" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="Health Monitor Name" value={healthMonitor.name} />
+                    <SectionCard.DataRow label="State" value={healthMonitor.state} />
+                    <SectionCard.DataRow label="Admin state" value={healthMonitor.adminState} />
+                    <SectionCard.DataRow label="Type" value={healthMonitor.type} />
+                    <SectionCard.DataRow label="Interval" value={`${healthMonitor.interval} sec`} />
+                    <SectionCard.DataRow label="Timeout" value={`${healthMonitor.timeout} sec`} />
+                    <SectionCard.DataRow
+                      label="Max retries"
+                      value={String(healthMonitor.maxRetries)}
+                    />
+                  </SectionCard.Content>
+                </SectionCard>
+              </VStack>
+            </TabPanel>
+          </Tabs>
         </div>
-      </main>
-    </div>
+      </VStack>
+    </PageShell>
   );
 }

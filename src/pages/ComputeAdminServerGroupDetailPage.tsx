@@ -16,6 +16,7 @@ import {
   Table,
   Pagination,
   StatusIndicator,
+  PageShell,
   type TableColumn,
   fixedColumns,
 } from '@/design-system';
@@ -138,6 +139,7 @@ export function ComputeAdminServerGroupDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 200 : 0;
   const [activeDetailTab, setActiveDetailTab] = useState('instances');
 
   const [instanceSearchQuery, setInstanceSearchQuery] = useState('');
@@ -271,111 +273,98 @@ export function ComputeAdminServerGroupDetailPage() {
   ];
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+    <PageShell
+      sidebar={
+        <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={true}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={breadcrumbItems} />}
+          actions={
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1.5} />}
+              aria-label="Notifications"
+              badge={true}
+            />
+          }
+        />
+      }
+      contentClassName="pt-4 px-8 pb-20"
+    >
+      <VStack gap={6} className="min-w-[1176px]">
+        <DetailHeader>
+          <DetailHeader.Title>{serverGroup.name}</DetailHeader.Title>
+          <DetailHeader.Actions>
+            <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+              Delete
+            </Button>
+          </DetailHeader.Actions>
+          <DetailHeader.InfoGrid>
+            <DetailHeader.InfoCard label="ID" value={serverGroup.id} copyable />
+            <DetailHeader.InfoCard label="Tenant" value="tenantA" />
+            <DetailHeader.InfoCard label="Policy" value={serverGroup.policy} />
+          </DetailHeader.InfoGrid>
+        </DetailHeader>
 
-      <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
-          sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'
-        }`}
-      >
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            onTabAdd={addNewTab}
-            onTabReorder={moveTab}
-            showAddButton={true}
-            showWindowControls={true}
-          />
+        <div className="w-full">
+          <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline" size="sm">
+            <TabList>
+              <Tab value="instances">Instances</Tab>
+            </TabList>
 
-          <TopBar
-            showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
-            showNavigation={true}
-            onBack={() => navigate(-1)}
-            onForward={() => navigate(1)}
-            breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-            actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-                badge={true}
-              />
-            }
-          />
+            <TabPanel value="instances" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                <h2 className="text-heading-h5 text-[var(--color-text-default)]">Instances</h2>
+
+                <div className="w-[var(--search-input-width)]">
+                  <SearchInput
+                    placeholder="Search instance by attributes"
+                    value={instanceSearchQuery}
+                    onChange={(e) => setInstanceSearchQuery(e.target.value)}
+                    onClear={() => setInstanceSearchQuery('')}
+                    size="sm"
+                    fullWidth
+                  />
+                </div>
+
+                <Pagination
+                  currentPage={instanceCurrentPage}
+                  totalPages={instanceTotalPages}
+                  onPageChange={setInstanceCurrentPage}
+                  totalItems={filteredInstances.length}
+                  selectedCount={selectedInstances.length}
+                />
+
+                <Table<ServerGroupInstance>
+                  columns={instanceColumns}
+                  data={paginatedInstances}
+                  rowKey="id"
+                  emptyMessage="No instances found"
+                />
+              </VStack>
+            </TabPanel>
+          </Tabs>
         </div>
-
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
-            <VStack gap={6} className="min-w-[1176px]">
-              <DetailHeader>
-                <DetailHeader.Title>{serverGroup.name}</DetailHeader.Title>
-                <DetailHeader.Actions>
-                  <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
-                    Delete
-                  </Button>
-                </DetailHeader.Actions>
-                <DetailHeader.InfoGrid>
-                  <DetailHeader.InfoCard label="ID" value={serverGroup.id} copyable />
-                  <DetailHeader.InfoCard label="Tenant" value="tenantA" />
-                  <DetailHeader.InfoCard label="Policy" value={serverGroup.policy} />
-                </DetailHeader.InfoGrid>
-              </DetailHeader>
-
-              <div className="w-full">
-                <Tabs
-                  value={activeDetailTab}
-                  onChange={setActiveDetailTab}
-                  variant="underline"
-                  size="sm"
-                >
-                  <TabList>
-                    <Tab value="instances">Instances</Tab>
-                  </TabList>
-
-                  <TabPanel value="instances" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      <h2 className="text-heading-h5 text-[var(--color-text-default)]">
-                        Instances
-                      </h2>
-
-                      <div className="w-[var(--search-input-width)]">
-                        <SearchInput
-                          placeholder="Search instance by attributes"
-                          value={instanceSearchQuery}
-                          onChange={(e) => setInstanceSearchQuery(e.target.value)}
-                          onClear={() => setInstanceSearchQuery('')}
-                          size="sm"
-                          fullWidth
-                        />
-                      </div>
-
-                      <Pagination
-                        currentPage={instanceCurrentPage}
-                        totalPages={instanceTotalPages}
-                        onPageChange={setInstanceCurrentPage}
-                        totalItems={filteredInstances.length}
-                        selectedCount={selectedInstances.length}
-                      />
-
-                      <Table<ServerGroupInstance>
-                        columns={instanceColumns}
-                        data={paginatedInstances}
-                        rowKey="id"
-                        emptyMessage="No instances found"
-                      />
-                    </VStack>
-                  </TabPanel>
-                </Tabs>
-              </div>
-            </VStack>
-          </div>
-        </div>
-      </main>
-    </div>
+      </VStack>
+    </PageShell>
   );
 }
 

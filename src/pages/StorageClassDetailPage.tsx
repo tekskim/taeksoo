@@ -14,6 +14,7 @@ import {
   DetailHeader,
   Radio,
   Chip,
+  PageShell,
   type ContextMenuItem,
 } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
@@ -185,7 +186,7 @@ export function StorageClassDetailPage() {
     {
       id: 'edit-yaml',
       label: 'Edit YAML',
-      onClick: () => navigate(`/container/storage-classes/${storageClass.name}/edit-yaml`),
+      onClick: () => navigate(`/container/storage-classes/${scData.name}/edit-yaml`),
     },
     {
       id: 'download-yaml',
@@ -214,16 +215,12 @@ export function StorageClassDetailPage() {
   const parametersEntries = Object.entries(scData.parameters);
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-
-      {/* Main Content */}
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: `${sidebarWidth}px` }}
-      >
-        {/* Tab Bar */}
+    <PageShell
+      sidebar={
+        <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
         <TabBar
           tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
@@ -232,8 +229,8 @@ export function StorageClassDetailPage() {
           onTabAdd={addNewTab}
           onTabReorder={moveTab}
         />
-
-        {/* Top Bar */}
+      }
+      topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -283,269 +280,261 @@ export function StorageClassDetailPage() {
             </>
           }
         />
-
-        {/* Content Area */}
-        <div
-          className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll"
-          style={{ paddingBottom: shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0' }}
-        >
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
-            <VStack gap={6}>
-              {/* Header */}
-              <DetailHeader>
-                <DetailHeader.Title>Storage Class: {scData.name}</DetailHeader.Title>
-                <DetailHeader.Actions>
-                  <ContextMenu items={moreActionsItems} trigger="click" align="right">
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      rightIcon={<IconChevronDown size={12} stroke={1.5} />}
-                    >
-                      More Actions
-                    </Button>
-                  </ContextMenu>
-                </DetailHeader.Actions>
-                <DetailHeader.InfoGrid>
-                  <DetailHeader.InfoCard
-                    label="Status"
-                    value={scData.status}
-                    status={
-                      scData.status === 'Active'
-                        ? 'active'
-                        : scData.status === 'Pending'
-                          ? 'pending'
-                          : 'error'
-                    }
-                  />
-                  <DetailHeader.InfoCard label="Default" value={scData.isDefault ? 'Yes' : 'No'} />
-                  <DetailHeader.InfoCard label="Created at" value={scData.createdAt} />
-                  <DetailHeader.InfoCard
-                    label={`Labels (${labelsCount})`}
-                    value={
-                      labelsCount > 0 ? (
-                        <div className="flex flex-wrap items-center gap-1 min-w-0">
-                          {Object.entries(scData.labels)
-                            .slice(0, 1)
-                            .map(([key, val]) => (
-                              <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
-                            ))}
-                          {labelsCount > 1 && (
-                            <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                              (+{labelsCount - 1})
-                            </span>
-                          )}
-                        </div>
-                      ) : (
-                        <span className="text-body-md text-[var(--color-text-default)]">-</span>
-                      )
-                    }
-                  />
-                  <DetailHeader.InfoCard
-                    label={`Annotations (${annotationsCount})`}
-                    value={
-                      annotationsCount > 0 ? (
-                        <div className="flex flex-wrap items-center gap-1 min-w-0">
-                          {Object.entries(scData.annotations)
-                            .slice(0, 1)
-                            .map(([key, val]) => (
-                              <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
-                            ))}
-                          {annotationsCount > 1 && (
-                            <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                              (+{annotationsCount - 1})
-                            </span>
-                          )}
-                        </div>
-                      ) : (
-                        <span className="text-body-md text-[var(--color-text-default)]">-</span>
-                      )
-                    }
-                  />
-                </DetailHeader.InfoGrid>
-              </DetailHeader>
-
-              {/* Tabs */}
-              <Tabs value={activeTab} onChange={setActiveTab} size="sm">
-                <TabList>
-                  <Tab value="parameters">Parameters</Tab>
-                  <Tab value="customize">Customize</Tab>
-                </TabList>
-
-                {/* Parameters Tab */}
-                <TabPanel value="parameters">
-                  {/* Content Box */}
-                  <div className="w-full border border-[var(--color-border-default)] rounded-[var(--primitive-radius-lg)] p-4">
-                    <VStack gap={3}>
-                      {/* Title */}
-                      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
-                        Parameters
-                      </h3>
-
-                      {parametersEntries.length > 0 ? (
-                        <div className="flex gap-2 w-full">
-                          {/* Key Column */}
-                          <div className="flex-1">
-                            <label className="text-label-sm text-[var(--color-text-default)] mb-2 block">
-                              Key
-                            </label>
-                            <VStack gap={2}>
-                              {parametersEntries.map(([key]) => (
-                                <div
-                                  key={key}
-                                  className="w-full h-[36px] px-2.5 py-2 bg-[var(--color-border-default)] border border-[var(--color-border-strong)] rounded-[var(--primitive-radius-md)] text-body-md text-[var(--color-text-subtle)]"
-                                >
-                                  {key}
-                                </div>
-                              ))}
-                            </VStack>
-                          </div>
-                          {/* Value Column */}
-                          <div className="flex-1">
-                            <label className="text-label-sm text-[var(--color-text-default)] mb-2 block">
-                              Value
-                            </label>
-                            <VStack gap={2}>
-                              {parametersEntries.map(([key, val]) => (
-                                <div
-                                  key={key}
-                                  className="w-full h-[36px] px-[10px] py-[8px] bg-[var(--color-border-default)] border border-[var(--color-border-strong)] rounded-[6px] text-body-md text-[var(--color-text-subtle)]"
-                                >
-                                  {val}
-                                </div>
-                              ))}
-                            </VStack>
-                          </div>
-                        </div>
-                      ) : (
-                        <p className="text-body-md text-[var(--color-text-subtle)]">
-                          No parameters defined.
-                        </p>
-                      )}
-                    </VStack>
+      }
+      bottomPanel={
+        <ShellPanel
+          isExpanded={shellPanel.isExpanded}
+          onExpandedChange={shellPanel.setIsExpanded}
+          tabs={shellPanel.tabs}
+          activeTabId={shellPanel.activeTabId}
+          onActiveTabChange={shellPanel.setActiveTabId}
+          onCloseTab={shellPanel.closeTab}
+          onContentChange={shellPanel.updateContent}
+          onClear={shellPanel.clearContent}
+          onOpenInNewTab={handleOpenInNewTab}
+          initialHeight={350}
+          sidebarWidth={sidebarWidth}
+        />
+      }
+      bottomPanelPadding={shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0'}
+      contentClassName="pt-4 px-8 pb-20"
+    >
+      <VStack gap={6}>
+        {/* Header */}
+        <DetailHeader>
+          <DetailHeader.Title>Storage Class: {scData.name}</DetailHeader.Title>
+          <DetailHeader.Actions>
+            <ContextMenu items={moreActionsItems} trigger="click" align="right">
+              <Button
+                variant="secondary"
+                size="sm"
+                rightIcon={<IconChevronDown size={12} stroke={1.5} />}
+              >
+                More Actions
+              </Button>
+            </ContextMenu>
+          </DetailHeader.Actions>
+          <DetailHeader.InfoGrid>
+            <DetailHeader.InfoCard
+              label="Status"
+              value={scData.status}
+              status={
+                scData.status === 'Active'
+                  ? 'active'
+                  : scData.status === 'Pending'
+                    ? 'pending'
+                    : 'error'
+              }
+            />
+            <DetailHeader.InfoCard label="Default" value={scData.isDefault ? 'Yes' : 'No'} />
+            <DetailHeader.InfoCard label="Created at" value={scData.createdAt} />
+            <DetailHeader.InfoCard
+              label={`Labels (${labelsCount})`}
+              value={
+                labelsCount > 0 ? (
+                  <div className="flex flex-wrap items-center gap-1 min-w-0">
+                    {Object.entries(scData.labels)
+                      .slice(0, 1)
+                      .map(([key, val]) => (
+                        <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
+                      ))}
+                    {labelsCount > 1 && (
+                      <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
+                        (+{labelsCount - 1})
+                      </span>
+                    )}
                   </div>
-                </TabPanel>
-
-                {/* Customize Tab */}
-                <TabPanel value="customize">
-                  {/* Content Box */}
-                  <div className="w-full border border-[var(--color-border-default)] rounded-[var(--primitive-radius-lg)] px-4 py-3">
-                    <VStack gap={3}>
-                      {/* Title */}
-                      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
-                        Customize
-                      </h3>
-
-                      {/* Reclaim Policy */}
-                      <VStack gap={1.5} align="start">
-                        <label className="text-label-lg text-[var(--color-text-default)]">
-                          Reclaim Policy
-                        </label>
-                        <VStack gap={1} align="start">
-                          <Radio
-                            label="Delete volumes and underlying device when volume claim is deleted"
-                            checked={scData.reclaimPolicy === 'Delete'}
-                            onChange={() => {}}
-                            disabled
-                          />
-                          <Radio
-                            label="Retain the volume for manual cleanup"
-                            checked={scData.reclaimPolicy === 'Retain'}
-                            onChange={() => {}}
-                            disabled
-                          />
-                        </VStack>
-                      </VStack>
-
-                      {/* Allow Volume Expansion */}
-                      <VStack gap={1.5} align="start">
-                        <label className="text-label-lg text-[var(--color-text-default)]">
-                          Allow Volume Expansion
-                        </label>
-                        <VStack gap={1} align="start">
-                          <Radio
-                            label="Enabled"
-                            checked={scData.allowVolumeExpansion === true}
-                            onChange={() => {}}
-                            disabled
-                          />
-                          <Radio
-                            label="Disabled"
-                            checked={scData.allowVolumeExpansion === false}
-                            onChange={() => {}}
-                            disabled
-                          />
-                        </VStack>
-                      </VStack>
-
-                      {/* Volume Binding Mode */}
-                      <VStack gap={1.5} align="start">
-                        <label className="text-label-lg text-[var(--color-text-default)]">
-                          Volume Binding Mode
-                        </label>
-                        <VStack gap={1} align="start">
-                          <Radio
-                            label="Bind and provision a persistent volume once the PersistentVolumeClaim is created"
-                            checked={scData.volumeBindingMode === 'Immediate'}
-                            onChange={() => {}}
-                            disabled
-                          />
-                          <Radio
-                            label="Bind and provision a persistent volume once a Pod using the PersistentVolumeClaim is created"
-                            checked={scData.volumeBindingMode === 'WaitForFirstConsumer'}
-                            onChange={() => {}}
-                            disabled
-                          />
-                        </VStack>
-                      </VStack>
-
-                      {/* Mount Options */}
-                      <VStack gap={2} align="start" className="w-full">
-                        <label className="text-label-lg text-[var(--color-text-default)]">
-                          Mount Options
-                        </label>
-                        {scData.mountOptions.length > 0 ? (
-                          <VStack gap={2} className="w-full">
-                            {scData.mountOptions.map((option, index) => (
-                              <div
-                                key={index}
-                                className="w-full h-[32px] px-[10px] py-[8px] bg-[var(--primitive-color-cool-gray200)] rounded-[6px] text-body-md text-[var(--color-text-subtle)] flex items-center"
-                              >
-                                {option}
-                              </div>
-                            ))}
-                          </VStack>
-                        ) : (
-                          <p className="text-body-md text-[var(--color-text-subtle)]">
-                            No mount options defined.
-                          </p>
-                        )}
-                      </VStack>
-                    </VStack>
+                ) : (
+                  <span className="text-body-md text-[var(--color-text-default)]">-</span>
+                )
+              }
+            />
+            <DetailHeader.InfoCard
+              label={`Annotations (${annotationsCount})`}
+              value={
+                annotationsCount > 0 ? (
+                  <div className="flex flex-wrap items-center gap-1 min-w-0">
+                    {Object.entries(scData.annotations)
+                      .slice(0, 1)
+                      .map(([key, val]) => (
+                        <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
+                      ))}
+                    {annotationsCount > 1 && (
+                      <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
+                        (+{annotationsCount - 1})
+                      </span>
+                    )}
                   </div>
-                </TabPanel>
-              </Tabs>
-            </VStack>
-          </div>
-        </div>
-      </main>
+                ) : (
+                  <span className="text-body-md text-[var(--color-text-default)]">-</span>
+                )
+              }
+            />
+          </DetailHeader.InfoGrid>
+        </DetailHeader>
 
-      {/* Shell Panel */}
-      <ShellPanel
-        isExpanded={shellPanel.isExpanded}
-        onExpandedChange={shellPanel.setIsExpanded}
-        tabs={shellPanel.tabs}
-        activeTabId={shellPanel.activeTabId}
-        onActiveTabChange={shellPanel.setActiveTabId}
-        onCloseTab={shellPanel.closeTab}
-        onContentChange={shellPanel.updateContent}
-        onClear={shellPanel.clearContent}
-        onOpenInNewTab={handleOpenInNewTab}
-        initialHeight={350}
-        minHeight={300}
-        sidebarOpen={sidebarOpen}
-        sidebarWidth={sidebarWidth}
-      />
-    </div>
+        {/* Tabs */}
+        <Tabs value={activeTab} onChange={setActiveTab} size="sm">
+          <TabList>
+            <Tab value="parameters">Parameters</Tab>
+            <Tab value="customize">Customize</Tab>
+          </TabList>
+
+          {/* Parameters Tab */}
+          <TabPanel value="parameters">
+            {/* Content Box */}
+            <div className="w-full border border-[var(--color-border-default)] rounded-[var(--primitive-radius-lg)] p-4">
+              <VStack gap={3}>
+                {/* Title */}
+                <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
+                  Parameters
+                </h3>
+
+                {parametersEntries.length > 0 ? (
+                  <div className="flex gap-2 w-full">
+                    {/* Key Column */}
+                    <div className="flex-1">
+                      <label className="text-label-sm text-[var(--color-text-default)] mb-2 block">
+                        Key
+                      </label>
+                      <VStack gap={2}>
+                        {parametersEntries.map(([key]) => (
+                          <div
+                            key={key}
+                            className="w-full h-[36px] px-2.5 py-2 bg-[var(--color-border-default)] border border-[var(--color-border-strong)] rounded-[var(--primitive-radius-md)] text-body-md text-[var(--color-text-subtle)]"
+                          >
+                            {key}
+                          </div>
+                        ))}
+                      </VStack>
+                    </div>
+                    {/* Value Column */}
+                    <div className="flex-1">
+                      <label className="text-label-sm text-[var(--color-text-default)] mb-2 block">
+                        Value
+                      </label>
+                      <VStack gap={2}>
+                        {parametersEntries.map(([key, val]) => (
+                          <div
+                            key={key}
+                            className="w-full h-[36px] px-[10px] py-[8px] bg-[var(--color-border-default)] border border-[var(--color-border-strong)] rounded-[6px] text-body-md text-[var(--color-text-subtle)]"
+                          >
+                            {val}
+                          </div>
+                        ))}
+                      </VStack>
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-body-md text-[var(--color-text-subtle)]">
+                    No parameters defined.
+                  </p>
+                )}
+              </VStack>
+            </div>
+          </TabPanel>
+
+          {/* Customize Tab */}
+          <TabPanel value="customize">
+            {/* Content Box */}
+            <div className="w-full border border-[var(--color-border-default)] rounded-[var(--primitive-radius-lg)] px-4 py-3">
+              <VStack gap={3}>
+                {/* Title */}
+                <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
+                  Customize
+                </h3>
+
+                {/* Reclaim Policy */}
+                <VStack gap={1.5} align="start">
+                  <label className="text-label-lg text-[var(--color-text-default)]">
+                    Reclaim Policy
+                  </label>
+                  <VStack gap={1} align="start">
+                    <Radio
+                      label="Delete volumes and underlying device when volume claim is deleted"
+                      checked={scData.reclaimPolicy === 'Delete'}
+                      onChange={() => {}}
+                      disabled
+                    />
+                    <Radio
+                      label="Retain the volume for manual cleanup"
+                      checked={scData.reclaimPolicy === 'Retain'}
+                      onChange={() => {}}
+                      disabled
+                    />
+                  </VStack>
+                </VStack>
+
+                {/* Allow Volume Expansion */}
+                <VStack gap={1.5} align="start">
+                  <label className="text-label-lg text-[var(--color-text-default)]">
+                    Allow Volume Expansion
+                  </label>
+                  <VStack gap={1} align="start">
+                    <Radio
+                      label="Enabled"
+                      checked={scData.allowVolumeExpansion === true}
+                      onChange={() => {}}
+                      disabled
+                    />
+                    <Radio
+                      label="Disabled"
+                      checked={scData.allowVolumeExpansion === false}
+                      onChange={() => {}}
+                      disabled
+                    />
+                  </VStack>
+                </VStack>
+
+                {/* Volume Binding Mode */}
+                <VStack gap={1.5} align="start">
+                  <label className="text-label-lg text-[var(--color-text-default)]">
+                    Volume Binding Mode
+                  </label>
+                  <VStack gap={1} align="start">
+                    <Radio
+                      label="Bind and provision a persistent volume once the PersistentVolumeClaim is created"
+                      checked={scData.volumeBindingMode === 'Immediate'}
+                      onChange={() => {}}
+                      disabled
+                    />
+                    <Radio
+                      label="Bind and provision a persistent volume once a Pod using the PersistentVolumeClaim is created"
+                      checked={scData.volumeBindingMode === 'WaitForFirstConsumer'}
+                      onChange={() => {}}
+                      disabled
+                    />
+                  </VStack>
+                </VStack>
+
+                {/* Mount Options */}
+                <VStack gap={2} align="start" className="w-full">
+                  <label className="text-label-lg text-[var(--color-text-default)]">
+                    Mount Options
+                  </label>
+                  {scData.mountOptions.length > 0 ? (
+                    <VStack gap={2} className="w-full">
+                      {scData.mountOptions.map((option, index) => (
+                        <div
+                          key={index}
+                          className="w-full h-[32px] px-[10px] py-[8px] bg-[var(--primitive-color-cool-gray200)] rounded-[6px] text-body-md text-[var(--color-text-subtle)] flex items-center"
+                        >
+                          {option}
+                        </div>
+                      ))}
+                    </VStack>
+                  ) : (
+                    <p className="text-body-md text-[var(--color-text-subtle)]">
+                      No mount options defined.
+                    </p>
+                  )}
+                </VStack>
+              </VStack>
+            </div>
+          </TabPanel>
+        </Tabs>
+      </VStack>
+    </PageShell>
   );
 }
 

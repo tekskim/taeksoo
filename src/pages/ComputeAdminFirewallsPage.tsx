@@ -16,6 +16,8 @@ import {
   StatusIndicator,
   ContextMenu,
   Badge,
+  PageShell,
+  PageHeader,
   fixedColumns,
 } from '@/design-system';
 import type { TableColumn, ContextMenuItem } from '@/design-system';
@@ -156,6 +158,7 @@ const firewallStatusMap: Record<FirewallStatus, 'active' | 'down' | 'error'> = {
 
 export default function ComputeAdminFirewallsPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 200 : 0;
   const [activeTab, setActiveTab] = useState('firewalls');
 
   // Firewalls state
@@ -635,248 +638,240 @@ export default function ComputeAdminFirewallsPage() {
   ];
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+    <PageShell
+      sidebar={
+        <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={<Breadcrumb items={breadcrumbItems} />}
+          actions={
+            <TopBarAction icon={<IconBell size={16} stroke={1.5} />} aria-label="Notifications" />
+          }
+        />
+      }
+    >
+      <VStack gap={3}>
+        <PageHeader
+          title="Firewalls"
+          actions={
+            <Button
+              variant="primary"
+              size="md"
+              onClick={() => {
+                if (activeTab === 'firewalls') {
+                  navigate('/compute-admin/firewall/create');
+                } else if (activeTab === 'policies') {
+                  navigate('/compute-admin/firewall/create-policy');
+                } else {
+                  navigate('/compute-admin/firewall/create-rule');
+                }
+              }}
+            >
+              {activeTab === 'firewalls'
+                ? 'Create firewall'
+                : activeTab === 'policies'
+                  ? 'Create policy'
+                  : 'Create rule'}
+            </Button>
+          }
+        />
 
-      {/* Main Content */}
-      <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
-          sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'
-        }`}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Tab Bar */}
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            onTabAdd={addNewTab}
-            onTabReorder={moveTab}
-            showAddButton={true}
-            showWindowControls={true}
-          />
+        {/* Tabs */}
+        <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
+          <TabList>
+            <Tab value="firewalls">Firewalls</Tab>
+            <Tab value="policies">Firewall policies</Tab>
+            <Tab value="rules">Firewall rules</Tab>
+          </TabList>
 
-          {/* Top Bar */}
-          <TopBar
-            sidebarOpen={sidebarOpen}
-            onMenuClick={() => setSidebarOpen(!sidebarOpen)}
-            breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          >
-            <TopBarAction icon={<IconBell size={16} stroke={1.5} />} onClick={() => {}} />
-          </TopBar>
-        </div>
-
-        {/* Scrollable Content */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
+          {/* Firewalls Tab */}
+          <TabPanel value="firewalls" className="pt-3">
             <VStack gap={3}>
-              {/* Page Header */}
-              <div className="flex items-center justify-between h-8">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Firewalls</h1>
+              {/* Action Bar */}
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1">
+                  <div className="w-[var(--search-input-width)]">
+                    <SearchInput
+                      value={firewallSearchTerm}
+                      onChange={(e) => {
+                        setFirewallSearchTerm(e.target.value);
+                        setFirewallCurrentPage(1);
+                      }}
+                      placeholder="Search firewalls by attributes"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    className="flex items-center justify-center w-7 h-7 rounded-[var(--button-radius)] border border-[var(--color-border-strong)] bg-[var(--color-surface-default)] text-[var(--color-text-default)] hover:bg-[var(--button-secondary-hover-bg)]"
+                    aria-label="Download"
+                  >
+                    <IconDownload size={14} stroke={1.5} />
+                  </button>
+                </div>
+                <div className="h-4 w-px bg-[var(--color-border-default)]" />
                 <Button
-                  variant="primary"
-                  size="md"
-                  onClick={() => {
-                    if (activeTab === 'firewalls') {
-                      navigate('/compute-admin/firewall/create');
-                    } else if (activeTab === 'policies') {
-                      navigate('/compute-admin/firewall/create-policy');
-                    } else {
-                      navigate('/compute-admin/firewall/create-rule');
-                    }
-                  }}
+                  variant="secondary"
+                  size="sm"
+                  leftIcon={<IconTrash size={12} />}
+                  disabled={selectedFirewalls.length === 0}
                 >
-                  {activeTab === 'firewalls'
-                    ? 'Create firewall'
-                    : activeTab === 'policies'
-                      ? 'Create policy'
-                      : 'Create rule'}
+                  Delete
                 </Button>
               </div>
 
-              {/* Tabs */}
-              <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
-                <TabList>
-                  <Tab value="firewalls">Firewalls</Tab>
-                  <Tab value="policies">Firewall policies</Tab>
-                  <Tab value="rules">Firewall rules</Tab>
-                </TabList>
+              {/* Pagination */}
+              <Pagination
+                currentPage={firewallCurrentPage}
+                totalPages={totalFirewallPages}
+                onPageChange={setFirewallCurrentPage}
+                totalItems={filteredFirewalls.length}
+                selectedCount={selectedFirewalls.length}
+              />
 
-                {/* Firewalls Tab */}
-                <TabPanel value="firewalls" className="pt-3">
-                  <VStack gap={3}>
-                    {/* Action Bar */}
-                    <div className="flex items-center gap-2">
-                      <div className="flex items-center gap-1">
-                        <div className="w-[var(--search-input-width)]">
-                          <SearchInput
-                            value={firewallSearchTerm}
-                            onChange={(e) => {
-                              setFirewallSearchTerm(e.target.value);
-                              setFirewallCurrentPage(1);
-                            }}
-                            placeholder="Search firewalls by attributes"
-                          />
-                        </div>
-                        <button
-                          type="button"
-                          className="flex items-center justify-center w-7 h-7 rounded-[var(--button-radius)] border border-[var(--color-border-strong)] bg-[var(--color-surface-default)] text-[var(--color-text-default)] hover:bg-[var(--button-secondary-hover-bg)]"
-                          aria-label="Download"
-                        >
-                          <IconDownload size={14} stroke={1.5} />
-                        </button>
-                      </div>
-                      <div className="h-4 w-px bg-[var(--color-border-default)]" />
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        leftIcon={<IconTrash size={12} />}
-                        disabled={selectedFirewalls.length === 0}
-                      >
-                        Delete
-                      </Button>
-                    </div>
-
-                    {/* Pagination */}
-                    <Pagination
-                      currentPage={firewallCurrentPage}
-                      totalPages={totalFirewallPages}
-                      onPageChange={setFirewallCurrentPage}
-                      totalItems={filteredFirewalls.length}
-                      selectedCount={selectedFirewalls.length}
-                    />
-
-                    {/* Table */}
-                    <Table
-                      columns={firewallColumns}
-                      data={paginatedFirewalls}
-                      rowKey="id"
-                      selectable
-                      selectedKeys={selectedFirewalls}
-                      onSelectionChange={setSelectedFirewalls}
-                    />
-                  </VStack>
-                </TabPanel>
-
-                {/* Policies Tab */}
-                <TabPanel value="policies" className="pt-3">
-                  <VStack gap={3}>
-                    {/* Action Bar */}
-                    <div className="flex items-center gap-2">
-                      <div className="flex items-center gap-1">
-                        <div className="w-[var(--search-input-width)]">
-                          <SearchInput
-                            value={policySearchTerm}
-                            onChange={(e) => {
-                              setPolicySearchTerm(e.target.value);
-                              setPolicyCurrentPage(1);
-                            }}
-                            placeholder="Search policies by attributes"
-                          />
-                        </div>
-                        <button
-                          type="button"
-                          className="flex items-center justify-center w-7 h-7 rounded-[var(--button-radius)] border border-[var(--color-border-strong)] bg-[var(--color-surface-default)] text-[var(--color-text-default)] hover:bg-[var(--button-secondary-hover-bg)]"
-                          aria-label="Download"
-                        >
-                          <IconDownload size={14} stroke={1.5} />
-                        </button>
-                      </div>
-                      <div className="h-4 w-px bg-[var(--color-border-default)]" />
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        leftIcon={<IconTrash size={12} />}
-                        disabled={selectedPolicies.length === 0}
-                      >
-                        Delete
-                      </Button>
-                    </div>
-
-                    {/* Pagination */}
-                    <Pagination
-                      currentPage={policyCurrentPage}
-                      totalPages={totalPolicyPages}
-                      onPageChange={setPolicyCurrentPage}
-                      totalItems={filteredPolicies.length}
-                      selectedCount={selectedPolicies.length}
-                    />
-
-                    {/* Table */}
-                    <Table
-                      columns={policyColumns}
-                      data={paginatedPolicies}
-                      rowKey="id"
-                      selectable
-                      selectedKeys={selectedPolicies}
-                      onSelectionChange={setSelectedPolicies}
-                    />
-                  </VStack>
-                </TabPanel>
-
-                {/* Rules Tab */}
-                <TabPanel value="rules" className="pt-3">
-                  <VStack gap={3}>
-                    {/* Action Bar */}
-                    <div className="flex items-center gap-2">
-                      <div className="flex items-center gap-1">
-                        <div className="w-[var(--search-input-width)]">
-                          <SearchInput
-                            value={ruleSearchTerm}
-                            onChange={(e) => {
-                              setRuleSearchTerm(e.target.value);
-                              setRuleCurrentPage(1);
-                            }}
-                            placeholder="Search rules by attributes"
-                          />
-                        </div>
-                        <button
-                          type="button"
-                          className="flex items-center justify-center w-7 h-7 rounded-[var(--button-radius)] border border-[var(--color-border-strong)] bg-[var(--color-surface-default)] text-[var(--color-text-default)] hover:bg-[var(--button-secondary-hover-bg)]"
-                          aria-label="Download"
-                        >
-                          <IconDownload size={14} stroke={1.5} />
-                        </button>
-                      </div>
-                      <div className="h-4 w-px bg-[var(--color-border-default)]" />
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        leftIcon={<IconTrash size={12} />}
-                        disabled={selectedRules.length === 0}
-                      >
-                        Delete
-                      </Button>
-                    </div>
-
-                    {/* Pagination */}
-                    <Pagination
-                      currentPage={ruleCurrentPage}
-                      totalPages={totalRulePages}
-                      onPageChange={setRuleCurrentPage}
-                      totalItems={filteredRules.length}
-                      selectedCount={selectedRules.length}
-                    />
-
-                    {/* Table */}
-                    <Table
-                      columns={ruleColumns}
-                      data={paginatedRules}
-                      rowKey="id"
-                      selectable
-                      selectedKeys={selectedRules}
-                      onSelectionChange={setSelectedRules}
-                    />
-                  </VStack>
-                </TabPanel>
-              </Tabs>
+              {/* Table */}
+              <Table
+                columns={firewallColumns}
+                data={paginatedFirewalls}
+                rowKey="id"
+                selectable
+                selectedKeys={selectedFirewalls}
+                onSelectionChange={setSelectedFirewalls}
+              />
             </VStack>
-          </div>
-        </div>
-      </main>
-    </div>
+          </TabPanel>
+
+          {/* Policies Tab */}
+          <TabPanel value="policies" className="pt-3">
+            <VStack gap={3}>
+              {/* Action Bar */}
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1">
+                  <div className="w-[var(--search-input-width)]">
+                    <SearchInput
+                      value={policySearchTerm}
+                      onChange={(e) => {
+                        setPolicySearchTerm(e.target.value);
+                        setPolicyCurrentPage(1);
+                      }}
+                      placeholder="Search policies by attributes"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    className="flex items-center justify-center w-7 h-7 rounded-[var(--button-radius)] border border-[var(--color-border-strong)] bg-[var(--color-surface-default)] text-[var(--color-text-default)] hover:bg-[var(--button-secondary-hover-bg)]"
+                    aria-label="Download"
+                  >
+                    <IconDownload size={14} stroke={1.5} />
+                  </button>
+                </div>
+                <div className="h-4 w-px bg-[var(--color-border-default)]" />
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  leftIcon={<IconTrash size={12} />}
+                  disabled={selectedPolicies.length === 0}
+                >
+                  Delete
+                </Button>
+              </div>
+
+              {/* Pagination */}
+              <Pagination
+                currentPage={policyCurrentPage}
+                totalPages={totalPolicyPages}
+                onPageChange={setPolicyCurrentPage}
+                totalItems={filteredPolicies.length}
+                selectedCount={selectedPolicies.length}
+              />
+
+              {/* Table */}
+              <Table
+                columns={policyColumns}
+                data={paginatedPolicies}
+                rowKey="id"
+                selectable
+                selectedKeys={selectedPolicies}
+                onSelectionChange={setSelectedPolicies}
+              />
+            </VStack>
+          </TabPanel>
+
+          {/* Rules Tab */}
+          <TabPanel value="rules" className="pt-3">
+            <VStack gap={3}>
+              {/* Action Bar */}
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1">
+                  <div className="w-[var(--search-input-width)]">
+                    <SearchInput
+                      value={ruleSearchTerm}
+                      onChange={(e) => {
+                        setRuleSearchTerm(e.target.value);
+                        setRuleCurrentPage(1);
+                      }}
+                      placeholder="Search rules by attributes"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    className="flex items-center justify-center w-7 h-7 rounded-[var(--button-radius)] border border-[var(--color-border-strong)] bg-[var(--color-surface-default)] text-[var(--color-text-default)] hover:bg-[var(--button-secondary-hover-bg)]"
+                    aria-label="Download"
+                  >
+                    <IconDownload size={14} stroke={1.5} />
+                  </button>
+                </div>
+                <div className="h-4 w-px bg-[var(--color-border-default)]" />
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  leftIcon={<IconTrash size={12} />}
+                  disabled={selectedRules.length === 0}
+                >
+                  Delete
+                </Button>
+              </div>
+
+              {/* Pagination */}
+              <Pagination
+                currentPage={ruleCurrentPage}
+                totalPages={totalRulePages}
+                onPageChange={setRuleCurrentPage}
+                totalItems={filteredRules.length}
+                selectedCount={selectedRules.length}
+              />
+
+              {/* Table */}
+              <Table
+                columns={ruleColumns}
+                data={paginatedRules}
+                rowKey="id"
+                selectable
+                selectedKeys={selectedRules}
+                onSelectionChange={setSelectedRules}
+              />
+            </VStack>
+          </TabPanel>
+        </Tabs>
+      </VStack>
+    </PageShell>
   );
 }

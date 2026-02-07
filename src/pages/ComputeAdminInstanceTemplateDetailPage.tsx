@@ -15,6 +15,8 @@ import {
   Select,
   Toggle,
   FormField,
+  PageShell,
+  PageHeader,
 } from '@/design-system';
 import type { WizardSummaryItem, WizardSectionState } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
@@ -479,398 +481,370 @@ export function ComputeAdminInstanceTemplateDetailPage() {
   };
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-      <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
-          sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'
-        }`}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Tab Bar */}
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            showWindowControls={true}
-          />
+    <PageShell
+      sidebar={
+        <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          showWindowControls={true}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={true}
+          onBack={() => navigate('/compute-admin/instance-templates')}
+          onForward={() => window.history.forward()}
+          breadcrumb={<Breadcrumb items={breadcrumbItems} />}
+          actions={
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1.5} />}
+              aria-label="Notifications"
+              badge={true}
+            />
+          }
+        />
+      }
+      contentClassName="pt-4 px-8 pb-6"
+    >
+      <VStack gap={3} className="min-w-[1176px]">
+        {/* Page Title with ID */}
+        <PageHeader
+          title={
+            <HStack gap={1} align="center">
+              <span>Edit template</span>
+              <span className="text-label-lg text-[var(--color-text-subtle)]">
+                (ID: {formData.id})
+              </span>
+            </HStack>
+          }
+        />
 
-          {/* Top Bar */}
-          <TopBar
-            showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
-            showNavigation={true}
-            onBack={() => navigate('/compute-admin/instance-templates')}
-            onForward={() => window.history.forward()}
-            breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-            actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-                badge={true}
-              />
-            }
-          />
-        </div>
-
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)] min-h-full">
-            <VStack gap={3} className="min-w-[1176px]">
-              {/* Page Title with ID */}
-              <div className="flex items-center h-8">
-                <HStack gap={1} align="center">
-                  <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-                    Edit template
-                  </h1>
-                  <span className="text-label-lg text-[var(--color-text-subtle)]">
-                    (ID: {formData.id})
-                  </span>
-                </HStack>
-              </div>
-
-              <HStack gap={6} align="start" className="w-full">
-                {/* Left Column - Main Content */}
-                <VStack gap={4} className="flex-1">
-                  {/* Template Information */}
-                  {editingSection === 'template-info' ? (
-                    <ActiveSection
-                      title={SECTION_LABELS['template-info']}
-                      onSave={() => handleSectionSave('template-info')}
-                      onCancel={() => handleSectionCancel('template-info')}
-                    >
-                      <VStack gap={4} align="stretch">
-                        <FormField>
-                          <FormField.Label>Template name</FormField.Label>
-                          <FormField.Control>
-                            <Input
-                              value={formData.name}
-                              onChange={(e) => updateFormData('name', e.target.value)}
-                              fullWidth
-                            />
-                          </FormField.Control>
-                        </FormField>
-                        <FormField>
-                          <FormField.Label>Favorite</FormField.Label>
-                          <FormField.Control>
-                            <Toggle
-                              checked={formData.favorite}
-                              onChange={(checked) => updateFormData('favorite', checked)}
-                            />
-                          </FormField.Control>
-                        </FormField>
-                        <FormField>
-                          <FormField.Label>Description</FormField.Label>
-                          <FormField.Control>
-                            <Textarea
-                              value={formData.description === '-' ? '' : formData.description}
-                              onChange={(e) => updateFormData('description', e.target.value || '-')}
-                              rows={3}
-                            />
-                          </FormField.Control>
-                        </FormField>
-                      </VStack>
-                    </ActiveSection>
-                  ) : (
-                    <DoneSection
-                      title={SECTION_LABELS['template-info']}
-                      onEdit={() => handleEdit('template-info')}
-                    >
-                      <SectionCard.DataRow
-                        label="Template name"
+        <HStack gap={6} align="start" className="w-full">
+          {/* Left Column - Main Content */}
+          <VStack gap={4} className="flex-1">
+            {/* Template Information */}
+            {editingSection === 'template-info' ? (
+              <ActiveSection
+                title={SECTION_LABELS['template-info']}
+                onSave={() => handleSectionSave('template-info')}
+                onCancel={() => handleSectionCancel('template-info')}
+              >
+                <VStack gap={4} align="stretch">
+                  <FormField>
+                    <FormField.Label>Template name</FormField.Label>
+                    <FormField.Control>
+                      <Input
                         value={formData.name}
-                        showDivider={false}
+                        onChange={(e) => updateFormData('name', e.target.value)}
+                        fullWidth
                       />
-                      <SectionCard.DataRow
-                        label="Favorite"
-                        value={formData.favorite ? 'Yes' : '-'}
+                    </FormField.Control>
+                  </FormField>
+                  <FormField>
+                    <FormField.Label>Favorite</FormField.Label>
+                    <FormField.Control>
+                      <Toggle
+                        checked={formData.favorite}
+                        onChange={(checked) => updateFormData('favorite', checked)}
                       />
-                      <SectionCard.DataRow label="Description" value={formData.description} />
-                    </DoneSection>
-                  )}
-
-                  {/* Basic information */}
-                  {editingSection === 'basic-info' ? (
-                    <ActiveSection
-                      title={SECTION_LABELS['basic-info']}
-                      onSave={() => handleSectionSave('basic-info')}
-                      onCancel={() => handleSectionCancel('basic-info')}
-                    >
-                      <VStack gap={4} align="stretch">
-                        <FormField>
-                          <FormField.Label>Availability zone</FormField.Label>
-                          <FormField.Control>
-                            <Select
-                              options={availabilityZoneOptions}
-                              value={formData.availabilityZone}
-                              onChange={(value) => updateFormData('availabilityZone', value)}
-                              fullWidth
-                            />
-                          </FormField.Control>
-                        </FormField>
-                      </VStack>
-                    </ActiveSection>
-                  ) : (
-                    <DoneSection
-                      title={SECTION_LABELS['basic-info']}
-                      onEdit={() => handleEdit('basic-info')}
-                    >
-                      <SectionCard.DataRow
-                        label="Availability zone"
-                        value={formData.availabilityZone}
-                        showDivider={false}
+                    </FormField.Control>
+                  </FormField>
+                  <FormField>
+                    <FormField.Label>Description</FormField.Label>
+                    <FormField.Control>
+                      <Textarea
+                        value={formData.description === '-' ? '' : formData.description}
+                        onChange={(e) => updateFormData('description', e.target.value || '-')}
+                        rows={3}
                       />
-                    </DoneSection>
-                  )}
-
-                  {/* Source */}
-                  {editingSection === 'source' ? (
-                    <ActiveSection
-                      title={SECTION_LABELS.source}
-                      onSave={() => handleSectionSave('source')}
-                      onCancel={() => handleSectionCancel('source')}
-                    >
-                      <VStack gap={4} align="stretch">
-                        <FormField>
-                          <FormField.Label>Image</FormField.Label>
-                          <FormField.Control>
-                            <Select
-                              options={imageOptions}
-                              value={formData.image}
-                              onChange={(value) => updateFormData('image', value)}
-                              fullWidth
-                            />
-                          </FormField.Control>
-                        </FormField>
-                        <FormField>
-                          <FormField.Label>System disk</FormField.Label>
-                          <FormField.Control>
-                            <Input
-                              value={formData.systemDisk}
-                              onChange={(e) => updateFormData('systemDisk', e.target.value)}
-                              fullWidth
-                            />
-                          </FormField.Control>
-                        </FormField>
-                        <FormField>
-                          <FormField.Label>Data disk</FormField.Label>
-                          <FormField.Control>
-                            <Input
-                              value={formData.dataDisk === '-' ? '' : formData.dataDisk}
-                              onChange={(e) => updateFormData('dataDisk', e.target.value || '-')}
-                              placeholder="Optional"
-                              fullWidth
-                            />
-                          </FormField.Control>
-                        </FormField>
-                      </VStack>
-                    </ActiveSection>
-                  ) : (
-                    <DoneSection title={SECTION_LABELS.source} onEdit={() => handleEdit('source')}>
-                      <SectionCard.DataRow
-                        label="Image"
-                        value={formData.image}
-                        showDivider={false}
-                      />
-                      <SectionCard.DataRow label="System disk" value={formData.systemDisk} />
-                      <SectionCard.DataRow label="Data disk" value={formData.dataDisk} />
-                    </DoneSection>
-                  )}
-
-                  {/* Flavor */}
-                  {editingSection === 'flavor' ? (
-                    <ActiveSection
-                      title={SECTION_LABELS.flavor}
-                      onSave={() => handleSectionSave('flavor')}
-                      onCancel={() => handleSectionCancel('flavor')}
-                    >
-                      <VStack gap={4} align="stretch">
-                        <FormField>
-                          <FormField.Label>Flavor</FormField.Label>
-                          <FormField.Control>
-                            <Select
-                              options={flavorOptions}
-                              value={formData.flavor}
-                              onChange={(value) => updateFormData('flavor', value)}
-                              fullWidth
-                            />
-                          </FormField.Control>
-                        </FormField>
-                      </VStack>
-                    </ActiveSection>
-                  ) : (
-                    <DoneSection title={SECTION_LABELS.flavor} onEdit={() => handleEdit('flavor')}>
-                      <SectionCard.DataRow
-                        label="Flavor"
-                        value={`${formData.flavor} (${formData.vcpu} vCPU / ${formData.ram} / ${formData.disk})`}
-                        showDivider={false}
-                      />
-                    </DoneSection>
-                  )}
-
-                  {/* Network */}
-                  {editingSection === 'network' ? (
-                    <ActiveSection
-                      title={SECTION_LABELS.network}
-                      onSave={() => handleSectionSave('network')}
-                      onCancel={() => handleSectionCancel('network')}
-                    >
-                      <VStack gap={4} align="stretch">
-                        <FormField>
-                          <FormField.Label>Network</FormField.Label>
-                          <FormField.Control>
-                            <Input
-                              value={formData.network === '-' ? '' : formData.network}
-                              onChange={(e) => updateFormData('network', e.target.value || '-')}
-                              placeholder="Select network"
-                              fullWidth
-                            />
-                          </FormField.Control>
-                        </FormField>
-                        <FormField>
-                          <FormField.Label>Floating IP</FormField.Label>
-                          <FormField.Control>
-                            <Input
-                              value={formData.floatingIp === '-' ? '' : formData.floatingIp}
-                              onChange={(e) => updateFormData('floatingIp', e.target.value || '-')}
-                              placeholder="Optional"
-                              fullWidth
-                            />
-                          </FormField.Control>
-                        </FormField>
-                        <FormField>
-                          <FormField.Label>Security groups</FormField.Label>
-                          <FormField.Control>
-                            <Input
-                              value={formData.securityGroups.join(', ')}
-                              onChange={(e) =>
-                                updateFormData(
-                                  'securityGroups',
-                                  e.target.value
-                                    .split(',')
-                                    .map((s) => s.trim())
-                                    .filter(Boolean)
-                                )
-                              }
-                              placeholder="Comma-separated"
-                              fullWidth
-                            />
-                          </FormField.Control>
-                        </FormField>
-                        <FormField>
-                          <FormField.Label>Port</FormField.Label>
-                          <FormField.Control>
-                            <Input
-                              value={formData.port === '-' ? '' : formData.port}
-                              onChange={(e) => updateFormData('port', e.target.value || '-')}
-                              placeholder="Optional"
-                              fullWidth
-                            />
-                          </FormField.Control>
-                        </FormField>
-                      </VStack>
-                    </ActiveSection>
-                  ) : (
-                    <DoneSection
-                      title={SECTION_LABELS.network}
-                      onEdit={() => handleEdit('network')}
-                    >
-                      <SectionCard.DataRow
-                        label="Network"
-                        value={formData.network}
-                        showDivider={false}
-                      />
-                      <SectionCard.DataRow label="Floating IP" value={formData.floatingIp} />
-                      <SectionCard.DataRow
-                        label="Security group"
-                        value={
-                          formData.securityGroups.length > 0
-                            ? formData.securityGroups.join(', ')
-                            : '-'
-                        }
-                      />
-                      <SectionCard.DataRow label="Port" value={formData.port} />
-                    </DoneSection>
-                  )}
-
-                  {/* Advanced */}
-                  {editingSection === 'advanced' ? (
-                    <ActiveSection
-                      title={SECTION_LABELS.advanced}
-                      onSave={() => handleSectionSave('advanced')}
-                      onCancel={() => handleSectionCancel('advanced')}
-                    >
-                      <VStack gap={4} align="stretch">
-                        <FormField>
-                          <FormField.Label>Tags</FormField.Label>
-                          <FormField.Control>
-                            <Input
-                              value={formData.tags.map((t) => `${t.key}:${t.value}`).join(', ')}
-                              onChange={(e) => {
-                                const tags = e.target.value
-                                  .split(',')
-                                  .map((s) => {
-                                    const [key, value] = s.trim().split(':');
-                                    return { key: key || '', value: value || '' };
-                                  })
-                                  .filter((t) => t.key);
-                                updateFormData('tags', tags);
-                              }}
-                              placeholder="key:value, key:value"
-                              fullWidth
-                            />
-                          </FormField.Control>
-                          <FormField.HelperText>
-                            Enter tags as key:value pairs, separated by commas
-                          </FormField.HelperText>
-                        </FormField>
-                        <FormField>
-                          <FormField.Label>User data</FormField.Label>
-                          <FormField.Control>
-                            <Textarea
-                              value={formData.userData === '-' ? '' : formData.userData}
-                              onChange={(e) => updateFormData('userData', e.target.value || '-')}
-                              rows={5}
-                              placeholder="Enter cloud-init script or user data"
-                            />
-                          </FormField.Control>
-                        </FormField>
-                      </VStack>
-                    </ActiveSection>
-                  ) : (
-                    <DoneSection
-                      title={SECTION_LABELS.advanced}
-                      onEdit={() => handleEdit('advanced')}
-                    >
-                      <SectionCard.DataRow
-                        label="Tag"
-                        value={
-                          formData.tags.length > 0
-                            ? formData.tags.map((t) => `${t.key}: ${t.value}`).join(', ')
-                            : '-'
-                        }
-                        showDivider={false}
-                      />
-                      <SectionCard.DataRow label="User data" value={formData.userData || '-'} />
-                    </DoneSection>
-                  )}
+                    </FormField.Control>
+                  </FormField>
                 </VStack>
-
-                {/* Right Column - Summary Sidebar */}
-                <SummarySidebar
-                  sectionStatus={sectionStatus}
-                  onCancel={handleCancel}
-                  onSave={handleSave}
-                  onDelete={handleDelete}
+              </ActiveSection>
+            ) : (
+              <DoneSection
+                title={SECTION_LABELS['template-info']}
+                onEdit={() => handleEdit('template-info')}
+              >
+                <SectionCard.DataRow
+                  label="Template name"
+                  value={formData.name}
+                  showDivider={false}
                 />
-              </HStack>
-            </VStack>
-          </div>
-        </div>
-      </main>
-    </div>
+                <SectionCard.DataRow label="Favorite" value={formData.favorite ? 'Yes' : '-'} />
+                <SectionCard.DataRow label="Description" value={formData.description} />
+              </DoneSection>
+            )}
+
+            {/* Basic information */}
+            {editingSection === 'basic-info' ? (
+              <ActiveSection
+                title={SECTION_LABELS['basic-info']}
+                onSave={() => handleSectionSave('basic-info')}
+                onCancel={() => handleSectionCancel('basic-info')}
+              >
+                <VStack gap={4} align="stretch">
+                  <FormField>
+                    <FormField.Label>Availability zone</FormField.Label>
+                    <FormField.Control>
+                      <Select
+                        options={availabilityZoneOptions}
+                        value={formData.availabilityZone}
+                        onChange={(value) => updateFormData('availabilityZone', value)}
+                        fullWidth
+                      />
+                    </FormField.Control>
+                  </FormField>
+                </VStack>
+              </ActiveSection>
+            ) : (
+              <DoneSection
+                title={SECTION_LABELS['basic-info']}
+                onEdit={() => handleEdit('basic-info')}
+              >
+                <SectionCard.DataRow
+                  label="Availability zone"
+                  value={formData.availabilityZone}
+                  showDivider={false}
+                />
+              </DoneSection>
+            )}
+
+            {/* Source */}
+            {editingSection === 'source' ? (
+              <ActiveSection
+                title={SECTION_LABELS.source}
+                onSave={() => handleSectionSave('source')}
+                onCancel={() => handleSectionCancel('source')}
+              >
+                <VStack gap={4} align="stretch">
+                  <FormField>
+                    <FormField.Label>Image</FormField.Label>
+                    <FormField.Control>
+                      <Select
+                        options={imageOptions}
+                        value={formData.image}
+                        onChange={(value) => updateFormData('image', value)}
+                        fullWidth
+                      />
+                    </FormField.Control>
+                  </FormField>
+                  <FormField>
+                    <FormField.Label>System disk</FormField.Label>
+                    <FormField.Control>
+                      <Input
+                        value={formData.systemDisk}
+                        onChange={(e) => updateFormData('systemDisk', e.target.value)}
+                        fullWidth
+                      />
+                    </FormField.Control>
+                  </FormField>
+                  <FormField>
+                    <FormField.Label>Data disk</FormField.Label>
+                    <FormField.Control>
+                      <Input
+                        value={formData.dataDisk === '-' ? '' : formData.dataDisk}
+                        onChange={(e) => updateFormData('dataDisk', e.target.value || '-')}
+                        placeholder="Optional"
+                        fullWidth
+                      />
+                    </FormField.Control>
+                  </FormField>
+                </VStack>
+              </ActiveSection>
+            ) : (
+              <DoneSection title={SECTION_LABELS.source} onEdit={() => handleEdit('source')}>
+                <SectionCard.DataRow label="Image" value={formData.image} showDivider={false} />
+                <SectionCard.DataRow label="System disk" value={formData.systemDisk} />
+                <SectionCard.DataRow label="Data disk" value={formData.dataDisk} />
+              </DoneSection>
+            )}
+
+            {/* Flavor */}
+            {editingSection === 'flavor' ? (
+              <ActiveSection
+                title={SECTION_LABELS.flavor}
+                onSave={() => handleSectionSave('flavor')}
+                onCancel={() => handleSectionCancel('flavor')}
+              >
+                <VStack gap={4} align="stretch">
+                  <FormField>
+                    <FormField.Label>Flavor</FormField.Label>
+                    <FormField.Control>
+                      <Select
+                        options={flavorOptions}
+                        value={formData.flavor}
+                        onChange={(value) => updateFormData('flavor', value)}
+                        fullWidth
+                      />
+                    </FormField.Control>
+                  </FormField>
+                </VStack>
+              </ActiveSection>
+            ) : (
+              <DoneSection title={SECTION_LABELS.flavor} onEdit={() => handleEdit('flavor')}>
+                <SectionCard.DataRow
+                  label="Flavor"
+                  value={`${formData.flavor} (${formData.vcpu} vCPU / ${formData.ram} / ${formData.disk})`}
+                  showDivider={false}
+                />
+              </DoneSection>
+            )}
+
+            {/* Network */}
+            {editingSection === 'network' ? (
+              <ActiveSection
+                title={SECTION_LABELS.network}
+                onSave={() => handleSectionSave('network')}
+                onCancel={() => handleSectionCancel('network')}
+              >
+                <VStack gap={4} align="stretch">
+                  <FormField>
+                    <FormField.Label>Network</FormField.Label>
+                    <FormField.Control>
+                      <Input
+                        value={formData.network === '-' ? '' : formData.network}
+                        onChange={(e) => updateFormData('network', e.target.value || '-')}
+                        placeholder="Select network"
+                        fullWidth
+                      />
+                    </FormField.Control>
+                  </FormField>
+                  <FormField>
+                    <FormField.Label>Floating IP</FormField.Label>
+                    <FormField.Control>
+                      <Input
+                        value={formData.floatingIp === '-' ? '' : formData.floatingIp}
+                        onChange={(e) => updateFormData('floatingIp', e.target.value || '-')}
+                        placeholder="Optional"
+                        fullWidth
+                      />
+                    </FormField.Control>
+                  </FormField>
+                  <FormField>
+                    <FormField.Label>Security groups</FormField.Label>
+                    <FormField.Control>
+                      <Input
+                        value={formData.securityGroups.join(', ')}
+                        onChange={(e) =>
+                          updateFormData(
+                            'securityGroups',
+                            e.target.value
+                              .split(',')
+                              .map((s) => s.trim())
+                              .filter(Boolean)
+                          )
+                        }
+                        placeholder="Comma-separated"
+                        fullWidth
+                      />
+                    </FormField.Control>
+                  </FormField>
+                  <FormField>
+                    <FormField.Label>Port</FormField.Label>
+                    <FormField.Control>
+                      <Input
+                        value={formData.port === '-' ? '' : formData.port}
+                        onChange={(e) => updateFormData('port', e.target.value || '-')}
+                        placeholder="Optional"
+                        fullWidth
+                      />
+                    </FormField.Control>
+                  </FormField>
+                </VStack>
+              </ActiveSection>
+            ) : (
+              <DoneSection title={SECTION_LABELS.network} onEdit={() => handleEdit('network')}>
+                <SectionCard.DataRow label="Network" value={formData.network} showDivider={false} />
+                <SectionCard.DataRow label="Floating IP" value={formData.floatingIp} />
+                <SectionCard.DataRow
+                  label="Security group"
+                  value={
+                    formData.securityGroups.length > 0 ? formData.securityGroups.join(', ') : '-'
+                  }
+                />
+                <SectionCard.DataRow label="Port" value={formData.port} />
+              </DoneSection>
+            )}
+
+            {/* Advanced */}
+            {editingSection === 'advanced' ? (
+              <ActiveSection
+                title={SECTION_LABELS.advanced}
+                onSave={() => handleSectionSave('advanced')}
+                onCancel={() => handleSectionCancel('advanced')}
+              >
+                <VStack gap={4} align="stretch">
+                  <FormField>
+                    <FormField.Label>Tags</FormField.Label>
+                    <FormField.Control>
+                      <Input
+                        value={formData.tags.map((t) => `${t.key}:${t.value}`).join(', ')}
+                        onChange={(e) => {
+                          const tags = e.target.value
+                            .split(',')
+                            .map((s) => {
+                              const [key, value] = s.trim().split(':');
+                              return { key: key || '', value: value || '' };
+                            })
+                            .filter((t) => t.key);
+                          updateFormData('tags', tags);
+                        }}
+                        placeholder="key:value, key:value"
+                        fullWidth
+                      />
+                    </FormField.Control>
+                    <FormField.HelperText>
+                      Enter tags as key:value pairs, separated by commas
+                    </FormField.HelperText>
+                  </FormField>
+                  <FormField>
+                    <FormField.Label>User data</FormField.Label>
+                    <FormField.Control>
+                      <Textarea
+                        value={formData.userData === '-' ? '' : formData.userData}
+                        onChange={(e) => updateFormData('userData', e.target.value || '-')}
+                        rows={5}
+                        placeholder="Enter cloud-init script or user data"
+                      />
+                    </FormField.Control>
+                  </FormField>
+                </VStack>
+              </ActiveSection>
+            ) : (
+              <DoneSection title={SECTION_LABELS.advanced} onEdit={() => handleEdit('advanced')}>
+                <SectionCard.DataRow
+                  label="Tag"
+                  value={
+                    formData.tags.length > 0
+                      ? formData.tags.map((t) => `${t.key}: ${t.value}`).join(', ')
+                      : '-'
+                  }
+                  showDivider={false}
+                />
+                <SectionCard.DataRow label="User data" value={formData.userData || '-'} />
+              </DoneSection>
+            )}
+          </VStack>
+
+          {/* Right Column - Summary Sidebar */}
+          <SummarySidebar
+            sectionStatus={sectionStatus}
+            onCancel={handleCancel}
+            onSave={handleSave}
+            onDelete={handleDelete}
+          />
+        </HStack>
+      </VStack>
+    </PageShell>
   );
 }
 

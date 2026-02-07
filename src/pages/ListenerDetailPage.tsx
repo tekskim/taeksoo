@@ -19,10 +19,12 @@ import {
   StatusIndicator,
   ContextMenu,
   Badge,
+  PageShell,
   fixedColumns,
   columnMinWidths,
+  type TableColumn,
+  type ContextMenuItem,
 } from '@/design-system';
-import type { TableColumn, ContextMenuItem } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
@@ -261,6 +263,7 @@ export default function ListenerDetailPage() {
     useTabs();
 
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 200 : 0;
   const [activeDetailTab, setActiveDetailTab] = useState('details');
   const [copiedId, setCopiedId] = useState(false);
 
@@ -670,354 +673,300 @@ export default function ListenerDetailPage() {
   ];
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+    <PageShell
+      sidebar={<Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />}
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
+        />
+      }
+      topBar={
+        <TopBar
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={<Breadcrumb items={breadcrumbItems} />}
+          onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+          actions={
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1.5} />}
+              onClick={() => {}}
+              hasNotification
+            />
+          }
+        />
+      }
+      contentClassName="pt-3 px-8 pb-20 bg-[var(--color-surface-subtle)]"
+    >
+      <VStack gap={8} className="min-w-[1176px]">
+        {/* Detail header */}
+        <DetailHeader>
+          <DetailHeader.Title>{listener.name}</DetailHeader.Title>
 
-      {/* Main Content */}
-      <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
-          sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'
-        }`}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Tab Bar */}
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            onTabAdd={addNewTab}
-            onTabReorder={moveTab}
-            showAddButton={true}
-            showWindowControls={true}
-          />
+          <DetailHeader.Actions>
+            <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+              Delete Default Pool
+            </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+              Delete
+            </Button>
+          </DetailHeader.Actions>
 
-          {/* Top Bar */}
-          <TopBar
-            showNavigation={true}
-            onBack={() => window.history.back()}
-            onForward={() => window.history.forward()}
-            breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-            onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
-            actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                onClick={() => {}}
-                hasNotification
-              />
-            }
-          />
-        </div>
+          <DetailHeader.InfoGrid>
+            <DetailHeader.InfoCard
+              label="Status"
+              value={listener.status === 'active' ? 'Available' : listener.status}
+              status={listenerStatusMap[listener.status]}
+            />
+            <DetailHeader.InfoCard
+              label="ID"
+              value={listener.id}
+              copyable
+              onCopy={handleCopyId}
+              className="flex-1"
+            />
+            <DetailHeader.InfoCard label="Admin state" value={listener.adminState} />
+            <DetailHeader.InfoCard label="Created at" value={listener.createdAt} />
+          </DetailHeader.InfoGrid>
+        </DetailHeader>
 
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          {/* Page Content */}
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
-            <VStack gap={8} className="min-w-[1176px]">
-              {/* Detail header */}
-              <DetailHeader>
-                <DetailHeader.Title>{listener.name}</DetailHeader.Title>
+        {/* Tabs */}
+        <div className="w-full">
+          <Tabs value={activeDetailTab} onChange={setActiveDetailTab} size="sm">
+            <TabList>
+              <Tab value="details">Details</Tab>
+              <Tab value="pools">Default pool</Tab>
+              <Tab value="l7-policies">L7 Policies</Tab>
+              <Tab value="certificates">Certificates</Tab>
+            </TabList>
 
-                <DetailHeader.Actions>
-                  <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
-                    Delete Default Pool
+            {/* Details Tab */}
+            <TabPanel value="details" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Basic information */}
+                <SectionCard>
+                  <SectionCard.Header
+                    title="Basic information"
+                    actions={
+                      <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+                        Edit
+                      </Button>
+                    }
+                  />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="Name" value={listener.name} />
+                    <SectionCard.DataRow label="Description" value={listener.description} />
+                    <SectionCard.DataRow label="Protocol" value={listener.protocol} />
+                    <SectionCard.DataRow label="Port" value={String(listener.port)} />
+                    <SectionCard.DataRow
+                      label="Connection limit"
+                      value={listener.connectionLimit}
+                    />
+                    <SectionCard.DataRow label="Custom headers" value={listener.customHeaders} />
+                    <SectionCard.DataRow
+                      label="Client data Timeout"
+                      value={listener.clientDataTimeout}
+                    />
+                    <SectionCard.DataRow
+                      label="Member connect Timeout"
+                      value={listener.memberConnectTimeout}
+                    />
+                    <SectionCard.DataRow
+                      label="Member data Timeout"
+                      value={listener.memberDataTimeout}
+                    />
+                    <SectionCard.DataRow
+                      label="TCP Inspect Timeout"
+                      value={listener.tcpInspectTimeout}
+                    />
+                    <SectionCard.DataRow label="Allowed CIDRs" value={listener.allowedCidrs} />
+                    <SectionCard.DataRow label="Admin state" value={listener.adminState} />
+                  </SectionCard.Content>
+                </SectionCard>
+
+                {/* Association */}
+                <SectionCard>
+                  <SectionCard.Header title="Association" />
+                  <SectionCard.Content>
+                    <div className="flex flex-col gap-3 w-full">
+                      <div className="h-px w-full bg-[var(--color-border-subtle)]" />
+                      <div className="flex flex-col gap-1.5">
+                        <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
+                          Load balancer
+                        </span>
+                        {listener.loadBalancer ? (
+                          <Link
+                            to={`/compute/load-balancers/${listener.loadBalancer.id}`}
+                            className="flex items-center gap-1.5 text-label-md leading-4 text-[var(--color-action-primary)] hover:underline"
+                          >
+                            {listener.loadBalancer.name}
+                          </Link>
+                        ) : (
+                          <span className="text-body-md leading-4 text-[var(--color-text-default)]">
+                            -
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </SectionCard.Content>
+                </SectionCard>
+              </VStack>
+            </TabPanel>
+
+            {/* Default Pool Tab */}
+            <TabPanel value="pools" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Default Pool */}
+                <SectionCard>
+                  <SectionCard.Header
+                    title="Default pool"
+                    actions={
+                      <>
+                        <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+                          Edit
+                        </Button>
+                        <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+                          Delete
+                        </Button>
+                      </>
+                    }
+                  />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="Name" value={mockPools[0]?.name || '-'} />
+                    <SectionCard.DataRow
+                      label="Status"
+                      value={
+                        <StatusIndicator status={poolStatusMap[mockPools[0]?.status] || 'down'} />
+                      }
+                    />
+                    <SectionCard.DataRow label="Description" value="-" />
+                    <SectionCard.DataRow label="Algorithm" value={mockPools[0]?.algorithm || '-'} />
+                    <SectionCard.DataRow label="Protocol" value={mockPools[0]?.protocol || '-'} />
+                    <SectionCard.DataRow label="Session persistence" value="-" />
+                    <SectionCard.DataRow
+                      label="Admin state"
+                      value={mockPools[0]?.adminState || '-'}
+                    />
+                  </SectionCard.Content>
+                </SectionCard>
+              </VStack>
+            </TabPanel>
+
+            {/* L7 Policies Tab */}
+            <TabPanel value="l7-policies" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Header */}
+                <div className="flex items-center justify-between">
+                  <h3 className="text-heading-h5 text-[var(--color-text-default)]">L7 Policies</h3>
+                  <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+                    Add L7 Policy
                   </Button>
-                  <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+                </div>
+
+                {/* Action Bar */}
+                <div className="flex items-center gap-2">
+                  <div className="w-[var(--search-input-width)]">
+                    <SearchInput
+                      value={l7PolicySearchTerm}
+                      onChange={(e) => {
+                        setL7PolicySearchTerm(e.target.value);
+                        setL7PolicyCurrentPage(1);
+                      }}
+                      placeholder="Search policies by attributes"
+                    />
+                  </div>
+                  <div className="h-4 w-px bg-[var(--color-border-default)]" />
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    leftIcon={<IconTrash size={12} />}
+                    disabled={selectedL7Policies.length === 0}
+                  >
                     Delete
                   </Button>
-                </DetailHeader.Actions>
+                </div>
 
-                <DetailHeader.InfoGrid>
-                  <DetailHeader.InfoCard
-                    label="Status"
-                    value={listener.status === 'active' ? 'Available' : listener.status}
-                    status={listenerStatusMap[listener.status]}
-                  />
-                  <DetailHeader.InfoCard
-                    label="ID"
-                    value={listener.id}
-                    copyable
-                    onCopy={handleCopyId}
-                    className="flex-1"
-                  />
-                  <DetailHeader.InfoCard label="Admin state" value={listener.adminState} />
-                  <DetailHeader.InfoCard label="Created at" value={listener.createdAt} />
-                </DetailHeader.InfoGrid>
-              </DetailHeader>
+                {/* Pagination */}
+                <Pagination
+                  currentPage={l7PolicyCurrentPage}
+                  totalPages={totalL7PolicyPages}
+                  onPageChange={setL7PolicyCurrentPage}
+                  totalItems={filteredL7Policies.length}
+                  selectedCount={selectedL7Policies.length}
+                />
 
-              {/* Tabs */}
-              <div className="w-full">
-                <Tabs value={activeDetailTab} onChange={setActiveDetailTab} size="sm">
-                  <TabList>
-                    <Tab value="details">Details</Tab>
-                    <Tab value="pools">Default pool</Tab>
-                    <Tab value="l7-policies">L7 Policies</Tab>
-                    <Tab value="certificates">Certificates</Tab>
-                  </TabList>
+                {/* Table */}
+                <Table
+                  columns={l7PolicyColumns}
+                  data={paginatedL7Policies}
+                  rowKey="id"
+                  selectable
+                  selectedKeys={selectedL7Policies}
+                  onSelectionChange={setSelectedL7Policies}
+                />
+              </VStack>
+            </TabPanel>
 
-                  {/* Details Tab */}
-                  <TabPanel value="details" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Basic information */}
-                      <SectionCard>
-                        <SectionCard.Header
-                          title="Basic information"
-                          actions={
-                            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                              Edit
-                            </Button>
-                          }
-                        />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow label="Name" value={listener.name} />
-                          <SectionCard.DataRow label="Description" value={listener.description} />
-                          <SectionCard.DataRow label="Protocol" value={listener.protocol} />
-                          <SectionCard.DataRow label="Port" value={String(listener.port)} />
-                          <SectionCard.DataRow
-                            label="Connection limit"
-                            value={listener.connectionLimit}
-                          />
-                          <SectionCard.DataRow
-                            label="Custom headers"
-                            value={listener.customHeaders}
-                          />
-                          <SectionCard.DataRow
-                            label="Client data Timeout"
-                            value={listener.clientDataTimeout}
-                          />
-                          <SectionCard.DataRow
-                            label="Member connect Timeout"
-                            value={listener.memberConnectTimeout}
-                          />
-                          <SectionCard.DataRow
-                            label="Member data Timeout"
-                            value={listener.memberDataTimeout}
-                          />
-                          <SectionCard.DataRow
-                            label="TCP Inspect Timeout"
-                            value={listener.tcpInspectTimeout}
-                          />
-                          <SectionCard.DataRow
-                            label="Allowed CIDRs"
-                            value={listener.allowedCidrs}
-                          />
-                          <SectionCard.DataRow label="Admin state" value={listener.adminState} />
-                        </SectionCard.Content>
-                      </SectionCard>
+            {/* Certificates Tab */}
+            <TabPanel value="certificates" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Header */}
+                <div className="flex items-center justify-between">
+                  <h3 className="text-heading-h5 text-[var(--color-text-default)]">Certificates</h3>
+                  <div className="flex items-center gap-2">
+                    <Button variant="secondary" size="sm">
+                      Change server Certificate
+                    </Button>
+                    <Button variant="secondary" size="sm">
+                      Change CA Certificate
+                    </Button>
+                    <Button variant="secondary" size="sm">
+                      Manage SNI Certificates
+                    </Button>
+                  </div>
+                </div>
 
-                      {/* Association */}
-                      <SectionCard>
-                        <SectionCard.Header title="Association" />
-                        <SectionCard.Content>
-                          <div className="flex flex-col gap-3 w-full">
-                            <div className="h-px w-full bg-[var(--color-border-subtle)]" />
-                            <div className="flex flex-col gap-1.5">
-                              <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
-                                Load balancer
-                              </span>
-                              {listener.loadBalancer ? (
-                                <Link
-                                  to={`/compute/load-balancers/${listener.loadBalancer.id}`}
-                                  className="flex items-center gap-1.5 text-label-md leading-4 text-[var(--color-action-primary)] hover:underline"
-                                >
-                                  {listener.loadBalancer.name}
-                                </Link>
-                              ) : (
-                                <span className="text-body-md leading-4 text-[var(--color-text-default)]">
-                                  -
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                        </SectionCard.Content>
-                      </SectionCard>
-                    </VStack>
-                  </TabPanel>
+                {/* Action Bar */}
+                <div className="flex items-center gap-2">
+                  <div className="w-[var(--search-input-width)]">
+                    <SearchInput
+                      value={certificateSearchTerm}
+                      onChange={(e) => {
+                        setCertificateSearchTerm(e.target.value);
+                        setCertificateCurrentPage(1);
+                      }}
+                      placeholder="Search certificates by attributes"
+                    />
+                  </div>
+                  <div className="h-4 w-px bg-[var(--color-border-default)]" />
+                  <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />} disabled>
+                    Delete
+                  </Button>
+                </div>
 
-                  {/* Default Pool Tab */}
-                  <TabPanel value="pools" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Default Pool */}
-                      <SectionCard>
-                        <SectionCard.Header
-                          title="Default pool"
-                          actions={
-                            <>
-                              <Button
-                                variant="secondary"
-                                size="sm"
-                                leftIcon={<IconEdit size={12} />}
-                              >
-                                Edit
-                              </Button>
-                              <Button
-                                variant="secondary"
-                                size="sm"
-                                leftIcon={<IconTrash size={12} />}
-                              >
-                                Delete
-                              </Button>
-                            </>
-                          }
-                        />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow label="Name" value={mockPools[0]?.name || '-'} />
-                          <SectionCard.DataRow
-                            label="Status"
-                            value={
-                              <StatusIndicator
-                                status={poolStatusMap[mockPools[0]?.status] || 'down'}
-                              />
-                            }
-                          />
-                          <SectionCard.DataRow label="Description" value="-" />
-                          <SectionCard.DataRow
-                            label="Algorithm"
-                            value={mockPools[0]?.algorithm || '-'}
-                          />
-                          <SectionCard.DataRow
-                            label="Protocol"
-                            value={mockPools[0]?.protocol || '-'}
-                          />
-                          <SectionCard.DataRow label="Session persistence" value="-" />
-                          <SectionCard.DataRow
-                            label="Admin state"
-                            value={mockPools[0]?.adminState || '-'}
-                          />
-                        </SectionCard.Content>
-                      </SectionCard>
-                    </VStack>
-                  </TabPanel>
+                {/* Pagination */}
+                <Pagination
+                  currentPage={certificateCurrentPage}
+                  totalPages={totalCertificatePages}
+                  onPageChange={setCertificateCurrentPage}
+                  totalItems={filteredCertificates.length}
+                />
 
-                  {/* L7 Policies Tab */}
-                  <TabPanel value="l7-policies" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Header */}
-                      <div className="flex items-center justify-between">
-                        <h3 className="text-heading-h5 text-[var(--color-text-default)]">
-                          L7 Policies
-                        </h3>
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          leftIcon={<IconCirclePlus size={12} />}
-                        >
-                          Add L7 Policy
-                        </Button>
-                      </div>
-
-                      {/* Action Bar */}
-                      <div className="flex items-center gap-2">
-                        <div className="w-[var(--search-input-width)]">
-                          <SearchInput
-                            value={l7PolicySearchTerm}
-                            onChange={(e) => {
-                              setL7PolicySearchTerm(e.target.value);
-                              setL7PolicyCurrentPage(1);
-                            }}
-                            placeholder="Search policies by attributes"
-                          />
-                        </div>
-                        <div className="h-4 w-px bg-[var(--color-border-default)]" />
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          leftIcon={<IconTrash size={12} />}
-                          disabled={selectedL7Policies.length === 0}
-                        >
-                          Delete
-                        </Button>
-                      </div>
-
-                      {/* Pagination */}
-                      <Pagination
-                        currentPage={l7PolicyCurrentPage}
-                        totalPages={totalL7PolicyPages}
-                        onPageChange={setL7PolicyCurrentPage}
-                        totalItems={filteredL7Policies.length}
-                        selectedCount={selectedL7Policies.length}
-                      />
-
-                      {/* Table */}
-                      <Table
-                        columns={l7PolicyColumns}
-                        data={paginatedL7Policies}
-                        rowKey="id"
-                        selectable
-                        selectedKeys={selectedL7Policies}
-                        onSelectionChange={setSelectedL7Policies}
-                      />
-                    </VStack>
-                  </TabPanel>
-
-                  {/* Certificates Tab */}
-                  <TabPanel value="certificates" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Header */}
-                      <div className="flex items-center justify-between">
-                        <h3 className="text-heading-h5 text-[var(--color-text-default)]">
-                          Certificates
-                        </h3>
-                        <div className="flex items-center gap-2">
-                          <Button variant="secondary" size="sm">
-                            Change server Certificate
-                          </Button>
-                          <Button variant="secondary" size="sm">
-                            Change CA Certificate
-                          </Button>
-                          <Button variant="secondary" size="sm">
-                            Manage SNI Certificates
-                          </Button>
-                        </div>
-                      </div>
-
-                      {/* Action Bar */}
-                      <div className="flex items-center gap-2">
-                        <div className="w-[var(--search-input-width)]">
-                          <SearchInput
-                            value={certificateSearchTerm}
-                            onChange={(e) => {
-                              setCertificateSearchTerm(e.target.value);
-                              setCertificateCurrentPage(1);
-                            }}
-                            placeholder="Search certificates by attributes"
-                          />
-                        </div>
-                        <div className="h-4 w-px bg-[var(--color-border-default)]" />
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          leftIcon={<IconTrash size={12} />}
-                          disabled
-                        >
-                          Delete
-                        </Button>
-                      </div>
-
-                      {/* Pagination */}
-                      <Pagination
-                        currentPage={certificateCurrentPage}
-                        totalPages={totalCertificatePages}
-                        onPageChange={setCertificateCurrentPage}
-                        totalItems={filteredCertificates.length}
-                      />
-
-                      {/* Table */}
-                      <Table
-                        columns={certificateColumns}
-                        data={paginatedCertificates}
-                        rowKey="id"
-                      />
-                    </VStack>
-                  </TabPanel>
-                </Tabs>
-              </div>
-            </VStack>
-          </div>
+                {/* Table */}
+                <Table columns={certificateColumns} data={paginatedCertificates} rowKey="id" />
+              </VStack>
+            </TabPanel>
+          </Tabs>
         </div>
-      </main>
-    </div>
+      </VStack>
+    </PageShell>
   );
 }

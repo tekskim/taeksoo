@@ -1,30 +1,18 @@
 import { useState, useEffect } from 'react';
-import { VStack, HStack, TabBar, TopBar, Breadcrumb, Button } from '@/design-system';
+import {
+  VStack,
+  HStack,
+  TabBar,
+  TopBar,
+  Breadcrumb,
+  Button,
+  PageShell,
+  PageHeader,
+  EmptyState,
+} from '@/design-system';
 import { AIPlatformSidebar } from '@/components/AIPlatformSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { IconBell, IconSearch, IconRefresh, IconBolt, IconPlus } from '@tabler/icons-react';
-
-function EmptyState({
-  icon,
-  title,
-  description,
-}: {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-}) {
-  return (
-    <div className="bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-subtle)] p-16">
-      <VStack gap={4} align="center">
-        <div className="text-[var(--color-text-disabled)]">{icon}</div>
-        <VStack gap={2} align="center">
-          <span className="text-heading-h5 text-[var(--color-text-default)]">{title}</span>
-          <span className="text-body-lg text-[var(--color-text-subtle)]">{description}</span>
-        </VStack>
-      </VStack>
-    </div>
-  );
-}
 
 export function ServerlessPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -38,12 +26,12 @@ export function ServerlessPage() {
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <AIPlatformSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: `${sidebarWidth}px` }}
-      >
+    <PageShell
+      sidebar={
+        <AIPlatformSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
         <TabBar
           tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
@@ -52,6 +40,8 @@ export function ServerlessPage() {
           onTabAdd={addNewTab}
           onTabReorder={moveTab}
         />
+      }
+      topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -75,39 +65,34 @@ export function ServerlessPage() {
             </>
           }
         />
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-3 px-8 pb-20 bg-[var(--color-surface-subtle)] min-h-full">
-            <VStack gap={6}>
-              <HStack justify="between" align="center">
-                <VStack gap={1}>
-                  <h1 className="text-heading-h3 text-[var(--color-text-default)]">Serverless</h1>
-                  <p className="text-body-lg text-[var(--color-text-subtle)]">
-                    Deploy serverless inference endpoints.
-                  </p>
-                </VStack>
-                <HStack gap={2}>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    icon={<IconRefresh size={14} stroke={1.5} />}
-                  >
-                    Refresh
-                  </Button>
-                  <Button variant="primary" size="md" icon={<IconPlus size={12} stroke={1.5} />}>
-                    Create endpoint
-                  </Button>
-                </HStack>
-              </HStack>
-              <EmptyState
-                icon={<IconBolt size={48} stroke={1} />}
-                title="No serverless endpoints found"
-                description="Create your first serverless endpoint to get started."
-              />
-            </VStack>
-          </div>
-        </div>
-      </main>
-    </div>
+      }
+      contentClassName="pt-3 px-8 pb-20 bg-[var(--color-surface-subtle)]"
+    >
+      <VStack gap={6}>
+        <PageHeader
+          title="Serverless"
+          actions={
+            <HStack gap={2}>
+              <Button variant="secondary" size="sm" icon={<IconRefresh size={14} stroke={1.5} />}>
+                Refresh
+              </Button>
+              <Button variant="primary" size="md" icon={<IconPlus size={12} stroke={1.5} />}>
+                Create endpoint
+              </Button>
+            </HStack>
+          }
+        />
+        <p className="text-body-lg text-[var(--color-text-subtle)]">
+          Deploy serverless inference endpoints.
+        </p>
+        <EmptyState
+          variant="card"
+          icon={<IconBolt size={48} stroke={1} />}
+          title="No serverless endpoints found"
+          description="Create your first serverless endpoint to get started."
+        />
+      </VStack>
+    </PageShell>
   );
 }
 

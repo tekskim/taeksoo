@@ -1,30 +1,8 @@
 import { useState, useEffect } from 'react';
-import { VStack, HStack, TabBar, TopBar, Breadcrumb, Button } from '@/design-system';
+import { VStack, HStack, TabBar, TopBar, Breadcrumb, Button, EmptyState } from '@/design-system';
 import { AIPlatformSidebar } from '@/components/AIPlatformSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import { IconBell, IconSearch, IconRefresh, IconSettings } from '@tabler/icons-react';
-
-function EmptyState({
-  icon,
-  title,
-  description,
-}: {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-}) {
-  return (
-    <div className="bg-[var(--color-surface-default)] rounded-lg border border-[var(--color-border-subtle)] p-16">
-      <VStack gap={4} align="center">
-        <div className="text-[var(--color-text-disabled)]">{icon}</div>
-        <VStack gap={2} align="center">
-          <span className="text-heading-h5 text-[var(--color-text-default)]">{title}</span>
-          <span className="text-body-lg text-[var(--color-text-subtle)]">{description}</span>
-        </VStack>
-      </VStack>
-    </div>
-  );
-}
 
 export function SettingsPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);

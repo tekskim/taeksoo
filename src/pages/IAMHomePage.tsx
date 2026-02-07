@@ -7,6 +7,7 @@ import {
   TopBar,
   Breadcrumb,
   Table,
+  PageShell,
   type TableColumn,
 } from '@/design-system';
 import { columnMinWidths } from '@/design-system/presets/columnWidths';
@@ -248,16 +249,10 @@ export function IAMHomePage() {
   ];
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <IAMSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-
-      {/* Main Content */}
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: `${sidebarWidth}px` }}
-      >
-        {/* Tab Bar */}
+    <PageShell
+      sidebar={<IAMSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />}
+      sidebarWidth={sidebarWidth}
+      tabBar={
         <TabBar
           tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
@@ -266,8 +261,8 @@ export function IAMHomePage() {
           onTabAdd={addNewTab}
           onTabReorder={moveTab}
         />
-
-        {/* Top Bar */}
+      }
+      topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -283,139 +278,125 @@ export function IAMHomePage() {
             </>
           }
         />
-
-        {/* Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="px-8 py-6">
-            <VStack gap={6}>
-              {/* Row 1: Domain Info + Authentication Summary */}
-              <div className="grid grid-cols-[320px_1fr] gap-6">
-                {/* Domain Info Card */}
-                <div className="bg-[var(--color-surface-subtle)] rounded-2xl border border-[var(--color-border-default)] p-4 flex flex-col gap-6">
-                  <h6 className="text-heading-h7">DOMAIN INFO</h6>
-                  <h2 className="text-heading-h2 text-[var(--color-text-default)]">DomainA</h2>
-                  <VStack gap={4} className="mt-auto">
-                    <div>
-                      <div className="text-body-xs text-[var(--color-text-muted)] mb-1">
-                        Created at
-                      </div>
-                      <div className="text-body-md text-[var(--color-text-default)]">
-                        Dec 12, 2025
-                      </div>
-                    </div>
-                    <div>
-                      <div className="text-body-xs text-[var(--color-text-muted)] mb-1">
-                        Description
-                      </div>
-                      <div className="text-body-md text-[var(--color-text-default)]">-</div>
-                    </div>
-                  </VStack>
-                </div>
-
-                {/* Authentication Summary Card */}
-                <div className="bg-[var(--color-surface-default)] rounded-2xl border border-[var(--color-border-default)] p-4 flex flex-col gap-4">
-                  <h6 className="text-heading-h7">AUTHENTICATION SUMMARY</h6>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    {/* Today's Sign-ins */}
-                    <div className="bg-[var(--color-surface-subtle)] rounded-lg p-4 flex items-start justify-between">
-                      <VStack gap={3}>
-                        <p className="text-label-lg text-[var(--color-text-default)]">
-                          Today's Sign-ins
-                        </p>
-                        <VStack gap={2}>
-                          <HStack gap={1} align="center">
-                            <div className="w-2 h-2 rounded-sm bg-[#4ade80]" />
-                            <span className="text-label-sm text-[var(--color-text-subtle)]">
-                              Success: 1,234 (96%)
-                            </span>
-                          </HStack>
-                          <HStack gap={1} align="center">
-                            <div className="w-2 h-2 rounded-sm bg-[#f87171]" />
-                            <span className="text-label-sm text-[var(--color-text-subtle)]">
-                              Failure: 45 (4%)
-                            </span>
-                          </HStack>
-                        </VStack>
-                      </VStack>
-                      <SimplePieChart
-                        data={[
-                          { name: 'Success', value: 1234, color: '#4ade80' },
-                          { name: 'Failure', value: 45, color: '#f87171' },
-                        ]}
-                        size={100}
-                      />
-                    </div>
-
-                    {/* MFA Adoption */}
-                    <div className="bg-[var(--color-surface-subtle)] rounded-lg p-4 flex items-start justify-between">
-                      <VStack gap={3}>
-                        <p className="text-label-lg text-[var(--color-text-default)]">
-                          MFA adoption
-                        </p>
-                        <VStack gap={2}>
-                          <HStack gap={1} align="center">
-                            <div className="w-2 h-2 rounded-sm bg-[#4ade80]" />
-                            <span className="text-label-sm text-[var(--color-text-subtle)]">
-                              Enabled: 117 (78%)
-                            </span>
-                          </HStack>
-                          <HStack gap={1} align="center">
-                            <div className="w-2 h-2 rounded-sm bg-[#e2e8f0]" />
-                            <span className="text-label-sm text-[var(--color-text-subtle)]">
-                              Disabled: 33 (22%)
-                            </span>
-                          </HStack>
-                        </VStack>
-                      </VStack>
-                      <SimplePieChart
-                        data={[
-                          { name: 'Enabled', value: 117, color: '#4ade80' },
-                          { name: 'Disabled', value: 33, color: '#e2e8f0' },
-                        ]}
-                        size={100}
-                      />
-                    </div>
-                  </div>
-                </div>
+      }
+      contentClassName="px-8 py-6"
+    >
+      <VStack gap={6}>
+        {/* Row 1: Domain Info + Authentication Summary */}
+        <div className="grid grid-cols-[320px_1fr] gap-6">
+          {/* Domain Info Card */}
+          <div className="bg-[var(--color-surface-subtle)] rounded-2xl border border-[var(--color-border-default)] p-4 flex flex-col gap-6">
+            <h6 className="text-heading-h7">DOMAIN INFO</h6>
+            <h2 className="text-heading-h2 text-[var(--color-text-default)]">DomainA</h2>
+            <VStack gap={4} className="mt-auto">
+              <div>
+                <div className="text-body-xs text-[var(--color-text-muted)] mb-1">Created at</div>
+                <div className="text-body-md text-[var(--color-text-default)]">Dec 12, 2025</div>
               </div>
-
-              {/* Row 2: User Status */}
-              <div className="bg-[var(--color-surface-default)] rounded-2xl border border-[var(--color-border-default)] p-4 flex flex-col gap-4">
-                <h6 className="text-heading-h7">USER STATUS</h6>
-                <div className="grid grid-cols-4 gap-4">
-                  <StatCard label="Total" value="150" variant="default" />
-                  <StatCard label="Online" value="50" variant="success" />
-                  <StatCard label="Disabled" value="27" variant="danger" />
-                  <StatCard label="Locked" value="3" variant="warning" />
-                </div>
-              </div>
-
-              {/* Row 3: IAM Resources + Recent Events */}
-              <div className="grid grid-cols-[320px_1fr] gap-6">
-                {/* IAM Resources */}
-                <div className="bg-[var(--color-surface-default)] rounded-2xl border border-[var(--color-border-default)] p-4 flex flex-col gap-4">
-                  <h6 className="text-heading-h7">IAM RESOURCES</h6>
-                  <VStack gap={2}>
-                    <ResourceCard label="User group" value="13" />
-                    <ResourceCard label="Roles" value="13" />
-                    <ResourceCard label="Policies" value="13" />
-                  </VStack>
-                </div>
-
-                {/* Recent Events */}
-                <div className="bg-[var(--color-surface-default)] rounded-2xl border border-[var(--color-border-default)] p-4 flex flex-col gap-4 min-w-0">
-                  <h6 className="text-heading-h7">RECENT EVENTS</h6>
-                  <div className="overflow-x-auto">
-                    <Table<EventRow> columns={eventsColumns} data={eventsData} rowKey="id" />
-                  </div>
-                </div>
+              <div>
+                <div className="text-body-xs text-[var(--color-text-muted)] mb-1">Description</div>
+                <div className="text-body-md text-[var(--color-text-default)]">-</div>
               </div>
             </VStack>
           </div>
+
+          {/* Authentication Summary Card */}
+          <div className="bg-[var(--color-surface-default)] rounded-2xl border border-[var(--color-border-default)] p-4 flex flex-col gap-4">
+            <h6 className="text-heading-h7">AUTHENTICATION SUMMARY</h6>
+
+            <div className="grid grid-cols-2 gap-4">
+              {/* Today's Sign-ins */}
+              <div className="bg-[var(--color-surface-subtle)] rounded-lg p-4 flex items-start justify-between">
+                <VStack gap={3}>
+                  <p className="text-label-lg text-[var(--color-text-default)]">Today's Sign-ins</p>
+                  <VStack gap={2}>
+                    <HStack gap={1} align="center">
+                      <div className="w-2 h-2 rounded-sm bg-[#4ade80]" />
+                      <span className="text-label-sm text-[var(--color-text-subtle)]">
+                        Success: 1,234 (96%)
+                      </span>
+                    </HStack>
+                    <HStack gap={1} align="center">
+                      <div className="w-2 h-2 rounded-sm bg-[#f87171]" />
+                      <span className="text-label-sm text-[var(--color-text-subtle)]">
+                        Failure: 45 (4%)
+                      </span>
+                    </HStack>
+                  </VStack>
+                </VStack>
+                <SimplePieChart
+                  data={[
+                    { name: 'Success', value: 1234, color: '#4ade80' },
+                    { name: 'Failure', value: 45, color: '#f87171' },
+                  ]}
+                  size={100}
+                />
+              </div>
+
+              {/* MFA Adoption */}
+              <div className="bg-[var(--color-surface-subtle)] rounded-lg p-4 flex items-start justify-between">
+                <VStack gap={3}>
+                  <p className="text-label-lg text-[var(--color-text-default)]">MFA adoption</p>
+                  <VStack gap={2}>
+                    <HStack gap={1} align="center">
+                      <div className="w-2 h-2 rounded-sm bg-[#4ade80]" />
+                      <span className="text-label-sm text-[var(--color-text-subtle)]">
+                        Enabled: 117 (78%)
+                      </span>
+                    </HStack>
+                    <HStack gap={1} align="center">
+                      <div className="w-2 h-2 rounded-sm bg-[#e2e8f0]" />
+                      <span className="text-label-sm text-[var(--color-text-subtle)]">
+                        Disabled: 33 (22%)
+                      </span>
+                    </HStack>
+                  </VStack>
+                </VStack>
+                <SimplePieChart
+                  data={[
+                    { name: 'Enabled', value: 117, color: '#4ade80' },
+                    { name: 'Disabled', value: 33, color: '#e2e8f0' },
+                  ]}
+                  size={100}
+                />
+              </div>
+            </div>
+          </div>
         </div>
-      </main>
-    </div>
+
+        {/* Row 2: User Status */}
+        <div className="bg-[var(--color-surface-default)] rounded-2xl border border-[var(--color-border-default)] p-4 flex flex-col gap-4">
+          <h6 className="text-heading-h7">USER STATUS</h6>
+          <div className="grid grid-cols-4 gap-4">
+            <StatCard label="Total" value="150" variant="default" />
+            <StatCard label="Online" value="50" variant="success" />
+            <StatCard label="Disabled" value="27" variant="danger" />
+            <StatCard label="Locked" value="3" variant="warning" />
+          </div>
+        </div>
+
+        {/* Row 3: IAM Resources + Recent Events */}
+        <div className="grid grid-cols-[320px_1fr] gap-6">
+          {/* IAM Resources */}
+          <div className="bg-[var(--color-surface-default)] rounded-2xl border border-[var(--color-border-default)] p-4 flex flex-col gap-4">
+            <h6 className="text-heading-h7">IAM RESOURCES</h6>
+            <VStack gap={2}>
+              <ResourceCard label="User group" value="13" />
+              <ResourceCard label="Roles" value="13" />
+              <ResourceCard label="Policies" value="13" />
+            </VStack>
+          </div>
+
+          {/* Recent Events */}
+          <div className="bg-[var(--color-surface-default)] rounded-2xl border border-[var(--color-border-default)] p-4 flex flex-col gap-4 min-w-0">
+            <h6 className="text-heading-h7">RECENT EVENTS</h6>
+            <div className="overflow-x-auto">
+              <Table<EventRow> columns={eventsColumns} data={eventsData} rowKey="id" />
+            </div>
+          </div>
+        </div>
+      </VStack>
+    </PageShell>
   );
 }
 

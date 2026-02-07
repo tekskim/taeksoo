@@ -16,6 +16,7 @@ import {
   StatusIndicator,
   ContextMenu,
   TabBar,
+  PageShell,
   fixedColumns,
   columnMinWidths,
   type TableColumn,
@@ -573,12 +574,10 @@ export default function IAMUserGroupDetailPage() {
 
   if (!userGroup) {
     return (
-      <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-        <IAMSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-        <main
-          className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-          style={{ left: `${sidebarWidth}px` }}
-        >
+      <PageShell
+        sidebar={<IAMSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />}
+        sidebarWidth={sidebarWidth}
+        tabBar={
           <TabBar
             tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
             activeTab={activeTabId}
@@ -587,6 +586,8 @@ export default function IAMUserGroupDetailPage() {
             onTabAdd={addNewTab}
             onTabReorder={moveTab}
           />
+        }
+        topBar={
           <TopBar
             showSidebarToggle={!sidebarOpen}
             onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -594,33 +595,27 @@ export default function IAMUserGroupDetailPage() {
             onBack={() => navigate(-1)}
             onForward={() => navigate(1)}
           />
-          <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-            <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
-              <VStack gap={3}>
-                <h1 className="text-heading-h3 text-[var(--color-text-default)]">
-                  User group not found
-                </h1>
-                <p className="text-[var(--color-text-muted)]">
-                  The user group "{groupName}" does not exist.
-                </p>
-                <Button variant="secondary" onClick={() => navigate('/iam/user-groups')}>
-                  Back to User groups
-                </Button>
-              </VStack>
-            </div>
-          </div>
-        </main>
-      </div>
+        }
+        contentClassName="pt-4 px-8 pb-6"
+      >
+        <VStack gap={3}>
+          <h1 className="text-heading-h3 text-[var(--color-text-default)]">User group not found</h1>
+          <p className="text-[var(--color-text-muted)]">
+            The user group "{groupName}" does not exist.
+          </p>
+          <Button variant="secondary" onClick={() => navigate('/iam/user-groups')}>
+            Back to User groups
+          </Button>
+        </VStack>
+      </PageShell>
     );
   }
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <IAMSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: `${sidebarWidth}px` }}
-      >
+    <PageShell
+      sidebar={<IAMSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />}
+      sidebarWidth={sidebarWidth}
+      tabBar={
         <TabBar
           tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
@@ -629,6 +624,8 @@ export default function IAMUserGroupDetailPage() {
           onTabAdd={addNewTab}
           onTabReorder={moveTab}
         />
+      }
+      topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -637,147 +634,137 @@ export default function IAMUserGroupDetailPage() {
           onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
         />
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
-            <VStack gap={8}>
-              {/* Header Card */}
-              <div className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
-                <VStack gap={3}>
-                  {/* Title */}
-                  <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
-                    {userGroup.name}
-                  </h1>
+      }
+      contentClassName="pt-4 px-8 pb-6"
+    >
+      <VStack gap={8}>
+        {/* Header Card */}
+        <div className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
+          <VStack gap={3}>
+            {/* Title */}
+            <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
+              {userGroup.name}
+            </h1>
 
-                  {/* Action Buttons */}
-                  <HStack gap={1}>
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      leftIcon={<IconEdit size={12} stroke={1.5} />}
-                    >
-                      Edit
-                    </Button>
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      leftIcon={<IconTrash size={12} stroke={1.5} />}
-                    >
-                      Delete
-                    </Button>
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      rightIcon={<IconChevronDown size={12} stroke={1.5} />}
-                    >
-                      More Actions
-                    </Button>
-                  </HStack>
+            {/* Action Buttons */}
+            <HStack gap={1}>
+              <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} stroke={1.5} />}>
+                Edit
+              </Button>
+              <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} stroke={1.5} />}>
+                Delete
+              </Button>
+              <Button
+                variant="secondary"
+                size="sm"
+                rightIcon={<IconChevronDown size={12} stroke={1.5} />}
+              >
+                More Actions
+              </Button>
+            </HStack>
 
-                  {/* Info Cards */}
-                  <HStack gap={2} className="w-full">
-                    <InfoCard label="Description" value={userGroup.description} />
-                    <InfoCard label="Type" value={userGroup.type} />
-                    <InfoCard label="Created at" value={userGroup.createdAt} />
-                  </HStack>
-                </VStack>
-              </div>
-
-              {/* Tabs Section */}
-              <div className="w-full">
-                <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
-                  <TabList>
-                    <Tab value="users">Users</Tab>
-                    <Tab value="roles">Roles</Tab>
-                  </TabList>
-
-                  {/* Users Tab */}
-                  <TabPanel value="users" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Section Header */}
-                      <HStack justify="between" align="center" className="w-full">
-                        <h2 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
-                          Users
-                        </h2>
-                        <Button variant="secondary" size="sm">
-                          Manage users
-                        </Button>
-                      </HStack>
-
-                      {/* Search */}
-                      <SearchInput
-                        placeholder="Search users by attributes"
-                        value={usersSearchQuery}
-                        onChange={setUsersSearchQuery}
-                        className="w-[var(--search-input-width)]"
-                      />
-
-                      {/* Pagination */}
-                      <Pagination
-                        currentPage={usersCurrentPage}
-                        totalPages={usersTotalPages}
-                        totalItems={filteredUsers.length}
-                        onPageChange={setUsersCurrentPage}
-                      />
-
-                      {/* Table */}
-                      <Table<GroupUser> columns={userColumns} data={paginatedUsers} rowKey="id" />
-                    </VStack>
-                  </TabPanel>
-
-                  {/* Roles Tab */}
-                  <TabPanel value="roles" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Section Header */}
-                      <HStack justify="between" align="center" className="w-full">
-                        <h2 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
-                          Roles
-                        </h2>
-                        <Button variant="secondary" size="sm">
-                          Manage roles
-                        </Button>
-                      </HStack>
-
-                      {/* Action Bar */}
-                      <HStack gap={2} align="center">
-                        {/* Search */}
-                        <HStack gap={1} align="center">
-                          <SearchInput
-                            placeholder="Search roles by attributes"
-                            value={rolesSearchQuery}
-                            onChange={(e) => setRolesSearchQuery(e.target.value)}
-                            className="w-[var(--search-input-width)]"
-                          />
-                        </HStack>
-
-                        {/* Divider */}
-                        <HStack align="center">
-                          <div className="w-px h-4 bg-[var(--color-border-subtle)]" />
-                        </HStack>
-
-                        {/* Actions */}
-                        <Button variant="secondary" size="sm" disabled>
-                          Detach
-                        </Button>
-                      </HStack>
-
-                      {/* Pagination */}
-                      <Pagination
-                        currentPage={rolesCurrentPage}
-                        totalPages={rolesTotalPages}
-                        totalItems={filteredRoles.length}
-                        onPageChange={setRolesCurrentPage}
-                      />
-
-                      {/* Table */}
-                      <Table<GroupRole> columns={roleColumns} data={paginatedRoles} rowKey="id" />
-                    </VStack>
-                  </TabPanel>
-                </Tabs>
-              </div>
-            </VStack>
-          </div>
+            {/* Info Cards */}
+            <HStack gap={2} className="w-full">
+              <InfoCard label="Description" value={userGroup.description} />
+              <InfoCard label="Type" value={userGroup.type} />
+              <InfoCard label="Created at" value={userGroup.createdAt} />
+            </HStack>
+          </VStack>
         </div>
-      </main>
-    </div>
+
+        {/* Tabs Section */}
+        <div className="w-full">
+          <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
+            <TabList>
+              <Tab value="users">Users</Tab>
+              <Tab value="roles">Roles</Tab>
+            </TabList>
+
+            {/* Users Tab */}
+            <TabPanel value="users" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Section Header */}
+                <HStack justify="between" align="center" className="w-full">
+                  <h2 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
+                    Users
+                  </h2>
+                  <Button variant="secondary" size="sm">
+                    Manage users
+                  </Button>
+                </HStack>
+
+                {/* Search */}
+                <SearchInput
+                  placeholder="Search users by attributes"
+                  value={usersSearchQuery}
+                  onChange={setUsersSearchQuery}
+                  className="w-[var(--search-input-width)]"
+                />
+
+                {/* Pagination */}
+                <Pagination
+                  currentPage={usersCurrentPage}
+                  totalPages={usersTotalPages}
+                  totalItems={filteredUsers.length}
+                  onPageChange={setUsersCurrentPage}
+                />
+
+                {/* Table */}
+                <Table<GroupUser> columns={userColumns} data={paginatedUsers} rowKey="id" />
+              </VStack>
+            </TabPanel>
+
+            {/* Roles Tab */}
+            <TabPanel value="roles" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Section Header */}
+                <HStack justify="between" align="center" className="w-full">
+                  <h2 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
+                    Roles
+                  </h2>
+                  <Button variant="secondary" size="sm">
+                    Manage roles
+                  </Button>
+                </HStack>
+
+                {/* Action Bar */}
+                <HStack gap={2} align="center">
+                  {/* Search */}
+                  <HStack gap={1} align="center">
+                    <SearchInput
+                      placeholder="Search roles by attributes"
+                      value={rolesSearchQuery}
+                      onChange={(e) => setRolesSearchQuery(e.target.value)}
+                      className="w-[var(--search-input-width)]"
+                    />
+                  </HStack>
+
+                  {/* Divider */}
+                  <HStack align="center">
+                    <div className="w-px h-4 bg-[var(--color-border-subtle)]" />
+                  </HStack>
+
+                  {/* Actions */}
+                  <Button variant="secondary" size="sm" disabled>
+                    Detach
+                  </Button>
+                </HStack>
+
+                {/* Pagination */}
+                <Pagination
+                  currentPage={rolesCurrentPage}
+                  totalPages={rolesTotalPages}
+                  totalItems={filteredRoles.length}
+                  onPageChange={setRolesCurrentPage}
+                />
+
+                {/* Table */}
+                <Table<GroupRole> columns={roleColumns} data={paginatedRoles} rowKey="id" />
+              </VStack>
+            </TabPanel>
+          </Tabs>
+        </div>
+      </VStack>
+    </PageShell>
   );
 }

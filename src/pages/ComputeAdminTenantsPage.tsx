@@ -11,6 +11,8 @@ import {
   Pagination,
   StatusIndicator,
   ContextMenu,
+  PageShell,
+  PageHeader,
   fixedColumns,
 } from '@/design-system';
 import type { TableColumn, ContextMenuItem } from '@/design-system';
@@ -60,6 +62,7 @@ const tenantStatusMap: Record<TenantStatus, 'active' | 'deactivated' | 'building
 
 export default function ComputeAdminTenantsPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 200 : 0;
 
   // Tenants state
   const [searchTerm, setSearchTerm] = useState('');
@@ -180,106 +183,98 @@ export default function ComputeAdminTenantsPage() {
   ];
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+    <PageShell
+      sidebar={
+        <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={<Breadcrumb items={breadcrumbItems} />}
+          actions={
+            <TopBarAction icon={<IconBell size={16} stroke={1.5} />} aria-label="Notifications" />
+          }
+        />
+      }
+    >
+      <VStack gap={3}>
+        <PageHeader
+          title="Tenants"
+          actions={
+            <Button variant="primary" size="md">
+              Create Tenant
+            </Button>
+          }
+        />
 
-      {/* Main Content */}
-      <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
-          sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'
-        }`}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Tab Bar */}
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            onTabAdd={addNewTab}
-            onTabReorder={moveTab}
-            showAddButton={true}
-            showWindowControls={true}
-          />
-
-          {/* Top Bar */}
-          <TopBar
-            sidebarOpen={sidebarOpen}
-            onMenuClick={() => setSidebarOpen(!sidebarOpen)}
-            breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-          >
-            <TopBarAction icon={<IconBell size={16} stroke={1.5} />} onClick={() => {}} />
-          </TopBar>
-        </div>
-
-        {/* Scrollable Content */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
-            <VStack gap={3}>
-              {/* Page Header */}
-              <div className="flex items-center justify-between h-8">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Tenants</h1>
-                <Button variant="primary" size="md">
-                  Create Tenant
-                </Button>
-              </div>
-
-              {/* Action Bar */}
-              <div className="flex items-center gap-2">
-                <div className="flex items-center gap-1">
-                  <div className="w-[var(--search-input-width)]">
-                    <SearchInput
-                      value={searchTerm}
-                      onChange={(e) => {
-                        setSearchTerm(e.target.value);
-                        setCurrentPage(1);
-                      }}
-                      placeholder="Search tenants by attributes"
-                    />
-                  </div>
-                  <button
-                    type="button"
-                    className="flex items-center justify-center w-7 h-7 rounded-[var(--button-radius)] border border-[var(--color-border-strong)] bg-[var(--color-surface-default)] text-[var(--color-text-default)] hover:bg-[var(--button-secondary-hover-bg)]"
-                    aria-label="Download"
-                  >
-                    <IconDownload size={14} stroke={1.5} />
-                  </button>
-                </div>
-                <div className="h-4 w-px bg-[var(--color-border-default)]" />
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  leftIcon={<IconTrash size={12} />}
-                  disabled={selectedTenants.length === 0}
-                >
-                  Delete
-                </Button>
-              </div>
-
-              {/* Pagination */}
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={setCurrentPage}
-                totalItems={filteredTenants.length}
-                selectedCount={selectedTenants.length}
+        {/* Action Bar */}
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
+            <div className="w-[var(--search-input-width)]">
+              <SearchInput
+                value={searchTerm}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setCurrentPage(1);
+                }}
+                placeholder="Search tenants by attributes"
               />
-
-              {/* Table */}
-              <Table
-                columns={tenantColumns}
-                data={paginatedTenants}
-                rowKey="id"
-                selectable
-                selectedKeys={selectedTenants}
-                onSelectionChange={setSelectedTenants}
-              />
-            </VStack>
+            </div>
+            <button
+              type="button"
+              className="flex items-center justify-center w-7 h-7 rounded-[var(--button-radius)] border border-[var(--color-border-strong)] bg-[var(--color-surface-default)] text-[var(--color-text-default)] hover:bg-[var(--button-secondary-hover-bg)]"
+              aria-label="Download"
+            >
+              <IconDownload size={14} stroke={1.5} />
+            </button>
           </div>
+          <div className="h-4 w-px bg-[var(--color-border-default)]" />
+          <Button
+            variant="secondary"
+            size="sm"
+            leftIcon={<IconTrash size={12} />}
+            disabled={selectedTenants.length === 0}
+          >
+            Delete
+          </Button>
         </div>
-      </main>
-    </div>
+
+        {/* Pagination */}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          totalItems={filteredTenants.length}
+          selectedCount={selectedTenants.length}
+        />
+
+        {/* Table */}
+        <Table
+          columns={tenantColumns}
+          data={paginatedTenants}
+          rowKey="id"
+          selectable
+          selectedKeys={selectedTenants}
+          onSelectionChange={setSelectedTenants}
+        />
+      </VStack>
+    </PageShell>
   );
 }

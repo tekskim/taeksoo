@@ -7,6 +7,7 @@ import {
   VStack,
   TabBar,
   TopBar,
+  PageShell,
   Input,
   Select,
   SectionCard,
@@ -631,13 +632,12 @@ export function CreateNetworkPolicyPage() {
   }, []);
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: `${sidebarWidth}px` }}
-      >
+    <PageShell
+      sidebar={
+        <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
         <TabBar
           tabs={tabBarTabs}
           activeTab={activeTabId}
@@ -646,7 +646,8 @@ export function CreateNetworkPolicyPage() {
           onTabReorder={moveTab}
           onTabAdd={addNewTab}
         />
-
+      }
+      topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -682,359 +683,350 @@ export function CreateNetworkPolicyPage() {
             </>
           }
         />
+      }
+      contentClassName="pt-4 px-8 pb-20"
+    >
+      <VStack gap={6}>
+        {/* Page Header */}
+        <VStack gap={2}>
+          <h1 className="text-heading-h4">Create network policy</h1>
+          <p className="text-body-sm text-[var(--color-text-subtle)]">
+            Network policies are used to control the traffic flow between pods within the cluster
+            based on defined rules for ingress and egress.
+          </p>
+        </VStack>
 
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
-            <VStack gap={6}>
-              {/* Page Header */}
-              <VStack gap={2}>
-                <h1 className="text-heading-h4">Create network policy</h1>
-                <p className="text-body-sm text-[var(--color-text-subtle)]">
-                  Network policies are used to control the traffic flow between pods within the
-                  cluster based on defined rules for ingress and egress.
-                </p>
-              </VStack>
-
-              {/* Main Content with Summary Sidebar */}
-              <HStack gap={6} className="w-full items-start">
-                {/* Form Sections */}
-                <VStack gap={4} className="flex-1">
-                  {/* Basic Information Section */}
-                  <SectionCard>
-                    <SectionCard.Header title="Basic information" />
-                    <SectionCard.Content>
-                      <VStack gap={6}>
-                        {/* Namespace */}
-                        <VStack gap={2}>
-                          <label className="text-label-lg text-[var(--color-text-default)]">
-                            Namespace <span className="text-[var(--color-state-danger)]">*</span>
-                          </label>
-                          <Select
-                            options={NAMESPACE_OPTIONS}
-                            value={namespace}
-                            onChange={setNamespace}
-                            fullWidth
-                          />
-                        </VStack>
-
-                        {/* Name */}
-                        <VStack gap={2}>
-                          <label className="text-label-lg text-[var(--color-text-default)]">
-                            Name <span className="text-[var(--color-state-danger)]">*</span>
-                          </label>
-                          <Input
-                            placeholder="Enter a unique name"
-                            value={policyName}
-                            onChange={(e) => setPolicyName(e.target.value)}
-                            fullWidth
-                          />
-                        </VStack>
-
-                        {/* Description (collapsible) */}
-                        <Disclosure>
-                          <Disclosure.Trigger>Description</Disclosure.Trigger>
-                          <Disclosure.Panel>
-                            <div className="pt-2">
-                              <Input
-                                placeholder="Description"
-                                value={description}
-                                onChange={(e) => setDescription(e.target.value)}
-                                fullWidth
-                              />
-                            </div>
-                          </Disclosure.Panel>
-                        </Disclosure>
-                      </VStack>
-                    </SectionCard.Content>
-                  </SectionCard>
-
-                  {/* Ingress Rules Section */}
-                  <TrafficRulesSection
-                    title="Ingress rules"
-                    checkboxLabel="Configure ingress rules to restrict incoming traffic"
-                    enabled={ingressEnabled}
-                    onEnabledChange={setIngressEnabled}
-                    rules={ingressRules}
-                    onRulesChange={setIngressRules}
-                  />
-
-                  {/* Egress Rules Section */}
-                  <TrafficRulesSection
-                    title="Egress rules"
-                    checkboxLabel="Configure egress rules to restrict outgoing traffic"
-                    enabled={egressEnabled}
-                    onEnabledChange={setEgressEnabled}
-                    rules={egressRules}
-                    onRulesChange={setEgressRules}
-                  />
-
-                  {/* Selector Section */}
-                  <SectionCard>
-                    <SectionCard.Header
-                      title="Selector"
-                      description="Selector keys and values are intended to match labels and values on existing pods."
-                      showDivider
+        {/* Main Content with Summary Sidebar */}
+        <HStack gap={6} className="w-full items-start">
+          {/* Form Sections */}
+          <VStack gap={4} className="flex-1">
+            {/* Basic Information Section */}
+            <SectionCard>
+              <SectionCard.Header title="Basic information" />
+              <SectionCard.Content>
+                <VStack gap={6}>
+                  {/* Namespace */}
+                  <VStack gap={2}>
+                    <label className="text-label-lg text-[var(--color-text-default)]">
+                      Namespace <span className="text-[var(--color-state-danger)]">*</span>
+                    </label>
+                    <Select
+                      options={NAMESPACE_OPTIONS}
+                      value={namespace}
+                      onChange={setNamespace}
+                      fullWidth
                     />
-                    <SectionCard.Content>
-                      <VStack gap={6}>
-                        {/* Selector Rules */}
-                        <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-                          <VStack gap={2}>
-                            {selectorRules.length > 0 && (
-                              <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
-                                  Key
-                                </span>
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
-                                  Operator
-                                </span>
-                                <span className="block text-label-lg text-[var(--color-text-default)]">
-                                  Value
-                                </span>
-                                <div />
-                              </div>
-                            )}
+                  </VStack>
 
-                            {selectorRules.map((rule) => (
-                              <div
-                                key={rule.id}
-                                className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
-                              >
-                                <Input
-                                  placeholder="input key"
-                                  value={rule.key}
-                                  onChange={(e) =>
-                                    updateSelectorRule(rule.id, 'key', e.target.value)
-                                  }
-                                  fullWidth
-                                />
-                                <Select
-                                  options={OPERATOR_OPTIONS}
-                                  value={rule.operator}
-                                  onChange={(value) =>
-                                    updateSelectorRule(rule.id, 'operator', value)
-                                  }
-                                  fullWidth
-                                />
-                                <Input
-                                  placeholder="input value"
-                                  value={rule.value}
-                                  onChange={(e) =>
-                                    updateSelectorRule(rule.id, 'value', e.target.value)
-                                  }
-                                  fullWidth
-                                />
-                                <button
-                                  onClick={() => removeSelectorRule(rule.id)}
-                                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                >
-                                  <IconX
-                                    size={16}
-                                    className="text-[var(--color-text-muted)]"
-                                    stroke={1.5}
-                                  />
-                                </button>
-                              </div>
-                            ))}
+                  {/* Name */}
+                  <VStack gap={2}>
+                    <label className="text-label-lg text-[var(--color-text-default)]">
+                      Name <span className="text-[var(--color-state-danger)]">*</span>
+                    </label>
+                    <Input
+                      placeholder="Enter a unique name"
+                      value={policyName}
+                      onChange={(e) => setPolicyName(e.target.value)}
+                      fullWidth
+                    />
+                  </VStack>
 
-                            <div className="w-fit">
-                              <Button
-                                variant="secondary"
-                                size="sm"
-                                leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                                onClick={addSelectorRule}
-                              >
-                                Add Rule
-                              </Button>
-                            </div>
-                          </VStack>
-                        </div>
-
-                        {/* Matching Pods */}
-                        <VStack gap={3}>
-                          <label className="text-label-lg text-[var(--color-text-default)]">
-                            Matching Pods
-                          </label>
-                          <Table
-                            columns={[
-                              {
-                                key: 'name',
-                                label: 'Name',
-                                render: (value) => (
-                                  <span className="font-medium text-[var(--color-action-primary)]">
-                                    {value}
-                                  </span>
-                                ),
-                              },
-                              {
-                                key: 'createdAt',
-                                label: 'Created at',
-                              },
-                            ]}
-                            data={MOCK_MATCHING_PODS}
-                            rowKey="id"
-                          />
-                        </VStack>
-                      </VStack>
-                    </SectionCard.Content>
-                  </SectionCard>
-
-                  {/* Labels & Annotations Section */}
-                  <SectionCard>
-                    <SectionCard.Header title="Labels & Annotations" />
-                    <SectionCard.Content>
-                      <VStack gap={6}>
-                        {/* Labels */}
-                        <VStack gap={3}>
-                          <VStack gap={1}>
-                            <label className="text-label-lg text-[var(--color-text-default)]">
-                              Labels
-                            </label>
-                            <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-                              Specify the labels used to identify and categorize the resource.
-                            </span>
-                          </VStack>
-
-                          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-                            <VStack gap={2}>
-                              {labels.length > 0 && (
-                                <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                                  <span className="block text-label-lg text-[var(--color-text-default)]">
-                                    Key
-                                  </span>
-                                  <span className="block text-label-lg text-[var(--color-text-default)]">
-                                    Value
-                                  </span>
-                                  <div />
-                                </div>
-                              )}
-                              {labels.map((label) => (
-                                <div
-                                  key={label.id}
-                                  className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
-                                >
-                                  <Input
-                                    placeholder="label key"
-                                    value={label.key}
-                                    onChange={(e) => updateLabel(label.id, 'key', e.target.value)}
-                                    fullWidth
-                                  />
-                                  <Input
-                                    placeholder="label value"
-                                    value={label.value}
-                                    onChange={(e) => updateLabel(label.id, 'value', e.target.value)}
-                                    fullWidth
-                                  />
-                                  <button
-                                    onClick={() => removeLabel(label.id)}
-                                    className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                  >
-                                    <IconX
-                                      size={16}
-                                      className="text-[var(--color-text-muted)]"
-                                      stroke={1.5}
-                                    />
-                                  </button>
-                                </div>
-                              ))}
-                              <div className="w-fit">
-                                <Button
-                                  variant="secondary"
-                                  size="sm"
-                                  leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                                  onClick={addLabel}
-                                >
-                                  Add Label
-                                </Button>
-                              </div>
-                            </VStack>
-                          </div>
-                        </VStack>
-
-                        {/* Annotations */}
-                        <VStack gap={3}>
-                          <VStack gap={1}>
-                            <label className="text-label-lg text-[var(--color-text-default)]">
-                              Annotations
-                            </label>
-                            <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-                              Specify the annotations used to provide additional metadata for the
-                              resource.
-                            </span>
-                          </VStack>
-
-                          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-                            <VStack gap={2}>
-                              {annotations.length > 0 && (
-                                <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                                  <span className="block text-label-lg text-[var(--color-text-default)]">
-                                    Key
-                                  </span>
-                                  <span className="block text-label-lg text-[var(--color-text-default)]">
-                                    Value
-                                  </span>
-                                  <div />
-                                </div>
-                              )}
-                              {annotations.map((annotation) => (
-                                <div
-                                  key={annotation.id}
-                                  className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
-                                >
-                                  <Input
-                                    placeholder="annotation key"
-                                    value={annotation.key}
-                                    onChange={(e) =>
-                                      updateAnnotation(annotation.id, 'key', e.target.value)
-                                    }
-                                    fullWidth
-                                  />
-                                  <Input
-                                    placeholder="annotation value"
-                                    value={annotation.value}
-                                    onChange={(e) =>
-                                      updateAnnotation(annotation.id, 'value', e.target.value)
-                                    }
-                                    fullWidth
-                                  />
-                                  <button
-                                    onClick={() => removeAnnotation(annotation.id)}
-                                    className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                  >
-                                    <IconX
-                                      size={16}
-                                      className="text-[var(--color-text-muted)]"
-                                      stroke={1.5}
-                                    />
-                                  </button>
-                                </div>
-                              ))}
-                              <div className="w-fit">
-                                <Button
-                                  variant="secondary"
-                                  size="sm"
-                                  leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                                  onClick={addAnnotation}
-                                >
-                                  Add Annotation
-                                </Button>
-                              </div>
-                            </VStack>
-                          </div>
-                        </VStack>
-                      </VStack>
-                    </SectionCard.Content>
-                  </SectionCard>
+                  {/* Description (collapsible) */}
+                  <Disclosure>
+                    <Disclosure.Trigger>Description</Disclosure.Trigger>
+                    <Disclosure.Panel>
+                      <div className="pt-2">
+                        <Input
+                          placeholder="Description"
+                          value={description}
+                          onChange={(e) => setDescription(e.target.value)}
+                          fullWidth
+                        />
+                      </div>
+                    </Disclosure.Panel>
+                  </Disclosure>
                 </VStack>
+              </SectionCard.Content>
+            </SectionCard>
 
-                {/* Summary Sidebar */}
-                <SummarySidebar sectionStates={getSectionStates()} />
-              </HStack>
-            </VStack>
-          </div>
-        </div>
-      </main>
-    </div>
+            {/* Ingress Rules Section */}
+            <TrafficRulesSection
+              title="Ingress rules"
+              checkboxLabel="Configure ingress rules to restrict incoming traffic"
+              enabled={ingressEnabled}
+              onEnabledChange={setIngressEnabled}
+              rules={ingressRules}
+              onRulesChange={setIngressRules}
+            />
+
+            {/* Egress Rules Section */}
+            <TrafficRulesSection
+              title="Egress rules"
+              checkboxLabel="Configure egress rules to restrict outgoing traffic"
+              enabled={egressEnabled}
+              onEnabledChange={setEgressEnabled}
+              rules={egressRules}
+              onRulesChange={setEgressRules}
+            />
+
+            {/* Selector Section */}
+            <SectionCard>
+              <SectionCard.Header
+                title="Selector"
+                description="Selector keys and values are intended to match labels and values on existing pods."
+                showDivider
+              />
+              <SectionCard.Content>
+                <VStack gap={6}>
+                  {/* Selector Rules */}
+                  <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                    <VStack gap={2}>
+                      {selectorRules.length > 0 && (
+                        <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
+                          <span className="block text-label-lg text-[var(--color-text-default)]">
+                            Key
+                          </span>
+                          <span className="block text-label-lg text-[var(--color-text-default)]">
+                            Operator
+                          </span>
+                          <span className="block text-label-lg text-[var(--color-text-default)]">
+                            Value
+                          </span>
+                          <div />
+                        </div>
+                      )}
+
+                      {selectorRules.map((rule) => (
+                        <div
+                          key={rule.id}
+                          className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
+                        >
+                          <Input
+                            placeholder="input key"
+                            value={rule.key}
+                            onChange={(e) => updateSelectorRule(rule.id, 'key', e.target.value)}
+                            fullWidth
+                          />
+                          <Select
+                            options={OPERATOR_OPTIONS}
+                            value={rule.operator}
+                            onChange={(value) => updateSelectorRule(rule.id, 'operator', value)}
+                            fullWidth
+                          />
+                          <Input
+                            placeholder="input value"
+                            value={rule.value}
+                            onChange={(e) => updateSelectorRule(rule.id, 'value', e.target.value)}
+                            fullWidth
+                          />
+                          <button
+                            onClick={() => removeSelectorRule(rule.id)}
+                            className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                          >
+                            <IconX
+                              size={16}
+                              className="text-[var(--color-text-muted)]"
+                              stroke={1.5}
+                            />
+                          </button>
+                        </div>
+                      ))}
+
+                      <div className="w-fit">
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                          onClick={addSelectorRule}
+                        >
+                          Add Rule
+                        </Button>
+                      </div>
+                    </VStack>
+                  </div>
+
+                  {/* Matching Pods */}
+                  <VStack gap={3}>
+                    <label className="text-label-lg text-[var(--color-text-default)]">
+                      Matching Pods
+                    </label>
+                    <Table
+                      columns={[
+                        {
+                          key: 'name',
+                          label: 'Name',
+                          render: (value) => (
+                            <span className="font-medium text-[var(--color-action-primary)]">
+                              {value}
+                            </span>
+                          ),
+                        },
+                        {
+                          key: 'createdAt',
+                          label: 'Created at',
+                        },
+                      ]}
+                      data={MOCK_MATCHING_PODS}
+                      rowKey="id"
+                    />
+                  </VStack>
+                </VStack>
+              </SectionCard.Content>
+            </SectionCard>
+
+            {/* Labels & Annotations Section */}
+            <SectionCard>
+              <SectionCard.Header title="Labels & Annotations" />
+              <SectionCard.Content>
+                <VStack gap={6}>
+                  {/* Labels */}
+                  <VStack gap={3}>
+                    <VStack gap={1}>
+                      <label className="text-label-lg text-[var(--color-text-default)]">
+                        Labels
+                      </label>
+                      <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+                        Specify the labels used to identify and categorize the resource.
+                      </span>
+                    </VStack>
+
+                    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                      <VStack gap={2}>
+                        {labels.length > 0 && (
+                          <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                            <span className="block text-label-lg text-[var(--color-text-default)]">
+                              Key
+                            </span>
+                            <span className="block text-label-lg text-[var(--color-text-default)]">
+                              Value
+                            </span>
+                            <div />
+                          </div>
+                        )}
+                        {labels.map((label) => (
+                          <div
+                            key={label.id}
+                            className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                          >
+                            <Input
+                              placeholder="label key"
+                              value={label.key}
+                              onChange={(e) => updateLabel(label.id, 'key', e.target.value)}
+                              fullWidth
+                            />
+                            <Input
+                              placeholder="label value"
+                              value={label.value}
+                              onChange={(e) => updateLabel(label.id, 'value', e.target.value)}
+                              fullWidth
+                            />
+                            <button
+                              onClick={() => removeLabel(label.id)}
+                              className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                            >
+                              <IconX
+                                size={16}
+                                className="text-[var(--color-text-muted)]"
+                                stroke={1.5}
+                              />
+                            </button>
+                          </div>
+                        ))}
+                        <div className="w-fit">
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                            onClick={addLabel}
+                          >
+                            Add Label
+                          </Button>
+                        </div>
+                      </VStack>
+                    </div>
+                  </VStack>
+
+                  {/* Annotations */}
+                  <VStack gap={3}>
+                    <VStack gap={1}>
+                      <label className="text-label-lg text-[var(--color-text-default)]">
+                        Annotations
+                      </label>
+                      <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+                        Specify the annotations used to provide additional metadata for the
+                        resource.
+                      </span>
+                    </VStack>
+
+                    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                      <VStack gap={2}>
+                        {annotations.length > 0 && (
+                          <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                            <span className="block text-label-lg text-[var(--color-text-default)]">
+                              Key
+                            </span>
+                            <span className="block text-label-lg text-[var(--color-text-default)]">
+                              Value
+                            </span>
+                            <div />
+                          </div>
+                        )}
+                        {annotations.map((annotation) => (
+                          <div
+                            key={annotation.id}
+                            className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                          >
+                            <Input
+                              placeholder="annotation key"
+                              value={annotation.key}
+                              onChange={(e) =>
+                                updateAnnotation(annotation.id, 'key', e.target.value)
+                              }
+                              fullWidth
+                            />
+                            <Input
+                              placeholder="annotation value"
+                              value={annotation.value}
+                              onChange={(e) =>
+                                updateAnnotation(annotation.id, 'value', e.target.value)
+                              }
+                              fullWidth
+                            />
+                            <button
+                              onClick={() => removeAnnotation(annotation.id)}
+                              className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                            >
+                              <IconX
+                                size={16}
+                                className="text-[var(--color-text-muted)]"
+                                stroke={1.5}
+                              />
+                            </button>
+                          </div>
+                        ))}
+                        <div className="w-fit">
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                            onClick={addAnnotation}
+                          >
+                            Add Annotation
+                          </Button>
+                        </div>
+                      </VStack>
+                    </div>
+                  </VStack>
+                </VStack>
+              </SectionCard.Content>
+            </SectionCard>
+          </VStack>
+
+          {/* Summary Sidebar */}
+          <SummarySidebar sectionStates={getSectionStates()} />
+        </HStack>
+      </VStack>
+    </PageShell>
   );
 }
 

@@ -1074,14 +1074,352 @@ import { IconPlus, IconEdit, IconTrash, IconStar, IconStarFilled } from '@tabler
 <div className="rounded-[var(--primitive-radius-lg)]">8px radius</div>
 ```
 
+## PageShell 페이지 레이아웃 패턴
+
+모든 페이지는 `PageShell`을 사용하여 일관된 레이아웃을 구현합니다. 수동으로 `fixed inset-0` + `Sidebar` + `main` 구조를 작성하지 마세요.
+
+### Compute/IAM/Storage 페이지 (Sidebar 사용)
+```tsx
+import { PageShell, PageHeader, ... } from '@/design-system';
+import { Sidebar } from '@/components/Sidebar';
+import { useSidebar } from '@/contexts/SidebarContext';
+
+export function ResourceListPage() {
+  const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab } = useTabs();
+  const sidebarWidth = sidebarOpen ? 200 : 0;  // --layout-sidebar-width: 200px
+
+  return (
+    <PageShell
+      sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabs.map(t => ({ id: t.id, label: t.label, closable: t.closable }))}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={openSidebar}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={<Breadcrumb items={[{ label: 'Proj-1', href: '/compute' }, { label: 'Resources' }]} />}
+          actions={<TopBarAction icon={<IconBell size={16} stroke={1.5} />} aria-label="Notifications" />}
+        />
+      }
+      contentClassName="pt-4 px-8 pb-6"
+    >
+      <VStack gap={3}>
+        <PageHeader title="Resources" actions={<Button size="md">Create</Button>} />
+        <ListToolbar ... />
+        <Pagination ... />
+        <Table ... />
+      </VStack>
+    </PageShell>
+  );
+}
+```
+
+### Container 페이지 (ContainerSidebar 사용)
+```tsx
+const [sidebarOpen, setSidebarOpen] = useState(true);
+const sidebarWidth = sidebarOpen ? 240 : 40;  // icon sidebar(40px) + menu(200px)
+
+<PageShell
+  sidebar={<ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />}
+  sidebarWidth={sidebarWidth}
+  tabBar={<TabBar ... />}
+  topBar={<TopBar ... />}
+  bottomPanel={<ShellPanel ... />}
+  bottomPanelPadding={shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0'}
+>
+```
+
+### AI Platform 페이지 (AIPlatformSidebar 사용)
+```tsx
+const [sidebarOpen, setSidebarOpen] = useState(true);
+const sidebarWidth = sidebarOpen ? 200 : 0;
+
+<PageShell
+  sidebar={<AIPlatformSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />}
+  sidebarWidth={sidebarWidth}
+  tabBar={<TabBar ... />}
+  topBar={<TopBar ... />}
+  contentClassName="pt-3 px-8 pb-20 bg-[var(--color-surface-subtle)]"
+>
+```
+
+### PageShell Props
+| Prop | 타입 | 기본값 | 설명 |
+|------|------|--------|------|
+| sidebar | ReactNode | 필수 | 사이드바 컴포넌트 |
+| sidebarWidth | number | 필수 | 사이드바 너비(px) |
+| tabBar | ReactNode | - | 탭바 |
+| topBar | ReactNode | - | 상단바 |
+| bottomPanel | ReactNode | - | 하단 패널 (ShellPanel) |
+| contentClassName | string | `'pt-4 px-8 pb-20'` | 콘텐츠 영역 패딩 |
+| bottomPanelPadding | string | - | 하단 패널 확장 시 패딩 |
+
+### PageHeader Props
+| Prop | 타입 | 설명 |
+|------|------|------|
+| title | string | 페이지 제목 |
+| titleExtra | ReactNode | 제목 옆 뱃지/카운트 |
+| actions | ReactNode | 우측 액션 버튼 |
+
+## 5가지 표준 페이지 패턴
+
+### 1. List Page 패턴
+```
+PageShell > VStack gap={3} >
+  PageHeader (title + Create 버튼)
+  ListToolbar (SearchInput + 필터 + 벌크 액션)
+  Pagination
+  Table (selectable, columns, data)
+```
+
+### 2. Detail Page 패턴
+```
+PageShell > VStack gap={4} >
+  DetailHeader (title + subtitle + status + actions)
+  Tabs (underline, sm)
+  SectionCard (Header + DataRow들)
+  SectionCard (Header + DataRow들)
+```
+
+### 3. Form Drawer 패턴
+```
+Drawer (width: 376px) >
+  h2 "Edit [Resource]"
+  InfoBox (컨텍스트 정보)
+  FormField들
+  Footer: Cancel + Save 버튼
+```
+
+### 4. Confirmation Modal 패턴
+```
+Modal (size: sm) >
+  title + description
+  InfoBox (리소스 정보)
+  Cancel + Delete/Confirm 버튼
+```
+
+### 5. Full Page (Dashboard) 패턴
+```
+PageShell > VStack gap={4} >
+  PageHeader (title)
+  MetricCard.Group / 커스텀 카드 그리드
+  SectionCard들 (차트, 테이블 등)
+```
+
+## EmptyState 사용 규칙
+
+**절대 커스텀 EmptyState를 인라인으로 정의하지 마세요.** 반드시 DS의 `EmptyState` 컴포넌트를 사용합니다.
+
+```tsx
+import { EmptyState } from '@/design-system';
+import { IconDatabase } from '@tabler/icons-react';
+
+// variant="card" (기본값) — 카드 스타일
+<EmptyState
+  icon={<IconDatabase size={48} stroke={1} />}
+  title="No resources found"
+  description="Create your first resource to get started."
+  action={<Button size="md" leftIcon={<IconPlus size={14} />}>Create Resource</Button>}
+/>
+
+// variant="inline" — 패딩만
+<EmptyState
+  variant="inline"
+  icon={<IconDatabase size={48} stroke={1} />}
+  title="No results"
+  description="Try adjusting your search or filters."
+/>
+```
+
+## ErrorState 사용 규칙
+
+에러 상태도 DS 컴포넌트를 사용합니다.
+
+```tsx
+import { ErrorState } from '@/design-system';
+
+<ErrorState
+  title="Failed to load resources"
+  description="Please try again later."
+  action={<Button variant="secondary" size="md" onClick={handleRetry}>Retry</Button>}
+/>
+```
+
+## Wizard (Create Page) 패턴
+
+Create 페이지에서 여러 단계가 필요할 때 Wizard 컴포넌트를 사용합니다.
+
+```tsx
+import { Wizard } from '@/design-system';
+
+<Wizard
+  steps={[
+    { id: 'basic', label: 'Basic Info' },
+    { id: 'network', label: 'Network' },
+    { id: 'storage', label: 'Storage' },
+    { id: 'review', label: 'Review' },
+  ]}
+  activeStep={currentStep}
+  onStepChange={setCurrentStep}
+>
+  {/* 각 스텝의 콘텐츠 */}
+</Wizard>
+```
+
+## 사이드바 너비 참조
+
+| 사이드바 | 열림 | 닫힘 | CSS 변수 |
+|---------|------|------|----------|
+| Sidebar (Compute/IAM) | 200px | 0px | `--layout-sidebar-width` |
+| ContainerSidebar | 240px | 40px | icon(40) + menu(200) |
+| AIPlatformSidebar | 200px | 0px | - |
+| StorageSidebar | 200px | 0px | - |
+| IAMSidebar | 200px | 0px | - |
+
+## FilterSearchInput 사용법
+
+고급 필터 검색이 필요한 리스트 페이지에서 사용합니다.
+
+```tsx
+const filterFields: FilterField[] = [
+  { id: 'name', label: 'Name', type: 'text', placeholder: 'Enter name...' },
+  { id: 'status', label: 'Status', type: 'select', options: [
+    { value: 'running', label: 'Running' },
+    { value: 'stopped', label: 'Stopped' },
+  ]},
+];
+
+const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
+
+<FilterSearchInput
+  filters={filterFields}
+  appliedFilters={appliedFilters}
+  onFiltersChange={setAppliedFilters}
+  placeholder="Search by attributes"
+  size="sm"
+  className="w-[var(--search-input-width)]"
+  hideAppliedFilters
+/>
+```
+
+## TopBarAction 사용법
+
+```tsx
+<TopBar
+  actions={
+    <>
+      <TopBarAction icon={<IconTerminal2 size={16} stroke={1.5} />} aria-label="Console" active={shellPanel.isExpanded} />
+      <TopBarAction icon={<IconBell size={16} stroke={1.5} />} aria-label="Notifications" badge={true} />
+    </>
+  }
+/>
+```
+
+## ContextMenu (Row Actions) 패턴
+
+```tsx
+const getContextMenuItems = (row: Resource): ContextMenuItem[] => [
+  { id: 'edit', label: 'Edit', onClick: () => handleEdit(row) },
+  { id: 'duplicate', label: 'Duplicate', onClick: () => handleDuplicate(row) },
+  { id: 'export', label: 'Export', onClick: () => handleExport(row) },
+  { id: 'delete', label: 'Delete', status: 'danger', divider: true, onClick: () => handleDelete(row) },
+];
+
+// submenu 지원
+const items: ContextMenuItem[] = [
+  {
+    id: 'status',
+    label: 'Instance status',
+    submenu: [
+      { id: 'start', label: 'Start' },
+      { id: 'stop', label: 'Stop', status: 'danger' },
+    ],
+  },
+];
+```
+
+## 테이블 컬럼 프리셋
+
+```tsx
+import { fixedColumns, columnMinWidths } from '@/design-system';
+
+// fixedColumns — 고정 너비 컬럼
+fixedColumns.status    // Status 컬럼 (60px)
+fixedColumns.actions   // Action 컬럼
+fixedColumns.locked    // Lock 컬럼
+
+// columnMinWidths — 최소 너비 (flex 컬럼용)
+columnMinWidths.name       // 이름
+columnMinWidths.namespace  // 네임스페이스
+columnMinWidths.image      // 이미지
+columnMinWidths.createdAt  // 생성일
+columnMinWidths.ip         // IP 주소
+```
+
+## 금지 패턴 (Anti-patterns)
+
+### 1. 수동 레이아웃 금지
+```tsx
+// ❌ 금지 - 수동 레이아웃
+<div className="fixed inset-0">
+  <Sidebar ... />
+  <main className="absolute top-0 bottom-0 right-0">
+    ...
+  </main>
+</div>
+
+// ✅ 권장 - PageShell 사용
+<PageShell sidebar={<Sidebar ... />} sidebarWidth={sidebarWidth}>
+  ...
+</PageShell>
+```
+
+### 2. 커스텀 EmptyState 금지
+```tsx
+// ❌ 금지 - 인라인 EmptyState
+function EmptyState({ icon, title, description }) {
+  return <div className="bg-... rounded-lg border ...">...</div>;
+}
+
+// ✅ 권장 - DS EmptyState 사용
+import { EmptyState } from '@/design-system';
+<EmptyState icon={...} title="..." description="..." />
+```
+
+### 3. 인라인 헤더 금지
+```tsx
+// ❌ 금지 - 인라인 헤더
+<div className="flex items-center justify-between h-8">
+  <h1 className="text-heading-h5 ...">Title</h1>
+  <Button>Create</Button>
+</div>
+
+// ✅ 권장 - PageHeader 사용
+<PageHeader title="Title" actions={<Button>Create</Button>} />
+```
+
 ## 참고
 
 - 디자인 시스템 페이지: `/design`
 - Storybook: `http://localhost:6006`
 - 컴포넌트 문서: `/DESIGN_SYSTEM.md`
+- 페이지 패턴 스토리: Storybook > Patterns > Page Patterns
 
 ## 버전
 
-- **Current Version**: 1.0.0
-- **Last Updated**: 2026-02-06
+- **Current Version**: 1.1.0
+- **Last Updated**: 2026-02-07
 - **Changelog**: `/CHANGELOG.md`

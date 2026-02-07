@@ -27,6 +27,7 @@ import {
   Checkbox,
   InlineMessage,
   SelectionIndicator,
+  PageShell,
   fixedColumns,
 } from '@/design-system';
 import type { WizardSummaryItem, WizardSectionState, TableColumn } from '@/design-system';
@@ -170,6 +171,7 @@ export default function CreateVirtualAdapterPage() {
   const navigate = useNavigate();
   const { tabs, activeTabId, addTab, closeTab, selectTab } = useTabs();
   const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
+  const sidebarWidth = sidebarOpen ? 200 : 0;
 
   // Section status state
   const [sectionStatus, setSectionStatus] = useState<Record<SectionStep, WizardSectionState>>({
@@ -450,581 +452,556 @@ export default function CreateVirtualAdapterPage() {
   };
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
-
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: sidebarOpen ? 'var(--layout-sidebar-width)' : '0px' }}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Tab Bar */}
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            showAddButton={true}
-            showWindowControls={true}
-          />
-
-          {/* Top Bar */}
-          <TopBar
-            showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={openSidebar}
-            showNavigation={true}
-            breadcrumb={
-              <Breadcrumb
-                items={[
-                  { label: 'Proj-1', href: '/compute' },
-                  { label: 'Ports', href: '/compute/ports' },
-                  { label: 'Create virtual adapter' },
-                ]}
+    <PageShell
+      sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          showAddButton={true}
+          showWindowControls={true}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={openSidebar}
+          showNavigation={true}
+          breadcrumb={
+            <Breadcrumb
+              items={[
+                { label: 'Proj-1', href: '/compute' },
+                { label: 'Ports', href: '/compute/ports' },
+                { label: 'Create virtual adapter' },
+              ]}
+            />
+          }
+          actions={
+            <>
+              <TopBarAction
+                icon={<IconBell size={16} stroke={1.5} />}
+                onClick={() => {}}
+                aria-label="Notifications"
               />
-            }
-            actions={
-              <>
-                <TopBarAction
-                  icon={<IconBell size={16} stroke={1.5} />}
-                  onClick={() => {}}
-                  aria-label="Notifications"
-                />
-              </>
-            }
-          />
+            </>
+          }
+        />
+      }
+      contentClassName="pt-3 px-8 pb-20"
+    >
+      <VStack gap={3} className="min-w-[1176px]">
+        {/* Page Title */}
+        <div className="flex items-center justify-between h-8">
+          <h1 className="text-heading-h5 text-[var(--color-text-default)]">
+            Create virtual adapter
+          </h1>
         </div>
 
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)] min-h-full">
-            <VStack gap={3} className="min-w-[1176px]">
-              {/* Page Title */}
-              <div className="flex items-center justify-between h-8">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-                  Create virtual adapter
-                </h1>
-              </div>
-
-              {/* Content Area */}
-              <HStack gap={6} align="start" className="w-full">
-                {/* Left Column - Form Sections */}
-                <VStack gap={4} className="flex-1">
-                  {/* Basic information Section */}
-                  <SectionCard isActive={sectionStatus['basic-info'] === 'active'}>
-                    <SectionCard.Header
-                      title={SECTION_LABELS['basic-info']}
-                      showDivider={sectionStatus['basic-info'] === 'active'}
-                      actions={
-                        sectionStatus['basic-info'] === 'done' && (
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            leftIcon={<IconEdit size={12} />}
-                            onClick={() => editSection('basic-info')}
-                          >
-                            Edit
-                          </Button>
-                        )
-                      }
-                    />
-                    {sectionStatus['basic-info'] === 'active' && (
-                      <SectionCard.Content gap={6} className="pt-2">
-                        {/* Virtual adapter Name */}
-                        <FormField required>
-                          <FormField.Label>Virtual adapter Name</FormField.Label>
-                          <FormField.Control>
-                            <VStack gap={1}>
-                              <Input
-                                placeholder="Enter name"
-                                value={adapterName}
-                                onChange={(e) => {
-                                  setAdapterName(e.target.value);
-                                  setAdapterNameError(null);
-                                }}
-                                fullWidth
-                                error={!!adapterNameError}
-                              />
-                              {adapterNameError && (
-                                <span className="text-body-sm text-[var(--color-state-danger)]">
-                                  {adapterNameError}
-                                </span>
-                              )}
-                            </VStack>
-                          </FormField.Control>
-                          <FormField.HelperText>
-                            You can use letters, numbers, and special characters (+=,.@-_), and the
-                            length must be between 2-128 characters.
-                          </FormField.HelperText>
-                        </FormField>
-
-                        {/* Description */}
-                        <FormField>
-                          <FormField.Label>Description</FormField.Label>
-                          <FormField.Control>
-                            <Input
-                              placeholder="Enter description"
-                              value={description}
-                              onChange={(e) => setDescription(e.target.value)}
-                              fullWidth
-                            />
-                          </FormField.Control>
-                          <FormField.HelperText>
-                            You can use letters, numbers, and special characters (+=,.@-_()[]), and
-                            maximum 255 characters.
-                          </FormField.HelperText>
-                        </FormField>
-
-                        {/* Next Button */}
-                        <div className="flex items-center justify-end w-full">
-                          <Button
-                            variant="primary"
-                            onClick={() => {
-                              if (!adapterName.trim()) {
-                                setAdapterNameError('Please enter a virtual adapter name.');
-                                return;
-                              }
-                              setAdapterNameError(null);
-                              setSectionStatus((prev) => ({
-                                ...prev,
-                                'basic-info': 'done',
-                                network: 'active',
-                              }));
-                            }}
-                          >
-                            Next
-                          </Button>
-                        </div>
-                      </SectionCard.Content>
-                    )}
-                    {sectionStatus['basic-info'] === 'done' && (
-                      <SectionCard.Content>
-                        <SectionCard.DataRow
-                          label="Virtual adapter Name"
+        {/* Content Area */}
+        <HStack gap={6} align="start" className="w-full">
+          {/* Left Column - Form Sections */}
+          <VStack gap={4} className="flex-1">
+            {/* Basic information Section */}
+            <SectionCard isActive={sectionStatus['basic-info'] === 'active'}>
+              <SectionCard.Header
+                title={SECTION_LABELS['basic-info']}
+                showDivider={sectionStatus['basic-info'] === 'active'}
+                actions={
+                  sectionStatus['basic-info'] === 'done' && (
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      leftIcon={<IconEdit size={12} />}
+                      onClick={() => editSection('basic-info')}
+                    >
+                      Edit
+                    </Button>
+                  )
+                }
+              />
+              {sectionStatus['basic-info'] === 'active' && (
+                <SectionCard.Content gap={6} className="pt-2">
+                  {/* Virtual adapter Name */}
+                  <FormField required>
+                    <FormField.Label>Virtual adapter Name</FormField.Label>
+                    <FormField.Control>
+                      <VStack gap={1}>
+                        <Input
+                          placeholder="Enter name"
                           value={adapterName}
-                          showDivider
+                          onChange={(e) => {
+                            setAdapterName(e.target.value);
+                            setAdapterNameError(null);
+                          }}
+                          fullWidth
+                          error={!!adapterNameError}
                         />
-                        {description && (
-                          <SectionCard.DataRow label="Description" value={description} />
+                        {adapterNameError && (
+                          <span className="text-body-sm text-[var(--color-state-danger)]">
+                            {adapterNameError}
+                          </span>
                         )}
-                      </SectionCard.Content>
-                    )}
-                  </SectionCard>
+                      </VStack>
+                    </FormField.Control>
+                    <FormField.HelperText>
+                      You can use letters, numbers, and special characters (+=,.@-_), and the length
+                      must be between 2-128 characters.
+                    </FormField.HelperText>
+                  </FormField>
 
-                  {/* Network Section */}
-                  <SectionCard isActive={sectionStatus['network'] === 'active'}>
-                    <SectionCard.Header
-                      title={SECTION_LABELS['network']}
-                      showDivider={sectionStatus['network'] === 'active'}
-                      actions={
-                        sectionStatus['network'] === 'done' && (
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            leftIcon={<IconEdit size={12} />}
-                            onClick={() => editSection('network')}
-                          >
-                            Edit
-                          </Button>
-                        )
+                  {/* Description */}
+                  <FormField>
+                    <FormField.Label>Description</FormField.Label>
+                    <FormField.Control>
+                      <Input
+                        placeholder="Enter description"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        fullWidth
+                      />
+                    </FormField.Control>
+                    <FormField.HelperText>
+                      You can use letters, numbers, and special characters (+=,.@-_()[]), and
+                      maximum 255 characters.
+                    </FormField.HelperText>
+                  </FormField>
+
+                  {/* Next Button */}
+                  <div className="flex items-center justify-end w-full">
+                    <Button
+                      variant="primary"
+                      onClick={() => {
+                        if (!adapterName.trim()) {
+                          setAdapterNameError('Please enter a virtual adapter name.');
+                          return;
+                        }
+                        setAdapterNameError(null);
+                        setSectionStatus((prev) => ({
+                          ...prev,
+                          'basic-info': 'done',
+                          network: 'active',
+                        }));
+                      }}
+                    >
+                      Next
+                    </Button>
+                  </div>
+                </SectionCard.Content>
+              )}
+              {sectionStatus['basic-info'] === 'done' && (
+                <SectionCard.Content>
+                  <SectionCard.DataRow
+                    label="Virtual adapter Name"
+                    value={adapterName}
+                    showDivider
+                  />
+                  {description && <SectionCard.DataRow label="Description" value={description} />}
+                </SectionCard.Content>
+              )}
+            </SectionCard>
+
+            {/* Network Section */}
+            <SectionCard isActive={sectionStatus['network'] === 'active'}>
+              <SectionCard.Header
+                title={SECTION_LABELS['network']}
+                showDivider={sectionStatus['network'] === 'active'}
+                actions={
+                  sectionStatus['network'] === 'done' && (
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      leftIcon={<IconEdit size={12} />}
+                      onClick={() => editSection('network')}
+                    >
+                      Edit
+                    </Button>
+                  )
+                }
+              />
+              {sectionStatus['network'] === 'active' && (
+                <SectionCard.Content gap={6} className="pt-2">
+                  {/* Owned network - Network Table */}
+                  <VStack gap={4} align="stretch">
+                    <FormField required>
+                      <FormField.Label>Owned network</FormField.Label>
+                      <FormField.Description>
+                        Select the network to which the virtual adaptor will be attached.
+                      </FormField.Description>
+                    </FormField>
+
+                    {/* Network Tabs */}
+                    <Tabs
+                      value={networkTab}
+                      onChange={(value) =>
+                        setNetworkTab(value as 'current' | 'shared' | 'external')
                       }
-                    />
-                    {sectionStatus['network'] === 'active' && (
-                      <SectionCard.Content gap={6} className="pt-2">
-                        {/* Owned network - Network Table */}
-                        <VStack gap={4} align="stretch">
-                          <FormField required>
-                            <FormField.Label>Owned network</FormField.Label>
-                            <FormField.Description>
-                              Select the network to which the virtual adaptor will be attached.
-                            </FormField.Description>
-                          </FormField>
+                      variant="underline"
+                    >
+                      <TabList>
+                        <Tab value="current">Current tenant</Tab>
+                        <Tab value="shared">Shared</Tab>
+                        <Tab value="external">External</Tab>
+                      </TabList>
+                    </Tabs>
 
-                          {/* Network Tabs */}
-                          <Tabs
-                            value={networkTab}
-                            onChange={(value) =>
-                              setNetworkTab(value as 'current' | 'shared' | 'external')
-                            }
-                            variant="underline"
-                          >
-                            <TabList>
-                              <Tab value="current">Current tenant</Tab>
-                              <Tab value="shared">Shared</Tab>
-                              <Tab value="external">External</Tab>
-                            </TabList>
-                          </Tabs>
-
-                          {/* Network Table Body */}
-                          <VStack gap={3} align="stretch">
-                            {/* Search and Pagination */}
-                            <div className="w-[var(--search-input-width)]">
-                              <SearchInput
-                                placeholder="Search fixed IPs by attributes"
-                                value={networkSearch}
-                                onChange={(e) => setNetworkSearch(e.target.value)}
-                              />
-                            </div>
-
-                            <HStack gap={2} align="center">
-                              <Pagination
-                                currentPage={networkPage}
-                                totalPages={5}
-                                onPageChange={setNetworkPage}
-                              />
-                              <div className="h-4 w-px bg-[var(--color-border-default)]" />
-                              <span className="text-body-sm text-[var(--color-text-subtle)]">
-                                115 items
-                              </span>
-                            </HStack>
-
-                            {/* Network Table */}
-                            <Table columns={networkColumns} data={mockNetworks} rowKey="id" />
-
-                            {/* Selection Indicator for Network */}
-                            <SelectionIndicator
-                              className="mt-2"
-                              selectedItems={
-                                selectedNetwork
-                                  ? [
-                                      {
-                                        id: selectedNetwork,
-                                        label:
-                                          mockNetworks.find((n) => n.id === selectedNetwork)
-                                            ?.name || selectedNetwork,
-                                      },
-                                    ]
-                                  : []
-                              }
-                              onRemove={() => setSelectedNetwork(null)}
-                            />
-                          </VStack>
-                        </VStack>
-
-                        {/* Fixed IP Section */}
-                        <VStack gap={3} align="stretch">
-                          <FormField>
-                            <FormField.Label>Fixed IP</FormField.Label>
-                            <FormField.Description>
-                              Select a subnet and choose whether to auto-allocate fixed IP or enter
-                              one manually.
-                            </FormField.Description>
-                          </FormField>
-
-                          {/* Fixed IP Entries */}
-                          {fixedIPs.length > 0 && (
-                            <VStack gap={2} align="stretch">
-                              {fixedIPs.map((entry) => (
-                                <div
-                                  key={entry.id}
-                                  className="flex items-center justify-between px-4 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md"
-                                >
-                                  <div className="flex items-center gap-2">
-                                    {/* Subnet Label + Dropdown */}
-                                    <div className="flex items-center gap-1.5">
-                                      <span className="text-label-lg text-[var(--color-text-default)]">
-                                        Subnet
-                                      </span>
-                                      <Select
-                                        value={entry.subnet}
-                                        onChange={(value) =>
-                                          updateFixedIP(entry.id, { subnet: value })
-                                        }
-                                        options={[{ value: entry.subnet, label: entry.subnet }]}
-                                        placeholder="Select"
-                                        style={{ width: '120px' }}
-                                      />
-                                    </div>
-
-                                    {/* IP Allocation Dropdown */}
-                                    <Select
-                                      value={entry.ipMode}
-                                      onChange={(value) =>
-                                        updateFixedIP(entry.id, {
-                                          ipMode: value as 'auto' | 'manual',
-                                        })
-                                      }
-                                      options={[
-                                        { value: 'auto', label: 'Auto-allocate' },
-                                        { value: 'manual', label: 'Manual' },
-                                      ]}
-                                      className="w-[var(--layout-sidebar-width)]"
-                                    />
-
-                                    {/* IP Range Info or Manual Input */}
-                                    {entry.ipMode === 'auto' ? (
-                                      <span className="text-body-sm text-[var(--color-text-subtle)]">
-                                        192.168.1.100 - 192.168.1.200
-                                      </span>
-                                    ) : (
-                                      <Input
-                                        placeholder="Enter IP address"
-                                        value={entry.ipAddress}
-                                        onChange={(e) =>
-                                          updateFixedIP(entry.id, { ipAddress: e.target.value })
-                                        }
-                                        style={{ width: '180px' }}
-                                      />
-                                    )}
-                                  </div>
-
-                                  {/* Close Button */}
-                                  <button
-                                    type="button"
-                                    onClick={() => removeFixedIP(entry.id)}
-                                    className="p-1 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] transition-colors"
-                                  >
-                                    <IconX size={16} />
-                                  </button>
-                                </div>
-                              ))}
-                            </VStack>
-                          )}
-
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            leftIcon={<IconCirclePlus size={12} />}
-                            disabled={!selectedNetwork}
-                            onClick={addFixedIP}
-                            style={{ width: '110px', height: '32px' }}
-                          >
-                            Add fixed IP
-                          </Button>
-                        </VStack>
-
-                        {/* MAC address Section */}
-                        <VStack gap={3} align="stretch">
-                          <FormField required>
-                            <FormField.Label>MAC address</FormField.Label>
-                            <FormField.Description>
-                              Choose whether to auto-allocate a MAC address or enter one manually.
-                            </FormField.Description>
-                            <FormField.Control>
-                              <VStack gap={3} align="stretch">
-                                <RadioGroup
-                                  value={macAddressMode}
-                                  onChange={(value) =>
-                                    setMacAddressMode(value as 'auto' | 'manual')
-                                  }
-                                >
-                                  <Radio value="auto" label="Auto-allocate" />
-                                  <Radio value="manual" label="Manual" />
-                                </RadioGroup>
-                                {macAddressMode === 'manual' && (
-                                  <Input
-                                    placeholder="Enter MAC address (e.g. fa:16:3e:d7:f2:6c)"
-                                    value={manualMacAddress}
-                                    onChange={(e) => setManualMacAddress(e.target.value)}
-                                    fullWidth
-                                  />
-                                )}
-                              </VStack>
-                            </FormField.Control>
-                          </FormField>
-                        </VStack>
-
-                        {/* Network Error Message */}
-                        {networkError && (
-                          <div className="mt-2">
-                            <InlineMessage variant="error">{networkError}</InlineMessage>
-                          </div>
-                        )}
-
-                        {/* Next Button */}
-                        <div className="flex items-center justify-end w-full">
-                          <Button
-                            variant="primary"
-                            onClick={() => {
-                              if (!selectedNetwork) {
-                                setNetworkError('Please select a network.');
-                                return;
-                              }
-                              setNetworkError(null);
-                              setSectionStatus((prev) => ({
-                                ...prev,
-                                network: 'done',
-                                security: 'active',
-                              }));
-                            }}
-                          >
-                            Next
-                          </Button>
-                        </div>
-                      </SectionCard.Content>
-                    )}
-                    {sectionStatus['network'] === 'done' && (
-                      <SectionCard.Content>
-                        <SectionCard.DataRow
-                          label="Network"
-                          value={selectedNetworkDetails?.name || '-'}
-                          showDivider
+                    {/* Network Table Body */}
+                    <VStack gap={3} align="stretch">
+                      {/* Search and Pagination */}
+                      <div className="w-[var(--search-input-width)]">
+                        <SearchInput
+                          placeholder="Search fixed IPs by attributes"
+                          value={networkSearch}
+                          onChange={(e) => setNetworkSearch(e.target.value)}
                         />
-                        <SectionCard.DataRow label="Fixed IP" value="Auto-allocate" showDivider />
-                        <SectionCard.DataRow
-                          label="MAC address"
-                          value={
-                            macAddressMode === 'auto'
-                              ? 'Auto-allocate'
-                              : manualMacAddress || 'Manual'
-                          }
+                      </div>
+
+                      <HStack gap={2} align="center">
+                        <Pagination
+                          currentPage={networkPage}
+                          totalPages={5}
+                          onPageChange={setNetworkPage}
                         />
-                      </SectionCard.Content>
-                    )}
-                  </SectionCard>
+                        <div className="h-4 w-px bg-[var(--color-border-default)]" />
+                        <span className="text-body-sm text-[var(--color-text-subtle)]">
+                          115 items
+                        </span>
+                      </HStack>
 
-                  {/* Security Section */}
-                  <SectionCard isActive={sectionStatus['security'] === 'active'}>
-                    <SectionCard.Header
-                      title={SECTION_LABELS['security']}
-                      showDivider={sectionStatus['security'] === 'active'}
-                      actions={
-                        sectionStatus['security'] === 'done' && (
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            leftIcon={<IconEdit size={12} />}
-                            onClick={() => editSection('security')}
+                      {/* Network Table */}
+                      <Table columns={networkColumns} data={mockNetworks} rowKey="id" />
+
+                      {/* Selection Indicator for Network */}
+                      <SelectionIndicator
+                        className="mt-2"
+                        selectedItems={
+                          selectedNetwork
+                            ? [
+                                {
+                                  id: selectedNetwork,
+                                  label:
+                                    mockNetworks.find((n) => n.id === selectedNetwork)?.name ||
+                                    selectedNetwork,
+                                },
+                              ]
+                            : []
+                        }
+                        onRemove={() => setSelectedNetwork(null)}
+                      />
+                    </VStack>
+                  </VStack>
+
+                  {/* Fixed IP Section */}
+                  <VStack gap={3} align="stretch">
+                    <FormField>
+                      <FormField.Label>Fixed IP</FormField.Label>
+                      <FormField.Description>
+                        Select a subnet and choose whether to auto-allocate fixed IP or enter one
+                        manually.
+                      </FormField.Description>
+                    </FormField>
+
+                    {/* Fixed IP Entries */}
+                    {fixedIPs.length > 0 && (
+                      <VStack gap={2} align="stretch">
+                        {fixedIPs.map((entry) => (
+                          <div
+                            key={entry.id}
+                            className="flex items-center justify-between px-4 py-2 bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md"
                           >
-                            Edit
-                          </Button>
-                        )
-                      }
-                    />
-                    {sectionStatus['security'] === 'active' && (
-                      <SectionCard.Content gap={6} className="pt-2">
-                        {/* Port Security Toggle */}
-                        <VStack gap={3} align="stretch">
-                          <FormField required>
-                            <FormField.Label>Port security</FormField.Label>
-                            <FormField.Description>
-                              Indicates whether to enable security features on the port, including
-                              security groups.
-                            </FormField.Description>
-                          </FormField>
-                          <HStack gap={2} align="center">
-                            <Toggle
-                              checked={portSecurityEnabled}
-                              onChange={(e) => setPortSecurityEnabled(e.target.checked)}
-                            />
-                            <span className="text-body-md text-[var(--color-text-default)]">
-                              {portSecurityEnabled ? 'On' : 'Off'}
-                            </span>
-                          </HStack>
-                        </VStack>
-
-                        {/* Security Groups Section */}
-                        {portSecurityEnabled && (
-                          <VStack gap={3} align="stretch">
-                            <VStack gap={1.5} align="stretch">
-                              <span className="text-label-lg text-[var(--color-text-default)]">
-                                Security groups
-                              </span>
-                              <span className="text-body-md text-[var(--color-text-subtle)]">
-                                Select the security groups to apply to the port.
-                              </span>
-                            </VStack>
-
-                            {/* Search + Create Button Row */}
-                            <HStack justify="between" align="center">
-                              <div className="w-[var(--search-input-width)]">
-                                <SearchInput
-                                  placeholder="Search fixed IPs by attributes"
-                                  value={securityGroupSearch}
-                                  onChange={(e) => setSecurityGroupSearch(e.target.value)}
+                            <div className="flex items-center gap-2">
+                              {/* Subnet Label + Dropdown */}
+                              <div className="flex items-center gap-1.5">
+                                <span className="text-label-lg text-[var(--color-text-default)]">
+                                  Subnet
+                                </span>
+                                <Select
+                                  value={entry.subnet}
+                                  onChange={(value) => updateFixedIP(entry.id, { subnet: value })}
+                                  options={[{ value: entry.subnet, label: entry.subnet }]}
+                                  placeholder="Select"
+                                  style={{ width: '120px' }}
                                 />
                               </div>
-                              <Button
-                                variant="secondary"
-                                size="sm"
-                                leftIcon={<IconEdit size={12} />}
-                              >
-                                Create a new security group
-                              </Button>
-                            </HStack>
 
-                            {/* Pagination */}
-                            <Pagination
-                              currentPage={securityGroupPage}
-                              totalPages={5}
-                              totalItems={115}
-                              onPageChange={setSecurityGroupPage}
-                            />
+                              {/* IP Allocation Dropdown */}
+                              <Select
+                                value={entry.ipMode}
+                                onChange={(value) =>
+                                  updateFixedIP(entry.id, {
+                                    ipMode: value as 'auto' | 'manual',
+                                  })
+                                }
+                                options={[
+                                  { value: 'auto', label: 'Auto-allocate' },
+                                  { value: 'manual', label: 'Manual' },
+                                ]}
+                                className="w-[var(--layout-sidebar-width)]"
+                              />
 
-                            {/* Security Groups Table */}
-                            <Table
-                              columns={securityGroupColumns}
-                              data={mockSecurityGroups}
-                              getRowId={(row) => row.id}
-                            />
+                              {/* IP Range Info or Manual Input */}
+                              {entry.ipMode === 'auto' ? (
+                                <span className="text-body-sm text-[var(--color-text-subtle)]">
+                                  192.168.1.100 - 192.168.1.200
+                                </span>
+                              ) : (
+                                <Input
+                                  placeholder="Enter IP address"
+                                  value={entry.ipAddress}
+                                  onChange={(e) =>
+                                    updateFixedIP(entry.id, { ipAddress: e.target.value })
+                                  }
+                                  style={{ width: '180px' }}
+                                />
+                              )}
+                            </div>
 
-                            {/* Selection Indicator for Security Groups */}
-                            <SelectionIndicator
-                              className="mt-2"
-                              selectedItems={selectedSecurityGroups.map((id) => ({
-                                id,
-                                label: mockSecurityGroups.find((sg) => sg.id === id)?.name || id,
-                              }))}
-                              onRemove={(id) =>
-                                setSelectedSecurityGroups((prev) =>
-                                  prev.filter((sgId) => sgId !== id)
-                                )
-                              }
-                            />
-                          </VStack>
-                        )}
+                            {/* Close Button */}
+                            <button
+                              type="button"
+                              onClick={() => removeFixedIP(entry.id)}
+                              className="p-1 text-[var(--color-text-subtle)] hover:text-[var(--color-text-default)] transition-colors"
+                            >
+                              <IconX size={16} />
+                            </button>
+                          </div>
+                        ))}
+                      </VStack>
+                    )}
 
-                        {/* Next Button */}
-                        <div className="flex items-center justify-end w-full">
-                          <Button
-                            variant="primary"
-                            onClick={() => {
-                              setSectionStatus((prev) => ({
-                                ...prev,
-                                security: 'done',
-                              }));
-                            }}
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      leftIcon={<IconCirclePlus size={12} />}
+                      disabled={!selectedNetwork}
+                      onClick={addFixedIP}
+                      style={{ width: '110px', height: '32px' }}
+                    >
+                      Add fixed IP
+                    </Button>
+                  </VStack>
+
+                  {/* MAC address Section */}
+                  <VStack gap={3} align="stretch">
+                    <FormField required>
+                      <FormField.Label>MAC address</FormField.Label>
+                      <FormField.Description>
+                        Choose whether to auto-allocate a MAC address or enter one manually.
+                      </FormField.Description>
+                      <FormField.Control>
+                        <VStack gap={3} align="stretch">
+                          <RadioGroup
+                            value={macAddressMode}
+                            onChange={(value) => setMacAddressMode(value as 'auto' | 'manual')}
                           >
-                            Next
-                          </Button>
-                        </div>
-                      </SectionCard.Content>
-                    )}
-                    {sectionStatus['security'] === 'done' && (
-                      <SectionCard.Content>
-                        <SectionCard.DataRow
-                          label="Port security"
-                          value={portSecurityEnabled ? 'Enabled' : 'Disabled'}
-                          showDivider
-                        />
-                        <SectionCard.DataRow
-                          label="Security groups"
-                          value={
-                            selectedSecurityGroups.length > 0
-                              ? mockSecurityGroups
-                                  .filter((sg) => selectedSecurityGroups.includes(sg.id))
-                                  .map((sg) => sg.name)
-                                  .join(', ')
-                              : 'None'
-                          }
-                        />
-                      </SectionCard.Content>
-                    )}
-                  </SectionCard>
-                </VStack>
+                            <Radio value="auto" label="Auto-allocate" />
+                            <Radio value="manual" label="Manual" />
+                          </RadioGroup>
+                          {macAddressMode === 'manual' && (
+                            <Input
+                              placeholder="Enter MAC address (e.g. fa:16:3e:d7:f2:6c)"
+                              value={manualMacAddress}
+                              onChange={(e) => setManualMacAddress(e.target.value)}
+                              fullWidth
+                            />
+                          )}
+                        </VStack>
+                      </FormField.Control>
+                    </FormField>
+                  </VStack>
 
-                {/* Summary Sidebar */}
-                <SummarySidebar
-                  sectionStatus={sectionStatus}
-                  onCancel={handleCancel}
-                  onCreate={handleCreate}
-                  isCreateDisabled={isCreateDisabled}
-                />
-              </HStack>
-            </VStack>
-          </div>
-        </div>
-      </main>
-    </div>
+                  {/* Network Error Message */}
+                  {networkError && (
+                    <div className="mt-2">
+                      <InlineMessage variant="error">{networkError}</InlineMessage>
+                    </div>
+                  )}
+
+                  {/* Next Button */}
+                  <div className="flex items-center justify-end w-full">
+                    <Button
+                      variant="primary"
+                      onClick={() => {
+                        if (!selectedNetwork) {
+                          setNetworkError('Please select a network.');
+                          return;
+                        }
+                        setNetworkError(null);
+                        setSectionStatus((prev) => ({
+                          ...prev,
+                          network: 'done',
+                          security: 'active',
+                        }));
+                      }}
+                    >
+                      Next
+                    </Button>
+                  </div>
+                </SectionCard.Content>
+              )}
+              {sectionStatus['network'] === 'done' && (
+                <SectionCard.Content>
+                  <SectionCard.DataRow
+                    label="Network"
+                    value={selectedNetworkDetails?.name || '-'}
+                    showDivider
+                  />
+                  <SectionCard.DataRow label="Fixed IP" value="Auto-allocate" showDivider />
+                  <SectionCard.DataRow
+                    label="MAC address"
+                    value={
+                      macAddressMode === 'auto' ? 'Auto-allocate' : manualMacAddress || 'Manual'
+                    }
+                  />
+                </SectionCard.Content>
+              )}
+            </SectionCard>
+
+            {/* Security Section */}
+            <SectionCard isActive={sectionStatus['security'] === 'active'}>
+              <SectionCard.Header
+                title={SECTION_LABELS['security']}
+                showDivider={sectionStatus['security'] === 'active'}
+                actions={
+                  sectionStatus['security'] === 'done' && (
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      leftIcon={<IconEdit size={12} />}
+                      onClick={() => editSection('security')}
+                    >
+                      Edit
+                    </Button>
+                  )
+                }
+              />
+              {sectionStatus['security'] === 'active' && (
+                <SectionCard.Content gap={6} className="pt-2">
+                  {/* Port Security Toggle */}
+                  <VStack gap={3} align="stretch">
+                    <FormField required>
+                      <FormField.Label>Port security</FormField.Label>
+                      <FormField.Description>
+                        Indicates whether to enable security features on the port, including
+                        security groups.
+                      </FormField.Description>
+                    </FormField>
+                    <HStack gap={2} align="center">
+                      <Toggle
+                        checked={portSecurityEnabled}
+                        onChange={(e) => setPortSecurityEnabled(e.target.checked)}
+                      />
+                      <span className="text-body-md text-[var(--color-text-default)]">
+                        {portSecurityEnabled ? 'On' : 'Off'}
+                      </span>
+                    </HStack>
+                  </VStack>
+
+                  {/* Security Groups Section */}
+                  {portSecurityEnabled && (
+                    <VStack gap={3} align="stretch">
+                      <VStack gap={1.5} align="stretch">
+                        <span className="text-label-lg text-[var(--color-text-default)]">
+                          Security groups
+                        </span>
+                        <span className="text-body-md text-[var(--color-text-subtle)]">
+                          Select the security groups to apply to the port.
+                        </span>
+                      </VStack>
+
+                      {/* Search + Create Button Row */}
+                      <HStack justify="between" align="center">
+                        <div className="w-[var(--search-input-width)]">
+                          <SearchInput
+                            placeholder="Search fixed IPs by attributes"
+                            value={securityGroupSearch}
+                            onChange={(e) => setSecurityGroupSearch(e.target.value)}
+                          />
+                        </div>
+                        <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+                          Create a new security group
+                        </Button>
+                      </HStack>
+
+                      {/* Pagination */}
+                      <Pagination
+                        currentPage={securityGroupPage}
+                        totalPages={5}
+                        totalItems={115}
+                        onPageChange={setSecurityGroupPage}
+                      />
+
+                      {/* Security Groups Table */}
+                      <Table
+                        columns={securityGroupColumns}
+                        data={mockSecurityGroups}
+                        getRowId={(row) => row.id}
+                      />
+
+                      {/* Selection Indicator for Security Groups */}
+                      <SelectionIndicator
+                        className="mt-2"
+                        selectedItems={selectedSecurityGroups.map((id) => ({
+                          id,
+                          label: mockSecurityGroups.find((sg) => sg.id === id)?.name || id,
+                        }))}
+                        onRemove={(id) =>
+                          setSelectedSecurityGroups((prev) => prev.filter((sgId) => sgId !== id))
+                        }
+                      />
+                    </VStack>
+                  )}
+
+                  {/* Next Button */}
+                  <div className="flex items-center justify-end w-full">
+                    <Button
+                      variant="primary"
+                      onClick={() => {
+                        setSectionStatus((prev) => ({
+                          ...prev,
+                          security: 'done',
+                        }));
+                      }}
+                    >
+                      Next
+                    </Button>
+                  </div>
+                </SectionCard.Content>
+              )}
+              {sectionStatus['security'] === 'done' && (
+                <SectionCard.Content>
+                  <SectionCard.DataRow
+                    label="Port security"
+                    value={portSecurityEnabled ? 'Enabled' : 'Disabled'}
+                    showDivider
+                  />
+                  <SectionCard.DataRow
+                    label="Security groups"
+                    value={
+                      selectedSecurityGroups.length > 0
+                        ? mockSecurityGroups
+                            .filter((sg) => selectedSecurityGroups.includes(sg.id))
+                            .map((sg) => sg.name)
+                            .join(', ')
+                        : 'None'
+                    }
+                  />
+                </SectionCard.Content>
+              )}
+            </SectionCard>
+          </VStack>
+
+          {/* Summary Sidebar */}
+          <SummarySidebar
+            sectionStatus={sectionStatus}
+            onCancel={handleCancel}
+            onCreate={handleCreate}
+            isCreateDisabled={isCreateDisabled}
+          />
+        </HStack>
+      </VStack>
+    </PageShell>
   );
 }

@@ -13,6 +13,7 @@ import {
   TabPanel,
   DetailHeader,
   SectionCard,
+  PageShell,
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -435,6 +436,7 @@ export function ComputeAdminImageDetailPage() {
   const image = id ? mockImagesMap[id] || defaultImageDetail : defaultImageDetail;
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 200 : 0;
   const [activeDetailTab, setActiveDetailTab] = useState('details');
 
   // Global tab management
@@ -463,225 +465,204 @@ export function ComputeAdminImageDetailPage() {
   ];
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+    <PageShell
+      sidebar={
+        <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={true}
+          onBack={() => navigate('/compute-admin/images')}
+          onForward={() => window.history.forward()}
+          breadcrumb={<Breadcrumb items={breadcrumbItems} />}
+          actions={
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1.5} />}
+              aria-label="Notifications"
+              badge={true}
+            />
+          }
+        />
+      }
+      contentClassName="pt-4 px-8 pb-20"
+    >
+      <VStack gap={6} className="min-w-[1176px]">
+        {/* Image Header Card */}
+        <DetailHeader>
+          <DetailHeader.Title>{image.name}</DetailHeader.Title>
+          <DetailHeader.Actions>
+            <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+              Manage metadata
+            </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+              Manage access
+            </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+              Edit
+            </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+              Delete
+            </Button>
+          </DetailHeader.Actions>
+          <DetailHeader.InfoGrid>
+            <DetailHeader.InfoCard label="Status" value="Active" status="active" />
+            <DetailHeader.InfoCard label="ID" value={image.id} copyable />
+            <DetailHeader.InfoCard label="Tenant" value={image.tenant} />
+            <DetailHeader.InfoCard label="Visibility" value={image.access} />
+            <DetailHeader.InfoCard label="Protected" value={image.protected ? 'Yes' : 'No'} />
+            <DetailHeader.InfoCard label="Created at" value={image.createdAt} />
+          </DetailHeader.InfoGrid>
+        </DetailHeader>
 
-      {/* Main Content */}
-      <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
-          sidebarOpen ? 'left-[200px]' : 'left-0'
-        }`}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Tab Bar */}
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            onTabAdd={addNewTab}
-            onTabReorder={moveTab}
-            showAddButton={true}
-            showWindowControls={true}
-          />
+        {/* Image Tabs */}
+        <div className="w-full">
+          <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline" size="sm">
+            <TabList>
+              <Tab value="details">Details</Tab>
+              <Tab value="metadata">Metadata</Tab>
+            </TabList>
 
-          {/* Top Bar */}
-          <TopBar
-            showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
-            showNavigation={true}
-            onBack={() => navigate('/compute-admin/images')}
-            onForward={() => window.history.forward()}
-            breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-            actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-                badge={true}
-              />
-            }
-          />
-        </div>
+            {/* Details Tab Panel */}
+            <TabPanel value="details" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Basic information */}
+                <SectionCard>
+                  <SectionCard.Header
+                    title="Basic information"
+                    actions={
+                      <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+                        Edit
+                      </Button>
+                    }
+                  />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="Image name" value={image.name} />
+                    <SectionCard.DataRow label="Description" value={image.description} />
+                  </SectionCard.Content>
+                </SectionCard>
 
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          {/* Page Content */}
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
-            <VStack gap={6} className="min-w-[1176px]">
-              {/* Image Header Card */}
-              <DetailHeader>
-                <DetailHeader.Title>{image.name}</DetailHeader.Title>
-                <DetailHeader.Actions>
-                  <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                    Manage metadata
-                  </Button>
-                  <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                    Manage access
-                  </Button>
-                  <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                    Edit
-                  </Button>
-                  <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
-                    Delete
-                  </Button>
-                </DetailHeader.Actions>
-                <DetailHeader.InfoGrid>
-                  <DetailHeader.InfoCard label="Status" value="Active" status="active" />
-                  <DetailHeader.InfoCard label="ID" value={image.id} copyable />
-                  <DetailHeader.InfoCard label="Tenant" value={image.tenant} />
-                  <DetailHeader.InfoCard label="Visibility" value={image.access} />
-                  <DetailHeader.InfoCard label="Protected" value={image.protected ? 'Yes' : 'No'} />
-                  <DetailHeader.InfoCard label="Created at" value={image.createdAt} />
-                </DetailHeader.InfoGrid>
-              </DetailHeader>
+                {/* Specifications */}
+                <SectionCard>
+                  <SectionCard.Header title="Specifications" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="Size" value={image.size} />
+                    <SectionCard.DataRow label="OS" value={image.os} />
+                    <SectionCard.DataRow label="OS Admin" value={image.osAdmin} />
+                    <SectionCard.DataRow
+                      label="Disk format / container format"
+                      value={`${image.diskFormat} / ${image.containerFormat}`}
+                    />
+                    <SectionCard.DataRow
+                      label="Min disk / Min RAM"
+                      value={`${image.minDisk} / ${image.minRam}`}
+                    />
+                  </SectionCard.Content>
+                </SectionCard>
 
-              {/* Image Tabs */}
-              <div className="w-full">
-                <Tabs
-                  value={activeDetailTab}
-                  onChange={setActiveDetailTab}
-                  variant="underline"
-                  size="sm"
-                >
-                  <TabList>
-                    <Tab value="details">Details</Tab>
-                    <Tab value="metadata">Metadata</Tab>
-                  </TabList>
+                {/* Security */}
+                <SectionCard>
+                  <SectionCard.Header title="Security" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="Owner" value={image.owner} />
+                    <SectionCard.DataRow label="Visibility" value={image.visibility} />
+                    <SectionCard.DataRow
+                      label="Protected"
+                      value={image.protected ? 'Enabled' : 'Disabled'}
+                    />
+                    {/* Filename with copy */}
+                    <div className="flex flex-col gap-3 w-full">
+                      <div className="h-px w-full bg-[var(--color-border-subtle)]" />
+                      <div className="flex flex-col gap-1.5">
+                        <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
+                          Filename
+                        </span>
+                        <CopyableValue value={image.filename} />
+                      </div>
+                    </div>
+                    {/* Checksum with copy */}
+                    <div className="flex flex-col gap-3 w-full">
+                      <div className="h-px w-full bg-[var(--color-border-subtle)]" />
+                      <div className="flex flex-col gap-1.5">
+                        <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
+                          Checksum
+                        </span>
+                        <CopyableValue value={image.checksum} />
+                      </div>
+                    </div>
+                  </SectionCard.Content>
+                </SectionCard>
 
-                  {/* Details Tab Panel */}
-                  <TabPanel value="details" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Basic information */}
-                      <SectionCard>
-                        <SectionCard.Header
-                          title="Basic information"
-                          actions={
-                            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                              Edit
-                            </Button>
-                          }
-                        />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow label="Image name" value={image.name} />
-                          <SectionCard.DataRow label="Description" value={image.description} />
-                        </SectionCard.Content>
-                      </SectionCard>
+                {/* Advanced */}
+                <SectionCard>
+                  <SectionCard.Header title="Advanced" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow
+                      label="QEMU Guest Agent"
+                      value={image.qemuGuestAgent ? 'Enabled' : 'Disabled'}
+                    />
+                    <SectionCard.DataRow label="CPU Policy" value={image.cpuPolicy} />
+                    <SectionCard.DataRow label="CPU Thread Policy" value={image.cpuThreadPolicy} />
+                  </SectionCard.Content>
+                </SectionCard>
+              </VStack>
+            </TabPanel>
 
-                      {/* Specifications */}
-                      <SectionCard>
-                        <SectionCard.Header title="Specifications" />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow label="Size" value={image.size} />
-                          <SectionCard.DataRow label="OS" value={image.os} />
-                          <SectionCard.DataRow label="OS Admin" value={image.osAdmin} />
-                          <SectionCard.DataRow
-                            label="Disk format / container format"
-                            value={`${image.diskFormat} / ${image.containerFormat}`}
-                          />
-                          <SectionCard.DataRow
-                            label="Min disk / Min RAM"
-                            value={`${image.minDisk} / ${image.minRam}`}
-                          />
-                        </SectionCard.Content>
-                      </SectionCard>
+            {/* Metadata Tab Panel */}
+            <TabPanel value="metadata" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Metadata Card - matching Figma design */}
+                <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 pt-3 pb-4 w-full flex flex-col gap-3">
+                  {/* Title */}
+                  <div className="h-8 flex items-center">
+                    <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
+                      Metadata
+                    </span>
+                  </div>
 
-                      {/* Security */}
-                      <SectionCard>
-                        <SectionCard.Header title="Security" />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow label="Owner" value={image.owner} />
-                          <SectionCard.DataRow label="Visibility" value={image.visibility} />
-                          <SectionCard.DataRow
-                            label="Protected"
-                            value={image.protected ? 'Enabled' : 'Disabled'}
-                          />
-                          {/* Filename with copy */}
-                          <div className="flex flex-col gap-3 w-full">
-                            <div className="h-px w-full bg-[var(--color-border-subtle)]" />
-                            <div className="flex flex-col gap-1.5">
-                              <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
-                                Filename
-                              </span>
-                              <CopyableValue value={image.filename} />
-                            </div>
-                          </div>
-                          {/* Checksum with copy */}
-                          <div className="flex flex-col gap-3 w-full">
-                            <div className="h-px w-full bg-[var(--color-border-subtle)]" />
-                            <div className="flex flex-col gap-1.5">
-                              <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
-                                Checksum
-                              </span>
-                              <CopyableValue value={image.checksum} />
-                            </div>
-                          </div>
-                        </SectionCard.Content>
-                      </SectionCard>
-
-                      {/* Advanced */}
-                      <SectionCard>
-                        <SectionCard.Header title="Advanced" />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow
-                            label="QEMU Guest Agent"
-                            value={image.qemuGuestAgent ? 'Enabled' : 'Disabled'}
-                          />
-                          <SectionCard.DataRow label="CPU Policy" value={image.cpuPolicy} />
-                          <SectionCard.DataRow
-                            label="CPU Thread Policy"
-                            value={image.cpuThreadPolicy}
-                          />
-                        </SectionCard.Content>
-                      </SectionCard>
-                    </VStack>
-                  </TabPanel>
-
-                  {/* Metadata Tab Panel */}
-                  <TabPanel value="metadata" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Metadata Card - matching Figma design */}
-                      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 pt-3 pb-4 w-full flex flex-col gap-3">
-                        {/* Title */}
-                        <div className="h-8 flex items-center">
-                          <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
-                            Metadata
+                  {/* Data Rows */}
+                  {Object.entries(image.metadata).length > 0 ? (
+                    Object.entries(image.metadata).map(([key, value]) => (
+                      <div key={key} className="flex flex-col gap-3 w-full">
+                        {/* Divider */}
+                        <div className="h-px w-full bg-[var(--color-border-subtle)]" />
+                        {/* Row Content */}
+                        <div className="flex flex-col gap-1.5">
+                          <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
+                            {key}
+                          </span>
+                          <span className="text-body-md leading-4 text-[var(--color-text-default)]">
+                            {value || '-'}
                           </span>
                         </div>
-
-                        {/* Data Rows */}
-                        {Object.entries(image.metadata).length > 0 ? (
-                          Object.entries(image.metadata).map(([key, value]) => (
-                            <div key={key} className="flex flex-col gap-3 w-full">
-                              {/* Divider */}
-                              <div className="h-px w-full bg-[var(--color-border-subtle)]" />
-                              {/* Row Content */}
-                              <div className="flex flex-col gap-1.5">
-                                <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
-                                  {key}
-                                </span>
-                                <span className="text-body-md leading-4 text-[var(--color-text-default)]">
-                                  {value || '-'}
-                                </span>
-                              </div>
-                            </div>
-                          ))
-                        ) : (
-                          <div className="py-4 text-center text-[var(--color-text-muted)]">
-                            No metadata available
-                          </div>
-                        )}
                       </div>
-                    </VStack>
-                  </TabPanel>
-                </Tabs>
-              </div>
-            </VStack>
-          </div>
+                    ))
+                  ) : (
+                    <div className="py-4 text-center text-[var(--color-text-muted)]">
+                      No metadata available
+                    </div>
+                  )}
+                </div>
+              </VStack>
+            </TabPanel>
+          </Tabs>
         </div>
-      </main>
-    </div>
+      </VStack>
+    </PageShell>
   );
 }
 

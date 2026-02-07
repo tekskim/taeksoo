@@ -13,6 +13,7 @@ import {
   TabPanel,
   SectionCard,
   DetailHeader,
+  PageShell,
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -102,6 +103,7 @@ const defaultMetadataDetail: MetadataDefinitionDetail = {
 export default function ComputeAdminMetadataDefinitionDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 200 : 0;
   const [activeTab, setActiveTab] = useState('details');
 
   // Global tab management
@@ -126,253 +128,238 @@ export default function ComputeAdminMetadataDefinitionDetailPage() {
   }));
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
+    <PageShell
+      sidebar={
+        <ComputeAdminSidebar
+          isOpen={sidebarOpen}
+          onToggle={() => setSidebarOpen((prev) => !prev)}
+        />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={
+            <Breadcrumb
+              items={[
+                { label: 'Compute Admin', href: '/compute-admin' },
+                { label: 'Metadata Definitions', href: '/compute-admin/metadata-definition' },
+                { label: metadata.displayName },
+              ]}
+            />
+          }
+          actions={
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1.5} />}
+              aria-label="Notifications"
+              badge={true}
+            />
+          }
+        />
+      }
+      contentClassName="pt-3 px-8 pb-20 bg-[var(--color-surface-subtle)]"
+    >
+      <VStack gap={8} className="min-w-[1176px]">
+        {/* Header Card */}
+        <DetailHeader>
+          <DetailHeader.Title>{metadata.displayName}</DetailHeader.Title>
+          <DetailHeader.Actions>
+            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+              Edit
+            </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+              Delete
+            </Button>
+          </DetailHeader.Actions>
+          <DetailHeader.InfoGrid>
+            <DetailHeader.InfoCard label="Namespace" value={metadata.namespace} />
+            <DetailHeader.InfoCard label="Description" value={metadata.description} />
+            <DetailHeader.InfoCard label="Public" value={metadata.isPublic ? 'On' : 'Off'} />
+            <DetailHeader.InfoCard label="Protected" value={metadata.isProtected ? 'Yes' : 'No'} />
+            <DetailHeader.InfoCard label="Created at" value={metadata.createdAt} />
+          </DetailHeader.InfoGrid>
+        </DetailHeader>
 
-      <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
-          sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'
-        }`}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Tab Bar */}
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            onTabAdd={addNewTab}
-            onTabReorder={moveTab}
-            showAddButton={true}
-            showWindowControls={true}
-          />
+        {/* Tabs Section */}
+        <div className="w-full">
+          <Tabs value={activeTab} onChange={setActiveTab}>
+            <TabList>
+              <Tab value="details">Details</Tab>
+              <Tab value="contents">Contents</Tab>
+            </TabList>
 
-          {/* Top Bar */}
-          <TopBar
-            showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
-            showNavigation={true}
-            onBack={() => window.history.back()}
-            onForward={() => window.history.forward()}
-            breadcrumb={
-              <Breadcrumb
-                items={[
-                  { label: 'Compute Admin', href: '/compute-admin' },
-                  { label: 'Metadata Definitions', href: '/compute-admin/metadata-definition' },
-                  { label: metadata.displayName },
-                ]}
-              />
-            }
-            actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-                badge={true}
-              />
-            }
-          />
-        </div>
+            {/* Details Tab */}
+            <TabPanel value="details" className="pt-6">
+              <VStack gap={6}>
+                {/* Basic Information */}
+                <SectionCard>
+                  <SectionCard.Header title="Basic information" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="Display name" value={metadata.displayName} />
+                    <SectionCard.DataRow label="Description" value={metadata.description} />
+                    <SectionCard.DataRow label="Public" value={metadata.isPublic ? 'On' : 'Off'} />
+                    <SectionCard.DataRow
+                      label="Protected"
+                      value={metadata.isProtected ? 'Yes' : 'No'}
+                    />
+                  </SectionCard.Content>
+                </SectionCard>
 
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
-            <VStack gap={8} className="min-w-[1176px]">
-              {/* Header Card */}
-              <DetailHeader>
-                <DetailHeader.Title>{metadata.displayName}</DetailHeader.Title>
-                <DetailHeader.Actions>
-                  <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                    Edit
-                  </Button>
-                  <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
-                    Delete
-                  </Button>
-                </DetailHeader.Actions>
-                <DetailHeader.InfoGrid>
-                  <DetailHeader.InfoCard label="Namespace" value={metadata.namespace} />
-                  <DetailHeader.InfoCard label="Description" value={metadata.description} />
-                  <DetailHeader.InfoCard label="Public" value={metadata.isPublic ? 'On' : 'Off'} />
-                  <DetailHeader.InfoCard
-                    label="Protected"
-                    value={metadata.isProtected ? 'Yes' : 'No'}
-                  />
-                  <DetailHeader.InfoCard label="Created at" value={metadata.createdAt} />
-                </DetailHeader.InfoGrid>
-              </DetailHeader>
+                {/* Associated Resource Types */}
+                <SectionCard>
+                  <SectionCard.Header title="Associated resource types" />
+                  <SectionCard.Content>
+                    {metadata.resourceTypes.length > 0 ? (
+                      metadata.resourceTypes.map((rt, index) => (
+                        <SectionCard.DataRow
+                          key={index}
+                          label="Resource Type / Prefix"
+                          value={`${rt.resourceType} / ${rt.prefix}`}
+                        />
+                      ))
+                    ) : (
+                      <SectionCard.DataRow
+                        label="Resource Type / Prefix"
+                        value="No resource types associated"
+                      />
+                    )}
+                  </SectionCard.Content>
+                </SectionCard>
+              </VStack>
+            </TabPanel>
 
-              {/* Tabs Section */}
-              <div className="w-full">
-                <Tabs value={activeTab} onChange={setActiveTab}>
-                  <TabList>
-                    <Tab value="details">Details</Tab>
-                    <Tab value="contents">Contents</Tab>
-                  </TabList>
-
-                  {/* Details Tab */}
-                  <TabPanel value="details" className="pt-6">
-                    <VStack gap={6}>
-                      {/* Basic Information */}
-                      <SectionCard>
-                        <SectionCard.Header title="Basic information" />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow label="Display name" value={metadata.displayName} />
-                          <SectionCard.DataRow label="Description" value={metadata.description} />
-                          <SectionCard.DataRow
-                            label="Public"
-                            value={metadata.isPublic ? 'On' : 'Off'}
-                          />
-                          <SectionCard.DataRow
-                            label="Protected"
-                            value={metadata.isProtected ? 'Yes' : 'No'}
-                          />
-                        </SectionCard.Content>
-                      </SectionCard>
-
-                      {/* Associated Resource Types */}
-                      <SectionCard>
-                        <SectionCard.Header title="Associated resource types" />
-                        <SectionCard.Content>
-                          {metadata.resourceTypes.length > 0 ? (
-                            metadata.resourceTypes.map((rt, index) => (
-                              <SectionCard.DataRow
-                                key={index}
-                                label="Resource Type / Prefix"
-                                value={`${rt.resourceType} / ${rt.prefix}`}
-                              />
-                            ))
-                          ) : (
-                            <SectionCard.DataRow
-                              label="Resource Type / Prefix"
-                              value="No resource types associated"
-                            />
-                          )}
-                        </SectionCard.Content>
-                      </SectionCard>
-                    </VStack>
-                  </TabPanel>
-
-                  {/* Contents Tab */}
-                  <TabPanel value="contents" className="pt-6">
-                    <div className="bg-[var(--primitive-color-blue-gray800)] rounded-lg p-6 font-mono text-[13px] leading-6 overflow-x-auto">
-                      <pre className="text-[var(--primitive-color-blue-gray200)]">
-                        <span className="text-[#94a3b8]">{'{'}</span>
-                        {'\n'}
-                        <span className="text-[#7dd3fc]">{`  "namespace"`}</span>
-                        <span className="text-[#94a3b8]">: </span>
-                        <span className="text-[#fde68a]">{`"${metadata.namespace}"`}</span>
-                        <span className="text-[#94a3b8]">,</span>
-                        {'\n'}
-                        <span className="text-[#7dd3fc]">{`  "display_name"`}</span>
-                        <span className="text-[#94a3b8]">: </span>
-                        <span className="text-[#fde68a]">{`"${metadata.displayName}"`}</span>
-                        <span className="text-[#94a3b8]">,</span>
-                        {'\n'}
-                        <span className="text-[#7dd3fc]">{`  "description"`}</span>
-                        <span className="text-[#94a3b8]">: </span>
-                        <span className="text-[#fde68a]">{`"${metadata.description}"`}</span>
-                        <span className="text-[#94a3b8]">,</span>
-                        {'\n'}
-                        <span className="text-[#7dd3fc]">{`  "visibility"`}</span>
-                        <span className="text-[#94a3b8]">: </span>
-                        <span className="text-[#fde68a]">{`"${metadata.isPublic ? 'public' : 'private'}"`}</span>
-                        <span className="text-[#94a3b8]">,</span>
-                        {'\n'}
-                        <span className="text-[#7dd3fc]">{`  "protected"`}</span>
-                        <span className="text-[#94a3b8]">: </span>
-                        <span className="text-[#7dd3fc]">
-                          {metadata.isProtected ? 'true' : 'false'}
-                        </span>
-                        <span className="text-[#94a3b8]">,</span>
-                        {'\n'}
-                        <span className="text-[#7dd3fc]">{`  "owner"`}</span>
-                        <span className="text-[#94a3b8]">: </span>
-                        <span className="text-[#fde68a]">{`"admin"`}</span>
-                        <span className="text-[#94a3b8]">,</span>
-                        {'\n'}
-                        <span className="text-[#7dd3fc]">{`  "created_at"`}</span>
-                        <span className="text-[#94a3b8]">: </span>
-                        <span className="text-[#fde68a]">{`"2025-05-13T02:48:18Z"`}</span>
-                        <span className="text-[#94a3b8]">,</span>
-                        {'\n'}
-                        <span className="text-[#7dd3fc]">{`  "resource_type_associations"`}</span>
-                        <span className="text-[#94a3b8]">: [</span>
-                        {metadata.resourceTypes.map((rt, index) => (
-                          <span key={index}>
-                            {'\n'}
-                            <span className="text-[#94a3b8]">{`    {`}</span>
-                            {'\n'}
-                            <span className="text-[#7dd3fc]">{`      "name"`}</span>
-                            <span className="text-[#94a3b8]">: </span>
-                            <span className="text-[#fde68a]">{`"${rt.resourceType}"`}</span>
-                            <span className="text-[#94a3b8]">,</span>
-                            {'\n'}
-                            <span className="text-[#7dd3fc]">{`      "prefix"`}</span>
-                            <span className="text-[#94a3b8]">: </span>
-                            <span className="text-[#fde68a]">{`"${rt.prefix}"`}</span>
-                            <span className="text-[#94a3b8]">,</span>
-                            {'\n'}
-                            <span className="text-[#7dd3fc]">{`      "properties_target"`}</span>
-                            <span className="text-[#94a3b8]">: </span>
-                            <span className="text-[#fde68a]">{`"image"`}</span>
-                            <span className="text-[#94a3b8]">,</span>
-                            {'\n'}
-                            <span className="text-[#7dd3fc]">{`      "created_at"`}</span>
-                            <span className="text-[#94a3b8]">: </span>
-                            <span className="text-[#fde68a]">{`"2025-05-13T02:48:18Z"`}</span>
-                            {'\n'}
-                            <span className="text-[#94a3b8]">
-                              {`    }`}
-                              {index < metadata.resourceTypes.length - 1 ? ',' : ''}
-                            </span>
-                          </span>
-                        ))}
-                        {'\n'}
-                        <span className="text-[#94a3b8]">{`  ],`}</span>
-                        {'\n'}
-                        <span className="text-[#7dd3fc]">{`  "properties"`}</span>
-                        <span className="text-[#94a3b8]">{`: {`}</span>
-                        {'\n'}
-                        <span className="text-[#7dd3fc]">{`    "mem_page_size"`}</span>
-                        <span className="text-[#94a3b8]">{`: {`}</span>
-                        {'\n'}
-                        <span className="text-[#7dd3fc]">{`      "type"`}</span>
-                        <span className="text-[#94a3b8]">: </span>
-                        <span className="text-[#fde68a]">{`"string"`}</span>
-                        <span className="text-[#94a3b8]">,</span>
-                        {'\n'}
-                        <span className="text-[#7dd3fc]">{`      "title"`}</span>
-                        <span className="text-[#94a3b8]">: </span>
-                        <span className="text-[#fde68a]">{`"Size of memory page"`}</span>
-                        <span className="text-[#94a3b8]">,</span>
-                        {'\n'}
-                        <span className="text-[#7dd3fc]">{`      "description"`}</span>
-                        <span className="text-[#94a3b8]">: </span>
-                        <span className="text-[#fde68a]">{`"Page size to be used for Guest memory backing. Value can be specified as <number><unit> (i.e.: 2MB, 1GB) or 'any', 'small', 'large'. If this property is set in Image metadata then only 'any' and 'large' values are accepted in Flavor metadata by Nova API."`}</span>
-                        {'\n'}
-                        <span className="text-[#94a3b8]">{`    }`}</span>
-                        {'\n'}
-                        <span className="text-[#94a3b8]">{`  },`}</span>
-                        {'\n'}
-                        <span className="text-[#7dd3fc]">{`  "self"`}</span>
-                        <span className="text-[#94a3b8]">: </span>
-                        <span className="text-[#fde68a]">{`"/v2/metadefs/namespaces/${metadata.namespace}"`}</span>
-                        <span className="text-[#94a3b8]">,</span>
-                        {'\n'}
-                        <span className="text-[#7dd3fc]">{`  "schema"`}</span>
-                        <span className="text-[#94a3b8]">: </span>
-                        <span className="text-[#fde68a]">{`"/v2/schemas/metadefs/namespace"`}</span>
-                        {'\n'}
-                        <span className="text-[#94a3b8]">{'}'}</span>
-                      </pre>
-                    </div>
-                  </TabPanel>
-                </Tabs>
+            {/* Contents Tab */}
+            <TabPanel value="contents" className="pt-6">
+              <div className="bg-[var(--primitive-color-blue-gray800)] rounded-lg p-6 font-mono text-[13px] leading-6 overflow-x-auto">
+                <pre className="text-[var(--primitive-color-blue-gray200)]">
+                  <span className="text-[#94a3b8]">{'{'}</span>
+                  {'\n'}
+                  <span className="text-[#7dd3fc]">{`  "namespace"`}</span>
+                  <span className="text-[#94a3b8]">: </span>
+                  <span className="text-[#fde68a]">{`"${metadata.namespace}"`}</span>
+                  <span className="text-[#94a3b8]">,</span>
+                  {'\n'}
+                  <span className="text-[#7dd3fc]">{`  "display_name"`}</span>
+                  <span className="text-[#94a3b8]">: </span>
+                  <span className="text-[#fde68a]">{`"${metadata.displayName}"`}</span>
+                  <span className="text-[#94a3b8]">,</span>
+                  {'\n'}
+                  <span className="text-[#7dd3fc]">{`  "description"`}</span>
+                  <span className="text-[#94a3b8]">: </span>
+                  <span className="text-[#fde68a]">{`"${metadata.description}"`}</span>
+                  <span className="text-[#94a3b8]">,</span>
+                  {'\n'}
+                  <span className="text-[#7dd3fc]">{`  "visibility"`}</span>
+                  <span className="text-[#94a3b8]">: </span>
+                  <span className="text-[#fde68a]">{`"${metadata.isPublic ? 'public' : 'private'}"`}</span>
+                  <span className="text-[#94a3b8]">,</span>
+                  {'\n'}
+                  <span className="text-[#7dd3fc]">{`  "protected"`}</span>
+                  <span className="text-[#94a3b8]">: </span>
+                  <span className="text-[#7dd3fc]">{metadata.isProtected ? 'true' : 'false'}</span>
+                  <span className="text-[#94a3b8]">,</span>
+                  {'\n'}
+                  <span className="text-[#7dd3fc]">{`  "owner"`}</span>
+                  <span className="text-[#94a3b8]">: </span>
+                  <span className="text-[#fde68a]">{`"admin"`}</span>
+                  <span className="text-[#94a3b8]">,</span>
+                  {'\n'}
+                  <span className="text-[#7dd3fc]">{`  "created_at"`}</span>
+                  <span className="text-[#94a3b8]">: </span>
+                  <span className="text-[#fde68a]">{`"2025-05-13T02:48:18Z"`}</span>
+                  <span className="text-[#94a3b8]">,</span>
+                  {'\n'}
+                  <span className="text-[#7dd3fc]">{`  "resource_type_associations"`}</span>
+                  <span className="text-[#94a3b8]">: [</span>
+                  {metadata.resourceTypes.map((rt, index) => (
+                    <span key={index}>
+                      {'\n'}
+                      <span className="text-[#94a3b8]">{`    {`}</span>
+                      {'\n'}
+                      <span className="text-[#7dd3fc]">{`      "name"`}</span>
+                      <span className="text-[#94a3b8]">: </span>
+                      <span className="text-[#fde68a]">{`"${rt.resourceType}"`}</span>
+                      <span className="text-[#94a3b8]">,</span>
+                      {'\n'}
+                      <span className="text-[#7dd3fc]">{`      "prefix"`}</span>
+                      <span className="text-[#94a3b8]">: </span>
+                      <span className="text-[#fde68a]">{`"${rt.prefix}"`}</span>
+                      <span className="text-[#94a3b8]">,</span>
+                      {'\n'}
+                      <span className="text-[#7dd3fc]">{`      "properties_target"`}</span>
+                      <span className="text-[#94a3b8]">: </span>
+                      <span className="text-[#fde68a]">{`"image"`}</span>
+                      <span className="text-[#94a3b8]">,</span>
+                      {'\n'}
+                      <span className="text-[#7dd3fc]">{`      "created_at"`}</span>
+                      <span className="text-[#94a3b8]">: </span>
+                      <span className="text-[#fde68a]">{`"2025-05-13T02:48:18Z"`}</span>
+                      {'\n'}
+                      <span className="text-[#94a3b8]">
+                        {`    }`}
+                        {index < metadata.resourceTypes.length - 1 ? ',' : ''}
+                      </span>
+                    </span>
+                  ))}
+                  {'\n'}
+                  <span className="text-[#94a3b8]">{`  ],`}</span>
+                  {'\n'}
+                  <span className="text-[#7dd3fc]">{`  "properties"`}</span>
+                  <span className="text-[#94a3b8]">{`: {`}</span>
+                  {'\n'}
+                  <span className="text-[#7dd3fc]">{`    "mem_page_size"`}</span>
+                  <span className="text-[#94a3b8]">{`: {`}</span>
+                  {'\n'}
+                  <span className="text-[#7dd3fc]">{`      "type"`}</span>
+                  <span className="text-[#94a3b8]">: </span>
+                  <span className="text-[#fde68a]">{`"string"`}</span>
+                  <span className="text-[#94a3b8]">,</span>
+                  {'\n'}
+                  <span className="text-[#7dd3fc]">{`      "title"`}</span>
+                  <span className="text-[#94a3b8]">: </span>
+                  <span className="text-[#fde68a]">{`"Size of memory page"`}</span>
+                  <span className="text-[#94a3b8]">,</span>
+                  {'\n'}
+                  <span className="text-[#7dd3fc]">{`      "description"`}</span>
+                  <span className="text-[#94a3b8]">: </span>
+                  <span className="text-[#fde68a]">{`"Page size to be used for Guest memory backing. Value can be specified as <number><unit> (i.e.: 2MB, 1GB) or 'any', 'small', 'large'. If this property is set in Image metadata then only 'any' and 'large' values are accepted in Flavor metadata by Nova API."`}</span>
+                  {'\n'}
+                  <span className="text-[#94a3b8]">{`    }`}</span>
+                  {'\n'}
+                  <span className="text-[#94a3b8]">{`  },`}</span>
+                  {'\n'}
+                  <span className="text-[#7dd3fc]">{`  "self"`}</span>
+                  <span className="text-[#94a3b8]">: </span>
+                  <span className="text-[#fde68a]">{`"/v2/metadefs/namespaces/${metadata.namespace}"`}</span>
+                  <span className="text-[#94a3b8]">,</span>
+                  {'\n'}
+                  <span className="text-[#7dd3fc]">{`  "schema"`}</span>
+                  <span className="text-[#94a3b8]">: </span>
+                  <span className="text-[#fde68a]">{`"/v2/schemas/metadefs/namespace"`}</span>
+                  {'\n'}
+                  <span className="text-[#94a3b8]">{'}'}</span>
+                </pre>
               </div>
-            </VStack>
-          </div>
+            </TabPanel>
+          </Tabs>
         </div>
-      </main>
-    </div>
+      </VStack>
+    </PageShell>
   );
 }

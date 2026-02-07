@@ -22,6 +22,7 @@ import {
   Table,
   Pagination,
   SearchInput,
+  PageShell,
   columnMinWidths,
   type ContextMenuItem,
 } from '@/design-system';
@@ -400,6 +401,10 @@ export function PersistentVolumeClaimDetailPage() {
   // Sidebar width calculation
   const sidebarWidth = sidebarOpen ? 240 : 40;
 
+  if (!pvcData) {
+    return <div>Loading...</div>;
+  }
+
   // More actions menu
   const moreActionsItems: ContextMenuItem[] = [
     {
@@ -410,7 +415,7 @@ export function PersistentVolumeClaimDetailPage() {
     {
       id: 'edit-yaml',
       label: 'Edit YAML',
-      onClick: () => navigate(`/container/pvc/${pvc.name}/edit-yaml`),
+      onClick: () => navigate(`/container/pvc/${pvcData.name}/edit-yaml`),
     },
     {
       id: 'download-yaml',
@@ -424,10 +429,6 @@ export function PersistentVolumeClaimDetailPage() {
       onClick: () => console.log('Delete'),
     },
   ];
-
-  if (!pvcData) {
-    return <div>Loading...</div>;
-  }
 
   // Format labels
   const labelsCount = Object.keys(pvcData.labels).length;
@@ -445,16 +446,12 @@ export function PersistentVolumeClaimDetailPage() {
   ];
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-
-      {/* Main Content */}
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: `${sidebarWidth}px` }}
-      >
-        {/* Tab Bar */}
+    <PageShell
+      sidebar={
+        <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
         <TabBar
           tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
@@ -463,8 +460,8 @@ export function PersistentVolumeClaimDetailPage() {
           onTabAdd={addNewTab}
           onTabReorder={moveTab}
         />
-
-        {/* Top Bar */}
+      }
+      topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -514,501 +511,478 @@ export function PersistentVolumeClaimDetailPage() {
             </>
           }
         />
-
-        {/* Content Area */}
-        <div
-          className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll"
-          style={{ paddingBottom: shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0' }}
-        >
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
-            <VStack gap={6}>
-              {/* Header */}
-              <DetailHeader>
-                <DetailHeader.Title>Persistent Volume Claim: {pvcData.name}</DetailHeader.Title>
-                <DetailHeader.Actions>
-                  <ContextMenu items={moreActionsItems} trigger="click" align="right">
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      rightIcon={<IconChevronDown size={12} stroke={1.5} />}
-                    >
-                      More Actions
-                    </Button>
-                  </ContextMenu>
-                </DetailHeader.Actions>
-                <DetailHeader.InfoGrid>
-                  <DetailHeader.InfoCard
-                    label="Status"
-                    value={pvcData.status === 'Bound' ? 'Active' : pvcData.status}
-                    status={
-                      pvcData.status === 'Bound'
-                        ? 'active'
-                        : pvcData.status === 'Pending'
-                          ? 'pending'
-                          : 'error'
-                    }
-                  />
-                  <DetailHeader.InfoCard
-                    label="Namespace"
-                    value={
-                      <span
-                        className="text-body-md text-[var(--color-action-primary)] cursor-pointer hover:underline"
-                        onClick={() => navigate(`/container/namespaces/${pvcData.namespace}`)}
-                      >
-                        {pvcData.namespace}
+      }
+      bottomPanel={
+        <ShellPanel
+          isExpanded={shellPanel.isExpanded}
+          onExpandedChange={shellPanel.setIsExpanded}
+          tabs={shellPanel.tabs}
+          activeTabId={shellPanel.activeTabId}
+          onActiveTabChange={shellPanel.setActiveTabId}
+          onCloseTab={shellPanel.closeTab}
+          onContentChange={shellPanel.updateContent}
+          onClear={shellPanel.clearContent}
+          onOpenInNewTab={handleOpenInNewTab}
+          initialHeight={350}
+          minHeight={300}
+          sidebarOpen={sidebarOpen}
+          sidebarWidth={sidebarWidth}
+        />
+      }
+      bottomPanelPadding={shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0'}
+      contentClassName="pt-4 px-8 pb-20"
+    >
+      <VStack gap={6}>
+        {/* Header */}
+        <DetailHeader>
+          <DetailHeader.Title>Persistent Volume Claim: {pvcData.name}</DetailHeader.Title>
+          <DetailHeader.Actions>
+            <ContextMenu items={moreActionsItems} trigger="click" align="right">
+              <Button
+                variant="secondary"
+                size="sm"
+                rightIcon={<IconChevronDown size={12} stroke={1.5} />}
+              >
+                More Actions
+              </Button>
+            </ContextMenu>
+          </DetailHeader.Actions>
+          <DetailHeader.InfoGrid>
+            <DetailHeader.InfoCard
+              label="Status"
+              value={pvcData.status === 'Bound' ? 'Active' : pvcData.status}
+              status={
+                pvcData.status === 'Bound'
+                  ? 'active'
+                  : pvcData.status === 'Pending'
+                    ? 'pending'
+                    : 'error'
+              }
+            />
+            <DetailHeader.InfoCard
+              label="Namespace"
+              value={
+                <span
+                  className="text-body-md text-[var(--color-action-primary)] cursor-pointer hover:underline"
+                  onClick={() => navigate(`/container/namespaces/${pvcData.namespace}`)}
+                >
+                  {pvcData.namespace}
+                </span>
+              }
+            />
+            <DetailHeader.InfoCard label="Created at" value={pvcData.createdAt} />
+            <DetailHeader.InfoCard
+              label={`Labels (${labelsCount})`}
+              value={
+                labelsCount > 0 ? (
+                  <div className="flex flex-wrap items-center gap-1 min-w-0">
+                    {Object.entries(pvcData.labels)
+                      .slice(0, 1)
+                      .map(([key, val]) => (
+                        <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
+                      ))}
+                    {labelsCount > 1 && (
+                      <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
+                        (+{labelsCount - 1})
                       </span>
-                    }
-                  />
-                  <DetailHeader.InfoCard label="Created at" value={pvcData.createdAt} />
-                  <DetailHeader.InfoCard
-                    label={`Labels (${labelsCount})`}
-                    value={
-                      labelsCount > 0 ? (
-                        <div className="flex flex-wrap items-center gap-1 min-w-0">
-                          {Object.entries(pvcData.labels)
-                            .slice(0, 1)
-                            .map(([key, val]) => (
-                              <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
-                            ))}
-                          {labelsCount > 1 && (
-                            <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                              (+{labelsCount - 1})
-                            </span>
-                          )}
-                        </div>
-                      ) : (
-                        <span className="text-body-md text-[var(--color-text-subtle)]">-</span>
-                      )
-                    }
-                  />
-                  <DetailHeader.InfoCard
-                    label={`Annotations (${annotationsCount})`}
-                    value={
-                      annotationsCount > 0 ? (
-                        <div className="flex flex-wrap items-center gap-1 min-w-0">
-                          {Object.entries(pvcData.annotations)
-                            .slice(0, 1)
-                            .map(([key, val]) => (
-                              <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
-                            ))}
-                          {annotationsCount > 1 && (
-                            <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                              (+{annotationsCount - 1})
-                            </span>
-                          )}
-                        </div>
-                      ) : (
-                        <span className="text-body-md text-[var(--color-text-subtle)]">-</span>
-                      )
-                    }
-                  />
-                </DetailHeader.InfoGrid>
-              </DetailHeader>
-
-              {/* Tabs */}
-              <Tabs value={activeTab} onChange={setActiveTab} size="sm" className="w-full">
-                <TabList>
-                  <Tab value="volume-claim">Volume Claim</Tab>
-                  <Tab value="customize">Customize</Tab>
-                  <Tab value="conditions">Conditions</Tab>
-                  <Tab value="labels-annotations">Labels & Annotations</Tab>
-                  <Tab value="recent-events">Recent Events</Tab>
-                </TabList>
-
-                {/* Volume Claim Tab */}
-                <TabPanel value="volume-claim">
-                  {/* Content Box */}
-                  <div className="w-full border border-[var(--color-border-default)] rounded-[var(--primitive-radius-lg)] p-4">
-                    <VStack gap={4}>
-                      {/* Title */}
-                      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
-                        Volume Claim
-                      </h3>
-                      {/* Source */}
-                      <VStack gap={1.5} align="start">
-                        <h4 className="text-label-lg text-[var(--color-text-default)]">Source</h4>
-                        <RadioGroup value={pvcData.source} onChange={() => {}}>
-                          <VStack gap={1} align="start">
-                            <Radio
-                              value="storage-class"
-                              label="Use a Storage Class to provision a new Persistent Volume"
-                              disabled
-                            />
-                            <Radio
-                              value="existing-pv"
-                              label="Use an existing Persistent Volume"
-                              disabled
-                            />
-                          </VStack>
-                        </RadioGroup>
-                      </VStack>
-
-                      {/* Storage Class */}
-                      <VStack gap={2} align="start" className="w-full">
-                        <label className="text-label-sm text-[var(--color-text-default)]">
-                          Storage Class
-                        </label>
-                        <Select
-                          options={storageClassOptions}
-                          value={pvcData.storageClass}
-                          onChange={() => {}}
-                          placeholder="Default storage class"
-                          fullWidth
-                          disabled
-                        />
-                      </VStack>
-
-                      {/* Request Storage */}
-                      <VStack gap={2} align="start" className="w-full">
-                        <label className="text-label-lg text-[var(--color-text-default)]">
-                          Request Storage{' '}
-                          <span className="text-[var(--color-state-warning)]">*</span>
-                        </label>
-                        <div className="flex items-center gap-3 w-full">
-                          <div className="flex-1">
-                            <NumberInput
-                              value={pvcData.requestStorage}
-                              onChange={() => {}}
-                              min={1}
-                              fullWidth
-                              disabled
-                            />
-                          </div>
-                          <span className="text-body-md text-[var(--color-text-default)]">
-                            {pvcData.storageUnit}
-                          </span>
-                        </div>
-                      </VStack>
-                    </VStack>
-                  </div>
-                </TabPanel>
-
-                {/* Customize Tab */}
-                <TabPanel value="customize">
-                  {/* Content Box */}
-                  <div className="w-full border border-[var(--color-border-default)] rounded-[var(--primitive-radius-lg)] p-4">
-                    <VStack gap={4}>
-                      {/* Title */}
-                      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
-                        Customize
-                      </h3>
-                      {/* Access Modes */}
-                      <VStack gap={1.5} align="start">
-                        <h4 className="text-label-lg text-[var(--color-text-default)]">
-                          Access Modes
-                        </h4>
-                        <VStack gap={1} align="start">
-                          <Checkbox
-                            label="Single node read-write"
-                            checked={pvcData.accessModes.singleNodeReadWrite}
-                            onChange={() => {}}
-                            disabled
-                          />
-                          <Checkbox
-                            label="Many nodes read-only"
-                            checked={pvcData.accessModes.manyNodesReadOnly}
-                            onChange={() => {}}
-                            disabled
-                          />
-                          <Checkbox
-                            label="Many nodes read-write"
-                            checked={pvcData.accessModes.manyNodesReadWrite}
-                            onChange={() => {}}
-                            disabled
-                          />
-                        </VStack>
-                      </VStack>
-                    </VStack>
-                  </div>
-                </TabPanel>
-
-                {/* Conditions Tab */}
-                <TabPanel value="conditions">
-                  <VStack gap={3}>
-                    {/* Title */}
-                    <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
-                      Conditions
-                    </h3>
-
-                    {/* Pagination */}
-                    <Pagination
-                      currentPage={1}
-                      totalPages={1}
-                      onPageChange={() => {}}
-                      totalItems={pvcData.conditions.length}
-                    />
-
-                    {/* Table */}
-                    {pvcData.conditions.length > 0 ? (
-                      <Table<PVCCondition>
-                        columns={[
-                          {
-                            key: 'condition',
-                            label: 'Condition',
-                            sortable: true,
-                            flex: 1,
-                          },
-                          {
-                            key: 'size',
-                            label: 'Size',
-                            sortable: true,
-                            flex: 1,
-                          },
-                          {
-                            key: 'message',
-                            label: 'Message',
-                            sortable: true,
-                            flex: 1,
-                          },
-                          {
-                            key: 'updated',
-                            label: 'Updated',
-                            sortable: true,
-                            flex: 1,
-                          },
-                        ]}
-                        data={pvcData.conditions}
-                        rowKey="id"
-                      />
-                    ) : (
-                      <p className="text-body-md text-[var(--color-text-subtle)]">
-                        No conditions to display.
-                      </p>
                     )}
-                  </VStack>
-                </TabPanel>
-
-                {/* Labels & Annotations Tab */}
-                <TabPanel value="labels-annotations">
-                  {/* Content Box */}
-                  <div className="w-full border border-[var(--color-border-default)] rounded-[var(--primitive-radius-lg)] p-4">
-                    <VStack gap={4}>
-                      {/* Title */}
-                      <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
-                        Labels & Annotations
-                      </h3>
-                      {/* Labels Section */}
-                      <VStack gap={4} align="start" className="w-full">
-                        <h4 className="text-label-lg text-[var(--color-text-default)]">Labels</h4>
-                        <VStack gap={2} align="start" className="w-full">
-                          {labelsCount > 0 ? (
-                            Object.entries(pvcData.labels).map(([key, val]) => (
-                              <div key={key} className="flex gap-2 w-full">
-                                <div className="flex-1">
-                                  <label className="text-label-sm text-[var(--color-text-default)] mb-2 block">
-                                    Key
-                                  </label>
-                                  <div className="w-full h-[36px] px-2.5 py-2 bg-[var(--color-border-default)] border border-[var(--color-border-strong)] rounded-[var(--primitive-radius-md)] text-body-md text-[var(--color-text-default)]">
-                                    {key}
-                                  </div>
-                                </div>
-                                <div className="flex-1">
-                                  <label className="text-label-sm text-[var(--color-text-default)] mb-2 block">
-                                    Value
-                                  </label>
-                                  <div className="w-full h-[36px] px-2.5 py-2 bg-[var(--color-border-default)] border border-[var(--color-border-strong)] rounded-[var(--primitive-radius-md)] text-body-md text-[var(--color-text-default)]">
-                                    {val}
-                                  </div>
-                                </div>
-                              </div>
-                            ))
-                          ) : (
-                            <p className="text-body-md text-[var(--color-text-subtle)]">
-                              No labels
-                            </p>
-                          )}
-                        </VStack>
-                      </VStack>
-
-                      {/* Annotations Section */}
-                      <VStack gap={4} align="start" className="w-full">
-                        <h4 className="text-label-lg text-[var(--color-text-default)]">
-                          Annotations
-                        </h4>
-                        <VStack gap={2} align="start" className="w-full">
-                          {annotationsCount > 0 ? (
-                            Object.entries(pvcData.annotations).map(([key, val]) => (
-                              <div key={key} className="flex gap-2 w-full">
-                                <div className="flex-1">
-                                  <label className="text-label-sm text-[var(--color-text-default)] mb-2 block">
-                                    Key
-                                  </label>
-                                  <div className="w-full h-[36px] px-2.5 py-2 bg-[var(--color-border-default)] border border-[var(--color-border-strong)] rounded-[var(--primitive-radius-md)] text-body-md text-[var(--color-text-default)]">
-                                    {key}
-                                  </div>
-                                </div>
-                                <div className="flex-1">
-                                  <label className="text-label-sm text-[var(--color-text-default)] mb-2 block">
-                                    Value
-                                  </label>
-                                  <div className="w-full h-[36px] px-2.5 py-2 bg-[var(--color-border-default)] border border-[var(--color-border-strong)] rounded-[var(--primitive-radius-md)] text-body-md text-[var(--color-text-default)]">
-                                    {val}
-                                  </div>
-                                </div>
-                              </div>
-                            ))
-                          ) : (
-                            <p className="text-body-md text-[var(--color-text-subtle)]">
-                              No annotations
-                            </p>
-                          )}
-                        </VStack>
-                      </VStack>
-                    </VStack>
                   </div>
-                </TabPanel>
-
-                {/* Recent Events Tab */}
-                <TabPanel value="recent-events">
-                  <VStack gap={3}>
-                    {/* Title */}
-                    <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
-                      Recent Events
-                    </h3>
-
-                    {/* Search and Actions */}
-                    <HStack gap={2} align="center">
-                      <SearchInput
-                        placeholder="Search events by attributes"
-                        size="sm"
-                        className="w-[var(--search-input-width)]"
-                      />
-                      <HStack gap={1}>
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          disabled={selectedEventKeys.length === 0}
-                        >
-                          <IconDownload size={14} stroke={1.5} />
-                          Download YAML
-                        </Button>
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          disabled={selectedEventKeys.length === 0}
-                        >
-                          <IconTrash size={14} stroke={1.5} />
-                          Delete
-                        </Button>
-                      </HStack>
-                    </HStack>
-
-                    {/* Pagination */}
-                    <Pagination
-                      currentPage={1}
-                      totalPages={1}
-                      onPageChange={() => {}}
-                      totalItems={pvcData.events.length}
-                      selectedCount={selectedEventKeys.length}
-                    />
-
-                    {/* Table */}
-                    {pvcData.events.length > 0 ? (
-                      <Table<PVCEvent>
-                        columns={[
-                          {
-                            key: 'lastSeen',
-                            label: 'Last seen',
-                            sortable: true,
-                            flex: 1,
-                            minWidth: columnMinWidths.lastSeen,
-                          },
-                          {
-                            key: 'type',
-                            label: 'Type',
-                            sortable: true,
-                            flex: 1,
-                            minWidth: columnMinWidths.type,
-                          },
-                          {
-                            key: 'reason',
-                            label: 'Reason',
-                            sortable: true,
-                            flex: 1,
-                            minWidth: columnMinWidths.reason,
-                          },
-                          {
-                            key: 'subobject',
-                            label: 'Subobject',
-                            flex: 1,
-                            minWidth: columnMinWidths.subobject,
-                          },
-                          {
-                            key: 'source',
-                            label: 'Source',
-                            sortable: true,
-                            flex: 1,
-                            minWidth: columnMinWidths.source,
-                          },
-                          {
-                            key: 'message',
-                            label: 'Message',
-                            sortable: true,
-                            flex: 1,
-                          },
-                          {
-                            key: 'firstSeen',
-                            label: 'First seen',
-                            sortable: true,
-                            flex: 1,
-                            minWidth: columnMinWidths.firstSeen,
-                          },
-                          {
-                            key: 'count',
-                            label: 'Count',
-                            sortable: true,
-                            flex: 1,
-                            minWidth: columnMinWidths.count,
-                          },
-                          {
-                            key: 'name',
-                            label: 'Name',
-                            sortable: true,
-                            flex: 1,
-                            minWidth: columnMinWidths.name,
-                            render: (value: string) => (
-                              <span className="text-[var(--color-action-primary)] cursor-pointer hover:underline font-medium">
-                                {value}
-                              </span>
-                            ),
-                          },
-                        ]}
-                        data={pvcData.events}
-                        rowKey="id"
-                        selectable
-                        selectedKeys={selectedEventKeys}
-                        onSelectionChange={setSelectedEventKeys}
-                      />
-                    ) : (
-                      <p className="text-body-md text-[var(--color-text-subtle)]">
-                        No recent events to display.
-                      </p>
+                ) : (
+                  <span className="text-body-md text-[var(--color-text-subtle)]">-</span>
+                )
+              }
+            />
+            <DetailHeader.InfoCard
+              label={`Annotations (${annotationsCount})`}
+              value={
+                annotationsCount > 0 ? (
+                  <div className="flex flex-wrap items-center gap-1 min-w-0">
+                    {Object.entries(pvcData.annotations)
+                      .slice(0, 1)
+                      .map(([key, val]) => (
+                        <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
+                      ))}
+                    {annotationsCount > 1 && (
+                      <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
+                        (+{annotationsCount - 1})
+                      </span>
                     )}
+                  </div>
+                ) : (
+                  <span className="text-body-md text-[var(--color-text-subtle)]">-</span>
+                )
+              }
+            />
+          </DetailHeader.InfoGrid>
+        </DetailHeader>
+
+        {/* Tabs */}
+        <Tabs value={activeTab} onChange={setActiveTab} size="sm" className="w-full">
+          <TabList>
+            <Tab value="volume-claim">Volume Claim</Tab>
+            <Tab value="customize">Customize</Tab>
+            <Tab value="conditions">Conditions</Tab>
+            <Tab value="labels-annotations">Labels & Annotations</Tab>
+            <Tab value="recent-events">Recent Events</Tab>
+          </TabList>
+
+          {/* Volume Claim Tab */}
+          <TabPanel value="volume-claim">
+            {/* Content Box */}
+            <div className="w-full border border-[var(--color-border-default)] rounded-[var(--primitive-radius-lg)] p-4">
+              <VStack gap={4}>
+                {/* Title */}
+                <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
+                  Volume Claim
+                </h3>
+                {/* Source */}
+                <VStack gap={1.5} align="start">
+                  <h4 className="text-label-lg text-[var(--color-text-default)]">Source</h4>
+                  <RadioGroup value={pvcData.source} onChange={() => {}}>
+                    <VStack gap={1} align="start">
+                      <Radio
+                        value="storage-class"
+                        label="Use a Storage Class to provision a new Persistent Volume"
+                        disabled
+                      />
+                      <Radio
+                        value="existing-pv"
+                        label="Use an existing Persistent Volume"
+                        disabled
+                      />
+                    </VStack>
+                  </RadioGroup>
+                </VStack>
+
+                {/* Storage Class */}
+                <VStack gap={2} align="start" className="w-full">
+                  <label className="text-label-sm text-[var(--color-text-default)]">
+                    Storage Class
+                  </label>
+                  <Select
+                    options={storageClassOptions}
+                    value={pvcData.storageClass}
+                    onChange={() => {}}
+                    placeholder="Default storage class"
+                    fullWidth
+                    disabled
+                  />
+                </VStack>
+
+                {/* Request Storage */}
+                <VStack gap={2} align="start" className="w-full">
+                  <label className="text-label-lg text-[var(--color-text-default)]">
+                    Request Storage <span className="text-[var(--color-state-warning)]">*</span>
+                  </label>
+                  <div className="flex items-center gap-3 w-full">
+                    <div className="flex-1">
+                      <NumberInput
+                        value={pvcData.requestStorage}
+                        onChange={() => {}}
+                        min={1}
+                        fullWidth
+                        disabled
+                      />
+                    </div>
+                    <span className="text-body-md text-[var(--color-text-default)]">
+                      {pvcData.storageUnit}
+                    </span>
+                  </div>
+                </VStack>
+              </VStack>
+            </div>
+          </TabPanel>
+
+          {/* Customize Tab */}
+          <TabPanel value="customize">
+            {/* Content Box */}
+            <div className="w-full border border-[var(--color-border-default)] rounded-[var(--primitive-radius-lg)] p-4">
+              <VStack gap={4}>
+                {/* Title */}
+                <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
+                  Customize
+                </h3>
+                {/* Access Modes */}
+                <VStack gap={1.5} align="start">
+                  <h4 className="text-label-lg text-[var(--color-text-default)]">Access Modes</h4>
+                  <VStack gap={1} align="start">
+                    <Checkbox
+                      label="Single node read-write"
+                      checked={pvcData.accessModes.singleNodeReadWrite}
+                      onChange={() => {}}
+                      disabled
+                    />
+                    <Checkbox
+                      label="Many nodes read-only"
+                      checked={pvcData.accessModes.manyNodesReadOnly}
+                      onChange={() => {}}
+                      disabled
+                    />
+                    <Checkbox
+                      label="Many nodes read-write"
+                      checked={pvcData.accessModes.manyNodesReadWrite}
+                      onChange={() => {}}
+                      disabled
+                    />
                   </VStack>
-                </TabPanel>
-              </Tabs>
+                </VStack>
+              </VStack>
+            </div>
+          </TabPanel>
+
+          {/* Conditions Tab */}
+          <TabPanel value="conditions">
+            <VStack gap={3}>
+              {/* Title */}
+              <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
+                Conditions
+              </h3>
+
+              {/* Pagination */}
+              <Pagination
+                currentPage={1}
+                totalPages={1}
+                onPageChange={() => {}}
+                totalItems={pvcData.conditions.length}
+              />
+
+              {/* Table */}
+              {pvcData.conditions.length > 0 ? (
+                <Table<PVCCondition>
+                  columns={[
+                    {
+                      key: 'condition',
+                      label: 'Condition',
+                      sortable: true,
+                      flex: 1,
+                    },
+                    {
+                      key: 'size',
+                      label: 'Size',
+                      sortable: true,
+                      flex: 1,
+                    },
+                    {
+                      key: 'message',
+                      label: 'Message',
+                      sortable: true,
+                      flex: 1,
+                    },
+                    {
+                      key: 'updated',
+                      label: 'Updated',
+                      sortable: true,
+                      flex: 1,
+                    },
+                  ]}
+                  data={pvcData.conditions}
+                  rowKey="id"
+                />
+              ) : (
+                <p className="text-body-md text-[var(--color-text-subtle)]">
+                  No conditions to display.
+                </p>
+              )}
             </VStack>
-          </div>
-        </div>
-      </main>
+          </TabPanel>
 
-      {/* Shell Panel */}
-      <ShellPanel
-        isExpanded={shellPanel.isExpanded}
-        onExpandedChange={shellPanel.setIsExpanded}
-        tabs={shellPanel.tabs}
-        activeTabId={shellPanel.activeTabId}
-        onActiveTabChange={shellPanel.setActiveTabId}
-        onCloseTab={shellPanel.closeTab}
-        onContentChange={shellPanel.updateContent}
-        onClear={shellPanel.clearContent}
-        onOpenInNewTab={handleOpenInNewTab}
-        initialHeight={350}
-        minHeight={300}
-        sidebarOpen={sidebarOpen}
-        sidebarWidth={sidebarWidth}
-      />
-    </div>
+          {/* Labels & Annotations Tab */}
+          <TabPanel value="labels-annotations">
+            {/* Content Box */}
+            <div className="w-full border border-[var(--color-border-default)] rounded-[var(--primitive-radius-lg)] p-4">
+              <VStack gap={4}>
+                {/* Title */}
+                <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
+                  Labels & Annotations
+                </h3>
+                {/* Labels Section */}
+                <VStack gap={4} align="start" className="w-full">
+                  <h4 className="text-label-lg text-[var(--color-text-default)]">Labels</h4>
+                  <VStack gap={2} align="start" className="w-full">
+                    {labelsCount > 0 ? (
+                      Object.entries(pvcData.labels).map(([key, val]) => (
+                        <div key={key} className="flex gap-2 w-full">
+                          <div className="flex-1">
+                            <label className="text-label-sm text-[var(--color-text-default)] mb-2 block">
+                              Key
+                            </label>
+                            <div className="w-full h-[36px] px-2.5 py-2 bg-[var(--color-border-default)] border border-[var(--color-border-strong)] rounded-[var(--primitive-radius-md)] text-body-md text-[var(--color-text-default)]">
+                              {key}
+                            </div>
+                          </div>
+                          <div className="flex-1">
+                            <label className="text-label-sm text-[var(--color-text-default)] mb-2 block">
+                              Value
+                            </label>
+                            <div className="w-full h-[36px] px-2.5 py-2 bg-[var(--color-border-default)] border border-[var(--color-border-strong)] rounded-[var(--primitive-radius-md)] text-body-md text-[var(--color-text-default)]">
+                              {val}
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-body-md text-[var(--color-text-subtle)]">No labels</p>
+                    )}
+                  </VStack>
+                </VStack>
+
+                {/* Annotations Section */}
+                <VStack gap={4} align="start" className="w-full">
+                  <h4 className="text-label-lg text-[var(--color-text-default)]">Annotations</h4>
+                  <VStack gap={2} align="start" className="w-full">
+                    {annotationsCount > 0 ? (
+                      Object.entries(pvcData.annotations).map(([key, val]) => (
+                        <div key={key} className="flex gap-2 w-full">
+                          <div className="flex-1">
+                            <label className="text-label-sm text-[var(--color-text-default)] mb-2 block">
+                              Key
+                            </label>
+                            <div className="w-full h-[36px] px-2.5 py-2 bg-[var(--color-border-default)] border border-[var(--color-border-strong)] rounded-[var(--primitive-radius-md)] text-body-md text-[var(--color-text-default)]">
+                              {key}
+                            </div>
+                          </div>
+                          <div className="flex-1">
+                            <label className="text-label-sm text-[var(--color-text-default)] mb-2 block">
+                              Value
+                            </label>
+                            <div className="w-full h-[36px] px-2.5 py-2 bg-[var(--color-border-default)] border border-[var(--color-border-strong)] rounded-[var(--primitive-radius-md)] text-body-md text-[var(--color-text-default)]">
+                              {val}
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-body-md text-[var(--color-text-subtle)]">No annotations</p>
+                    )}
+                  </VStack>
+                </VStack>
+              </VStack>
+            </div>
+          </TabPanel>
+
+          {/* Recent Events Tab */}
+          <TabPanel value="recent-events">
+            <VStack gap={3}>
+              {/* Title */}
+              <h3 className="text-heading-h5 leading-[24px] text-[var(--color-text-default)]">
+                Recent Events
+              </h3>
+
+              {/* Search and Actions */}
+              <HStack gap={2} align="center">
+                <SearchInput
+                  placeholder="Search events by attributes"
+                  size="sm"
+                  className="w-[var(--search-input-width)]"
+                />
+                <HStack gap={1}>
+                  <Button variant="secondary" size="sm" disabled={selectedEventKeys.length === 0}>
+                    <IconDownload size={14} stroke={1.5} />
+                    Download YAML
+                  </Button>
+                  <Button variant="secondary" size="sm" disabled={selectedEventKeys.length === 0}>
+                    <IconTrash size={14} stroke={1.5} />
+                    Delete
+                  </Button>
+                </HStack>
+              </HStack>
+
+              {/* Pagination */}
+              <Pagination
+                currentPage={1}
+                totalPages={1}
+                onPageChange={() => {}}
+                totalItems={pvcData.events.length}
+                selectedCount={selectedEventKeys.length}
+              />
+
+              {/* Table */}
+              {pvcData.events.length > 0 ? (
+                <Table<PVCEvent>
+                  columns={[
+                    {
+                      key: 'lastSeen',
+                      label: 'Last seen',
+                      sortable: true,
+                      flex: 1,
+                      minWidth: columnMinWidths.lastSeen,
+                    },
+                    {
+                      key: 'type',
+                      label: 'Type',
+                      sortable: true,
+                      flex: 1,
+                      minWidth: columnMinWidths.type,
+                    },
+                    {
+                      key: 'reason',
+                      label: 'Reason',
+                      sortable: true,
+                      flex: 1,
+                      minWidth: columnMinWidths.reason,
+                    },
+                    {
+                      key: 'subobject',
+                      label: 'Subobject',
+                      flex: 1,
+                      minWidth: columnMinWidths.subobject,
+                    },
+                    {
+                      key: 'source',
+                      label: 'Source',
+                      sortable: true,
+                      flex: 1,
+                      minWidth: columnMinWidths.source,
+                    },
+                    {
+                      key: 'message',
+                      label: 'Message',
+                      sortable: true,
+                      flex: 1,
+                    },
+                    {
+                      key: 'firstSeen',
+                      label: 'First seen',
+                      sortable: true,
+                      flex: 1,
+                      minWidth: columnMinWidths.firstSeen,
+                    },
+                    {
+                      key: 'count',
+                      label: 'Count',
+                      sortable: true,
+                      flex: 1,
+                      minWidth: columnMinWidths.count,
+                    },
+                    {
+                      key: 'name',
+                      label: 'Name',
+                      sortable: true,
+                      flex: 1,
+                      minWidth: columnMinWidths.name,
+                      render: (value: string) => (
+                        <span className="text-[var(--color-action-primary)] cursor-pointer hover:underline font-medium">
+                          {value}
+                        </span>
+                      ),
+                    },
+                  ]}
+                  data={pvcData.events}
+                  rowKey="id"
+                  selectable
+                  selectedKeys={selectedEventKeys}
+                  onSelectionChange={setSelectedEventKeys}
+                />
+              ) : (
+                <p className="text-body-md text-[var(--color-text-subtle)]">
+                  No recent events to display.
+                </p>
+              )}
+            </VStack>
+          </TabPanel>
+        </Tabs>
+      </VStack>
+    </PageShell>
   );
 }
 

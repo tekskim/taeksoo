@@ -18,6 +18,7 @@ import {
   SearchInput,
   DetailHeader,
   Chip,
+  PageShell,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
@@ -642,16 +643,12 @@ export function PodDetailPage() {
   ];
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-
-      {/* Main Content */}
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: `${sidebarWidth}px` }}
-      >
-        {/* Tab Bar */}
+    <PageShell
+      sidebar={
+        <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
         <TabBar
           tabs={tabBarTabs}
           activeTab={activeTabId}
@@ -660,8 +657,8 @@ export function PodDetailPage() {
           onTabReorder={moveTab}
           onTabAdd={addNewTab}
         />
-
-        {/* Top Bar */}
+      }
+      topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -697,162 +694,161 @@ export function PodDetailPage() {
             </>
           }
         />
+      }
+      bottomPanel={
+        <ShellPanel
+          isExpanded={shellPanel.isExpanded}
+          onExpandedChange={shellPanel.setIsExpanded}
+          tabs={shellPanel.tabs}
+          activeTabId={shellPanel.activeTabId}
+          onActiveTabChange={shellPanel.setActiveTabId}
+          onCloseTab={shellPanel.closeTab}
+          onContentChange={shellPanel.updateContent}
+          onClear={shellPanel.clearContent}
+          onOpenInNewTab={handleOpenInNewTab}
+          initialHeight={350}
+          minHeight={300}
+          sidebarOpen={sidebarOpen}
+          sidebarWidth={sidebarWidth}
+        />
+      }
+      bottomPanelPadding={shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0'}
+      contentClassName="pt-4 px-8 pb-20"
+    >
+      <VStack gap={6}>
+        {/* Detail Header */}
+        <DetailHeader>
+          <DetailHeader.Title>Pod: {pod.name}</DetailHeader.Title>
+          <DetailHeader.Actions>
+            <ContextMenu items={moreActionsItems} trigger="click" align="right">
+              <Button
+                variant="secondary"
+                size="sm"
+                rightIcon={<IconChevronDown size={12} stroke={1.5} />}
+              >
+                More Actions
+              </Button>
+            </ContextMenu>
+          </DetailHeader.Actions>
+          <DetailHeader.InfoGrid>
+            <DetailHeader.InfoCard
+              label="Status"
+              value={pod.status === 'Running' ? 'Active' : pod.status}
+              status={
+                pod.status === 'Running'
+                  ? 'active'
+                  : pod.status === 'Succeeded'
+                    ? 'active'
+                    : pod.status === 'Pending'
+                      ? 'pending'
+                      : pod.status === 'Failed'
+                        ? 'error'
+                        : 'pending'
+              }
+            />
+            <DetailHeader.InfoCard
+              label="Namespace"
+              value={pod.namespace}
+              link={`/container/namespaces/${pod.namespace}`}
+              copyable
+            />
+            <DetailHeader.InfoCard label="Pod IP" value={pod.podIP} copyable />
+            <DetailHeader.InfoCard label="Created at" value={pod.createdAt} />
+          </DetailHeader.InfoGrid>
 
-        {/* Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
-            <VStack gap={6}>
-              {/* Detail Header */}
-              <DetailHeader>
-                <DetailHeader.Title>Pod: {pod.name}</DetailHeader.Title>
-                <DetailHeader.Actions>
-                  <ContextMenu items={moreActionsItems} trigger="click" align="right">
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      rightIcon={<IconChevronDown size={12} stroke={1.5} />}
-                    >
-                      More Actions
-                    </Button>
-                  </ContextMenu>
-                </DetailHeader.Actions>
-                <DetailHeader.InfoGrid>
-                  <DetailHeader.InfoCard
-                    label="Status"
-                    value={pod.status === 'Running' ? 'Active' : pod.status}
-                    status={
-                      pod.status === 'Running'
-                        ? 'active'
-                        : pod.status === 'Succeeded'
-                          ? 'active'
-                          : pod.status === 'Pending'
-                            ? 'pending'
-                            : pod.status === 'Failed'
-                              ? 'error'
-                              : 'pending'
-                    }
-                  />
-                  <DetailHeader.InfoCard
-                    label="Namespace"
-                    value={pod.namespace}
-                    link={`/container/namespaces/${pod.namespace}`}
-                    copyable
-                  />
-                  <DetailHeader.InfoCard label="Pod IP" value={pod.podIP} copyable />
-                  <DetailHeader.InfoCard label="Created at" value={pod.createdAt} />
-                </DetailHeader.InfoGrid>
+          {/* Second row: Workload, Node, Labels, Annotations */}
+          <HStack gap={3} className="w-full mt-3">
+            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+              <VStack gap={1}>
+                <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
+                  Workload
+                </span>
+                <span
+                  className="text-label-md text-[var(--color-action-primary)] cursor-pointer hover:underline"
+                  onClick={() => navigate(`/container/deployments/${pod.workload}`)}
+                >
+                  {pod.workload}
+                </span>
+              </VStack>
+            </div>
+            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+              <VStack gap={1}>
+                <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
+                  Node
+                </span>
+                <span
+                  className="text-label-md text-[var(--color-action-primary)] cursor-pointer hover:underline"
+                  onClick={() => navigate(`/container/nodes/${pod.node}`)}
+                >
+                  {pod.node}
+                </span>
+              </VStack>
+            </div>
+            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+              <VStack gap={2}>
+                <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
+                  Labels ({Object.keys(pod.labels).length})
+                </span>
+                <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
+                  {Object.entries(pod.labels)
+                    .slice(0, 1)
+                    .map(([key, val]) => (
+                      <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
+                    ))}
+                  {Object.keys(pod.labels).length > 1 && (
+                    <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
+                      (+{Object.keys(pod.labels).length - 1})
+                    </span>
+                  )}
+                </div>
+              </VStack>
+            </div>
+            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+              <VStack gap={2}>
+                <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
+                  Annotations ({Object.keys(pod.annotations).length})
+                </span>
+                <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
+                  {Object.entries(pod.annotations)
+                    .slice(0, 1)
+                    .map(([key, val]) => (
+                      <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
+                    ))}
+                  {Object.keys(pod.annotations).length > 1 && (
+                    <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
+                      (+{Object.keys(pod.annotations).length - 1})
+                    </span>
+                  )}
+                </div>
+              </VStack>
+            </div>
+          </HStack>
+        </DetailHeader>
 
-                {/* Second row: Workload, Node, Labels, Annotations */}
-                <HStack gap={3} className="w-full mt-3">
-                  <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-                    <VStack gap={1}>
-                      <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-                        Workload
-                      </span>
-                      <span
-                        className="text-label-md text-[var(--color-action-primary)] cursor-pointer hover:underline"
-                        onClick={() => navigate(`/container/deployments/${pod.workload}`)}
-                      >
-                        {pod.workload}
-                      </span>
-                    </VStack>
-                  </div>
-                  <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-                    <VStack gap={1}>
-                      <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-                        Node
-                      </span>
-                      <span
-                        className="text-label-md text-[var(--color-action-primary)] cursor-pointer hover:underline"
-                        onClick={() => navigate(`/container/nodes/${pod.node}`)}
-                      >
-                        {pod.node}
-                      </span>
-                    </VStack>
-                  </div>
-                  <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-                    <VStack gap={2}>
-                      <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-                        Labels ({Object.keys(pod.labels).length})
-                      </span>
-                      <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
-                        {Object.entries(pod.labels)
-                          .slice(0, 1)
-                          .map(([key, val]) => (
-                            <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
-                          ))}
-                        {Object.keys(pod.labels).length > 1 && (
-                          <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                            (+{Object.keys(pod.labels).length - 1})
-                          </span>
-                        )}
-                      </div>
-                    </VStack>
-                  </div>
-                  <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-                    <VStack gap={2}>
-                      <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-                        Annotations ({Object.keys(pod.annotations).length})
-                      </span>
-                      <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
-                        {Object.entries(pod.annotations)
-                          .slice(0, 1)
-                          .map(([key, val]) => (
-                            <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
-                          ))}
-                        {Object.keys(pod.annotations).length > 1 && (
-                          <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                            (+{Object.keys(pod.annotations).length - 1})
-                          </span>
-                        )}
-                      </div>
-                    </VStack>
-                  </div>
-                </HStack>
-              </DetailHeader>
+        {/* Tabs */}
+        <Tabs value={activeTab} onChange={setActiveTab}>
+          <TabList>
+            <Tab value="containers">Containers</Tab>
+            <Tab value="conditions">Conditions</Tab>
+            <Tab value="events">Recent Events</Tab>
+          </TabList>
 
-              {/* Tabs */}
-              <Tabs value={activeTab} onChange={setActiveTab}>
-                <TabList>
-                  <Tab value="containers">Containers</Tab>
-                  <Tab value="conditions">Conditions</Tab>
-                  <Tab value="events">Recent Events</Tab>
-                </TabList>
-
-                <TabPanel value="containers">
-                  <ContainersTab
-                    containers={mockContainersData}
-                    onExecuteShell={handleExecuteShell}
-                    onViewLogs={handleViewLogs}
-                  />
-                </TabPanel>
-                <TabPanel value="conditions">
-                  <ConditionsTab conditions={mockConditionsData} />
-                </TabPanel>
-                <TabPanel value="events">
-                  <RecentEventsTab events={mockEventsData} />
-                </TabPanel>
-              </Tabs>
-            </VStack>
-          </div>
-        </div>
-      </main>
-
-      {/* Shell Panel */}
-      <ShellPanel
-        isExpanded={shellPanel.isExpanded}
-        onExpandedChange={shellPanel.setIsExpanded}
-        tabs={shellPanel.tabs}
-        activeTabId={shellPanel.activeTabId}
-        onActiveTabChange={shellPanel.setActiveTabId}
-        onCloseTab={shellPanel.closeTab}
-        onContentChange={shellPanel.updateContent}
-        onClear={shellPanel.clearContent}
-        onOpenInNewTab={handleOpenInNewTab}
-        initialHeight={350}
-        sidebarWidth={sidebarWidth}
-      />
-    </div>
+          <TabPanel value="containers">
+            <ContainersTab
+              containers={mockContainersData}
+              onExecuteShell={handleExecuteShell}
+              onViewLogs={handleViewLogs}
+            />
+          </TabPanel>
+          <TabPanel value="conditions">
+            <ConditionsTab conditions={mockConditionsData} />
+          </TabPanel>
+          <TabPanel value="events">
+            <RecentEventsTab events={mockEventsData} />
+          </TabPanel>
+        </Tabs>
+      </VStack>
+    </PageShell>
   );
 }
 

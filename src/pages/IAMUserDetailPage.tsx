@@ -18,6 +18,7 @@ import {
   StatusIndicator,
   ContextMenu,
   SectionCard,
+  PageShell,
   fixedColumns,
   columnMinWidths,
   type TableColumn,
@@ -820,296 +821,266 @@ export function IAMUserDetailPage() {
   ];
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <IAMSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+    <PageShell
+      sidebar={<IAMSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />}
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={true}
+          onBack={() => navigate(-1)}
+          onForward={() => navigate(1)}
+          breadcrumb={<Breadcrumb items={breadcrumbItems} />}
+          actions={
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1.5} />}
+              aria-label="Notifications"
+              badge={true}
+            />
+          }
+        />
+      }
+      contentClassName="pt-4 px-8 pb-6"
+    >
+      <VStack gap={8}>
+        {/* User Header Card */}
+        <div className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 pt-3 pb-4">
+          {/* Username */}
+          <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)] mb-3">
+            {user.username}
+          </h1>
 
-      {/* Main Content */}
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: `${sidebarWidth}px` }}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Tab Bar */}
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            onTabAdd={addNewTab}
-            onTabReorder={moveTab}
-            showAddButton={true}
-            showWindowControls={true}
-          />
+          {/* Action Buttons */}
+          <HStack gap={1} className="mb-3">
+            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} stroke={1.5} />}>
+              Edit
+            </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} stroke={1.5} />}>
+              Delete
+            </Button>
+            <Button variant="secondary" size="sm">
+              Lock setting
+            </Button>
+            <Button variant="secondary" size="sm">
+              Reset password
+            </Button>
+            <Button
+              variant="secondary"
+              size="sm"
+              rightIcon={<IconChevronDown size={12} stroke={1.5} />}
+            >
+              More Actions
+            </Button>
+          </HStack>
 
-          {/* Top Bar */}
-          <TopBar
-            showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
-            showNavigation={true}
-            onBack={() => navigate(-1)}
-            onForward={() => navigate(1)}
-            breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-            actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-                badge={true}
-              />
-            }
-          />
+          {/* Info Cards */}
+          <HStack gap={2} className="w-full">
+            <InfoCard
+              label="Status"
+              value={user.status === 'online' ? 'Online' : 'Offline'}
+              statusIndicator={
+                <StatusIndicator status={user.status === 'online' ? 'active' : 'shutoff'} />
+              }
+            />
+            <InfoCard label="Display name" value={user.displayName} />
+            <InfoCard label="Email address" value={user.email} />
+            <InfoCard label="Created at" value={user.createdAt} />
+          </HStack>
         </div>
 
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
-            <VStack gap={8}>
-              {/* User Header Card */}
-              <div className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 pt-3 pb-4">
-                {/* Username */}
-                <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)] mb-3">
-                  {user.username}
-                </h1>
+        {/* Tabs Section */}
+        <div className="w-full">
+          <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline" size="sm">
+            <TabList>
+              <Tab value="user-groups">User groups</Tab>
+              <Tab value="roles">Roles</Tab>
+              <Tab value="security-credentials">Security credentials</Tab>
+              <Tab value="sessions">Sessions</Tab>
+            </TabList>
 
-                {/* Action Buttons */}
-                <HStack gap={1} className="mb-3">
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    leftIcon={<IconEdit size={12} stroke={1.5} />}
-                  >
-                    Edit
-                  </Button>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    leftIcon={<IconTrash size={12} stroke={1.5} />}
-                  >
-                    Delete
-                  </Button>
+            {/* User groups Tab */}
+            <TabPanel value="user-groups" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Section Header */}
+                <HStack justify="between" align="center" className="w-full">
+                  <h2 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
+                    User groups
+                  </h2>
                   <Button variant="secondary" size="sm">
-                    Lock setting
-                  </Button>
-                  <Button variant="secondary" size="sm">
-                    Reset password
-                  </Button>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    rightIcon={<IconChevronDown size={12} stroke={1.5} />}
-                  >
-                    More Actions
+                    Manage user groups
                   </Button>
                 </HStack>
 
-                {/* Info Cards */}
-                <HStack gap={2} className="w-full">
-                  <InfoCard
-                    label="Status"
-                    value={user.status === 'online' ? 'Online' : 'Offline'}
-                    statusIndicator={
-                      <StatusIndicator status={user.status === 'online' ? 'active' : 'shutoff'} />
+                {/* Search */}
+                <SearchInput
+                  placeholder="Search groups by attributes"
+                  value={searchQuery}
+                  onChange={setSearchQuery}
+                  className="w-[var(--search-input-width)]"
+                />
+
+                {/* Pagination */}
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  totalItems={filteredGroups.length}
+                  onPageChange={setCurrentPage}
+                />
+
+                {/* Table */}
+                <Table<UserGroup> columns={groupColumns} data={paginatedGroups} rowKey="id" />
+              </VStack>
+            </TabPanel>
+
+            {/* Roles Tab */}
+            <TabPanel value="roles" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Section Header */}
+                <HStack justify="between" align="center" className="w-full">
+                  <h2 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
+                    Roles
+                  </h2>
+                  <Button variant="secondary" size="sm">
+                    Manage roles
+                  </Button>
+                </HStack>
+
+                {/* Search */}
+                <SearchInput
+                  placeholder="Search roles by attributes"
+                  value={rolesSearchQuery}
+                  onChange={setRolesSearchQuery}
+                  className="w-[var(--search-input-width)]"
+                />
+
+                {/* Pagination */}
+                <Pagination
+                  currentPage={rolesCurrentPage}
+                  totalPages={rolesTotalPages}
+                  totalItems={filteredRoles.length}
+                  onPageChange={setRolesCurrentPage}
+                />
+
+                {/* Table */}
+                <Table<Role> columns={roleColumns} data={paginatedRoles} rowKey="id" />
+              </VStack>
+            </TabPanel>
+
+            {/* Security Credentials Tab */}
+            <TabPanel value="security-credentials" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Password Section */}
+                <SectionCard>
+                  <SectionCard.Header
+                    title="Password"
+                    actions={
+                      <Button variant="secondary" size="sm">
+                        Reset password
+                      </Button>
                     }
                   />
-                  <InfoCard label="Display name" value={user.displayName} />
-                  <InfoCard label="Email address" value={user.email} />
-                  <InfoCard label="Created at" value={user.createdAt} />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow
+                      label="Last updated at"
+                      value="2025.11.11 14:22:43 (Updated by user)"
+                    />
+                  </SectionCard.Content>
+                </SectionCard>
+
+                {/* OTP MFA Section */}
+                <SectionCard>
+                  <SectionCard.Header
+                    title="OTP MFA"
+                    actions={
+                      <Button variant="secondary" size="sm">
+                        Remove
+                      </Button>
+                    }
+                  />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="Last used" value="2025.11.11 14:22:43" />
+                    <SectionCard.DataRow label="Created at" value="2025.11.11 14:22:43" />
+                  </SectionCard.Content>
+                </SectionCard>
+
+                {/* Access Keys Section - Disabled */}
+                <SectionCard className="opacity-50 pointer-events-none">
+                  <SectionCard.Header
+                    title={`Access keys (${mockAccessKeys.length})`}
+                    actions={
+                      <Button variant="secondary" size="sm" disabled>
+                        Create access key
+                      </Button>
+                    }
+                  />
+                  <SectionCard.Content>
+                    <Table<AccessKey>
+                      columns={accessKeyColumns}
+                      data={mockAccessKeys}
+                      rowKey="id"
+                    />
+                  </SectionCard.Content>
+                </SectionCard>
+              </VStack>
+            </TabPanel>
+
+            {/* Sessions Tab */}
+            <TabPanel value="sessions" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Section Header */}
+                <h2 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
+                  Sessions
+                </h2>
+
+                {/* Action Bar */}
+                <HStack gap={2} align="center">
+                  <SearchInput
+                    placeholder="Search session by attributes"
+                    value={sessionsSearchQuery}
+                    onChange={setSessionsSearchQuery}
+                    className="w-[var(--search-input-width)]"
+                  />
+                  <div className="w-px h-4 bg-[var(--color-border-default)]" />
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    icon={<IconRefresh size={12} stroke={1.5} />}
+                    aria-label="Refresh"
+                  />
+                  <Button variant="secondary" size="sm">
+                    Terminate all sessions
+                  </Button>
                 </HStack>
-              </div>
 
-              {/* Tabs Section */}
-              <div className="w-full">
-                <Tabs
-                  value={activeDetailTab}
-                  onChange={setActiveDetailTab}
-                  variant="underline"
-                  size="sm"
-                >
-                  <TabList>
-                    <Tab value="user-groups">User groups</Tab>
-                    <Tab value="roles">Roles</Tab>
-                    <Tab value="security-credentials">Security credentials</Tab>
-                    <Tab value="sessions">Sessions</Tab>
-                  </TabList>
+                {/* Pagination */}
+                <Pagination
+                  currentPage={sessionsCurrentPage}
+                  totalPages={sessionsTotalPages}
+                  totalItems={filteredSessions.length}
+                  onPageChange={setSessionsCurrentPage}
+                />
 
-                  {/* User groups Tab */}
-                  <TabPanel value="user-groups" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Section Header */}
-                      <HStack justify="between" align="center" className="w-full">
-                        <h2 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
-                          User groups
-                        </h2>
-                        <Button variant="secondary" size="sm">
-                          Manage user groups
-                        </Button>
-                      </HStack>
-
-                      {/* Search */}
-                      <SearchInput
-                        placeholder="Search groups by attributes"
-                        value={searchQuery}
-                        onChange={setSearchQuery}
-                        className="w-[var(--search-input-width)]"
-                      />
-
-                      {/* Pagination */}
-                      <Pagination
-                        currentPage={currentPage}
-                        totalPages={totalPages}
-                        totalItems={filteredGroups.length}
-                        onPageChange={setCurrentPage}
-                      />
-
-                      {/* Table */}
-                      <Table<UserGroup> columns={groupColumns} data={paginatedGroups} rowKey="id" />
-                    </VStack>
-                  </TabPanel>
-
-                  {/* Roles Tab */}
-                  <TabPanel value="roles" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Section Header */}
-                      <HStack justify="between" align="center" className="w-full">
-                        <h2 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
-                          Roles
-                        </h2>
-                        <Button variant="secondary" size="sm">
-                          Manage roles
-                        </Button>
-                      </HStack>
-
-                      {/* Search */}
-                      <SearchInput
-                        placeholder="Search roles by attributes"
-                        value={rolesSearchQuery}
-                        onChange={setRolesSearchQuery}
-                        className="w-[var(--search-input-width)]"
-                      />
-
-                      {/* Pagination */}
-                      <Pagination
-                        currentPage={rolesCurrentPage}
-                        totalPages={rolesTotalPages}
-                        totalItems={filteredRoles.length}
-                        onPageChange={setRolesCurrentPage}
-                      />
-
-                      {/* Table */}
-                      <Table<Role> columns={roleColumns} data={paginatedRoles} rowKey="id" />
-                    </VStack>
-                  </TabPanel>
-
-                  {/* Security Credentials Tab */}
-                  <TabPanel value="security-credentials" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Password Section */}
-                      <SectionCard>
-                        <SectionCard.Header
-                          title="Password"
-                          actions={
-                            <Button variant="secondary" size="sm">
-                              Reset password
-                            </Button>
-                          }
-                        />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow
-                            label="Last updated at"
-                            value="2025.11.11 14:22:43 (Updated by user)"
-                          />
-                        </SectionCard.Content>
-                      </SectionCard>
-
-                      {/* OTP MFA Section */}
-                      <SectionCard>
-                        <SectionCard.Header
-                          title="OTP MFA"
-                          actions={
-                            <Button variant="secondary" size="sm">
-                              Remove
-                            </Button>
-                          }
-                        />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow label="Last used" value="2025.11.11 14:22:43" />
-                          <SectionCard.DataRow label="Created at" value="2025.11.11 14:22:43" />
-                        </SectionCard.Content>
-                      </SectionCard>
-
-                      {/* Access Keys Section - Disabled */}
-                      <SectionCard className="opacity-50 pointer-events-none">
-                        <SectionCard.Header
-                          title={`Access keys (${mockAccessKeys.length})`}
-                          actions={
-                            <Button variant="secondary" size="sm" disabled>
-                              Create access key
-                            </Button>
-                          }
-                        />
-                        <SectionCard.Content>
-                          <Table<AccessKey>
-                            columns={accessKeyColumns}
-                            data={mockAccessKeys}
-                            rowKey="id"
-                          />
-                        </SectionCard.Content>
-                      </SectionCard>
-                    </VStack>
-                  </TabPanel>
-
-                  {/* Sessions Tab */}
-                  <TabPanel value="sessions" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Section Header */}
-                      <h2 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
-                        Sessions
-                      </h2>
-
-                      {/* Action Bar */}
-                      <HStack gap={2} align="center">
-                        <SearchInput
-                          placeholder="Search session by attributes"
-                          value={sessionsSearchQuery}
-                          onChange={setSessionsSearchQuery}
-                          className="w-[var(--search-input-width)]"
-                        />
-                        <div className="w-px h-4 bg-[var(--color-border-default)]" />
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          icon={<IconRefresh size={12} stroke={1.5} />}
-                          aria-label="Refresh"
-                        />
-                        <Button variant="secondary" size="sm">
-                          Terminate all sessions
-                        </Button>
-                      </HStack>
-
-                      {/* Pagination */}
-                      <Pagination
-                        currentPage={sessionsCurrentPage}
-                        totalPages={sessionsTotalPages}
-                        totalItems={filteredSessions.length}
-                        onPageChange={setSessionsCurrentPage}
-                      />
-
-                      {/* Table */}
-                      <Table<Session>
-                        columns={sessionColumns}
-                        data={paginatedSessions}
-                        rowKey="id"
-                      />
-                    </VStack>
-                  </TabPanel>
-                </Tabs>
-              </div>
-            </VStack>
-          </div>
+                {/* Table */}
+                <Table<Session> columns={sessionColumns} data={paginatedSessions} rowKey="id" />
+              </VStack>
+            </TabPanel>
+          </Tabs>
         </div>
-      </main>
-    </div>
+      </VStack>
+    </PageShell>
   );
 }
 

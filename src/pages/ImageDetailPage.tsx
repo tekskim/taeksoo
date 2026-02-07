@@ -14,9 +14,11 @@ import {
   TabPanel,
   DetailHeader,
   MonitoringToolbar,
+  PageShell,
 } from '@/design-system';
-import { StorageSidebar } from '@/components/StorageSidebar';
+import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
+import { useSidebar } from '@/contexts/SidebarContext';
 import { DataViewDrawer } from '@/components/DataViewDrawer';
 import {
   IconBell,
@@ -458,7 +460,8 @@ const latencyData = {
 
 export function ImageDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
+  const sidebarWidth = sidebarOpen ? 200 : 0;
   const [activeTab, setActiveTab] = useState('performance');
 
   // Global tab management
@@ -498,123 +501,108 @@ export function ImageDetailPage() {
   ];
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <StorageSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
+    <PageShell
+      sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={
+            <Breadcrumb
+              items={[
+                { label: 'Home', href: '/' },
+                { label: 'Images', href: '/storage/images' },
+                { label: imageData.name },
+              ]}
+            />
+          }
+          actions={
+            <TopBarAction icon={<IconBell size={16} stroke={1.5} />} aria-label="Notifications" />
+          }
+        />
+      }
+      contentClassName="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]"
+    >
+      <VStack gap={6} className="min-w-[1176px]">
+        {/* Page Header with Info Cards */}
+        <DetailHeader>
+          <DetailHeader.Title>{imageData.name}</DetailHeader.Title>
+          <DetailHeader.InfoGrid>
+            <DetailHeader.InfoCard label="Pool" value={imageData.pool} status="active" />
+            <DetailHeader.InfoCard label="Size" value={imageData.size} />
+            <DetailHeader.InfoCard label="Objects" value={String(imageData.objects)} />
+            <DetailHeader.InfoCard label="Object size" value={imageData.objectSize} />
+            <DetailHeader.InfoCard label="Total provisioned" value={imageData.totalProvisioned} />
+          </DetailHeader.InfoGrid>
+        </DetailHeader>
 
-      {/* Main Content */}
-      <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'}`}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Tab Bar */}
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            onTabAdd={addNewTab}
-            onTabReorder={moveTab}
-            showAddButton={true}
-            showWindowControls={true}
-          />
+        {/* Tabs */}
+        <div className="w-full">
+          <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
+            <TabList>
+              <Tab value="performance">Performance</Tab>
+            </TabList>
 
-          {/* Top Bar */}
-          <TopBar
-            showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
-            showNavigation={true}
-            onBack={() => window.history.back()}
-            onForward={() => window.history.forward()}
-            breadcrumb={
-              <Breadcrumb
-                items={[
-                  { label: 'Home', href: '/' },
-                  { label: 'Images', href: '/storage/images' },
-                  { label: imageData.name },
-                ]}
-              />
-            }
-            actions={
-              <TopBarAction icon={<IconBell size={16} stroke={1.5} />} aria-label="Notifications" />
-            }
-          />
+            {/* Performance Tab Panel */}
+            <TabPanel value="performance" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Monitoring Time Controls */}
+                <div className="flex justify-start w-full">
+                  <MonitoringToolbar />
+                </div>
+
+                {/* Charts - Two on top row, one below */}
+                <div className="flex gap-4 w-full">
+                  <div className="flex-1">
+                    <ImageChartWithFullScreen
+                      title="IOPS"
+                      series={iopsSeries}
+                      timeLabels={timeLabels}
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <ImageChartWithFullScreen
+                      title="Throughput"
+                      series={throughputSeries}
+                      timeLabels={timeLabels}
+                    />
+                  </div>
+                </div>
+
+                {/* Average Latency Chart - Half width below */}
+                <div className="flex gap-4 w-full">
+                  <div className="flex-1">
+                    <ImageChartWithFullScreen
+                      title="Average latency"
+                      series={latencySeries}
+                      timeLabels={timeLabels}
+                      yAxisUnit="ms"
+                    />
+                  </div>
+                  <div className="flex-1" />
+                </div>
+              </VStack>
+            </TabPanel>
+          </Tabs>
         </div>
-
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
-            <VStack gap={6} className="min-w-[1176px]">
-              {/* Page Header with Info Cards */}
-              <DetailHeader>
-                <DetailHeader.Title>{imageData.name}</DetailHeader.Title>
-                <DetailHeader.InfoGrid>
-                  <DetailHeader.InfoCard label="Pool" value={imageData.pool} status="active" />
-                  <DetailHeader.InfoCard label="Size" value={imageData.size} />
-                  <DetailHeader.InfoCard label="Objects" value={String(imageData.objects)} />
-                  <DetailHeader.InfoCard label="Object size" value={imageData.objectSize} />
-                  <DetailHeader.InfoCard
-                    label="Total provisioned"
-                    value={imageData.totalProvisioned}
-                  />
-                </DetailHeader.InfoGrid>
-              </DetailHeader>
-
-              {/* Tabs */}
-              <div className="w-full">
-                <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
-                  <TabList>
-                    <Tab value="performance">Performance</Tab>
-                  </TabList>
-
-                  {/* Performance Tab Panel */}
-                  <TabPanel value="performance" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Monitoring Time Controls */}
-                      <div className="flex justify-start w-full">
-                        <MonitoringToolbar />
-                      </div>
-
-                      {/* Charts - Two on top row, one below */}
-                      <div className="flex gap-4 w-full">
-                        <div className="flex-1">
-                          <ImageChartWithFullScreen
-                            title="IOPS"
-                            series={iopsSeries}
-                            timeLabels={timeLabels}
-                          />
-                        </div>
-                        <div className="flex-1">
-                          <ImageChartWithFullScreen
-                            title="Throughput"
-                            series={throughputSeries}
-                            timeLabels={timeLabels}
-                          />
-                        </div>
-                      </div>
-
-                      {/* Average Latency Chart - Half width below */}
-                      <div className="flex gap-4 w-full">
-                        <div className="flex-1">
-                          <ImageChartWithFullScreen
-                            title="Average latency"
-                            series={latencySeries}
-                            timeLabels={timeLabels}
-                            yAxisUnit="ms"
-                          />
-                        </div>
-                        <div className="flex-1" />
-                      </div>
-                    </VStack>
-                  </TabPanel>
-                </Tabs>
-              </div>
-            </VStack>
-          </div>
-        </div>
-      </main>
-    </div>
+      </VStack>
+    </PageShell>
   );
 }
 

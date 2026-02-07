@@ -4,12 +4,14 @@ import {
   SearchInput,
   Table,
   Pagination,
-  HStack,
   VStack,
   TabBar,
   TopBar,
   Breadcrumb,
   ContextMenu,
+  PageShell,
+  PageHeader,
+  ListToolbar,
   fixedColumns,
   columnMinWidths,
   type TableColumn,
@@ -318,16 +320,10 @@ export function IAMUserGroupsPage() {
   ];
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <IAMSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-
-      {/* Main Content */}
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: `${sidebarWidth}px` }}
-      >
-        {/* Tab Bar */}
+    <PageShell
+      sidebar={<IAMSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />}
+      sidebarWidth={sidebarWidth}
+      tabBar={
         <TabBar
           tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
@@ -336,8 +332,8 @@ export function IAMUserGroupsPage() {
           onTabAdd={addNewTab}
           onTabReorder={moveTab}
         />
-
-        {/* Top Bar */}
+      }
+      topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -348,83 +344,74 @@ export function IAMUserGroupsPage() {
             <Breadcrumb items={[{ label: 'IAM', href: '/iam' }, { label: 'User groups' }]} />
           }
         />
+      }
+    >
+      <VStack gap={3}>
+        {/* Header */}
+        <PageHeader
+          title="User groups"
+          actions={
+            <Button variant="primary" size="md" onClick={() => navigate('/iam/user-groups/create')}>
+              Create user group
+            </Button>
+          }
+        />
 
-        {/* Content */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
-            <VStack gap={3}>
-              {/* Header */}
-              <HStack justify="between" align="center" className="w-full">
-                <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
-                  User groups
-                </h1>
+        {/* Search and Actions */}
+        <VStack gap={3} className="w-full">
+          {/* Action Bar */}
+          <ListToolbar
+            primaryActions={
+              <ListToolbar.Actions>
+                <SearchInput
+                  placeholder="Search user groups by attributes"
+                  value={searchQuery}
+                  onChange={setSearchQuery}
+                  className="w-[var(--search-input-width)]"
+                />
                 <Button
-                  variant="primary"
-                  size="md"
-                  onClick={() => navigate('/iam/user-groups/create')}
+                  variant="secondary"
+                  size="sm"
+                  icon={<IconDownload size={12} />}
+                  aria-label="Download"
+                />
+              </ListToolbar.Actions>
+            }
+            bulkActions={
+              <ListToolbar.Actions>
+                <Button
+                  variant="muted"
+                  size="sm"
+                  disabled={!hasSelection}
+                  leftIcon={<IconTrash size={12} />}
                 >
-                  Create user group
+                  Delete
                 </Button>
-              </HStack>
+              </ListToolbar.Actions>
+            }
+          />
 
-              {/* Search and Actions */}
-              <VStack gap={3} className="w-full">
-                {/* Action Bar */}
-                <ListToolbar
-                  primaryActions={
-                    <ListToolbar.Actions>
-                      <SearchInput
-                        placeholder="Search user groups by attributes"
-                        value={searchQuery}
-                        onChange={setSearchQuery}
-                        className="w-[var(--search-input-width)]"
-                      />
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        icon={<IconDownload size={12} />}
-                        aria-label="Download"
-                      />
-                    </ListToolbar.Actions>
-                  }
-                  bulkActions={
-                    <ListToolbar.Actions>
-                      <Button
-                        variant="muted"
-                        size="sm"
-                        disabled={!hasSelection}
-                        leftIcon={<IconTrash size={12} />}
-                      >
-                        Delete
-                      </Button>
-                    </ListToolbar.Actions>
-                  }
-                />
+          {/* Pagination */}
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            totalItems={filteredGroups.length}
+            selectedCount={selectedRows.length}
+            showSettings
+            onPageChange={setCurrentPage}
+          />
 
-                {/* Pagination */}
-                <Pagination
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  totalItems={filteredGroups.length}
-                  selectedCount={selectedRows.length}
-                  showSettings
-                  onPageChange={setCurrentPage}
-                />
-
-                {/* Table */}
-                <Table<UserGroup>
-                  columns={columns}
-                  data={paginatedGroups}
-                  rowKey="id"
-                  selectable
-                  selectedKeys={selectedRows}
-                  onSelectionChange={setSelectedRows}
-                />
-              </VStack>
-            </VStack>
-          </div>
-        </div>
-      </main>
+          {/* Table */}
+          <Table<UserGroup>
+            columns={columns}
+            data={paginatedGroups}
+            rowKey="id"
+            selectable
+            selectedKeys={selectedRows}
+            onSelectionChange={setSelectedRows}
+          />
+        </VStack>
+      </VStack>
 
       {/* User Group Drawers */}
       <ManageRolesDrawer
@@ -451,7 +438,7 @@ export function IAMUserGroupsPage() {
             : undefined
         }
       />
-    </div>
+    </PageShell>
   );
 }
 

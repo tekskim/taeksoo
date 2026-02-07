@@ -18,10 +18,12 @@ import {
   Pagination,
   ContextMenu,
   Modal,
+  PageShell,
   fixedColumns,
   columnMinWidths,
+  type TableColumn,
+  type ContextMenuItem,
 } from '@/design-system';
-import type { TableColumn, ContextMenuItem } from '@/design-system';
 import { Sidebar } from '@/components/Sidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
@@ -260,6 +262,7 @@ export default function PortDetailPage() {
     useTabs();
 
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 200 : 0;
   const [activeDetailTab, setActiveDetailTab] = useState('details');
   const [copiedMac, setCopiedMac] = useState(false);
 
@@ -589,365 +592,336 @@ export default function PortDetailPage() {
   };
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+    <PageShell
+      sidebar={<Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />}
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={<Breadcrumb items={breadcrumbItems} />}
+          actions={
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1.5} />}
+              aria-label="Notifications"
+              badge={true}
+            />
+          }
+        />
+      }
+      contentClassName="pt-3 px-8 pb-20 bg-[var(--color-surface-subtle)]"
+    >
+      <VStack gap={8} className="min-w-[1176px]">
+        {/* Header Card */}
+        <DetailHeader>
+          {/* Title */}
+          <h1 className="text-heading-h5 text-[var(--color-text-default)] mb-3">{port.name}</h1>
 
-      <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
-          sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'
-        }`}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Tab Bar */}
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            onTabAdd={addNewTab}
-            onTabReorder={moveTab}
-            showAddButton={true}
-            showWindowControls={true}
-          />
+          {/* Actions */}
+          <div className="flex items-center gap-1 mb-3">
+            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+              Edit
+            </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+              Delete
+            </Button>
+            <ContextMenu
+              items={[
+                { label: 'Attach instance', onClick: () => {} },
+                { label: 'Detach instance', onClick: () => {} },
+                { label: 'Associate floating IP', onClick: () => {} },
+                { label: 'Disassociate floating IP', onClick: () => {} },
+                { label: 'Allocate IP', onClick: () => {} },
+                { label: 'Manage security groups', onClick: () => {} },
+                { label: 'Create allowed address pair', onClick: () => {} },
+              ]}
+              trigger="click"
+            >
+              <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
+                More Actions
+              </Button>
+            </ContextMenu>
+          </div>
 
-          {/* Top Bar with Breadcrumb */}
-          <TopBar
-            showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
-            showNavigation={true}
-            onBack={() => window.history.back()}
-            onForward={() => window.history.forward()}
-            breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-            actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-                badge={true}
-              />
-            }
-          />
-        </div>
+          {/* Info Cards */}
+          <DetailHeader.InfoGrid>
+            <DetailHeader.InfoCard
+              label="Status"
+              value={port.status.charAt(0).toUpperCase() + port.status.slice(1)}
+              status={portStatusMap[port.status]}
+            />
+            <DetailHeader.InfoCard label="ID" value={port.id} copyable onCopy={handleCopyId} />
+            <DetailHeader.InfoCard label="Port security" value={port.portSecurity ? 'On' : 'Off'} />
+            <DetailHeader.InfoCard label="Created at" value={port.createdAt} />
+          </DetailHeader.InfoGrid>
+        </DetailHeader>
 
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          {/* Main Content */}
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
-            <VStack gap={8} className="min-w-[1176px]">
-              {/* Header Card */}
-              <DetailHeader>
-                {/* Title */}
-                <h1 className="text-heading-h5 text-[var(--color-text-default)] mb-3">
-                  {port.name}
-                </h1>
+        {/* Tabs */}
+        <div className="w-full">
+          <Tabs value={activeDetailTab} onChange={setActiveDetailTab} size="sm">
+            <TabList>
+              <Tab value="details">Details</Tab>
+              <Tab value="fixed-ips">Fixed IPs</Tab>
+              {port.status === 'active' && (
+                <Tab value="allowed-address-pairs">Allowed Address Pairs</Tab>
+              )}
+              {port.status === 'active' && <Tab value="security">Security</Tab>}
+            </TabList>
 
-                {/* Actions */}
-                <div className="flex items-center gap-1 mb-3">
-                  <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                    Edit
-                  </Button>
-                  <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
-                    Delete
-                  </Button>
-                  <ContextMenu
-                    items={[
-                      { label: 'Attach instance', onClick: () => {} },
-                      { label: 'Detach instance', onClick: () => {} },
-                      { label: 'Associate floating IP', onClick: () => {} },
-                      { label: 'Disassociate floating IP', onClick: () => {} },
-                      { label: 'Allocate IP', onClick: () => {} },
-                      { label: 'Manage security groups', onClick: () => {} },
-                      { label: 'Create allowed address pair', onClick: () => {} },
-                    ]}
-                    trigger="click"
-                  >
-                    <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-                      More Actions
+            {/* Details Tab */}
+            <TabPanel value="details" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Basic information */}
+                <SectionCard>
+                  <SectionCard.Header
+                    title="Basic information"
+                    actions={
+                      <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+                        Edit
+                      </Button>
+                    }
+                  />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="Port name" value={port.name} />
+                    <SectionCard.DataRow label="Description" value={port.description} />
+                  </SectionCard.Content>
+                </SectionCard>
+
+                {/* Network */}
+                <SectionCard>
+                  <SectionCard.Header title="Network" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow
+                      label="Owned network"
+                      value={
+                        <Link
+                          to={`/compute/networks/${port.ownedNetwork.id}`}
+                          className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                        >
+                          {port.ownedNetwork.name}
+                          <IconExternalLink
+                            size={12}
+                            className="text-[var(--color-action-primary)]"
+                          />
+                        </Link>
+                      }
+                    />
+                    <SectionCard.DataRow
+                      label="Subnet"
+                      value={
+                        <Link
+                          to={`/compute/networks/${port.subnet.id}`}
+                          className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                        >
+                          {port.subnet.name}
+                          <IconExternalLink
+                            size={12}
+                            className="text-[var(--color-action-primary)]"
+                          />
+                        </Link>
+                      }
+                    />
+                    <SectionCard.DataRow
+                      label="MAC Address"
+                      value={
+                        <div className="flex items-center gap-2">
+                          <span>{port.macAddress}</span>
+                          <button
+                            onClick={handleCopyMac}
+                            className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                            title={copiedMac ? 'Copied!' : 'Copy MAC Address'}
+                          >
+                            <IconCopy
+                              size={16}
+                              stroke={1.5}
+                              className="text-[var(--color-action-primary)]"
+                            />
+                          </button>
+                        </div>
+                      }
+                    />
+                  </SectionCard.Content>
+                </SectionCard>
+
+                {/* Attachments */}
+                <SectionCard>
+                  <SectionCard.Header title="Attachments" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow
+                      label="Attached to"
+                      value={
+                        port.attachedTo ? (
+                          <Link
+                            to={
+                              port.attachedTo.type === 'instance'
+                                ? `/instances/${port.attachedTo.id}`
+                                : `/routers/${port.attachedTo.id}`
+                            }
+                            className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                          >
+                            {port.attachedTo.name}
+                            <IconExternalLink
+                              size={12}
+                              className="text-[var(--color-action-primary)]"
+                            />
+                          </Link>
+                        ) : (
+                          '-'
+                        )
+                      }
+                    />
+                  </SectionCard.Content>
+                </SectionCard>
+              </VStack>
+            </TabPanel>
+
+            {/* Fixed IPs Tab */}
+            <TabPanel value="fixed-ips" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Header */}
+                <div className="flex items-center justify-between">
+                  <h3 className="text-heading-h5 text-[var(--color-text-default)]">Fixed IPs</h3>
+                  <div className="flex items-center gap-1">
+                    <Button variant="secondary" size="sm">
+                      Allocate IP
                     </Button>
-                  </ContextMenu>
+                    <Button variant="secondary" size="sm">
+                      Associate floating IP
+                    </Button>
+                  </div>
                 </div>
 
-                {/* Info Cards */}
-                <DetailHeader.InfoGrid>
-                  <DetailHeader.InfoCard
-                    label="Status"
-                    value={port.status.charAt(0).toUpperCase() + port.status.slice(1)}
-                    status={portStatusMap[port.status]}
+                {/* Search */}
+                <div className="w-[var(--search-input-width)]">
+                  <SearchInput
+                    value={fixedIpSearchTerm}
+                    onChange={(e) => {
+                      setFixedIpSearchTerm(e.target.value);
+                      setFixedIpCurrentPage(1);
+                    }}
+                    placeholder="Search fixed IP by attributes"
                   />
-                  <DetailHeader.InfoCard
-                    label="ID"
-                    value={port.id}
-                    copyable
-                    onCopy={handleCopyId}
+                </div>
+
+                {/* Pagination */}
+                <div className="flex items-center gap-2">
+                  <Pagination
+                    currentPage={fixedIpCurrentPage}
+                    totalPages={totalFixedIpPages}
+                    onPageChange={setFixedIpCurrentPage}
+                    totalItems={filteredFixedIPs.length}
+                    selectedCount={selectedFixedIPs.length}
                   />
-                  <DetailHeader.InfoCard
-                    label="Port security"
-                    value={port.portSecurity ? 'On' : 'Off'}
-                  />
-                  <DetailHeader.InfoCard label="Created at" value={port.createdAt} />
-                </DetailHeader.InfoGrid>
-              </DetailHeader>
+                </div>
 
-              {/* Tabs */}
-              <div className="w-full">
-                <Tabs value={activeDetailTab} onChange={setActiveDetailTab} size="sm">
-                  <TabList>
-                    <Tab value="details">Details</Tab>
-                    <Tab value="fixed-ips">Fixed IPs</Tab>
-                    {port.status === 'active' && (
-                      <Tab value="allowed-address-pairs">Allowed Address Pairs</Tab>
-                    )}
-                    {port.status === 'active' && <Tab value="security">Security</Tab>}
-                  </TabList>
+                {/* Table */}
+                <Table columns={fixedIpColumns} data={paginatedFixedIPs} rowKey="id" />
+              </VStack>
+            </TabPanel>
 
-                  {/* Details Tab */}
-                  <TabPanel value="details" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Basic information */}
-                      <SectionCard>
-                        <SectionCard.Header
-                          title="Basic information"
-                          actions={
-                            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                              Edit
-                            </Button>
-                          }
-                        />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow label="Port name" value={port.name} />
-                          <SectionCard.DataRow label="Description" value={port.description} />
-                        </SectionCard.Content>
-                      </SectionCard>
+            {/* Allowed Address Pairs Tab */}
+            {port.status === 'active' && (
+              <TabPanel value="allowed-address-pairs" className="pt-0">
+                <VStack gap={4} className="pt-4">
+                  {/* Header */}
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-heading-h5 text-[var(--color-text-default)]">
+                      Allowed Address Pairs
+                    </h3>
+                    <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+                      Create Allowed Address Pair
+                    </Button>
+                  </div>
 
-                      {/* Network */}
-                      <SectionCard>
-                        <SectionCard.Header title="Network" />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow
-                            label="Owned network"
-                            value={
-                              <Link
-                                to={`/compute/networks/${port.ownedNetwork.id}`}
-                                className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-                              >
-                                {port.ownedNetwork.name}
-                                <IconExternalLink
-                                  size={12}
-                                  className="text-[var(--color-action-primary)]"
-                                />
-                              </Link>
-                            }
-                          />
-                          <SectionCard.DataRow
-                            label="Subnet"
-                            value={
-                              <Link
-                                to={`/compute/networks/${port.subnet.id}`}
-                                className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-                              >
-                                {port.subnet.name}
-                                <IconExternalLink
-                                  size={12}
-                                  className="text-[var(--color-action-primary)]"
-                                />
-                              </Link>
-                            }
-                          />
-                          <SectionCard.DataRow
-                            label="MAC Address"
-                            value={
-                              <div className="flex items-center gap-2">
-                                <span>{port.macAddress}</span>
-                                <button
-                                  onClick={handleCopyMac}
-                                  className="p-1 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                  title={copiedMac ? 'Copied!' : 'Copy MAC Address'}
-                                >
-                                  <IconCopy
-                                    size={16}
-                                    stroke={1.5}
-                                    className="text-[var(--color-action-primary)]"
-                                  />
-                                </button>
-                              </div>
-                            }
-                          />
-                        </SectionCard.Content>
-                      </SectionCard>
+                  {/* Search */}
+                  <div className="w-[var(--search-input-width)]">
+                    <SearchInput
+                      value={aapSearchTerm}
+                      onChange={(e) => {
+                        setAapSearchTerm(e.target.value);
+                        setAapCurrentPage(1);
+                      }}
+                      placeholder="Search address pair by attributes"
+                    />
+                  </div>
 
-                      {/* Attachments */}
-                      <SectionCard>
-                        <SectionCard.Header title="Attachments" />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow
-                            label="Attached to"
-                            value={
-                              port.attachedTo ? (
-                                <Link
-                                  to={
-                                    port.attachedTo.type === 'instance'
-                                      ? `/instances/${port.attachedTo.id}`
-                                      : `/routers/${port.attachedTo.id}`
-                                  }
-                                  className="inline-flex items-center gap-1.5 font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-                                >
-                                  {port.attachedTo.name}
-                                  <IconExternalLink
-                                    size={12}
-                                    className="text-[var(--color-action-primary)]"
-                                  />
-                                </Link>
-                              ) : (
-                                '-'
-                              )
-                            }
-                          />
-                        </SectionCard.Content>
-                      </SectionCard>
-                    </VStack>
-                  </TabPanel>
+                  {/* Pagination */}
+                  <div className="flex items-center gap-2">
+                    <Pagination
+                      currentPage={aapCurrentPage}
+                      totalPages={totalAapPages}
+                      onPageChange={setAapCurrentPage}
+                      totalItems={filteredAaps.length}
+                      selectedCount={selectedAaps.length}
+                    />
+                  </div>
 
-                  {/* Fixed IPs Tab */}
-                  <TabPanel value="fixed-ips" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Header */}
-                      <div className="flex items-center justify-between">
-                        <h3 className="text-heading-h5 text-[var(--color-text-default)]">
-                          Fixed IPs
-                        </h3>
-                        <div className="flex items-center gap-1">
-                          <Button variant="secondary" size="sm">
-                            Allocate IP
-                          </Button>
-                          <Button variant="secondary" size="sm">
-                            Associate floating IP
-                          </Button>
-                        </div>
-                      </div>
+                  {/* Table */}
+                  <Table columns={aapColumns} data={paginatedAaps} rowKey="id" />
+                </VStack>
+              </TabPanel>
+            )}
 
-                      {/* Search */}
-                      <div className="w-[var(--search-input-width)]">
-                        <SearchInput
-                          value={fixedIpSearchTerm}
-                          onChange={(e) => {
-                            setFixedIpSearchTerm(e.target.value);
-                            setFixedIpCurrentPage(1);
-                          }}
-                          placeholder="Search fixed IP by attributes"
-                        />
-                      </div>
+            {/* Security Tab */}
+            {port.status === 'active' && (
+              <TabPanel value="security" className="pt-0">
+                <VStack gap={4} className="pt-4">
+                  {/* Header */}
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-heading-h5 text-[var(--color-text-default)]">
+                      Security groups
+                    </h3>
+                    <Button variant="secondary" size="sm">
+                      Manage security Group
+                    </Button>
+                  </div>
 
-                      {/* Pagination */}
-                      <div className="flex items-center gap-2">
-                        <Pagination
-                          currentPage={fixedIpCurrentPage}
-                          totalPages={totalFixedIpPages}
-                          onPageChange={setFixedIpCurrentPage}
-                          totalItems={filteredFixedIPs.length}
-                          selectedCount={selectedFixedIPs.length}
-                        />
-                      </div>
+                  {/* Search */}
+                  <div className="w-[var(--search-input-width)]">
+                    <SearchInput
+                      value={sgSearchTerm}
+                      onChange={(e) => {
+                        setSgSearchTerm(e.target.value);
+                        setSgCurrentPage(1);
+                      }}
+                      placeholder="Search security group by attributes"
+                    />
+                  </div>
 
-                      {/* Table */}
-                      <Table columns={fixedIpColumns} data={paginatedFixedIPs} rowKey="id" />
-                    </VStack>
-                  </TabPanel>
+                  {/* Pagination */}
+                  <div className="flex items-center gap-2">
+                    <Pagination
+                      currentPage={sgCurrentPage}
+                      totalPages={totalSgPages}
+                      onPageChange={setSgCurrentPage}
+                      totalItems={filteredSgs.length}
+                      selectedCount={selectedSgs.length}
+                    />
+                  </div>
 
-                  {/* Allowed Address Pairs Tab */}
-                  {port.status === 'active' && (
-                    <TabPanel value="allowed-address-pairs" className="pt-0">
-                      <VStack gap={4} className="pt-4">
-                        {/* Header */}
-                        <div className="flex items-center justify-between">
-                          <h3 className="text-heading-h5 text-[var(--color-text-default)]">
-                            Allowed Address Pairs
-                          </h3>
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            leftIcon={<IconCirclePlus size={12} />}
-                          >
-                            Create Allowed Address Pair
-                          </Button>
-                        </div>
-
-                        {/* Search */}
-                        <div className="w-[var(--search-input-width)]">
-                          <SearchInput
-                            value={aapSearchTerm}
-                            onChange={(e) => {
-                              setAapSearchTerm(e.target.value);
-                              setAapCurrentPage(1);
-                            }}
-                            placeholder="Search address pair by attributes"
-                          />
-                        </div>
-
-                        {/* Pagination */}
-                        <div className="flex items-center gap-2">
-                          <Pagination
-                            currentPage={aapCurrentPage}
-                            totalPages={totalAapPages}
-                            onPageChange={setAapCurrentPage}
-                            totalItems={filteredAaps.length}
-                            selectedCount={selectedAaps.length}
-                          />
-                        </div>
-
-                        {/* Table */}
-                        <Table columns={aapColumns} data={paginatedAaps} rowKey="id" />
-                      </VStack>
-                    </TabPanel>
-                  )}
-
-                  {/* Security Tab */}
-                  {port.status === 'active' && (
-                    <TabPanel value="security" className="pt-0">
-                      <VStack gap={4} className="pt-4">
-                        {/* Header */}
-                        <div className="flex items-center justify-between">
-                          <h3 className="text-heading-h5 text-[var(--color-text-default)]">
-                            Security groups
-                          </h3>
-                          <Button variant="secondary" size="sm">
-                            Manage security Group
-                          </Button>
-                        </div>
-
-                        {/* Search */}
-                        <div className="w-[var(--search-input-width)]">
-                          <SearchInput
-                            value={sgSearchTerm}
-                            onChange={(e) => {
-                              setSgSearchTerm(e.target.value);
-                              setSgCurrentPage(1);
-                            }}
-                            placeholder="Search security group by attributes"
-                          />
-                        </div>
-
-                        {/* Pagination */}
-                        <div className="flex items-center gap-2">
-                          <Pagination
-                            currentPage={sgCurrentPage}
-                            totalPages={totalSgPages}
-                            onPageChange={setSgCurrentPage}
-                            totalItems={filteredSgs.length}
-                            selectedCount={selectedSgs.length}
-                          />
-                        </div>
-
-                        {/* Table */}
-                        <Table columns={sgColumns} data={paginatedSgs} rowKey="id" />
-                      </VStack>
-                    </TabPanel>
-                  )}
-                </Tabs>
-              </div>
-            </VStack>
-          </div>
+                  {/* Table */}
+                  <Table columns={sgColumns} data={paginatedSgs} rowKey="id" />
+                </VStack>
+              </TabPanel>
+            )}
+          </Tabs>
         </div>
-      </main>
+      </VStack>
 
       {/* Detach Security group Modal */}
       <Modal
@@ -1014,6 +988,6 @@ export default function PortDetailPage() {
           </Button>
         </div>
       </Modal>
-    </div>
+    </PageShell>
   );
 }

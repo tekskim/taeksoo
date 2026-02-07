@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import {
   Button,
   VStack,
+  PageShell,
   TabBar,
   TopBar,
   TopBarAction,
@@ -183,6 +184,7 @@ export function ComputeAdminLoadBalancerDetailPage() {
   const [activeTab, setActiveTab] = useState('details');
   const [isCopied, setIsCopied] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 200 : 0;
 
   // Listeners state
   const [listenerSearchTerm, setListenerSearchTerm] = useState('');
@@ -467,319 +469,298 @@ export function ComputeAdminLoadBalancerDetailPage() {
   ];
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
-      <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'}`}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Tab Bar */}
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            onTabAdd={addNewTab}
-            onTabReorder={moveTab}
-            showAddButton={true}
-            showWindowControls={true}
-          />
+    <PageShell
+      sidebar={
+        <ComputeAdminSidebar
+          isOpen={sidebarOpen}
+          onToggle={() => setSidebarOpen((prev) => !prev)}
+        />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={
+            <Breadcrumb
+              items={[
+                { label: 'Compute Admin', href: '/' },
+                { label: 'Load balancers', href: '/compute-admin/load-balancers' },
+                { label: loadBalancer.name },
+              ]}
+            />
+          }
+          actions={
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1.5} />}
+              aria-label="Notifications"
+              badge={true}
+            />
+          }
+        />
+      }
+      contentClassName="pt-3 px-8 pb-20 bg-[var(--color-surface-subtle)]"
+    >
+      <VStack gap={8} className="min-w-[1176px]">
+        {/* Detail header */}
+        <DetailHeader>
+          <DetailHeader.Title>{loadBalancer.name}</DetailHeader.Title>
+          <DetailHeader.Actions>
+            <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+              Delete
+            </Button>
+          </DetailHeader.Actions>
+          <DetailHeader.InfoGrid>
+            <DetailHeader.InfoCard
+              label="Status"
+              value={loadBalancer.status === 'active' ? 'Available' : loadBalancer.status}
+              status={statusMap[loadBalancer.status]}
+            />
+            <DetailHeader.InfoCard
+              label="ID"
+              value={loadBalancer.id}
+              truncate
+              copyable
+              onCopy={handleCopyId}
+            />
+            <DetailHeader.InfoCard label="Tenant" value="tenantA" />
+            <DetailHeader.InfoCard label="VIP Address" value={loadBalancer.vipAddress} />
+            <DetailHeader.InfoCard label="Admin state" value={loadBalancer.adminState} />
+            <DetailHeader.InfoCard label="Created at" value={loadBalancer.createdAt} />
+          </DetailHeader.InfoGrid>
+        </DetailHeader>
 
-          {/* Top Bar with Breadcrumb */}
-          <TopBar
-            showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
-            showNavigation={true}
-            onBack={() => window.history.back()}
-            onForward={() => window.history.forward()}
-            breadcrumb={
-              <Breadcrumb
-                items={[
-                  { label: 'Compute Admin', href: '/' },
-                  { label: 'Load balancers', href: '/compute-admin/load-balancers' },
-                  { label: loadBalancer.name },
-                ]}
-              />
-            }
-            actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-                badge={true}
-              />
-            }
-          />
-        </div>
+        {/* Tabs Section */}
+        <div className="w-full">
+          <Tabs value={activeTab} onChange={setActiveTab} size="sm">
+            <div className="flex flex-col">
+              <TabList>
+                <Tab value="details">Details</Tab>
+                <Tab value="listeners">Listeners</Tab>
+                <Tab value="pools">Pools</Tab>
+              </TabList>
 
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          {/* Main Content */}
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
-            <VStack gap={8} className="min-w-[1176px]">
-              {/* Detail header */}
-              <DetailHeader>
-                <DetailHeader.Title>{loadBalancer.name}</DetailHeader.Title>
-                <DetailHeader.Actions>
-                  <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
-                    Delete
-                  </Button>
-                </DetailHeader.Actions>
-                <DetailHeader.InfoGrid>
-                  <DetailHeader.InfoCard
-                    label="Status"
-                    value={loadBalancer.status === 'active' ? 'Available' : loadBalancer.status}
-                    status={statusMap[loadBalancer.status]}
-                  />
-                  <DetailHeader.InfoCard
-                    label="ID"
-                    value={loadBalancer.id}
-                    truncate
-                    copyable
-                    onCopy={handleCopyId}
-                  />
-                  <DetailHeader.InfoCard label="Tenant" value="tenantA" />
-                  <DetailHeader.InfoCard label="VIP Address" value={loadBalancer.vipAddress} />
-                  <DetailHeader.InfoCard label="Admin state" value={loadBalancer.adminState} />
-                  <DetailHeader.InfoCard label="Created at" value={loadBalancer.createdAt} />
-                </DetailHeader.InfoGrid>
-              </DetailHeader>
+              {/* Details Tab Panel */}
+              <TabPanel value="details" className="pt-0">
+                <VStack gap={4} className="pt-4">
+                  {/* Basic information */}
+                  <SectionCard>
+                    <SectionCard.Header title="Basic information" />
+                    <SectionCard.Content>
+                      <SectionCard.DataRow label="Load balancer name" value={loadBalancer.name} />
+                      <SectionCard.DataRow label="Description" value={loadBalancer.description} />
+                      <SectionCard.DataRow label="Admin state" value={loadBalancer.adminState} />
+                      <SectionCard.DataRow label="Provider" value={loadBalancer.provider} />
+                    </SectionCard.Content>
+                  </SectionCard>
 
-              {/* Tabs Section */}
-              <div className="w-full">
-                <Tabs value={activeTab} onChange={setActiveTab} size="sm">
-                  <div className="flex flex-col">
-                    <TabList>
-                      <Tab value="details">Details</Tab>
-                      <Tab value="listeners">Listeners</Tab>
-                      <Tab value="pools">Pools</Tab>
-                    </TabList>
-
-                    {/* Details Tab Panel */}
-                    <TabPanel value="details" className="pt-0">
-                      <VStack gap={4} className="pt-4">
-                        {/* Basic information */}
-                        <SectionCard>
-                          <SectionCard.Header title="Basic information" />
-                          <SectionCard.Content>
-                            <SectionCard.DataRow
-                              label="Load balancer name"
-                              value={loadBalancer.name}
-                            />
-                            <SectionCard.DataRow
-                              label="Description"
-                              value={loadBalancer.description}
-                            />
-                            <SectionCard.DataRow
-                              label="Admin state"
-                              value={loadBalancer.adminState}
-                            />
-                            <SectionCard.DataRow label="Provider" value={loadBalancer.provider} />
-                          </SectionCard.Content>
-                        </SectionCard>
-
-                        {/* Network */}
-                        <SectionCard>
-                          <SectionCard.Header title="Network" />
-                          <SectionCard.Content>
-                            <SectionCard.DataRow
-                              label="VIP Address"
-                              value={loadBalancer.vipAddress}
-                            />
-                            <div className="flex flex-col gap-3 w-full">
-                              <div className="h-px w-full bg-[var(--color-border-subtle)]" />
-                              <div className="flex flex-col gap-1.5">
-                                <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
-                                  Owned network
-                                </span>
-                                {loadBalancer.ownedNetwork ? (
-                                  <Link
-                                    to={`/compute-admin/networks/${loadBalancer.ownedNetwork.id}`}
-                                    className="flex items-center gap-1.5 text-label-md leading-4 text-[var(--color-action-primary)] hover:underline"
-                                  >
-                                    {loadBalancer.ownedNetwork.name}
-                                  </Link>
-                                ) : (
-                                  <span className="text-body-md leading-4 text-[var(--color-text-default)]">
-                                    -
-                                  </span>
-                                )}
-                              </div>
-                            </div>
-                            <div className="flex flex-col gap-3 w-full">
-                              <div className="h-px w-full bg-[var(--color-border-subtle)]" />
-                              <div className="flex flex-col gap-1.5">
-                                <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
-                                  Subnet
-                                </span>
-                                {loadBalancer.subnet ? (
-                                  <Link
-                                    to={`/compute-admin/subnets/${loadBalancer.subnet.id}`}
-                                    className="flex items-center gap-1.5 text-label-md leading-4 text-[var(--color-action-primary)] hover:underline"
-                                  >
-                                    {loadBalancer.subnet.name}
-                                  </Link>
-                                ) : (
-                                  <span className="text-body-md leading-4 text-[var(--color-text-default)]">
-                                    -
-                                  </span>
-                                )}
-                              </div>
-                            </div>
-                            <div className="flex flex-col gap-3 w-full">
-                              <div className="h-px w-full bg-[var(--color-border-subtle)]" />
-                              <div className="flex flex-col gap-1.5">
-                                <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
-                                  Floating IP
-                                </span>
-                                {loadBalancer.floatingIp ? (
-                                  <Link
-                                    to={`/compute-admin/floating-ips/${loadBalancer.floatingIp.id}`}
-                                    className="flex items-center gap-1.5 text-label-md leading-4 text-[var(--color-action-primary)] hover:underline"
-                                  >
-                                    {loadBalancer.floatingIp.name}
-                                  </Link>
-                                ) : (
-                                  <span className="text-body-md leading-4 text-[var(--color-text-default)]">
-                                    -
-                                  </span>
-                                )}
-                              </div>
-                            </div>
-                          </SectionCard.Content>
-                        </SectionCard>
-                      </VStack>
-                    </TabPanel>
-
-                    {/* Listeners Tab Panel */}
-                    <TabPanel value="listeners" className="pt-0">
-                      <VStack gap={4} className="pt-4">
-                        {/* Header */}
-                        <div className="flex items-center justify-between">
-                          <h3 className="text-heading-h5 text-[var(--color-text-default)]">
-                            Listener
-                          </h3>
+                  {/* Network */}
+                  <SectionCard>
+                    <SectionCard.Header title="Network" />
+                    <SectionCard.Content>
+                      <SectionCard.DataRow label="VIP Address" value={loadBalancer.vipAddress} />
+                      <div className="flex flex-col gap-3 w-full">
+                        <div className="h-px w-full bg-[var(--color-border-subtle)]" />
+                        <div className="flex flex-col gap-1.5">
+                          <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
+                            Owned network
+                          </span>
+                          {loadBalancer.ownedNetwork ? (
+                            <Link
+                              to={`/compute-admin/networks/${loadBalancer.ownedNetwork.id}`}
+                              className="flex items-center gap-1.5 text-label-md leading-4 text-[var(--color-action-primary)] hover:underline"
+                            >
+                              {loadBalancer.ownedNetwork.name}
+                            </Link>
+                          ) : (
+                            <span className="text-body-md leading-4 text-[var(--color-text-default)]">
+                              -
+                            </span>
+                          )}
                         </div>
-
-                        {/* Action Bar */}
-                        <div className="flex items-center gap-2">
-                          <div className="flex items-center gap-1">
-                            <div className="w-[var(--search-input-width)]">
-                              <SearchInput
-                                value={listenerSearchTerm}
-                                onChange={(e) => {
-                                  setListenerSearchTerm(e.target.value);
-                                  setListenerCurrentPage(1);
-                                }}
-                                placeholder="Search listener by attributes"
-                              />
-                            </div>
-                            <button className="w-7 h-7 flex items-center justify-center rounded-md border border-[var(--color-border-strong)] hover:bg-[var(--button-secondary-hover-bg)] transition-colors">
-                              <IconDownload size={14} stroke={1.5} />
-                            </button>
-                          </div>
-                          <div className="h-4 w-px bg-[var(--color-border-default)]" />
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            leftIcon={<IconTrash size={12} />}
-                            disabled={selectedListeners.length === 0}
-                          >
-                            Delete
-                          </Button>
+                      </div>
+                      <div className="flex flex-col gap-3 w-full">
+                        <div className="h-px w-full bg-[var(--color-border-subtle)]" />
+                        <div className="flex flex-col gap-1.5">
+                          <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
+                            Subnet
+                          </span>
+                          {loadBalancer.subnet ? (
+                            <Link
+                              to={`/compute-admin/subnets/${loadBalancer.subnet.id}`}
+                              className="flex items-center gap-1.5 text-label-md leading-4 text-[var(--color-action-primary)] hover:underline"
+                            >
+                              {loadBalancer.subnet.name}
+                            </Link>
+                          ) : (
+                            <span className="text-body-md leading-4 text-[var(--color-text-default)]">
+                              -
+                            </span>
+                          )}
                         </div>
-
-                        {/* Pagination */}
-                        <div className="flex items-center gap-2">
-                          <Pagination
-                            currentPage={listenerCurrentPage}
-                            totalPages={totalListenerPages}
-                            onPageChange={setListenerCurrentPage}
-                            totalItems={filteredListeners.length}
-                            selectedCount={selectedListeners.length}
-                          />
+                      </div>
+                      <div className="flex flex-col gap-3 w-full">
+                        <div className="h-px w-full bg-[var(--color-border-subtle)]" />
+                        <div className="flex flex-col gap-1.5">
+                          <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
+                            Floating IP
+                          </span>
+                          {loadBalancer.floatingIp ? (
+                            <Link
+                              to={`/compute-admin/floating-ips/${loadBalancer.floatingIp.id}`}
+                              className="flex items-center gap-1.5 text-label-md leading-4 text-[var(--color-action-primary)] hover:underline"
+                            >
+                              {loadBalancer.floatingIp.name}
+                            </Link>
+                          ) : (
+                            <span className="text-body-md leading-4 text-[var(--color-text-default)]">
+                              -
+                            </span>
+                          )}
                         </div>
+                      </div>
+                    </SectionCard.Content>
+                  </SectionCard>
+                </VStack>
+              </TabPanel>
 
-                        {/* Table */}
-                        <Table
-                          columns={listenerColumns}
-                          data={paginatedListeners}
-                          rowKey="id"
-                          selectable
-                          selectedKeys={selectedListeners}
-                          onSelectionChange={setSelectedListeners}
-                        />
-                      </VStack>
-                    </TabPanel>
-
-                    {/* Pools Tab Panel */}
-                    <TabPanel value="pools" className="pt-0">
-                      <VStack gap={4} className="pt-4">
-                        {/* Header */}
-                        <div className="flex items-center justify-between">
-                          <h3 className="text-heading-h5 text-[var(--color-text-default)]">
-                            Pools
-                          </h3>
-                        </div>
-
-                        {/* Action Bar */}
-                        <div className="flex items-center gap-2">
-                          <div className="flex items-center gap-1">
-                            <div className="w-[var(--search-input-width)]">
-                              <SearchInput
-                                value={poolSearchTerm}
-                                onChange={(e) => {
-                                  setPoolSearchTerm(e.target.value);
-                                  setPoolCurrentPage(1);
-                                }}
-                                placeholder="Search pool by attributes"
-                              />
-                            </div>
-                            <button className="w-7 h-7 flex items-center justify-center rounded-md border border-[var(--color-border-strong)] hover:bg-[var(--button-secondary-hover-bg)] transition-colors">
-                              <IconDownload size={14} stroke={1.5} />
-                            </button>
-                          </div>
-                          <div className="h-4 w-px bg-[var(--color-border-default)]" />
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            leftIcon={<IconTrash size={12} />}
-                            disabled={selectedPools.length === 0}
-                          >
-                            Delete
-                          </Button>
-                        </div>
-
-                        {/* Pagination */}
-                        <div className="flex items-center gap-2">
-                          <Pagination
-                            currentPage={poolCurrentPage}
-                            totalPages={totalPoolPages}
-                            onPageChange={setPoolCurrentPage}
-                            totalItems={filteredPools.length}
-                            selectedCount={selectedPools.length}
-                          />
-                        </div>
-
-                        {/* Table */}
-                        <Table
-                          columns={poolColumns}
-                          data={paginatedPools}
-                          rowKey="id"
-                          selectable
-                          selectedKeys={selectedPools}
-                          onSelectionChange={setSelectedPools}
-                        />
-                      </VStack>
-                    </TabPanel>
+              {/* Listeners Tab Panel */}
+              <TabPanel value="listeners" className="pt-0">
+                <VStack gap={4} className="pt-4">
+                  {/* Header */}
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-heading-h5 text-[var(--color-text-default)]">Listener</h3>
                   </div>
-                </Tabs>
-              </div>
-            </VStack>
-          </div>
+
+                  {/* Action Bar */}
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1">
+                      <div className="w-[var(--search-input-width)]">
+                        <SearchInput
+                          value={listenerSearchTerm}
+                          onChange={(e) => {
+                            setListenerSearchTerm(e.target.value);
+                            setListenerCurrentPage(1);
+                          }}
+                          placeholder="Search listener by attributes"
+                        />
+                      </div>
+                      <button className="w-7 h-7 flex items-center justify-center rounded-md border border-[var(--color-border-strong)] hover:bg-[var(--button-secondary-hover-bg)] transition-colors">
+                        <IconDownload size={14} stroke={1.5} />
+                      </button>
+                    </div>
+                    <div className="h-4 w-px bg-[var(--color-border-default)]" />
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      leftIcon={<IconTrash size={12} />}
+                      disabled={selectedListeners.length === 0}
+                    >
+                      Delete
+                    </Button>
+                  </div>
+
+                  {/* Pagination */}
+                  <div className="flex items-center gap-2">
+                    <Pagination
+                      currentPage={listenerCurrentPage}
+                      totalPages={totalListenerPages}
+                      onPageChange={setListenerCurrentPage}
+                      totalItems={filteredListeners.length}
+                      selectedCount={selectedListeners.length}
+                    />
+                  </div>
+
+                  {/* Table */}
+                  <Table
+                    columns={listenerColumns}
+                    data={paginatedListeners}
+                    rowKey="id"
+                    selectable
+                    selectedKeys={selectedListeners}
+                    onSelectionChange={setSelectedListeners}
+                  />
+                </VStack>
+              </TabPanel>
+
+              {/* Pools Tab Panel */}
+              <TabPanel value="pools" className="pt-0">
+                <VStack gap={4} className="pt-4">
+                  {/* Header */}
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-heading-h5 text-[var(--color-text-default)]">Pools</h3>
+                  </div>
+
+                  {/* Action Bar */}
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1">
+                      <div className="w-[var(--search-input-width)]">
+                        <SearchInput
+                          value={poolSearchTerm}
+                          onChange={(e) => {
+                            setPoolSearchTerm(e.target.value);
+                            setPoolCurrentPage(1);
+                          }}
+                          placeholder="Search pool by attributes"
+                        />
+                      </div>
+                      <button className="w-7 h-7 flex items-center justify-center rounded-md border border-[var(--color-border-strong)] hover:bg-[var(--button-secondary-hover-bg)] transition-colors">
+                        <IconDownload size={14} stroke={1.5} />
+                      </button>
+                    </div>
+                    <div className="h-4 w-px bg-[var(--color-border-default)]" />
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      leftIcon={<IconTrash size={12} />}
+                      disabled={selectedPools.length === 0}
+                    >
+                      Delete
+                    </Button>
+                  </div>
+
+                  {/* Pagination */}
+                  <div className="flex items-center gap-2">
+                    <Pagination
+                      currentPage={poolCurrentPage}
+                      totalPages={totalPoolPages}
+                      onPageChange={setPoolCurrentPage}
+                      totalItems={filteredPools.length}
+                      selectedCount={selectedPools.length}
+                    />
+                  </div>
+
+                  {/* Table */}
+                  <Table
+                    columns={poolColumns}
+                    data={paginatedPools}
+                    rowKey="id"
+                    selectable
+                    selectedKeys={selectedPools}
+                    onSelectionChange={setSelectedPools}
+                  />
+                </VStack>
+              </TabPanel>
+            </div>
+          </Tabs>
         </div>
-      </main>
-    </div>
+      </VStack>
+    </PageShell>
   );
 }
 

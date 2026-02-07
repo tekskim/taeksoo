@@ -16,6 +16,7 @@ import {
   ContextMenu,
   TabBar,
   Chip,
+  PageShell,
   fixedColumns,
   columnMinWidths,
   type TableColumn,
@@ -588,27 +589,23 @@ export default function IAMRoleDetailPage() {
 
   if (!role) {
     return (
-      <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-        <IAMSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-        <main
-          className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-          style={{ left: `${sidebarWidth}px` }}
-        >
-          <div className="flex-1 flex items-center justify-center">
-            <p className="text-[var(--color-text-muted)]">Role not found</p>
-          </div>
-        </main>
-      </div>
+      <PageShell
+        sidebar={<IAMSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />}
+        sidebarWidth={sidebarWidth}
+        tabBar={null}
+        topBar={null}
+        contentClassName="flex items-center justify-center"
+      >
+        <p className="text-[var(--color-text-muted)]">Role not found</p>
+      </PageShell>
     );
   }
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <IAMSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: `${sidebarWidth}px` }}
-      >
+    <PageShell
+      sidebar={<IAMSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />}
+      sidebarWidth={sidebarWidth}
+      tabBar={
         <TabBar
           tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
@@ -617,6 +614,8 @@ export default function IAMRoleDetailPage() {
           onTabAdd={addNewTab}
           onTabReorder={moveTab}
         />
+      }
+      topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -625,276 +624,257 @@ export default function IAMRoleDetailPage() {
           onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
         />
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
-            <VStack gap={8}>
-              {/* Header Card */}
-              <div className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
-                <VStack gap={3}>
-                  {/* Title */}
-                  <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
-                    {role.name}
-                  </h1>
+      }
+      contentClassName="pt-4 px-8 pb-6"
+    >
+      <VStack gap={8}>
+        {/* Header Card */}
+        <div className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
+          <VStack gap={3}>
+            {/* Title */}
+            <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
+              {role.name}
+            </h1>
 
-                  {/* Action Buttons */}
-                  <HStack gap={1}>
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      leftIcon={<IconEdit size={12} stroke={1.5} />}
-                    >
-                      Edit
-                    </Button>
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      leftIcon={<IconTrash size={12} stroke={1.5} />}
-                    >
-                      Delete
-                    </Button>
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      rightIcon={<IconChevronDown size={12} stroke={1.5} />}
-                    >
-                      More Actions
-                    </Button>
-                  </HStack>
+            {/* Action Buttons */}
+            <HStack gap={1}>
+              <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} stroke={1.5} />}>
+                Edit
+              </Button>
+              <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} stroke={1.5} />}>
+                Delete
+              </Button>
+              <Button
+                variant="secondary"
+                size="sm"
+                rightIcon={<IconChevronDown size={12} stroke={1.5} />}
+              >
+                More Actions
+              </Button>
+            </HStack>
 
-                  {/* Info Cards */}
-                  <HStack gap={2} className="w-full">
-                    <InfoCard label="Description" value={role.description} />
-                    <InfoCard label="Type" value={role.type} />
-                    <InfoCard label="Created at" value={role.createdAt} />
-                  </HStack>
-                </VStack>
-              </div>
-
-              {/* Tabs */}
-              <div className="w-full">
-                <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
-                  <TabList>
-                    <Tab value="policies">Policies</Tab>
-                    <Tab value="entities">Entities attached</Tab>
-                  </TabList>
-
-                  {/* Policies Tab */}
-                  <TabPanel value="policies" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Section Header */}
-                      <HStack justify="between" align="center" className="w-full">
-                        <h2 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
-                          Policies
-                        </h2>
-                        <Button variant="secondary" size="sm">
-                          Manage policies
-                        </Button>
-                      </HStack>
-
-                      {/* Search */}
-                      <SearchInput
-                        placeholder="Search policies by attributes"
-                        value={policiesSearchQuery}
-                        onChange={(e) => setPoliciesSearchQuery(e.target.value)}
-                        className="w-[var(--search-input-width)]"
-                      />
-
-                      {/* Pagination */}
-                      <Pagination
-                        currentPage={policiesCurrentPage}
-                        totalPages={policiesTotalPages}
-                        totalItems={filteredPolicies.length}
-                        onPageChange={setPoliciesCurrentPage}
-                      />
-
-                      {/* Policies Table with Expandable Rows */}
-                      <div className="w-full flex flex-col gap-1">
-                        {/* Table Header */}
-                        <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md">
-                          <div className="flex-1 flex items-center px-3 py-2 text-label-sm text-[var(--color-text-default)]">
-                            Status
-                          </div>
-                          <div className="flex-1 flex items-center px-3 py-2 text-label-sm text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                            Type
-                          </div>
-                          <div className="flex-1 flex items-center px-3 py-2 text-label-sm text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                            Apps
-                          </div>
-                          <div className="flex-1 flex items-center px-3 py-2 text-label-sm text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                            Description
-                          </div>
-                          <div className="flex-1 flex items-center px-3 py-2 text-label-sm text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                            Edited at
-                          </div>
-                          <div className="w-[72px] flex items-center justify-center px-3 py-2 text-label-sm text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                            Action
-                          </div>
-                        </div>
-
-                        {/* Table Rows */}
-                        {paginatedPolicies.map((policy) => (
-                          <div
-                            key={policy.id}
-                            className="rounded-[var(--table-row-radius)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] transition-colors overflow-hidden"
-                          >
-                            {/* Main Row */}
-                            <div className="flex items-center min-h-[var(--table-row-height)] hover:bg-[var(--table-row-hover-bg)] transition-colors">
-                              <div className="flex-1 flex items-center gap-2 px-3 py-2 text-body-md text-[var(--color-text-default)]">
-                                <button
-                                  onClick={() =>
-                                    policy.permissions && togglePolicyExpansion(policy.id)
-                                  }
-                                  className={`p-0.5 hover:bg-[var(--color-surface-subtle)] rounded ${!policy.permissions ? 'invisible' : ''}`}
-                                >
-                                  {expandedPolicies.has(policy.id) ? (
-                                    <IconChevronDown size={16} stroke={1.5} />
-                                  ) : (
-                                    <IconChevronRight size={16} stroke={1.5} />
-                                  )}
-                                </button>
-                                <Link
-                                  to={`/iam/policies/${policy.name}`}
-                                  className="text-[var(--color-action-primary)] font-medium hover:underline"
-                                >
-                                  {policy.name}
-                                </Link>
-                              </div>
-                              <div className="flex-1 flex items-center px-3 py-2 text-body-md text-[var(--color-text-default)] border-l border-transparent">
-                                {policy.type}
-                              </div>
-                              <div className="flex-1 flex items-center px-3 py-2 text-body-md text-[var(--color-text-default)] border-l border-transparent">
-                                {policy.apps}
-                              </div>
-                              <div className="flex-1 flex items-center px-3 py-2 text-body-md text-[var(--color-text-default)] border-l border-transparent">
-                                {policy.description}
-                              </div>
-                              <div className="flex-1 flex items-center px-3 py-2 text-body-md text-[var(--color-text-default)] border-l border-transparent">
-                                {policy.editedAt}
-                              </div>
-                              <div className="w-[72px] flex items-center justify-center px-3 py-2 border-l border-transparent">
-                                <ContextMenu
-                                  items={getPolicyContextMenuItems(
-                                    policy.id,
-                                    policy.type === 'Built-in'
-                                  )}
-                                  trigger="click"
-                                >
-                                  <button
-                                    type="button"
-                                    className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
-                                  >
-                                    <IconAction
-                                      size={16}
-                                      stroke={1}
-                                      className="text-[var(--color-text-default)]"
-                                    />
-                                  </button>
-                                </ContextMenu>
-                              </div>
-                            </div>
-
-                            {/* Expanded Policy Details */}
-                            {expandedPolicies.has(policy.id) && policy.permissions && (
-                              <PolicyDetails permissions={policy.permissions} />
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    </VStack>
-                  </TabPanel>
-
-                  {/* Entities Attached Tab */}
-                  <TabPanel value="entities" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Section Header */}
-                      <h2 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
-                        Entities attached
-                      </h2>
-
-                      {/* Sub Tab Container */}
-                      <div className="w-full bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md p-1">
-                        <div className="flex gap-2 items-center w-full">
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setEntitiesSubTab('user-groups');
-                              setEntitiesCurrentPage(1);
-                              setEntitiesSearchQuery('');
-                            }}
-                            className={`flex-1 min-w-[80px] py-2.5 px-2.5 rounded-md text-label-lg text-center transition-colors ${
-                              entitiesSubTab === 'user-groups'
-                                ? 'bg-[var(--color-surface-default)] border border-[var(--color-border-default)] text-[var(--color-action-primary)]'
-                                : 'text-[var(--color-text-default)]'
-                            }`}
-                          >
-                            User groups
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setEntitiesSubTab('users');
-                              setEntitiesCurrentPage(1);
-                              setEntitiesSearchQuery('');
-                            }}
-                            className={`flex-1 min-w-[80px] py-2.5 px-2.5 rounded-md text-label-lg text-center transition-colors ${
-                              entitiesSubTab === 'users'
-                                ? 'bg-[var(--color-surface-default)] border border-[var(--color-border-default)] text-[var(--color-action-primary)]'
-                                : 'text-[var(--color-text-default)]'
-                            }`}
-                          >
-                            Users
-                          </button>
-                        </div>
-                      </div>
-
-                      {/* Search */}
-                      <SearchInput
-                        placeholder={
-                          entitiesSubTab === 'user-groups'
-                            ? 'Search user groups by attributes'
-                            : 'Search users by attributes'
-                        }
-                        value={entitiesSearchQuery}
-                        onChange={(e) => setEntitiesSearchQuery(e.target.value)}
-                        className="w-[var(--search-input-width)]"
-                      />
-
-                      {/* Pagination */}
-                      <Pagination
-                        currentPage={entitiesCurrentPage}
-                        totalPages={
-                          entitiesSubTab === 'user-groups' ? userGroupsTotalPages : usersTotalPages
-                        }
-                        totalItems={
-                          entitiesSubTab === 'user-groups'
-                            ? filteredUserGroups.length
-                            : filteredUsers.length
-                        }
-                        onPageChange={setEntitiesCurrentPage}
-                      />
-
-                      {/* Table */}
-                      {entitiesSubTab === 'user-groups' ? (
-                        <Table<AttachedUserGroup>
-                          columns={userGroupColumns}
-                          data={paginatedUserGroups}
-                          rowKey="id"
-                        />
-                      ) : (
-                        <Table<AttachedUser>
-                          columns={userColumns}
-                          data={paginatedUsers}
-                          rowKey="id"
-                        />
-                      )}
-                    </VStack>
-                  </TabPanel>
-                </Tabs>
-              </div>
-            </VStack>
-          </div>
+            {/* Info Cards */}
+            <HStack gap={2} className="w-full">
+              <InfoCard label="Description" value={role.description} />
+              <InfoCard label="Type" value={role.type} />
+              <InfoCard label="Created at" value={role.createdAt} />
+            </HStack>
+          </VStack>
         </div>
-      </main>
-    </div>
+
+        {/* Tabs */}
+        <div className="w-full">
+          <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
+            <TabList>
+              <Tab value="policies">Policies</Tab>
+              <Tab value="entities">Entities attached</Tab>
+            </TabList>
+
+            {/* Policies Tab */}
+            <TabPanel value="policies" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Section Header */}
+                <HStack justify="between" align="center" className="w-full">
+                  <h2 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
+                    Policies
+                  </h2>
+                  <Button variant="secondary" size="sm">
+                    Manage policies
+                  </Button>
+                </HStack>
+
+                {/* Search */}
+                <SearchInput
+                  placeholder="Search policies by attributes"
+                  value={policiesSearchQuery}
+                  onChange={(e) => setPoliciesSearchQuery(e.target.value)}
+                  className="w-[var(--search-input-width)]"
+                />
+
+                {/* Pagination */}
+                <Pagination
+                  currentPage={policiesCurrentPage}
+                  totalPages={policiesTotalPages}
+                  totalItems={filteredPolicies.length}
+                  onPageChange={setPoliciesCurrentPage}
+                />
+
+                {/* Policies Table with Expandable Rows */}
+                <div className="w-full flex flex-col gap-1">
+                  {/* Table Header */}
+                  <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md">
+                    <div className="flex-1 flex items-center px-3 py-2 text-label-sm text-[var(--color-text-default)]">
+                      Status
+                    </div>
+                    <div className="flex-1 flex items-center px-3 py-2 text-label-sm text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
+                      Type
+                    </div>
+                    <div className="flex-1 flex items-center px-3 py-2 text-label-sm text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
+                      Apps
+                    </div>
+                    <div className="flex-1 flex items-center px-3 py-2 text-label-sm text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
+                      Description
+                    </div>
+                    <div className="flex-1 flex items-center px-3 py-2 text-label-sm text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
+                      Edited at
+                    </div>
+                    <div className="w-[72px] flex items-center justify-center px-3 py-2 text-label-sm text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
+                      Action
+                    </div>
+                  </div>
+
+                  {/* Table Rows */}
+                  {paginatedPolicies.map((policy) => (
+                    <div
+                      key={policy.id}
+                      className="rounded-[var(--table-row-radius)] border border-[var(--color-border-default)] bg-[var(--color-surface-default)] transition-colors overflow-hidden"
+                    >
+                      {/* Main Row */}
+                      <div className="flex items-center min-h-[var(--table-row-height)] hover:bg-[var(--table-row-hover-bg)] transition-colors">
+                        <div className="flex-1 flex items-center gap-2 px-3 py-2 text-body-md text-[var(--color-text-default)]">
+                          <button
+                            onClick={() => policy.permissions && togglePolicyExpansion(policy.id)}
+                            className={`p-0.5 hover:bg-[var(--color-surface-subtle)] rounded ${!policy.permissions ? 'invisible' : ''}`}
+                          >
+                            {expandedPolicies.has(policy.id) ? (
+                              <IconChevronDown size={16} stroke={1.5} />
+                            ) : (
+                              <IconChevronRight size={16} stroke={1.5} />
+                            )}
+                          </button>
+                          <Link
+                            to={`/iam/policies/${policy.name}`}
+                            className="text-[var(--color-action-primary)] font-medium hover:underline"
+                          >
+                            {policy.name}
+                          </Link>
+                        </div>
+                        <div className="flex-1 flex items-center px-3 py-2 text-body-md text-[var(--color-text-default)] border-l border-transparent">
+                          {policy.type}
+                        </div>
+                        <div className="flex-1 flex items-center px-3 py-2 text-body-md text-[var(--color-text-default)] border-l border-transparent">
+                          {policy.apps}
+                        </div>
+                        <div className="flex-1 flex items-center px-3 py-2 text-body-md text-[var(--color-text-default)] border-l border-transparent">
+                          {policy.description}
+                        </div>
+                        <div className="flex-1 flex items-center px-3 py-2 text-body-md text-[var(--color-text-default)] border-l border-transparent">
+                          {policy.editedAt}
+                        </div>
+                        <div className="w-[72px] flex items-center justify-center px-3 py-2 border-l border-transparent">
+                          <ContextMenu
+                            items={getPolicyContextMenuItems(policy.id, policy.type === 'Built-in')}
+                            trigger="click"
+                          >
+                            <button
+                              type="button"
+                              className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
+                            >
+                              <IconAction
+                                size={16}
+                                stroke={1}
+                                className="text-[var(--color-text-default)]"
+                              />
+                            </button>
+                          </ContextMenu>
+                        </div>
+                      </div>
+
+                      {/* Expanded Policy Details */}
+                      {expandedPolicies.has(policy.id) && policy.permissions && (
+                        <PolicyDetails permissions={policy.permissions} />
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </VStack>
+            </TabPanel>
+
+            {/* Entities Attached Tab */}
+            <TabPanel value="entities" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Section Header */}
+                <h2 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
+                  Entities attached
+                </h2>
+
+                {/* Sub Tab Container */}
+                <div className="w-full bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-md p-1">
+                  <div className="flex gap-2 items-center w-full">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setEntitiesSubTab('user-groups');
+                        setEntitiesCurrentPage(1);
+                        setEntitiesSearchQuery('');
+                      }}
+                      className={`flex-1 min-w-[80px] py-2.5 px-2.5 rounded-md text-label-lg text-center transition-colors ${
+                        entitiesSubTab === 'user-groups'
+                          ? 'bg-[var(--color-surface-default)] border border-[var(--color-border-default)] text-[var(--color-action-primary)]'
+                          : 'text-[var(--color-text-default)]'
+                      }`}
+                    >
+                      User groups
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setEntitiesSubTab('users');
+                        setEntitiesCurrentPage(1);
+                        setEntitiesSearchQuery('');
+                      }}
+                      className={`flex-1 min-w-[80px] py-2.5 px-2.5 rounded-md text-label-lg text-center transition-colors ${
+                        entitiesSubTab === 'users'
+                          ? 'bg-[var(--color-surface-default)] border border-[var(--color-border-default)] text-[var(--color-action-primary)]'
+                          : 'text-[var(--color-text-default)]'
+                      }`}
+                    >
+                      Users
+                    </button>
+                  </div>
+                </div>
+
+                {/* Search */}
+                <SearchInput
+                  placeholder={
+                    entitiesSubTab === 'user-groups'
+                      ? 'Search user groups by attributes'
+                      : 'Search users by attributes'
+                  }
+                  value={entitiesSearchQuery}
+                  onChange={(e) => setEntitiesSearchQuery(e.target.value)}
+                  className="w-[var(--search-input-width)]"
+                />
+
+                {/* Pagination */}
+                <Pagination
+                  currentPage={entitiesCurrentPage}
+                  totalPages={
+                    entitiesSubTab === 'user-groups' ? userGroupsTotalPages : usersTotalPages
+                  }
+                  totalItems={
+                    entitiesSubTab === 'user-groups'
+                      ? filteredUserGroups.length
+                      : filteredUsers.length
+                  }
+                  onPageChange={setEntitiesCurrentPage}
+                />
+
+                {/* Table */}
+                {entitiesSubTab === 'user-groups' ? (
+                  <Table<AttachedUserGroup>
+                    columns={userGroupColumns}
+                    data={paginatedUserGroups}
+                    rowKey="id"
+                  />
+                ) : (
+                  <Table<AttachedUser> columns={userColumns} data={paginatedUsers} rowKey="id" />
+                )}
+              </VStack>
+            </TabPanel>
+          </Tabs>
+        </div>
+      </VStack>
+    </PageShell>
   );
 }

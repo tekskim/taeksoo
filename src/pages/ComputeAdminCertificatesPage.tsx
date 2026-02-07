@@ -16,6 +16,8 @@ import {
   Tabs,
   TabList,
   Tab,
+  PageShell,
+  PageHeader,
   type TableColumn,
   type ContextMenuItem,
   type FilterField,
@@ -208,6 +210,7 @@ const filterFields: FilterField[] = [
 
 export function ComputeAdminCertificatesPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 200 : 0;
   const [appliedFilters, setAppliedFilters] = useState<AppliedFilter[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [certificates] = useState(mockCertificates);
@@ -394,115 +397,119 @@ export function ComputeAdminCertificatesPage() {
   };
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
-      <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'}`}
-      >
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            onTabAdd={addNewTab}
-            onTabReorder={moveTab}
-            showAddButton={true}
-            showWindowControls={true}
-          />
-          <TopBar
-            showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
-            showNavigation={true}
-            onBack={() => window.history.back()}
-            onForward={() => window.history.forward()}
-            breadcrumb={
-              <Breadcrumb
-                items={[
-                  { label: 'Compute Admin', href: '/compute-admin' },
-                  { label: 'Certificates' },
-                ]}
+    <PageShell
+      sidebar={
+        <ComputeAdminSidebar
+          isOpen={sidebarOpen}
+          onToggle={() => setSidebarOpen((prev) => !prev)}
+        />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={
+            <Breadcrumb
+              items={[
+                { label: 'Compute Admin', href: '/compute-admin' },
+                { label: 'Certificates' },
+              ]}
+            />
+          }
+          actions={
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1.5} />}
+              aria-label="Notifications"
+              badge={true}
+            />
+          }
+        />
+      }
+    >
+      <VStack gap={3}>
+        <PageHeader
+          title="Certificates"
+          actions={
+            <Button variant="primary" size="md" onClick={() => setIsRegisterDrawerOpen(true)}>
+              Register certificate
+            </Button>
+          }
+        />
+        <Tabs value={activeTab} onChange={setActiveTab} size="sm">
+          <TabList>
+            <Tab value="server">Server</Tab>
+            <Tab value="ca">CA</Tab>
+          </TabList>
+        </Tabs>
+        <ListToolbar
+          primaryActions={
+            <ListToolbar.Actions>
+              <FilterSearchInput
+                filters={filterFields}
+                appliedFilters={appliedFilters}
+                onFiltersChange={setAppliedFilters}
+                placeholder="Search certificate by attributes"
+                size="sm"
+                className="w-[var(--search-input-width)]"
+                hideAppliedFilters
               />
-            }
-            actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-                badge={true}
+              <Button
+                variant="secondary"
+                size="sm"
+                iconOnly
+                icon={<IconDownload size={12} />}
+                aria-label="Download"
               />
-            }
-          />
-        </div>
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
-            <VStack gap={3}>
-              <div className="flex justify-between items-center h-8 w-full">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Certificates</h1>
-                <Button variant="primary" size="md" onClick={() => setIsRegisterDrawerOpen(true)}>
-                  Register certificate
-                </Button>
-              </div>
-              <Tabs value={activeTab} onChange={setActiveTab} size="sm">
-                <TabList>
-                  <Tab value="server">Server</Tab>
-                  <Tab value="ca">CA</Tab>
-                </TabList>
-              </Tabs>
-              <ListToolbar
-                primaryActions={
-                  <ListToolbar.Actions>
-                    <FilterSearchInput
-                      filters={filterFields}
-                      appliedFilters={appliedFilters}
-                      onFiltersChange={setAppliedFilters}
-                      placeholder="Search certificate by attributes"
-                      size="sm"
-                      className="w-[var(--search-input-width)]"
-                      hideAppliedFilters
-                    />
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      iconOnly
-                      icon={<IconDownload size={12} />}
-                      aria-label="Download"
-                    />
-                  </ListToolbar.Actions>
-                }
-                bulkActions={
-                  <ListToolbar.Actions>
-                    <Button
-                      variant="muted"
-                      size="sm"
-                      leftIcon={<IconTrash size={12} />}
-                      disabled={selectedCerts.length === 0}
-                    >
-                      Delete
-                    </Button>
-                  </ListToolbar.Actions>
-                }
-              />
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                totalItems={filteredCerts.length}
-                selectedCount={selectedCerts.length}
-                onPageChange={setCurrentPage}
-                showSettings
-                onSettingsClick={() => setIsPreferencesOpen(true)}
-              />
-              <Table
-                columns={visibleColumns}
-                data={paginatedCerts}
-                rowKey="id"
-                selectable
-                selectedKeys={selectedCerts}
-                onSelectionChange={setSelectedCerts}
-              />
-            </VStack>
-          </div>
-        </div>
-      </main>
+            </ListToolbar.Actions>
+          }
+          bulkActions={
+            <ListToolbar.Actions>
+              <Button
+                variant="muted"
+                size="sm"
+                leftIcon={<IconTrash size={12} />}
+                disabled={selectedCerts.length === 0}
+              >
+                Delete
+              </Button>
+            </ListToolbar.Actions>
+          }
+        />
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalItems={filteredCerts.length}
+          selectedCount={selectedCerts.length}
+          onPageChange={setCurrentPage}
+          showSettings
+          onSettingsClick={() => setIsPreferencesOpen(true)}
+        />
+        <Table
+          columns={visibleColumns}
+          data={paginatedCerts}
+          rowKey="id"
+          selectable
+          selectedKeys={selectedCerts}
+          onSelectionChange={setSelectedCerts}
+        />
+      </VStack>
+
       <ConfirmModal
         isOpen={deleteModalOpen}
         onClose={() => {
@@ -531,6 +538,6 @@ export function ComputeAdminCertificatesPage() {
         isOpen={isRegisterDrawerOpen}
         onClose={() => setIsRegisterDrawerOpen(false)}
       />
-    </div>
+    </PageShell>
   );
 }

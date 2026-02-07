@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import {
   Button,
   VStack,
+  PageShell,
   TabBar,
   TopBar,
   TopBarAction,
@@ -299,6 +300,7 @@ export default function NetworkDetailPage() {
   } = useTabs();
 
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 200 : 0;
   const [activeDetailTab, setActiveDetailTab] = useState('details');
 
   // Subnet state
@@ -774,371 +776,335 @@ export default function NetworkDetailPage() {
   ];
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+    <PageShell
+      sidebar={
+        <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={<Breadcrumb items={breadcrumbItems} />}
+          actions={
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1.5} />}
+              aria-label="Notifications"
+              badge={true}
+            />
+          }
+        />
+      }
+      contentClassName="pt-3 px-8 pb-20 bg-[var(--color-surface-subtle)]"
+    >
+      <VStack gap={8} className="min-w-[1176px]">
+        {/* Network Header Card */}
+        <DetailHeader>
+          <DetailHeader.Title>{network.name}</DetailHeader.Title>
+          <DetailHeader.Actions>
+            <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+              Create Subnet
+            </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+              Edit
+            </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+              Delete
+            </Button>
+          </DetailHeader.Actions>
+          <DetailHeader.InfoGrid>
+            <DetailHeader.InfoCard label="Status" value="Active" status={network.status} />
+            <DetailHeader.InfoCard label="ID" value={network.id} copyable />
+            <DetailHeader.InfoCard label="Tenant" value={network.tenant} />
+            <DetailHeader.InfoCard label="Admin state" value={network.adminState} />
+            <DetailHeader.InfoCard label="Shared" value={network.shared ? 'Yes' : 'No'} />
+            <DetailHeader.InfoCard label="External" value={network.external ? 'Yes' : 'No'} />
+            <DetailHeader.InfoCard label="Created at" value={network.createdAt} />
+          </DetailHeader.InfoGrid>
+        </DetailHeader>
 
-      <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
-          sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'
-        }`}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Tab Bar */}
-          <TabBar
-            tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            onTabAdd={addNewTab}
-            onTabReorder={moveTab}
-            showAddButton={true}
-            showWindowControls={true}
-          />
+        {/* Network Tabs */}
+        <div className="w-full">
+          <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline" size="sm">
+            <TabList>
+              <Tab value="details">Details</Tab>
+              <Tab value="subnets">Subnets</Tab>
+              <Tab value="ports">Ports</Tab>
+              <Tab value="dhcp-agents">DHCP Agents</Tab>
+            </TabList>
 
-          {/* Top Bar with Breadcrumb */}
-          <TopBar
-            showNavigation={true}
-            onBack={() => window.history.back()}
-            onForward={() => window.history.forward()}
-            breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-            actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-                badge={true}
-              />
-            }
-          />
-        </div>
+            {/* Details Tab Panel */}
+            <TabPanel value="details" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Basic Information */}
+                <SectionCard>
+                  <SectionCard.Header
+                    title="Basic information"
+                    actions={
+                      <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+                        Edit
+                      </Button>
+                    }
+                  />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="Network name" value={network.networkName} />
+                    <SectionCard.DataRow label="Description" value={network.description} />
+                    <SectionCard.DataRow label="Admin state" value={network.adminState} />
+                    <SectionCard.DataRow
+                      label="Port security"
+                      value={network.portSecurity ? 'On' : 'Off'}
+                    />
+                    <SectionCard.DataRow label="Shared" value={network.shared ? 'Yes' : 'No'} />
+                    <SectionCard.DataRow
+                      label="Router External"
+                      value={network.routerExternal ? 'Yes' : 'No'}
+                    />
+                  </SectionCard.Content>
+                </SectionCard>
 
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          {/* Main Content */}
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
-            <VStack gap={8} className="min-w-[1176px]">
-              {/* Network Header Card */}
-              <DetailHeader>
-                <DetailHeader.Title>{network.name}</DetailHeader.Title>
-                <DetailHeader.Actions>
+                {/* Specifications */}
+                <SectionCard>
+                  <SectionCard.Header title="Specifications" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="MTU" value={String(network.mtu)} />
+                    <SectionCard.DataRow
+                      label="Provider Network Type"
+                      value={network.providerNetworkType}
+                    />
+                    <SectionCard.DataRow
+                      label="Physical Network"
+                      value={network.providerPhysicalNetwork}
+                    />
+                    <SectionCard.DataRow label="Segmentation ID" value={network.segmentationId} />
+                  </SectionCard.Content>
+                </SectionCard>
+              </VStack>
+            </TabPanel>
+
+            {/* Subnets Tab Panel */}
+            <TabPanel value="subnets" className="pt-0">
+              <VStack gap={3} className="pt-6">
+                {/* Header */}
+                <div className="flex items-center justify-between">
+                  <h3 className="text-heading-h5 text-[var(--color-text-default)]">Subnets</h3>
                   <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
                     Create Subnet
                   </Button>
-                  <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                    Edit
-                  </Button>
-                  <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+                </div>
+
+                {/* Action Bar */}
+                <div className="flex items-center gap-1">
+                  {/* Search */}
+                  <div className="flex items-center gap-1">
+                    <div>
+                      <SearchInput
+                        value={subnetSearchTerm}
+                        onChange={(e) => {
+                          setSubnetSearchTerm(e.target.value);
+                          setSubnetCurrentPage(1);
+                        }}
+                        placeholder="Search subnets by attributes"
+                      />
+                    </div>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      icon={<IconDownload size={12} />}
+                      aria-label="Download"
+                    />
+                  </div>
+                  {/* Divider */}
+                  <div className="w-px h-4 bg-[var(--color-border-default)]" />
+                  {/* Delete Button */}
+                  <Button
+                    variant="muted"
+                    size="sm"
+                    leftIcon={<IconTrash size={12} />}
+                    disabled={selectedSubnets.length === 0}
+                  >
                     Delete
                   </Button>
-                </DetailHeader.Actions>
-                <DetailHeader.InfoGrid>
-                  <DetailHeader.InfoCard label="Status" value="Active" status={network.status} />
-                  <DetailHeader.InfoCard label="ID" value={network.id} copyable />
-                  <DetailHeader.InfoCard label="Tenant" value={network.tenant} />
-                  <DetailHeader.InfoCard label="Admin state" value={network.adminState} />
-                  <DetailHeader.InfoCard label="Shared" value={network.shared ? 'Yes' : 'No'} />
-                  <DetailHeader.InfoCard label="External" value={network.external ? 'Yes' : 'No'} />
-                  <DetailHeader.InfoCard label="Created at" value={network.createdAt} />
-                </DetailHeader.InfoGrid>
-              </DetailHeader>
+                </div>
 
-              {/* Network Tabs */}
-              <div className="w-full">
-                <Tabs
-                  value={activeDetailTab}
-                  onChange={setActiveDetailTab}
-                  variant="underline"
-                  size="sm"
-                >
-                  <TabList>
-                    <Tab value="details">Details</Tab>
-                    <Tab value="subnets">Subnets</Tab>
-                    <Tab value="ports">Ports</Tab>
-                    <Tab value="dhcp-agents">DHCP Agents</Tab>
-                  </TabList>
+                {/* Pagination */}
+                <Pagination
+                  currentPage={subnetCurrentPage}
+                  totalPages={totalSubnetPages}
+                  onPageChange={setSubnetCurrentPage}
+                  totalItems={filteredSubnets.length}
+                  selectedCount={selectedSubnets.length}
+                />
 
-                  {/* Details Tab Panel */}
-                  <TabPanel value="details" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Basic Information */}
-                      <SectionCard>
-                        <SectionCard.Header
-                          title="Basic information"
-                          actions={
-                            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                              Edit
-                            </Button>
-                          }
-                        />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow label="Network name" value={network.networkName} />
-                          <SectionCard.DataRow label="Description" value={network.description} />
-                          <SectionCard.DataRow label="Admin state" value={network.adminState} />
-                          <SectionCard.DataRow
-                            label="Port security"
-                            value={network.portSecurity ? 'On' : 'Off'}
-                          />
-                          <SectionCard.DataRow
-                            label="Shared"
-                            value={network.shared ? 'Yes' : 'No'}
-                          />
-                          <SectionCard.DataRow
-                            label="Router External"
-                            value={network.routerExternal ? 'Yes' : 'No'}
-                          />
-                        </SectionCard.Content>
-                      </SectionCard>
+                {/* Table */}
+                <Table
+                  columns={subnetColumns}
+                  data={paginatedSubnets}
+                  rowKey="id"
+                  sortBy={subnetSortBy}
+                  sortDirection={subnetSortDirection}
+                  onSort={handleSubnetSort}
+                  selectable
+                  selectedKeys={selectedSubnets}
+                  onSelectionChange={setSelectedSubnets}
+                />
+              </VStack>
+            </TabPanel>
 
-                      {/* Specifications */}
-                      <SectionCard>
-                        <SectionCard.Header title="Specifications" />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow label="MTU" value={String(network.mtu)} />
-                          <SectionCard.DataRow
-                            label="Provider Network Type"
-                            value={network.providerNetworkType}
-                          />
-                          <SectionCard.DataRow
-                            label="Physical Network"
-                            value={network.providerPhysicalNetwork}
-                          />
-                          <SectionCard.DataRow
-                            label="Segmentation ID"
-                            value={network.segmentationId}
-                          />
-                        </SectionCard.Content>
-                      </SectionCard>
-                    </VStack>
-                  </TabPanel>
+            {/* Ports Tab Panel */}
+            <TabPanel value="ports" className="pt-0">
+              <VStack gap={3} className="pt-6">
+                {/* Header */}
+                <div className="flex items-center justify-between">
+                  <h3 className="text-heading-h5 text-[var(--color-text-default)]">Ports</h3>
+                  <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+                    Create Port
+                  </Button>
+                </div>
 
-                  {/* Subnets Tab Panel */}
-                  <TabPanel value="subnets" className="pt-0">
-                    <VStack gap={3} className="pt-6">
-                      {/* Header */}
-                      <div className="flex items-center justify-between">
-                        <h3 className="text-heading-h5 text-[var(--color-text-default)]">
-                          Subnets
-                        </h3>
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          leftIcon={<IconCirclePlus size={12} />}
-                        >
-                          Create Subnet
-                        </Button>
-                      </div>
-
-                      {/* Action Bar */}
-                      <div className="flex items-center gap-1">
-                        {/* Search */}
-                        <div className="flex items-center gap-1">
-                          <div>
-                            <SearchInput
-                              value={subnetSearchTerm}
-                              onChange={(e) => {
-                                setSubnetSearchTerm(e.target.value);
-                                setSubnetCurrentPage(1);
-                              }}
-                              placeholder="Search subnets by attributes"
-                            />
-                          </div>
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            icon={<IconDownload size={12} />}
-                            aria-label="Download"
-                          />
-                        </div>
-                        {/* Divider */}
-                        <div className="w-px h-4 bg-[var(--color-border-default)]" />
-                        {/* Delete Button */}
-                        <Button
-                          variant="muted"
-                          size="sm"
-                          leftIcon={<IconTrash size={12} />}
-                          disabled={selectedSubnets.length === 0}
-                        >
-                          Delete
-                        </Button>
-                      </div>
-
-                      {/* Pagination */}
-                      <Pagination
-                        currentPage={subnetCurrentPage}
-                        totalPages={totalSubnetPages}
-                        onPageChange={setSubnetCurrentPage}
-                        totalItems={filteredSubnets.length}
-                        selectedCount={selectedSubnets.length}
+                {/* Action Bar */}
+                <div className="flex items-center gap-1">
+                  {/* Search */}
+                  <div className="flex items-center gap-1">
+                    <div>
+                      <SearchInput
+                        value={portSearchTerm}
+                        onChange={(e) => {
+                          setPortSearchTerm(e.target.value);
+                          setPortCurrentPage(1);
+                        }}
+                        placeholder="Search ports by attributes"
                       />
+                    </div>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      icon={<IconDownload size={12} />}
+                      aria-label="Download"
+                    />
+                  </div>
+                  {/* Divider */}
+                  <div className="w-px h-4 bg-[var(--color-border-default)]" />
+                  {/* Delete Button */}
+                  <Button
+                    variant="muted"
+                    size="sm"
+                    leftIcon={<IconTrash size={12} />}
+                    disabled={selectedPorts.length === 0}
+                  >
+                    Delete
+                  </Button>
+                </div>
 
-                      {/* Table */}
-                      <Table
-                        columns={subnetColumns}
-                        data={paginatedSubnets}
-                        rowKey="id"
-                        sortBy={subnetSortBy}
-                        sortDirection={subnetSortDirection}
-                        onSort={handleSubnetSort}
-                        selectable
-                        selectedKeys={selectedSubnets}
-                        onSelectionChange={setSelectedSubnets}
+                {/* Pagination */}
+                <Pagination
+                  currentPage={portCurrentPage}
+                  totalPages={totalPortPages}
+                  onPageChange={setPortCurrentPage}
+                  totalItems={filteredPorts.length}
+                  selectedCount={selectedPorts.length}
+                />
+
+                {/* Table */}
+                <Table
+                  columns={portColumns}
+                  data={paginatedPorts}
+                  rowKey="id"
+                  sortBy={portSortBy}
+                  sortDirection={portSortDirection}
+                  onSort={handlePortSort}
+                  selectable
+                  selectedKeys={selectedPorts}
+                  onSelectionChange={setSelectedPorts}
+                />
+              </VStack>
+            </TabPanel>
+
+            {/* DHCP Agents Tab Panel */}
+            <TabPanel value="dhcp-agents" className="pt-0">
+              <VStack gap={3} className="pt-6">
+                {/* Header */}
+                <div className="flex items-center justify-between">
+                  <h3 className="text-heading-h5 text-[var(--color-text-default)]">DHCP Agents</h3>
+                  <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+                    Add DHCP Agent
+                  </Button>
+                </div>
+
+                {/* Action Bar */}
+                <div className="flex items-center gap-1">
+                  {/* Search */}
+                  <div className="flex items-center gap-1">
+                    <div>
+                      <SearchInput
+                        value={dhcpAgentSearchTerm}
+                        onChange={(e) => {
+                          setDhcpAgentSearchTerm(e.target.value);
+                          setDhcpAgentCurrentPage(1);
+                        }}
+                        placeholder="Search DHCP agents by attributes"
                       />
-                    </VStack>
-                  </TabPanel>
+                    </div>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      icon={<IconDownload size={12} />}
+                      aria-label="Download"
+                    />
+                  </div>
+                  {/* Divider */}
+                  <div className="w-px h-4 bg-[var(--color-border-default)]" />
+                  {/* Remove Button */}
+                  <Button
+                    variant="muted"
+                    size="sm"
+                    leftIcon={<IconTrash size={12} />}
+                    disabled={selectedDhcpAgents.length === 0}
+                  >
+                    Remove
+                  </Button>
+                </div>
 
-                  {/* Ports Tab Panel */}
-                  <TabPanel value="ports" className="pt-0">
-                    <VStack gap={3} className="pt-6">
-                      {/* Header */}
-                      <div className="flex items-center justify-between">
-                        <h3 className="text-heading-h5 text-[var(--color-text-default)]">Ports</h3>
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          leftIcon={<IconCirclePlus size={12} />}
-                        >
-                          Create Port
-                        </Button>
-                      </div>
+                {/* Pagination */}
+                <Pagination
+                  currentPage={dhcpAgentCurrentPage}
+                  totalPages={totalDhcpAgentPages}
+                  onPageChange={setDhcpAgentCurrentPage}
+                  totalItems={filteredDhcpAgents.length}
+                  selectedCount={selectedDhcpAgents.length}
+                />
 
-                      {/* Action Bar */}
-                      <div className="flex items-center gap-1">
-                        {/* Search */}
-                        <div className="flex items-center gap-1">
-                          <div>
-                            <SearchInput
-                              value={portSearchTerm}
-                              onChange={(e) => {
-                                setPortSearchTerm(e.target.value);
-                                setPortCurrentPage(1);
-                              }}
-                              placeholder="Search ports by attributes"
-                            />
-                          </div>
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            icon={<IconDownload size={12} />}
-                            aria-label="Download"
-                          />
-                        </div>
-                        {/* Divider */}
-                        <div className="w-px h-4 bg-[var(--color-border-default)]" />
-                        {/* Delete Button */}
-                        <Button
-                          variant="muted"
-                          size="sm"
-                          leftIcon={<IconTrash size={12} />}
-                          disabled={selectedPorts.length === 0}
-                        >
-                          Delete
-                        </Button>
-                      </div>
-
-                      {/* Pagination */}
-                      <Pagination
-                        currentPage={portCurrentPage}
-                        totalPages={totalPortPages}
-                        onPageChange={setPortCurrentPage}
-                        totalItems={filteredPorts.length}
-                        selectedCount={selectedPorts.length}
-                      />
-
-                      {/* Table */}
-                      <Table
-                        columns={portColumns}
-                        data={paginatedPorts}
-                        rowKey="id"
-                        sortBy={portSortBy}
-                        sortDirection={portSortDirection}
-                        onSort={handlePortSort}
-                        selectable
-                        selectedKeys={selectedPorts}
-                        onSelectionChange={setSelectedPorts}
-                      />
-                    </VStack>
-                  </TabPanel>
-
-                  {/* DHCP Agents Tab Panel */}
-                  <TabPanel value="dhcp-agents" className="pt-0">
-                    <VStack gap={3} className="pt-6">
-                      {/* Header */}
-                      <div className="flex items-center justify-between">
-                        <h3 className="text-heading-h5 text-[var(--color-text-default)]">
-                          DHCP Agents
-                        </h3>
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          leftIcon={<IconCirclePlus size={12} />}
-                        >
-                          Add DHCP Agent
-                        </Button>
-                      </div>
-
-                      {/* Action Bar */}
-                      <div className="flex items-center gap-1">
-                        {/* Search */}
-                        <div className="flex items-center gap-1">
-                          <div>
-                            <SearchInput
-                              value={dhcpAgentSearchTerm}
-                              onChange={(e) => {
-                                setDhcpAgentSearchTerm(e.target.value);
-                                setDhcpAgentCurrentPage(1);
-                              }}
-                              placeholder="Search DHCP agents by attributes"
-                            />
-                          </div>
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            icon={<IconDownload size={12} />}
-                            aria-label="Download"
-                          />
-                        </div>
-                        {/* Divider */}
-                        <div className="w-px h-4 bg-[var(--color-border-default)]" />
-                        {/* Remove Button */}
-                        <Button
-                          variant="muted"
-                          size="sm"
-                          leftIcon={<IconTrash size={12} />}
-                          disabled={selectedDhcpAgents.length === 0}
-                        >
-                          Remove
-                        </Button>
-                      </div>
-
-                      {/* Pagination */}
-                      <Pagination
-                        currentPage={dhcpAgentCurrentPage}
-                        totalPages={totalDhcpAgentPages}
-                        onPageChange={setDhcpAgentCurrentPage}
-                        totalItems={filteredDhcpAgents.length}
-                        selectedCount={selectedDhcpAgents.length}
-                      />
-
-                      {/* Table */}
-                      <Table
-                        columns={dhcpAgentColumns}
-                        data={paginatedDhcpAgents}
-                        rowKey="id"
-                        sortBy={dhcpAgentSortBy}
-                        sortDirection={dhcpAgentSortDirection}
-                        onSort={handleDhcpAgentSort}
-                        selectable
-                        selectedKeys={selectedDhcpAgents}
-                        onSelectionChange={setSelectedDhcpAgents}
-                      />
-                    </VStack>
-                  </TabPanel>
-                </Tabs>
-              </div>
-            </VStack>
-          </div>
+                {/* Table */}
+                <Table
+                  columns={dhcpAgentColumns}
+                  data={paginatedDhcpAgents}
+                  rowKey="id"
+                  sortBy={dhcpAgentSortBy}
+                  sortDirection={dhcpAgentSortDirection}
+                  onSort={handleDhcpAgentSort}
+                  selectable
+                  selectedKeys={selectedDhcpAgents}
+                  onSelectionChange={setSelectedDhcpAgents}
+                />
+              </VStack>
+            </TabPanel>
+          </Tabs>
         </div>
-      </main>
-    </div>
+      </VStack>
+    </PageShell>
   );
 }

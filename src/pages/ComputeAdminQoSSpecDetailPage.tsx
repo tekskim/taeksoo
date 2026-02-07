@@ -17,6 +17,7 @@ import {
   ListToolbar,
   ContextMenu,
   ConfirmModal,
+  PageShell,
   type TableColumn,
   type ContextMenuItem,
   type FilterField,
@@ -109,6 +110,7 @@ export default function ComputeAdminQoSSpecDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 200 : 0;
   const [activeDetailTab, setActiveDetailTab] = useState('extra-specs');
 
   // Extra Specs state
@@ -267,19 +269,13 @@ export default function ComputeAdminQoSSpecDetailPage() {
   const hasSelection = selectedSpecs.length > 0;
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-
-      {/* Main Content */}
-      <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
-          sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'
-        }`}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Tab Bar */}
+    <>
+      <PageShell
+        sidebar={
+          <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        }
+        sidebarWidth={sidebarWidth}
+        tabBar={
           <TabBar
             tabs={tabBarTabs}
             activeTab={activeTabId}
@@ -290,8 +286,8 @@ export default function ComputeAdminQoSSpecDetailPage() {
             showAddButton={true}
             showWindowControls={true}
           />
-
-          {/* Top Bar */}
+        }
+        topBar={
           <TopBar
             showSidebarToggle={!sidebarOpen}
             onSidebarToggle={() => setSidebarOpen(true)}
@@ -307,126 +303,119 @@ export default function ComputeAdminQoSSpecDetailPage() {
               />
             }
           />
-        </div>
+        }
+        contentClassName="pt-3 px-8 pb-20 bg-[var(--color-surface-subtle)]"
+      >
+        <VStack gap={8} className="min-w-[1176px]">
+          {/* QoS Spec Header Card */}
+          <DetailHeader>
+            <DetailHeader.Title>{qosSpec.name}</DetailHeader.Title>
+            <DetailHeader.Actions>
+              <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+                Edit Consumer
+              </Button>
+              <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+                Delete
+              </Button>
+            </DetailHeader.Actions>
+            <DetailHeader.InfoGrid>
+              <DetailHeader.InfoCard label="ID" value={qosSpec.id} copyable />
+              <DetailHeader.InfoCard label="Consumer" value={qosSpec.consumer} />
+            </DetailHeader.InfoGrid>
+          </DetailHeader>
 
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          {/* Page Content */}
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
-            <VStack gap={8} className="min-w-[1176px]">
-              {/* QoS Spec Header Card */}
-              <DetailHeader>
-                <DetailHeader.Title>{qosSpec.name}</DetailHeader.Title>
-                <DetailHeader.Actions>
-                  <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                    Edit Consumer
+          {/* QoS Spec Tabs */}
+          <div className="w-full">
+            <Tabs
+              value={activeDetailTab}
+              onChange={setActiveDetailTab}
+              variant="underline"
+              size="sm"
+            >
+              <TabList>
+                <Tab value="extra-specs">Extra Specs</Tab>
+              </TabList>
+            </Tabs>
+
+            {/* Extra Specs Tab Content */}
+            {activeDetailTab === 'extra-specs' && (
+              <VStack gap={3} className="pt-6">
+                {/* Header with title and create button */}
+                <div className="flex items-center justify-between w-full">
+                  <h2 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
+                    Extra Specs
+                  </h2>
+                  <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
+                    Create Extra Spec
                   </Button>
-                  <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
-                    Delete
-                  </Button>
-                </DetailHeader.Actions>
-                <DetailHeader.InfoGrid>
-                  <DetailHeader.InfoCard label="ID" value={qosSpec.id} copyable />
-                  <DetailHeader.InfoCard label="Consumer" value={qosSpec.consumer} />
-                </DetailHeader.InfoGrid>
-              </DetailHeader>
+                </div>
 
-              {/* QoS Spec Tabs */}
-              <div className="w-full">
-                <Tabs
-                  value={activeDetailTab}
-                  onChange={setActiveDetailTab}
-                  variant="underline"
-                  size="sm"
-                >
-                  <TabList>
-                    <Tab value="extra-specs">Extra Specs</Tab>
-                  </TabList>
-                </Tabs>
-
-                {/* Extra Specs Tab Content */}
-                {activeDetailTab === 'extra-specs' && (
-                  <VStack gap={3} className="pt-6">
-                    {/* Header with title and create button */}
-                    <div className="flex items-center justify-between w-full">
-                      <h2 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
-                        Extra Specs
-                      </h2>
-                      <Button variant="secondary" size="sm" leftIcon={<IconCirclePlus size={12} />}>
-                        Create Extra Spec
+                {/* Toolbar */}
+                <ListToolbar
+                  primaryActions={
+                    <ListToolbar.Actions>
+                      <FilterSearchInput
+                        placeholder="Search specs by attributes"
+                        value={searchValue}
+                        onChange={setSearchValue}
+                        fields={filterFields}
+                        appliedFilters={appliedFilters}
+                        onApplyFilter={(filter) => setAppliedFilters((prev) => [...prev, filter])}
+                        onRemoveFilter={(field) =>
+                          setAppliedFilters((prev) => prev.filter((f) => f.field !== field))
+                        }
+                        onClearFilters={() => setAppliedFilters([])}
+                        size="sm"
+                        className="w-[var(--search-input-width)]"
+                      />
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        iconOnly
+                        icon={<IconDownload size={12} />}
+                        aria-label="Download"
+                      />
+                    </ListToolbar.Actions>
+                  }
+                  bulkActions={
+                    <ListToolbar.Actions>
+                      <Button
+                        variant="muted"
+                        size="sm"
+                        leftIcon={<IconTrash size={12} />}
+                        disabled={!hasSelection}
+                        onClick={handleBulkDelete}
+                      >
+                        Delete
                       </Button>
-                    </div>
+                    </ListToolbar.Actions>
+                  }
+                />
 
-                    {/* Toolbar */}
-                    <ListToolbar
-                      primaryActions={
-                        <ListToolbar.Actions>
-                          <FilterSearchInput
-                            placeholder="Search specs by attributes"
-                            value={searchValue}
-                            onChange={setSearchValue}
-                            fields={filterFields}
-                            appliedFilters={appliedFilters}
-                            onApplyFilter={(filter) =>
-                              setAppliedFilters((prev) => [...prev, filter])
-                            }
-                            onRemoveFilter={(field) =>
-                              setAppliedFilters((prev) => prev.filter((f) => f.field !== field))
-                            }
-                            onClearFilters={() => setAppliedFilters([])}
-                            size="sm"
-                            className="w-[var(--search-input-width)]"
-                          />
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            iconOnly
-                            icon={<IconDownload size={12} />}
-                            aria-label="Download"
-                          />
-                        </ListToolbar.Actions>
-                      }
-                      bulkActions={
-                        <ListToolbar.Actions>
-                          <Button
-                            variant="muted"
-                            size="sm"
-                            leftIcon={<IconTrash size={12} />}
-                            disabled={!hasSelection}
-                            onClick={handleBulkDelete}
-                          >
-                            Delete
-                          </Button>
-                        </ListToolbar.Actions>
-                      }
-                    />
+                {/* Pagination */}
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  totalItems={filteredExtraSpecs.length}
+                  selectedCount={selectedSpecs.length}
+                  onPageChange={setCurrentPage}
+                />
 
-                    {/* Pagination */}
-                    <Pagination
-                      currentPage={currentPage}
-                      totalPages={totalPages}
-                      totalItems={filteredExtraSpecs.length}
-                      selectedCount={selectedSpecs.length}
-                      onPageChange={setCurrentPage}
-                    />
-
-                    {/* Table */}
-                    <Table
-                      columns={extraSpecColumns}
-                      data={paginatedSpecs}
-                      rowKey="id"
-                      selectable
-                      selectedKeys={selectedSpecs}
-                      onSelectionChange={setSelectedSpecs}
-                      emptyMessage="No extra specs found"
-                    />
-                  </VStack>
-                )}
-              </div>
-            </VStack>
+                {/* Table */}
+                <Table
+                  columns={extraSpecColumns}
+                  data={paginatedSpecs}
+                  rowKey="id"
+                  selectable
+                  selectedKeys={selectedSpecs}
+                  onSelectionChange={setSelectedSpecs}
+                  emptyMessage="No extra specs found"
+                />
+              </VStack>
+            )}
           </div>
-        </div>
-      </main>
+        </VStack>
+      </PageShell>
 
       {/* Delete Confirmation Modal */}
       <ConfirmModal
@@ -438,6 +427,6 @@ export default function ComputeAdminQoSSpecDetailPage() {
         confirmText="Delete"
         variant="danger"
       />
-    </div>
+    </>
   );
 }

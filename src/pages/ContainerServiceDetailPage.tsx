@@ -17,6 +17,7 @@ import {
   StatusIndicator,
   DetailHeader,
   Chip,
+  PageShell,
   type TableColumn,
   type ContextMenuItem,
   fixedColumns,
@@ -630,16 +631,12 @@ export function ContainerServiceDetailPage() {
   ];
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-
-      {/* Main Content */}
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: `${sidebarWidth}px` }}
-      >
-        {/* Tab Bar */}
+    <PageShell
+      sidebar={
+        <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
         <TabBar
           tabs={tabBarTabs}
           activeTab={activeTabId}
@@ -648,8 +645,8 @@ export function ContainerServiceDetailPage() {
           onTabReorder={moveTab}
           onTabAdd={addNewTab}
         />
-
-        {/* Top Bar */}
+      }
+      topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -685,138 +682,135 @@ export function ContainerServiceDetailPage() {
             </>
           }
         />
+      }
+      bottomPanel={
+        <ShellPanel
+          isExpanded={shellPanel.isExpanded}
+          onExpandedChange={shellPanel.setIsExpanded}
+          tabs={shellPanel.tabs}
+          activeTabId={shellPanel.activeTabId}
+          onActiveTabChange={shellPanel.setActiveTabId}
+          onCloseTab={shellPanel.closeTab}
+          onContentChange={shellPanel.updateContent}
+          onClear={shellPanel.clearContent}
+          onOpenInNewTab={handleOpenInNewTab}
+          initialHeight={350}
+          sidebarWidth={sidebarWidth}
+        />
+      }
+      bottomPanelPadding={shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0'}
+      contentClassName="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]"
+    >
+      <VStack gap={6}>
+        {/* Detail Header */}
+        <DetailHeader>
+          <DetailHeader.Title>Service: {service.name}</DetailHeader.Title>
+          <DetailHeader.Actions>
+            <ContextMenu items={moreActionsItems} trigger="click" align="right">
+              <Button
+                variant="secondary"
+                size="sm"
+                rightIcon={<IconChevronDown size={12} stroke={1.5} />}
+              >
+                More Actions
+              </Button>
+            </ContextMenu>
+          </DetailHeader.Actions>
+          <DetailHeader.InfoGrid>
+            <DetailHeader.InfoCard
+              label="Status"
+              value={service.status === 'Running' ? 'Active' : service.status}
+              status={
+                service.status === 'Running'
+                  ? 'active'
+                  : service.status === 'Pending'
+                    ? 'building'
+                    : service.status === 'Error'
+                      ? 'error'
+                      : 'muted'
+              }
+            />
+            <DetailHeader.InfoCard label="Namespace" value={service.namespace} copyable />
+            <DetailHeader.InfoCard
+              label="Type"
+              value={`${service.type} - Cluster IP: ${service.clusterIP}`}
+              copyable
+            />
+            <DetailHeader.InfoCard label="Session affinity" value={service.sessionAffinity} />
+            <DetailHeader.InfoCard label="Created at" value={service.createdAt} />
+          </DetailHeader.InfoGrid>
 
-        {/* Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
-            <VStack gap={6}>
-              {/* Detail Header */}
-              <DetailHeader>
-                <DetailHeader.Title>Service: {service.name}</DetailHeader.Title>
-                <DetailHeader.Actions>
-                  <ContextMenu items={moreActionsItems} trigger="click" align="right">
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      rightIcon={<IconChevronDown size={12} stroke={1.5} />}
-                    >
-                      More Actions
-                    </Button>
-                  </ContextMenu>
-                </DetailHeader.Actions>
-                <DetailHeader.InfoGrid>
-                  <DetailHeader.InfoCard
-                    label="Status"
-                    value={service.status === 'Running' ? 'Active' : service.status}
-                    status={
-                      service.status === 'Running'
-                        ? 'active'
-                        : service.status === 'Pending'
-                          ? 'building'
-                          : service.status === 'Error'
-                            ? 'error'
-                            : 'muted'
-                    }
-                  />
-                  <DetailHeader.InfoCard label="Namespace" value={service.namespace} copyable />
-                  <DetailHeader.InfoCard
-                    label="Type"
-                    value={`${service.type} - Cluster IP: ${service.clusterIP}`}
-                    copyable
-                  />
-                  <DetailHeader.InfoCard label="Session affinity" value={service.sessionAffinity} />
-                  <DetailHeader.InfoCard label="Created at" value={service.createdAt} />
-                </DetailHeader.InfoGrid>
+          {/* Second row: Labels, Annotations */}
+          <HStack gap={3} className="w-full mt-3">
+            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+              <VStack gap={2}>
+                <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
+                  Labels ({Object.keys(service.labels).length})
+                </span>
+                <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
+                  {Object.entries(service.labels)
+                    .slice(0, 1)
+                    .map(([key, val]) => (
+                      <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
+                    ))}
+                  {Object.keys(service.labels).length > 1 && (
+                    <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
+                      (+{Object.keys(service.labels).length - 1})
+                    </span>
+                  )}
+                </div>
+              </VStack>
+            </div>
+            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+              <VStack gap={2}>
+                <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
+                  Annotations ({Object.keys(service.annotations).length})
+                </span>
+                <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
+                  {Object.entries(service.annotations)
+                    .slice(0, 1)
+                    .map(([key, val]) => (
+                      <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
+                    ))}
+                  {Object.keys(service.annotations).length > 1 && (
+                    <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
+                      (+{Object.keys(service.annotations).length - 1})
+                    </span>
+                  )}
+                </div>
+              </VStack>
+            </div>
+          </HStack>
+        </DetailHeader>
 
-                {/* Second row: Labels, Annotations */}
-                <HStack gap={3} className="w-full mt-3">
-                  <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-                    <VStack gap={2}>
-                      <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-                        Labels ({Object.keys(service.labels).length})
-                      </span>
-                      <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
-                        {Object.entries(service.labels)
-                          .slice(0, 1)
-                          .map(([key, val]) => (
-                            <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
-                          ))}
-                        {Object.keys(service.labels).length > 1 && (
-                          <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                            (+{Object.keys(service.labels).length - 1})
-                          </span>
-                        )}
-                      </div>
-                    </VStack>
-                  </div>
-                  <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-                    <VStack gap={2}>
-                      <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-                        Annotations ({Object.keys(service.annotations).length})
-                      </span>
-                      <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
-                        {Object.entries(service.annotations)
-                          .slice(0, 1)
-                          .map(([key, val]) => (
-                            <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
-                          ))}
-                        {Object.keys(service.annotations).length > 1 && (
-                          <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                            (+{Object.keys(service.annotations).length - 1})
-                          </span>
-                        )}
-                      </div>
-                    </VStack>
-                  </div>
-                </HStack>
-              </DetailHeader>
+        {/* Tabs */}
+        <Tabs value={activeTab} onChange={setActiveTab}>
+          <TabList>
+            <Tab value="pods">Pods</Tab>
+            <Tab value="ports">Ports</Tab>
+            <Tab value="selectors">Selectors</Tab>
+            <Tab value="conditions">Conditions</Tab>
+          </TabList>
 
-              {/* Tabs */}
-              <Tabs value={activeTab} onChange={setActiveTab}>
-                <TabList>
-                  <Tab value="pods">Pods</Tab>
-                  <Tab value="ports">Ports</Tab>
-                  <Tab value="selectors">Selectors</Tab>
-                  <Tab value="conditions">Conditions</Tab>
-                </TabList>
-
-                <TabPanel value="pods">
-                  <PodsTab
-                    pods={mockPodsData}
-                    onViewLogs={handleViewLogs}
-                    onExecuteShell={handleExecuteShell}
-                  />
-                </TabPanel>
-                <TabPanel value="ports">
-                  <PortsTab ports={mockPortsData} />
-                </TabPanel>
-                <TabPanel value="selectors">
-                  <SelectorsTab selectors={mockSelectorsData} />
-                </TabPanel>
-                <TabPanel value="conditions">
-                  <ConditionsTab conditions={mockConditionsData} />
-                </TabPanel>
-              </Tabs>
-            </VStack>
-          </div>
-        </div>
-      </main>
-
-      {/* Shell Panel */}
-      <ShellPanel
-        isExpanded={shellPanel.isExpanded}
-        onExpandedChange={shellPanel.setIsExpanded}
-        tabs={shellPanel.tabs}
-        activeTabId={shellPanel.activeTabId}
-        onActiveTabChange={shellPanel.setActiveTabId}
-        onCloseTab={shellPanel.closeTab}
-        onContentChange={shellPanel.updateContent}
-        onClear={shellPanel.clearContent}
-        onOpenInNewTab={handleOpenInNewTab}
-        initialHeight={350}
-        sidebarWidth={sidebarWidth}
-      />
-    </div>
+          <TabPanel value="pods">
+            <PodsTab
+              pods={mockPodsData}
+              onViewLogs={handleViewLogs}
+              onExecuteShell={handleExecuteShell}
+            />
+          </TabPanel>
+          <TabPanel value="ports">
+            <PortsTab ports={mockPortsData} />
+          </TabPanel>
+          <TabPanel value="selectors">
+            <SelectorsTab selectors={mockSelectorsData} />
+          </TabPanel>
+          <TabPanel value="conditions">
+            <ConditionsTab conditions={mockConditionsData} />
+          </TabPanel>
+        </Tabs>
+      </VStack>
+    </PageShell>
   );
 }
 

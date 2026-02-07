@@ -14,6 +14,7 @@ import {
   SectionCard,
   Checkbox,
   InlineMessage,
+  PageShell,
 } from '@/design-system';
 import type { WizardSectionState } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
@@ -391,16 +392,12 @@ export default function CreateHPAPage() {
   };
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-
-      {/* Main Content */}
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: `${sidebarWidth}px` }}
-      >
-        {/* Tab Bar */}
+    <PageShell
+      sidebar={
+        <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
         <TabBar
           tabs={tabs.map((tab) => ({
             id: tab.id,
@@ -411,9 +408,14 @@ export default function CreateHPAPage() {
           onTabChange={selectTab}
           onTabClose={closeTab}
         />
-
-        {/* Top Bar */}
+      }
+      topBar={
         <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
           breadcrumb={
             <Breadcrumb
               items={[
@@ -423,7 +425,7 @@ export default function CreateHPAPage() {
               ]}
             />
           }
-          rightContent={
+          actions={
             <HStack gap={1}>
               <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
                 <IconSearch size={16} className="text-[var(--color-text-muted)]" />
@@ -437,196 +439,442 @@ export default function CreateHPAPage() {
             </HStack>
           }
         />
+      }
+      contentClassName="pt-3 px-8 pb-20"
+    >
+      <VStack gap={6}>
+        {/* Page Header */}
+        <VStack gap={2}>
+          <h1 className="text-heading-h4 text-[var(--color-text-default)]">
+            Create Horizontal Pod Autoscaler
+          </h1>
+          <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+            Horizontal Pod Autoscaler automatically adjusts the number of running Pods based on
+            real-time resource usage to maintain stable application performance.
+          </p>
+        </VStack>
 
-        {/* Page Content */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
-            <VStack gap={6}>
-              {/* Page Header */}
-              <VStack gap={2}>
-                <h1 className="text-heading-h4 text-[var(--color-text-default)]">
-                  Create Horizontal Pod Autoscaler
-                </h1>
-                <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
-                  Horizontal Pod Autoscaler automatically adjusts the number of running Pods based
-                  on real-time resource usage to maintain stable application performance.
-                </p>
-              </VStack>
+        {/* Form Content with Summary */}
+        <HStack gap={6} className="w-full items-start">
+          {/* Form Sections */}
+          <VStack gap={4} className="flex-1">
+            {/* Basic Information Section */}
+            <SectionCard>
+              <SectionCard.Header title="Basic information" />
+              <SectionCard.Content>
+                <VStack gap={6}>
+                  {/* Namespace */}
+                  <VStack gap={2}>
+                    <label className="text-label-lg text-[var(--color-text-default)]">
+                      Namespace <span className="text-[var(--color-state-danger)]">*</span>
+                    </label>
+                    <Select
+                      options={NAMESPACE_OPTIONS}
+                      value={namespace}
+                      onChange={setNamespace}
+                      fullWidth
+                    />
+                  </VStack>
 
-              {/* Form Content with Summary */}
-              <HStack gap={6} className="w-full items-start">
-                {/* Form Sections */}
-                <VStack gap={4} className="flex-1">
-                  {/* Basic Information Section */}
-                  <SectionCard>
-                    <SectionCard.Header title="Basic information" />
-                    <SectionCard.Content>
+                  {/* Name */}
+                  <VStack gap={2}>
+                    <label className="text-label-lg text-[var(--color-text-default)]">
+                      Name <span className="text-[var(--color-state-danger)]">*</span>
+                    </label>
+                    <Input
+                      placeholder="Enter a unique name"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      fullWidth
+                    />
+                  </VStack>
+
+                  {/* Description with Disclosure */}
+                  <VStack gap={2}>
+                    <Disclosure defaultOpen={showDescription}>
+                      <Disclosure.Trigger className="flex items-center gap-1.5">
+                        <span className="text-label-lg text-[var(--color-text-default)]">
+                          Description
+                        </span>
+                      </Disclosure.Trigger>
+                      <Disclosure.Panel className="pt-2">
+                        <Input
+                          placeholder="Description"
+                          value={description}
+                          onChange={(e) => setDescription(e.target.value)}
+                          fullWidth
+                        />
+                      </Disclosure.Panel>
+                    </Disclosure>
+                  </VStack>
+                </VStack>
+              </SectionCard.Content>
+            </SectionCard>
+
+            {/* Target Section */}
+            <SectionCard>
+              <SectionCard.Header title="Target" />
+              <SectionCard.Content>
+                <VStack gap={6}>
+                  {/* Target Reference */}
+                  <VStack gap={2}>
+                    <label className="text-label-lg text-[var(--color-text-default)]">
+                      Target Reference <span className="text-[var(--color-state-danger)]">*</span>
+                    </label>
+                    <div className="w-[240px]">
+                      <Select
+                        options={TARGET_REFERENCE_OPTIONS}
+                        value={targetReference}
+                        onChange={setTargetReference}
+                        fullWidth
+                      />
+                    </div>
+                  </VStack>
+
+                  {/* Min/Max Replicas */}
+                  <VStack gap={6}>
+                    <VStack gap={2}>
+                      <label className="text-label-lg text-[var(--color-text-default)]">
+                        Minimum Replicas <span className="text-[var(--color-state-danger)]">*</span>
+                      </label>
+                      <NumberInput
+                        value={minReplicas}
+                        onChange={setMinReplicas}
+                        min={1}
+                        width="sm"
+                      />
+                    </VStack>
+                    <VStack gap={2}>
+                      <label className="text-label-lg text-[var(--color-text-default)]">
+                        Maximum Replicas <span className="text-[var(--color-state-danger)]">*</span>
+                      </label>
+                      <NumberInput
+                        value={maxReplicas}
+                        onChange={setMaxReplicas}
+                        min={1}
+                        width="sm"
+                      />
+                    </VStack>
+                  </VStack>
+                </VStack>
+              </SectionCard.Content>
+            </SectionCard>
+
+            {/* Behavior Section */}
+            <SectionCard>
+              <SectionCard.Header title="Behavior" />
+              <SectionCard.Content>
+                <VStack gap={6}>
+                  {/* Scale down behavior */}
+                  <VStack gap={3}>
+                    <label className="text-label-lg text-[var(--color-text-default)]">
+                      Scale down behavior
+                    </label>
+                    <Checkbox
+                      checked={scaleDownBehavior}
+                      onChange={setScaleDownBehavior}
+                      label="Configure scale down behavior"
+                    />
+                  </VStack>
+
+                  {/* Scale up behavior */}
+                  <VStack gap={3}>
+                    <label className="text-label-lg text-[var(--color-text-default)]">
+                      Scale up behavior
+                    </label>
+                    <Checkbox
+                      checked={scaleUpBehavior}
+                      onChange={setScaleUpBehavior}
+                      label="Configure scale up behavior"
+                    />
+                  </VStack>
+                </VStack>
+              </SectionCard.Content>
+            </SectionCard>
+
+            {/* Metrics Section */}
+            <SectionCard>
+              <SectionCard.Header title="Metrics" />
+              <SectionCard.Content>
+                <VStack gap={2}>
+                  {/* Metric rows */}
+                  {metrics.map((metric) => (
+                    <div
+                      key={metric.id}
+                      className="border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
+                    >
                       <VStack gap={6}>
-                        {/* Namespace */}
+                        <HStack justify="between" align="start" className="w-full">
+                          <VStack gap={2} className="items-start">
+                            {metric.source === 'External' && (
+                              <div className="w-fit">
+                                <InlineMessage variant="warning">
+                                  In order to use external metrics with HPA, you need to deploy the
+                                  external metrics server such as prometheus adapter.
+                                </InlineMessage>
+                              </div>
+                            )}
+                            <div className="w-fit">
+                              <InlineMessage variant="warning">
+                                The selected target reference does not have the correct resource
+                                requests on the spec. Without this the HPA metric will have no
+                                effect.
+                              </InlineMessage>
+                            </div>
+                          </VStack>
+                          <button
+                            onClick={() => removeMetric(metric.id)}
+                            className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                          >
+                            <IconX
+                              size={16}
+                              className="text-[var(--color-text-muted)]"
+                              stroke={1.5}
+                            />
+                          </button>
+                        </HStack>
+
+                        {/* Source */}
                         <VStack gap={2}>
                           <label className="text-label-lg text-[var(--color-text-default)]">
-                            Namespace <span className="text-[var(--color-state-danger)]">*</span>
+                            Source
                           </label>
-                          <Select
-                            options={NAMESPACE_OPTIONS}
-                            value={namespace}
-                            onChange={setNamespace}
-                            fullWidth
-                          />
-                        </VStack>
-
-                        {/* Name */}
-                        <VStack gap={2}>
-                          <label className="text-label-lg text-[var(--color-text-default)]">
-                            Name <span className="text-[var(--color-state-danger)]">*</span>
-                          </label>
-                          <Input
-                            placeholder="Enter a unique name"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            fullWidth
-                          />
-                        </VStack>
-
-                        {/* Description with Disclosure */}
-                        <VStack gap={2}>
-                          <Disclosure defaultOpen={showDescription}>
-                            <Disclosure.Trigger className="flex items-center gap-1.5">
-                              <span className="text-label-lg text-[var(--color-text-default)]">
-                                Description
-                              </span>
-                            </Disclosure.Trigger>
-                            <Disclosure.Panel className="pt-2">
-                              <Input
-                                placeholder="Description"
-                                value={description}
-                                onChange={(e) => setDescription(e.target.value)}
-                                fullWidth
-                              />
-                            </Disclosure.Panel>
-                          </Disclosure>
-                        </VStack>
-                      </VStack>
-                    </SectionCard.Content>
-                  </SectionCard>
-
-                  {/* Target Section */}
-                  <SectionCard>
-                    <SectionCard.Header title="Target" />
-                    <SectionCard.Content>
-                      <VStack gap={6}>
-                        {/* Target Reference */}
-                        <VStack gap={2}>
-                          <label className="text-label-lg text-[var(--color-text-default)]">
-                            Target Reference{' '}
-                            <span className="text-[var(--color-state-danger)]">*</span>
-                          </label>
-                          <div className="w-[240px]">
+                          <div className="w-[80px]">
                             <Select
-                              options={TARGET_REFERENCE_OPTIONS}
-                              value={targetReference}
-                              onChange={setTargetReference}
+                              options={METRIC_SOURCE_OPTIONS}
+                              value={metric.source}
+                              onChange={(value) => updateMetric(metric.id, 'source', value)}
                               fullWidth
                             />
                           </div>
                         </VStack>
 
-                        {/* Min/Max Replicas */}
-                        <VStack gap={6}>
+                        {/* Resource Name (for Resource source) */}
+                        {metric.source === 'Resource' && (
                           <VStack gap={2}>
                             <label className="text-label-lg text-[var(--color-text-default)]">
-                              Minimum Replicas{' '}
-                              <span className="text-[var(--color-state-danger)]">*</span>
+                              Resource Name
                             </label>
-                            <NumberInput
-                              value={minReplicas}
-                              onChange={setMinReplicas}
-                              min={1}
-                              width="sm"
+                            <Select
+                              options={RESOURCE_NAME_OPTIONS}
+                              value={metric.resourceName}
+                              onChange={(value) => updateMetric(metric.id, 'resourceName', value)}
+                              fullWidth
                             />
                           </VStack>
-                          <VStack gap={2}>
+                        )}
+
+                        {/* Type and Quantity */}
+                        <HStack gap={3} className="w-full">
+                          <VStack gap={2} className="flex-1">
                             <label className="text-label-lg text-[var(--color-text-default)]">
-                              Maximum Replicas{' '}
-                              <span className="text-[var(--color-state-danger)]">*</span>
+                              Type
                             </label>
-                            <NumberInput
-                              value={maxReplicas}
-                              onChange={setMaxReplicas}
-                              min={1}
-                              width="sm"
+                            <Select
+                              options={TYPE_OPTIONS}
+                              value={metric.type}
+                              onChange={(value) => updateMetric(metric.id, 'type', value)}
+                              fullWidth
                             />
                           </VStack>
-                        </VStack>
-                      </VStack>
-                    </SectionCard.Content>
-                  </SectionCard>
+                          <VStack gap={2} className="flex-1">
+                            <label className="text-label-lg text-[var(--color-text-default)]">
+                              Quantity <span className="text-[var(--color-state-danger)]">*</span>
+                            </label>
+                            <HStack gap={2} align="center" className="w-full">
+                              <Input
+                                value={metric.quantity.toString()}
+                                onChange={(e) =>
+                                  updateMetric(metric.id, 'quantity', parseInt(e.target.value) || 0)
+                                }
+                                fullWidth
+                              />
+                              {metric.type === 'AverageUtilization' && (
+                                <span className="text-[12px] text-[var(--color-text-default)]">
+                                  %
+                                </span>
+                              )}
+                            </HStack>
+                          </VStack>
+                        </HStack>
 
-                  {/* Behavior Section */}
-                  <SectionCard>
-                    <SectionCard.Header title="Behavior" />
-                    <SectionCard.Content>
-                      <VStack gap={6}>
-                        {/* Scale down behavior */}
-                        <VStack gap={3}>
-                          <label className="text-label-lg text-[var(--color-text-default)]">
-                            Scale down behavior
-                          </label>
-                          <Checkbox
-                            checked={scaleDownBehavior}
-                            onChange={setScaleDownBehavior}
-                            label="Configure scale down behavior"
-                          />
-                        </VStack>
+                        {/* External metrics specific fields */}
+                        {metric.source === 'External' && (
+                          <>
+                            <VStack gap={2}>
+                              <label className="text-label-lg text-[var(--color-text-default)]">
+                                Metric Name{' '}
+                                <span className="text-[var(--color-state-danger)]">*</span>
+                              </label>
+                              <Input
+                                placeholder="e.g. packet-per-second"
+                                value={metric.metricName}
+                                onChange={(e) =>
+                                  updateMetric(metric.id, 'metricName', e.target.value)
+                                }
+                                fullWidth
+                              />
+                            </VStack>
 
-                        {/* Scale up behavior */}
-                        <VStack gap={3}>
-                          <label className="text-label-lg text-[var(--color-text-default)]">
-                            Scale up behavior
-                          </label>
-                          <Checkbox
-                            checked={scaleUpBehavior}
-                            onChange={setScaleUpBehavior}
-                            label="Configure scale up behavior"
-                          />
-                        </VStack>
-                      </VStack>
-                    </SectionCard.Content>
-                  </SectionCard>
-
-                  {/* Metrics Section */}
-                  <SectionCard>
-                    <SectionCard.Header title="Metrics" />
-                    <SectionCard.Content>
-                      <VStack gap={2}>
-                        {/* Metric rows */}
-                        {metrics.map((metric) => (
-                          <div
-                            key={metric.id}
-                            className="border border-[var(--color-border-default)] rounded-[6px] p-3 w-full"
-                          >
-                            <VStack gap={6}>
-                              <HStack justify="between" align="start" className="w-full">
-                                <VStack gap={2} className="items-start">
-                                  {metric.source === 'External' && (
-                                    <div className="w-fit">
-                                      <InlineMessage variant="warning">
-                                        In order to use external metrics with HPA, you need to
-                                        deploy the external metrics server such as prometheus
-                                        adapter.
-                                      </InlineMessage>
+                            {/* Metric Selector */}
+                            <VStack gap={2}>
+                              <label className="text-label-lg text-[var(--color-text-default)]">
+                                Metric Selector
+                              </label>
+                              <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                                <VStack gap={2}>
+                                  {metric.selectors.length > 0 && (
+                                    <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
+                                      <label className="text-label-lg text-[var(--color-text-default)]">
+                                        Key
+                                      </label>
+                                      <label className="text-label-lg text-[var(--color-text-default)]">
+                                        Operator
+                                      </label>
+                                      <label className="text-label-lg text-[var(--color-text-default)]">
+                                        Value
+                                      </label>
+                                      <div />
                                     </div>
                                   )}
+                                  {metric.selectors.map((selector) => (
+                                    <div
+                                      key={selector.id}
+                                      className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
+                                    >
+                                      <Input
+                                        placeholder="Input key"
+                                        value={selector.key}
+                                        onChange={(e) =>
+                                          updateMetricSelector(
+                                            metric.id,
+                                            selector.id,
+                                            'key',
+                                            e.target.value
+                                          )
+                                        }
+                                        fullWidth
+                                      />
+                                      <Select
+                                        options={OPERATOR_OPTIONS}
+                                        value={selector.operator}
+                                        onChange={(value) =>
+                                          updateMetricSelector(
+                                            metric.id,
+                                            selector.id,
+                                            'operator',
+                                            value
+                                          )
+                                        }
+                                        fullWidth
+                                      />
+                                      <Input
+                                        placeholder="input value"
+                                        value={selector.value}
+                                        onChange={(e) =>
+                                          updateMetricSelector(
+                                            metric.id,
+                                            selector.id,
+                                            'value',
+                                            e.target.value
+                                          )
+                                        }
+                                        fullWidth
+                                      />
+                                      <button
+                                        onClick={() => removeMetricSelector(metric.id, selector.id)}
+                                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                                      >
+                                        <IconX
+                                          size={16}
+                                          className="text-[var(--color-text-muted)]"
+                                          stroke={1.5}
+                                        />
+                                      </button>
+                                    </div>
+                                  ))}
                                   <div className="w-fit">
-                                    <InlineMessage variant="warning">
-                                      The selected target reference does not have the correct
-                                      resource requests on the spec. Without this the HPA metric
-                                      will have no effect.
-                                    </InlineMessage>
+                                    <Button
+                                      variant="secondary"
+                                      size="sm"
+                                      leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                                      onClick={() => addMetricSelector(metric.id)}
+                                    >
+                                      Add Rule
+                                    </Button>
                                   </div>
                                 </VStack>
+                              </div>
+                            </VStack>
+                          </>
+                        )}
+                      </VStack>
+                    </div>
+                  ))}
+
+                  {/* Add a new row button */}
+                  <div className="w-fit">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                      onClick={addMetric}
+                    >
+                      Add a new row
+                    </Button>
+                  </div>
+                </VStack>
+              </SectionCard.Content>
+            </SectionCard>
+
+            {/* Labels & Annotations Section */}
+            <SectionCard>
+              <SectionCard.Header title="Labels & Annotations" />
+              <SectionCard.Content>
+                <VStack gap={6}>
+                  {/* Labels */}
+                  <VStack gap={3}>
+                    <VStack gap={1}>
+                      <label className="text-label-lg text-[var(--color-text-default)]">
+                        Labels
+                      </label>
+                      <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+                        Specify the labels used to identify and categorize the resource.
+                      </p>
+                    </VStack>
+                    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                      <VStack gap={3}>
+                        {labels.length > 0 && (
+                          <VStack gap={2} className="w-full">
+                            {/* Header row */}
+                            <div className="grid grid-cols-[1fr_1fr_23px] gap-2">
+                              <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
+                                Key
+                              </span>
+                              <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
+                                Value
+                              </span>
+                              <div />
+                            </div>
+                            {labels.map((label) => (
+                              <div
+                                key={label.id}
+                                className="grid grid-cols-[1fr_1fr_23px] gap-2 items-center"
+                              >
+                                <Input
+                                  placeholder="e.g. key"
+                                  value={label.key}
+                                  onChange={(e) => updateLabel(label.id, 'key', e.target.value)}
+                                  fullWidth
+                                />
+                                <Input
+                                  placeholder="e.g. value"
+                                  value={label.value}
+                                  onChange={(e) => updateLabel(label.id, 'value', e.target.value)}
+                                  fullWidth
+                                />
                                 <button
-                                  onClick={() => removeMetric(metric.id)}
+                                  onClick={() => removeLabel(label.id)}
                                   className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                 >
                                   <IconX
@@ -635,379 +883,112 @@ export default function CreateHPAPage() {
                                     stroke={1.5}
                                   />
                                 </button>
-                              </HStack>
-
-                              {/* Source */}
-                              <VStack gap={2}>
-                                <label className="text-label-lg text-[var(--color-text-default)]">
-                                  Source
-                                </label>
-                                <div className="w-[80px]">
-                                  <Select
-                                    options={METRIC_SOURCE_OPTIONS}
-                                    value={metric.source}
-                                    onChange={(value) => updateMetric(metric.id, 'source', value)}
-                                    fullWidth
-                                  />
-                                </div>
-                              </VStack>
-
-                              {/* Resource Name (for Resource source) */}
-                              {metric.source === 'Resource' && (
-                                <VStack gap={2}>
-                                  <label className="text-label-lg text-[var(--color-text-default)]">
-                                    Resource Name
-                                  </label>
-                                  <Select
-                                    options={RESOURCE_NAME_OPTIONS}
-                                    value={metric.resourceName}
-                                    onChange={(value) =>
-                                      updateMetric(metric.id, 'resourceName', value)
-                                    }
-                                    fullWidth
-                                  />
-                                </VStack>
-                              )}
-
-                              {/* Type and Quantity */}
-                              <HStack gap={3} className="w-full">
-                                <VStack gap={2} className="flex-1">
-                                  <label className="text-label-lg text-[var(--color-text-default)]">
-                                    Type
-                                  </label>
-                                  <Select
-                                    options={TYPE_OPTIONS}
-                                    value={metric.type}
-                                    onChange={(value) => updateMetric(metric.id, 'type', value)}
-                                    fullWidth
-                                  />
-                                </VStack>
-                                <VStack gap={2} className="flex-1">
-                                  <label className="text-label-lg text-[var(--color-text-default)]">
-                                    Quantity{' '}
-                                    <span className="text-[var(--color-state-danger)]">*</span>
-                                  </label>
-                                  <HStack gap={2} align="center" className="w-full">
-                                    <Input
-                                      value={metric.quantity.toString()}
-                                      onChange={(e) =>
-                                        updateMetric(
-                                          metric.id,
-                                          'quantity',
-                                          parseInt(e.target.value) || 0
-                                        )
-                                      }
-                                      fullWidth
-                                    />
-                                    {metric.type === 'AverageUtilization' && (
-                                      <span className="text-[12px] text-[var(--color-text-default)]">
-                                        %
-                                      </span>
-                                    )}
-                                  </HStack>
-                                </VStack>
-                              </HStack>
-
-                              {/* External metrics specific fields */}
-                              {metric.source === 'External' && (
-                                <>
-                                  <VStack gap={2}>
-                                    <label className="text-label-lg text-[var(--color-text-default)]">
-                                      Metric Name{' '}
-                                      <span className="text-[var(--color-state-danger)]">*</span>
-                                    </label>
-                                    <Input
-                                      placeholder="e.g. packet-per-second"
-                                      value={metric.metricName}
-                                      onChange={(e) =>
-                                        updateMetric(metric.id, 'metricName', e.target.value)
-                                      }
-                                      fullWidth
-                                    />
-                                  </VStack>
-
-                                  {/* Metric Selector */}
-                                  <VStack gap={2}>
-                                    <label className="text-label-lg text-[var(--color-text-default)]">
-                                      Metric Selector
-                                    </label>
-                                    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-                                      <VStack gap={2}>
-                                        {metric.selectors.length > 0 && (
-                                          <div className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full">
-                                            <label className="text-label-lg text-[var(--color-text-default)]">
-                                              Key
-                                            </label>
-                                            <label className="text-label-lg text-[var(--color-text-default)]">
-                                              Operator
-                                            </label>
-                                            <label className="text-label-lg text-[var(--color-text-default)]">
-                                              Value
-                                            </label>
-                                            <div />
-                                          </div>
-                                        )}
-                                        {metric.selectors.map((selector) => (
-                                          <div
-                                            key={selector.id}
-                                            className="grid grid-cols-[1fr_1fr_1fr_20px] gap-2 w-full items-center"
-                                          >
-                                            <Input
-                                              placeholder="Input key"
-                                              value={selector.key}
-                                              onChange={(e) =>
-                                                updateMetricSelector(
-                                                  metric.id,
-                                                  selector.id,
-                                                  'key',
-                                                  e.target.value
-                                                )
-                                              }
-                                              fullWidth
-                                            />
-                                            <Select
-                                              options={OPERATOR_OPTIONS}
-                                              value={selector.operator}
-                                              onChange={(value) =>
-                                                updateMetricSelector(
-                                                  metric.id,
-                                                  selector.id,
-                                                  'operator',
-                                                  value
-                                                )
-                                              }
-                                              fullWidth
-                                            />
-                                            <Input
-                                              placeholder="input value"
-                                              value={selector.value}
-                                              onChange={(e) =>
-                                                updateMetricSelector(
-                                                  metric.id,
-                                                  selector.id,
-                                                  'value',
-                                                  e.target.value
-                                                )
-                                              }
-                                              fullWidth
-                                            />
-                                            <button
-                                              onClick={() =>
-                                                removeMetricSelector(metric.id, selector.id)
-                                              }
-                                              className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                            >
-                                              <IconX
-                                                size={16}
-                                                className="text-[var(--color-text-muted)]"
-                                                stroke={1.5}
-                                              />
-                                            </button>
-                                          </div>
-                                        ))}
-                                        <div className="w-fit">
-                                          <Button
-                                            variant="secondary"
-                                            size="sm"
-                                            leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                                            onClick={() => addMetricSelector(metric.id)}
-                                          >
-                                            Add Rule
-                                          </Button>
-                                        </div>
-                                      </VStack>
-                                    </div>
-                                  </VStack>
-                                </>
-                              )}
-                            </VStack>
-                          </div>
-                        ))}
-
-                        {/* Add a new row button */}
+                              </div>
+                            ))}
+                          </VStack>
+                        )}
                         <div className="w-fit">
                           <Button
                             variant="secondary"
                             size="sm"
                             leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                            onClick={addMetric}
+                            onClick={addLabel}
                           >
-                            Add a new row
+                            Add Label
                           </Button>
                         </div>
                       </VStack>
-                    </SectionCard.Content>
-                  </SectionCard>
+                    </div>
+                  </VStack>
 
-                  {/* Labels & Annotations Section */}
-                  <SectionCard>
-                    <SectionCard.Header title="Labels & Annotations" />
-                    <SectionCard.Content>
-                      <VStack gap={6}>
-                        {/* Labels */}
-                        <VStack gap={3}>
-                          <VStack gap={1}>
-                            <label className="text-label-lg text-[var(--color-text-default)]">
-                              Labels
-                            </label>
-                            <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
-                              Specify the labels used to identify and categorize the resource.
-                            </p>
-                          </VStack>
-                          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-                            <VStack gap={3}>
-                              {labels.length > 0 && (
-                                <VStack gap={2} className="w-full">
-                                  {/* Header row */}
-                                  <div className="grid grid-cols-[1fr_1fr_23px] gap-2">
-                                    <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
-                                      Key
-                                    </span>
-                                    <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
-                                      Value
-                                    </span>
-                                    <div />
-                                  </div>
-                                  {labels.map((label) => (
-                                    <div
-                                      key={label.id}
-                                      className="grid grid-cols-[1fr_1fr_23px] gap-2 items-center"
-                                    >
-                                      <Input
-                                        placeholder="e.g. key"
-                                        value={label.key}
-                                        onChange={(e) =>
-                                          updateLabel(label.id, 'key', e.target.value)
-                                        }
-                                        fullWidth
-                                      />
-                                      <Input
-                                        placeholder="e.g. value"
-                                        value={label.value}
-                                        onChange={(e) =>
-                                          updateLabel(label.id, 'value', e.target.value)
-                                        }
-                                        fullWidth
-                                      />
-                                      <button
-                                        onClick={() => removeLabel(label.id)}
-                                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                      >
-                                        <IconX
-                                          size={16}
-                                          className="text-[var(--color-text-muted)]"
-                                          stroke={1.5}
-                                        />
-                                      </button>
-                                    </div>
-                                  ))}
-                                </VStack>
-                              )}
-                              <div className="w-fit">
-                                <Button
-                                  variant="secondary"
-                                  size="sm"
-                                  leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                                  onClick={addLabel}
+                  {/* Annotations */}
+                  <VStack gap={3}>
+                    <VStack gap={1}>
+                      <label className="text-label-lg text-[var(--color-text-default)]">
+                        Annotations
+                      </label>
+                      <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
+                        Specify the annotations used to provide additional metadata for the
+                        resource.
+                      </p>
+                    </VStack>
+                    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                      <VStack gap={3}>
+                        {annotations.length > 0 && (
+                          <VStack gap={2} className="w-full">
+                            {/* Header row */}
+                            <div className="grid grid-cols-[1fr_1fr_23px] gap-2">
+                              <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
+                                Key
+                              </span>
+                              <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
+                                Value
+                              </span>
+                              <div />
+                            </div>
+                            {annotations.map((annotation) => (
+                              <div
+                                key={annotation.id}
+                                className="grid grid-cols-[1fr_1fr_23px] gap-2 items-center"
+                              >
+                                <Input
+                                  placeholder="e.g. key"
+                                  value={annotation.key}
+                                  onChange={(e) =>
+                                    updateAnnotation(annotation.id, 'key', e.target.value)
+                                  }
+                                  fullWidth
+                                />
+                                <Input
+                                  placeholder="e.g. value"
+                                  value={annotation.value}
+                                  onChange={(e) =>
+                                    updateAnnotation(annotation.id, 'value', e.target.value)
+                                  }
+                                  fullWidth
+                                />
+                                <button
+                                  onClick={() => removeAnnotation(annotation.id)}
+                                  className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
                                 >
-                                  Add Label
-                                </Button>
+                                  <IconX
+                                    size={16}
+                                    className="text-[var(--color-text-muted)]"
+                                    stroke={1.5}
+                                  />
+                                </button>
                               </div>
-                            </VStack>
-                          </div>
-                        </VStack>
-
-                        {/* Annotations */}
-                        <VStack gap={3}>
-                          <VStack gap={1}>
-                            <label className="text-label-lg text-[var(--color-text-default)]">
-                              Annotations
-                            </label>
-                            <p className="text-[11px] text-[var(--color-text-subtle)] leading-4">
-                              Specify the annotations used to provide additional metadata for the
-                              resource.
-                            </p>
+                            ))}
                           </VStack>
-                          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-                            <VStack gap={3}>
-                              {annotations.length > 0 && (
-                                <VStack gap={2} className="w-full">
-                                  {/* Header row */}
-                                  <div className="grid grid-cols-[1fr_1fr_23px] gap-2">
-                                    <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
-                                      Key
-                                    </span>
-                                    <span className="text-label-sm text-[var(--color-text-default)] leading-[16.5px]">
-                                      Value
-                                    </span>
-                                    <div />
-                                  </div>
-                                  {annotations.map((annotation) => (
-                                    <div
-                                      key={annotation.id}
-                                      className="grid grid-cols-[1fr_1fr_23px] gap-2 items-center"
-                                    >
-                                      <Input
-                                        placeholder="e.g. key"
-                                        value={annotation.key}
-                                        onChange={(e) =>
-                                          updateAnnotation(annotation.id, 'key', e.target.value)
-                                        }
-                                        fullWidth
-                                      />
-                                      <Input
-                                        placeholder="e.g. value"
-                                        value={annotation.value}
-                                        onChange={(e) =>
-                                          updateAnnotation(annotation.id, 'value', e.target.value)
-                                        }
-                                        fullWidth
-                                      />
-                                      <button
-                                        onClick={() => removeAnnotation(annotation.id)}
-                                        className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                      >
-                                        <IconX
-                                          size={16}
-                                          className="text-[var(--color-text-muted)]"
-                                          stroke={1.5}
-                                        />
-                                      </button>
-                                    </div>
-                                  ))}
-                                </VStack>
-                              )}
-                              <div className="w-fit">
-                                <Button
-                                  variant="secondary"
-                                  size="sm"
-                                  leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                                  onClick={addAnnotation}
-                                >
-                                  Add Annotation
-                                </Button>
-                              </div>
-                            </VStack>
-                          </div>
-                        </VStack>
+                        )}
+                        <div className="w-fit">
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                            onClick={addAnnotation}
+                          >
+                            Add Annotation
+                          </Button>
+                        </div>
                       </VStack>
-                    </SectionCard.Content>
-                  </SectionCard>
+                    </div>
+                  </VStack>
                 </VStack>
+              </SectionCard.Content>
+            </SectionCard>
+          </VStack>
 
-                {/* Summary Sidebar */}
-                <SummarySidebar
-                  sections={HPA_SECTION_ORDER}
-                  sectionLabels={HPA_SECTION_LABELS}
-                  sectionStates={getSectionStates()}
-                  onCancel={handleCancel}
-                  onSubmit={handleSubmit}
-                />
-              </HStack>
-            </VStack>
-          </div>
-        </div>
-      </main>
-    </div>
+          {/* Summary Sidebar */}
+          <SummarySidebar
+            sections={HPA_SECTION_ORDER}
+            sectionLabels={HPA_SECTION_LABELS}
+            sectionStates={getSectionStates()}
+            onCancel={handleCancel}
+            onSubmit={handleSubmit}
+          />
+        </HStack>
+      </VStack>
+    </PageShell>
   );
 }

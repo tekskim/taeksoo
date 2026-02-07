@@ -16,6 +16,7 @@ import {
   ContextMenu,
   DetailHeader,
   Chip,
+  PageShell,
   type TableColumn,
   type ContextMenuItem,
   columnMinWidths,
@@ -182,22 +183,33 @@ export function ContainerIngressDetailPage() {
   const { ingressId } = useParams<{ ingressId: string }>();
   const navigate = useNavigate();
   const [ingress, setIngress] = useState<IngressData | null>(null);
-  const { tabs, activeTab, setActiveTab, closeTab } = useTabs();
-  const {
-    isOpen: isShellOpen,
-    shellTabs,
-    activeShellTab,
-    setActiveShellTab,
-    closeShellTab,
-    addShellTab,
-    closeShell,
-  } = useShellPanel();
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [activeTab, setActiveTab] = useState('rules');
+  const { tabs, activeTabId, selectTab, closeTab, addNewTab, moveTab, updateActiveTabLabel } =
+    useTabs();
+  const shellPanel = useShellPanel();
 
   useEffect(() => {
     if (ingressId && mockIngressData[ingressId]) {
       setIngress(mockIngressData[ingressId]);
     }
   }, [ingressId]);
+
+  // Update tab label
+  useEffect(() => {
+    if (ingress) {
+      updateActiveTabLabel(`Ingress: ${ingress.name}`);
+    }
+  }, [updateActiveTabLabel, ingress]);
+
+  // Sidebar width calculation
+  const sidebarWidth = sidebarOpen ? 240 : 40;
+
+  const tabBarTabs = tabs.map((tab) => ({
+    id: tab.id,
+    label: tab.label,
+    closable: tab.closable,
+  }));
 
   const getStatusType = (status: string): 'active' | 'building' | 'error' => {
     switch (status) {
@@ -238,178 +250,162 @@ export function ContainerIngressDetailPage() {
 
   if (!ingress) {
     return (
-      <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-        <ContainerSidebar />
-        <main
-          className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-          style={{ left: 'var(--sidebar-width)' }}
-        >
-          <div className="flex-1 flex items-center justify-center">
-            <p className="text-[var(--color-text-subtle)]">Loading...</p>
-          </div>
-        </main>
-      </div>
+      <PageShell
+        sidebar={
+          <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+        }
+        sidebarWidth={sidebarWidth}
+        contentClassName="flex items-center justify-center"
+      >
+        <p className="text-[var(--color-text-subtle)]">Loading...</p>
+      </PageShell>
     );
   }
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <ContainerSidebar />
-
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: 'var(--sidebar-width)' }}
-      >
-        {/* TabBar */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          <TabBar
-            tabs={tabs}
-            activeTab={activeTab}
-            onTabClick={setActiveTab}
-            onTabClose={closeTab}
-          />
-        </div>
-
-        {/* TopBar */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          <TopBar>
-            <TopBar.Breadcrumb>
-              <Breadcrumb
-                items={[
-                  {
-                    label: 'clusterName',
-                    onClick: () => navigate('/container'),
-                  },
-                  {
-                    label: 'Ingresses',
-                    onClick: () => navigate('/container/ingresses'),
-                  },
-                  { label: ingress.name },
-                ]}
-              />
-            </TopBar.Breadcrumb>
-            <TopBar.Actions>
-              <button
-                className="p-2 rounded-md hover:bg-[var(--color-surface-subtle)] transition-colors"
-                onClick={() => console.log('Search')}
+    <PageShell
+      sidebar={
+        <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabReorder={moveTab}
+          onTabAdd={addNewTab}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={
+            <Breadcrumb
+              items={[
+                { label: 'clusterName', href: '/container' },
+                { label: 'Ingresses', href: '/container/ingresses' },
+                { label: ingress.name },
+              ]}
+            />
+          }
+          actions={
+            <>
+              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+                <IconSearch size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+                <IconTerminal2 size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+              <button className="p-1.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors">
+                <IconBell size={16} className="text-[var(--color-text-muted)]" stroke={1.5} />
+              </button>
+            </>
+          }
+        />
+      }
+      bottomPanel={
+        <ShellPanel
+          isExpanded={shellPanel.isExpanded}
+          onExpandedChange={shellPanel.setIsExpanded}
+          tabs={shellPanel.tabs}
+          activeTabId={shellPanel.activeTabId}
+          onActiveTabChange={shellPanel.setActiveTabId}
+          onCloseTab={shellPanel.closeTab}
+          onContentChange={shellPanel.updateContent}
+          onClear={shellPanel.clearContent}
+          onOpenInNewTab={(tab) => console.log('Open in new tab:', tab)}
+          initialHeight={350}
+          sidebarWidth={sidebarWidth}
+        />
+      }
+      bottomPanelPadding={shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0'}
+      contentClassName="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]"
+    >
+      <VStack gap={6}>
+        {/* Detail Header */}
+        <DetailHeader>
+          <DetailHeader.Title>Ingress: {ingress.name}</DetailHeader.Title>
+          <DetailHeader.Actions>
+            <ContextMenu items={moreActionsItems} trigger="click" align="right">
+              <Button
+                variant="secondary"
+                size="sm"
+                rightIcon={<IconChevronDown size={12} stroke={1.5} />}
               >
-                <IconSearch size={20} stroke={1.5} />
-              </button>
-              <button
-                className="p-2 rounded-md hover:bg-[var(--color-surface-subtle)] transition-colors"
-                onClick={() =>
-                  addShellTab({
-                    id: `shell-${Date.now()}`,
-                    title: 'Shell',
-                    type: 'shell',
-                  })
-                }
-              >
-                <IconTerminal2 size={20} stroke={1.5} />
-              </button>
-              <button className="p-2 rounded-md hover:bg-[var(--color-surface-subtle)] transition-colors relative">
-                <IconBell size={20} stroke={1.5} />
-              </button>
-            </TopBar.Actions>
-          </TopBar>
-        </div>
+                More Actions
+              </Button>
+            </ContextMenu>
+          </DetailHeader.Actions>
+          <DetailHeader.InfoGrid>
+            <DetailHeader.InfoCard
+              label="Status"
+              value={ingress.status}
+              status={getStatusType(ingress.status)}
+            />
+            <DetailHeader.InfoCard label="Namespace" value={ingress.namespace} copyable />
+            <DetailHeader.InfoCard label="Ingress Class" value={ingress.ingressClass} />
+            <DetailHeader.InfoCard label="Created at" value={ingress.createdAt} />
+          </DetailHeader.InfoGrid>
 
-        {/* Content */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
-            <VStack gap={6}>
-              {/* Detail Header */}
-              <DetailHeader>
-                <DetailHeader.Title>Ingress: {ingress.name}</DetailHeader.Title>
-                <DetailHeader.Actions>
-                  <ContextMenu items={moreActionsItems} trigger="click" align="right">
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      rightIcon={<IconChevronDown size={12} stroke={1.5} />}
-                    >
-                      More Actions
-                    </Button>
-                  </ContextMenu>
-                </DetailHeader.Actions>
-                <DetailHeader.InfoGrid>
-                  <DetailHeader.InfoCard
-                    label="Status"
-                    value={ingress.status}
-                    status={getStatusType(ingress.status)}
-                  />
-                  <DetailHeader.InfoCard label="Namespace" value={ingress.namespace} copyable />
-                  <DetailHeader.InfoCard label="Ingress Class" value={ingress.ingressClass} />
-                  <DetailHeader.InfoCard label="Created at" value={ingress.createdAt} />
-                </DetailHeader.InfoGrid>
+          {/* Labels & Annotations Cards */}
+          <HStack gap={3} className="w-full mt-3">
+            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+              <VStack gap={2}>
+                <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
+                  Labels ({Object.keys(ingress.labels).length})
+                </span>
+                <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
+                  {Object.entries(ingress.labels)
+                    .slice(0, 1)
+                    .map(([key, val]) => (
+                      <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
+                    ))}
+                  {Object.keys(ingress.labels).length > 1 && (
+                    <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
+                      (+{Object.keys(ingress.labels).length - 1})
+                    </span>
+                  )}
+                </div>
+              </VStack>
+            </div>
+            <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+              <VStack gap={2}>
+                <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
+                  Annotations ({Object.keys(ingress.annotations).length})
+                </span>
+                <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
+                  {Object.entries(ingress.annotations)
+                    .slice(0, 1)
+                    .map(([key, val]) => (
+                      <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
+                    ))}
+                  {Object.keys(ingress.annotations).length > 1 && (
+                    <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
+                      (+{Object.keys(ingress.annotations).length - 1})
+                    </span>
+                  )}
+                </div>
+              </VStack>
+            </div>
+          </HStack>
+        </DetailHeader>
 
-                {/* Labels & Annotations Cards */}
-                <HStack gap={3} className="w-full mt-3">
-                  <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-                    <VStack gap={2}>
-                      <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-                        Labels ({Object.keys(ingress.labels).length})
-                      </span>
-                      <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
-                        {Object.entries(ingress.labels)
-                          .slice(0, 1)
-                          .map(([key, val]) => (
-                            <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
-                          ))}
-                        {Object.keys(ingress.labels).length > 1 && (
-                          <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                            (+{Object.keys(ingress.labels).length - 1})
-                          </span>
-                        )}
-                      </div>
-                    </VStack>
-                  </div>
-                  <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-                    <VStack gap={2}>
-                      <span className="text-label-sm text-[var(--color-text-subtle)] leading-4">
-                        Annotations ({Object.keys(ingress.annotations).length})
-                      </span>
-                      <div className="flex flex-wrap items-center gap-1 min-w-0 w-full">
-                        {Object.entries(ingress.annotations)
-                          .slice(0, 1)
-                          .map(([key, val]) => (
-                            <Chip key={key} value={`${key}: ${val}`} maxWidth="100%" />
-                          ))}
-                        {Object.keys(ingress.annotations).length > 1 && (
-                          <span className="text-body-sm text-[var(--color-text-default)] cursor-pointer hover:underline">
-                            (+{Object.keys(ingress.annotations).length - 1})
-                          </span>
-                        )}
-                      </div>
-                    </VStack>
-                  </div>
-                </HStack>
-              </DetailHeader>
-
-              {/* Tabs */}
-              <Tabs defaultValue="rules">
-                <TabList>
-                  <Tab value="rules">Rules</Tab>
-                </TabList>
-                <TabPanel value="rules">
-                  <RulesTab rules={mockRulesData} />
-                </TabPanel>
-              </Tabs>
-            </VStack>
-          </div>
-        </div>
-
-        {/* Shell Panel */}
-        {isShellOpen && (
-          <ShellPanel
-            tabs={shellTabs}
-            activeTab={activeShellTab}
-            onTabChange={setActiveShellTab}
-            onTabClose={closeShellTab}
-            onClose={closeShell}
-          />
-        )}
-      </main>
-    </div>
+        {/* Tabs */}
+        <Tabs value={activeTab} onChange={setActiveTab}>
+          <TabList>
+            <Tab value="rules">Rules</Tab>
+          </TabList>
+          <TabPanel value="rules">
+            <RulesTab rules={mockRulesData} />
+          </TabPanel>
+        </Tabs>
+      </VStack>
+    </PageShell>
   );
 }

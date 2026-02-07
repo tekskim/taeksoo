@@ -12,6 +12,7 @@ import {
   Select,
   SectionCard,
   Disclosure,
+  PageShell,
 } from '@/design-system';
 import type { WizardSectionState } from '@/design-system';
 import { ContainerSidebar } from '@/components/ContainerSidebar';
@@ -218,16 +219,12 @@ export function CreateNamespacePage() {
   }, []);
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-
-      {/* Main Content */}
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: `${sidebarWidth}px` }}
-      >
-        {/* Tab Bar */}
+    <PageShell
+      sidebar={
+        <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
         <TabBar
           tabs={tabBarTabs}
           activeTab={activeTabId}
@@ -236,8 +233,8 @@ export function CreateNamespacePage() {
           onTabReorder={moveTab}
           onTabAdd={addNewTab}
         />
-
-        {/* Top Bar */}
+      }
+      topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -273,309 +270,304 @@ export function CreateNamespacePage() {
             </>
           }
         />
+      }
+      contentClassName="pt-3 px-8 pb-20"
+    >
+      <VStack gap={6}>
+        {/* Page Header */}
+        <VStack gap={2}>
+          <h1 className="text-heading-h4">Create namespace</h1>
+          <p className="text-body-sm text-[var(--color-text-subtle)]">
+            Namespace is a logical partition within a cluster that isolates and organizes resources
+            for easier management and access control.
+          </p>
+        </VStack>
 
-        {/* Scrollable Content */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)]">
-            <VStack gap={6}>
-              {/* Page Header */}
-              <VStack gap={2}>
-                <h1 className="text-heading-h4">Create namespace</h1>
-                <p className="text-body-sm text-[var(--color-text-subtle)]">
-                  Namespace is a logical partition within a cluster that isolates and organizes
-                  resources for easier management and access control.
-                </p>
-              </VStack>
+        {/* Main Content with Summary Sidebar */}
+        <HStack gap={6} className="w-full items-start">
+          {/* Form Sections */}
+          <VStack gap={4} className="flex-1">
+            {/* Basic Information Section */}
+            <SectionCard>
+              <SectionCard.Header title="Basic information" />
+              <SectionCard.Content>
+                <VStack gap={6}>
+                  {/* Namespace Name */}
+                  <VStack gap={2}>
+                    <label className="text-label-lg text-[var(--color-text-default)]">
+                      Namespace Name <span className="text-[var(--color-state-danger)]">*</span>
+                    </label>
+                    <Input
+                      placeholder="Enter a unique name"
+                      value={namespaceName}
+                      onChange={(e) => setNamespaceName(e.target.value)}
+                      fullWidth
+                    />
+                  </VStack>
 
-              {/* Main Content with Summary Sidebar */}
-              <HStack gap={6} className="w-full items-start">
-                {/* Form Sections */}
-                <VStack gap={4} className="flex-1">
-                  {/* Basic Information Section */}
-                  <SectionCard>
-                    <SectionCard.Header title="Basic information" />
-                    <SectionCard.Content>
-                      <VStack gap={6}>
-                        {/* Namespace Name */}
-                        <VStack gap={2}>
-                          <label className="text-label-lg text-[var(--color-text-default)]">
-                            Namespace Name{' '}
-                            <span className="text-[var(--color-state-danger)]">*</span>
-                          </label>
-                          <Input
-                            placeholder="Enter a unique name"
-                            value={namespaceName}
-                            onChange={(e) => setNamespaceName(e.target.value)}
-                            fullWidth
-                          />
-                        </VStack>
-
-                        {/* Description (collapsible) */}
-                        <Disclosure>
-                          <Disclosure.Trigger>Description</Disclosure.Trigger>
-                          <Disclosure.Panel>
-                            <div className="pt-2">
-                              <Input
-                                placeholder="Description"
-                                value={description}
-                                onChange={(e) => setDescription(e.target.value)}
-                                fullWidth
-                              />
-                            </div>
-                          </Disclosure.Panel>
-                        </Disclosure>
-                      </VStack>
-                    </SectionCard.Content>
-                  </SectionCard>
-
-                  {/* Pod Security Admission Section */}
-                  <SectionCard>
-                    <SectionCard.Header title="Pod security admission" />
-                    <SectionCard.Content>
-                      <VStack gap={6}>
-                        {/* Enforce */}
-                        <VStack gap={2}>
-                          <Checkbox
-                            checked={enforceEnabled}
-                            onChange={(e) => setEnforceEnabled(e.target.checked)}
-                            label="Enforce"
-                          />
-                          <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-                            Block the creation of pods that violate the policy.
-                          </p>
-                          <div className="grid grid-cols-2 gap-3">
-                            <Select
-                              options={PSA_PROFILE_OPTIONS}
-                              value={enforceProfile}
-                              onChange={setEnforceProfile}
-                              disabled={!enforceEnabled}
-                              fullWidth
-                            />
-                            <Input
-                              placeholder="Version (default: latest)"
-                              value={enforceVersion}
-                              onChange={(e) => setEnforceVersion(e.target.value)}
-                              disabled={!enforceEnabled}
-                              fullWidth
-                            />
-                          </div>
-                        </VStack>
-
-                        {/* Audit */}
-                        <VStack gap={2}>
-                          <Checkbox
-                            checked={auditEnabled}
-                            onChange={(e) => setAuditEnabled(e.target.checked)}
-                            label="Audit"
-                          />
-                          <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-                            Allow policy violations and records them in audit logs.
-                          </p>
-                          <div className="grid grid-cols-2 gap-3">
-                            <Select
-                              options={PSA_PROFILE_OPTIONS}
-                              value={auditProfile}
-                              onChange={setAuditProfile}
-                              disabled={!auditEnabled}
-                              fullWidth
-                            />
-                            <Input
-                              placeholder="Version (default: latest)"
-                              value={auditVersion}
-                              onChange={(e) => setAuditVersion(e.target.value)}
-                              disabled={!auditEnabled}
-                              fullWidth
-                            />
-                          </div>
-                        </VStack>
-
-                        {/* Warn */}
-                        <VStack gap={2}>
-                          <Checkbox
-                            checked={warnEnabled}
-                            onChange={(e) => setWarnEnabled(e.target.checked)}
-                            label="Warn"
-                          />
-                          <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-                            Allow the creation of violating pods but displays a warning message.
-                          </p>
-                          <div className="grid grid-cols-2 gap-3">
-                            <Select
-                              options={PSA_PROFILE_OPTIONS}
-                              value={warnProfile}
-                              onChange={setWarnProfile}
-                              disabled={!warnEnabled}
-                              fullWidth
-                            />
-                            <Input
-                              placeholder="Version (default: latest)"
-                              value={warnVersion}
-                              onChange={(e) => setWarnVersion(e.target.value)}
-                              disabled={!warnEnabled}
-                              fullWidth
-                            />
-                          </div>
-                        </VStack>
-                      </VStack>
-                    </SectionCard.Content>
-                  </SectionCard>
-
-                  {/* Labels & Annotations Section */}
-                  <SectionCard>
-                    <SectionCard.Header title="Labels & Annotations" />
-                    <SectionCard.Content>
-                      <VStack gap={6}>
-                        {/* Labels */}
-                        <VStack gap={3}>
-                          <VStack gap={1}>
-                            <label className="text-label-lg text-[var(--color-text-default)]">
-                              Labels
-                            </label>
-                            <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-                              Specify the labels used to identify and categorize the resource.
-                            </span>
-                          </VStack>
-
-                          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-                            <VStack gap={2}>
-                              {labels.length > 0 && (
-                                <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                                  <span className="block text-label-lg text-[var(--color-text-default)]">
-                                    Key
-                                  </span>
-                                  <span className="block text-label-lg text-[var(--color-text-default)]">
-                                    Value
-                                  </span>
-                                  <div />
-                                </div>
-                              )}
-                              {labels.map((label) => (
-                                <div
-                                  key={label.id}
-                                  className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
-                                >
-                                  <Input
-                                    placeholder="label key"
-                                    value={label.key}
-                                    onChange={(e) => updateLabel(label.id, 'key', e.target.value)}
-                                    fullWidth
-                                  />
-                                  <Input
-                                    placeholder="label value"
-                                    value={label.value}
-                                    onChange={(e) => updateLabel(label.id, 'value', e.target.value)}
-                                    fullWidth
-                                  />
-                                  <button
-                                    onClick={() => removeLabel(label.id)}
-                                    className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                  >
-                                    <IconX
-                                      size={16}
-                                      className="text-[var(--color-text-muted)]"
-                                      stroke={1.5}
-                                    />
-                                  </button>
-                                </div>
-                              ))}
-                              <div className="w-fit">
-                                <Button
-                                  variant="secondary"
-                                  size="sm"
-                                  leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                                  onClick={addLabel}
-                                >
-                                  Add Label
-                                </Button>
-                              </div>
-                            </VStack>
-                          </div>
-                        </VStack>
-
-                        {/* Annotations */}
-                        <VStack gap={3}>
-                          <VStack gap={1}>
-                            <label className="text-label-lg text-[var(--color-text-default)]">
-                              Annotations
-                            </label>
-                            <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
-                              Specify the annotations used to provide additional metadata for the
-                              resource.
-                            </span>
-                          </VStack>
-
-                          <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
-                            <VStack gap={2}>
-                              {annotations.length > 0 && (
-                                <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
-                                  <span className="block text-label-lg text-[var(--color-text-default)]">
-                                    Key
-                                  </span>
-                                  <span className="block text-label-lg text-[var(--color-text-default)]">
-                                    Value
-                                  </span>
-                                  <div />
-                                </div>
-                              )}
-                              {annotations.map((annotation) => (
-                                <div
-                                  key={annotation.id}
-                                  className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
-                                >
-                                  <Input
-                                    placeholder="annotation key"
-                                    value={annotation.key}
-                                    onChange={(e) =>
-                                      updateAnnotation(annotation.id, 'key', e.target.value)
-                                    }
-                                    fullWidth
-                                  />
-                                  <Input
-                                    placeholder="annotation value"
-                                    value={annotation.value}
-                                    onChange={(e) =>
-                                      updateAnnotation(annotation.id, 'value', e.target.value)
-                                    }
-                                    fullWidth
-                                  />
-                                  <button
-                                    onClick={() => removeAnnotation(annotation.id)}
-                                    className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                  >
-                                    <IconX
-                                      size={16}
-                                      className="text-[var(--color-text-muted)]"
-                                      stroke={1.5}
-                                    />
-                                  </button>
-                                </div>
-                              ))}
-                              <div className="w-fit">
-                                <Button
-                                  variant="secondary"
-                                  size="sm"
-                                  leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
-                                  onClick={addAnnotation}
-                                >
-                                  Add Annotation
-                                </Button>
-                              </div>
-                            </VStack>
-                          </div>
-                        </VStack>
-                      </VStack>
-                    </SectionCard.Content>
-                  </SectionCard>
+                  {/* Description (collapsible) */}
+                  <Disclosure>
+                    <Disclosure.Trigger>Description</Disclosure.Trigger>
+                    <Disclosure.Panel>
+                      <div className="pt-2">
+                        <Input
+                          placeholder="Description"
+                          value={description}
+                          onChange={(e) => setDescription(e.target.value)}
+                          fullWidth
+                        />
+                      </div>
+                    </Disclosure.Panel>
+                  </Disclosure>
                 </VStack>
+              </SectionCard.Content>
+            </SectionCard>
 
-                {/* Summary Sidebar */}
-                <SummarySidebar sectionStates={getSectionStates()} />
-              </HStack>
-            </VStack>
-          </div>
-        </div>
-      </main>
-    </div>
+            {/* Pod Security Admission Section */}
+            <SectionCard>
+              <SectionCard.Header title="Pod security admission" />
+              <SectionCard.Content>
+                <VStack gap={6}>
+                  {/* Enforce */}
+                  <VStack gap={2}>
+                    <Checkbox
+                      checked={enforceEnabled}
+                      onChange={(e) => setEnforceEnabled(e.target.checked)}
+                      label="Enforce"
+                    />
+                    <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+                      Block the creation of pods that violate the policy.
+                    </p>
+                    <div className="grid grid-cols-2 gap-3">
+                      <Select
+                        options={PSA_PROFILE_OPTIONS}
+                        value={enforceProfile}
+                        onChange={setEnforceProfile}
+                        disabled={!enforceEnabled}
+                        fullWidth
+                      />
+                      <Input
+                        placeholder="Version (default: latest)"
+                        value={enforceVersion}
+                        onChange={(e) => setEnforceVersion(e.target.value)}
+                        disabled={!enforceEnabled}
+                        fullWidth
+                      />
+                    </div>
+                  </VStack>
+
+                  {/* Audit */}
+                  <VStack gap={2}>
+                    <Checkbox
+                      checked={auditEnabled}
+                      onChange={(e) => setAuditEnabled(e.target.checked)}
+                      label="Audit"
+                    />
+                    <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+                      Allow policy violations and records them in audit logs.
+                    </p>
+                    <div className="grid grid-cols-2 gap-3">
+                      <Select
+                        options={PSA_PROFILE_OPTIONS}
+                        value={auditProfile}
+                        onChange={setAuditProfile}
+                        disabled={!auditEnabled}
+                        fullWidth
+                      />
+                      <Input
+                        placeholder="Version (default: latest)"
+                        value={auditVersion}
+                        onChange={(e) => setAuditVersion(e.target.value)}
+                        disabled={!auditEnabled}
+                        fullWidth
+                      />
+                    </div>
+                  </VStack>
+
+                  {/* Warn */}
+                  <VStack gap={2}>
+                    <Checkbox
+                      checked={warnEnabled}
+                      onChange={(e) => setWarnEnabled(e.target.checked)}
+                      label="Warn"
+                    />
+                    <p className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+                      Allow the creation of violating pods but displays a warning message.
+                    </p>
+                    <div className="grid grid-cols-2 gap-3">
+                      <Select
+                        options={PSA_PROFILE_OPTIONS}
+                        value={warnProfile}
+                        onChange={setWarnProfile}
+                        disabled={!warnEnabled}
+                        fullWidth
+                      />
+                      <Input
+                        placeholder="Version (default: latest)"
+                        value={warnVersion}
+                        onChange={(e) => setWarnVersion(e.target.value)}
+                        disabled={!warnEnabled}
+                        fullWidth
+                      />
+                    </div>
+                  </VStack>
+                </VStack>
+              </SectionCard.Content>
+            </SectionCard>
+
+            {/* Labels & Annotations Section */}
+            <SectionCard>
+              <SectionCard.Header title="Labels & Annotations" />
+              <SectionCard.Content>
+                <VStack gap={6}>
+                  {/* Labels */}
+                  <VStack gap={3}>
+                    <VStack gap={1}>
+                      <label className="text-label-lg text-[var(--color-text-default)]">
+                        Labels
+                      </label>
+                      <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+                        Specify the labels used to identify and categorize the resource.
+                      </span>
+                    </VStack>
+
+                    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                      <VStack gap={2}>
+                        {labels.length > 0 && (
+                          <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                            <span className="block text-label-lg text-[var(--color-text-default)]">
+                              Key
+                            </span>
+                            <span className="block text-label-lg text-[var(--color-text-default)]">
+                              Value
+                            </span>
+                            <div />
+                          </div>
+                        )}
+                        {labels.map((label) => (
+                          <div
+                            key={label.id}
+                            className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                          >
+                            <Input
+                              placeholder="label key"
+                              value={label.key}
+                              onChange={(e) => updateLabel(label.id, 'key', e.target.value)}
+                              fullWidth
+                            />
+                            <Input
+                              placeholder="label value"
+                              value={label.value}
+                              onChange={(e) => updateLabel(label.id, 'value', e.target.value)}
+                              fullWidth
+                            />
+                            <button
+                              onClick={() => removeLabel(label.id)}
+                              className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                            >
+                              <IconX
+                                size={16}
+                                className="text-[var(--color-text-muted)]"
+                                stroke={1.5}
+                              />
+                            </button>
+                          </div>
+                        ))}
+                        <div className="w-fit">
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                            onClick={addLabel}
+                          >
+                            Add Label
+                          </Button>
+                        </div>
+                      </VStack>
+                    </div>
+                  </VStack>
+
+                  {/* Annotations */}
+                  <VStack gap={3}>
+                    <VStack gap={1}>
+                      <label className="text-label-lg text-[var(--color-text-default)]">
+                        Annotations
+                      </label>
+                      <span className="text-[12px] text-[var(--color-text-subtle)] leading-4">
+                        Specify the annotations used to provide additional metadata for the
+                        resource.
+                      </span>
+                    </VStack>
+
+                    <div className="bg-[var(--color-surface-subtle)] border border-[var(--color-border-default)] rounded-[6px] p-3 w-full">
+                      <VStack gap={2}>
+                        {annotations.length > 0 && (
+                          <div className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full">
+                            <span className="block text-label-lg text-[var(--color-text-default)]">
+                              Key
+                            </span>
+                            <span className="block text-label-lg text-[var(--color-text-default)]">
+                              Value
+                            </span>
+                            <div />
+                          </div>
+                        )}
+                        {annotations.map((annotation) => (
+                          <div
+                            key={annotation.id}
+                            className="grid grid-cols-[1fr_1fr_20px] gap-2 w-full items-center"
+                          >
+                            <Input
+                              placeholder="annotation key"
+                              value={annotation.key}
+                              onChange={(e) =>
+                                updateAnnotation(annotation.id, 'key', e.target.value)
+                              }
+                              fullWidth
+                            />
+                            <Input
+                              placeholder="annotation value"
+                              value={annotation.value}
+                              onChange={(e) =>
+                                updateAnnotation(annotation.id, 'value', e.target.value)
+                              }
+                              fullWidth
+                            />
+                            <button
+                              onClick={() => removeAnnotation(annotation.id)}
+                              className="size-5 flex items-center justify-center hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                            >
+                              <IconX
+                                size={16}
+                                className="text-[var(--color-text-muted)]"
+                                stroke={1.5}
+                              />
+                            </button>
+                          </div>
+                        ))}
+                        <div className="w-fit">
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            leftIcon={<IconCirclePlus size={12} stroke={1.5} />}
+                            onClick={addAnnotation}
+                          >
+                            Add Annotation
+                          </Button>
+                        </div>
+                      </VStack>
+                    </div>
+                  </VStack>
+                </VStack>
+              </SectionCard.Content>
+            </SectionCard>
+          </VStack>
+
+          {/* Summary Sidebar */}
+          <SummarySidebar sectionStates={getSectionStates()} />
+        </HStack>
+      </VStack>
+    </PageShell>
   );
 }
 

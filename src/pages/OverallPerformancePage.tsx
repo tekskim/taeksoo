@@ -13,14 +13,16 @@ import {
   MonitoringToolbar,
   SectionCard,
   Table,
+  PageShell,
   type TableColumn,
   type TimeRangeValue,
   fixedColumns,
   columnMinWidths,
 } from '@/design-system';
-import { StorageSidebar } from '@/components/StorageSidebar';
+import { Sidebar } from '@/components/Sidebar';
 import { DataViewDrawer } from '@/components/DataViewDrawer';
 import { useTabs } from '@/contexts/TabContext';
+import { useSidebar } from '@/contexts/SidebarContext';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import {
   IconBell,
@@ -939,7 +941,8 @@ function EmptyStateChartCard({
    ---------------------------------------- */
 
 export function OverallPerformancePage() {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { isOpen: sidebarOpen, toggle: toggleSidebar, open: openSidebar } = useSidebar();
+  const sidebarWidth = sidebarOpen ? 200 : 0;
   const [activeTab, setActiveTab] = useState('pools');
   const [timeRange, setTimeRange] = useState<TimeRangeValue>('30m');
   const { isDark } = useDarkMode();
@@ -1098,655 +1101,638 @@ export function OverallPerformancePage() {
   ];
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <StorageSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
-
-      {/* Main Content */}
-      <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'}`}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Tab Bar */}
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            onTabAdd={addNewTab}
-            onTabReorder={moveTab}
-            showAddButton={true}
-            showWindowControls={true}
-          />
-
-          {/* Top Bar */}
-          <TopBar
-            showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
-            showNavigation={true}
-            onBack={() => window.history.back()}
-            onForward={() => window.history.forward()}
-            breadcrumb={
-              <Breadcrumb
-                items={[{ label: 'Home', href: '/storage' }, { label: 'Overall performance' }]}
-              />
-            }
-            actions={
-              <TopBarAction icon={<IconBell size={16} stroke={1.5} />} aria-label="Notifications" />
-            }
-          />
+    <PageShell
+      sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={openSidebar}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={
+            <Breadcrumb
+              items={[{ label: 'Home', href: '/storage' }, { label: 'Overall performance' }]}
+            />
+          }
+          actions={
+            <TopBarAction icon={<IconBell size={16} stroke={1.5} />} aria-label="Notifications" />
+          }
+        />
+      }
+      contentClassName="pt-4 px-8 pb-20"
+    >
+      <VStack gap={6} className="min-w-[1176px]">
+        {/* Page Header */}
+        <div className="flex items-center justify-between h-8">
+          <h1 className="text-heading-h5 text-[var(--color-text-default)]">Overall performance</h1>
         </div>
 
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
-            <VStack gap={6} className="min-w-[1176px]">
-              {/* Page Header */}
-              <div className="flex items-center justify-between h-8">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">
-                  Overall performance
-                </h1>
-              </div>
+        {/* Page Tabs */}
+        <div className="w-full">
+          <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
+            <TabList>
+              <Tab value="pools">Pools</Tab>
+              <Tab value="hosts">Hosts</Tab>
+              <Tab value="osds">OSDs</Tab>
+              <Tab value="images">Images</Tab>
+            </TabList>
 
-              {/* Page Tabs */}
-              <div className="w-full">
-                <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
-                  <TabList>
-                    <Tab value="pools">Pools</Tab>
-                    <Tab value="hosts">Hosts</Tab>
-                    <Tab value="osds">OSDs</Tab>
-                    <Tab value="images">Images</Tab>
-                  </TabList>
+            {/* Pools Tab Panel */}
+            <TabPanel value="pools" className="pt-6">
+              <VStack gap={6}>
+                {/* Time Period Selector */}
+                <div className="flex justify-start">
+                  <MonitoringToolbar
+                    timeRange={timeRange}
+                    onTimeRangeChange={setTimeRange}
+                    onRefresh={() => console.log('Refresh clicked')}
+                    showRefresh={true}
+                  />
+                </div>
 
-                  {/* Pools Tab Panel */}
-                  <TabPanel value="pools" className="pt-6">
-                    <VStack gap={6}>
-                      {/* Time Period Selector */}
-                      <div className="flex justify-start">
-                        <MonitoringToolbar
-                          timeRange={timeRange}
-                          onTimeRangeChange={setTimeRange}
-                          onRefresh={() => console.log('Refresh clicked')}
-                          showRefresh={true}
+                {/* Stats Cards - Row 1 */}
+                <div className="flex gap-6">
+                  {poolsStats.slice(0, 4).map((stat) => (
+                    <StatCardItem key={stat.label} {...stat} />
+                  ))}
+                </div>
+
+                {/* Stats Cards - Row 2 */}
+                <div className="flex gap-6">
+                  {poolsStats.slice(4, 8).map((stat) => (
+                    <StatCardItem key={stat.label} {...stat} />
+                  ))}
+                </div>
+
+                {/* Charts - Row 1 */}
+                <div className="flex gap-6">
+                  <div className="flex-1">
+                    <ChartCard
+                      title="Pool capacity usage (RAW)"
+                      series={capacitySeries}
+                      yAxisFormatter={(v) => `${v} TiB`}
+                      isDarkMode={isDark}
+                      timeRange={timeRange}
+                      onTimeRangeChange={setTimeRange}
+                      onRefresh={() => console.log('Refresh clicked')}
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <ChartCard
+                      title="Client IOPS by pool"
+                      series={iopsSeries}
+                      isDarkMode={isDark}
+                      timeRange={timeRange}
+                      onTimeRangeChange={setTimeRange}
+                      onRefresh={() => console.log('Refresh clicked')}
+                    />
+                  </div>
+                </div>
+
+                {/* Charts - Row 2 */}
+                <div className="flex gap-6">
+                  <div className="w-[calc(50%-12px)]">
+                    <ChartCard
+                      title="Client bandwidth by pool"
+                      series={bandwidthSeries}
+                      yAxisFormatter={(v) => `${v} MB/s`}
+                      isDarkMode={isDark}
+                      timeRange={timeRange}
+                      onTimeRangeChange={setTimeRange}
+                      onRefresh={() => console.log('Refresh clicked')}
+                    />
+                  </div>
+                  <div className="w-[calc(50%-12px)]">
+                    <EmptyStateChartCard
+                      title="Recovery rate"
+                      yAxisFormatter={(v) => `${v} MB/s`}
+                      isDarkMode={isDark}
+                    />
+                  </div>
+                </div>
+
+                {/* Pool Overview Table */}
+                <SectionCard>
+                  <SectionCard.Header title="Pool overview" />
+                  <SectionCard.Content gap={0}>
+                    <Table<PoolOverviewRow>
+                      columns={poolOverviewColumns}
+                      data={poolOverviewData}
+                      rowKey="id"
+                    />
+                  </SectionCard.Content>
+                </SectionCard>
+              </VStack>
+            </TabPanel>
+
+            {/* Hosts Tab Panel */}
+            <TabPanel value="hosts" className="pt-6">
+              <VStack gap={6}>
+                {/* Time Period Selector */}
+                <div className="flex justify-start">
+                  <MonitoringToolbar
+                    timeRange={timeRange}
+                    onTimeRangeChange={setTimeRange}
+                    onRefresh={() => console.log('Refresh clicked')}
+                    showRefresh={true}
+                  />
+                </div>
+
+                {/* Stats Cards Row */}
+                <div className="flex gap-6">
+                  {hostsStats.map((stat) => (
+                    <StatCardItem key={stat.label} {...stat} />
+                  ))}
+                </div>
+
+                {/* Charts Row */}
+                <div className="flex gap-6">
+                  <div className="flex-1">
+                    <ChartCard
+                      title="CPU Busy"
+                      series={cpuBusySeries}
+                      yAxisFormatter={(v) => `${v.toFixed(1)}%`}
+                      isDarkMode={isDark}
+                      timeRange={timeRange}
+                      onTimeRangeChange={setTimeRange}
+                      onRefresh={() => console.log('Refresh clicked')}
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <ChartCard
+                      title="Network load"
+                      series={networkLoadSeries}
+                      yAxisFormatter={(v) => `${v} MiB/s`}
+                      isDarkMode={isDark}
+                      timeRange={timeRange}
+                      onTimeRangeChange={setTimeRange}
+                      onRefresh={() => console.log('Refresh clicked')}
+                    />
+                  </div>
+                </div>
+
+                {/* Host Overview Table */}
+                <SectionCard>
+                  <SectionCard.Header title="Host overview" />
+                  <SectionCard.Content gap={0}>
+                    <Table<HostOverviewRow>
+                      columns={hostOverviewColumns}
+                      data={hostOverviewData}
+                      rowKey="id"
+                    />
+                  </SectionCard.Content>
+                </SectionCard>
+              </VStack>
+            </TabPanel>
+
+            {/* OSDs Tab Panel */}
+            <TabPanel value="osds" className="pt-6">
+              <VStack gap={6}>
+                {/* Time Period Selector */}
+                <div className="flex justify-start">
+                  <MonitoringToolbar
+                    timeRange={timeRange}
+                    onTimeRangeChange={setTimeRange}
+                    onRefresh={() => console.log('Refresh clicked')}
+                    showRefresh={true}
+                  />
+                </div>
+
+                {/* Read Latencies Row */}
+                <div className="flex gap-6">
+                  {/* Highest READ Latencies Table */}
+                  <div className="flex-1 h-[334px]">
+                    <SectionCard className="h-full">
+                      <SectionCard.Header title="Highest READ latencies" />
+                      <SectionCard.Content gap={0} className="overflow-auto flex-1">
+                        <Table<OsdLatencyRow>
+                          columns={osdLatencyColumns}
+                          data={osdReadLatencyData}
+                          rowKey="id"
+                          rowHeight="40px"
                         />
-                      </div>
+                      </SectionCard.Content>
+                    </SectionCard>
+                  </div>
+                  {/* OSD Read Latencies Chart */}
+                  <div className="flex-1">
+                    <ChartCard
+                      title="OSD Read Latencies"
+                      series={osdReadLatenciesSeries}
+                      yAxisFormatter={(v) => `${v}`}
+                      isDarkMode={isDark}
+                      timeRange={timeRange}
+                      onTimeRangeChange={setTimeRange}
+                      onRefresh={() => console.log('Refresh clicked')}
+                    />
+                  </div>
+                </div>
 
-                      {/* Stats Cards - Row 1 */}
-                      <div className="flex gap-6">
-                        {poolsStats.slice(0, 4).map((stat) => (
-                          <StatCardItem key={stat.label} {...stat} />
-                        ))}
-                      </div>
-
-                      {/* Stats Cards - Row 2 */}
-                      <div className="flex gap-6">
-                        {poolsStats.slice(4, 8).map((stat) => (
-                          <StatCardItem key={stat.label} {...stat} />
-                        ))}
-                      </div>
-
-                      {/* Charts - Row 1 */}
-                      <div className="flex gap-6">
-                        <div className="flex-1">
-                          <ChartCard
-                            title="Pool capacity usage (RAW)"
-                            series={capacitySeries}
-                            yAxisFormatter={(v) => `${v} TiB`}
-                            isDarkMode={isDark}
-                            timeRange={timeRange}
-                            onTimeRangeChange={setTimeRange}
-                            onRefresh={() => console.log('Refresh clicked')}
-                          />
-                        </div>
-                        <div className="flex-1">
-                          <ChartCard
-                            title="Client IOPS by pool"
-                            series={iopsSeries}
-                            isDarkMode={isDark}
-                            timeRange={timeRange}
-                            onTimeRangeChange={setTimeRange}
-                            onRefresh={() => console.log('Refresh clicked')}
-                          />
-                        </div>
-                      </div>
-
-                      {/* Charts - Row 2 */}
-                      <div className="flex gap-6">
-                        <div className="w-[calc(50%-12px)]">
-                          <ChartCard
-                            title="Client bandwidth by pool"
-                            series={bandwidthSeries}
-                            yAxisFormatter={(v) => `${v} MB/s`}
-                            isDarkMode={isDark}
-                            timeRange={timeRange}
-                            onTimeRangeChange={setTimeRange}
-                            onRefresh={() => console.log('Refresh clicked')}
-                          />
-                        </div>
-                        <div className="w-[calc(50%-12px)]">
-                          <EmptyStateChartCard
-                            title="Recovery rate"
-                            yAxisFormatter={(v) => `${v} MB/s`}
-                            isDarkMode={isDark}
-                          />
-                        </div>
-                      </div>
-
-                      {/* Pool Overview Table */}
-                      <SectionCard>
-                        <SectionCard.Header title="Pool overview" />
-                        <SectionCard.Content gap={0}>
-                          <Table<PoolOverviewRow>
-                            columns={poolOverviewColumns}
-                            data={poolOverviewData}
-                            rowKey="id"
-                          />
-                        </SectionCard.Content>
-                      </SectionCard>
-                    </VStack>
-                  </TabPanel>
-
-                  {/* Hosts Tab Panel */}
-                  <TabPanel value="hosts" className="pt-6">
-                    <VStack gap={6}>
-                      {/* Time Period Selector */}
-                      <div className="flex justify-start">
-                        <MonitoringToolbar
-                          timeRange={timeRange}
-                          onTimeRangeChange={setTimeRange}
-                          onRefresh={() => console.log('Refresh clicked')}
-                          showRefresh={true}
+                {/* Write Latencies Row */}
+                <div className="flex gap-6">
+                  {/* Highest WRITE Latencies Table */}
+                  <div className="flex-1 h-[334px]">
+                    <SectionCard className="h-full">
+                      <SectionCard.Header title="Highest WRITE latencies" />
+                      <SectionCard.Content gap={0} className="overflow-auto flex-1">
+                        <Table<OsdLatencyRow>
+                          columns={osdLatencyColumns}
+                          data={osdWriteLatencyData}
+                          rowKey="id"
+                          rowHeight="40px"
                         />
-                      </div>
+                      </SectionCard.Content>
+                    </SectionCard>
+                  </div>
+                  {/* OSD Write Latencies Chart */}
+                  <div className="flex-1">
+                    <ChartCard
+                      title="OSD Write Latencies"
+                      series={osdWriteLatenciesSeries}
+                      yAxisFormatter={(v) => `${v}`}
+                      isDarkMode={isDark}
+                      timeRange={timeRange}
+                      onTimeRangeChange={setTimeRange}
+                      onRefresh={() => console.log('Refresh clicked')}
+                    />
+                  </div>
+                </div>
 
-                      {/* Stats Cards Row */}
-                      <div className="flex gap-6">
-                        {hostsStats.map((stat) => (
-                          <StatCardItem key={stat.label} {...stat} />
-                        ))}
-                      </div>
+                {/* Pie charts Row */}
+                <div className="flex gap-6">
+                  <PieChartCard title="OSD Types Summary" data={osdTypesSummaryData} />
+                  <PieChartCard title="OSD Objectstore Types" data={osdObjectstoreTypesData} />
+                  <PieChartCard title="OSD Size Summary" data={osdSizeSummaryData} />
+                  <SingleValueDoughnutCard
+                    title="OSD onode Hits Ratio"
+                    value={98.3}
+                    color="#ef4444"
+                    className="flex-1"
+                  />
+                </div>
 
-                      {/* Charts Row */}
-                      <div className="flex gap-6">
-                        <div className="flex-1">
-                          <ChartCard
-                            title="CPU Busy"
-                            series={cpuBusySeries}
-                            yAxisFormatter={(v) => `${v.toFixed(1)}%`}
-                            isDarkMode={isDark}
-                            timeRange={timeRange}
-                            onTimeRangeChange={setTimeRange}
-                            onRefresh={() => console.log('Refresh clicked')}
-                          />
-                        </div>
-                        <div className="flex-1">
-                          <ChartCard
-                            title="Network load"
-                            series={networkLoadSeries}
-                            yAxisFormatter={(v) => `${v} MiB/s`}
-                            isDarkMode={isDark}
-                            timeRange={timeRange}
-                            onTimeRangeChange={setTimeRange}
-                            onRefresh={() => console.log('Refresh clicked')}
-                          />
-                        </div>
-                      </div>
+                {/* Distribution & Read/Write Charts Row */}
+                <div className="flex gap-6">
+                  <div className="flex-1">
+                    <ChartCard
+                      title="Distribution of PGs per OSD"
+                      series={pgDistributionSeries}
+                      yAxisFormatter={(v) => `${v}`}
+                      isDarkMode={isDark}
+                      timeRange={timeRange}
+                      onTimeRangeChange={setTimeRange}
+                      onRefresh={() => console.log('Refresh clicked')}
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <ChartCard
+                      title="Read/Write Profile"
+                      series={readWriteProfileSeries}
+                      yAxisFormatter={(v) => `${v}`}
+                      isDarkMode={isDark}
+                      timeRange={timeRange}
+                      onTimeRangeChange={setTimeRange}
+                      onRefresh={() => console.log('Refresh clicked')}
+                    />
+                  </div>
+                </div>
 
-                      {/* Host Overview Table */}
-                      <SectionCard>
-                        <SectionCard.Header title="Host overview" />
-                        <SectionCard.Content gap={0}>
-                          <Table<HostOverviewRow>
-                            columns={hostOverviewColumns}
-                            data={hostOverviewData}
-                            rowKey="id"
-                          />
-                        </SectionCard.Content>
-                      </SectionCard>
-                    </VStack>
-                  </TabPanel>
+                {/* Top Slow OSD Ops Table */}
+                <SectionCard>
+                  <SectionCard.Header title="Top slow OSD ops" />
+                  <SectionCard.Content gap={0}>
+                    <Table<SlowOsdOpsRow>
+                      columns={slowOsdOpsColumns}
+                      data={slowOsdOpsData}
+                      rowKey="id"
+                    />
+                  </SectionCard.Content>
+                </SectionCard>
+              </VStack>
+            </TabPanel>
 
-                  {/* OSDs Tab Panel */}
-                  <TabPanel value="osds" className="pt-6">
-                    <VStack gap={6}>
-                      {/* Time Period Selector */}
-                      <div className="flex justify-start">
-                        <MonitoringToolbar
-                          timeRange={timeRange}
-                          onTimeRangeChange={setTimeRange}
-                          onRefresh={() => console.log('Refresh clicked')}
-                          showRefresh={true}
+            {/* Images Tab Panel */}
+            <TabPanel value="images" className="pt-6">
+              <VStack gap={6}>
+                {/* Time Period Selector */}
+                <div className="flex justify-start">
+                  <MonitoringToolbar
+                    timeRange={timeRange}
+                    onTimeRangeChange={setTimeRange}
+                    onRefresh={() => console.log('Refresh clicked')}
+                    showRefresh={true}
+                  />
+                </div>
+
+                {/* Highest Throughput & Highest Latencies Tables */}
+                <div className="flex gap-6">
+                  <div className="flex-1 h-[334px]">
+                    <SectionCard className="h-full">
+                      <SectionCard.Header title="Highest throughput" />
+                      <SectionCard.Content gap={0} className="overflow-auto flex-1">
+                        <Table<{ id: string; imageName: string; throughput: string }>
+                          columns={[
+                            {
+                              key: 'imageName',
+                              label: 'Image name',
+                              flex: 1,
+                              minWidth: columnMinWidths.name,
+                              sortable: true,
+                            },
+                            {
+                              key: 'throughput',
+                              label: 'Throughput',
+                              flex: 1,
+                              minWidth: '100px',
+                              sortable: true,
+                            },
+                          ]}
+                          data={[
+                            {
+                              id: '1',
+                              imageName: 'ubuntu-22.04-base',
+                              throughput: '125 MB/s',
+                            },
+                            { id: '2', imageName: 'centos-8-minimal', throughput: '98 MB/s' },
+                            { id: '3', imageName: 'debian-11-server', throughput: '87 MB/s' },
+                            { id: '4', imageName: 'rocky-linux-9', throughput: '82 MB/s' },
+                            {
+                              id: '5',
+                              imageName: 'fedora-38-workstation',
+                              throughput: '76 MB/s',
+                            },
+                            { id: '6', imageName: 'alpine-3.18', throughput: '71 MB/s' },
+                            { id: '7', imageName: 'arch-linux-2024', throughput: '68 MB/s' },
+                            { id: '8', imageName: 'opensuse-leap-15', throughput: '65 MB/s' },
+                          ]}
+                          rowKey="id"
+                          rowHeight="40px"
                         />
-                      </div>
+                      </SectionCard.Content>
+                    </SectionCard>
+                  </div>
+                  <div className="flex-1 h-[334px]">
+                    <SectionCard className="h-full">
+                      <SectionCard.Header title="Highest latencies" />
+                      <SectionCard.Content gap={0} className="overflow-auto flex-1">
+                        <Table<{ id: string; imageName: string; latency: string }>
+                          columns={[
+                            {
+                              key: 'imageName',
+                              label: 'Image name',
+                              flex: 1,
+                              minWidth: columnMinWidths.name,
+                              sortable: true,
+                            },
+                            {
+                              key: 'latency',
+                              label: 'Latency',
+                              flex: 1,
+                              minWidth: '100px',
+                              sortable: true,
+                            },
+                          ]}
+                          data={[
+                            { id: '1', imageName: 'windows-server-2019', latency: '45 ms' },
+                            { id: '2', imageName: 'rhel-8-enterprise', latency: '32 ms' },
+                            { id: '3', imageName: 'ubuntu-20.04-lts', latency: '28 ms' },
+                            { id: '4', imageName: 'oracle-linux-8', latency: '24 ms' },
+                            { id: '5', imageName: 'sles-15-sp4', latency: '21 ms' },
+                            { id: '6', imageName: 'amazon-linux-2023', latency: '18 ms' },
+                            { id: '7', imageName: 'kali-linux-2024', latency: '15 ms' },
+                            { id: '8', imageName: 'nixos-23.11', latency: '12 ms' },
+                          ]}
+                          rowKey="id"
+                          rowHeight="40px"
+                        />
+                      </SectionCard.Content>
+                    </SectionCard>
+                  </div>
+                </div>
 
-                      {/* Read Latencies Row */}
-                      <div className="flex gap-6">
-                        {/* Highest READ Latencies Table */}
-                        <div className="flex-1 h-[334px]">
-                          <SectionCard className="h-full">
-                            <SectionCard.Header title="Highest READ latencies" />
-                            <SectionCard.Content gap={0} className="overflow-auto flex-1">
-                              <Table<OsdLatencyRow>
-                                columns={osdLatencyColumns}
-                                data={osdReadLatencyData}
-                                rowKey="id"
-                                rowHeight="40px"
+                {/* IOPS & Throughput Charts */}
+                <div className="flex gap-6">
+                  <div className="flex-1">
+                    <ChartCard
+                      title="IOPS"
+                      series={[
+                        {
+                          name: 'image-001',
+                          color: chartColors.cyan400,
+                          data: [120, 125, 130, 128, 135, 140, 138, 142, 145, 140],
+                        },
+                        {
+                          name: 'image-002',
+                          color: chartColors.emerald400,
+                          data: [100, 105, 110, 108, 115, 120, 118, 122, 125, 120],
+                        },
+                        {
+                          name: 'image-003',
+                          color: chartColors.amber400,
+                          data: [80, 85, 90, 88, 95, 100, 98, 102, 105, 100],
+                        },
+                        {
+                          name: 'image-004',
+                          color: chartColors.violet400,
+                          data: [60, 65, 70, 68, 75, 80, 78, 82, 85, 80],
+                        },
+                      ]}
+                      yAxisFormatter={(v) => `${v}`}
+                      isDarkMode={isDark}
+                      timeRange={timeRange}
+                      onTimeRangeChange={setTimeRange}
+                      onRefresh={() => console.log('Refresh clicked')}
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <ChartCard
+                      title="Throughput"
+                      series={[
+                        {
+                          name: 'read',
+                          color: chartColors.cyan400,
+                          data: [450, 480, 520, 490, 550, 580, 540, 600, 580, 560],
+                        },
+                        {
+                          name: 'write',
+                          color: chartColors.emerald400,
+                          data: [120, 150, 180, 160, 200, 220, 190, 250, 230, 210],
+                        },
+                      ]}
+                      yAxisFormatter={(v) => `${v}`}
+                      isDarkMode={isDark}
+                      timeRange={timeRange}
+                      onTimeRangeChange={setTimeRange}
+                      onRefresh={() => console.log('Refresh clicked')}
+                    />
+                  </div>
+                </div>
+
+                {/* Average Latency & Highest IOPS Charts */}
+                <div className="flex gap-6">
+                  <div className="flex-1">
+                    <ChartCard
+                      title="Average latency"
+                      series={[
+                        {
+                          name: 'image-001',
+                          color: chartColors.cyan400,
+                          data: [12, 14, 13, 15, 14, 16, 15, 17, 16, 15],
+                        },
+                        {
+                          name: 'image-002',
+                          color: chartColors.emerald400,
+                          data: [18, 20, 19, 21, 20, 22, 21, 23, 22, 21],
+                        },
+                        {
+                          name: 'image-003',
+                          color: chartColors.amber400,
+                          data: [8, 10, 9, 11, 10, 12, 11, 13, 12, 11],
+                        },
+                        {
+                          name: 'image-004',
+                          color: chartColors.violet400,
+                          data: [22, 24, 23, 25, 24, 26, 25, 27, 26, 25],
+                        },
+                      ]}
+                      yAxisFormatter={(v) => `${v} ms`}
+                      isDarkMode={isDark}
+                      timeRange={timeRange}
+                      onTimeRangeChange={setTimeRange}
+                      onRefresh={() => console.log('Refresh clicked')}
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <ChartCard
+                      title="Highest IOPS"
+                      series={[
+                        {
+                          name: 'read',
+                          color: chartColors.cyan400,
+                          data: [500, 520, 540, 530, 560, 580, 570, 600, 590, 580],
+                        },
+                        {
+                          name: 'write',
+                          color: chartColors.emerald400,
+                          data: [150, 160, 170, 165, 180, 190, 185, 200, 195, 190],
+                        },
+                      ]}
+                      yAxisFormatter={(v) => `${v}`}
+                      isDarkMode={isDark}
+                      timeRange={timeRange}
+                      onTimeRangeChange={setTimeRange}
+                      onRefresh={() => console.log('Refresh clicked')}
+                    />
+                  </div>
+                </div>
+
+                {/* Images Overview Table */}
+                <SectionCard>
+                  <SectionCard.Header title="Images overview" />
+                  <SectionCard.Content gap={0}>
+                    <Table<{
+                      id: string;
+                      imageName: string;
+                      iops: string;
+                      throughput: string;
+                    }>
+                      columns={[
+                        {
+                          key: 'imageName',
+                          label: 'Image name',
+                          flex: 1,
+                          minWidth: columnMinWidths.name,
+                          sortable: true,
+                          render: (_, row) => (
+                            <Link
+                              to={`/storage/images/${row.id}`}
+                              className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              {row.imageName}
+                            </Link>
+                          ),
+                        },
+                        {
+                          key: 'iops',
+                          label: 'IOPS',
+                          flex: 1,
+                          minWidth: columnMinWidths.readOps,
+                          sortable: true,
+                        },
+                        {
+                          key: 'throughput',
+                          label: 'Throughput',
+                          flex: 1,
+                          minWidth: '100px',
+                          sortable: true,
+                        },
+                        {
+                          key: 'actions',
+                          label: 'Action',
+                          width: fixedColumns.actions,
+                          align: 'center' as const,
+                          render: () => (
+                            <button className="p-1.5 hover:bg-[var(--color-surface-subtle)] rounded transition-colors">
+                              <IconTerminal2
+                                size={16}
+                                stroke={1.5}
+                                className="text-[var(--color-text-muted)]"
                               />
-                            </SectionCard.Content>
-                          </SectionCard>
-                        </div>
-                        {/* OSD Read Latencies Chart */}
-                        <div className="flex-1">
-                          <ChartCard
-                            title="OSD Read Latencies"
-                            series={osdReadLatenciesSeries}
-                            yAxisFormatter={(v) => `${v}`}
-                            isDarkMode={isDark}
-                            timeRange={timeRange}
-                            onTimeRangeChange={setTimeRange}
-                            onRefresh={() => console.log('Refresh clicked')}
-                          />
-                        </div>
-                      </div>
-
-                      {/* Write Latencies Row */}
-                      <div className="flex gap-6">
-                        {/* Highest WRITE Latencies Table */}
-                        <div className="flex-1 h-[334px]">
-                          <SectionCard className="h-full">
-                            <SectionCard.Header title="Highest WRITE latencies" />
-                            <SectionCard.Content gap={0} className="overflow-auto flex-1">
-                              <Table<OsdLatencyRow>
-                                columns={osdLatencyColumns}
-                                data={osdWriteLatencyData}
-                                rowKey="id"
-                                rowHeight="40px"
-                              />
-                            </SectionCard.Content>
-                          </SectionCard>
-                        </div>
-                        {/* OSD Write Latencies Chart */}
-                        <div className="flex-1">
-                          <ChartCard
-                            title="OSD Write Latencies"
-                            series={osdWriteLatenciesSeries}
-                            yAxisFormatter={(v) => `${v}`}
-                            isDarkMode={isDark}
-                            timeRange={timeRange}
-                            onTimeRangeChange={setTimeRange}
-                            onRefresh={() => console.log('Refresh clicked')}
-                          />
-                        </div>
-                      </div>
-
-                      {/* Pie charts Row */}
-                      <div className="flex gap-6">
-                        <PieChartCard title="OSD Types Summary" data={osdTypesSummaryData} />
-                        <PieChartCard
-                          title="OSD Objectstore Types"
-                          data={osdObjectstoreTypesData}
-                        />
-                        <PieChartCard title="OSD Size Summary" data={osdSizeSummaryData} />
-                        <SingleValueDoughnutCard
-                          title="OSD onode Hits Ratio"
-                          value={98.3}
-                          color="#ef4444"
-                          className="flex-1"
-                        />
-                      </div>
-
-                      {/* Distribution & Read/Write Charts Row */}
-                      <div className="flex gap-6">
-                        <div className="flex-1">
-                          <ChartCard
-                            title="Distribution of PGs per OSD"
-                            series={pgDistributionSeries}
-                            yAxisFormatter={(v) => `${v}`}
-                            isDarkMode={isDark}
-                            timeRange={timeRange}
-                            onTimeRangeChange={setTimeRange}
-                            onRefresh={() => console.log('Refresh clicked')}
-                          />
-                        </div>
-                        <div className="flex-1">
-                          <ChartCard
-                            title="Read/Write Profile"
-                            series={readWriteProfileSeries}
-                            yAxisFormatter={(v) => `${v}`}
-                            isDarkMode={isDark}
-                            timeRange={timeRange}
-                            onTimeRangeChange={setTimeRange}
-                            onRefresh={() => console.log('Refresh clicked')}
-                          />
-                        </div>
-                      </div>
-
-                      {/* Top Slow OSD Ops Table */}
-                      <SectionCard>
-                        <SectionCard.Header title="Top slow OSD ops" />
-                        <SectionCard.Content gap={0}>
-                          <Table<SlowOsdOpsRow>
-                            columns={slowOsdOpsColumns}
-                            data={slowOsdOpsData}
-                            rowKey="id"
-                          />
-                        </SectionCard.Content>
-                      </SectionCard>
-                    </VStack>
-                  </TabPanel>
-
-                  {/* Images Tab Panel */}
-                  <TabPanel value="images" className="pt-6">
-                    <VStack gap={6}>
-                      {/* Time Period Selector */}
-                      <div className="flex justify-start">
-                        <MonitoringToolbar
-                          timeRange={timeRange}
-                          onTimeRangeChange={setTimeRange}
-                          onRefresh={() => console.log('Refresh clicked')}
-                          showRefresh={true}
-                        />
-                      </div>
-
-                      {/* Highest Throughput & Highest Latencies Tables */}
-                      <div className="flex gap-6">
-                        <div className="flex-1 h-[334px]">
-                          <SectionCard className="h-full">
-                            <SectionCard.Header title="Highest throughput" />
-                            <SectionCard.Content gap={0} className="overflow-auto flex-1">
-                              <Table<{ id: string; imageName: string; throughput: string }>
-                                columns={[
-                                  {
-                                    key: 'imageName',
-                                    label: 'Image name',
-                                    flex: 1,
-                                    minWidth: columnMinWidths.name,
-                                    sortable: true,
-                                  },
-                                  {
-                                    key: 'throughput',
-                                    label: 'Throughput',
-                                    flex: 1,
-                                    minWidth: '100px',
-                                    sortable: true,
-                                  },
-                                ]}
-                                data={[
-                                  {
-                                    id: '1',
-                                    imageName: 'ubuntu-22.04-base',
-                                    throughput: '125 MB/s',
-                                  },
-                                  { id: '2', imageName: 'centos-8-minimal', throughput: '98 MB/s' },
-                                  { id: '3', imageName: 'debian-11-server', throughput: '87 MB/s' },
-                                  { id: '4', imageName: 'rocky-linux-9', throughput: '82 MB/s' },
-                                  {
-                                    id: '5',
-                                    imageName: 'fedora-38-workstation',
-                                    throughput: '76 MB/s',
-                                  },
-                                  { id: '6', imageName: 'alpine-3.18', throughput: '71 MB/s' },
-                                  { id: '7', imageName: 'arch-linux-2024', throughput: '68 MB/s' },
-                                  { id: '8', imageName: 'opensuse-leap-15', throughput: '65 MB/s' },
-                                ]}
-                                rowKey="id"
-                                rowHeight="40px"
-                              />
-                            </SectionCard.Content>
-                          </SectionCard>
-                        </div>
-                        <div className="flex-1 h-[334px]">
-                          <SectionCard className="h-full">
-                            <SectionCard.Header title="Highest latencies" />
-                            <SectionCard.Content gap={0} className="overflow-auto flex-1">
-                              <Table<{ id: string; imageName: string; latency: string }>
-                                columns={[
-                                  {
-                                    key: 'imageName',
-                                    label: 'Image name',
-                                    flex: 1,
-                                    minWidth: columnMinWidths.name,
-                                    sortable: true,
-                                  },
-                                  {
-                                    key: 'latency',
-                                    label: 'Latency',
-                                    flex: 1,
-                                    minWidth: '100px',
-                                    sortable: true,
-                                  },
-                                ]}
-                                data={[
-                                  { id: '1', imageName: 'windows-server-2019', latency: '45 ms' },
-                                  { id: '2', imageName: 'rhel-8-enterprise', latency: '32 ms' },
-                                  { id: '3', imageName: 'ubuntu-20.04-lts', latency: '28 ms' },
-                                  { id: '4', imageName: 'oracle-linux-8', latency: '24 ms' },
-                                  { id: '5', imageName: 'sles-15-sp4', latency: '21 ms' },
-                                  { id: '6', imageName: 'amazon-linux-2023', latency: '18 ms' },
-                                  { id: '7', imageName: 'kali-linux-2024', latency: '15 ms' },
-                                  { id: '8', imageName: 'nixos-23.11', latency: '12 ms' },
-                                ]}
-                                rowKey="id"
-                                rowHeight="40px"
-                              />
-                            </SectionCard.Content>
-                          </SectionCard>
-                        </div>
-                      </div>
-
-                      {/* IOPS & Throughput Charts */}
-                      <div className="flex gap-6">
-                        <div className="flex-1">
-                          <ChartCard
-                            title="IOPS"
-                            series={[
-                              {
-                                name: 'image-001',
-                                color: chartColors.cyan400,
-                                data: [120, 125, 130, 128, 135, 140, 138, 142, 145, 140],
-                              },
-                              {
-                                name: 'image-002',
-                                color: chartColors.emerald400,
-                                data: [100, 105, 110, 108, 115, 120, 118, 122, 125, 120],
-                              },
-                              {
-                                name: 'image-003',
-                                color: chartColors.amber400,
-                                data: [80, 85, 90, 88, 95, 100, 98, 102, 105, 100],
-                              },
-                              {
-                                name: 'image-004',
-                                color: chartColors.violet400,
-                                data: [60, 65, 70, 68, 75, 80, 78, 82, 85, 80],
-                              },
-                            ]}
-                            yAxisFormatter={(v) => `${v}`}
-                            isDarkMode={isDark}
-                            timeRange={timeRange}
-                            onTimeRangeChange={setTimeRange}
-                            onRefresh={() => console.log('Refresh clicked')}
-                          />
-                        </div>
-                        <div className="flex-1">
-                          <ChartCard
-                            title="Throughput"
-                            series={[
-                              {
-                                name: 'read',
-                                color: chartColors.cyan400,
-                                data: [450, 480, 520, 490, 550, 580, 540, 600, 580, 560],
-                              },
-                              {
-                                name: 'write',
-                                color: chartColors.emerald400,
-                                data: [120, 150, 180, 160, 200, 220, 190, 250, 230, 210],
-                              },
-                            ]}
-                            yAxisFormatter={(v) => `${v}`}
-                            isDarkMode={isDark}
-                            timeRange={timeRange}
-                            onTimeRangeChange={setTimeRange}
-                            onRefresh={() => console.log('Refresh clicked')}
-                          />
-                        </div>
-                      </div>
-
-                      {/* Average Latency & Highest IOPS Charts */}
-                      <div className="flex gap-6">
-                        <div className="flex-1">
-                          <ChartCard
-                            title="Average latency"
-                            series={[
-                              {
-                                name: 'image-001',
-                                color: chartColors.cyan400,
-                                data: [12, 14, 13, 15, 14, 16, 15, 17, 16, 15],
-                              },
-                              {
-                                name: 'image-002',
-                                color: chartColors.emerald400,
-                                data: [18, 20, 19, 21, 20, 22, 21, 23, 22, 21],
-                              },
-                              {
-                                name: 'image-003',
-                                color: chartColors.amber400,
-                                data: [8, 10, 9, 11, 10, 12, 11, 13, 12, 11],
-                              },
-                              {
-                                name: 'image-004',
-                                color: chartColors.violet400,
-                                data: [22, 24, 23, 25, 24, 26, 25, 27, 26, 25],
-                              },
-                            ]}
-                            yAxisFormatter={(v) => `${v} ms`}
-                            isDarkMode={isDark}
-                            timeRange={timeRange}
-                            onTimeRangeChange={setTimeRange}
-                            onRefresh={() => console.log('Refresh clicked')}
-                          />
-                        </div>
-                        <div className="flex-1">
-                          <ChartCard
-                            title="Highest IOPS"
-                            series={[
-                              {
-                                name: 'read',
-                                color: chartColors.cyan400,
-                                data: [500, 520, 540, 530, 560, 580, 570, 600, 590, 580],
-                              },
-                              {
-                                name: 'write',
-                                color: chartColors.emerald400,
-                                data: [150, 160, 170, 165, 180, 190, 185, 200, 195, 190],
-                              },
-                            ]}
-                            yAxisFormatter={(v) => `${v}`}
-                            isDarkMode={isDark}
-                            timeRange={timeRange}
-                            onTimeRangeChange={setTimeRange}
-                            onRefresh={() => console.log('Refresh clicked')}
-                          />
-                        </div>
-                      </div>
-
-                      {/* Images Overview Table */}
-                      <SectionCard>
-                        <SectionCard.Header title="Images overview" />
-                        <SectionCard.Content gap={0}>
-                          <Table<{
-                            id: string;
-                            imageName: string;
-                            iops: string;
-                            throughput: string;
-                          }>
-                            columns={[
-                              {
-                                key: 'imageName',
-                                label: 'Image name',
-                                flex: 1,
-                                minWidth: columnMinWidths.name,
-                                sortable: true,
-                                render: (_, row) => (
-                                  <Link
-                                    to={`/storage/images/${row.id}`}
-                                    className="font-medium text-[var(--color-action-primary)] hover:underline hover:underline-offset-2"
-                                    onClick={(e) => e.stopPropagation()}
-                                  >
-                                    {row.imageName}
-                                  </Link>
-                                ),
-                              },
-                              {
-                                key: 'iops',
-                                label: 'IOPS',
-                                flex: 1,
-                                minWidth: columnMinWidths.readOps,
-                                sortable: true,
-                              },
-                              {
-                                key: 'throughput',
-                                label: 'Throughput',
-                                flex: 1,
-                                minWidth: '100px',
-                                sortable: true,
-                              },
-                              {
-                                key: 'actions',
-                                label: 'Action',
-                                width: fixedColumns.actions,
-                                align: 'center' as const,
-                                render: () => (
-                                  <button className="p-1.5 hover:bg-[var(--color-surface-subtle)] rounded transition-colors">
-                                    <IconTerminal2
-                                      size={16}
-                                      stroke={1.5}
-                                      className="text-[var(--color-text-muted)]"
-                                    />
-                                  </button>
-                                ),
-                              },
-                            ]}
-                            data={[
-                              {
-                                id: 'img-001',
-                                imageName: 'ubuntu-22.04-base',
-                                iops: '1,250',
-                                throughput: '125 MB/s',
-                              },
-                              {
-                                id: 'img-002',
-                                imageName: 'centos-8-minimal',
-                                iops: '980',
-                                throughput: '98 MB/s',
-                              },
-                              {
-                                id: 'img-003',
-                                imageName: 'debian-11-server',
-                                iops: '870',
-                                throughput: '87 MB/s',
-                              },
-                              {
-                                id: 'img-004',
-                                imageName: 'windows-server-2019',
-                                iops: '650',
-                                throughput: '65 MB/s',
-                              },
-                            ]}
-                            rowKey="id"
-                          />
-                        </SectionCard.Content>
-                      </SectionCard>
-                    </VStack>
-                  </TabPanel>
-                </Tabs>
-              </div>
-            </VStack>
-          </div>
+                            </button>
+                          ),
+                        },
+                      ]}
+                      data={[
+                        {
+                          id: 'img-001',
+                          imageName: 'ubuntu-22.04-base',
+                          iops: '1,250',
+                          throughput: '125 MB/s',
+                        },
+                        {
+                          id: 'img-002',
+                          imageName: 'centos-8-minimal',
+                          iops: '980',
+                          throughput: '98 MB/s',
+                        },
+                        {
+                          id: 'img-003',
+                          imageName: 'debian-11-server',
+                          iops: '870',
+                          throughput: '87 MB/s',
+                        },
+                        {
+                          id: 'img-004',
+                          imageName: 'windows-server-2019',
+                          iops: '650',
+                          throughput: '65 MB/s',
+                        },
+                      ]}
+                      rowKey="id"
+                    />
+                  </SectionCard.Content>
+                </SectionCard>
+              </VStack>
+            </TabPanel>
+          </Tabs>
         </div>
-      </main>
-    </div>
+      </VStack>
+    </PageShell>
   );
 }
 

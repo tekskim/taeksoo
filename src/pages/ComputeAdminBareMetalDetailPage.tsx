@@ -18,6 +18,7 @@ import {
   Pagination,
   StatusIndicator,
   ContextMenu,
+  PageShell,
   fixedColumns,
 } from '@/design-system';
 import { Link } from 'react-router-dom';
@@ -304,6 +305,7 @@ const mockActionLogs: ActionLog[] = [
 export function ComputeAdminBareMetalDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 200 : 0;
   const [activeDetailTab, setActiveDetailTab] = useState('details');
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
 
@@ -377,553 +379,528 @@ export function ComputeAdminBareMetalDetailPage() {
   }));
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
-
-      {/* Main Content */}
-      <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${sidebarOpen ? 'left-[200px]' : 'left-0'}`}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Tab Bar */}
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            showWindowControls={true}
-          />
-
-          {/* Top Bar with Breadcrumb Navigation */}
-          <TopBar
-            showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
-            showNavigation={true}
-            onBack={() => window.history.back()}
-            onForward={() => window.history.forward()}
-            breadcrumb={
-              <Breadcrumb
-                items={[
-                  { label: 'Compute Admin', href: '/compute-admin' },
-                  { label: 'Bare metal nodes', href: '/compute-admin/bare-metal-nodes' },
-                  { label: bareMetal.name },
-                ]}
+    <PageShell
+      sidebar={
+        <ComputeAdminSidebar
+          isOpen={sidebarOpen}
+          onToggle={() => setSidebarOpen((prev) => !prev)}
+        />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          showWindowControls={true}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={
+            <Breadcrumb
+              items={[
+                { label: 'Compute Admin', href: '/compute-admin' },
+                { label: 'Bare metal nodes', href: '/compute-admin/bare-metal-nodes' },
+                { label: bareMetal.name },
+              ]}
+            />
+          }
+          actions={
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1.5} />}
+              aria-label="Notifications"
+              badge={true}
+            />
+          }
+        />
+      }
+      contentClassName="pt-3 px-8 pb-20 bg-[var(--color-surface-subtle)]"
+    >
+      <VStack gap={6} className="min-w-[1176px]">
+        {/* Bare Metal Header Card */}
+        <DetailHeader>
+          <DetailHeader.Title>
+            {bareMetal.locked && (
+              <IconLock
+                size={16}
+                stroke={1.5}
+                className="inline-block mr-1.5 text-[var(--color-text-default)]"
               />
-            }
-            actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-                badge={true}
-              />
-            }
-          />
-        </div>
+            )}
+            {bareMetal.name}
+          </DetailHeader.Title>
 
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          {/* Page Content */}
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
-            <VStack gap={6} className="min-w-[1176px]">
-              {/* Bare Metal Header Card */}
-              <DetailHeader>
-                <DetailHeader.Title>
-                  {bareMetal.locked && (
-                    <IconLock
-                      size={16}
-                      stroke={1.5}
-                      className="inline-block mr-1.5 text-[var(--color-text-default)]"
+          <DetailHeader.Actions>
+            <Button variant="secondary" size="sm" leftIcon={<IconPlayerPlay size={12} />}>
+              Start
+            </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconPlayerStop size={12} />}>
+              Stop
+            </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconRefresh size={12} />}>
+              Reboot
+            </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+              Delete
+            </Button>
+            <ContextMenu
+              items={[
+                {
+                  id: 'lock-setting',
+                  label: 'Lock setting',
+                  onClick: () => console.log('Lock setting'),
+                },
+                { id: 'edit', label: 'Edit', onClick: () => console.log('Edit') },
+              ]}
+              trigger="click"
+            >
+              <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
+                More Actions
+              </Button>
+            </ContextMenu>
+          </DetailHeader.Actions>
+
+          <DetailHeader.InfoGrid>
+            <DetailHeader.InfoCard label="Status" value="Active" status="active" />
+            <DetailHeader.InfoCard label="ID" value={bareMetal.id} copyable />
+            <DetailHeader.InfoCard label="Host" value={bareMetal.host} />
+            <DetailHeader.InfoCard label="Created at" value={bareMetal.createdAt} />
+          </DetailHeader.InfoGrid>
+        </DetailHeader>
+
+        {/* Bare Metal Tabs */}
+        <div className="w-full">
+          <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline" size="sm">
+            <TabList>
+              <Tab value="details">Details</Tab>
+              <Tab value="interfaces">Interfaces</Tab>
+              <Tab value="action-logs">Action logs</Tab>
+            </TabList>
+
+            {/* Details Tab Panel */}
+            <TabPanel value="details" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Basic information */}
+                <SectionCard>
+                  <SectionCard.Header
+                    title="Basic information"
+                    actions={
+                      <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+                        Edit
+                      </Button>
+                    }
+                  />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="Name" value={bareMetal.name} />
+                    <SectionCard.DataRow
+                      label="Availability zone"
+                      value={bareMetal.availabilityZone}
                     />
-                  )}
-                  {bareMetal.name}
-                </DetailHeader.Title>
+                    <SectionCard.DataRow label="Description" value={bareMetal.description} />
+                  </SectionCard.Content>
+                </SectionCard>
 
-                <DetailHeader.Actions>
-                  <Button variant="secondary" size="sm" leftIcon={<IconPlayerPlay size={12} />}>
-                    Start
-                  </Button>
-                  <Button variant="secondary" size="sm" leftIcon={<IconPlayerStop size={12} />}>
-                    Stop
-                  </Button>
-                  <Button variant="secondary" size="sm" leftIcon={<IconRefresh size={12} />}>
-                    Reboot
-                  </Button>
-                  <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
-                    Delete
-                  </Button>
-                  <ContextMenu
-                    items={[
-                      {
-                        id: 'lock-setting',
-                        label: 'Lock setting',
-                        onClick: () => console.log('Lock setting'),
-                      },
-                      { id: 'edit', label: 'Edit', onClick: () => console.log('Edit') },
-                    ]}
-                    trigger="click"
-                  >
-                    <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
-                      More Actions
-                    </Button>
-                  </ContextMenu>
-                </DetailHeader.Actions>
+                {/* Flavor */}
+                <SectionCard>
+                  <SectionCard.Header title="Flavor" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow
+                      label="Flavor name"
+                      value={bareMetal.flavor.name}
+                      isLink
+                      linkHref="/compute-admin/flavors"
+                    />
+                    <SectionCard.DataRow
+                      label="Spec"
+                      value={`CPU : ${bareMetal.flavor.cpu} / RAM : ${bareMetal.flavor.ram} / Disk : ${bareMetal.flavor.disk} / GPU : ${bareMetal.flavor.gpu}`}
+                    />
+                  </SectionCard.Content>
+                </SectionCard>
 
-                <DetailHeader.InfoGrid>
-                  <DetailHeader.InfoCard label="Status" value="Active" status="active" />
-                  <DetailHeader.InfoCard label="ID" value={bareMetal.id} copyable />
-                  <DetailHeader.InfoCard label="Host" value={bareMetal.host} />
-                  <DetailHeader.InfoCard label="Created at" value={bareMetal.createdAt} />
-                </DetailHeader.InfoGrid>
-              </DetailHeader>
+                {/* Source */}
+                <SectionCard>
+                  <SectionCard.Header title="Source" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow
+                      label="Image"
+                      value={bareMetal.imageName}
+                      isLink
+                      linkHref="/compute-admin/images"
+                    />
+                    <SectionCard.DataRow label="OS" value={bareMetal.image} />
+                  </SectionCard.Content>
+                </SectionCard>
 
-              {/* Bare Metal Tabs */}
-              <div className="w-full">
-                <Tabs
-                  value={activeDetailTab}
-                  onChange={setActiveDetailTab}
-                  variant="underline"
-                  size="sm"
-                >
-                  <TabList>
-                    <Tab value="details">Details</Tab>
-                    <Tab value="interfaces">Interfaces</Tab>
-                    <Tab value="action-logs">Action logs</Tab>
-                  </TabList>
+                {/* Authentication */}
+                <SectionCard>
+                  <SectionCard.Header title="Authentication" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="Key pair" value={bareMetal.keyPair} />
+                  </SectionCard.Content>
+                </SectionCard>
 
-                  {/* Details Tab Panel */}
-                  <TabPanel value="details" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Basic information */}
-                      <SectionCard>
-                        <SectionCard.Header
-                          title="Basic information"
-                          actions={
-                            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                              Edit
-                            </Button>
-                          }
-                        />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow label="Name" value={bareMetal.name} />
-                          <SectionCard.DataRow
-                            label="Availability zone"
-                            value={bareMetal.availabilityZone}
-                          />
-                          <SectionCard.DataRow label="Description" value={bareMetal.description} />
-                        </SectionCard.Content>
-                      </SectionCard>
-
-                      {/* Flavor */}
-                      <SectionCard>
-                        <SectionCard.Header title="Flavor" />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow
-                            label="Flavor name"
-                            value={bareMetal.flavor.name}
-                            isLink
-                            linkHref="/compute-admin/flavors"
-                          />
-                          <SectionCard.DataRow
-                            label="Spec"
-                            value={`CPU : ${bareMetal.flavor.cpu} / RAM : ${bareMetal.flavor.ram} / Disk : ${bareMetal.flavor.disk} / GPU : ${bareMetal.flavor.gpu}`}
-                          />
-                        </SectionCard.Content>
-                      </SectionCard>
-
-                      {/* Source */}
-                      <SectionCard>
-                        <SectionCard.Header title="Source" />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow
-                            label="Image"
-                            value={bareMetal.imageName}
-                            isLink
-                            linkHref="/compute-admin/images"
-                          />
-                          <SectionCard.DataRow label="OS" value={bareMetal.image} />
-                        </SectionCard.Content>
-                      </SectionCard>
-
-                      {/* Authentication */}
-                      <SectionCard>
-                        <SectionCard.Header title="Authentication" />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow label="Key pair" value={bareMetal.keyPair} />
-                        </SectionCard.Content>
-                      </SectionCard>
-
-                      {/* Advanced */}
-                      <SectionCard>
-                        <SectionCard.Header title="Advanced" />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow
-                            label="Tags"
-                            value={
-                              <div className="flex gap-1.5">
-                                <span className="inline-flex items-center gap-1 px-2 py-1 text-label-sm border border-[var(--color-border-default)] rounded-md bg-[var(--color-surface-default)]">
-                                  <span className="text-[var(--color-text-default)]">Type</span>
-                                  <span className="text-[var(--color-border-default)]">|</span>
-                                  <span className="text-[var(--color-text-default)]">
-                                    bare-metal
-                                  </span>
-                                </span>
-                                <span className="inline-flex items-center gap-1 px-2 py-1 text-label-sm border border-[var(--color-border-default)] rounded-md bg-[var(--color-surface-default)]">
-                                  <span className="text-[var(--color-text-default)]">Env</span>
-                                  <span className="text-[var(--color-border-default)]">|</span>
-                                  <span className="text-[var(--color-text-default)]">prod</span>
-                                </span>
-                              </div>
-                            }
-                          />
-                        </SectionCard.Content>
-                      </SectionCard>
-                    </VStack>
-                  </TabPanel>
-
-                  {/* Interfaces Tab Panel */}
-                  <TabPanel value="interfaces" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Header */}
-                      <div className="flex items-center w-full">
-                        <h2 className="text-heading-h5 text-[var(--color-text-default)]">
-                          Interfaces
-                        </h2>
-                      </div>
-
-                      {/* Search */}
-                      <SearchInput placeholder="Search interface by attributes" size="sm" />
-
-                      {/* Pagination */}
-                      <Pagination
-                        currentPage={1}
-                        totalPages={1}
-                        totalItems={mockAttachedInterfaces.length}
-                        onPageChange={() => {}}
-                      />
-
-                      {/* Table */}
-                      <Table
-                        columns={[
-                          {
-                            key: 'status',
-                            label: 'Status',
-                            width: fixedColumns.status,
-                            align: 'center',
-                            render: (_value: string, iface: AttachedInterface) => {
-                              const statusMap: Record<
-                                string,
-                                'active' | 'down' | 'building' | 'shutoff'
-                              > = {
-                                Active: 'active',
-                                Inactive: 'shutoff',
-                                Down: 'down',
-                                Build: 'building',
-                              };
-                              return (
-                                <StatusIndicator
-                                  status={statusMap[iface.portStatus] || 'down'}
-                                  layout="icon-only"
-                                />
-                              );
-                            },
-                          },
-                          {
-                            key: 'name',
-                            label: 'Name',
-                            sortable: true,
-                            render: (_value: string, iface: AttachedInterface) => (
-                              <div className="flex flex-col gap-0.5">
-                                <Link
-                                  to={`/compute-admin/ports/${iface.id}`}
-                                  className="font-medium text-[var(--color-action-primary)] hover:underline"
-                                >
-                                  {iface.name}
-                                </Link>
-                                <span className="text-body-sm text-[var(--color-text-subtle)]">
-                                  ID : {iface.id}
-                                </span>
-                              </div>
-                            ),
-                          },
-                          {
-                            key: 'network',
-                            label: 'Network',
-                            sortable: true,
-                            render: (_value: string, iface: AttachedInterface) => (
-                              <div className="flex flex-col gap-0.5">
-                                <Link
-                                  to={`/compute-admin/networks/${iface.id}`}
-                                  className="font-medium text-[var(--color-action-primary)] hover:underline"
-                                >
-                                  {iface.network}
-                                </Link>
-                                <span className="text-body-sm text-[var(--color-text-subtle)]">
-                                  ID : {iface.id}
-                                </span>
-                              </div>
-                            ),
-                          },
-                          {
-                            key: 'fixedIp',
-                            label: 'Fixed IP',
-                            render: (_value: string, iface: AttachedInterface) => (
-                              <span className="text-[var(--color-text-default)]">
-                                {iface.fixedIp}
-                              </span>
-                            ),
-                          },
-                          {
-                            key: 'macAddress',
-                            label: 'Mac address',
-                            render: (_value: string, iface: AttachedInterface) => (
-                              <span className="text-[var(--color-text-default)]">
-                                {iface.macAddress}
-                              </span>
-                            ),
-                          },
-                          {
-                            key: 'createdAt',
-                            label: 'Created at',
-                            sortable: true,
-                            render: (_value: string, iface: AttachedInterface) => (
-                              <span className="text-[var(--color-text-default)]">
-                                {iface.createdAt}
-                              </span>
-                            ),
-                          },
-                        ]}
-                        data={mockAttachedInterfaces}
-                        rowKey="id"
-                      />
-                    </VStack>
-                  </TabPanel>
-
-                  {/* Action Logs Tab Panel */}
-                  <TabPanel value="action-logs" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Header */}
-                      <div className="flex items-center h-7">
-                        <h2 className="text-heading-h5 text-[var(--color-text-default)]">
-                          Action logs
-                        </h2>
-                      </div>
-
-                      {/* Search and Download */}
-                      <div className="flex items-center gap-1">
-                        <SearchInput
-                          placeholder="Search action logs by attributes"
-                          value={actionLogSearchQuery}
-                          onChange={(e) => {
-                            setActionLogSearchQuery(e.target.value);
-                            setActionLogCurrentPage(1);
-                          }}
-                        />
-                        <Button variant="secondary" size="sm" className="!p-2 !w-7 !h-7 !min-w-7">
-                          <IconDownload size={12} stroke={2} className="w-3 h-3" />
-                        </Button>
-                      </div>
-
-                      {/* Pagination */}
-                      <Pagination
-                        currentPage={actionLogCurrentPage}
-                        totalPages={actionLogTotalPages}
-                        onPageChange={setActionLogCurrentPage}
-                        totalItems={filteredActionLogs.length}
-                      />
-
-                      {/* Action Logs Table */}
-                      <div className="w-full flex flex-col gap-1">
-                        {/* Table Header */}
-                        <div className="flex items-start bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-md">
-                          <div
-                            className="flex-1 flex items-center h-10 px-3 cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors"
-                            onClick={() => handleActionLogSort('operationName')}
-                          >
-                            <div className="flex items-center gap-1 w-full">
-                              <span className="text-label-sm text-[var(--color-text-default)]">
-                                Action
-                              </span>
-                              {actionLogSortKey === 'operationName' ? (
-                                actionLogSortDirection === 'asc' ? (
-                                  <IconChevronUp
-                                    size={14}
-                                    stroke={1.5}
-                                    className="text-[var(--color-action-primary)]"
-                                  />
-                                ) : (
-                                  <IconChevronDown
-                                    size={14}
-                                    stroke={1.5}
-                                    className="text-[var(--color-action-primary)]"
-                                  />
-                                )
-                              ) : (
-                                <IconSelector
-                                  size={14}
-                                  stroke={1.5}
-                                  className="text-[var(--color-text-disabled)]"
-                                />
-                              )}
-                            </div>
-                          </div>
-                          <div
-                            className="flex-1 flex items-center h-10 px-3 border-l border-[var(--color-border-default)] cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors"
-                            onClick={() => handleActionLogSort('requestId')}
-                          >
-                            <div className="flex items-center gap-1 w-full">
-                              <span className="text-label-sm text-[var(--color-text-default)]">
-                                Request ID
-                              </span>
-                              {actionLogSortKey === 'requestId' ? (
-                                actionLogSortDirection === 'asc' ? (
-                                  <IconChevronUp
-                                    size={14}
-                                    stroke={1.5}
-                                    className="text-[var(--color-action-primary)]"
-                                  />
-                                ) : (
-                                  <IconChevronDown
-                                    size={14}
-                                    stroke={1.5}
-                                    className="text-[var(--color-action-primary)]"
-                                  />
-                                )
-                              ) : (
-                                <IconSelector
-                                  size={14}
-                                  stroke={1.5}
-                                  className="text-[var(--color-text-disabled)]"
-                                />
-                              )}
-                            </div>
-                          </div>
-                          <div
-                            className="flex-1 flex items-center h-10 px-3 border-l border-[var(--color-border-default)] cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors"
-                            onClick={() => handleActionLogSort('requestedTime')}
-                          >
-                            <div className="flex items-center gap-1 w-full">
-                              <span className="text-label-sm text-[var(--color-text-default)]">
-                                Requested Time
-                              </span>
-                              {actionLogSortKey === 'requestedTime' ? (
-                                actionLogSortDirection === 'asc' ? (
-                                  <IconChevronUp
-                                    size={14}
-                                    stroke={1.5}
-                                    className="text-[var(--color-action-primary)]"
-                                  />
-                                ) : (
-                                  <IconChevronDown
-                                    size={14}
-                                    stroke={1.5}
-                                    className="text-[var(--color-action-primary)]"
-                                  />
-                                )
-                              ) : (
-                                <IconSelector
-                                  size={14}
-                                  stroke={1.5}
-                                  className="text-[var(--color-text-disabled)]"
-                                />
-                              )}
-                            </div>
-                          </div>
+                {/* Advanced */}
+                <SectionCard>
+                  <SectionCard.Header title="Advanced" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow
+                      label="Tags"
+                      value={
+                        <div className="flex gap-1.5">
+                          <span className="inline-flex items-center gap-1 px-2 py-1 text-label-sm border border-[var(--color-border-default)] rounded-md bg-[var(--color-surface-default)]">
+                            <span className="text-[var(--color-text-default)]">Type</span>
+                            <span className="text-[var(--color-border-default)]">|</span>
+                            <span className="text-[var(--color-text-default)]">bare-metal</span>
+                          </span>
+                          <span className="inline-flex items-center gap-1 px-2 py-1 text-label-sm border border-[var(--color-border-default)] rounded-md bg-[var(--color-surface-default)]">
+                            <span className="text-[var(--color-text-default)]">Env</span>
+                            <span className="text-[var(--color-border-default)]">|</span>
+                            <span className="text-[var(--color-text-default)]">prod</span>
+                          </span>
                         </div>
+                      }
+                    />
+                  </SectionCard.Content>
+                </SectionCard>
+              </VStack>
+            </TabPanel>
 
-                        {/* Table Rows */}
-                        {filteredActionLogs
-                          .slice(
-                            (actionLogCurrentPage - 1) * actionLogRowsPerPage,
-                            actionLogCurrentPage * actionLogRowsPerPage
+            {/* Interfaces Tab Panel */}
+            <TabPanel value="interfaces" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Header */}
+                <div className="flex items-center w-full">
+                  <h2 className="text-heading-h5 text-[var(--color-text-default)]">Interfaces</h2>
+                </div>
+
+                {/* Search */}
+                <SearchInput placeholder="Search interface by attributes" size="sm" />
+
+                {/* Pagination */}
+                <Pagination
+                  currentPage={1}
+                  totalPages={1}
+                  totalItems={mockAttachedInterfaces.length}
+                  onPageChange={() => {}}
+                />
+
+                {/* Table */}
+                <Table
+                  columns={[
+                    {
+                      key: 'status',
+                      label: 'Status',
+                      width: fixedColumns.status,
+                      align: 'center',
+                      render: (_value: string, iface: AttachedInterface) => {
+                        const statusMap: Record<
+                          string,
+                          'active' | 'down' | 'building' | 'shutoff'
+                        > = {
+                          Active: 'active',
+                          Inactive: 'shutoff',
+                          Down: 'down',
+                          Build: 'building',
+                        };
+                        return (
+                          <StatusIndicator
+                            status={statusMap[iface.portStatus] || 'down'}
+                            layout="icon-only"
+                          />
+                        );
+                      },
+                    },
+                    {
+                      key: 'name',
+                      label: 'Name',
+                      sortable: true,
+                      render: (_value: string, iface: AttachedInterface) => (
+                        <div className="flex flex-col gap-0.5">
+                          <Link
+                            to={`/compute-admin/ports/${iface.id}`}
+                            className="font-medium text-[var(--color-action-primary)] hover:underline"
+                          >
+                            {iface.name}
+                          </Link>
+                          <span className="text-body-sm text-[var(--color-text-subtle)]">
+                            ID : {iface.id}
+                          </span>
+                        </div>
+                      ),
+                    },
+                    {
+                      key: 'network',
+                      label: 'Network',
+                      sortable: true,
+                      render: (_value: string, iface: AttachedInterface) => (
+                        <div className="flex flex-col gap-0.5">
+                          <Link
+                            to={`/compute-admin/networks/${iface.id}`}
+                            className="font-medium text-[var(--color-action-primary)] hover:underline"
+                          >
+                            {iface.network}
+                          </Link>
+                          <span className="text-body-sm text-[var(--color-text-subtle)]">
+                            ID : {iface.id}
+                          </span>
+                        </div>
+                      ),
+                    },
+                    {
+                      key: 'fixedIp',
+                      label: 'Fixed IP',
+                      render: (_value: string, iface: AttachedInterface) => (
+                        <span className="text-[var(--color-text-default)]">{iface.fixedIp}</span>
+                      ),
+                    },
+                    {
+                      key: 'macAddress',
+                      label: 'Mac address',
+                      render: (_value: string, iface: AttachedInterface) => (
+                        <span className="text-[var(--color-text-default)]">{iface.macAddress}</span>
+                      ),
+                    },
+                    {
+                      key: 'createdAt',
+                      label: 'Created at',
+                      sortable: true,
+                      render: (_value: string, iface: AttachedInterface) => (
+                        <span className="text-[var(--color-text-default)]">{iface.createdAt}</span>
+                      ),
+                    },
+                  ]}
+                  data={mockAttachedInterfaces}
+                  rowKey="id"
+                />
+              </VStack>
+            </TabPanel>
+
+            {/* Action Logs Tab Panel */}
+            <TabPanel value="action-logs" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Header */}
+                <div className="flex items-center h-7">
+                  <h2 className="text-heading-h5 text-[var(--color-text-default)]">Action logs</h2>
+                </div>
+
+                {/* Search and Download */}
+                <div className="flex items-center gap-1">
+                  <SearchInput
+                    placeholder="Search action logs by attributes"
+                    value={actionLogSearchQuery}
+                    onChange={(e) => {
+                      setActionLogSearchQuery(e.target.value);
+                      setActionLogCurrentPage(1);
+                    }}
+                  />
+                  <Button variant="secondary" size="sm" className="!p-2 !w-7 !h-7 !min-w-7">
+                    <IconDownload size={12} stroke={2} className="w-3 h-3" />
+                  </Button>
+                </div>
+
+                {/* Pagination */}
+                <Pagination
+                  currentPage={actionLogCurrentPage}
+                  totalPages={actionLogTotalPages}
+                  onPageChange={setActionLogCurrentPage}
+                  totalItems={filteredActionLogs.length}
+                />
+
+                {/* Action Logs Table */}
+                <div className="w-full flex flex-col gap-1">
+                  {/* Table Header */}
+                  <div className="flex items-start bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-md">
+                    <div
+                      className="flex-1 flex items-center h-10 px-3 cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors"
+                      onClick={() => handleActionLogSort('operationName')}
+                    >
+                      <div className="flex items-center gap-1 w-full">
+                        <span className="text-label-sm text-[var(--color-text-default)]">
+                          Action
+                        </span>
+                        {actionLogSortKey === 'operationName' ? (
+                          actionLogSortDirection === 'asc' ? (
+                            <IconChevronUp
+                              size={14}
+                              stroke={1.5}
+                              className="text-[var(--color-action-primary)]"
+                            />
+                          ) : (
+                            <IconChevronDown
+                              size={14}
+                              stroke={1.5}
+                              className="text-[var(--color-action-primary)]"
+                            />
                           )
-                          .map((log) => {
-                            const isExpanded = expandedLogIds.has(log.id);
-                            return (
-                              <div
-                                key={log.id}
-                                className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md"
-                              >
-                                {/* Main Row */}
-                                <div className="flex items-center w-full">
-                                  <div className="flex-1 flex items-center gap-2 min-h-[40px] px-3 py-2">
-                                    <button
-                                      onClick={() => toggleLogExpansion(log.id)}
-                                      className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                    >
-                                      {isExpanded ? (
-                                        <IconChevronDown
-                                          size={12}
-                                          stroke={1.5}
-                                          className="text-[var(--color-text-default)]"
-                                        />
-                                      ) : (
-                                        <IconChevronRight
-                                          size={12}
-                                          stroke={1.5}
-                                          className="text-[var(--color-text-default)]"
-                                        />
-                                      )}
-                                    </button>
-                                    <span className="text-body-md text-[var(--color-text-default)]">
-                                      {log.operationName}
-                                    </span>
-                                  </div>
-                                  <div className="flex-1 flex items-center gap-1.5 min-h-[40px] px-3 py-2">
-                                    <span className="text-body-md text-[var(--color-text-default)]">
-                                      {log.requestId}
-                                    </span>
-                                    <button
-                                      onClick={() => copyToClipboard(log.requestId)}
-                                      className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
-                                    >
-                                      <IconCopy
-                                        size={12}
-                                        stroke={1.5}
-                                        className="text-[var(--color-action-primary)]"
-                                      />
-                                    </button>
-                                  </div>
-                                  <div className="flex-1 flex items-center min-h-[40px] px-3 py-2">
-                                    <span className="text-body-md text-[var(--color-text-default)]">
-                                      {log.requestedTime}
-                                    </span>
-                                  </div>
-                                </div>
-
-                                {/* Expanded Details */}
-                                {isExpanded && (
-                                  <div className="flex items-center gap-4 min-h-[40px] px-8 py-2 border-t border-[var(--color-border-default)]">
-                                    <div className="flex items-center gap-2 text-body-md text-[var(--color-text-default)]">
-                                      <span className="font-medium">Result :</span>
-                                      <span>{log.result}</span>
-                                    </div>
-                                    <div className="w-px h-3 bg-[var(--color-border-default)]" />
-                                    <div className="flex items-center gap-2 text-body-md text-[var(--color-text-default)]">
-                                      <span className="font-medium">Start Time :</span>
-                                      <span>{log.startTime}</span>
-                                    </div>
-                                    <div className="w-px h-3 bg-[var(--color-border-default)]" />
-                                    <div className="flex items-center gap-2 text-body-md text-[var(--color-text-default)]">
-                                      <span className="font-medium">End Time :</span>
-                                      <span>{log.endTime}</span>
-                                    </div>
-                                  </div>
-                                )}
-                              </div>
-                            );
-                          })}
+                        ) : (
+                          <IconSelector
+                            size={14}
+                            stroke={1.5}
+                            className="text-[var(--color-text-disabled)]"
+                          />
+                        )}
                       </div>
-                    </VStack>
-                  </TabPanel>
-                </Tabs>
-              </div>
-            </VStack>
-          </div>
+                    </div>
+                    <div
+                      className="flex-1 flex items-center h-10 px-3 border-l border-[var(--color-border-default)] cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors"
+                      onClick={() => handleActionLogSort('requestId')}
+                    >
+                      <div className="flex items-center gap-1 w-full">
+                        <span className="text-label-sm text-[var(--color-text-default)]">
+                          Request ID
+                        </span>
+                        {actionLogSortKey === 'requestId' ? (
+                          actionLogSortDirection === 'asc' ? (
+                            <IconChevronUp
+                              size={14}
+                              stroke={1.5}
+                              className="text-[var(--color-action-primary)]"
+                            />
+                          ) : (
+                            <IconChevronDown
+                              size={14}
+                              stroke={1.5}
+                              className="text-[var(--color-action-primary)]"
+                            />
+                          )
+                        ) : (
+                          <IconSelector
+                            size={14}
+                            stroke={1.5}
+                            className="text-[var(--color-text-disabled)]"
+                          />
+                        )}
+                      </div>
+                    </div>
+                    <div
+                      className="flex-1 flex items-center h-10 px-3 border-l border-[var(--color-border-default)] cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors"
+                      onClick={() => handleActionLogSort('requestedTime')}
+                    >
+                      <div className="flex items-center gap-1 w-full">
+                        <span className="text-label-sm text-[var(--color-text-default)]">
+                          Requested Time
+                        </span>
+                        {actionLogSortKey === 'requestedTime' ? (
+                          actionLogSortDirection === 'asc' ? (
+                            <IconChevronUp
+                              size={14}
+                              stroke={1.5}
+                              className="text-[var(--color-action-primary)]"
+                            />
+                          ) : (
+                            <IconChevronDown
+                              size={14}
+                              stroke={1.5}
+                              className="text-[var(--color-action-primary)]"
+                            />
+                          )
+                        ) : (
+                          <IconSelector
+                            size={14}
+                            stroke={1.5}
+                            className="text-[var(--color-text-disabled)]"
+                          />
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Table Rows */}
+                  {filteredActionLogs
+                    .slice(
+                      (actionLogCurrentPage - 1) * actionLogRowsPerPage,
+                      actionLogCurrentPage * actionLogRowsPerPage
+                    )
+                    .map((log) => {
+                      const isExpanded = expandedLogIds.has(log.id);
+                      return (
+                        <div
+                          key={log.id}
+                          className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-md"
+                        >
+                          {/* Main Row */}
+                          <div className="flex items-center w-full">
+                            <div className="flex-1 flex items-center gap-2 min-h-[40px] px-3 py-2">
+                              <button
+                                onClick={() => toggleLogExpansion(log.id)}
+                                className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                              >
+                                {isExpanded ? (
+                                  <IconChevronDown
+                                    size={12}
+                                    stroke={1.5}
+                                    className="text-[var(--color-text-default)]"
+                                  />
+                                ) : (
+                                  <IconChevronRight
+                                    size={12}
+                                    stroke={1.5}
+                                    className="text-[var(--color-text-default)]"
+                                  />
+                                )}
+                              </button>
+                              <span className="text-body-md text-[var(--color-text-default)]">
+                                {log.operationName}
+                              </span>
+                            </div>
+                            <div className="flex-1 flex items-center gap-1.5 min-h-[40px] px-3 py-2">
+                              <span className="text-body-md text-[var(--color-text-default)]">
+                                {log.requestId}
+                              </span>
+                              <button
+                                onClick={() => copyToClipboard(log.requestId)}
+                                className="p-0.5 hover:bg-[var(--color-surface-muted)] rounded transition-colors"
+                              >
+                                <IconCopy
+                                  size={12}
+                                  stroke={1.5}
+                                  className="text-[var(--color-action-primary)]"
+                                />
+                              </button>
+                            </div>
+                            <div className="flex-1 flex items-center min-h-[40px] px-3 py-2">
+                              <span className="text-body-md text-[var(--color-text-default)]">
+                                {log.requestedTime}
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Expanded Details */}
+                          {isExpanded && (
+                            <div className="flex items-center gap-4 min-h-[40px] px-8 py-2 border-t border-[var(--color-border-default)]">
+                              <div className="flex items-center gap-2 text-body-md text-[var(--color-text-default)]">
+                                <span className="font-medium">Result :</span>
+                                <span>{log.result}</span>
+                              </div>
+                              <div className="w-px h-3 bg-[var(--color-border-default)]" />
+                              <div className="flex items-center gap-2 text-body-md text-[var(--color-text-default)]">
+                                <span className="font-medium">Start Time :</span>
+                                <span>{log.startTime}</span>
+                              </div>
+                              <div className="w-px h-3 bg-[var(--color-border-default)]" />
+                              <div className="flex items-center gap-2 text-body-md text-[var(--color-text-default)]">
+                                <span className="font-medium">End Time :</span>
+                                <span>{log.endTime}</span>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                </div>
+              </VStack>
+            </TabPanel>
+          </Tabs>
         </div>
-      </main>
-    </div>
+      </VStack>
+    </PageShell>
   );
 }
 

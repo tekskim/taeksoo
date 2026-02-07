@@ -1,2 +1,40 @@
-<!doctype html><html lang="en"><head><meta charset="UTF-8"><link rel="icon" type="image/svg+xml" href="/vite.svg"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>THAKI Cloud</title><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"><script>!function(){var e=localStorage.getItem("tds-theme");("dark"===e||"light"!==e&&window.matchMedia("(prefers-color-scheme: dark)").matches)&&document.documentElement.classList.add("dark")}(),function(e){if("/"===e.search[1]){var a=e.search.slice(1).split("&").map(function(e){return e.replace(/~and~/g,"&")}).join("?");window.history.replaceState(null,null,e.pathname.slice(0,-1)+a+e.hash)}}(window.location)</script><script defer src="/tds_ssot/vendors.081dd3f1ec7f1ca6.js"></script><script defer src="/tds_ssot/main.8c576ad0eb09d539.js"></script><link href="/tds_ssot/main.f2a0feaebea2acda.css" rel="stylesheet"></head><body style="margin: 0; padding: 0; background-color: var(--color-surface-subtle, #f8fafc);"><div id="root" style="min-height: 100vh; background-color: var(--color-surface-subtle, #f8fafc);"></div>
-    <script type="module" src="/src/main.tsx"></script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/svg+xml" href="/vite.svg">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THAKI Cloud</title>
+    <!-- Pretendard Font for Korean -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+    <!-- Prevent FOUC: Apply theme before page renders -->
+    <script>
+      (function() {
+        var theme = localStorage.getItem('tds-theme');
+        var isDark = theme === 'dark' || 
+          (theme !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        if (isDark) {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
+    <!-- Single Page Apps for GitHub Pages -->
+    <script type="text/javascript">
+      (function(l) {
+        if (l.search[1] === '/' ) {
+          var decoded = l.search.slice(1).split('&').map(function(s) { 
+            return s.replace(/~and~/g, '&')
+          }).join('?');
+          window.history.replaceState(null, null,
+              l.pathname.slice(0, -1) + decoded + l.hash
+          );
+        }
+      }(window.location))
+    </script>
+  <script defer src="/tds_ssot/vendors.6fe2fe49f52ba632.js"></script><script defer src="/tds_ssot/main.c9a558e85e6fcc74.js"></script><link href="/tds_ssot/main.567d3f09dd1c25bf.css" rel="stylesheet"></head>
+  <body style="margin: 0; padding: 0; background-color: var(--color-surface-subtle, #f8fafc);">
+    <div id="root" style="min-height: 100vh; background-color: var(--color-surface-subtle, #f8fafc);"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  
+
+</body></html>

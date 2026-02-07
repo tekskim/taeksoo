@@ -13,6 +13,7 @@ import {
   Table,
   Button,
   Pagination,
+  PageShell,
   type TableColumn,
   columnMinWidths,
 } from '@/design-system';
@@ -342,16 +343,12 @@ export function ContainerDashboardPage() {
   const sidebarWidth = sidebarOpen ? 240 : 40;
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-
-      {/* Main Content */}
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: `${sidebarWidth}px` }}
-      >
-        {/* Tab Bar */}
+    <PageShell
+      sidebar={
+        <ContainerSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
         <TabBar
           tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
@@ -360,8 +357,8 @@ export function ContainerDashboardPage() {
           onTabAdd={addNewTab}
           onTabReorder={moveTab}
         />
-
-        {/* Top Bar */}
+      }
+      topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -390,182 +387,156 @@ export function ContainerDashboardPage() {
             </>
           }
         />
-
-        {/* Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="px-8 py-6">
-            {/* Top Row - 2 Cards */}
-            <div className="grid grid-cols-2 gap-6 mb-6">
-              {/* Basic information Card */}
-              <Card
-                title="Basic information"
-                bgColor="bg-[var(--color-surface-subtle)]"
-                className="flex flex-col"
-              >
-                <h3 className="text-heading-h2 text-[var(--color-text-default)]">k3s-cluster</h3>
-                <div className="space-y-4 mt-auto">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="flex flex-col gap-1.5">
-                      <span className="text-label-sm text-[var(--color-text-subtle)]">
-                        Architecture
-                      </span>
-                      <span className="text-body-md text-[var(--color-text-default)]">amd64</span>
-                    </div>
-                    <div className="flex flex-col gap-1.5">
-                      <span className="text-label-sm text-[var(--color-text-subtle)]">
-                        Kubernetes version
-                      </span>
-                      <span className="text-body-md text-[var(--color-text-default)]">
-                        v1.33.4+k3s1
-                      </span>
-                    </div>
-                    <div className="flex flex-col gap-1.5">
-                      <span className="text-label-sm text-[var(--color-text-subtle)]">
-                        Total resources
-                      </span>
-                      <span className="text-body-md text-[var(--color-text-default)]">295</span>
-                    </div>
-                    <div className="flex flex-col gap-1.5">
-                      <span className="text-label-sm text-[var(--color-text-subtle)]">
-                        Created at
-                      </span>
-                      <span className="text-body-md text-[var(--color-text-default)]">
-                        Nov 9, 2025
-                      </span>
-                    </div>
-                    <div className="flex flex-col gap-1.5">
-                      <span className="text-label-sm text-[var(--color-text-subtle)] flex items-center gap-1">
-                        Deployments
-                        <IconExternalLink
-                          size={12}
-                          className="text-[var(--color-action-primary)]"
-                        />
-                      </span>
-                      <span className="text-body-md text-[var(--color-text-default)]">15</span>
-                    </div>
-                    <div className="flex flex-col gap-1.5">
-                      <span className="text-label-sm text-[var(--color-text-subtle)] flex items-center gap-1">
-                        Nodes
-                        <IconExternalLink
-                          size={12}
-                          className="text-[var(--color-action-primary)]"
-                        />
-                      </span>
-                      <span className="text-body-md text-[var(--color-text-default)]">1</span>
-                    </div>
-                  </div>
-                </div>
-              </Card>
-
-              {/* Capacity Card */}
-              <Card title="Capacity">
-                <VStack gap={5}>
-                  <CapacityProgressBar
-                    label="CPU (Used)"
-                    used={0.26}
-                    total={8}
-                    unit="cores"
-                    percentage={3.3}
-                  />
-                  <CapacityProgressBar
-                    label="CPU (Reserved)"
-                    used={3.6}
-                    total={16.0}
-                    unit="GiB"
-                    percentage={50.2}
-                  />
-                  <CapacityProgressBar
-                    label="Memory (Used)"
-                    used={12.0}
-                    total={16.0}
-                    unit="GiB"
-                    percentage={75}
-                  />
-                  <CapacityProgressBar
-                    label="Memory (Reserved)"
-                    used={15}
-                    total={16}
-                    unit="GiB"
-                    percentage={93.8}
-                  />
-                  <CapacityProgressBar
-                    label="Pods"
-                    used={51}
-                    total={110}
-                    unit=""
-                    percentage={46.4}
-                  />
-                </VStack>
-              </Card>
+      }
+      contentClassName="px-8 py-6"
+    >
+      {/* Top Row - 2 Cards */}
+      <div className="grid grid-cols-2 gap-6 mb-6">
+        {/* Basic information Card */}
+        <Card
+          title="Basic information"
+          bgColor="bg-[var(--color-surface-subtle)]"
+          className="flex flex-col"
+        >
+          <h3 className="text-heading-h2 text-[var(--color-text-default)]">k3s-cluster</h3>
+          <div className="space-y-4 mt-auto">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="flex flex-col gap-1.5">
+                <span className="text-label-sm text-[var(--color-text-subtle)]">Architecture</span>
+                <span className="text-body-md text-[var(--color-text-default)]">amd64</span>
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <span className="text-label-sm text-[var(--color-text-subtle)]">
+                  Kubernetes version
+                </span>
+                <span className="text-body-md text-[var(--color-text-default)]">v1.33.4+k3s1</span>
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <span className="text-label-sm text-[var(--color-text-subtle)]">
+                  Total resources
+                </span>
+                <span className="text-body-md text-[var(--color-text-default)]">295</span>
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <span className="text-label-sm text-[var(--color-text-subtle)]">Created at</span>
+                <span className="text-body-md text-[var(--color-text-default)]">Nov 9, 2025</span>
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <span className="text-label-sm text-[var(--color-text-subtle)] flex items-center gap-1">
+                  Deployments
+                  <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+                </span>
+                <span className="text-body-md text-[var(--color-text-default)]">15</span>
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <span className="text-label-sm text-[var(--color-text-subtle)] flex items-center gap-1">
+                  Nodes
+                  <IconExternalLink size={12} className="text-[var(--color-action-primary)]" />
+                </span>
+                <span className="text-body-md text-[var(--color-text-default)]">1</span>
+              </div>
             </div>
-
-            {/* Control Plane Components */}
-            <div className="mb-6">
-              <Card title="Control plane components">
-                <DetailHeader.InfoGrid>
-                  <DetailHeader.InfoCard
-                    label="Etcd"
-                    value="Uptime: 15d 4h 23m"
-                    status="active"
-                    tooltip="etcd is a distributed key-value store used by Kubernetes to store all cluster state and configuration data."
-                  />
-                  <DetailHeader.InfoCard
-                    label="Scheduler"
-                    value="Uptime: 15d 4h 23m"
-                    status="active"
-                    tooltip="Scheduler assigns pods to nodes based on resource requirements, constraints, and scheduling policies."
-                  />
-                  <DetailHeader.InfoCard
-                    label="Controller manager"
-                    value="Uptime: 15d 4h 23m"
-                    status="active"
-                    tooltip="Controller manager runs background controllers that ensure cluster resources reach their desired state."
-                  />
-                </DetailHeader.InfoGrid>
-              </Card>
-            </div>
-
-            {/* Events & Secrets */}
-            <Card
-              title="Events & Secrets"
-              actions={
-                <Button variant="secondary" size="sm">
-                  Full Events List
-                </Button>
-              }
-            >
-              <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="md">
-                <TabList className="w-full mb-3">
-                  <Tab value="events">Events</Tab>
-                  <Tab value="secrets">Secrets</Tab>
-                </TabList>
-
-                <TabPanel value="events" className="pt-0">
-                  <VStack gap={3}>
-                    <div className="flex justify-start">
-                      <Pagination
-                        currentPage={currentPage}
-                        totalPages={1}
-                        onPageChange={setCurrentPage}
-                        showSettings
-                        onSettingsClick={() => {}}
-                      />
-                    </div>
-                    <Table<EventRow> columns={eventsColumns} data={eventsData} rowKey="id" />
-                  </VStack>
-                </TabPanel>
-
-                <TabPanel value="secrets" className="pt-0">
-                  <div className="text-center py-8 text-[var(--color-text-muted)]">
-                    No secrets found
-                  </div>
-                </TabPanel>
-              </Tabs>
-            </Card>
           </div>
-        </div>
-      </main>
-    </div>
+        </Card>
+
+        {/* Capacity Card */}
+        <Card title="Capacity">
+          <VStack gap={5}>
+            <CapacityProgressBar
+              label="CPU (Used)"
+              used={0.26}
+              total={8}
+              unit="cores"
+              percentage={3.3}
+            />
+            <CapacityProgressBar
+              label="CPU (Reserved)"
+              used={3.6}
+              total={16.0}
+              unit="GiB"
+              percentage={50.2}
+            />
+            <CapacityProgressBar
+              label="Memory (Used)"
+              used={12.0}
+              total={16.0}
+              unit="GiB"
+              percentage={75}
+            />
+            <CapacityProgressBar
+              label="Memory (Reserved)"
+              used={15}
+              total={16}
+              unit="GiB"
+              percentage={93.8}
+            />
+            <CapacityProgressBar label="Pods" used={51} total={110} unit="" percentage={46.4} />
+          </VStack>
+        </Card>
+      </div>
+
+      {/* Control Plane Components */}
+      <div className="mb-6">
+        <Card title="Control plane components">
+          <DetailHeader.InfoGrid>
+            <DetailHeader.InfoCard
+              label="Etcd"
+              value="Uptime: 15d 4h 23m"
+              status="active"
+              tooltip="etcd is a distributed key-value store used by Kubernetes to store all cluster state and configuration data."
+            />
+            <DetailHeader.InfoCard
+              label="Scheduler"
+              value="Uptime: 15d 4h 23m"
+              status="active"
+              tooltip="Scheduler assigns pods to nodes based on resource requirements, constraints, and scheduling policies."
+            />
+            <DetailHeader.InfoCard
+              label="Controller manager"
+              value="Uptime: 15d 4h 23m"
+              status="active"
+              tooltip="Controller manager runs background controllers that ensure cluster resources reach their desired state."
+            />
+          </DetailHeader.InfoGrid>
+        </Card>
+      </div>
+
+      {/* Events & Secrets */}
+      <Card
+        title="Events & Secrets"
+        actions={
+          <Button variant="secondary" size="sm">
+            Full Events List
+          </Button>
+        }
+      >
+        <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="md">
+          <TabList className="w-full mb-3">
+            <Tab value="events">Events</Tab>
+            <Tab value="secrets">Secrets</Tab>
+          </TabList>
+
+          <TabPanel value="events" className="pt-0">
+            <VStack gap={3}>
+              <div className="flex justify-start">
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={1}
+                  onPageChange={setCurrentPage}
+                  showSettings
+                  onSettingsClick={() => {}}
+                />
+              </div>
+              <Table<EventRow> columns={eventsColumns} data={eventsData} rowKey="id" />
+            </VStack>
+          </TabPanel>
+
+          <TabPanel value="secrets" className="pt-0">
+            <div className="text-center py-8 text-[var(--color-text-muted)]">No secrets found</div>
+          </TabPanel>
+        </Tabs>
+      </Card>
+    </PageShell>
   );
 }
 

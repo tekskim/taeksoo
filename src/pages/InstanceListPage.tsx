@@ -16,6 +16,8 @@ import {
   Tab,
   ListToolbar,
   ContextMenu,
+  PageShell,
+  PageHeader,
   fixedColumns,
   columnMinWidths,
   type TableColumn,
@@ -34,7 +36,6 @@ import {
   IconPlayerStop,
   IconTrash,
   IconRefresh,
-  IconArrowUp,
   IconBell,
   IconDownload,
   IconLock,
@@ -891,6 +892,9 @@ export function InstanceListPage() {
   const navigate = useNavigate();
   const { addTab } = useTabs();
 
+  // PageShell sidebar width
+  const sidebarWidth = sidebarOpen ? 200 : 0;
+
   // Scroll container ref for maintaining scroll position
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const scrollPositionRef = useRef(0);
@@ -1606,216 +1610,207 @@ export function InstanceListPage() {
   ];
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
+    <PageShell
+      sidebar={<Sidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />}
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={openSidebar}
+          showNavigation={true}
+          onBack={() => window.history.back()}
+          onForward={() => window.history.forward()}
+          breadcrumb={
+            <Breadcrumb
+              items={[{ label: 'Proj-1', href: '/compute' }, { label: 'Instances list' }]}
+            />
+          }
+          actions={
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1.5} />}
+              aria-label="Notifications"
+              badge={true}
+            />
+          }
+        />
+      }
+      bottomPanel={
+        <ShellPanel
+          isExpanded={shellPanel.isExpanded}
+          onExpandedChange={shellPanel.setIsExpanded}
+          tabs={shellPanel.tabs}
+          activeTabId={shellPanel.activeTabId}
+          onActiveTabChange={shellPanel.setActiveTabId}
+          onCloseTab={shellPanel.closeTab}
+          onContentChange={shellPanel.updateContent}
+          onClear={shellPanel.clearContent}
+          onOpenInNewTab={handleOpenInNewTab}
+          initialHeight={350}
+          minHeight={300}
+          sidebarOpen={sidebarOpen}
+        />
+      }
+      bottomPanelPadding={shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0'}
+      contentClassName="pt-4 px-8 pb-6"
+    >
+      <VStack gap={3}>
+        {/* Page Header */}
+        <PageHeader
+          title="Instances list"
+          actions={
+            <Link to="/compute/instances/create">
+              <Button size="md">Create instance</Button>
+            </Link>
+          }
+        />
 
-      {/* Main Content */}
-      <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'}`}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Tab Bar */}
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            onTabAdd={addNewTab}
-            onTabReorder={moveTab}
-            showAddButton={true}
-            showWindowControls={true}
-          />
+        {/* Type Tabs */}
+        <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
+          <TabList>
+            <Tab value="vm">VM</Tab>
+            <Tab value="bare-metal">Bare metal</Tab>
+          </TabList>
+        </Tabs>
 
-          {/* Top Bar with Breadcrumb Navigation */}
-          <TopBar
-            showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={openSidebar}
-            showNavigation={true}
-            onBack={() => window.history.back()}
-            onForward={() => window.history.forward()}
-            breadcrumb={
-              <Breadcrumb
-                items={[{ label: 'Proj-1', href: '/compute' }, { label: 'Instances list' }]}
+        {/* List Toolbar */}
+        <ListToolbar
+          primaryActions={
+            <ListToolbar.Actions>
+              <FilterSearchInput
+                filters={filterFields}
+                appliedFilters={appliedFilters}
+                onFiltersChange={handleFiltersChange}
+                placeholder="Search instance by attributes"
+                size="sm"
+                className="w-[var(--search-input-width)]"
+                hideAppliedFilters
               />
-            }
-            actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-                badge={true}
+              <Button
+                variant="secondary"
+                size="sm"
+                icon={<IconDownload size={12} />}
+                aria-label="Download"
               />
-            }
-          />
-        </div>
-
-        {/* Scrollable Content Area */}
-        <div
-          ref={scrollContainerRef}
-          className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll"
-          style={{ paddingBottom: shellPanel.isExpanded ? 'var(--shell-panel-height)' : '0' }}
-        >
-          {/* Page Content */}
-          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
-            <VStack gap={3}>
-              {/* Page Header */}
-              <div className="flex items-center justify-between h-8">
-                <h1 className="text-heading-h5 text-[var(--color-text-default)]">Instances list</h1>
-                <Link to="/compute/instances/create">
-                  <Button size="md">Create instance</Button>
-                </Link>
-              </div>
-
-              {/* Type Tabs */}
-              <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
-                <TabList>
-                  <Tab value="vm">VM</Tab>
-                  <Tab value="bare-metal">Bare metal</Tab>
-                </TabList>
-              </Tabs>
-
-              {/* List Toolbar */}
-              <ListToolbar
-                primaryActions={
-                  <ListToolbar.Actions>
-                    <FilterSearchInput
-                      filters={filterFields}
-                      appliedFilters={appliedFilters}
-                      onFiltersChange={handleFiltersChange}
-                      placeholder="Search instance by attributes"
-                      size="sm"
-                      className="w-[var(--search-input-width)]"
-                      hideAppliedFilters
-                    />
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      icon={<IconDownload size={12} />}
-                      aria-label="Download"
-                    />
-                  </ListToolbar.Actions>
+            </ListToolbar.Actions>
+          }
+          bulkActions={
+            <ListToolbar.Actions>
+              <Button
+                variant="muted"
+                size="sm"
+                leftIcon={<IconPlayerPlay size={12} />}
+                disabled={
+                  activeTab === 'vm'
+                    ? selectedInstances.length === 0
+                    : selectedBareMetalInstances.length === 0
                 }
-                bulkActions={
-                  <ListToolbar.Actions>
-                    <Button
-                      variant="muted"
-                      size="sm"
-                      leftIcon={<IconPlayerPlay size={12} />}
-                      disabled={
-                        activeTab === 'vm'
-                          ? selectedInstances.length === 0
-                          : selectedBareMetalInstances.length === 0
-                      }
-                    >
-                      Start
-                    </Button>
-                    <Button
-                      variant="muted"
-                      size="sm"
-                      leftIcon={<IconPlayerStop size={12} />}
-                      disabled={
-                        activeTab === 'vm'
-                          ? selectedInstances.length === 0
-                          : selectedBareMetalInstances.length === 0
-                      }
-                    >
-                      Stop
-                    </Button>
-                    <Button
-                      variant="muted"
-                      size="sm"
-                      leftIcon={<IconRefresh size={12} />}
-                      disabled={
-                        activeTab === 'vm'
-                          ? selectedInstances.length === 0
-                          : selectedBareMetalInstances.length === 0
-                      }
-                    >
-                      Reboot
-                    </Button>
-                    <Button
-                      variant="muted"
-                      size="sm"
-                      leftIcon={<IconTrash size={12} />}
-                      disabled={
-                        activeTab === 'vm'
-                          ? selectedInstances.length === 0
-                          : selectedBareMetalInstances.length === 0
-                      }
-                    >
-                      Delete
-                    </Button>
-                  </ListToolbar.Actions>
+              >
+                Start
+              </Button>
+              <Button
+                variant="muted"
+                size="sm"
+                leftIcon={<IconPlayerStop size={12} />}
+                disabled={
+                  activeTab === 'vm'
+                    ? selectedInstances.length === 0
+                    : selectedBareMetalInstances.length === 0
                 }
-                filters={toolbarFilters}
-                onFilterRemove={removeFilter}
-                onFiltersClear={clearAllFilters}
-              />
+              >
+                Stop
+              </Button>
+              <Button
+                variant="muted"
+                size="sm"
+                leftIcon={<IconRefresh size={12} />}
+                disabled={
+                  activeTab === 'vm'
+                    ? selectedInstances.length === 0
+                    : selectedBareMetalInstances.length === 0
+                }
+              >
+                Reboot
+              </Button>
+              <Button
+                variant="muted"
+                size="sm"
+                leftIcon={<IconTrash size={12} />}
+                disabled={
+                  activeTab === 'vm'
+                    ? selectedInstances.length === 0
+                    : selectedBareMetalInstances.length === 0
+                }
+              >
+                Delete
+              </Button>
+            </ListToolbar.Actions>
+          }
+          filters={toolbarFilters}
+          onFilterRemove={removeFilter}
+          onFiltersClear={clearAllFilters}
+        />
 
-              {/* Pagination */}
-              {activeTab === 'vm' && filteredInstances.length > 0 && (
-                <Pagination
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  onPageChange={setCurrentPage}
-                  showSettings
-                  onSettingsClick={() => setIsPreferencesOpen(true)}
-                  totalItems={filteredInstances.length}
-                />
-              )}
-              {activeTab === 'bare-metal' && filteredBareMetalInstances.length > 0 && (
-                <Pagination
-                  currentPage={currentBareMetalPage}
-                  totalPages={totalBareMetalPages}
-                  onPageChange={setCurrentBareMetalPage}
-                  showSettings
-                  onSettingsClick={() => setIsPreferencesOpen(true)}
-                  totalItems={filteredBareMetalInstances.length}
-                  selectedCount={selectedBareMetalInstances.length}
-                />
-              )}
+        {/* Pagination */}
+        {activeTab === 'vm' && filteredInstances.length > 0 && (
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            showSettings
+            onSettingsClick={() => setIsPreferencesOpen(true)}
+            totalItems={filteredInstances.length}
+          />
+        )}
+        {activeTab === 'bare-metal' && filteredBareMetalInstances.length > 0 && (
+          <Pagination
+            currentPage={currentBareMetalPage}
+            totalPages={totalBareMetalPages}
+            onPageChange={setCurrentBareMetalPage}
+            showSettings
+            onSettingsClick={() => setIsPreferencesOpen(true)}
+            totalItems={filteredBareMetalInstances.length}
+            selectedCount={selectedBareMetalInstances.length}
+          />
+        )}
 
-              {/* VM Table */}
-              {activeTab === 'vm' && (
-                <Table<Instance>
-                  columns={visibleColumns}
-                  data={paginatedInstances}
-                  rowKey="id"
-                  emptyMessage="No instances found"
-                  selectable
-                  selectedKeys={selectedInstances}
-                  onSelectionChange={setSelectedInstances}
-                />
-              )}
+        {/* VM Table */}
+        {activeTab === 'vm' && (
+          <Table<Instance>
+            columns={visibleColumns}
+            data={paginatedInstances}
+            rowKey="id"
+            emptyMessage="No instances found"
+            selectable
+            selectedKeys={selectedInstances}
+            onSelectionChange={setSelectedInstances}
+          />
+        )}
 
-              {/* Bare Metal Table */}
-              {activeTab === 'bare-metal' && (
-                <Table<BareMetalInstance>
-                  columns={bareMetalColumns}
-                  data={paginatedBareMetalInstances}
-                  rowKey="id"
-                  emptyMessage="No bare metal instances found"
-                  selectable
-                  selectedKeys={selectedBareMetalInstances}
-                  onSelectionChange={setSelectedBareMetalInstances}
-                />
-              )}
-            </VStack>
-          </div>
-        </div>
-      </main>
-
-      {/* Scroll to Top Button */}
-      {showScrollTop && (
-        <button
-          onClick={scrollToTop}
-          className="fixed bottom-6 right-6 w-10 h-10 bg-[var(--color-action-primary)] hover:bg-[var(--color-action-primary-hover)] text-white rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-110 z-50"
-          aria-label="Scroll to top"
-        >
-          <IconArrowUp size={20} stroke={1.5} />
-        </button>
-      )}
+        {/* Bare Metal Table */}
+        {activeTab === 'bare-metal' && (
+          <Table<BareMetalInstance>
+            columns={bareMetalColumns}
+            data={paginatedBareMetalInstances}
+            rowKey="id"
+            emptyMessage="No bare metal instances found"
+            selectable
+            selectedKeys={selectedBareMetalInstances}
+            onSelectionChange={setSelectedBareMetalInstances}
+          />
+        )}
+      </VStack>
 
       {/* View Preferences Drawer */}
       <ViewPreferencesDrawer
@@ -2015,23 +2010,7 @@ export function InstanceListPage() {
           // TODO: Implement rescue instance API call
         }}
       />
-
-      {/* Shell Panel (Multi-tab Console) */}
-      <ShellPanel
-        isExpanded={shellPanel.isExpanded}
-        onExpandedChange={shellPanel.setIsExpanded}
-        tabs={shellPanel.tabs}
-        activeTabId={shellPanel.activeTabId}
-        onActiveTabChange={shellPanel.setActiveTabId}
-        onCloseTab={shellPanel.closeTab}
-        onContentChange={shellPanel.updateContent}
-        onClear={shellPanel.clearContent}
-        onOpenInNewTab={handleOpenInNewTab}
-        initialHeight={350}
-        minHeight={300}
-        sidebarOpen={sidebarOpen}
-      />
-    </div>
+    </PageShell>
   );
 }
 

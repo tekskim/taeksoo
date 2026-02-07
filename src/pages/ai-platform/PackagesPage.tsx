@@ -1,5 +1,15 @@
 import { useState, useEffect } from 'react';
-import { VStack, HStack, TabBar, TopBar, Breadcrumb, Button, Badge } from '@/design-system';
+import {
+  VStack,
+  HStack,
+  TabBar,
+  TopBar,
+  Breadcrumb,
+  Button,
+  Badge,
+  PageShell,
+  PageHeader,
+} from '@/design-system';
 import { AIPlatformSidebar } from '@/components/AIPlatformSidebar';
 import { useTabs } from '@/contexts/TabContext';
 import {
@@ -208,13 +218,12 @@ export function PackagesPage() {
   const sidebarWidth = sidebarOpen ? 200 : 0;
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <AIPlatformSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: `${sidebarWidth}px` }}
-      >
+    <PageShell
+      sidebar={
+        <AIPlatformSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
         <TabBar
           tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
@@ -223,7 +232,8 @@ export function PackagesPage() {
           onTabAdd={addNewTab}
           onTabReorder={moveTab}
         />
-
+      }
+      topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -243,75 +253,58 @@ export function PackagesPage() {
             </>
           }
         />
+      }
+      contentClassName="pt-3 px-8 pb-20 bg-[var(--color-surface-subtle)]"
+    >
+      <VStack gap={6}>
+        <PageHeader
+          title="Packages Hub"
+          actions={
+            <Button variant="secondary" size="sm" icon={<IconRefresh size={14} stroke={1.5} />}>
+              Refresh
+            </Button>
+          }
+        />
 
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-3 px-8 pb-20 bg-[var(--color-surface-subtle)] min-h-full">
-            <VStack gap={6}>
-              {/* Header */}
-              <HStack justify="between" align="start">
-                <VStack gap={1}>
-                  <h1 className="text-heading-h3 text-[var(--color-text-default)]">Packages Hub</h1>
-                  <p className="text-body-lg text-[var(--color-text-subtle)]">
-                    AI Container Image Package Management
-                  </p>
-                </VStack>
-                <Button variant="secondary" size="sm" icon={<IconRefresh size={14} stroke={1.5} />}>
-                  Refresh
-                </Button>
-              </HStack>
-
-              {/* Thaki Images Section */}
-              <VStack gap={4}>
-                <SectionHeader
-                  icon={
-                    <IconStar
-                      size={20}
-                      className="text-[var(--color-action-primary)]"
-                      stroke={1.5}
-                    />
-                  }
-                  title="Thaki images"
-                  count={thakiImages.length}
-                />
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {thakiImages.map((image) => (
-                    <ThakiImageCard
-                      key={image.name}
-                      {...image}
-                      onDeploy={(option) => console.log('Deploy', image.name, option)}
-                    />
-                  ))}
-                </div>
-              </VStack>
-
-              {/* Common Images Section */}
-              <VStack gap={4}>
-                <SectionHeader
-                  icon={
-                    <IconPackage
-                      size={20}
-                      className="text-[var(--color-text-muted)]"
-                      stroke={1.5}
-                    />
-                  }
-                  title="Common images"
-                  count={commonImages.length}
-                />
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {commonImages.map((image) => (
-                    <CommonImageCard
-                      key={image.name}
-                      {...image}
-                      onDeploy={() => console.log('Deploy', image.name)}
-                    />
-                  ))}
-                </div>
-              </VStack>
-            </VStack>
+        {/* Thaki Images Section */}
+        <VStack gap={4}>
+          <SectionHeader
+            icon={
+              <IconStar size={20} className="text-[var(--color-action-primary)]" stroke={1.5} />
+            }
+            title="Thaki images"
+            count={thakiImages.length}
+          />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {thakiImages.map((image) => (
+              <ThakiImageCard
+                key={image.name}
+                {...image}
+                onDeploy={(option) => console.log('Deploy', image.name, option)}
+              />
+            ))}
           </div>
-        </div>
-      </main>
-    </div>
+        </VStack>
+
+        {/* Common Images Section */}
+        <VStack gap={4}>
+          <SectionHeader
+            icon={<IconPackage size={20} className="text-[var(--color-text-muted)]" stroke={1.5} />}
+            title="Common images"
+            count={commonImages.length}
+          />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {commonImages.map((image) => (
+              <CommonImageCard
+                key={image.name}
+                {...image}
+                onDeploy={() => console.log('Deploy', image.name)}
+              />
+            ))}
+          </div>
+        </VStack>
+      </VStack>
+    </PageShell>
   );
 }
 

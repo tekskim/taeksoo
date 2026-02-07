@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import {
   Button,
   VStack,
+  PageShell,
   TabBar,
   TopBar,
   TopBarAction,
@@ -172,6 +173,7 @@ const mockPorts: Port[] = Array.from({ length: 115 }, (_, i) => ({
 export default function SecurityGroupDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 200 : 0;
   const [activeTab, setActiveTab] = useState('rules');
 
   // Rules state
@@ -397,17 +399,16 @@ export default function SecurityGroupDetailPage() {
   ];
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen((prev) => !prev)} />
-
-      <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
-          sidebarOpen ? 'left-[var(--layout-sidebar-width)]' : 'left-0'
-        }`}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Tab Bar */}
+    <>
+      <PageShell
+        sidebar={
+          <ComputeAdminSidebar
+            isOpen={sidebarOpen}
+            onToggle={() => setSidebarOpen((prev) => !prev)}
+          />
+        }
+        sidebarWidth={sidebarWidth}
+        tabBar={
           <TabBar
             tabs={tabBarTabs}
             activeTab={activeTabId}
@@ -418,8 +419,8 @@ export default function SecurityGroupDetailPage() {
             showAddButton={true}
             showWindowControls={true}
           />
-
-          {/* Top Bar */}
+        }
+        topBar={
           <TopBar
             showSidebarToggle={!sidebarOpen}
             onSidebarToggle={() => setSidebarOpen(true)}
@@ -443,135 +444,128 @@ export default function SecurityGroupDetailPage() {
               />
             }
           />
-        </div>
+        }
+        contentClassName="pt-3 px-8 pb-20 bg-[var(--color-surface-subtle)]"
+      >
+        <VStack gap={6} className="min-w-[1176px]">
+          {/* Header Card */}
+          <div className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 pt-3 pb-4">
+            {/* Title */}
+            <h1 className="text-heading-h5 text-[var(--color-text-default)] mb-3">
+              {securityGroup.name}
+            </h1>
 
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          {/* Main Content */}
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
-            <VStack gap={6} className="min-w-[1176px]">
-              {/* Header Card */}
-              <div className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg px-4 pt-3 pb-4">
-                {/* Title */}
-                <h1 className="text-heading-h5 text-[var(--color-text-default)] mb-3">
-                  {securityGroup.name}
-                </h1>
+            {/* Actions */}
+            <div className="flex items-center gap-1 mb-3">
+              <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+                Delete
+              </Button>
+            </div>
 
-                {/* Actions */}
-                <div className="flex items-center gap-1 mb-3">
-                  <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
-                    Delete
-                  </Button>
+            {/* Info Row */}
+            <div className="flex items-center gap-2">
+              {/* ID */}
+              <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+                <span className="text-label-sm text-[var(--color-text-subtle)]">ID</span>
+                <div className="flex items-center gap-1 mt-1.5">
+                  <p className="text-body-md text-[var(--color-text-default)]">
+                    {securityGroup.id}
+                  </p>
+                  <button
+                    onClick={() => copyToClipboard(securityGroup.id)}
+                    className="p-0.5 rounded hover:bg-[var(--color-surface-muted)] transition-colors"
+                  >
+                    <IconCopy size={12} className="text-[var(--color-action-primary)]" />
+                  </button>
                 </div>
+              </div>
 
-                {/* Info Row */}
-                <div className="flex items-center gap-2">
-                  {/* ID */}
-                  <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-                    <span className="text-label-sm text-[var(--color-text-subtle)]">ID</span>
-                    <div className="flex items-center gap-1 mt-1.5">
-                      <p className="text-body-md text-[var(--color-text-default)]">
-                        {securityGroup.id}
-                      </p>
-                      <button
-                        onClick={() => copyToClipboard(securityGroup.id)}
-                        className="p-0.5 rounded hover:bg-[var(--color-surface-muted)] transition-colors"
-                      >
-                        <IconCopy size={12} className="text-[var(--color-action-primary)]" />
+              {/* Tenant */}
+              <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+                <span className="text-label-sm text-[var(--color-text-subtle)]">Tenant</span>
+                <p className="text-body-md text-[var(--color-text-default)] mt-1.5">tenantA</p>
+              </div>
+
+              {/* Created at */}
+              <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
+                <span className="text-label-sm text-[var(--color-text-subtle)]">Created at</span>
+                <p className="text-body-md text-[var(--color-text-default)] mt-1.5">
+                  {securityGroup.createdAt}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Tabs Section */}
+          <div className="w-full">
+            <Tabs value={activeTab} onChange={setActiveTab} size="sm">
+              <TabList>
+                <Tab value="rules">Rules</Tab>
+              </TabList>
+
+              <TabPanel value="rules" className="pt-0">
+                <VStack gap={4} className="pt-4">
+                  {/* Header */}
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-heading-h5 text-[var(--color-text-default)]">Rules</h3>
+                  </div>
+
+                  {/* Toolbar */}
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1">
+                      <div className="w-[var(--search-input-width)]">
+                        <SearchInput
+                          placeholder="Search rules by attributes"
+                          value={ruleSearchTerm}
+                          onChange={(e) => setRuleSearchTerm(e.target.value)}
+                          onClear={() => setRuleSearchTerm('')}
+                          size="sm"
+                          fullWidth
+                        />
+                      </div>
+                      <button className="w-7 h-7 flex items-center justify-center rounded-md border border-[var(--color-border-strong)] hover:bg-[var(--button-secondary-hover-bg)] transition-colors">
+                        <IconDownload
+                          size={14}
+                          stroke={1.5}
+                          className="text-[var(--color-text-default)]"
+                        />
                       </button>
                     </div>
+                    <div className="w-px h-4 bg-[var(--color-border-default)]" />
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      leftIcon={<IconTrash size={12} />}
+                      disabled={selectedRules.length === 0}
+                    >
+                      Delete
+                    </Button>
                   </div>
 
-                  {/* Tenant */}
-                  <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-                    <span className="text-label-sm text-[var(--color-text-subtle)]">Tenant</span>
-                    <p className="text-body-md text-[var(--color-text-default)] mt-1.5">tenantA</p>
-                  </div>
+                  {/* Pagination */}
+                  <Pagination
+                    currentPage={ruleCurrentPage}
+                    totalPages={Math.ceil(filteredRules.length / rulesPerPage)}
+                    totalItems={filteredRules.length}
+                    selectedCount={selectedRules.length}
+                    onPageChange={setRuleCurrentPage}
+                  />
 
-                  {/* Created at */}
-                  <div className="flex-1 bg-[var(--color-surface-subtle)] rounded-lg px-4 py-3">
-                    <span className="text-label-sm text-[var(--color-text-subtle)]">
-                      Created at
-                    </span>
-                    <p className="text-body-md text-[var(--color-text-default)] mt-1.5">
-                      {securityGroup.createdAt}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Tabs Section */}
-              <div className="w-full">
-                <Tabs value={activeTab} onChange={setActiveTab} size="sm">
-                  <TabList>
-                    <Tab value="rules">Rules</Tab>
-                  </TabList>
-
-                  <TabPanel value="rules" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Header */}
-                      <div className="flex items-center justify-between">
-                        <h3 className="text-heading-h5 text-[var(--color-text-default)]">Rules</h3>
-                      </div>
-
-                      {/* Toolbar */}
-                      <div className="flex items-center gap-2">
-                        <div className="flex items-center gap-1">
-                          <div className="w-[var(--search-input-width)]">
-                            <SearchInput
-                              placeholder="Search rules by attributes"
-                              value={ruleSearchTerm}
-                              onChange={(e) => setRuleSearchTerm(e.target.value)}
-                              onClear={() => setRuleSearchTerm('')}
-                              size="sm"
-                              fullWidth
-                            />
-                          </div>
-                          <button className="w-7 h-7 flex items-center justify-center rounded-md border border-[var(--color-border-strong)] hover:bg-[var(--button-secondary-hover-bg)] transition-colors">
-                            <IconDownload
-                              size={14}
-                              stroke={1.5}
-                              className="text-[var(--color-text-default)]"
-                            />
-                          </button>
-                        </div>
-                        <div className="w-px h-4 bg-[var(--color-border-default)]" />
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          leftIcon={<IconTrash size={12} />}
-                          disabled={selectedRules.length === 0}
-                        >
-                          Delete
-                        </Button>
-                      </div>
-
-                      {/* Pagination */}
-                      <Pagination
-                        currentPage={ruleCurrentPage}
-                        totalPages={Math.ceil(filteredRules.length / rulesPerPage)}
-                        totalItems={filteredRules.length}
-                        selectedCount={selectedRules.length}
-                        onPageChange={setRuleCurrentPage}
-                      />
-
-                      {/* Table */}
-                      <Table
-                        columns={ruleColumns}
-                        data={paginatedRules}
-                        rowKey="id"
-                        selectable
-                        selectedKeys={selectedRules}
-                        onSelectionChange={setSelectedRules}
-                      />
-                    </VStack>
-                  </TabPanel>
-                </Tabs>
-              </div>
-            </VStack>
+                  {/* Table */}
+                  <Table
+                    columns={ruleColumns}
+                    data={paginatedRules}
+                    rowKey="id"
+                    selectable
+                    selectedKeys={selectedRules}
+                    onSelectionChange={setSelectedRules}
+                  />
+                </VStack>
+              </TabPanel>
+            </Tabs>
           </div>
-        </div>
-      </main>
+        </VStack>
+      </PageShell>
 
       {/* Delete Modal */}
       <ConfirmModal
@@ -590,6 +584,6 @@ export default function SecurityGroupDetailPage() {
           setRuleToDelete(null);
         }}
       />
-    </div>
+    </>
   );
 }

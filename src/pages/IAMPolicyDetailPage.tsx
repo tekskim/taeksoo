@@ -16,6 +16,7 @@ import {
   TabBar,
   Chip,
   ContextMenu,
+  PageShell,
   fixedColumns,
   columnMinWidths,
   type TableColumn,
@@ -560,12 +561,10 @@ export default function IAMPolicyDetailPage() {
 
   if (!policy) {
     return (
-      <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-        <IAMSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-        <main
-          className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-          style={{ left: `${sidebarWidth}px` }}
-        >
+      <PageShell
+        sidebar={<IAMSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />}
+        sidebarWidth={sidebarWidth}
+        tabBar={
           <TabBar
             tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
             activeTab={activeTabId}
@@ -574,6 +573,8 @@ export default function IAMPolicyDetailPage() {
             onTabAdd={addNewTab}
             onTabReorder={moveTab}
           />
+        }
+        topBar={
           <TopBar
             showSidebarToggle={!sidebarOpen}
             onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -589,21 +590,21 @@ export default function IAMPolicyDetailPage() {
               />
             }
           />
-          <div className="flex-1 flex items-center justify-center">
-            <p className="text-[var(--color-text-muted)]">Policy not found</p>
-          </div>
-        </main>
-      </div>
+        }
+        contentClassName="pt-4 px-8 pb-6"
+      >
+        <div className="flex-1 flex items-center justify-center">
+          <p className="text-[var(--color-text-muted)]">Policy not found</p>
+        </div>
+      </PageShell>
     );
   }
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <IAMSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: `${sidebarWidth}px` }}
-      >
+    <PageShell
+      sidebar={<IAMSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />}
+      sidebarWidth={sidebarWidth}
+      tabBar={
         <TabBar
           tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
@@ -612,6 +613,8 @@ export default function IAMPolicyDetailPage() {
           onTabAdd={addNewTab}
           onTabReorder={moveTab}
         />
+      }
+      topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -620,352 +623,315 @@ export default function IAMPolicyDetailPage() {
           onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
         />
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
-            <VStack gap={8}>
-              {/* Header Card */}
-              <div className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
-                <VStack gap={3}>
-                  {/* Title */}
-                  <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
-                    {policy.name}
-                  </h1>
+      }
+      contentClassName="pt-4 px-8 pb-6"
+    >
+      <VStack gap={8}>
+        {/* Header Card */}
+        <div className="w-full bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-lg p-4">
+          <VStack gap={3}>
+            {/* Title */}
+            <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
+              {policy.name}
+            </h1>
 
-                  {/* Action Buttons */}
-                  <HStack gap={1}>
-                    <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                      Edit
-                    </Button>
-                    <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
-                      Delete
-                    </Button>
-                    <ContextMenu items={moreActionsItems} trigger="click" align="right">
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        rightIcon={<IconChevronDown size={12} />}
-                      >
-                        More Actions
-                      </Button>
-                    </ContextMenu>
-                  </HStack>
+            {/* Action Buttons */}
+            <HStack gap={1}>
+              <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+                Edit
+              </Button>
+              <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+                Delete
+              </Button>
+              <ContextMenu items={moreActionsItems} trigger="click" align="right">
+                <Button variant="secondary" size="sm" rightIcon={<IconChevronDown size={12} />}>
+                  More Actions
+                </Button>
+              </ContextMenu>
+            </HStack>
 
-                  {/* Info Cards */}
-                  <HStack gap={2} className="w-full">
-                    <InfoCard label="Description" value={policy.description} />
-                    <InfoCard label="Type" value={policy.type} />
-                    <InfoCard label="Condition" value={policy.condition} />
-                    <InfoCard label="Edited at" value={policy.editedAt} />
-                    <InfoCard label="Created at" value={policy.createdAt} />
-                  </HStack>
-                </VStack>
-              </div>
+            {/* Info Cards */}
+            <HStack gap={2} className="w-full">
+              <InfoCard label="Description" value={policy.description} />
+              <InfoCard label="Type" value={policy.type} />
+              <InfoCard label="Condition" value={policy.condition} />
+              <InfoCard label="Edited at" value={policy.editedAt} />
+              <InfoCard label="Created at" value={policy.createdAt} />
+            </HStack>
+          </VStack>
+        </div>
 
-              {/* Tabs */}
-              <div className="w-full">
-                <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
-                  <TabList>
-                    <Tab value="permissions">Permissions</Tab>
-                    <Tab value="roles">Roles</Tab>
-                    <Tab value="version-history">Version history</Tab>
-                  </TabList>
+        {/* Tabs */}
+        <div className="w-full">
+          <Tabs value={activeTab} onChange={setActiveTab} variant="underline" size="sm">
+            <TabList>
+              <Tab value="permissions">Permissions</Tab>
+              <Tab value="roles">Roles</Tab>
+              <Tab value="version-history">Version history</Tab>
+            </TabList>
 
-                  {/* Permissions Tab */}
-                  <TabPanel value="permissions" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Section Header */}
-                      <HStack justify="between" align="center" className="w-full">
-                        <h2 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
-                          Permissions
-                        </h2>
-                        <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                          Edit
-                        </Button>
-                      </HStack>
+            {/* Permissions Tab */}
+            <TabPanel value="permissions" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Section Header */}
+                <HStack justify="between" align="center" className="w-full">
+                  <h2 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
+                    Permissions
+                  </h2>
+                  <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+                    Edit
+                  </Button>
+                </HStack>
 
-                      {/* Search */}
-                      <SearchInput
-                        placeholder="Search permissions by attributes"
-                        value={permSearchQuery}
-                        onChange={(e) => setPermSearchQuery(e.target.value)}
-                        className="w-[var(--search-input-width)]"
-                      />
+                {/* Search */}
+                <SearchInput
+                  placeholder="Search permissions by attributes"
+                  value={permSearchQuery}
+                  onChange={(e) => setPermSearchQuery(e.target.value)}
+                  className="w-[var(--search-input-width)]"
+                />
 
-                      {/* Pagination */}
-                      <Pagination
-                        currentPage={permCurrentPage}
-                        totalPages={permTotalPages}
-                        totalItems={filteredPermissions.length}
-                        onPageChange={setPermCurrentPage}
-                      />
+                {/* Pagination */}
+                <Pagination
+                  currentPage={permCurrentPage}
+                  totalPages={permTotalPages}
+                  totalItems={filteredPermissions.length}
+                  onPageChange={setPermCurrentPage}
+                />
 
-                      {/* Permissions Table */}
-                      <div className="w-full flex flex-col gap-1">
-                        {/* Table Header */}
-                        <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
-                          <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
-                            App
-                            <IconChevronDown
-                              size={16}
-                              className="text-[var(--color-text-default)]"
-                            />
-                          </div>
-                          <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                            Partition
-                            <IconChevronDown
-                              size={16}
-                              className="text-[var(--color-text-default)]"
-                            />
-                          </div>
-                          <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                            Resource
-                            <IconChevronDown
-                              size={16}
-                              className="text-[var(--color-text-default)]"
-                            />
-                          </div>
-                          <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                            Action class
-                            <IconChevronDown
-                              size={16}
-                              className="text-[var(--color-text-default)]"
-                            />
-                          </div>
-                        </div>
+                {/* Permissions Table */}
+                <div className="w-full flex flex-col gap-1">
+                  {/* Table Header */}
+                  <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
+                    <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
+                      App
+                      <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
+                    </div>
+                    <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
+                      Partition
+                      <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
+                    </div>
+                    <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
+                      Resource
+                      <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
+                    </div>
+                    <div className="flex-1 flex items-center gap-1.5 px-[var(--table-cell-padding-x)] py-[var(--table-header-padding-y)] text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
+                      Action class
+                      <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
+                    </div>
+                  </div>
 
-                        {/* Table Rows */}
-                        {paginatedPermissions.map((perm) => (
-                          <div
-                            key={perm.id}
-                            className={`
+                  {/* Table Rows */}
+                  {paginatedPermissions.map((perm) => (
+                    <div
+                      key={perm.id}
+                      className={`
                               rounded-[var(--table-row-radius)]
                               border border-[var(--color-border-default)] bg-[var(--color-surface-default)]
                               transition-colors overflow-hidden
                             `}
-                          >
-                            {/* Main Row */}
-                            <div
-                              className={`
+                    >
+                      {/* Main Row */}
+                      <div
+                        className={`
                                 flex items-stretch min-h-[var(--table-row-height)]
                                 ${expandedPermissions.has(perm.id) ? 'rounded-t-md' : 'rounded-md'}
                                 hover:bg-[var(--table-row-hover-bg)] transition-colors
                               `}
-                            >
-                              {/* App */}
-                              <div className="flex-1 flex items-center gap-2 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                                <button
-                                  onClick={() => togglePermissionExpansion(perm.id)}
-                                  className="p-0.5 hover:bg-[var(--color-surface-subtle)] rounded"
-                                >
-                                  {expandedPermissions.has(perm.id) ? (
-                                    <IconChevronDown size={16} stroke={1.5} />
-                                  ) : (
-                                    <IconChevronRight size={16} stroke={1.5} />
-                                  )}
-                                </button>
-                                {perm.app}
-                              </div>
-                              {/* Partition */}
-                              <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                                {perm.partition}
-                              </div>
-                              {/* Resource */}
-                              <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                                {perm.resource}
-                              </div>
-                              {/* Action Class */}
-                              <div className="flex-1 flex items-center gap-1 flex-wrap px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                                {perm.actionClass.map((action, i) => (
-                                  <Chip key={i} value={action} />
-                                ))}
-                              </div>
-                            </div>
-
-                            {/* Expanded Permission Details */}
-                            {expandedPermissions.has(perm.id) && (
-                              <PermissionDetails actions={perm.actions || []} />
+                      >
+                        {/* App */}
+                        <div className="flex-1 flex items-center gap-2 px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                          <button
+                            onClick={() => togglePermissionExpansion(perm.id)}
+                            className="p-0.5 hover:bg-[var(--color-surface-subtle)] rounded"
+                          >
+                            {expandedPermissions.has(perm.id) ? (
+                              <IconChevronDown size={16} stroke={1.5} />
+                            ) : (
+                              <IconChevronRight size={16} stroke={1.5} />
                             )}
-                          </div>
-                        ))}
-                      </div>
-                    </VStack>
-                  </TabPanel>
-
-                  {/* Roles Tab */}
-                  <TabPanel value="roles" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Section Header */}
-                      <HStack justify="between" align="center" className="w-full">
-                        <h2 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
-                          Roles
-                        </h2>
-                        <Button variant="secondary" size="sm">
-                          Manage roles
-                        </Button>
-                      </HStack>
-
-                      {/* Search */}
-                      <SearchInput
-                        placeholder="Search roles by attributes"
-                        value={rolesSearchQuery}
-                        onChange={(e) => setRolesSearchQuery(e.target.value)}
-                        className="w-[var(--search-input-width)]"
-                      />
-
-                      {/* Pagination */}
-                      <Pagination
-                        currentPage={rolesCurrentPage}
-                        totalPages={rolesTotalPages}
-                        totalItems={filteredRoles.length}
-                        onPageChange={setRolesCurrentPage}
-                      />
-
-                      {/* Roles Table */}
-                      <Table<AttachedRole>
-                        columns={rolesColumns}
-                        data={paginatedRoles}
-                        rowKey="id"
-                      />
-                    </VStack>
-                  </TabPanel>
-
-                  {/* Version History Tab */}
-                  <TabPanel value="version-history" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Section Header */}
-                      <div className="h-7 flex items-center">
-                        <h2 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
-                          Version history
-                        </h2>
-                      </div>
-
-                      {/* Version History Table */}
-                      <div className="w-full flex flex-col gap-1">
-                        {/* Table Header */}
-                        <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
-                          <div className="w-[70px] flex items-center justify-center px-3 py-0 text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
-                            Active
-                          </div>
-                          <div className="flex-1 flex items-center gap-1.5 px-3 py-0 text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors">
-                            Version
-                            <IconChevronDown
-                              size={16}
-                              className="text-[var(--color-text-default)]"
-                            />
-                          </div>
-                          <div className="flex-1 flex items-center gap-1.5 px-3 py-0 text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors">
-                            Conditions
-                            <IconChevronDown
-                              size={16}
-                              className="text-[var(--color-text-default)]"
-                            />
-                          </div>
-                          <div className="flex-1 flex items-center gap-1.5 px-3 py-0 text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors">
-                            Edited by
-                            <IconChevronDown
-                              size={16}
-                              className="text-[var(--color-text-default)]"
-                            />
-                          </div>
-                          <div className="flex-1 flex items-center gap-1.5 px-3 py-0 text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors">
-                            Edited at
-                            <IconChevronDown
-                              size={16}
-                              className="text-[var(--color-text-default)]"
-                            />
-                          </div>
-                          <div className="w-[72px] flex items-center justify-center px-3 py-0 text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
-                            Action
-                          </div>
+                          </button>
+                          {perm.app}
                         </div>
+                        {/* Partition */}
+                        <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                          {perm.partition}
+                        </div>
+                        {/* Resource */}
+                        <div className="flex-1 flex items-center px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                          {perm.resource}
+                        </div>
+                        {/* Action Class */}
+                        <div className="flex-1 flex items-center gap-1 flex-wrap px-[var(--table-cell-padding-x)] py-[var(--table-cell-padding-y)] text-[length:var(--table-font-size)] leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                          {perm.actionClass.map((action, i) => (
+                            <Chip key={i} value={action} />
+                          ))}
+                        </div>
+                      </div>
 
-                        {/* Table Rows */}
-                        {mockVersionHistory.map((version) => (
-                          <div
-                            key={version.id}
-                            className={`
+                      {/* Expanded Permission Details */}
+                      {expandedPermissions.has(perm.id) && (
+                        <PermissionDetails actions={perm.actions || []} />
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </VStack>
+            </TabPanel>
+
+            {/* Roles Tab */}
+            <TabPanel value="roles" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Section Header */}
+                <HStack justify="between" align="center" className="w-full">
+                  <h2 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
+                    Roles
+                  </h2>
+                  <Button variant="secondary" size="sm">
+                    Manage roles
+                  </Button>
+                </HStack>
+
+                {/* Search */}
+                <SearchInput
+                  placeholder="Search roles by attributes"
+                  value={rolesSearchQuery}
+                  onChange={(e) => setRolesSearchQuery(e.target.value)}
+                  className="w-[var(--search-input-width)]"
+                />
+
+                {/* Pagination */}
+                <Pagination
+                  currentPage={rolesCurrentPage}
+                  totalPages={rolesTotalPages}
+                  totalItems={filteredRoles.length}
+                  onPageChange={setRolesCurrentPage}
+                />
+
+                {/* Roles Table */}
+                <Table<AttachedRole> columns={rolesColumns} data={paginatedRoles} rowKey="id" />
+              </VStack>
+            </TabPanel>
+
+            {/* Version History Tab */}
+            <TabPanel value="version-history" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Section Header */}
+                <div className="h-7 flex items-center">
+                  <h2 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
+                    Version history
+                  </h2>
+                </div>
+
+                {/* Version History Table */}
+                <div className="w-full flex flex-col gap-1">
+                  {/* Table Header */}
+                  <div className="flex items-stretch min-h-[var(--table-row-height)] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-[var(--table-row-radius)]">
+                    <div className="w-[70px] flex items-center justify-center px-3 py-0 text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)]">
+                      Active
+                    </div>
+                    <div className="flex-1 flex items-center gap-1.5 px-3 py-0 text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors">
+                      Version
+                      <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
+                    </div>
+                    <div className="flex-1 flex items-center gap-1.5 px-3 py-0 text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors">
+                      Conditions
+                      <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
+                    </div>
+                    <div className="flex-1 flex items-center gap-1.5 px-3 py-0 text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors">
+                      Edited by
+                      <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
+                    </div>
+                    <div className="flex-1 flex items-center gap-1.5 px-3 py-0 text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)] cursor-pointer select-none hover:text-[var(--color-action-primary)] transition-colors">
+                      Edited at
+                      <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
+                    </div>
+                    <div className="w-[72px] flex items-center justify-center px-3 py-0 text-[length:var(--table-header-font-size)] leading-[var(--table-line-height)] font-medium text-[var(--color-text-default)] border-l border-[var(--color-border-default)]">
+                      Action
+                    </div>
+                  </div>
+
+                  {/* Table Rows */}
+                  {mockVersionHistory.map((version) => (
+                    <div
+                      key={version.id}
+                      className={`
                               rounded-[var(--table-row-radius)]
                               border border-[var(--color-border-default)] bg-[var(--color-surface-default)]
                               transition-colors overflow-hidden
                             `}
-                          >
-                            {/* Main Row */}
-                            <div
-                              className={`
+                    >
+                      {/* Main Row */}
+                      <div
+                        className={`
                                 flex items-stretch min-h-[var(--table-row-height)]
                                 ${expandedVersions.has(version.id) ? 'rounded-t-md' : 'rounded-md'}
                                 hover:bg-[var(--table-row-hover-bg)] transition-colors
                               `}
-                            >
-                              {/* Active Badge */}
-                              <div className="w-[70px] flex items-center justify-center px-3 py-2">
-                                {version.isActive && (
-                                  <span className="px-1.5 py-0.5 bg-[var(--color-action-primary)] text-white text-label-sm rounded-md">
-                                    Active
-                                  </span>
-                                )}
-                              </div>
-                              {/* Version */}
-                              <div className="flex-1 flex items-center gap-2 px-3 py-2 text-body-md leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                                <button
-                                  onClick={() => toggleVersionExpansion(version.id)}
-                                  className="p-0.5 hover:bg-[var(--color-surface-subtle)] rounded"
-                                >
-                                  {expandedVersions.has(version.id) ? (
-                                    <IconChevronDown size={16} stroke={1.5} />
-                                  ) : (
-                                    <IconChevronRight size={16} stroke={1.5} />
-                                  )}
-                                </button>
-                                <span className="font-medium">Version {version.version}</span>
-                              </div>
-                              {/* Conditions */}
-                              <div className="flex-1 flex items-center px-3 py-2 text-body-md leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                                {version.conditions}
-                              </div>
-                              {/* Edited by */}
-                              <div className="flex-1 flex items-center px-3 py-2 text-body-md leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                                {version.editedBy}
-                              </div>
-                              {/* Edited at */}
-                              <div className="flex-1 flex items-center px-3 py-2 text-body-md leading-[var(--table-line-height)] text-[var(--color-text-default)]">
-                                {version.editedAt}
-                              </div>
-                              {/* Action */}
-                              <div className="w-[72px] flex items-center justify-center px-1.5 py-1.5">
-                                <ContextMenu
-                                  items={getVersionContextMenuItems(version)}
-                                  trigger="click"
-                                >
-                                  <button
-                                    type="button"
-                                    className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
-                                  >
-                                    <IconAction
-                                      size={16}
-                                      stroke={1}
-                                      className="text-[var(--color-text-default)]"
-                                    />
-                                  </button>
-                                </ContextMenu>
-                              </div>
-                            </div>
-
-                            {/* Expanded Version Details */}
-                            {expandedVersions.has(version.id) && (
-                              <VersionDetails statements={version.statements} />
+                      >
+                        {/* Active Badge */}
+                        <div className="w-[70px] flex items-center justify-center px-3 py-2">
+                          {version.isActive && (
+                            <span className="px-1.5 py-0.5 bg-[var(--color-action-primary)] text-white text-label-sm rounded-md">
+                              Active
+                            </span>
+                          )}
+                        </div>
+                        {/* Version */}
+                        <div className="flex-1 flex items-center gap-2 px-3 py-2 text-body-md leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                          <button
+                            onClick={() => toggleVersionExpansion(version.id)}
+                            className="p-0.5 hover:bg-[var(--color-surface-subtle)] rounded"
+                          >
+                            {expandedVersions.has(version.id) ? (
+                              <IconChevronDown size={16} stroke={1.5} />
+                            ) : (
+                              <IconChevronRight size={16} stroke={1.5} />
                             )}
-                          </div>
-                        ))}
+                          </button>
+                          <span className="font-medium">Version {version.version}</span>
+                        </div>
+                        {/* Conditions */}
+                        <div className="flex-1 flex items-center px-3 py-2 text-body-md leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                          {version.conditions}
+                        </div>
+                        {/* Edited by */}
+                        <div className="flex-1 flex items-center px-3 py-2 text-body-md leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                          {version.editedBy}
+                        </div>
+                        {/* Edited at */}
+                        <div className="flex-1 flex items-center px-3 py-2 text-body-md leading-[var(--table-line-height)] text-[var(--color-text-default)]">
+                          {version.editedAt}
+                        </div>
+                        {/* Action */}
+                        <div className="w-[72px] flex items-center justify-center px-1.5 py-1.5">
+                          <ContextMenu items={getVersionContextMenuItems(version)} trigger="click">
+                            <button
+                              type="button"
+                              className="flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-[var(--color-surface-muted)] active:bg-[var(--color-border-subtle)] transition-colors cursor-pointer"
+                            >
+                              <IconAction
+                                size={16}
+                                stroke={1}
+                                className="text-[var(--color-text-default)]"
+                              />
+                            </button>
+                          </ContextMenu>
+                        </div>
                       </div>
-                    </VStack>
-                  </TabPanel>
-                </Tabs>
-              </div>
-            </VStack>
-          </div>
+
+                      {/* Expanded Version Details */}
+                      {expandedVersions.has(version.id) && (
+                        <VersionDetails statements={version.statements} />
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </VStack>
+            </TabPanel>
+          </Tabs>
         </div>
-      </main>
-    </div>
+      </VStack>
+    </PageShell>
   );
 }

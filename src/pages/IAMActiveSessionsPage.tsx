@@ -6,12 +6,13 @@ import {
   Table,
   Pagination,
   VStack,
-  HStack,
   TopBar,
   Breadcrumb,
   ContextMenu,
   TabBar,
   ListToolbar,
+  PageShell,
+  PageHeader,
   fixedColumns,
   columnMinWidths,
   type TableColumn,
@@ -239,12 +240,10 @@ export default function IAMActiveSessionsPage() {
   ];
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      <IAMSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: `${sidebarWidth}px` }}
-      >
+    <PageShell
+      sidebar={<IAMSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />}
+      sidebarWidth={sidebarWidth}
+      tabBar={
         <TabBar
           tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
@@ -253,6 +252,8 @@ export default function IAMActiveSessionsPage() {
           onTabAdd={addNewTab}
           onTabReorder={moveTab}
         />
+      }
+      topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -261,68 +262,61 @@ export default function IAMActiveSessionsPage() {
           onForward={() => navigate(1)}
           breadcrumb={<Breadcrumb items={breadcrumbItems} />}
         />
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
-            <VStack gap={3}>
-              {/* Header */}
-              <HStack justify="between" align="center" className="w-full min-h-[28px]">
-                <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
-                  Active sessions
-                </h1>
-              </HStack>
+      }
+    >
+      <VStack gap={3}>
+        {/* Header */}
+        <PageHeader title="Active sessions" />
 
-              {/* Action Bar */}
-              <VStack gap={3} className="w-full">
-                <ListToolbar
-                  primaryActions={
-                    <ListToolbar.Actions>
-                      <SearchInput
-                        placeholder="Search session by attributes"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-[var(--search-input-width)]"
-                      />
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        icon={<IconRefresh size={12} stroke={1.5} />}
-                        aria-label="Refresh"
-                      />
-                    </ListToolbar.Actions>
-                  }
-                  bulkActions={
-                    <ListToolbar.Actions>
-                      <Button variant="muted" size="sm" disabled={selectedRows.length === 0}>
-                        Terminate
-                      </Button>
-                    </ListToolbar.Actions>
-                  }
+        {/* Action Bar */}
+        <VStack gap={3} className="w-full">
+          <ListToolbar
+            primaryActions={
+              <ListToolbar.Actions>
+                <SearchInput
+                  placeholder="Search session by attributes"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-[var(--search-input-width)]"
                 />
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  icon={<IconRefresh size={12} stroke={1.5} />}
+                  aria-label="Refresh"
+                />
+              </ListToolbar.Actions>
+            }
+            bulkActions={
+              <ListToolbar.Actions>
+                <Button variant="muted" size="sm" disabled={selectedRows.length === 0}>
+                  Terminate
+                </Button>
+              </ListToolbar.Actions>
+            }
+          />
 
-                {/* Pagination */}
-                <Pagination
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  totalItems={filteredSessions.length}
-                  selectedCount={selectedRows.length}
-                  showSettings
-                  onPageChange={setCurrentPage}
-                />
+          {/* Pagination */}
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            totalItems={filteredSessions.length}
+            selectedCount={selectedRows.length}
+            showSettings
+            onPageChange={setCurrentPage}
+          />
 
-                {/* Table */}
-                <Table<ActiveSession>
-                  columns={columns}
-                  data={paginatedSessions}
-                  rowKey="id"
-                  selectable
-                  selectedKeys={selectedRows}
-                  onSelectionChange={setSelectedRows}
-                />
-              </VStack>
-            </VStack>
-          </div>
-        </div>
-      </main>
-    </div>
+          {/* Table */}
+          <Table<ActiveSession>
+            columns={columns}
+            data={paginatedSessions}
+            rowKey="id"
+            selectable
+            selectedKeys={selectedRows}
+            onSelectionChange={setSelectedRows}
+          />
+        </VStack>
+      </VStack>
+    </PageShell>
   );
 }

@@ -13,6 +13,7 @@ import {
   TabPanel,
   DetailHeader,
   SectionCard,
+  PageShell,
 } from '@/design-system';
 import { ComputeAdminSidebar } from '@/components/ComputeAdminSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -216,6 +217,7 @@ export function ComputeAdminInstanceSnapshotDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sidebarWidth = sidebarOpen ? 200 : 0;
   const [activeDetailTab, setActiveDetailTab] = useState('details');
 
   // Get snapshot based on URL id
@@ -247,215 +249,197 @@ export function ComputeAdminInstanceSnapshotDetailPage() {
   ];
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+    <PageShell
+      sidebar={
+        <ComputeAdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      }
+      sidebarWidth={sidebarWidth}
+      tabBar={
+        <TabBar
+          tabs={tabBarTabs}
+          activeTab={activeTabId}
+          onTabChange={selectTab}
+          onTabClose={closeTab}
+          onTabAdd={addNewTab}
+          onTabReorder={moveTab}
+          showAddButton={true}
+          showWindowControls={true}
+        />
+      }
+      topBar={
+        <TopBar
+          showSidebarToggle={!sidebarOpen}
+          onSidebarToggle={() => setSidebarOpen(true)}
+          showNavigation={true}
+          onBack={() => navigate('/compute-admin/instance-snapshots')}
+          onForward={() => window.history.forward()}
+          breadcrumb={<Breadcrumb items={breadcrumbItems} />}
+          actions={
+            <TopBarAction
+              icon={<IconBell size={16} stroke={1.5} />}
+              aria-label="Notifications"
+              badge={true}
+            />
+          }
+        />
+      }
+      contentClassName="pt-4 px-8 pb-20"
+    >
+      <VStack gap={6} className="min-w-[1176px]">
+        {/* Snapshot Header Card */}
+        <DetailHeader>
+          <DetailHeader.Title>{snapshot.name}</DetailHeader.Title>
+          <DetailHeader.Actions>
+            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+              Edit
+            </Button>
+            <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
+              Delete
+            </Button>
+          </DetailHeader.Actions>
+          <DetailHeader.InfoGrid>
+            <DetailHeader.InfoCard label="Status" value="Active" status="active" />
+            <DetailHeader.InfoCard label="ID" value={snapshot.id} copyable />
+            <DetailHeader.InfoCard label="Tenant" value={snapshot.tenant} />
+            <DetailHeader.InfoCard label="Size" value={snapshot.size} />
+            <DetailHeader.InfoCard label="Created at" value={snapshot.createdAt} />
+          </DetailHeader.InfoGrid>
+        </DetailHeader>
 
-      {/* Main Content */}
-      <main
-        className={`absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200 ${
-          sidebarOpen ? 'left-[200px]' : 'left-0'
-        }`}
-      >
-        {/* Fixed Header Area */}
-        <div className="shrink-0 bg-[var(--color-surface-default)]">
-          {/* Tab Bar */}
-          <TabBar
-            tabs={tabBarTabs}
-            activeTab={activeTabId}
-            onTabChange={selectTab}
-            onTabClose={closeTab}
-            onTabAdd={addNewTab}
-            onTabReorder={moveTab}
-            showAddButton={true}
-            showWindowControls={true}
-          />
+        {/* Snapshot Tabs */}
+        <div className="w-full">
+          <Tabs value={activeDetailTab} onChange={setActiveDetailTab} variant="underline" size="sm">
+            <TabList>
+              <Tab value="details">Details</Tab>
+              <Tab value="metadata">Metadata</Tab>
+            </TabList>
 
-          {/* Top Bar */}
-          <TopBar
-            showSidebarToggle={!sidebarOpen}
-            onSidebarToggle={() => setSidebarOpen(true)}
-            showNavigation={true}
-            onBack={() => navigate('/compute-admin/instance-snapshots')}
-            onForward={() => window.history.forward()}
-            breadcrumb={<Breadcrumb items={breadcrumbItems} />}
-            actions={
-              <TopBarAction
-                icon={<IconBell size={16} stroke={1.5} />}
-                aria-label="Notifications"
-                badge={true}
-              />
-            }
-          />
-        </div>
+            {/* Details Tab Panel */}
+            <TabPanel value="details" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Basic information */}
+                <SectionCard>
+                  <SectionCard.Header
+                    title="Basic information"
+                    actions={
+                      <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
+                        Edit
+                      </Button>
+                    }
+                  />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="Snapshot name" value={snapshot.name} />
+                    <SectionCard.DataRow label="Description" value={snapshot.description} />
+                  </SectionCard.Content>
+                </SectionCard>
 
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          {/* Page Content */}
-          <div className="pt-4 px-8 pb-20 bg-[var(--color-surface-default)] min-h-full">
-            <VStack gap={6} className="min-w-[1176px]">
-              {/* Snapshot Header Card */}
-              <DetailHeader>
-                <DetailHeader.Title>{snapshot.name}</DetailHeader.Title>
-                <DetailHeader.Actions>
-                  <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                    Edit
-                  </Button>
-                  <Button variant="secondary" size="sm" leftIcon={<IconTrash size={12} />}>
-                    Delete
-                  </Button>
-                </DetailHeader.Actions>
-                <DetailHeader.InfoGrid>
-                  <DetailHeader.InfoCard label="Status" value="Active" status="active" />
-                  <DetailHeader.InfoCard label="ID" value={snapshot.id} copyable />
-                  <DetailHeader.InfoCard label="Tenant" value={snapshot.tenant} />
-                  <DetailHeader.InfoCard label="Size" value={snapshot.size} />
-                  <DetailHeader.InfoCard label="Created at" value={snapshot.createdAt} />
-                </DetailHeader.InfoGrid>
-              </DetailHeader>
-
-              {/* Snapshot Tabs */}
-              <div className="w-full">
-                <Tabs
-                  value={activeDetailTab}
-                  onChange={setActiveDetailTab}
-                  variant="underline"
-                  size="sm"
-                >
-                  <TabList>
-                    <Tab value="details">Details</Tab>
-                    <Tab value="metadata">Metadata</Tab>
-                  </TabList>
-
-                  {/* Details Tab Panel */}
-                  <TabPanel value="details" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Basic information */}
-                      <SectionCard>
-                        <SectionCard.Header
-                          title="Basic information"
-                          actions={
-                            <Button variant="secondary" size="sm" leftIcon={<IconEdit size={12} />}>
-                              Edit
-                            </Button>
-                          }
-                        />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow label="Snapshot name" value={snapshot.name} />
-                          <SectionCard.DataRow label="Description" value={snapshot.description} />
-                        </SectionCard.Content>
-                      </SectionCard>
-
-                      {/* Source */}
-                      <SectionCard>
-                        <SectionCard.Header title="Source" />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow
-                            label="Instance"
-                            value={
-                              <Link
-                                to="/compute-admin/instances"
-                                className="inline-flex items-center gap-1.5 text-label-md leading-4 text-[var(--color-action-primary)] hover:underline"
-                              >
-                                {snapshot.sourceInstance}
-                                <IconExternalLink
-                                  size={12}
-                                  className="text-[var(--color-action-primary)]"
-                                />
-                              </Link>
-                            }
+                {/* Source */}
+                <SectionCard>
+                  <SectionCard.Header title="Source" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow
+                      label="Instance"
+                      value={
+                        <Link
+                          to="/compute-admin/instances"
+                          className="inline-flex items-center gap-1.5 text-label-md leading-4 text-[var(--color-action-primary)] hover:underline"
+                        >
+                          {snapshot.sourceInstance}
+                          <IconExternalLink
+                            size={12}
+                            className="text-[var(--color-action-primary)]"
                           />
-                        </SectionCard.Content>
-                      </SectionCard>
+                        </Link>
+                      }
+                    />
+                  </SectionCard.Content>
+                </SectionCard>
 
-                      {/* Specifications */}
-                      <SectionCard>
-                        <SectionCard.Header title="Specifications" />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow label="Size" value={snapshot.size} />
-                          <SectionCard.DataRow label="OS" value={snapshot.os} />
-                          <SectionCard.DataRow
-                            label="Min disk / Min RAM"
-                            value={`${snapshot.minDisk} / ${snapshot.minRam}`}
-                          />
-                          <SectionCard.DataRow
-                            label="Disk format / Container Format"
-                            value={`${snapshot.diskFormat} / ${snapshot.containerFormat}`}
-                          />
-                        </SectionCard.Content>
-                      </SectionCard>
+                {/* Specifications */}
+                <SectionCard>
+                  <SectionCard.Header title="Specifications" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="Size" value={snapshot.size} />
+                    <SectionCard.DataRow label="OS" value={snapshot.os} />
+                    <SectionCard.DataRow
+                      label="Min disk / Min RAM"
+                      value={`${snapshot.minDisk} / ${snapshot.minRam}`}
+                    />
+                    <SectionCard.DataRow
+                      label="Disk format / Container Format"
+                      value={`${snapshot.diskFormat} / ${snapshot.containerFormat}`}
+                    />
+                  </SectionCard.Content>
+                </SectionCard>
 
-                      {/* Security */}
-                      <SectionCard>
-                        <SectionCard.Header title="Security" />
-                        <SectionCard.Content>
-                          <SectionCard.DataRow label="Owner" value={snapshot.owner} />
-                          <SectionCard.DataRow label="Visibility" value={snapshot.visibility} />
-                          <SectionCard.DataRow
-                            label="Protected"
-                            value={snapshot.protected ? 'Enabled' : 'Disabled'}
-                          />
-                          <div className="flex flex-col gap-3 w-full">
-                            <div className="h-px w-full bg-[var(--color-border-subtle)]" />
-                            <div className="flex flex-col gap-1.5">
-                              <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
-                                Filename
-                              </span>
-                              <CopyableValue value={snapshot.filename} />
-                            </div>
-                          </div>
-                          <div className="flex flex-col gap-3 w-full">
-                            <div className="h-px w-full bg-[var(--color-border-subtle)]" />
-                            <div className="flex flex-col gap-1.5">
-                              <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
-                                Checksum
-                              </span>
-                              <CopyableValue value={snapshot.checksum} />
-                            </div>
-                          </div>
-                        </SectionCard.Content>
-                      </SectionCard>
-                    </VStack>
-                  </TabPanel>
-
-                  {/* Metadata Tab Panel */}
-                  <TabPanel value="metadata" className="pt-0">
-                    <VStack gap={4} className="pt-4">
-                      {/* Metadata Card - matching Figma design */}
-                      <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 pt-3 pb-4 w-full flex flex-col gap-3">
-                        {/* Title */}
-                        <div className="h-8 flex items-center">
-                          <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
-                            Metadata
-                          </span>
-                        </div>
-
-                        {/* Data Rows */}
-                        {Object.entries(snapshot.metadata).map(([key, value]) => (
-                          <div key={key} className="flex flex-col gap-3 w-full">
-                            {/* Divider */}
-                            <div className="h-px w-full bg-[var(--color-border-subtle)]" />
-                            {/* Row Content */}
-                            <div className="flex flex-col gap-1.5">
-                              <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
-                                {key}
-                              </span>
-                              <span className="text-body-md leading-4 text-[var(--color-text-default)]">
-                                {value || '-'}
-                              </span>
-                            </div>
-                          </div>
-                        ))}
+                {/* Security */}
+                <SectionCard>
+                  <SectionCard.Header title="Security" />
+                  <SectionCard.Content>
+                    <SectionCard.DataRow label="Owner" value={snapshot.owner} />
+                    <SectionCard.DataRow label="Visibility" value={snapshot.visibility} />
+                    <SectionCard.DataRow
+                      label="Protected"
+                      value={snapshot.protected ? 'Enabled' : 'Disabled'}
+                    />
+                    <div className="flex flex-col gap-3 w-full">
+                      <div className="h-px w-full bg-[var(--color-border-subtle)]" />
+                      <div className="flex flex-col gap-1.5">
+                        <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
+                          Filename
+                        </span>
+                        <CopyableValue value={snapshot.filename} />
                       </div>
-                    </VStack>
-                  </TabPanel>
-                </Tabs>
-              </div>
-            </VStack>
-          </div>
+                    </div>
+                    <div className="flex flex-col gap-3 w-full">
+                      <div className="h-px w-full bg-[var(--color-border-subtle)]" />
+                      <div className="flex flex-col gap-1.5">
+                        <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
+                          Checksum
+                        </span>
+                        <CopyableValue value={snapshot.checksum} />
+                      </div>
+                    </div>
+                  </SectionCard.Content>
+                </SectionCard>
+              </VStack>
+            </TabPanel>
+
+            {/* Metadata Tab Panel */}
+            <TabPanel value="metadata" className="pt-0">
+              <VStack gap={4} className="pt-4">
+                {/* Metadata Card - matching Figma design */}
+                <div className="bg-[var(--color-surface-default)] border border-[var(--color-border-default)] rounded-[6px] px-4 pt-3 pb-4 w-full flex flex-col gap-3">
+                  {/* Title */}
+                  <div className="h-8 flex items-center">
+                    <span className="text-label-lg leading-5 text-[var(--color-text-default)]">
+                      Metadata
+                    </span>
+                  </div>
+
+                  {/* Data Rows */}
+                  {Object.entries(snapshot.metadata).map(([key, value]) => (
+                    <div key={key} className="flex flex-col gap-3 w-full">
+                      {/* Divider */}
+                      <div className="h-px w-full bg-[var(--color-border-subtle)]" />
+                      {/* Row Content */}
+                      <div className="flex flex-col gap-1.5">
+                        <span className="text-label-sm leading-4 text-[var(--color-text-subtle)]">
+                          {key}
+                        </span>
+                        <span className="text-body-md leading-4 text-[var(--color-text-default)]">
+                          {value || '-'}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </VStack>
+            </TabPanel>
+          </Tabs>
         </div>
-      </main>
-    </div>
+      </VStack>
+    </PageShell>
   );
 }
 

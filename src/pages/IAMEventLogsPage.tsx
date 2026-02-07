@@ -9,6 +9,8 @@ import {
   VStack,
   HStack,
   TabBar,
+  PageShell,
+  PageHeader,
 } from '@/design-system';
 import { IAMSidebar } from '@/components/IAMSidebar';
 import { useTabs } from '@/contexts/TabContext';
@@ -396,16 +398,10 @@ export default function IAMEventLogsPage() {
   };
 
   return (
-    <div className="fixed inset-0 bg-[var(--color-surface-subtle)]">
-      {/* Sidebar */}
-      <IAMSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
-
-      {/* Main Content */}
-      <main
-        className="absolute top-0 bottom-0 right-0 flex flex-col bg-[var(--color-surface-default)] transition-[left] duration-200"
-        style={{ left: `${sidebarWidth}px` }}
-      >
-        {/* Tab Bar */}
+    <PageShell
+      sidebar={<IAMSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />}
+      sidebarWidth={sidebarWidth}
+      tabBar={
         <TabBar
           tabs={tabs.map((tab) => ({ id: tab.id, label: tab.label, closable: tab.closable }))}
           activeTab={activeTabId}
@@ -414,8 +410,8 @@ export default function IAMEventLogsPage() {
           onTabAdd={addNewTab}
           onTabReorder={moveTab}
         />
-
-        {/* Top Bar */}
+      }
+      topBar={
         <TopBar
           showSidebarToggle={!sidebarOpen}
           onSidebarToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -426,168 +422,156 @@ export default function IAMEventLogsPage() {
             <Breadcrumb items={[{ label: 'IAM', href: '/iam' }, { label: 'Event logs' }]} />
           }
         />
+      }
+    >
+      <VStack gap={3}>
+        {/* Header */}
+        <PageHeader title="Event logs" />
 
-        {/* Scrollable Content */}
-        <div className="flex-1 overflow-auto min-w-[var(--layout-content-min-width)] overscroll-contain sidebar-scroll">
-          <div className="pt-4 px-8 pb-6 bg-[var(--color-surface-default)]">
-            <VStack gap={3}>
-              {/* Header */}
-              <HStack justify="between" align="center" className="w-full min-h-[28px]">
-                <h1 className="text-heading-h5 leading-6 text-[var(--color-text-default)]">
-                  Event logs
-                </h1>
-              </HStack>
+        {/* Table Content */}
+        <VStack gap={3} className="w-full">
+          {/* Action Bar */}
+          <HStack gap={2} align="center">
+            {/* Search */}
+            <HStack gap={1} align="center">
+              <SearchInput
+                placeholder="Search logs by attributes"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-[var(--search-input-width)]"
+              />
+              <Button
+                variant="secondary"
+                size="sm"
+                icon={<IconDownload size={12} />}
+                aria-label="Download"
+              />
+            </HStack>
+          </HStack>
 
-              {/* Table Content */}
-              <VStack gap={3} className="w-full">
-                {/* Action Bar */}
-                <HStack gap={2} align="center">
-                  {/* Search */}
-                  <HStack gap={1} align="center">
-                    <SearchInput
-                      placeholder="Search logs by attributes"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-[var(--search-input-width)]"
-                    />
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      icon={<IconDownload size={12} />}
-                      aria-label="Download"
-                    />
-                  </HStack>
-                </HStack>
+          {/* Pagination */}
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            showSettings
+            totalItems={filteredLogs.length}
+          />
 
-                {/* Pagination */}
-                <Pagination
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  onPageChange={setCurrentPage}
-                  showSettings
-                  totalItems={filteredLogs.length}
-                />
+          {/* Custom Table */}
+          <div className="w-full flex flex-col gap-1">
+            {/* Table Header */}
+            <div className="flex items-stretch min-h-[40px] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-md">
+              <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)] flex items-center">
+                <span>Event</span>
+                <IconChevronDown size={16} className="ml-1.5" />
+              </div>
+              <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">
+                <span>Time</span>
+                <IconChevronDown size={16} className="ml-1.5" />
+              </div>
+              <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">
+                <span>User</span>
+                <IconChevronDown size={16} className="ml-1.5" />
+              </div>
+              <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">
+                <span>Target</span>
+                <IconChevronDown size={16} className="ml-1.5" />
+              </div>
+              <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">
+                <span>Result</span>
+              </div>
+              <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">
+                <span>IP address</span>
+                <IconChevronDown size={16} className="ml-1.5" />
+              </div>
+            </div>
 
-                {/* Custom Table */}
-                <div className="w-full flex flex-col gap-1">
-                  {/* Table Header */}
-                  <div className="flex items-stretch min-h-[40px] bg-[var(--table-header-bg)] border border-[var(--color-border-default)] rounded-md">
-                    <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)] flex items-center">
-                      <span>Event</span>
-                      <IconChevronDown size={16} className="ml-1.5" />
+            {/* Table Rows */}
+            {paginatedLogs.map((log) => {
+              const isExpanded = expandedLogs.has(log.id);
+              return (
+                <div key={log.id} className="w-full">
+                  {/* Main Row */}
+                  <div
+                    className={`flex items-stretch min-h-[var(--table-row-height)] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] transition-colors hover:bg-[var(--table-row-hover-bg)] cursor-pointer ${isExpanded ? 'rounded-t-md border-b-0' : 'rounded-md'}`}
+                    onClick={() => toggleExpanded(log.id)}
+                  >
+                    {/* Event Cell */}
+                    <div className="flex-1 px-3 py-2 flex items-center gap-2">
+                      <button
+                        type="button"
+                        className="p-0.5 rounded hover:bg-[var(--color-surface-subtle)] transition-colors"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleExpanded(log.id);
+                        }}
+                      >
+                        {isExpanded ? (
+                          <IconChevronDown size={16} className="text-[var(--color-text-default)]" />
+                        ) : (
+                          <IconChevronRight
+                            size={16}
+                            className="text-[var(--color-text-default)]"
+                          />
+                        )}
+                      </button>
+                      <div className="flex flex-col gap-0.5">
+                        <span className="text-body-md text-[var(--color-text-default)]">
+                          {log.eventName}
+                        </span>
+                        <span className="text-body-sm text-[var(--color-text-subtle)]">
+                          ID: {log.eventId}
+                        </span>
+                      </div>
                     </div>
-                    <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">
-                      <span>Time</span>
-                      <IconChevronDown size={16} className="ml-1.5" />
+
+                    {/* Time Cell */}
+                    <div className="flex-1 px-3 py-2 flex items-center border-l border-transparent">
+                      <span className="text-body-md text-[var(--color-text-default)]">
+                        {log.displayTime}
+                      </span>
                     </div>
-                    <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">
-                      <span>User</span>
-                      <IconChevronDown size={16} className="ml-1.5" />
+
+                    {/* User Cell */}
+                    <div className="flex-1 px-3 py-2 flex items-center border-l border-transparent">
+                      <span className="text-body-md text-[var(--color-text-default)]">
+                        {log.user}
+                      </span>
                     </div>
-                    <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">
-                      <span>Target</span>
-                      <IconChevronDown size={16} className="ml-1.5" />
+
+                    {/* Target Cell */}
+                    <div className="flex-1 px-3 py-2 flex items-center border-l border-transparent">
+                      <span className="text-body-md text-[var(--color-text-default)]">
+                        {log.target}
+                      </span>
                     </div>
-                    <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">
-                      <span>Result</span>
+
+                    {/* Result Cell */}
+                    <div className="flex-1 px-3 py-2 flex items-center border-l border-transparent">
+                      <span
+                        className={`text-body-md ${log.result === 'success' ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-state-danger)]'}`}
+                      >
+                        {log.result === 'success' ? 'Success' : 'Failure'}
+                      </span>
                     </div>
-                    <div className="flex-1 px-3 py-2 text-label-sm text-[var(--color-text-default)] flex items-center border-l border-[var(--color-border-default)]">
-                      <span>IP address</span>
-                      <IconChevronDown size={16} className="ml-1.5" />
+
+                    {/* IP Address Cell */}
+                    <div className="flex-1 px-3 py-2 flex items-center border-l border-transparent">
+                      <span className="text-body-md text-[var(--color-text-default)]">
+                        {log.ipAddress}
+                      </span>
                     </div>
                   </div>
 
-                  {/* Table Rows */}
-                  {paginatedLogs.map((log) => {
-                    const isExpanded = expandedLogs.has(log.id);
-                    return (
-                      <div key={log.id} className="w-full">
-                        {/* Main Row */}
-                        <div
-                          className={`flex items-stretch min-h-[var(--table-row-height)] bg-[var(--color-surface-default)] border border-[var(--color-border-default)] transition-colors hover:bg-[var(--table-row-hover-bg)] cursor-pointer ${isExpanded ? 'rounded-t-md border-b-0' : 'rounded-md'}`}
-                          onClick={() => toggleExpanded(log.id)}
-                        >
-                          {/* Event Cell */}
-                          <div className="flex-1 px-3 py-2 flex items-center gap-2">
-                            <button
-                              type="button"
-                              className="p-0.5 rounded hover:bg-[var(--color-surface-subtle)] transition-colors"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                toggleExpanded(log.id);
-                              }}
-                            >
-                              {isExpanded ? (
-                                <IconChevronDown
-                                  size={16}
-                                  className="text-[var(--color-text-default)]"
-                                />
-                              ) : (
-                                <IconChevronRight
-                                  size={16}
-                                  className="text-[var(--color-text-default)]"
-                                />
-                              )}
-                            </button>
-                            <div className="flex flex-col gap-0.5">
-                              <span className="text-body-md text-[var(--color-text-default)]">
-                                {log.eventName}
-                              </span>
-                              <span className="text-body-sm text-[var(--color-text-subtle)]">
-                                ID: {log.eventId}
-                              </span>
-                            </div>
-                          </div>
-
-                          {/* Time Cell */}
-                          <div className="flex-1 px-3 py-2 flex items-center border-l border-transparent">
-                            <span className="text-body-md text-[var(--color-text-default)]">
-                              {log.displayTime}
-                            </span>
-                          </div>
-
-                          {/* User Cell */}
-                          <div className="flex-1 px-3 py-2 flex items-center border-l border-transparent">
-                            <span className="text-body-md text-[var(--color-text-default)]">
-                              {log.user}
-                            </span>
-                          </div>
-
-                          {/* Target Cell */}
-                          <div className="flex-1 px-3 py-2 flex items-center border-l border-transparent">
-                            <span className="text-body-md text-[var(--color-text-default)]">
-                              {log.target}
-                            </span>
-                          </div>
-
-                          {/* Result Cell */}
-                          <div className="flex-1 px-3 py-2 flex items-center border-l border-transparent">
-                            <span
-                              className={`text-body-md ${log.result === 'success' ? 'text-[var(--color-action-primary)]' : 'text-[var(--color-state-danger)]'}`}
-                            >
-                              {log.result === 'success' ? 'Success' : 'Failure'}
-                            </span>
-                          </div>
-
-                          {/* IP Address Cell */}
-                          <div className="flex-1 px-3 py-2 flex items-center border-l border-transparent">
-                            <span className="text-body-md text-[var(--color-text-default)]">
-                              {log.ipAddress}
-                            </span>
-                          </div>
-                        </div>
-
-                        {/* Expanded Details */}
-                        {isExpanded && <EventDetailsConsole details={log.details} />}
-                      </div>
-                    );
-                  })}
+                  {/* Expanded Details */}
+                  {isExpanded && <EventDetailsConsole details={log.details} />}
                 </div>
-              </VStack>
-            </VStack>
+              );
+            })}
           </div>
-        </div>
-      </main>
-    </div>
+        </VStack>
+      </VStack>
+    </PageShell>
   );
 }
